@@ -22,10 +22,11 @@
 ##     (clear_egg(), from CombatResolver before the kill path: no kill, no XP,
 ##     no drop, no corpse; counted by spell / by summon / by anything else);
 ##     otherwise a broodling hatches (on_egg_hatched()).
-##   * NOTHING HATCHED (the stage's achievement; owner's Act IX call: "No egg
-##     hatches on the Crash Site, from the start until the Hive Mother falls,
-##     and you beat her"): when the stage boss (the Hive Mother) falls with no
-##     egg hatched so far on the Crash Site, the run stat
+##   * NOTHING HATCHED (the stage's achievement; owner's Act IX call, eased
+##     after Act IX playtest pass 1: "at most 10 eggs hatch before the Hive
+##     Mother falls", was "no egg"): when the stage boss (the Hive Mother)
+##     falls with at most `nothing_hatched_limit` eggs hatched so far on the
+##     Crash Site, the run stat
 ##     crash_site_nothing_hatched is set (MetaProgress counts the runs:
 ##     lifetime nothing_hatched_runs, MetaData "nothing_hatched"; it unlocks
 ##     Anchored).
@@ -60,7 +61,8 @@ var hatched: int = 0
 var skipped: int = 0
 ## Most eggs alive at once this run.
 var peak: int = 0
-## Eggs that hatched before the stage boss fell (Nothing Hatched counts these).
+## Eggs that hatched before the stage boss fell (Nothing Hatched counts these
+## against CrashSiteStage.CRASH_SITE "nothing_hatched_limit").
 var hatched_before_boss: int = 0
 ## True once the stage boss (the Hive Mother) fell this run.
 var boss_down: bool = false
@@ -191,6 +193,12 @@ func on_egg_hatched(_e: Enemy) -> void:
 		game.stat_add("crash_site_eggs_hatched_before_boss", 1.0)
 
 
+## Most eggs that may hatch before the Hive Mother falls for Nothing Hatched
+## (CrashSiteStage.CRASH_SITE "nothing_hatched_limit").
+func hatch_limit() -> int:
+	return int(config.get("nothing_hatched_limit", 0))
+
+
 ## Eggs alive now (EnemyDirector.regular_alive() leaves them out of the cap).
 func eggs_alive() -> int:
 	_prune()
@@ -208,8 +216,9 @@ func _prune() -> void:
 		i -= 1
 
 
-## The stage boss fell (EnemyDirector.boss_defeated): Nothing Hatched when no
-## egg hatched before her fall and she is the Hive Mother.
+## The stage boss fell (EnemyDirector.boss_defeated): Nothing Hatched when at
+## most `nothing_hatched_limit` eggs hatched before her fall and she is the
+## Hive Mother.
 func _on_boss_defeated() -> void:
 	if boss_down:
 		return
@@ -217,7 +226,7 @@ func _on_boss_defeated() -> void:
 	_log("boss_down")
 	if String(game.enemies.boss_info.get("id", "")) != HiveMotherData.ARRIVAL["id"]:
 		return
-	if String(game.stage_def.get("id", "")) != CrashSiteStage.ID or hatched_before_boss > 0:
+	if String(game.stage_def.get("id", "")) != CrashSiteStage.ID or hatched_before_boss > hatch_limit():
 		return
 	nothing_hatched = true
 	game.stats["crash_site_nothing_hatched"] = 1.0
@@ -269,12 +278,12 @@ func objective_override() -> String:
 ## One autotest summary line of the stage's systems.
 func summary_line() -> String:
 	var st := game.stats
-	return "crater seeded %d cells | eggs laid %d (deaths %d, sacs %d, waves %d), cleared %d (spell %d, summon %d, other %d), hatched %d (before the boss %d), skipped at the cap %d, peak %d | nothing hatched %s | matriarch spawned %d, killed %d%s | events: %s" % [
+	return "crater seeded %d cells | eggs laid %d (deaths %d, sacs %d, waves %d), cleared %d (spell %d, summon %d, other %d), hatched %d (before the boss %d of at most %d), skipped at the cap %d, peak %d | nothing hatched %s | matriarch spawned %d, killed %d%s | events: %s" % [
 		int(st.get("terra_seeded_crater", 0.0)), laid, int(st.get("crash_site_eggs_laid_death", 0.0)),
 		int(st.get("crash_site_eggs_laid_sac", 0.0)), int(st.get("crash_site_eggs_laid_wave", 0.0)),
 		cleared, int(st.get("crash_site_eggs_cleared_spell", 0.0)), int(st.get("crash_site_eggs_cleared_summon", 0.0)),
-		int(st.get("crash_site_eggs_cleared_other", 0.0)), hatched, hatched_before_boss, skipped, peak,
-		"EARNED" if nothing_hatched else ("lost" if hatched_before_boss > 0 else "open"),
+		int(st.get("crash_site_eggs_cleared_other", 0.0)), hatched, hatched_before_boss, hatch_limit(), skipped, peak,
+		"EARNED" if nothing_hatched else ("lost" if hatched_before_boss > hatch_limit() else "open"),
 		int(st.get("crash_site_matriarch_spawned", 0.0)), int(st.get("crash_site_matriarch_killed", 0.0)),
 		(" at " + matriarch_time) if matriarch_time != "" else "", ", ".join(fired)]
 

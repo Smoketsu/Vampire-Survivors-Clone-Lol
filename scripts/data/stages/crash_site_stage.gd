@@ -118,12 +118,17 @@ const MARCH := {
 ##   egg_cap         — most Infestation eggs alive at once (brief: for example
 ##                     24; over it no egg is laid, counted as skipped).
 ##   matriarch_objective — HUD objective while the Brood Matriarch stands.
+##   nothing_hatched_limit — most Infestation eggs that may hatch before the
+##                     Hive Mother falls for Nothing Hatched still to be earned
+##                     (eggs, >= 0; owner, Act IX playtest pass 1: "at most 10";
+##                     it was 0, no egg at all).
 ##   nothing_hatched_banner — banner when Nothing Hatched is earned.
 const CRASH_SITE := {
 	"crater": {"offset": Vector2(0.0, -420.0), "radius": 200.0},  # TUNING (not in GDD) the crater north of the start, out of the clear circle
 	"egg_cap": 24,  # TUNING (not in GDD) brief: "for example 24"
 	"matriarch_objective": "Bring down the Brood Matriarch: clear her eggs before they hatch",  # TUNING (not in GDD)
-	"nothing_hatched_banner": "NOTHING HATCHED: not one egg of the Brood broke open!",  # TUNING (not in GDD)
+	"nothing_hatched_limit": 10,  # TUNING (not in GDD) owner decision Nov 2026, Act IX playtest pass 1 (was 0: no egg hatched)
+	"nothing_hatched_banner": "NOTHING HATCHED: the Brood's eggs were burned before they broke open!",  # TUNING (not in GDD)
 }
 
 ## Terraforming on this stage: {} = the defaults of

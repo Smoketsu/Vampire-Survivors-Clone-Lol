@@ -259,7 +259,7 @@ const UNLOCKS := {
 	# "act"; the brief's pairing, GDD §15.0 "Act IX phase 2: owner answers").
 	"bone_beetles": {"type": "spell", "boss": "hive_mother", "text": "Slay the Hive Mother at the Crash Site to unlock."},  # Owner-approved Act IX proposal
 	"chitin": {"type": "passive", "boss": "hive_mother", "text": "Slay the Hive Mother at the Crash Site to unlock."},  # Bone Beetles' paired passive (owner-approved proposal), unlocked with it
-	"anchored": {"type": "passive", "achievement": "nothing_hatched", "text": "Earn Nothing Hatched: let no egg hatch on the Crash Site before the Hive Mother falls."},  # Brief (Nov 3, 2026): Nothing Hatched unlocks Anchored
+	"anchored": {"type": "passive", "achievement": "nothing_hatched", "text": "Earn Nothing Hatched: let at most 10 eggs hatch on the Crash Site before the Hive Mother falls."},  # Brief (Nov 3, 2026): Nothing Hatched unlocks Anchored
 	# --- Act IX: the Proving Moon ---
 	# Vrask'Tal's fall (owner-approved Act IX proposal "Rewards": Soul Caster is
 	# unlocked by Vrask'Tal) with its paired passive, offered on every stage; the

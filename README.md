@@ -2350,7 +2350,7 @@ hunter now and then and the Luminous fight with them.
 - **Rewards.** Slaying the Hive Mother unlocks **Bone Beetles** (slain foes near you burst into bone beetles that bite
   the next foe; it evolves into **Hive of Bone** with its paired passive **Chitin**: beetles bite foe after foe, and
   their kills burst too) and with it **the Broodbound** (a woman who wed the swarm; her innate Swarm Bride adds a beetle
-  to every burst). The achievement **Nothing Hatched** (beat the Hive Mother with no egg hatched before she falls)
+  to every burst). The achievement **Nothing Hatched** (beat the Hive Mother with at most 10 eggs hatched before she falls)
   unlocks Act IX's counter-passive **Anchored** (abductions hold your summons for less, and a hit on the saucer drops
   them; offered in Act IX only).
 

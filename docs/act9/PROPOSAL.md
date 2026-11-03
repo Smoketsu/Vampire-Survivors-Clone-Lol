@@ -36,6 +36,11 @@ order of it again, so don't worry about epilogue stuff of each act until we nail
   stops shots on summons and walls (the same segment test). Orb Shields and Warder barriers still reflect a beam. This
   changes the foundation's Beams rule (`ConcordBeams`).
 
+**Playtest pass 1 answer (Nov 2026).** This overrides the achievement line under "Rewards".
+- **Nothing Hatched: at most 10 eggs.** The achievement is earned when the Hive Mother falls with at most 10 Infestation
+  eggs hatched before her fall (it was "no egg hatches"). The limit is `CrashSiteStage.CRASH_SITE`
+  `"nothing_hatched_limit"`.
+
 ## Act IX: The Concord of Stars (draft, still cooking)
 The harvest has stopped. Long ago, something out in the dark seeded life on this world, the way a farmer plants a field, and every few thousand years it comes back to reap the dead. This time there is nothing to reap: the necromancer has taken every soul. The Concord (a union of alien races under the Harvesters who rule it) arrives to find out why. The look is hull white and gunmetal, plasma green and laser magenta, against starfield black; each race adds one accent colour of its own. Recommended as a draft: the races, the rules and the bosses below are a starting set, and the ideas bank at the end of this section has the alternatives.
 

@@ -666,11 +666,14 @@ const ACHIEVEMENTS := {
 	# --- Act IX: the Crash Site ---
 	# The brief's Act IX achievement "Nothing Hatched" (Nov 3, 2026: "No egg
 	# hatches on the Crash Site, from the start until the Hive Mother falls,
-	# and you beat her"): a Crash Site run in which the Hive Mother fell and no
-	# Infestation egg had hatched before her fall (CrashSiteDirector sets the
+	# and you beat her"; eased by the owner after Act IX playtest pass 1: "at
+	# most 10 eggs hatch before the Hive Mother falls", the limit in
+	# CrashSiteStage.CRASH_SITE "nothing_hatched_limit"): a Crash Site run in
+	# which the Hive Mother fell and at most that many Infestation eggs had
+	# hatched before her fall (CrashSiteDirector sets the
 	# run stat crash_site_nothing_hatched; MetaProgress counts the runs,
 	# lifetime nothing_hatched_runs). It unlocks the counter-passive Anchored.
-	"nothing_hatched": {"display_name": "Nothing Hatched", "description": "Beat the Hive Mother at the Crash Site with no egg hatched before she falls",
+	"nothing_hatched": {"display_name": "Nothing Hatched", "description": "Beat the Hive Mother at the Crash Site with at most 10 eggs hatched before she falls",
 		"stat": "nothing_hatched_runs", "goal": 1, "unlock": "The Anchored passive", "bounty": 300},  # Brief (Nov 3, 2026); bounty TUNING (not in GDD) as No Witnesses
 	# --- Act IX: the Proving Moon ---
 	# Owner-approved Act IX achievement "The Hunter Hunted" ("beat Vrask'Tal

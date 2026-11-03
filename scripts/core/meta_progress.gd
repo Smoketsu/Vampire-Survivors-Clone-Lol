@@ -1648,7 +1648,7 @@ static func _default_lifetime() -> Dictionary:
 		# --- Act VIII: Liberty Heights ---
 		"paragon_no_heroes_kills": 0.0,  # Paragon slain on Liberty Heights with no Super at his side (No More Heroes)
 		# --- Act IX: the Crash Site ---
-		"nothing_hatched_runs": 0.0,  # Crash Site runs that beat the Hive Mother with no egg hatched before her fall (Nothing Hatched)
+		"nothing_hatched_runs": 0.0,  # Crash Site runs that beat the Hive Mother with at most 10 eggs hatched before her fall (Nothing Hatched)
 		# --- Act IX: the Proving Moon ---
 		"hunter_hunted_runs": 0.0,  # runs in which Vrask'Tal fell to anything but his own Last Trophy bomb (The Hunter Hunted)
 		# --- Content wave 2: B. Achievement rewards (MetaProgress.run_counters()) ---

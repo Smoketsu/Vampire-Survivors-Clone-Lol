@@ -36,11 +36,14 @@ const BOSS_TIME: float = 1020.0  # TUNING (not in GDD) 17:00, as on every stage
 
 ## Enemy max-HP multiplier of this stage on top of the shared time scaling
 ## (Act IX starts a step above Liberty Heights's 2.0; the step goes in HP, not
-## damage: the Act IV lesson).
-const ENEMY_HP_MULT: float = 2.15  # TUNING (not in GDD) the foundation's step above Liberty Heights
+## damage: the Act IV lesson). Act IX playtest pass 1 ("Harden the Ark"): the
+## screen showed the army killing everything before it reached the ring, so the
+## finale's step goes mostly in HP.
+const ENEMY_HP_MULT: float = 3.0  # TUNING (not in GDD) was 2.15 (the foundation's step above Liberty Heights); Act IX pass 1, owner: "Harden the Ark"
 ## Enemy damage multiplier of this stage on top of the shared time scaling
-## (Liberty Heights's 1.5, kept: the step up is in HP).
-const ENEMY_DAMAGE_MULT: float = 1.5  # TUNING (not in GDD) the foundation's
+## (the foundation kept Liberty Heights's 1.5; Act IX playtest pass 1 raised
+## it so the finale is the hardest Act IX stage, GDD §15.0 "Act IX playtest pass 1").
+const ENEMY_DAMAGE_MULT: float = 2.5  # TUNING (not in GDD) was 1.5 (the foundation's); Act IX pass 1, owner: "Harden the Ark"
 ## Elapsed game seconds from which the two multipliers apply to regular
 ## enemies (the boss always gets them).
 const ENEMY_MULT_FROM: float = 420.0  # TUNING (not in GDD) (Acts III to VIII: 7:00)
@@ -154,27 +157,28 @@ const RECKONING_OBJECTIVE: String = "THE FINAL HARVEST: the eye sweeps the world
 ## Continuous spawning segments (keys as GraveyardStage.SEGMENTS): the
 ## Harvesters lead (grey drones, Overseers, saucers), the Luminous are mixed in
 ## (Sentinels, Star-Seers), the Brood and the Vrask come as guests. Saucers,
-## hunters and Overseers stay rare.
+## hunters and Overseers stay rare. Act IX playtest pass 1 (owner: "Harden the
+## Ark") raised every segment's rate and alive cap x1.2.
 const SEGMENTS := [
-	{"start": 0.0, "rate": 1.4, "max_alive": 30,  # TUNING (not in GDD)
+	{"start": 0.0, "rate": 1.68, "max_alive": 36,  # TUNING (not in GDD); Act IX pass 1 x1.2 (was rate 1.4, cap 30)
 		"weights": {"grey_drone": 0.65, "broodling": 0.35},
 		"objective": "The Hangar: the Harvesters' greys come for you, their probes raised"},
-	{"start": 60.0, "rate": 1.7, "max_alive": 40,  # TUNING (not in GDD)
+	{"start": 60.0, "rate": 2.04, "max_alive": 48,  # TUNING (not in GDD); Act IX pass 1 x1.2 (was rate 1.7, cap 40)
 		"weights": {"grey_drone": 0.6, "broodling": 0.3, "grey_overseer": 0.06, "saucer": 0.04},
 		"objective": "Kill the Grey Overseers first: their pulse stuns your dead and shields their greys"},
-	{"start": 180.0, "rate": 2.0, "max_alive": 50,  # TUNING (not in GDD)
+	{"start": 180.0, "rate": 2.4, "max_alive": 60,  # TUNING (not in GDD); Act IX pass 1 x1.2 (was rate 2.0, cap 50)
 		"weights": {"grey_drone": 0.56, "broodling": 0.27, "grey_overseer": 0.06, "lumen_sentinel": 0.05, "prism": 0.02, "saucer": 0.04},
 		"objective": "Your Orb Shield and your Warders' barriers send a beam back at its firer"},
-	{"start": 300.0, "rate": 2.3, "max_alive": 60,  # TUNING (not in GDD)
+	{"start": 300.0, "rate": 2.76, "max_alive": 72,  # TUNING (not in GDD); Act IX pass 1 x1.2 (was rate 2.3, cap 60)
 		"weights": {"grey_drone": 0.55, "broodling": 0.27, "grey_overseer": 0.06, "lumen_sentinel": 0.05, "prism": 0.02, "vrask_hunter": 0.02, "saucer": 0.03},
 		"objective": "The Specimen Vaults: break the tanks, and the beasts inside fall on the Concord too"},
-	{"start": 600.0, "rate": 2.6, "max_alive": 70,  # TUNING (not in GDD)
+	{"start": 600.0, "rate": 3.12, "max_alive": 84,  # TUNING (not in GDD); Act IX pass 1 x1.2 (was rate 2.6, cap 70)
 		"weights": {"grey_drone": 0.54, "broodling": 0.27, "grey_overseer": 0.06, "lumen_sentinel": 0.06, "prism": 0.02, "vrask_hunter": 0.02, "saucer": 0.03},
 		"objective": "The Reactor: break the vents before their ground heals the Concord. Your spells burn it back"},
-	{"start": 900.0, "rate": 2.9, "max_alive": 80,  # TUNING (not in GDD)
+	{"start": 900.0, "rate": 3.48, "max_alive": 96,  # TUNING (not in GDD); Act IX pass 1 x1.2 (was rate 2.9, cap 80)
 		"weights": {"grey_drone": 0.52, "broodling": 0.27, "grey_overseer": 0.06, "lumen_sentinel": 0.07, "prism": 0.02, "vrask_hunter": 0.03, "saucer": 0.03},
 		"objective": "The Bridge of Stars: the whole coalition stands before the throne of rings"},
-	{"start": BOSS_TIME, "rate": 2.2, "max_alive": 60,  # TUNING (not in GDD) thinner during the boss fight
+	{"start": BOSS_TIME, "rate": 2.64, "max_alive": 72,  # TUNING (not in GDD) thinner during the boss fight; Act IX pass 1 x1.2 (was rate 2.2, cap 60)
 		"weights": {"grey_drone": 0.58, "broodling": 0.27, "grey_overseer": 0.05, "lumen_sentinel": 0.05, "prism": 0.02, "saucer": 0.03},
 		"objective": "The Harvester has come for you"},
 ]
