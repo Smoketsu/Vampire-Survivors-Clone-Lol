@@ -313,7 +313,7 @@ const STAGE := {
 	"short_name": "Liberty Heights",
 	"chapter": "Chapter XXIV",
 	"act": 8,  # Act VIII, the Last Line.
-	"playable": false,  # Phase 2 built; hidden from the stage select until the lead's integration and the owner's go.
+	"playable": true,  # Owner decision (Nov 2026): "Ship it" after the art reviews and playtest passes (GDD §15.0 "Acts VI–IX go live").
 	"description": "The heart of the city: the plaza, the skyline and the Heroes' Tower, where the last heroes of the living make their stand.",
 	"unlock": {"stage": "fort_kessler", "boss_kills": 1},  # Owner-approved: each Act VIII stage opens the next
 	"unlock_text": "Defeat General Harrow at Fort Kessler to unlock.",

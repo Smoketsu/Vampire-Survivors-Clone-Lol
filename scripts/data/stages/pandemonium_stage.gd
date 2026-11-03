@@ -293,7 +293,7 @@ const STAGE := {
 	"short_name": "Pandemonium",
 	"chapter": "Chapter XVIII",
 	"act": 6,  # Act VI, the Inferno.
-	"playable": false,  # Phase 2 built; hidden from the stage select until the lead's integration and the owner's go.
+	"playable": true,  # Owner decision (Nov 2026): "Ship it" after the art reviews and playtest passes (GDD §15.0 "Acts VI–IX go live").
 	"description": "The capital of hell: an obsidian cathedral city of chains and lava rivers, and at its heart the throne of the Adversary himself.",
 	"unlock": {"stage": "silk_palace", "boss_kills": 1},  # Owner-approved: each Act VI stage opens the next
 	"unlock_text": "Slay Lilith in the Palace of Silk and Ash to unlock.",

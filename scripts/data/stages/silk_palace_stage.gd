@@ -320,7 +320,7 @@ const STAGE := {
 	"short_name": "The Palace",
 	"chapter": "Chapter XVII",
 	"act": 6,  # Act VI, the Inferno.
-	"playable": false,  # Phase 2 built (GDD §15.0 "The Palace of Silk and Ash (Act VI phase 2)"); hidden until the lead's merge and the owner's go.
+	"playable": true,  # Owner decision (Nov 2026): "Ship it" after the art reviews and playtest passes (GDD §15.0 "Acts VI–IX go live").
 	"description": "The court of desire: velvet halls, mirrors, rose gardens of black thorns and a ballroom over a lava lake, where every smile is a snare for your dead.",
 	"unlock": {"stage": "burning_gate", "boss_kills": 1},  # Owner-approved: each Act VI stage opens the next
 	"unlock_text": "Slay Moloch at the Burning Gate to unlock.",

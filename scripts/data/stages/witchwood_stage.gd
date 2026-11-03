@@ -311,7 +311,7 @@ const STAGE := {
 	"short_name": "The Witchwood",
 	"chapter": "Chapter XX",
 	"act": 7,  # Act VII, the Sanguine Court.
-	"playable": false,  # Phase 2 built; hidden until the lead's integration and the owner's review (brief: keep "playable": false).
+	"playable": true,  # Owner decision (Nov 2026): "Ship it" after the art reviews and playtest passes (GDD §15.0 "Acts VI–IX go live").
 	"description": "A black fen and a wood of hanging charms where the Court's witches keep their sabbath, their circles drawn in blood on the standing stones.",
 	"unlock": {"stage": "ravensmoor", "boss_kills": 1},  # Owner-approved: each Act VII stage opens the next
 	"unlock_text": "Slay Vargr on Ravensmoor to unlock.",

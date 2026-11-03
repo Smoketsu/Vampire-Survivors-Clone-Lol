@@ -170,7 +170,9 @@ Autotest options (full table in the README):
 - `--spells=a,b` (force spells and their evolution passives, e.g.
   `bone_spear,soul_siphon,corpse_explosion,plague_cloud` or `death_mark,bone_wall,soul_chains`)
 - `--passives=a,b` (force passives the same way, e.g. `unholy_precision,unholy_resilience`)
-- `--stage=graveyard|crimson_march|sanctum|harbour|archive|spire|wastes|assembly|citadel|ilion|olympus|underworld` (default graveyard; stage locks are
+- `--stage=graveyard|crimson_march|sanctum|harbour|archive|spire|wastes|assembly|citadel|ilion|olympus|underworld|province|kurogane|sun_road|`
+  `burning_gate|silk_palace|pandemonium|ravensmoor|witchwood|castle_sanguis|skid_row|fort_kessler|liberty_heights|crash_site|`
+  `proving_moon|ark` (default graveyard; stage locks are
   ignored)
 - `--unlocks=all|none` (Act II's lockable spells / passives / classes in the card pool; forced items
   are open either way)
@@ -204,9 +206,9 @@ Autotest options (full table in the README):
 the autotests for the area a change touches plus one default run; run the full "Done" set (every stage,
 the same-seed gates) once per batch of changes, before `main` moves; multi-seed batches only for balance.
 
-CI (`.github/workflows/ci.yml`) runs the import and, as thirteen **parallel** matrix jobs, the Graveyard
+CI (`.github/workflows/ci.yml`) runs the import and, as twenty-five **parallel** matrix jobs, the Graveyard
 autotest with the naive and army policies, a Crimson March autotest, a Sanctum of Judgment autotest (army
-policy) and one army autotest per Act II, Act IV and Act V stage; beside them, the Windows/Linux/Web exports (artifacts
+policy) and one army autotest per Act II, Act IV, V, VI, VII, VIII and IX stage; beside them, the Windows/Linux/Web exports (artifacts
 `Necropathy-windows` / `-linux` / `-web`) and an exported-build smoke test; also the co-op jobs `coop-net` (relay
 protocol + two-process transport test) and `coop-lockstep` (the two-process full-run determinism gate, ~10 min, not
 waited on by the publish jobs) and, on `main` pushes, `deploy-relay` (the Worker, secrets `CLOUDFLARE_API_TOKEN` /
@@ -646,6 +648,30 @@ tiny tweaks.
   (the Kirin, Amaterasu crossing the sky through `SunCourse.set_override()`; Kitsune and fox-fire illusions, Sohei;
   Black Sun / Eclipse of Heaven + Stolen Dawn; the Shrine Maiden of Night; the Bound Oni / Oni Lord + Oni's Resolve;
   The Sun Goes Out → the epilogue part and "The Pit Keeps Count"). Stages 1–12 same-seed summaries unchanged.
+- **Act VI, the Inferno** (GDD §15.0 rows from "Act VI foundation (phase 1)" to "Acts VI–IX go live"; `docs/act6/`): hell
+  comes to collect the souls the necromancer raised (`game.inferno`, `InfernoRules`: Hell Pits, Portals to break or seal,
+  Temptation charming summons; the Last Judgment Reckoning; "Hymn of the Pit"); **the Burning Gate** (Moloch, the
+  Gatekeeper miniboss; Brimstone + Salt Circle), **the Palace of Silk and Ash** (Lilith; the Bound Succubus, Faithless) and
+  **Pandemonium** (the Morning Star in two phases; the Archfiend). No epilogue part or closing card until the act order is
+  settled. Stages 1–15 same-seed summaries unchanged.
+- **Act VII, the Sanguine Court** (GDD §15.0 from "Act VII foundation (phase 1)"; `docs/act7/`): vampires, bats, werewolves
+  and witches (`game.court`, `CourtRules`: Bloodfeast and blood shields, Night Wings over the ring, the Blood Moon every
+  4:00; the Endless Feast Reckoning; "Waltz of the Red Moon"); **Ravensmoor** (Vargr; Moonfang + Silver Bones), **the
+  Witchwood** (Isolde Vane; Witch Circle + Embalmed) and **Castle Sanguis** (Queen Carmilla and the Elder in two forms;
+  the Blood Spawn). Stages 1–18 same-seed summaries unchanged.
+- **Act VIII, the Last Line** (GDD §15.0 from "Act VIII foundation (phase 1)"; `docs/act8/`): the last cities of the living
+  on city-block maps (`game.city`, `CityRules`: the escalation clock gangs → police → SWAT → army → heroes, Armour and
+  vehicles, Supers with one power and one weakness, Civilians; the Martial Law Reckoning; "Sirens at Midnight"); **Skid
+  Row** (Don Marrow, Big Sal; Hearse Run), **Fort Kessler** (General Harrow, the Mammoth; Bone Mines, Armour-Piercing
+  Bones) and **Liberty Heights** (Blitz, Aurora, Atlas, Nightjar, Paragon; Hero's Fist; the Fallen Hero). Stages 1–21
+  same-seed summaries unchanged.
+- **Act IX, the Concord of Stars** (GDD §15.0 from "Act IX foundation (phase 1)"; `docs/act9/`): one alien coalition
+  come to reap a world with no souls left (`game.concord`, `ConcordRules`: Beams that only Bone Walls stop and barriers
+  reflect, Abduction by saucers, Terraforming; the Final Harvest Reckoning; "The Reaping Stars"); **the Crash Site** (the
+  Hive Mother; Nothing Hatched), **the Proving Moon** (Vrask'Tal the Hunt-Lord; Soul Caster) and **the Ark of the
+  Concord** (the Harvester; the Ghost Saucer). Stages 1–24 same-seed summaries unchanged.
+- **Acts VI–IX go live** (owner: "Ship it", Nov 2026; GDD §15.0 "Acts VI–IX go live"): the twelve stages playable, one CI
+  army job each (25 matrix jobs), masteries for 24 classes (18,240 Soul Ash), Soul Ash ×1 / ×1.25 / ×1.5 per act.
 
 **Next, in priority order:**
 1. **Playtest feedback** from the owner and friends (actively playtesting); it outranks everything below.
@@ -689,13 +715,16 @@ tiny tweaks.
    softened, the Road to the Sun's damage back to ×1.5). Soul Ash ×1 / ×1.25 / ×1.5 (the per-act rule); the Bound Oni
    has its Ossuary mastery. Open: the owner's own playtest notes, the spell-only build on Kurogane, a phone check of
    the night darkness and the Shogun fight.
-6d. **Act VI, the Inferno: waits for the owner's playtest of Acts IV and V** (owner decision Oct 26, 2026, GDD §15.0
-   "Act VI and the act order"). When built it ends Part One; the Morning Star has two phases (the Throne phase cut for
-   now). The proposal to reorder the acts (Claude Doc "Necropathy: A New Act Order",
-   https://claude.ai/artifact/B76vzD659dz2dAyy5P4bqh) is deferred until all content is added (owner, Nov 2, 2026); build the
-   plan from `docs/act5/` again once it starts.
+6d. **Acts VI–IX: live (Nov 2026).** The Inferno, the Sanguine Court, the Last Line and the Concord of Stars, twelve
+   stages (GDD §15.0 "Acts VI–IX go live"), one CI army job each, after their art reviews and bot playtest passes
+   (`docs/act6..act9/playtest/`). Open: the owner's own playtest notes (they outrank the bots; Liberty Heights' early
+   collapses and the Fort Kessler new-class builds are the known soft spots), phone checks (Web performance and the
+   late fights on a real iPhone), the act's epilogue parts / closing cards (none until the act order is settled). The
+   proposal to reorder the acts (Claude Doc "Necropathy: A New Act Order",
+   https://claude.ai/artifact/B76vzD659dz2dAyy5P4bqh) is deferred until all content is added (owner, Nov 2, 2026).
 6e. **Proposed acts** (`docs/proposals/NEW_ACTS_AND_ORDER.md`): the Black Tide (pirates), the Age of Titans (prehistoric), the
-   Necropolis Dynasty (Egypt), and a Norse act on the docket; not scheduled; Acts VII–IX first.
+   Necropolis Dynasty (Egypt), and a Norse act on the docket; not scheduled; build the plan from `docs/act5/` again once
+   one starts.
 7. **Phase 4 polish:** accessibility, profiling on real hardware, and the **final balance pass**.
    The owner's Oct 2026 playtest balance pass is in (GDD §15.0 "Balance pass (Oct 2026 playtest)": Dread Rally raises the army, spells ×1.2, boss HP Alaric −35% / Vael −40% / Seraphine −30%, later level-up items weigh 0.5, Frost Wraith / Bone Hound / Banshee base damage raised; the earlier +5% global multiplier was removed); further value tweaks wait for this pass (naive-bot
    death rates above target on both stages and spell-only builds lacking single-target damage are

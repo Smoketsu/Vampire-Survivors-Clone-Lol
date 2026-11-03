@@ -291,7 +291,7 @@ const STAGE := {
 	"short_name": "Ravensmoor",
 	"chapter": "Chapter XIX",
 	"act": 7,  # Act VII, the Sanguine Court.
-	"playable": false,  # Phase 2 built; hidden until the lead's integration and the owner's review (brief: keep "playable": false).
+	"playable": true,  # Owner decision (Nov 2026): "Ship it" after the art reviews and playtest passes (GDD §15.0 "Acts VI–IX go live").
 	"description": "A cursed village on the moors below the Court's castle, its people long since turned to thralls: here the starving Court first comes for the necromancer who emptied its table.",
 	"unlock": {"stage": "pandemonium", "boss_kills": 1},  # Owner-approved: the Morning Star's fall opens Act VII
 	"unlock_text": "Cast down the Morning Star in Pandemonium to unlock.",

@@ -23,8 +23,7 @@
 ## and Mammoth (FortKesslerEnemyData). General Vance Harrow, the Hammer
 ## (BossHarrow, HarrowData) arrives with 3:00 left: the command vehicle and
 ## carpet bombing, the power armour and the tank column, Broken Arrow; the
-## Reckoning at 0:00. Hidden from the stage select ("playable": false) until the
-## lead's integration pass.
+## Reckoning at 0:00. Playable since Acts VI–IX went live (GDD §15.0).
 ## Every rate, cap and weight is TUNING (not in GDD).
 class_name FortKesslerStage
 extends RefCounted
@@ -284,7 +283,7 @@ const STAGE := {
 	"short_name": "Fort Kessler",
 	"chapter": "Chapter XXIII",
 	"act": 8,  # Act VIII, the Last Line.
-	"playable": false,  # Phase 2 built; the lead's integration pass opens it.
+	"playable": true,  # Owner decision (Nov 2026): "Ship it" after the art reviews and playtest passes (GDD §15.0 "Acts VI–IX go live").
 	"description": "A military base on the edge of the city: checkpoints, minefields and an airfield, the army's last line against the dead.",
 	"unlock": {"stage": "skid_row", "boss_kills": 1},  # Owner-approved: each Act VIII stage opens the next
 	"unlock_text": "Bring down Don Marrow on Skid Row to unlock.",

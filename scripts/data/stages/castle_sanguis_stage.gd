@@ -321,7 +321,7 @@ const STAGE := {
 	"short_name": "Castle Sanguis",
 	"chapter": "Chapter XXI",
 	"act": 7,  # Act VII, the Sanguine Court.
-	"playable": false,  # Phase 2 built; hidden from the stage select until the lead's integration and the owner's go.
+	"playable": true,  # Owner decision (Nov 2026): "Ship it" after the art reviews and playtest passes (GDD §15.0 "Acts VI–IX go live").
 	"description": "The Court itself: a castle above the clouds of the moor, its banquet set for a thousand years, and in its crypt the coffin of the first vampire.",
 	"unlock": {"stage": "witchwood", "boss_kills": 1},  # Owner-approved: each Act VII stage opens the next
 	"unlock_text": "Slay Isolde Vane in the Witchwood to unlock.",

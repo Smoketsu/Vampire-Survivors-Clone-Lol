@@ -14,10 +14,10 @@ you. Late in a run your summons can evolve into Death Knights, Liches, Profane
 Bishops, Shadow Reapers, Cathedral Horrors, Hellhounds, Keening Ladies and
 Ossuary Engines.
 
-This repository holds the game's three campaign stages, *The Desecrated
-Graveyard*, *The Crimson March* (unlocked by slaying Sir Alaric) and *The
-Sanctum of Judgment* (unlocked by slaying Marshal Vael), built in Godot 4.3
-with no addons. The art is true pixel art (PNGs in `assets/`; the code
+This repository holds the game's campaign: nine acts of three stages each,
+27 playable stages from *The Desecrated Graveyard* (Act I) to *The Ark of the
+Concord* (Act IX), each boss opening the next stage (Acts VI-IX went live in
+Nov 2026), built in Godot 4.3 with no addons. The art is true pixel art (PNGs in `assets/`; the code
 drawings remain as the fallback for any missing image), and the sound and
 music are synthesized at startup. Latest release notes:
 [`docs/release_notes/v0.7.0.md`](docs/release_notes/v0.7.0.md).
@@ -1019,7 +1019,7 @@ structure (a 20:00 countdown, its boss with 3:00 left, the Reckoning at 0:00).
 | Chapter II, **The Crimson March** | slay Sir Alaric once (GDD §9.3) | Marshal Vael, the Crimson Bulwark | ×1.25 |
 | Chapter III, **The Sanctum of Judgment** | slay Marshal Vael once (GDD §9.3) | Grand Inquisitor Seraphine, Voice of the Dawn | ×1.5 |
 
-**The stage Soul Ash bonus restarts in every act** (owner decision Oct 2026, GDD §15.0 "Soul Ash per act and difficulty"): stage 1 of an act ×1, stage 2 ×1.25, stage 3 ×1.5. Graveyard / Gullhaven Harbour / Scrap Wastes ×1.0; Crimson March / Hollow Archive / Assembly Halls ×1.25; Sanctum / Ul-Thalos / Iron Citadel ×1.5. Difficulty is the bigger lever (Initiate ×0.8, Necromancer ×1, Lich ×1.5, Deathlord ×2). The bonuses add on the run subtotal rather than multiply (see Difficulty & run modifiers). Measured payouts: `docs/ossuary/ECONOMY.md`, tool `tools/ash_measure.py`.
+**The stage Soul Ash bonus restarts in every act** (owner decision Oct 2026, GDD §15.0 "Soul Ash per act and difficulty"): stage 1 of an act ×1, stage 2 ×1.25, stage 3 ×1.5. Graveyard / Gullhaven Harbour / Scrap Wastes ×1.0; Crimson March / Hollow Archive / Assembly Halls ×1.25; Sanctum / Ul-Thalos / Iron Citadel ×1.5. Acts IV-IX follow the same rule (the first stage of each act ×1.0, the finale ×1.5). Difficulty is the bigger lever (Initiate ×0.8, Necromancer ×1, Lich ×1.5, Deathlord ×2). The bonuses add on the run subtotal rather than multiply (see Difficulty & run modifiers). Measured payouts: `docs/ossuary/ECONOMY.md`, tool `tools/ash_measure.py`.
 
 ### Characters
 
@@ -1932,8 +1932,8 @@ Hell comes to collect. Every soul the necromancer raised was owed to the Pit, an
 **the Inferno** (GDD §15.0 "Act VI foundation (phase 1)"; owner-approved proposal `docs/act6/PROPOSAL.md`).
 The stage select has an **Act VI** tab with its three stages, **the Burning Gate**, **the Palace of Silk and
 Ash** and **Pandemonium** (bosses Moloch, the Furnace King; Lilith, Queen of the Night; the Morning Star),
-"Coming soon" until phase 2 builds them; putting out Amaterasu's sun opens the Burning Gate and each boss opens
-the next stage. The act's shared rules:
+all playable (owner decision Nov 2026, GDD §15.0 "Acts VI–IX go live"); putting out Amaterasu's sun opens the Burning Gate and each boss
+opens the next stage. The act's shared rules:
 
 - **Hell Pits.** Burning pools on the ground hurt anyone standing in them, you, your summons, the damned and
   the living; demons, imps and other fliers are spared. Each zone has its own fixed pits, and more open near you
@@ -1957,8 +1957,7 @@ Last Judgment's heavy). The Codex has an **Inferno** tab.
 
 <!-- --- Act VI: the Burning Gate --- -->
 A plain of ash and obsidian before the gate of hell, the river of fire Phlegethon along its edge (GDD §15.0 "The
-Burning Gate (Act VI phase 2)" and the rows after it). Built, still hidden ("playable": false) until the lead's
-integration and the owner's review.
+Burning Gate (Act VI phase 2)" and the rows after it). Playable since Acts VI–IX went live.
 
 - **Four zones on the clock:** the Ash Plain (20:00), the Cages (15:00), the River of Fire (10:00) and the Gate
   (5:00), each with its own floor, obstacles (ember rocks, cages of the damned, gate pillars) and fixed pits.
@@ -1987,7 +1986,7 @@ integration and the owner's review.
 
 <!-- --- Act VI: the Palace of Silk and Ash --- -->
 The court of desire (GDD §15.0 "The Palace of Silk and Ash (Act VI phase 2)" and the rows after it; data in
-`scripts/data/stages/silk_palace_stage.gd`; still "Coming soon" until the lead's merge). Four zones on the clock:
+`scripts/data/stages/silk_palace_stage.gd`; playable). Four zones on the clock:
 **the Rose Garden** (black-thorned roses), **the Hall of Mirrors** (every few seconds a mirror shimmers and a
 **reflection of you** steps out of it: the summons near it walk at it for a moment instead of fighting), **the
 Ballroom** (rose marble over a lava lake: the most fixed Hell Pits of the act) and **the Queen's Chamber**.
@@ -2009,7 +2008,7 @@ Ballroom** (rose marble over a lava lake: the most fixed Hell Pits of the act) a
 
 <!-- --- Act VI: Pandemonium --- -->
 **Pandemonium** (Stage 18, the finale of Part One; GDD §15.0 "Pandemonium (Act VI phase 2)" and the rows after it;
-built, still hidden until the Act VI integration). The capital of hell in four zones on the clock: **the Iron
+playable). The capital of hell in four zones on the clock: **the Iron
 City**, **the Chain Bridges** (chain bridges over rivers of lava: the most fixed pits of the run), **the Cathedral of
 Ash** and **the Throne**. Its own kinds: the **Fallen Angel** (an elite who dives from above with a burning spear and
 leaves a short pit; aloft, your grounded blades only graze her: gargoyles, archers, mages and spells answer her) and,
@@ -2032,7 +2031,7 @@ fed on the living in secret for a thousand years; now the necromancer has turned
 and the Court is starving: **the Sanguine Court** (GDD §15.0 "Act VII foundation (phase 1)"; owner-approved proposal
 `docs/act7/PROPOSAL.md`). The stage select has an **Act VII** tab with its three stages, **Ravensmoor**, **the
 Witchwood** and **Castle Sanguis** (bosses Vargr, the Moon-Eater; Isolde Vane, the Witch of the Red Moon; Queen
-Carmilla and the Elder), "Coming soon" until phase 2 builds them; casting down the Morning Star opens Ravensmoor
+Carmilla and the Elder), all playable (owner decision Nov 2026, GDD §15.0 "Acts VI–IX go live"); casting down the Morning Star opens Ravensmoor
 and each boss opens the next stage. The act's shared rules:
 
 - **Bloodfeast.** Court enemies heal on their melee hits: a vampire (the Blood Knight, the Vampire Noble) heals half
@@ -2060,8 +2059,7 @@ HP 1.5 s of mist before she reforms nearer you), plus the Court's **coffin**. Th
 
 <!-- --- Act VII: Ravensmoor --- -->
 A cursed village on the moors below the Court's castle, its people long since turned to thralls (GDD §15.0
-"Ravensmoor (Act VII phase 2)" and the rows after it). Built, still hidden ("playable": false) until the lead's
-integration and the owner's review.
+"Ravensmoor (Act VII phase 2)" and the rows after it). Playable since Acts VI–IX went live.
 
 - **Four zones on the clock, each changing as a Blood Moon sets:** the Moor (20:00), the Village (15:15), the Old
   Church (11:15) and the Wolfwood (7:15), each with its own floor and obstacles (moor cairns, moor pines, village
@@ -2093,8 +2091,7 @@ integration and the owner's review.
 
 <!-- --- Act VII: the Witchwood --- -->
 A black fen and a wood of hanging charms where the Court's witches keep their sabbath (GDD §15.0 "The Witchwood (Act
-VII phase 2)" and the rows after it). Built, still hidden ("playable": false) until the lead's integration and the
-owner's review.
+VII phase 2)" and the rows after it). Playable since Acts VI–IX went live.
 
 - **Four zones on the clock:** the Fen (20:00), the Hanging Wood (15:00), the Standing Stones (10:00) and the
   Cauldron (5:00), each with its own floor and obstacles (fen snags, charm fences, standing stones, cauldrons).
@@ -2125,7 +2122,7 @@ owner's review.
 
 <!-- --- Act VII: Castle Sanguis --- -->
 **Castle Sanguis** (Stage 21, the finale of Act VII; GDD §15.0 "Castle Sanguis (Act VII phase 2)" and the rows after
-it; built, still hidden until the Act VII integration). The Court's castle above the clouds in four zones on the
+it; playable). The Court's castle above the clouds in four zones on the
 clock: **the Courtyard**, **the Banquet Hall**, **the Crypt Gallery** and **the Throne of Blood**. In the Banquet
 Hall (and again before the throne) **blood fountains** heal every Court enemy standing in them; a Bone Wall segment
 or a Bone Golem on a fountain denies it. Its own kinds: the **Chiropteran** (an elite bat-man who glides over your
@@ -2154,7 +2151,7 @@ Behind the Court's veil were the last great cities of the living, lit all night 
 **the Last Line** (GDD §15.0 "Act VIII foundation (phase 1)" and the rows after it; owner-approved proposal
 `docs/act8/PROPOSAL.md`). The stage select has an **Act VIII** tab with its three stages, **Skid Row**, **Fort
 Kessler** and **Liberty Heights** (bosses Don Marrow, the Kingpin; General Vance Harrow, the Hammer; Paragon, the
-Last Hero), "Coming soon" until phase 2 builds them; slaying Queen Carmilla opens Skid Row and each boss opens the
+Last Hero), all playable (owner decision Nov 2026, GDD §15.0 "Acts VI–IX go live"); slaying Queen Carmilla opens Skid Row and each boss opens the
 next stage. The act's arenas and shared rules:
 
 - **City blocks.** The maps are a grid of rectangular buildings instead of scattered obstacles: 256 x 192 px
@@ -2193,8 +2190,7 @@ and flat armour, a cannon) and **Blitz** (the speedster Super). The Codex has a 
 
 <!-- --- Act VIII: Skid Row --- -->
 The docks and back streets of the last great city, where the dead first come up out of the sewers (GDD §15.0 "Skid
-Row (Act VIII phase 2)" and the rows after it). Built, still hidden ("playable": false) until the lead's integration
-and the owner's review.
+Row (Act VIII phase 2)" and the rows after it). Playable since Acts VI–IX went live.
 
 - **Four zones on the clock over the same streets:** the Alleys (20:00), the Night Market (15:00: rows of lit neon
   stalls in the open lots), the Overpass (10:00: the elevated road's shadow and its pillar footings over every other
@@ -2225,8 +2221,7 @@ and the owner's review.
 
 <!-- --- Act VIII: Fort Kessler --- -->
 A military base on the edge of the city, the army's last line against the dead (GDD §15.0 "Fort Kessler (Act VIII
-phase 2)" and the rows after it). Built, still hidden ("playable": false) until the lead's integration and the owner's
-review.
+phase 2)" and the rows after it). Playable since Acts VI–IX went live.
 
 - **The escalation stops at the army** (gangs 0:00, police 2:30, SWAT 5:00, the army 7:30; no Super on the clock).
   Martial Law still throws every tier at 0:00, and brings the act's Supers one at a time.
@@ -2258,7 +2253,7 @@ review.
 
 <!-- --- Act VIII: Liberty Heights --- -->
 **Liberty Heights** (Stage 24, the finale of Act VIII; GDD §15.0 "Liberty Heights (Act VIII phase 2)" and the rows
-after it; built, still hidden until the Act VIII integration). The heart of the city in four zones on the clock, each
+after it; playable). The heart of the city in four zones on the clock, each
 a new look over the same streets (towers and plazas, a quarter of the lots open): **the Plaza**, **the Rooftops**,
 **the Tower Lobby** and **the Watchtower**. The escalation starts high: the army from 0:00 (so only the opening crowd
 of civilians runs) and the heroes from 15:00. The army's kinds: the stage's own **Conscripts** (bayonets, in crowds),
@@ -2292,7 +2287,7 @@ dead. This time there is nothing to reap: the necromancer has taken every soul. 
 of alien races under the Harvesters who rule it, comes to find out why (GDD §15.0 "Act IX foundation (phase 1)" and
 the rows after it; owner-approved proposal `docs/act9/PROPOSAL.md`). The stage select has an **Act IX** tab with its
 three stages, **the Crash Site**, **the Proving Moon** and **the Ark of the Concord** (bosses the Hive Mother,
-Vrask'Tal the Hunt-Lord and the Harvester), "Coming soon" until phase 2 builds them; defeating Paragon opens the Crash
+Vrask'Tal the Hunt-Lord and the Harvester), all playable (owner decision Nov 2026, GDD §15.0 "Acts VI–IX go live"); defeating Paragon opens the Crash
 Site and each boss opens the next stage. One coalition: the Brood lead the Crash Site, the Vrask the Proving Moon, the
 Harvesters the Ark, and the Luminous fight on every stage. The act's shared rules:
 
@@ -2329,7 +2324,7 @@ your summons barely scratch it until a spell reveals it; a three-dot lock, then 
 
 <!-- --- Act IX: the Crash Site --- -->
 A Harvester scout ship lies broken in the ruins of the capital, and the Brood is hatching from it (GDD §15.0 "The Crash
-Site (Act IX phase 2)" and the rows after it). Still hidden from the stage select until the lead's integration. Four
+Site (Act IX phase 2)" and the rows after it). Playable since Acts VI–IX went live. Four
 zones on the clock: **the Crater** (glassed black rock; the crater's alien turf is already growing at the start),
 **the Hatchery** (5:00, green-black resin), **the Wreck** (10:00, the ship's hull plates) and **the Glass Spire**
 (15:00, the capital's broken paving and spires of fused glass). The Brood lead the timeline, the Harvesters, a Vrask
@@ -2364,8 +2359,7 @@ Autotest: `--stage=crash_site`, `--boss=hive_mother`, `--spawn=` with `burrower`
 The Vrask take the necromancer to their hunting ground on the moon, to see what he is worth (GDD §15.0 "The Proving Moon
 (Act IX phase 2)" and the rows after it; `docs/act9/BRIEF_PHASE2.md`). The Vrask lead here: their hunters come more often
 and in hunting parties, their Brood beasts are the fodder, and the Harvesters and the Luminous fight beside them. Beams,
-Abduction, Terraforming and the Final Harvest work as on every Act IX stage. Still hidden from the stage select
-(`"playable": false`) until the lead's integration pass.
+Abduction, Terraforming and the Final Harvest work as on every Act IX stage. Playable since Acts VI–IX went live.
 
 - **Low gravity.** Knockback goes twice as far for everyone (STAGE key `gravity` 2.0, read only through
   `ConcordRules.gravity()`): every knock you deal sends an enemy twice as far, the enemies' shoves throw your summons twice
@@ -2401,7 +2395,7 @@ Abduction, Terraforming and the Final Harvest work as on every Act IX stage. Sti
 
 <!-- --- Act IX: the Ark --- -->
 **The Ark of the Concord** (Stage 27, the finale of Act IX; GDD §15.0 "The Ark of the Concord (Act IX phase 2)" and the
-rows after it; built, still hidden until the Act IX integration). The mothership in orbit over the dead world, in four
+rows after it; playable). The mothership in orbit over the dead world, in four
 zones on the clock: **the Hangar** (deck plates and landing marks), **the Specimen Vaults** (sealed tanks stand round
 you: break them and the beasts inside attack everyone, your army and the Concord alike), **the Reactor** (vents breathe
 alien ground that heals the Concord: break them, and burn the ground with your spells) and **the Bridge of Stars**
@@ -4052,7 +4046,7 @@ Options (after `--`):
 | `--spells=a,b,...` | Any policy first takes these spells (ids from `AbilityData.SPELL_ORDER`, e.g. `bone_spear,soul_siphon,corpse_explosion,plague_cloud` or the later `death_mark,bone_wall,soul_chains` / `wither,raise_dead`) and their evolution passives, which also get ×8 card weight in hands and chests so they are offered reliably (a test-only hook; without `--spells` the draw is unchanged), never banishes them, and stops taking other new actives (or passives) once the free slots are down to the forced spells (or passives) still missing plus one spare, because chests can fill slots too (a hand with nothing else is rerolled or skipped). The `army`, `evolve` and `summon` bots never take a new item that is not on their build list (they reroll or skip), so the newer spells and the later summon classes do not change those baselines (`--classes` / `--spells` items are exempt); the `summon` and `army` bots also keep active slots free for the core classes they still lack (summon: Warriors, Mages, Menders, Warders; army: those plus Archers). Use it to exercise a spell and reach its evolution. |
 | `--passives=a,b,...` | Any policy first takes these passives (ids from `PassiveData.ORDER` except the Pact, e.g. `unholy_precision,unholy_resilience` or `blood_scent,mournsong,siegecraft`) exactly like the `--spells` items (score, ×8 card weight, slot reservation, never banished), so a passive's effect can be exercised. |
 | Bone Golem (content wave 2) | `--classes=bone_golem,...` and `--passives=grave_masonry` force the locked Golem and its passive. A run that had either prints a `bone golem` line: `absorbed=<n> max_growth=<%> bulwarks=<n> titan=<bool> bone_bastion_prevented=<dmg>`, then its level, alive / capacity, deaths, damage by source (slams with their volleys, splash, the Titan's wall), slams and slam hits, planted seconds, taunts, Grave Masonry's level and damage prevented, the Titan's heal, barriers and walls, and whether Bone Bastion was active. |
-| `--stage=ID` | Stage to play: `graveyard` (default), `crimson_march`, `sanctum`, the Act II stages `harbour`, `archive` and `spire`, the Act III stages `wastes`, `assembly` and `citadel`, the Act IV stages `ilion`, `olympus` and `underworld`, the Act V stages `province`, `kurogane` and `sun_road`, the Act VI stages `burning_gate`, `silk_palace` and `pandemonium`, the Act VII stubs `ravensmoor`, `witchwood` and `castle_sanguis` (the summary adds the `bloodfeast`, `night wings`, `blood moon`, `court kinds`, `endless feast` and `court stage` lines; `--boss=vargr\|isolde\|carmilla`), or the Act VIII stubs `skid_row`, `fort_kessler` and `liberty_heights` (city blocks; the summary adds the `city blocks`, `armour`, `supers`, `civilians`, `escalation`, `city kinds`, `martial law` and `city stage` lines; `--boss=don_marrow\|harrow\|paragon`; `--spawn=` takes `civilian`, `street_thug`, `gang_gunner`, `riot_cop`, `squad_car`, `swat_breacher`, `field_medic`, `rifleman`, `tank`, `blitz` and `city_wreck`, Skid Row's `armoured_limo`, `big_sal` and `bounty_board`, and Fort Kessler's `machine_gunner`, `attack_helicopter` and `mammoth`; Skid Row adds `skid row` (Big Sal, the Bounty, No Witnesses), `tear gas`, `big sal` and `don marrow` lines, Fort Kessler adds the `fort kessler`, `fort kessler kinds`, `mammoth`, `fort kessler threats` (top summon-damage and summon-death sources) and `harrow` lines, and on any stage `act VIII spell` / `act VIII passives` when Hearse Run, Black Car, Kevlar Bones, Bone Mines, Tripwire or Armour-Piercing Bones were taken). Stage locks are ignored. Act II runs print a `dread` line (peak, average, end, Dread calmed by kills, seconds per 25-Dread step, Dread by source) and a `claims` line (claims, Thralls freed, expired, still risen at the end, refusals by the cap, claims by class). Gullhaven adds `tide` (level, seawall, High Water, surges and shoves, seconds in water for you / summons / enemies / swimmers), `harbour` and `harbour events` (buoys sunk and when, tolls, wave and trickle size, caches and chests, the Harbourmaster), `harbour kinds` / `harbour tricks` (also on any stage where a Harbour kind spawned, e.g. `--spawn=deep_kin@60x3`), `merrow` (when he is the boss, also `--boss=merrow`), `act II spell` (Undertow when learned) and `act II passives` (Salt of the Deep, Brinewalker). |
+| `--stage=ID` | Stage to play: `graveyard` (default), `crimson_march`, `sanctum`, the Act II stages `harbour`, `archive` and `spire`, the Act III stages `wastes`, `assembly` and `citadel`, the Act IV stages `ilion`, `olympus` and `underworld`, the Act V stages `province`, `kurogane` and `sun_road`, the Act VI stages `burning_gate`, `silk_palace` and `pandemonium`, the Act VII stages `ravensmoor`, `witchwood` and `castle_sanguis` (the summary adds the `bloodfeast`, `night wings`, `blood moon`, `court kinds`, `endless feast` and `court stage` lines; `--boss=vargr\|isolde\|carmilla`), the Act VIII stages `skid_row`, `fort_kessler` and `liberty_heights` (city blocks; the summary adds the `city blocks`, `armour`, `supers`, `civilians`, `escalation`, `city kinds`, `martial law` and `city stage` lines; `--boss=don_marrow\|harrow\|paragon`; `--spawn=` takes `civilian`, `street_thug`, `gang_gunner`, `riot_cop`, `squad_car`, `swat_breacher`, `field_medic`, `rifleman`, `tank`, `blitz` and `city_wreck`, Skid Row's `armoured_limo`, `big_sal` and `bounty_board`, and Fort Kessler's `machine_gunner`, `attack_helicopter` and `mammoth`; Skid Row adds `skid row` (Big Sal, the Bounty, No Witnesses), `tear gas`, `big sal` and `don marrow` lines, Fort Kessler adds the `fort kessler`, `fort kessler kinds`, `mammoth`, `fort kessler threats` (top summon-damage and summon-death sources) and `harrow` lines, and on any stage `act VIII spell` / `act VIII passives` when Hearse Run, Black Car, Kevlar Bones, Bone Mines, Tripwire or Armour-Piercing Bones were taken), or the Act IX stages `crash_site`, `proving_moon` and `ark` (see *Act IX* above). Stage locks are ignored. Act II runs print a `dread` line (peak, average, end, Dread calmed by kills, seconds per 25-Dread step, Dread by source) and a `claims` line (claims, Thralls freed, expired, still risen at the end, refusals by the cap, claims by class). Gullhaven adds `tide` (level, seawall, High Water, surges and shoves, seconds in water for you / summons / enemies / swimmers), `harbour` and `harbour events` (buoys sunk and when, tolls, wave and trickle size, caches and chests, the Harbourmaster), `harbour kinds` / `harbour tricks` (also on any stage where a Harbour kind spawned, e.g. `--spawn=deep_kin@60x3`), `merrow` (when he is the boss, also `--boss=merrow`), `act II spell` (Undertow when learned) and `act II passives` (Salt of the Deep, Brinewalker). |
 | (the Hollow Archive) | `--stage=archive` adds `archive` (tomes burned and when, Nothing Unwritten, seconds in ink / spores, the orrery's risings, turns and pushes, the Librarian), `archive rifts` (opened and when, closed early, closed by themselves, cultists spat out) and `archive events` lines; any Archive kind adds `archive enemies` (spawned / killed per kind), `archive kits` (curses, wraith rises and dives, spore clouds and their summon damage, mass splits, Librarian beams, summons turned, lashes, kills) and `archive hazards`; the Archivist adds `archivist` (phase times, kill time, pages and their hits, Footnotes and the damage wasted on copies, Erasure steps and pushes); Forbidden Verse adds `act ii spells`, Marginalia / Iron Mind `act ii passives`. `--spawn=` takes `scribe`, `ink_wraith`, `spore_pilgrim`, `gibbering_mass`, `librarian`, `archive_rift`, `unwritten_one`; `--boss=archivist`; `--character=heretic_scribe`. |
 | (Act III) | `--stage=wastes\|assembly\|citadel` (the Act III stubs) prints `line of fire` (shots fired, rails, arcs; stopped by summons, absorbed by barriers, stopped by Bone Walls, Orb intercepts; reached you and the damage; expired, capped, peak), `lock-on` (lines painted on you / on summons, refused at the cap, fired, cancelled by a slain Spotter, rails stopped by summons or reaching you, most lines at once), `steel` (machine and cyborg kills, Grave Gunners raised per raising effect, their damage and kills), `purge protocol` (orbital salvos and strikes, hits), `empire kinds` (spawned / killed and damage per kind), `empire stage` and `ranged share` (the share of Empire spawns that attack from range; every Act III stage). The Empire's lines also print on any stage where an Empire kind was forced: `--spawn=scout_drone@60x10,line_trooper@90x6,spotter@120`. Grave Gunners need a raising effect, e.g. `--spells=death_mark` or `--ultimate=grave_tide`; `--boss=kestrel\|motherboard\|deus_ex_machina`. The Scrap Wastes (`--stage=wastes`) adds `wastes` (pylons raised / destroyed and when, the share of shooter reach samples boosted, shrunk or storm-halved, storms, the Trojan Horse, objective Soul Ash), `wastes kinds` (Aegis shield blocks and breaks, mortar shells, rockets launched / intercepted / hitting you / shot down, decoys; also wherever a Wastes kind was forced, e.g. `--spawn=aegis_bot@60x6,mortar_walker@90x2,trojan_horse@120`), `trojan horse` and `kestrel` (when she is the boss, also `--boss=kestrel`). On any stage, `act III spell` (Death Ray when learned, e.g. `--spells=death_ray`) and `act III passives` (Conductive Marrow, Lead-Lined Bones, e.g. `--passives=lead_lined_bones`). |
 | (Act IV) | `--stage=ilion\|olympus\|underworld` (the Act IV stubs) prints `divine wrath` (the stage's kind; salvos and strikes per kind: waves, bolts, fissures; damage to enemies with the kills, to summons and to you; fodder drowned, lightning chains, corpses swallowed, shades spat, capped strikes, whether the Twilight began), `phalanx` (walls formed, bodies locked, front hits by shots and melee with the damage prevented, flank breaks, most bodies locked at once), `glory` (stacks gained, the peak, heroes killed and with how many stacks, chests and Soul Ash bounty), `pantheon kinds` (spawned / killed and damage per kind) and `pantheon stage`. The lines also print on any stage where a Pantheon kind was forced: `--spawn=hoplite@60x8,hero@90,shade_of_dead@30x12,bronze_titan@120`; `--boss=achilles\|zeus\|hades` (placeholder boss scripts until phase 2). |
@@ -4231,10 +4225,13 @@ uptime.
 time, and everything that ships waits for all of them (GDD §15.0 "Parallel CI and lean testing": about 8-10 minutes from a push to
 the live build instead of about 30):
 
-1. **test:** seven parallel jobs, one per playthrough. Each imports the project with Godot 4.3 headless and runs one
-   full 20-minute autotest: the Graveyard with the naive and the army policy, the Crimson March
-   (`--stage=crimson_march`), the Sanctum (`--stage=sanctum --policy=army`) and each Act II stage with the army
-   policy (`--stage=harbour`, `archive`, `spire`) (`--quit-after 15000`, at most 10-15 wall-clock minutes per run).
+1. **test:** twenty-five parallel jobs, one per playthrough. Each imports the project with Godot 4.3 headless and runs
+   one full 20-minute autotest: the Graveyard with the naive and the army policy, the Crimson March
+   (`--stage=crimson_march`), the Sanctum (`--stage=sanctum --policy=army`) and each stage of Acts II and IV-IX with the
+   army policy (`--stage=harbour`, `archive`, `spire`, `ilion`, `olympus`, `underworld`, `province`, `kurogane`,
+   `sun_road`, `burning_gate`, `silk_palace`, `pandemonium`, `ravensmoor`, `witchwood`, `castle_sanguis`, `skid_row`,
+   `fort_kessler`, `liberty_heights`, `crash_site`, `proving_moon`, `ark`) (`--quit-after 15000`, at most 10-15
+   wall-clock minutes per run).
    A job fails on any `SCRIPT ERROR`, `ERROR:` or `WARNING:` line, or if its run doesn't complete; one failure does
    not cancel the others. Logs: `test-logs-<id>`.
 2. **export:** builds single-file Windows and Linux executables using `export_presets.cfg` (game data is embedded in

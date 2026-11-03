@@ -22,8 +22,8 @@
 ##   IV  THE BRIDGE OF STARS (15:00): starfield glass, the whole coalition.
 ## The Harvester (HarvesterData, boss_harvester.gd: the Council, the Reaping,
 ## the Gardener) arrives with 3:00 left; the Reckoning, the Final Harvest, at
-## 0:00. Still "playable": false until the lead's integration and the owner's
-## review. Every rate, cap and weight is TUNING (not in GDD).
+## 0:00. Playable since Acts VI–IX went live (GDD §15.0 "Acts VI–IX go
+## live"). Every rate, cap and weight is TUNING (not in GDD).
 class_name ArkStage
 extends RefCounted
 
@@ -274,7 +274,7 @@ const STAGE := {
 	"short_name": "The Ark",
 	"chapter": "Chapter XXVII",
 	"act": 9,  # Act IX, the Concord of Stars.
-	"playable": false,  # Phase 2 built; hidden from the stage select until the lead's integration and the owner's go.
+	"playable": true,  # Owner decision (Nov 2026): "Ship it" after the art reviews and playtest passes (GDD §15.0 "Acts VI–IX go live").
 	"description": "The mothership in orbit over the dead world: the Concord's capital and its harvest vault, where the one who planted the world waits.",
 	"unlock": {"stage": "proving_moon", "boss_kills": 1},  # Brief: each Act IX stage opens the next
 	"unlock_text": "Defeat Vrask'Tal on the Proving Moon to unlock.",

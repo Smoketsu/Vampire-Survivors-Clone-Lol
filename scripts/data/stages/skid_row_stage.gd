@@ -291,7 +291,7 @@ const STAGE := {
 	"short_name": "Skid Row",
 	"chapter": "Chapter XXII",
 	"act": 8,  # Act VIII, the Last Line.
-	"playable": false,  # Phase 2 built; hidden until the lead's integration and the owner's review (brief: keep "playable": false).
+	"playable": true,  # Owner decision (Nov 2026): "Ship it" after the art reviews and playtest passes (GDD §15.0 "Acts VI–IX go live").
 	"description": "The docks and back streets of the last great city, where the dead first come up out of the sewers and the gangs own every block.",
 	"unlock": {"stage": "castle_sanguis", "boss_kills": 1},  # Owner-approved: Act VIII opens on Carmilla
 	"unlock_text": "Slay Queen Carmilla in Castle Sanguis to unlock.",

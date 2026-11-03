@@ -6,9 +6,8 @@
 ## to the run as `Game.stage_def` (the STAGE dictionary at the bottom; its keys
 ## are documented in StageRegistry).
 ##
-## STATUS: PHASE 2 BUILT (GDD §15.0 "The Crash Site (Act IX phase 2)"), still
-## hidden from the stage select ("playable": false) until the lead's
-## integration and the owner's review. Unlocked in the campaign chain
+## STATUS: LIVE (GDD §15.0 "The Crash Site (Act IX phase 2)", "Acts VI–IX
+## go live"). Unlocked in the campaign chain
 ## (Paragon's fall at Liberty Heights opens it); it runs the Concord's three
 ## shared rules ("concord": true: Beams, Abduction and Terraforming) with the
 ## Brood leading the timeline (broodlings, the Burrower, the Acid Spitter; the
@@ -257,7 +256,7 @@ const STAGE := {
 	"short_name": "Crash Site",
 	"chapter": "Chapter XXV",
 	"act": 9,  # Act IX, the Concord of Stars.
-	"playable": false,  # Phase 2 built; hidden until the lead's integration and the owner's review (brief: keep "playable": false).
+	"playable": true,  # Owner decision (Nov 2026): "Ship it" after the art reviews and playtest passes (GDD §15.0 "Acts VI–IX go live").
 	"description": "A Harvester scout ship lies broken in the ruins of the capital, and the Brood is hatching from it: the Concord has come to find out why the dead no longer rise for its harvest.",
 	"unlock": {"stage": "liberty_heights", "boss_kills": 1},  # Brief: Paragon's fall opens Act IX
 	"unlock_text": "Defeat Paragon at Liberty Heights to unlock.",

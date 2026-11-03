@@ -24,8 +24,7 @@
 ## the miniboss, ProvingMoonDirector) and THE DUELLING RING (the marked
 ## circles). Vrask'Tal, the Hunt-Lord (BossVraskTal, VraskTalData) arrives
 ## with 3:00 left: the Stalk, the Duel, the Last Trophy; the Reckoning at 0:00.
-## Hidden from the stage select ("playable": false) until the lead's
-## integration pass.
+## Playable since Acts VI–IX went live (GDD §15.0).
 ## Every rate, cap and weight is TUNING (not in GDD).
 class_name ProvingMoonStage
 extends RefCounted
@@ -243,7 +242,7 @@ const STAGE := {
 	"short_name": "Proving Moon",
 	"chapter": "Chapter XXVI",
 	"act": 9,  # Act IX, the Concord of Stars.
-	"playable": false,  # Phase 2 built; the lead's integration pass opens it.
+	"playable": true,  # Owner decision (Nov 2026): "Ship it" after the art reviews and playtest passes (GDD §15.0 "Acts VI–IX go live").
 	"description": "The Vrask take the necromancer to their hunting ground on the moon, to see what he is worth.",
 	"unlock": {"stage": "crash_site", "boss_kills": 1},  # Brief: each Act IX stage opens the next
 	"unlock_text": "Defeat the Hive Mother at the Crash Site to unlock.",

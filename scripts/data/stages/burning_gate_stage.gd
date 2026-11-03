@@ -302,7 +302,7 @@ const STAGE := {
 	"short_name": "The Gate",
 	"chapter": "Chapter XVI",
 	"act": 6,  # Act VI, the Inferno.
-	"playable": false,  # Phase 2 built; hidden until the lead's integration and the owner's review (brief: keep "playable": false).
+	"playable": true,  # Owner decision (Nov 2026): "Ship it" after the art reviews and playtest passes (GDD §15.0 "Acts VI–IX go live").
 	"description": "A plain of ash and obsidian before the gate of hell, the river of fire Phlegethon burning along its edge: here the Pit's collectors come for the souls you raised.",
 	"unlock": {"stage": "sun_road", "boss_kills": 1},  # Owner-approved: Amaterasu's fall opens Act VI
 	"unlock_text": "Put out the sun on the Road to the Sun to unlock.",
