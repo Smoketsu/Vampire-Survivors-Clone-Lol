@@ -807,7 +807,12 @@ RIGS = {
                                 muzzle=[dict(tip=(43, 17), face=1, frames=((1, "small"), (2, "spark"), (3, "small"), (4, "spark"), (6, "small"), (7, "spark")))]),
     "city/attack_helicopter": dict(mode="hover", bob=2, parts=[],
                                 rotor=[dict(c=(37.5, 9.0), r=(19.5, 5.3), hold=[(33, 42, 0, 20)], colors=TYRE), dict(c=(6.5, 9.0), r=(2.6, 5.4), colors=TYRE)]),
-    "city/mammoth": dict(mode="legs", hip=44, back=(0, 54), front=(54, 108), rigid=[], spread=0, lift=1, dip=1),
+    # Act VIII art review round 1: Mammoth (redone with a long main gun, 118 px wide) plays the shared tank firing cycle: `recoil` on
+    # the main gun (the barrel's greys from the mantlet at x 66; the open-air pixels from x 95 on are cleared) and `muzzle` flashes
+    # (`heavy` on frame 1, `big` on frame 2) at the barrel tip; treads and hull never move (spread / lift / dip 0).
+    "city/mammoth": dict(mode="legs", hip=44, back=(0, 59), front=(59, 118), rigid=[], spread=0, lift=0, dip=0,
+                         recoil=dict(box=(66, 118, 8, 21), px=3, clip=66, free=95, colors=TYRE),
+                         muzzle=[dict(tip=(112, 14), face=1, frames=((1, "heavy"), (2, "big")))]),
     "bosses/harrow": dict(mode="legs", hip=50, back=(0, 33), front=(33, 72), rigid=[], spread=2, lift=2, dip=1),
     "bosses/harrow_command": dict(mode="legs", hip=44, back=(0, 34), front=(34, 68), rigid=[], spread=0, lift=1, dip=1),
     "player/fallen_sergeant": dict(mode="legs", hip=36, back=(0, 15), front=(15, 32), rigid=[], spread=2, lift=2, dip=1,
@@ -878,6 +883,12 @@ RIGS = {
     "city/aurora": dict(mode="robe", hip=30, rigid=[], sway=1, dip=1, bust=(17, 28, 7, 14, 1)),
     "player/revenant_heroine": dict(mode="legs", hip=33, back=(0, 24), front=(24, 38), rigid=[], spread=1, lift=1, dip=1,
                                     bust=(17, 32, 11, 19, 2), swish=(12, 32, 24, 32, 1)),
+    # Act VIII art review round 1 (figures): the redone, bolder Deathlord heroine (bare midriff / shoulders / thighs) has her own rig
+    # (it no longer derives the base's): bust box on her chest (cols 20-30, rows 14-21), the dark glove / arm beside it excluded,
+    # the hip `swish` over the high-cut hips.
+    "player/revenant_heroine_deathlord": dict(mode="legs", hip=34, back=(0, 24), front=(24, 40), rigid=[], spread=1, lift=1, dip=1,
+                                              bust=(20, 31, 14, 21, 2, 2), swish=(14, 32, 26, 34, 1),
+                                              bust_exclude=[(28, 36, 12, 22, 150)]),
     "summons/fallen_hero": dict(mode="robe", hip=30, rigid=[], sway=1, dip=1),
     "summons/black_paragon": dict(mode="robe", hip=34, rigid=[], sway=1, dip=1),
     "bosses/paragon": dict(mode="robe", hip=40, rigid=[], sway=1, dip=1),
@@ -1002,7 +1013,6 @@ SKINS = {
     # --- Act VIII: Liberty Heights ---
     "player/revenant_heroine_hyper": "player/revenant_heroine",
     "player/revenant_heroine_untouchable": "player/revenant_heroine",
-    "player/revenant_heroine_deathlord": "player/revenant_heroine",
 }
 # Per-skin field overrides of the derived rig (same keys as RIGS), set after review.
 SKIN_FIX = {

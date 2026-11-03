@@ -2999,3 +2999,7 @@ frame 0 is always the still, and the only colours they add are city ramps (`FX_R
 | `breath` `True` | A rig with no bust box that keeps an idle strip: the breathing sink alone (the civilian woman). |
 
 The limo's still has only faint wheels (an AI-blotched body), so its spin is subtle; the tyre greys that exist do turn.
+<!-- --- Act VIII art review, round 1 (figures) --- -->
+Paragon is red / white / blue with red eyes (no emblem; ramps `marble,police,siren_red,skin,steel`); Mammoth has the long main gun and a bigger
+machine-gun turret (118 x 60) and a firing-cycle walk strip (the shared tank rig: `recoil` on the main gun + `muzzle` `heavy` / `big` at the barrel tip on frames 1-2);
+the Revenant Heroine Deathlord is bolder (bare midriff / shoulders / thighs, chest and hips covered) with her own bust / swish rig.
