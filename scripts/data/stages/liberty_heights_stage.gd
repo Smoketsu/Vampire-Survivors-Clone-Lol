@@ -52,7 +52,7 @@ const BOSS_TIME: float = 1020.0  # TUNING (not in GDD) 17:00, as on every stage
 const ENEMY_HP_MULT: float = 2.0  # TUNING (not in GDD) the foundation's placeholder, kept; tuned in the balance pass
 ## Enemy damage multiplier of this stage on top of the shared time scaling
 ## (Castle Sanguis's 1.5, kept: the step up is in HP).
-const ENEMY_DAMAGE_MULT: float = 1.5  # TUNING (not in GDD) the foundation's placeholder, kept
+const ENEMY_DAMAGE_MULT: float = 1.3  # TUNING (not in GDD) was 1.5 (the foundation's placeholder); Act VIII pass 3, owner: Stage damage x1.3
 ## Elapsed game seconds from which the two multipliers apply to regular
 ## enemies (the boss always gets them).
 const ENEMY_MULT_FROM: float = 420.0  # TUNING (not in GDD) (Acts III to VII: 7:00)
