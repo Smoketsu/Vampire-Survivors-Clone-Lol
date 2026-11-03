@@ -62,7 +62,7 @@ const ASH_MULT: float = 1.5  # TUNING (not in GDD) owner decision Oct 2026, GDD 
 const ZONES := [
 	{"id": "hangar", "start": 0.0, "numeral": "I", "name": "The Hangar",  # Owner-approved proposal zone I
 		"blurb": "The mothership's open hangar, where the saucers dock and the greys muster",
-		"ground": {"style": "hangar", "base": Color(0.36, 0.38, 0.42), "line": Color(0.24, 0.26, 0.30),
+		"ground": {"style": "hangar", "base": Color(0.17, 0.20, 0.23), "line": Color(0.12, 0.14, 0.17),
 			"accent": Palette.CONCORD_PLASMA},
 		"arena": {"density": 0.18, "clear_radius": 220.0, "layout_seed": 2701,  # TUNING (not in GDD)
 			"kinds": {

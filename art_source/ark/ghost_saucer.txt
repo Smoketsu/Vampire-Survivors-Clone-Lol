@@ -1,0 +1,13 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), a flying saucer seen from the side and a little above, hovering level
+
+LOW-RESOLUTION pixel art: the whole figure is only 30 pixels tall, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims, lacing or engravings.
+
+Subject: a GHOST SAUCER, an alien flying saucer RAISED FROM THE DEAD by a necromancer (a machine, no crew): a classic round saucer hull of old BONE-WHITE and grey plates, cracked and patched, a cracked glass dome on top with a pale SOUL-TEAL glow inside, a ring of small soul-teal lights round the rim, a faint soul-teal glow underneath. No green, no magenta.
+Signature shape that must read in silhouette: the round saucer with its dome.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: bone hull #8C8674 #C8C0A8 #E6E0CC; grey plates #4A4E5A #6E7280; dome and lights soul teal #1F7A5C #3FD39A #9CFFD8; dark seams #1C1A22
+
+Outline: a clean 1-pixel dark outline around the whole subject in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the subject), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark. Draw ONLY ONE figure.
+Attached: (1) the Concord saucer sprite of this act, for pixel size, outline weight and the saucer's shape (this is the same craft, raised and recoloured); (2) a summon sprite of the necromancer's army for its bone-and-soul colours.

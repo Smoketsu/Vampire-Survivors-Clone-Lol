@@ -1224,3 +1224,16 @@ utc,key,model,quality,size,refs,text_in,image_in,image_out,usd_est,file
 2026-11-03 05:30,concord/mothership_eye,gpt-image-2.5-flare,medium,1024x1024,1,365,418,439,0.0183,mothership_eye_a.png
 2026-11-03 05:30,structures/concord_terraformer_dead,gpt-image-2.5-flare,medium,1024x1024,2,543,1306,439,0.0263,concord_terraformer_dead_a.png
 2026-11-03 05:30,structures/concord_terraformer,gpt-image-2.5-flare,medium,1024x1024,2,549,1306,439,0.0264,concord_terraformer_a.png
+2026-11-03 13:00,,gpt-image-2.5-flare,medium,1024x1024,2,595,643,439,0.0213,grey_overseer.png
+2026-11-03 13:00,,gpt-image-2.5-flare,medium,1024x1024,2,559,1684,439,0.0294,ghost_saucer.png
+2026-11-03 13:00,,gpt-image-2.5-flare,medium,1024x1024,1,330,576,439,0.0194,icons_gold.png
+2026-11-03 13:00,,gpt-image-2.5-flare,medium,1024x1024,1,357,576,439,0.0196,icons_violet.png
+2026-11-03 13:00,,gpt-image-2.5-flare,medium,1024x1024,1,541,289,439,0.0182,vault_beast.png
+2026-11-03 13:00,,gpt-image-2.5-flare,medium,1024x1024,2,645,1568,439,0.0289,harvester.png
+2026-11-03 13:00,,gpt-image-2.5-flare,medium,1024x1024,2,695,765,439,0.0228,starborn.png
+2026-11-03 13:00,,gpt-image-2.5-flare,medium,1024x1024,2,626,881,439,0.0233,luminous_archon.png
+2026-11-03 13:00,,gpt-image-2.5-flare,medium,1024x1024,1,176,1024,439,0.0222,starborn_untouchable.png
+2026-11-03 13:00,,gpt-image-2.5-flare,medium,1024x1024,1,176,1024,439,0.0222,starborn_deathlord.png
+2026-11-03 13:00,,gpt-image-2.5-flare,medium,1024x1024,1,489,1024,439,0.0238,black_mothership.png
+2026-11-03 13:00,,gpt-image-2.5-flare,medium,1024x1024,1,177,1024,439,0.0222,starborn_hyper.png
+2026-11-03 13:00,,gpt-image-2.5-flare,medium,1024x1024,2,568,2016,439,0.0321,harvester_true.png

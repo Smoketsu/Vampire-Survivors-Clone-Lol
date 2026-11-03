@@ -515,8 +515,8 @@ const HEIGHTS: Dictionary = {
 	"player/starborn_hyper": 56.0,  # TUNING (not in GDD) skin art: her suit gilded
 	"player/starborn_untouchable": 56.0,  # TUNING (not in GDD) skin art: the white phantom
 	"player/starborn_deathlord": 56.0,  # TUNING (not in GDD) skin art: black iron, a crown above
-	"summons/ghost_saucer": 30.0,  # TUNING (not in GDD) a raised saucer, a machine: bone-grey hull, soul-light (about 44 wide); hover strip
-	"summons/black_mothership": 36.0,  # TUNING (not in GDD) its evolution, larger, black and soul-lit
+	"summons/ghost_saucer": 34.0,  # TUNING (not in GDD) a raised saucer, a machine: bone-grey hull, soul-light, 52 x 30 art px plus 2 empty rows above and below for the hover bob; hover strip
+	"summons/black_mothership": 40.0,  # TUNING (not in GDD) its evolution, larger, black and soul-lit, 54 x 36 art px plus 2 empty rows above and below; hover strip
 }
 
 ## Height (world px) used for a key missing from HEIGHTS.

@@ -1,0 +1,13 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, a calm, confident stance, one hand raised with a small glowing green light above the palm, the other at her side
+
+LOW-RESOLUTION pixel art: the whole figure is only 56 pixels tall, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims, lacing or engravings. Details must be big enough to read at game size.
+
+Subject: THE STARBORN, a FEMALE playable necromancer, a grey alien of the Harvesters who deserted them, in the game's figure-redesign style: an extremely exaggerated hourglass figure (very full bust, a tiny cinched waist, very wide hips), glamorous and confident. She is a GREY: smooth pale silver-grey skin, a large smooth bald slightly egg-shaped head, two large glossy BLACK almond eyes with a white glint, a small nose and mouth, her FACE CLEARLY VISIBLE. She wears a fitted, fully covering HULL-WHITE suit with GUNMETAL panels and thin glowing PLASMA-GREEN seams, a long fitted gunmetal coat open at the front down to her knees, tall boots and gloves. Chest and hips FULLY COVERED, never nude, tasteful. NO emblem, NO logo, NO letters. Never violet or purple, never bone-white.
+Signature shape that must read in silhouette: the big egg-shaped head on the hourglass figure, the long coat and the raised glowing hand.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: skin #8E98A4 #AEB8C4 #D4DAE0; suit #AEB8C4 #E8ECF0; gunmetal coat and panels #1E242C #3A424C #5A6470; seams and the light #1FA84A #3CFF6A; eyes #07080F with one white glint.
+
+Outline: a clean 1-pixel dark outline around the whole subject in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the subject), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark. Draw ONLY ONE figure.
+Attached: (1) a female playable character of this game in the figure-redesign style, for the pixel size, outline weight, proportions and flat look (not its subject); (2) a grey of this act for the head and skin (not its body).

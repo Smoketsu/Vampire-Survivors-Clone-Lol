@@ -198,7 +198,7 @@ const ENEMIES := {
 	# holds (the rescue). ReapEmitterKit.
 	"reap_emitter": {
 		"display_name": "Reaping Emitter",
-		"max_hp": 260.0,  # TUNING (not in GDD) x the run's enemy HP scaling at the call
+		"max_hp": 150.0,  # TUNING (not in GDD) x the run's enemy HP scaling at the call (first pass 260: two of four still stood after 55 s in the seed-7 army run)
 		"move_speed": 0.0,
 		"damage": 0.0,
 		"attack_interval": 1.0,

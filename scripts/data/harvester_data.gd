@@ -141,7 +141,7 @@ const BOSS := {
 	"reaping_hp": 0.66,  # TUNING (not in GDD) share of its health where the Reaping begins
 	"reaping_max": 55.0,  # TUNING (not in GDD) s at most (then the emitters fall silent)
 	"emitters": 4,  # Owner-approved proposal: "Four beam emitters around the arena"
-	"emitter_dist": 250.0,  # TUNING (not in GDD) px from the necromancer (past the ring)
+	"emitter_dist": 215.0,  # TUNING (not in GDD) px from the necromancer, just past the ring (first pass 250)
 	"lift_every": 3.0,  # TUNING (not in GDD) s between two lifts of one emitter (a steady rhythm)
 	"lift_range": 320.0,  # TUNING (not in GDD) px from an emitter a summon can be picked
 	"rise_time": 1.2,  # TUNING (not in GDD) s it rises above its throne (immune throughout)

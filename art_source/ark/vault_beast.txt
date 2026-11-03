@@ -1,0 +1,13 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, crouched low and about to pounce, head forward, jaws open
+
+LOW-RESOLUTION pixel art: the whole figure is only 30 pixels tall, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims, lacing or engravings.
+
+Subject: a FREED VAULT BEAST, an alien CREATURE the Concord harvested from a dead world (an animal, no sex shown): a lean six-legged grazer-predator the size of a big dog, long low body with three pairs of thin jointed legs, a long narrow head with an open jaw of small pale teeth and two small glowing pale-gold eyes, a rust-red hide, a short ochre crest of plates along its back, a few pale-gold glowing spots along its spine, a thin whip tail. Never violet or purple, never bone-white skulls, not green.
+Signature shape that must read in silhouette: the long low six-legged body and the crest along the back.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: hide #5A2418 #8E3A24 #B85A34; crest #9A6A26 #D2A048; glowing eyes and spine spots #FFE9A0; teeth #E8ECF0; dark joints #2A1410
+
+Outline: a clean 1-pixel dark outline around the whole subject in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the subject), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark. Draw ONLY ONE figure.
+Attached: a game sprite of this act for pixel size, outline weight and flat look (not its subject).
