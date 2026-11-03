@@ -1,0 +1,13 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, floating gracefully a little above the ground in a long gown, one hand raised with a small glowing prism hovering above her palm
+
+LOW-RESOLUTION pixel art: the whole figure is only 44 pixels tall, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims, lacing or engravings.
+
+Subject: a FEMALE STAR-SEER, called the Prism (a support caster of the Luminous), in the game's figure-redesign style: the most exaggerated hourglass figure (very full bust, an extremely tiny cinched waist less than half as wide as the hips, very wide curvy hips), glamorous and graceful, face clearly readable with big eyes and a calm smile, pale LAVENDER skin, long flowing white-gold hair falling behind her shoulders. She wears an OPAQUE, thick, fully covering, long-sleeved, HIGH-NECKED white gown with magenta panels and trim that covers her chest, arms, waist and hips completely (no cut-outs, no bare skin except the face and hands), tight at the bust and waist, a long skirt flowing to the ground. A small glowing magenta crystal prism floats above her raised hand. Never nude, tasteful. Never violet or purple (violet and bone are the player's), never bone-white skulls.
+Signature shape that must read in silhouette: the hourglass gown with its long skirt, the flowing white-gold hair and the floating prism.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: lavender skin #8D7DB2 #C8BAE6; gown white #AEB8C4 #E8ECF0; gown magenta trim and panels #A01C7A #FF2FB8; hair white-gold #C9A95C #FFE9A0; prism #FF2FB8 with a white glint
+
+Outline: a clean 1-pixel dark outline around the whole subject in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the subject), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark. Draw ONLY ONE figure.
+Attached: (1) a game sprite for pixel size, outline weight and flat look; (2) concept art of this unit for the costume only (do NOT copy its detail level or painted shading).

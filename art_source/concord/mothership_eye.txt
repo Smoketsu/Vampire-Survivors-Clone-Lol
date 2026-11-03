@@ -1,0 +1,9 @@
+Pixel-art game overlay for a top-down 2D horde-survival game. A SKY OVERLAY: the vast EYE of an alien mothership opening in the night sky, seen from below, looking straight up, centred in a square image.
+
+LOW-RESOLUTION pixel art: drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes. No anti-aliasing, no gradients, no dithering, no soft glow haze, no blur.
+
+Subject: the underside of a gigantic circular mothership hull, hull-white and gunmetal plating in concentric rings, with a huge almond-shaped EYE-SHAPED iris-door at its centre opening slowly, its pupil a glowing PLASMA-GREEN core ringed by thin laser-MAGENTA lights, mechanical iris blades of white-and-gunmetal plates around it, a few plasma-green lamps on the rings. The corners of the picture are empty starfield black.
+Colours: ONLY flat fills from this list, at most 3 shades per material: hull white #E8ECF0 #AEB8C4; gunmetal #3A424C #1E242C; plasma green #3CFF6A #1FA84A; laser magenta #FF2FB8; starfield black #07080F
+
+Output: a square PNG, the picture fills the whole image edge to edge on a solid starfield-black #07080F background (no transparency needed), one eye only, centred. No text, no frame, no watermark, no people, no ground.
+Attached: concept art of the Harvester's ship for the hull colours only.

@@ -490,6 +490,16 @@ const HEIGHTS: Dictionary = {
 	"player/revenant_heroine_deathlord": 56.0,  # TUNING (not in GDD) skin art: her body, the spiked crown above
 	"summons/fallen_hero": 46.0,  # TUNING (not in GDD) a raised Super (male): the tattered cape behind
 	"summons/black_paragon": 54.0,  # TUNING (not in GDD) its evolution, taller
+	# --- Act IX: the Concord of Stars (the shared kinds; assets/sprites/concord/, structures/, bosses/) ---
+	"concord/broodling": 22.0,  # TUNING (not in GDD) Brood fodder, a creature: a hunched green-black insect, about 24 wide; walk strip
+	"concord/grey_drone": 28.0,  # TUNING (not in GDD) Harvester fodder, sex unmarked: a small grey with a probe held out (about 30 wide with it); walk strip
+	"concord/saucer": 36.0,  # TUNING (not in GDD) a Harvester flier, 64 x 32 art px plus 2 empty rows above and below for the hover bob; hover strip
+	"concord/vrask_hunter": 46.0,  # TUNING (not in GDD) elite Vrask, male: a lizard-man with a shoulder caster and a glaive (about 44 wide); walk strip
+	"concord/lumen_sentinel": 46.0,  # TUNING (not in GDD) Luminous ranged, male: white-gold crystal armour and a beam staff; glide strip
+	"concord/prism": 44.0,  # TUNING (not in GDD) Luminous support, female (figure redesign, gown covers chest and hips): the Star-Seer, the prism above her hand; glide strip, bust rig, `swish`, idle strip
+	"bosses/hive_mother": 96.0,  # TUNING (not in GDD) boss tier, female (figure redesign, chitin covers her completely): the Brood's queen, wings, horned helm and egg-sac abdomen (about 90 wide); idle strip
+	"structures/concord_terraformer": 40.0,  # TUNING (not in GDD) a landing pod rooted in alien turf, about 54 x 40 art px, vents glowing green; the steam is code
+	"structures/concord_terraformer_dead": 40.0,  # TUNING (not in GDD) the same pod cracked, charred and dark (destroyed)
 }
 
 ## Height (world px) used for a key missing from HEIGHTS.
@@ -590,6 +600,8 @@ const FLAT_SIZES: Dictionary = {
 	"overlays/tide_wall": 152.0,  # TUNING (not in GDD) the Tide Caller's rising water line, 152 x 28, along +x (wall_length 150)
 	"overlays/undertow_crest": 14.0,  # TUNING (not in GDD) one foam crest of the Undertow wave, 10 x 14, facing +x
 	"overlays/maelstrom_whirl": 96.0,  # TUNING (not in GDD) a Maelstrom whirlpool from above, 92 x 96
+	# --- Act IX: the Concord of Stars ---
+	"concord/mothership_eye": 192.0,  # TUNING (not in GDD) the mothership's eye seen from below, a round 192 x 192 sky overlay with transparent corners (the Final Harvest fades it in; no screen read)
 }
 ## Longest side (px) for a flat sprite key missing from FLAT_SIZES.
 const DEFAULT_FLAT_SIZE: float = 20.0  # TUNING (not in GDD)
