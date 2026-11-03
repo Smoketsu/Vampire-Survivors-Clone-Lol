@@ -910,7 +910,7 @@ RIGS = {
     "concord/lumen_sentinel": dict(mode="robe", hip=28, rigid=[(14, 20, 0, None)], sway=1, dip=1),
     "concord/prism": dict(mode="robe", hip=28, rigid=[], sway=1, dip=1, bust=(7, 15, 10, 16, 1, 2),
                           bust_exclude=[(15, 20, 8, 20)], swish=(5, 17, 24, 38, 1)),
-    "bosses/hive_mother": dict(mode="robe", hip=62, rigid=[], sway=1, dip=1, bust=(33, 50, 32, 44, 2, 2)),
+    "bosses/hive_mother": dict(mode="robe", hip=62, rigid=[], sway=1, dip=1, bust=(36, 53, 31, 41, 2, 2)),  # Act IX R1 redo: refit to the new, fuller still (the cream hooks beside the lobes stay outside the box).
     # --- Act IX: the Crash Site --- (the Brood's soldiers walk on their legs; the Matriarch and the Hive Mother's
     # Flight form hover; the Broodbound glides in her chitin gown with the bust bounce and an idle strip)
     "concord/burrower": dict(mode="legs", hip=26, back=(0, 16), front=(16, 32), rigid=[], spread=1, lift=1, dip=1),

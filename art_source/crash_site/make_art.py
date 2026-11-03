@@ -35,6 +35,7 @@ UNITS = {
 }
 # Figures put on the art grid first (pixelate_source.py): key -> (raw source, art height, extra arguments).
 FIGURES = {
+    "bosses/hive_mother": ("raw/hive_mother.png", 96, ["--ramps", "hive,hive_bone,gold", "--no-prune", "--no-levels"]),  # R1 redo: wider hips, bigger bust
     "bosses/hive_mother_cast": ("raw/hive_mother_cast.png", 96, ["--ramps", "hive,hive_bone,gold", "--no-prune", "--no-levels"]),
     "bosses/hive_mother_strike": ("raw/hive_mother_strike.png", 96, ["--ramps", "hive,hive_bone,gold,brown", "--no-prune", "--no-levels"]),
     "bosses/hive_mother_flight": ("raw/hive_mother_flight.png", 96, ["--ramps", "hive,hive_bone,gold", "--no-prune", "--no-levels"]),
