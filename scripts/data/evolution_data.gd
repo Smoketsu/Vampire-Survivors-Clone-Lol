@@ -755,8 +755,8 @@ const EVOLUTIONS := {
 		"description": "Three foes rise into the light, and each falls like a star, dragging the rest in after it.",
 		"labels": {"damage": "Slam damage", "cooldown": "Cooldown (s)", "lifts": "Lifts", "lift_time": "Lift (s)", "slam_radius": "Slam (px)", "slam_share": "Slam splash", "pull": "Pull (px)", "quake_share": "Quake damage"},
 		"stats": {
-			"damage": 96.0, "cooldown": 2.4, "lifts": 3, "lift_time": 1.2, "slam_radius": 70.0, "slam_share": 0.55,  # TUNING (not in GDD)
-			"pull": 120.0, "pull_force": 260.0, "quake_share": 0.3,  # TUNING (not in GDD) the evolution flag: the pull round each slam
+			"damage": 88.0, "cooldown": 2.4, "lifts": 3, "lift_time": 1.2, "slam_radius": 70.0, "slam_share": 0.5,  # TUNING (not in GDD) first pass 96 / 0.55
+			"pull": 120.0, "pull_force": 260.0, "quake_share": 0.18,  # TUNING (not in GDD) the evolution flag: the pull round each slam (first pass 0.3: 244k damage, 95k of it quake, in the forced seed-7 Graveyard run)
 		},
 	},
 }

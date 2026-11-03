@@ -2323,6 +2323,36 @@ your summons barely scratch it until a spell reveals it; a three-dot lock, then 
 `--boss=hive_mother|vrask_tal|harvester`, `--spawn=` with the kinds above (`concord_terraformer@T` drops a pod); lines
 `beams`, `abduction`, `terraforming`, `final harvest`, `concord kinds`, `concord stage`.
 
+### Act IX: the Ark of the Concord (Stage 27)
+
+<!-- --- Act IX: the Ark --- -->
+**The Ark of the Concord** (Stage 27, the finale of Act IX; GDD §15.0 "The Ark of the Concord (Act IX phase 2)" and the
+rows after it; built, still hidden until the Act IX integration). The mothership in orbit over the dead world, in four
+zones on the clock: **the Hangar** (deck plates and landing marks), **the Specimen Vaults** (sealed tanks stand round
+you: break them and the beasts inside attack everyone, your army and the Concord alike), **the Reactor** (vents breathe
+alien ground that heals the Concord: break them, and burn the ground with your spells) and **the Bridge of Stars**
+(starfield glass). The Harvesters lead, with the Luminous mixed in: the **Grey Overseer** (a psionic pulse that stuns
+your summons near it for 1 s, after a widening ring; it shields the greys round it: kill it first) joins the drones and
+saucers, and at 12:30 the **Luminous Archon** (the miniboss, a being of pure light) comes: every blow it strikes is a
+beam, a fan of lances and a halo all round it, so catch them on your Orb Shield and your Warders' barriers and send
+them back into it. At 3:00 left **the Harvester** descends from its throne of rings: **the Council** (it fights with
+the Concord's powers in turn: Brood swarms from every side, the Vrask's cloak (a shimmer; your spells reveal it) and
+the Luminous beams), **the Reaping** (it rises, untouchable, and four emitters land round your ring: each lifts one of
+your summons in its tractor beam every few seconds, with no cap, until you destroy them) and **the Gardener** (its true
+form, a vast being of light and rings: rings of alien ground grow round you and heal the adds it calls; your spells
+burn them back). When it falls the stars go dark (a short ending text, no epilogue). Rewards: the spell **Tractor
+Beam** (a column of soul light lifts the strongest foe into the air and slams it down on the rest; bosses and
+structures are slammed in place; evolves into **Abduction**: three foes a cast, and every slam drags the foes round it
+in, with **Starseed**: the beam lifts sooner and the slam reaches wider), the character **the Starborn** (a grey who
+deserted the Harvesters; Deserter's Signal: one more foe lifted), the summon class **the Ghost Saucer** (a raised
+saucer that hovers over your army, fires short beams through the foes on their line and lifts small foes to drop
+them; it flies, so the Concord can never lift it; evolves into **Black Mothership**: three beams at once and two foes
+lifted, with **Crop Circles**: every summon's special holds its foes longer) and its Ossuary mastery, and the
+achievement **The Last Harvest** (beat the Harvester: the title The Unharvested). Autotest: `--stage=ark`,
+`--boss=harvester`, `--spells=tractor_lift`, `--classes=ghost_saucer`, `--character=starborn`,
+`--spawn=grey_overseer@T`, `luminous_archon@T`, `specimen_tank@T`, `vault_beast@T`, `reactor_vent@T`,
+`reap_emitter@T`; lines `ark`, `ark events`, `ark kinds`, `harvester`, `tractor beam`, `ghost saucer`.
+
 ### The illustrated epilogue
 
 The campaign epilogue (content wave 2, GDD §15.0 "Illustrated epilogue (content wave 2)") is a short
@@ -3039,6 +3069,11 @@ scripts/
                             streak, the saucer's tractor cone, the Final Harvest's eye (textures only; Act IX)
     concord_report.gd       The autotest's Act IX lines (beams, abduction, terraforming, final harvest, concord
                             kinds, concord stage)
+    ark_ground.gd           The Ark of the Concord's four zone floors (hangar, vaults, reactor, bridge; Act IX)
+    ark_glyphs.gd           Code fallbacks of the Ark's kinds, obstacles and the Harvester; its throne of rings,
+                            Tractor Beam's lift column, the Ghost Saucer's beams (textures only; Act IX)
+    ark_report.gd           The autotest's Ark lines (ark, ark kinds, harvester) and the Tractor Beam / Ghost
+                            Saucer lines (Act IX)
     fort_kessler_report.gd  The autotest's Fort Kessler lines (the stage, its kinds, Mammoth, the threats, Harrow) and
                             its items (Bone Mines, Tripwire, Armour-Piercing Bones)
     fort_kessler_ground.gd  Fort Kessler's floor: CityGround with each zone's look (checkpoints, minefields, aprons,
@@ -3140,6 +3175,8 @@ scripts/
     behaviors/blood_spawn_behavior.gd  Act VII: the Blood Spawn's Bloodthirst (Nosferatu's spill; Thirst Eternal's key)
     behaviors/fallen_hero_behavior.gd  Act VIII: the Fallen Hero's Hero's Slam (the orbit, the dive on the densest pack;
                             Black Paragon's stun and chain; Origin Story's key)
+    behaviors/ghost_saucer_behavior.gd  Act IX: the Ghost Saucer's short beams and lifts (EnemyLift); Black
+                            Mothership's three beams and two lifts; Crop Circles' key
     golem_kit.gd            Content wave 2: Ossuary Hunger, the Ossuary Titan's heal, barrier and
                             collapse wall (HordeDirector.golems, created by the first Golem)
     golem_texts.gd          Content wave 2: Bone Golem / Grave Masonry / Ossuary Titan card and
@@ -3380,6 +3417,14 @@ scripts/
       broodling_kit.gd, grey_drone_kit.gd, saucer_kit.gd, vrask_hunter_kit.gd, lumen_sentinel_kit.gd, prism_kit.gd,
       concord_terraformer_kit.gd  The shared kinds (the probe, the hover and tractor beam, the cloak and lock, the
                             sweep, the Star-Seer's glint, the pod's roots)
+      ark_director.gd       The Ark: the Specimen Vaults' tanks and the Reactor's vents (structure windows), the
+                            wrecks, the Luminous Archon's event, the objective lines (Act IX)
+      grey_overseer_kit.gd, luminous_archon_kit.gd, specimen_tank_kit.gd, vault_beast_kit.gd, reactor_vent_kit.gd,
+      reap_emitter_kit.gd   The Ark's kinds: the pulse (stun_unit()) and shields, the Archon's beams (boss
+                            override), the freed beasts (prey(): the one check of whom they attack), the vents'
+                            Terraforming.seed(), the Reaping's lifts (Abduction.lift())
+      boss_harvester.gd     The Harvester: the Council (swarms, the cloak, beams), the Reaping (emitters, the cap
+                            lifted), the Gardener (rings of turf, adds)
     pantheon/               The Olympian Republic (Act IV): its kits ("<id>_kit.gd", loaded by name after the
                             Eye's and the Empire's) and bosses ("boss_<id>.gd"), and the act's shared rules:
       pantheon_rules.gd     Game.pantheon: owns the wrath, the Phalanx and Glory, the one front test
@@ -3666,6 +3711,11 @@ scripts/
                             Sentinel, the Star-Seer) and the landing pod; the race / beam / abducts / cloak /
                             heals_on_turf keys; the Final Harvest's kind and companions (Act IX)
                             (crash_site_ / proving_moon_ / ark_enemy_data.gd: each stage's own, empty until phase 2)
+    ark_enemy_data.gd       The Ark's own kinds: the Luminous Archon, the specimen tank, the freed beast, the
+                            reactor vent, the Reaping emitter (Act IX; the Grey Overseer is a shared row)
+    harvester_data.gd       The Harvester's arrival, phases and numbers (Act IX)
+    tractor_lift_data.gd    Tractor Beam / Abduction rules, Starseed keys, Deserter's Signal key (Act IX; the
+                            spell node is abilities/spells/tractor_lift.gd, the lift helper abilities/enemy_lift.gd)
     concord_rules_data.gd   Act IX's shared rules: RACES, BEAMS and BEAM_STYLES, ABDUCTION, TERRAFORMING,
                             FINAL_HARVEST, the SOUNDS map, the Mirror Bones / Anchored keys
     stages/crash_site_stage.gd     Act IX stubs: the Crash Site, the Proving Moon and the Ark of the Concord; act 9,

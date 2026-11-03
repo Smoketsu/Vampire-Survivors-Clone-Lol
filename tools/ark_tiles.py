@@ -110,9 +110,9 @@ def vaults() -> Image.Image:
     for (cx, cy) in ((32, 36), (96, 100)):
         disc(px, cx, cy, 19, C["gm"], TILE, TILE, True)
         disc(px, cx, cy, 16, C["ink"], TILE, TILE, True)
-        disc(px, cx, cy, 14, C["pk"], TILE, TILE, True)
-        disc(px, cx - 4, cy - 4, 5, (0x16, 0x5A, 0x30), TILE, TILE, True)
-        px[(cx - 6) % TILE, (cy - 6) % TILE] = C["pd"] + (255,)
+        disc(px, cx, cy, 14, (0x0A, 0x22, 0x14), TILE, TILE, True)  # Dim glass: the units must read over it.
+        disc(px, cx - 4, cy - 4, 5, (0x10, 0x34, 0x20), TILE, TILE, True)
+        px[(cx - 6) % TILE, (cy - 6) % TILE] = C["pk"] + (255,)
     return im
 
 

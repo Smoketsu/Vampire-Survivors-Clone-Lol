@@ -195,9 +195,8 @@ func body_lift(u: SummonedUnit) -> float:
 ## Ground shadow under the hovering hull, its beams and its lifts (textures,
 ## world-aligned under the unit).
 func draw_under(u: SummonedUnit) -> void:
-	u.draw_set_transform(Vector2(0, u.radius * 0.95), 0.0, Vector2(1.0, 0.4))
-	u.draw_circle(Vector2.ZERO, u.radius * 1.1, Color(0, 0, 0, 0.28))
-	body_space(u)
+	var w := u.radius * 1.1  # Shadow half-width (px).
+	u.draw_texture_rect(SpriteBank.disc(), Rect2(Vector2(-w, u.radius * 0.95 - w * 0.4), Vector2(w * 2.0, w * 0.8)), false, Color(0, 0, 0, 0.28))  # A texture (the Web GL rule).
 	var g := u.game
 	if lifts.is_empty() and _beams.is_empty():
 		return
