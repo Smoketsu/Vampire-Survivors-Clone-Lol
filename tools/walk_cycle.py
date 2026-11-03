@@ -916,14 +916,14 @@ RIGS = {
     "concord/lumen_sentinel": dict(mode="robe", hip=28, rigid=[(14, 20, 0, None)], sway=1, dip=1),
     "concord/prism": dict(mode="robe", hip=28, rigid=[], sway=1, dip=1, bust=(7, 15, 10, 16, 1, 2),
                           bust_exclude=[(15, 20, 8, 20)], swish=(5, 17, 24, 38, 1)),
-    "bosses/hive_mother": dict(mode="robe", hip=62, rigid=[], sway=1, dip=1, bust=(33, 50, 32, 44, 2, 2)),
+    "bosses/hive_mother": dict(mode="robe", hip=62, rigid=[], sway=1, dip=1, bust=(36, 53, 31, 41, 2, 2)),  # Act IX R1 redo: refit to the new, fuller still (the cream hooks beside the lobes stay outside the box).
     # --- Act IX: the Crash Site --- (the Brood's soldiers walk on their legs; the Matriarch and the Hive Mother's
     # Flight form hover; the Broodbound glides in her chitin gown with the bust bounce and an idle strip)
     "concord/burrower": dict(mode="legs", hip=26, back=(0, 16), front=(16, 32), rigid=[], spread=1, lift=1, dip=1),
     "concord/acid_spitter": dict(mode="legs", hip=21, back=(0, 15), front=(15, 32), rigid=[], spread=1, lift=1, dip=1),
     "concord/brood_matriarch": dict(mode="hover", bob=2, parts=[]),
     "bosses/hive_mother_flight": dict(mode="hover", bob=2, parts=[]),
-    "player/broodbound": dict(mode="robe", hip=32, rigid=[], sway=1, dip=1, bust=(9, 21, 14, 21, 2)),
+    "player/broodbound": dict(mode="robe", hip=32, rigid=[], sway=1, dip=1, bust=(14, 24, 14, 22, 2), bust_exclude=[(24, 32, 10, 24)]),  # Act IX R1 redo: the new insect-woman still (bust cols 14-23, rows 14-21; the raised arm beyond col 24 and the shoulder case left of col 14 stay still).
     # --- Act IX: the Proving Moon ---
     # The Warbeast (a creature) prowls on its four legs (its hind and fore pairs as the back and front halves, like Old
     # Greymane); Vrask'Tal strides (the cloak and glaive end above the hip); the Blooded (female, figure redesign) strides
@@ -1081,6 +1081,8 @@ SKINS = {
 }
 # Per-skin field overrides of the derived rig (same keys as RIGS), set after review.
 SKIN_FIX = {
+    # --- Act IX R1 redo: the Hyper Broodbound is 30 wide (the base 32): its own box, 2 px left of the base box, arm excluded. ---
+    "player/broodbound_hyper": {"bust": (12, 22, 14, 22, 2), "bust_exclude": [(22, 30, 10, 24)]},
     # --- Act VII: the Witchwood --- R1 redo: the Deathlord skin has its own upper (bust) box, the base's derived one with x1 + 2.
     "player/hedge_witch_deathlord": {"bust": (13, 25, 15, 21, 2)},
     # --- Act VII round 1 redo: the regenerated Deathlord skins are 44 wide (the bases 42 / 46), so their own splits and box ---
