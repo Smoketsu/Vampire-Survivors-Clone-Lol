@@ -33,6 +33,16 @@ static func draw_enemy(ci: CanvasItem, kind: String, o: Vector2, r: float, flash
 		return false
 	# Phase 2: each Act IX stage's own fallbacks go here, before the shared
 	# kinds' (as CourtGlyphs asks RavensmoorGlyphs first).
+	# --- Act IX: the Crash Site ---
+	if CrashSiteGlyphs.draw_enemy(ci, kind, o, r, flash):
+		return true
+	# --- Act IX: the Proving Moon ---
+	if kind == ProvingMoonEnemyData.WARBEAST:
+		ProvingMoonGlyphs.draw_warbeast(ci, o, r, flash, false)
+		return true
+	# --- Act IX: the Ark ---
+	if ArkGlyphs.draw_enemy(ci, kind, o, r, flash):
+		return true  # The Ark's kinds and the Grey Overseer.
 	match kind:
 		"broodling":
 			_broodling(ci, o, r, flash)
@@ -139,6 +149,9 @@ static func draw_pod(ci: CanvasItem, o: Vector2, r: float, flash: bool) -> void:
 ## Draws one of the Act IX stubs' placeholder obstacles. Returns false for any
 ## other kind.
 static func draw_obstacle(ci: CanvasItem, o: Arena.Obstacle) -> bool:
+	# --- Act IX: the Crash Site --- its own obstacle kinds first.
+	if CrashSiteGlyphs.draw_obstacle(ci, o):
+		return true
 	var c := o.center
 	match o.kind:
 		"concord_rubble", "concord_moonrock", "concord_conduit":

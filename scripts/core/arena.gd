@@ -602,6 +602,12 @@ func _draw_obstacle(o: Obstacle) -> void:
 	# --- Act IX: the Concord of Stars ---
 	if ConcordGlyphs.draw_obstacle(self, o):
 		return  # An Act IX stub's placeholder obstacle kind.
+	# --- Act IX: the Proving Moon ---
+	if ProvingMoonGlyphs.draw_obstacle(self, o):
+		return  # A Proving Moon obstacle kind (Act IX).
+	# --- Act IX: the Ark ---
+	if ArkGlyphs.draw_obstacle(self, o):
+		return  # An Ark of the Concord obstacle kind (Act IX).
 	var c := o.center
 	var dark := Color(0.06, 0.06, 0.07)
 	match o.kind:

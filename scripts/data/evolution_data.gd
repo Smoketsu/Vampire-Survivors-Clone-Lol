@@ -102,7 +102,13 @@ const ORDER := ["void_barrage", "eclipse_ward", "abyssal_detonation",
 	# --- Act VIII: Fort Kessler ---
 	"killing_ground",
 	# --- Act VIII: Liberty Heights ---
-	"doomsday"]
+	"doomsday",
+	# --- Act IX: the Crash Site ---
+	"hive_of_bone",
+	# --- Act IX: the Proving Moon ---
+	"apex_predator",
+	# --- Act IX: the Ark ---
+	"star_abduction"]
 
 ## Evolution definitions.
 ##   base         — spell id that evolves (AbilityData.SPELLS key).
@@ -734,6 +740,67 @@ const EVOLUTIONS := {
 		"stats": {
 			"damage": 95.0, "cooldown": 2.3, "fists": 2, "fling": 240.0, "fling_share": 0.5,  # TUNING (not in GDD) first pass 110 / 2.2 s / 0.65: ~500k damage in the forced seed-7 run, far ahead of every source
 			"crater": 64.0, "crater_share": 0.4,  # TUNING (not in GDD) the evolution flag: the crater where a flung foe lands (first pass 0.6)
+		},
+	},
+	# --- Act IX: the Crash Site ---
+	# Hive of Bone (GDD §15.0 "Bone Beetles, Hive of Bone, Chitin and the
+	# Broodbound (Act IX)"; owner-approved proposal "Bone Beetles -> Hive of
+	# Bone (+ Chitin)"): Bone Beetles + Chitin (a NEW passive, owner rule: at
+	# Lv 5). Own decision on its kit: each beetle bites `bites` foes in turn,
+	# and a foe a beetle kills bursts too (the hive feeds itself, still under
+	# the cap). Detected by the "bites" key.
+	"hive_of_bone": {
+		"base": "bone_beetles",
+		"passive": "chitin",
+		"display_name": "Hive of Bone",  # Owner-approved proposal
+		"icon": "hive_of_bone",
+		"description": "A hive of bone beetles: each bites foe after foe, and every foe they kill bursts into more.",
+		"labels": {"damage": "Bite damage", "beetles": "Beetles a foe", "bites": "Bites each", "range": "Range", "cap": "Most beetles"},
+		"stats": {
+			"damage": 11.0, "beetles": 3, "range": 340.0, "speed": 280.0, "seek": 220.0, "life": 3.5, "cap": 32,  # TUNING (not in GDD) first pass 17 / cap 40 (377k from the hive alone in the forced seed-7 run)
+			"bites": 2,  # TUNING (not in GDD) the evolution flag: foes each beetle bites in turn (first pass 3)
+		},
+	},
+	# --- Act IX: the Proving Moon ---
+	# Apex Predator (GDD §15.0 "Soul Caster, Apex Predator, Trophy Rack and the
+	# Blooded (Act IX)"; owner-approved proposal "Soul Caster -> Apex Predator
+	# (+ Trophy Rack)"): Soul Caster + Trophy Rack (a NEW passive, owner rule:
+	# at Lv 5). Own decision on its kit: five targets, harder shots, x
+	# elite_mult on elites, minibosses and bosses, and every kill gives back
+	# `refund` s of the cooldown (the predator never stops). Detected by the
+	# "refund" key.
+	"apex_predator": {
+		"base": "soul_caster",
+		"passive": "trophy_rack",
+		"display_name": "Apex Predator",  # Owner-approved proposal
+		"icon": "apex_predator",
+		"description": "Five locks, harder shots that hunt the strongest, and every kill reloads the cannon.",
+		"labels": {"damage": "Shot damage", "targets": "Targets locked", "elite_mult": "Vs elites and bosses", "refund": "Reload per kill (s)", "cooldown": "Cooldown (s)"},
+		"stats": {
+			"damage": 58.0, "targets": 5, "lock": 0.4, "range": 360.0, "cooldown": 1.9,  # TUNING (not in GDD)
+			"elite_mult": 1.5,  # TUNING (not in GDD) x on elites, minibosses and bosses
+			"refund": 0.25,  # TUNING (not in GDD) the evolution flag: s of the cooldown given back per kill
+		},
+	},
+	# --- Act IX: the Ark ---
+	# Abduction (id "star_abduction": "abduction" is the Concord rule's source
+	# tag and class name; its display name stays "Abduction"; GDD §15.0
+	# "Tractor Beam, Abduction, Starseed and the Starborn"; owner-approved
+	# proposal "Tractor Beam -> Abduction (+ Starseed)"): Tractor Beam +
+	# Starseed (a NEW passive, owner rule: at Lv 5). Three foes lifted a cast,
+	# held longer, and every slam first DRAGS the foes within `pull` px in
+	# toward it (pull_force / mass) and shakes them for quake_share x the
+	# damage. Detected by the "pull" key.
+	"star_abduction": {
+		"base": "tractor_lift",
+		"passive": "starseed",
+		"display_name": "Abduction",  # Owner-approved proposal
+		"icon": "star_abduction",
+		"description": "Three foes rise into the light, and each falls like a star, dragging the rest in after it.",
+		"labels": {"damage": "Slam damage", "cooldown": "Cooldown (s)", "lifts": "Lifts", "lift_time": "Lift (s)", "slam_radius": "Slam (px)", "slam_share": "Slam splash", "pull": "Pull (px)", "quake_share": "Quake damage"},
+		"stats": {
+			"damage": 88.0, "cooldown": 2.4, "lifts": 3, "lift_time": 1.2, "slam_radius": 70.0, "slam_share": 0.5,  # TUNING (not in GDD) first pass 96 / 0.55
+			"pull": 120.0, "pull_force": 260.0, "quake_share": 0.18,  # TUNING (not in GDD) the evolution flag: the pull round each slam (first pass 0.3: 244k damage, 95k of it quake, in the forced seed-7 Graveyard run)
 		},
 	},
 }

@@ -438,7 +438,13 @@ const ACHIEVEMENT_ORDER := ["bone_legion", "heretics_bane", "dread_sovereign", "
 	# --- Act VIII: Fort Kessler ---
 	"broken_arrow",
 	# --- Act VIII: Liberty Heights ---
-	"no_more_heroes"]
+	"no_more_heroes",
+	# --- Act IX: the Crash Site ---
+	"nothing_hatched",
+	# --- Act IX: the Proving Moon ---
+	"the_hunter_hunted",
+	# --- Act IX: the Ark ---
+	"last_harvest"]
 
 ## Achievement definitions (GDD §9.4 "Example Achievement Unlocks"). Each
 ## achievement is tracked and recorded in the save and pays a one-time Soul
@@ -657,6 +663,31 @@ const ACHIEVEMENTS := {
 	# TitleData).
 	"no_more_heroes": {"display_name": "No More Heroes", "description": "Beat Paragon at Liberty Heights with no Super at his side",
 		"stat": "paragon_no_heroes_kills", "goal": 1, "unlock": "The title Bane of Heroes", "bounty": 500},  # Owner-approved proposal; bounty TUNING (not in GDD) as Last Supper
+	# --- Act IX: the Crash Site ---
+	# The brief's Act IX achievement "Nothing Hatched" (Nov 3, 2026: "No egg
+	# hatches on the Crash Site, from the start until the Hive Mother falls,
+	# and you beat her"): a Crash Site run in which the Hive Mother fell and no
+	# Infestation egg had hatched before her fall (CrashSiteDirector sets the
+	# run stat crash_site_nothing_hatched; MetaProgress counts the runs,
+	# lifetime nothing_hatched_runs). It unlocks the counter-passive Anchored.
+	"nothing_hatched": {"display_name": "Nothing Hatched", "description": "Beat the Hive Mother at the Crash Site with no egg hatched before she falls",
+		"stat": "nothing_hatched_runs", "goal": 1, "unlock": "The Anchored passive", "bounty": 300},  # Brief (Nov 3, 2026); bounty TUNING (not in GDD) as No Witnesses
+	# --- Act IX: the Proving Moon ---
+	# Owner-approved Act IX achievement "The Hunter Hunted" ("beat Vrask'Tal
+	# before the countdown ends"): a run in which Vrask'Tal fell to anything but
+	# his own Last Trophy bomb (BossVraskTal sets the run stat
+	# proving_moon_hunter_hunted; MetaProgress counts the runs, lifetime
+	# hunter_hunted_runs). It unlocks the counter-passive Mirror Bones (brief).
+	"the_hunter_hunted": {"display_name": "The Hunter Hunted", "description": "Kill Vrask'Tal before his Last Trophy goes off",
+		"stat": "hunter_hunted_runs", "goal": 1, "unlock": "The Mirror Bones passive", "bounty": 300},  # Owner-approved Act IX proposal; bounty TUNING (not in GDD) as Broken Arrow
+	# --- Act IX: the Ark ---
+	# The finale of Act IX (owner-approved Act IX proposal: "The Last Harvest
+	# (beat the Harvester)"; owner answers of Oct 31 and Nov 3, 2026: no
+	# epilogue part, no closing card and no epilogue hook): counted from the
+	# stage record (a boss kill on the Ark), as Last Supper. It only records the
+	# clear, with the title The Unharvested (UnlockData / TitleData).
+	"last_harvest": {"display_name": "The Last Harvest", "description": "Beat the Harvester on the Ark of the Concord",
+		"stat": "boss_kills", "stage": "ark", "goal": 1, "unlock": "The title The Unharvested", "bounty": 500},  # Owner-approved proposal; bounty TUNING (not in GDD) as Last Supper
 }
 
 # --- Content wave 2: B. Achievement rewards ---

@@ -7,7 +7,7 @@
 ##   beams:          ConcordBeams (fired by style, refused, peak at once, hits
 ##                   and damage on summons and the necromancer, reflections by
 ##                   an orb / a barrier and the reflected damage to enemies,
-##                   prism splits, cancelled)
+##                   prism splits, cancelled, Bone Wall stops)
 ##   abduction:      Abduction (lifts, rescues when the saucer fell, taken,
 ##                   refused at the cap / too heavy, peak held, saucers shot
 ##                   down, the saucers' air whiffs and hits)
@@ -51,6 +51,12 @@ static func print_lines(game: Game, st: Dictionary) -> void:
 			EmpireReport._clock(float(sd.get("enemy_mult_from", 0.0))), float(sd["ash_mult"]),
 			String((sd["reckoning"] as Dictionary).get("kind", "inquisitor")), str(not c.harvest.cfg.is_empty())])
 	# Phase 2: each Act IX stage's own lines go here (its stage, kinds and boss).
+	# --- Act IX: the Crash Site ---
+	CrashSiteReport.print_lines(game, st)  # The crater, the eggs, the Burrowers, the acid, the Matriarch, the Hive Mother.
+	# --- Act IX: the Proving Moon --- (low gravity, the Warbeast, Vrask'Tal; ProvingMoonReport)
+	ProvingMoonReport.print_lines(game, st)
+	# --- Act IX: the Ark --- (its stage, kinds and boss; ArkReport)
+	ArkReport.stage_lines(game, st)
 
 
 ## The "beams" line (ConcordBeams).
@@ -60,13 +66,14 @@ static func beams_line(game: Game, st: Dictionary) -> String:
 	for s: String in ConcordRulesData.BEAM_STYLES:
 		if b.fired_by.has(s):
 			by.append("%s %d" % [s, int(b.fired_by[s])])
-	return "fired %d (%s) | refused %d | cancelled %d | peak at once %d | hits on summons %d (dmg %d), on you %d (dmg %d) | reflected by orb %d, by barrier %d (enemy hits %d, dmg %d) | prism splits %d" % [
+	return "fired %d (%s) | refused %d | cancelled %d | peak at once %d | hits on summons %d (dmg %d), on you %d (dmg %d) | reflected by orb %d, by barrier %d (enemy hits %d, dmg %d) | prism splits %d | bone wall stops %d" % [
 		int(st.get("beams_fired", 0.0)), ", ".join(by) if not by.is_empty() else "-", int(st.get("beams_refused", 0.0)),
 		int(st.get("beams_cancelled", 0.0)), b.peak,
 		int(st.get("beam_hits_summons", 0.0)), int(st.get("beam_dmg_summons", 0.0)),
 		int(st.get("beam_hits_you", 0.0)), int(st.get("beam_dmg_you", 0.0)),
 		int(st.get("beam_reflect_orb", 0.0)), int(st.get("beam_reflect_barrier", 0.0)),
-		int(st.get("beam_reflect_hits", 0.0)), int(st.get("beam_reflect_dmg", 0.0)), int(st.get("beam_prism_splits", 0.0))]
+		int(st.get("beam_reflect_hits", 0.0)), int(st.get("beam_reflect_dmg", 0.0)), int(st.get("beam_prism_splits", 0.0)),
+		int(st.get("beam_wall_stops", 0.0))]  # Act IX, the Crash Site: a Bone Wall stopped the beam.
 
 
 ## The "abduction" line (Abduction).

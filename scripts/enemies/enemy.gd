@@ -1101,7 +1101,10 @@ func _rush_move(delta: float) -> void:
 			break
 		var side := rel - rush_dir * rel.dot(rush_dir)
 		var push := side.normalized() if side.length() > 0.1 else Vector2(-rush_dir.y, rush_dir.x)
-		u.position += push * float(_rush_def["charge_knockback"])
+		var shove := float(_rush_def["charge_knockback"])  # px the summon is shoved aside.
+		if game.concord != null:
+			shove *= game.concord.gravity()  # Act IX, the Proving Moon: low gravity (exactly 1.0 off the moon).
+		u.position += push * shove
 		game.combat.damage_unit(u, dmg * undead_damage_mult, "templar_charge")
 	if rush_left <= 0.0:
 		rush_state = 0
@@ -1194,7 +1197,14 @@ func _tick_timers(delta: float) -> void:
 		ward_resist = 0.0
 		queue_redraw()
 	if knockback != Vector2.ZERO:
-		knockback = knockback.move_toward(Vector2.ZERO, EnemyData.KNOCKBACK_DECAY * delta)
+		var decay := EnemyData.KNOCKBACK_DECAY  # px/s² the knockback slows by.
+		# --- Act IX: the Proving Moon --- low gravity: the decay is divided by the
+		# STAGE "gravity" (ConcordRules.gravity(); 2.0 on the moon: every knockback
+		# travels twice as far). Read only while game.concord exists, and it is
+		# exactly 1.0 off the moon.
+		if game.concord != null:
+			decay /= game.concord.gravity()
+		knockback = knockback.move_toward(Vector2.ZERO, decay * delta)
 	if flash > 0.0:
 		flash -= delta
 		if flash <= 0.0:

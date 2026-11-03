@@ -202,7 +202,13 @@ const ORDER := ["grave_dominion", "necrotic_vigor", "dark_command", "soul_recycl
 	# --- Act VIII: Fort Kessler ---
 	"tripwire", "armour_piercing_bones",
 	# --- Act VIII: Liberty Heights ---
-	"secret_identity", "origin_story"]
+	"secret_identity", "origin_story",
+	# --- Act IX: the Crash Site ---
+	"chitin", "anchored",
+	# --- Act IX: the Proving Moon ---
+	"trophy_rack", "mirror_bones",
+	# --- Act IX: the Ark ---
+	"starseed", "crop_circles"]
 
 ## Passives that only help summons (a "dead" level-up card while no summon
 ## class is owned, see AbilityManager.build_offers()).
@@ -246,7 +252,13 @@ const ARMY_PASSIVES := ["grave_dominion", "necrotic_vigor", "dark_command", "sou
 	# --- Act VIII: Fort Kessler ---
 	"armour_piercing_bones",
 	# --- Act VIII: Liberty Heights ---
-	"origin_story"]
+	"origin_story",
+	# --- Act IX: the Crash Site ---
+	"anchored",
+	# --- Act IX: the Proving Moon ---
+	"mirror_bones",
+	# --- Act IX: the Ark ---
+	"crop_circles"]
 
 # --- Act III: the Assembly Halls ---
 ## Overclock (paired with the Grave Drone): a summon class is "ranged" (and
@@ -315,7 +327,9 @@ const MINION_SPECIAL_SOURCES := ["bash", "abom_stomp", "rogue_dash", "gargoyle_s
 	"archfiend_cleave",
 	# --- Act VIII: Liberty Heights --- (the Fallen Hero's and Black Paragon's slams, FallenHeroBehavior; also
 	# what lets Armour-Piercing Bones, Armour.pierce_share(), count them as summon hits)
-	"fallen_hero_slam", "black_paragon_slam"]
+	"fallen_hero_slam", "black_paragon_slam",
+	# --- Act IX: the Ark --- (the Ghost Saucer's and Black Mothership's dropped foes, GhostSaucerBehavior)
+	"ghost_saucer_lift", "black_mothership_lift"]
 ## Unholy Resilience: enemy damage-source tags (CombatResolver.damage_unit
 ## `source`) that count as AREA or HOLY damage, tag -> category ("area" |
 ## "holy"; the category only splits the summary stats). Every other source
@@ -1755,6 +1769,139 @@ const PASSIVES := {
 			{"special_reach": 0.15},  # TUNING (not in GDD)
 			{"special_reach": 0.20},  # TUNING (not in GDD)
 			{"special_reach": 0.25},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act IX: the Crash Site ---
+	# Chitin (Bone Beetles' paired passive; owner-approved Act IX proposal:
+	# "Hive of Bone (+ Chitin)"; unlocked with the spell by the Hive Mother and
+	# offered on every stage). Own decision on its effect: the beetles grow
+	# chitin shells: every bone beetle bite deals bite_bonus more (BoneBeetles
+	# reads it once per bite; stat beetle_chitin_bonus_dmg; 0 while not owned).
+	"chitin": {
+		"display_name": "Chitin",  # Owner-approved proposal
+		"icon": "chitin",
+		"description": "Your bone beetles grow chitin shells: their bites hit harder.",
+		"labels": {"bite_bonus": ["Beetle bite damage", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"bite_bonus": 0.06},  # TUNING (not in GDD)
+			{"bite_bonus": 0.12},  # TUNING (not in GDD)
+			{"bite_bonus": 0.18},  # TUNING (not in GDD)
+			{"bite_bonus": 0.24},  # TUNING (not in GDD)
+			{"bite_bonus": 0.30},  # TUNING (not in GDD) first pass 0.45
+		],
+	},
+	# Act IX's counter-passive Anchored (owner-approved Act IX proposal and the
+	# brief: "abductions last half as long and break when the saucer takes
+	# damage"; unlocked by the Crash Site achievement Nothing Hatched and offered
+	# only in Act IX through its card row's "act"). The foundation's hooks read
+	# it: ConcordRules.anchored_hold_mult() (x the hold, 1 - hold_cut, in
+	# Abduction.lift()) and anchored_breaks() (any level: a hit on the saucer
+	# ends the hold, Abduction.on_saucer_hit(); stat abduction_anchored_breaks).
+	"anchored": {
+		"display_name": "Anchored",  # Owner-approved proposal
+		"icon": "anchored",
+		"description": "Your dead cling to the earth: tractor beams hold them for less, and a hit on the saucer drops them.",
+		"labels": {"hold_cut": ["Abduction hold", "neg_pct"]},
+		"act": 9,  # Owner-approved: the act's counter-passives are offered only in Act IX (Unlocks.act_allows())
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"hold_cut": 0.10},  # TUNING (not in GDD)
+			{"hold_cut": 0.20},  # TUNING (not in GDD)
+			{"hold_cut": 0.30},  # TUNING (not in GDD)
+			{"hold_cut": 0.40},  # TUNING (not in GDD)
+			{"hold_cut": 0.50},  # Brief: 0.5 at full ("half as long")
+		],
+	},
+	# --- Act IX: the Proving Moon ---
+	# Trophy Rack (Soul Caster's paired passive; owner-approved Act IX proposal:
+	# "Apex Predator (+ Trophy Rack)"; unlocked with the spell by Vrask'Tal and
+	# offered on every stage). Own decision on its effect: every enemy Soul
+	# Caster kills hangs a trophy (SoulCaster.trophies, for the run), and each
+	# trophy up to trophy_cap adds trophy_dmg to its shots (SoulCaster._fire(),
+	# the one read). Read only by SoulCaster: exactly nothing without the spell.
+	"trophy_rack": {
+		"display_name": "Trophy Rack",  # Owner-approved proposal
+		"icon": "trophy_rack",
+		"description": "Every foe your Soul Caster kills hangs a trophy, and every trophy makes its shots hit harder.",
+		"labels": {"trophy_dmg": ["Soul Caster damage per trophy", "pct"], "trophy_cap": ["Trophies counted", "num"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"trophy_dmg": 0.01, "trophy_cap": 10},  # TUNING (not in GDD) +10% at most
+			{"trophy_dmg": 0.012, "trophy_cap": 14},  # TUNING (not in GDD)
+			{"trophy_dmg": 0.014, "trophy_cap": 18},  # TUNING (not in GDD)
+			{"trophy_dmg": 0.016, "trophy_cap": 22},  # TUNING (not in GDD)
+			{"trophy_dmg": 0.018, "trophy_cap": 25},  # TUNING (not in GDD) +45% at most
+		],
+	},
+	# Act IX's counter-passive Mirror Bones (owner-approved Act IX proposal:
+	# "Mirror Bones (reflected beams deal more and summons take less beam
+	# damage)"; unlocked by the Proving Moon achievement The Hunter Hunted and
+	# offered only in Act IX through its card row's "act"). The foundation's
+	# hooks read it, nothing else: ConcordRules.mirror_reflect_mult() (x 1 +
+	# reflect_damage on every beam the bound player's Orb Shield or his army's
+	# barriers reflect; kept modest, brief: the reflected beams are already
+	# strong) and ConcordRules.mirror_taken_mult() (a Concord beam's tick on a
+	# summon deals 1 - beam_reduction). Keys ConcordRulesData.MIRROR_REFLECT_KEY
+	# and MIRROR_TAKEN_KEY.
+	"mirror_bones": {
+		"display_name": "Mirror Bones",  # Owner-approved proposal
+		"icon": "mirror_bones",
+		"description": "Your dead are polished like mirrors: beams burn them less, and the beams you turn back burn hotter.",
+		"labels": {"beam_reduction": ["Beam damage to summons", "neg_pct"], "reflect_damage": ["Reflected beam damage", "pct"]},
+		"act": 9,  # Owner-approved: the act's counter-passives are offered only in Act IX (Unlocks.act_allows())
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"beam_reduction": 0.10, "reflect_damage": 0.04},  # TUNING (not in GDD)
+			{"beam_reduction": 0.18, "reflect_damage": 0.08},  # TUNING (not in GDD)
+			{"beam_reduction": 0.26, "reflect_damage": 0.12},  # TUNING (not in GDD)
+			{"beam_reduction": 0.33, "reflect_damage": 0.16},  # TUNING (not in GDD)
+			{"beam_reduction": 0.40, "reflect_damage": 0.20},  # TUNING (not in GDD) brief: keep reflect_damage modest
+		],
+	},
+	# --- Act IX: the Ark ---
+	# Starseed (owner-approved proposal: Abduction's paired passive; own
+	# decision on its rule; GDD §15.0 "Tractor Beam, Abduction, Starseed and the
+	# Starborn"; unlocked by defeating the Harvester, UnlockData): the seed the
+	# Harvesters planted answers you now: Tractor Beam recharges starseed_haste
+	# sooner and its slam reaches starseed_reach wider
+	# (AbilityManager.apply_spell_mods() on the spell rows' own keys, like
+	# Secret Identity). Pairs with Tractor Beam -> Abduction.
+	"starseed": {
+		"display_name": "Starseed",  # Owner-approved proposal
+		"icon": "starseed",
+		"description": "Your Tractor Beam lifts sooner, and its slam reaches wider.",
+		"labels": {"starseed_haste": ["Tractor Beam cooldown", "neg_pct"], "starseed_reach": ["Slam reach", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"starseed_haste": 0.04, "starseed_reach": 0.05},  # TUNING (not in GDD)
+			{"starseed_haste": 0.08, "starseed_reach": 0.10},  # TUNING (not in GDD)
+			{"starseed_haste": 0.12, "starseed_reach": 0.15},  # TUNING (not in GDD)
+			{"starseed_haste": 0.16, "starseed_reach": 0.20},  # TUNING (not in GDD)
+			{"starseed_haste": 0.20, "starseed_reach": 0.25},  # TUNING (not in GDD)
+		],
+	},
+	# Crop Circles (own decision: Black Mothership's paired passive, its name
+	# and rule; GDD §15.0 "The Ghost Saucer, Black Mothership and Crop
+	# Circles"; unlocked by defeating the Harvester): the marks the saucers
+	# leave: every class special's held effects last special_hold longer (its
+	# *_duration keys: the Ghost Saucer's lift, freezes, stuns, chills;
+	# HordeDirector._special_stats(), THE one path of summon special numbers,
+	# its own category beside the level row's special_duration; 0 when not
+	# owned, so every other run is unchanged). Works the same on every stage.
+	# Pairs with the Ghost Saucer -> Black Mothership.
+	"crop_circles": {
+		"display_name": "Crop Circles",
+		"icon": "crop_circles",
+		"description": "Every summon's special holds its foes longer.",
+		"labels": {"special_hold": ["Special effects' length", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"special_hold": 0.06},  # TUNING (not in GDD)
+			{"special_hold": 0.12},  # TUNING (not in GDD)
+			{"special_hold": 0.18},  # TUNING (not in GDD)
+			{"special_hold": 0.24},  # TUNING (not in GDD)
+			{"special_hold": 0.30},  # TUNING (not in GDD)
 		],
 	},
 }

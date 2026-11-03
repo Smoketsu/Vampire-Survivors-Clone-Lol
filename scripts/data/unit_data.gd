@@ -61,7 +61,10 @@ const CLASS_ORDER := ["warrior", "archer", "mage", "mender", "warder", "bishop",
 		"blood_spawn",
 		# --- Act VIII: Liberty Heights ---
 		# Unlockable (UnlockData: defeating Paragon), so a fresh save never offers it.
-		"fallen_hero"]
+		"fallen_hero",
+		# --- Act IX: the Ark ---
+		# Unlockable (UnlockData: defeating the Harvester), so a fresh save never offers it.
+		"ghost_saucer"]
 ## The four GDD §4.2 summon ROLES ("all 4 classes": the Dread Sovereign
 ## achievement), in SynergyManager.classes_met() format: an entry that is an
 ## Array means "any one of these", so after the priest split either priest
@@ -1314,6 +1317,65 @@ const UNITS := {
 			"cluster_bonus": 0.5,  # TUNING (not in GDD) target-score bonus x cluster fullness while the slam is ready
 		},
 	},
+	# --- Act IX: the Ark ---
+	# The Ghost Saucer (owner-approved proposal: "Finale summon class: the Ghost
+	# Saucer, a flying ranged summon that fires short beams and lifts small
+	# enemies (evolution Black Mothership)"; GDD §15.0 "The Ghost Saucer, Black
+	# Mothership and Crop Circles"): a Concord saucer raised by the
+	# necromancer, a machine (no sex): a hull of bone-grey plates and
+	# soul-light, a cracked dome. It HOVERS over the army inside the Bone Ring
+	# with the support classes (formation "back", "flies": over the obstacles;
+	# enemies target and hit it; never liftable by the Concord) and fires SHORT
+	# BEAMS (attack_profile "saucer_beam", released by GhostSaucerBehavior,
+	# "saucer_lift"), and every lift_cooldown s it LIFTS a small foe through the
+	# one enemy-lift helper and drops it. Unlockable (UnlockData), then offered
+	# on every stage.
+	"ghost_saucer": {
+		"display_name": "Ghost Saucer",  # Owner-approved proposal
+		"plural": "Ghost Saucers",
+		"description": "A raised saucer that hovers over your army, fires short beams and lifts small foes.",  # Card text: one short sentence (owner rule).
+		"max_hp": 70.0,  # TUNING (not in GDD) a hull (Grave Drone 30, Gargoyle 70)
+		"damage": 8.0,  # TUNING (not in GDD) per beam, on every foe on its line
+		"attack_interval": 1.3,  # TUNING (not in GDD) s
+		"attack_range": 170.0,  # TUNING (not in GDD) centre-to-edge (px)
+		"move_speed": 96.0,  # TUNING (not in GDD) px/s; a quick hover
+		"radius": 10.0,  # TUNING (not in GDD) px
+		"acquisition_range": 250.0,  # TUNING (not in GDD)
+		"replenish_interval": 12.0,  # TUNING (not in GDD) s
+		"band_min": 30.0,  # TUNING (not in GDD) over the army, inside the ring (px)
+		"band_max": 70.0,  # TUNING (not in GDD)
+		"w_pursuit": 0.35,  # TUNING (not in GDD) it fires from where it hovers
+		"w_formation": 0.9,  # TUNING (not in GDD) keeps over the army
+		"w_separation": 0.9,  # TUNING (not in GDD)
+		"w_threat": 0.0,  # TUNING (not in GDD) hovers; never shies away
+		"attack_profile": "saucer_beam",  # Released by GhostSaucerBehavior (short beams).
+		"target_profile": "ranged",
+		"windup": 0.15,  # TUNING (not in GDD) s
+		"projectile_speed": 0.0,  # Unused: a beam, not a projectile.
+		"splash_radius": 0.0,
+		"heal_amount": 0.0,
+		"kite_distance": 0.0,
+		"heal_role_priority": 0.4,  # TUNING (not in GDD)
+		"formation": "back",  # Over the army: inside the Bone Ring with the support classes.
+		"capacity_bonus_mult": 0.5,  # TUNING (not in GDD) Grave Dominion V: +2
+		"flies": true,  # Owner-approved proposal: "a flying ranged summon" (SummonedUnit.flies; never liftable)
+		"behavior": "saucer_lift",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"special": {
+			"beams": 1,  # Beams an attack (Black Mothership 3).
+			"beam_spread": 0.25,  # TUNING (not in GDD) rad between two beams of one attack
+			"beam_length": 190.0,  # TUNING (not in GDD) px of a short beam (special_area lengthens it)
+			"beam_width": 7.0,  # TUNING (not in GDD) px each side of the line it strikes
+			"lift_cooldown": 7.0,  # TUNING (not in GDD) s between two lifts
+			"lift_duration": 1.2,  # TUNING (not in GDD) s a lifted foe hangs (Crop Circles lengthens it)
+			"lift_range": 170.0,  # TUNING (not in GDD) px it looks for a small foe
+			"lift_max_size": 12.0,  # TUNING (not in GDD) px: the biggest body it lifts ("small enemies"; not a *_radius key, so no area bonus grows it)
+			"lift_damage": 22.0,  # TUNING (not in GDD) the drop on the lifted foe (half to the foes round it)
+			"lift_radius": 36.0,  # TUNING (not in GDD) px round the drop
+			"lifts": 1,  # Foes it holds at once (Black Mothership 2).
+			"hover_lift": 16.0,  # TUNING (not in GDD) px the hull hovers above its shadow (drawing only)
+		},
+	},
 }
 
 ## Summon-ability progression, one entry per skill level (index 0 = level 1).
@@ -1547,6 +1609,16 @@ const LEVELS := {
 	# TUNING (not in GDD): 1 -> 3 Fallen Heroes; harder, wider, then more
 	# frequent slams.
 	"fallen_hero": [
+		{"count": 1},
+		{"count": 2},
+		{"count": 2, "hp_bonus": 0.2, "special_bonus": 0.25},
+		{"count": 3, "hp_bonus": 0.25, "special_bonus": 0.3, "special_area": 0.15},
+		{"count": 3, "hp_bonus": 0.3, "damage_bonus": 0.25, "special_bonus": 0.5, "special_area": 0.2, "special_haste": 0.2},
+	],
+	# --- Act IX: the Ark ---
+	# TUNING (not in GDD): 1 -> 3 Ghost Saucers; harder drops, wider beams,
+	# then more frequent lifts.
+	"ghost_saucer": [
 		{"count": 1},
 		{"count": 2},
 		{"count": 2, "hp_bonus": 0.2, "special_bonus": 0.25},

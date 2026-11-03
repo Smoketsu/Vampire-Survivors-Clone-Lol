@@ -450,6 +450,15 @@ func _ready() -> void:
 			var cog := ConcordGround.new()  # Act IX placeholder floor (the STAGE's "floor").
 			cog.look = stage_def.get("floor", {})
 			ground = cog
+		# --- Act IX: the Crash Site ---
+		"crash_site":
+			ground = CrashSiteGround.new()  # Act IX: the Crash Site's four zone floors (CrashSiteStage.ZONES).
+		# --- Act IX: the Proving Moon ---
+		"proving_moon":
+			ground = ProvingMoonGround.new()  # Act IX: the Proving Moon's four zone floors (ProvingMoonStage.ZONES).
+		# --- Act IX: the Ark ---
+		"ark":
+			ground = ArkGround.new()  # Act IX: the Ark of the Concord's four zone floors (ArkStage.ZONES).
 		_:
 			ground = Ground.new()
 	add_child(ground)

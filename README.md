@@ -2298,7 +2298,9 @@ Harvesters the Ark, and the Luminous fight on every stage. The act's shared rule
 
 - **Beams.** Concord weapons are continuous beams, not bullets: a thin magenta aiming line for 1 s (it follows its
   target, then stops turning for the last 0.3 s), then a beam that holds and sweeps, cutting through every summon and
-  you on its line. Your Bone Ring does not block it, nor does a Bone Wall: get out of the line (Grave Step dodges it).
+  you on its line. Your Bone Ring does not block it, but a **Bone Wall** does: a beam stops at the first wall
+  segment on its line (the spell's walls, Charnel Bastion rings and an Ossuary Titan's wall alike; split beams and the
+  Final Harvest's eye too; never your own reflected beam). Otherwise get out of the line (Grave Step dodges it).
   Your **Orb Shield** (one charge) and a summon with a **Warder or Bishop barrier** reflect a beam back along its line
   into whoever fired it, hurting every enemy on the way. A beam that passes through a **Star-Seer** splits into three.
   At most 6 beams at once.
@@ -2322,6 +2324,108 @@ your summons barely scratch it until a spell reveals it; a three-dot lock, then 
 **Terraformer Pod**. The Codex has a **Concord** tab, grouped by race. Autotest: `--stage=crash_site|proving_moon|ark`,
 `--boss=hive_mother|vrask_tal|harvester`, `--spawn=` with the kinds above (`concord_terraformer@T` drops a pod); lines
 `beams`, `abduction`, `terraforming`, `final harvest`, `concord kinds`, `concord stage`.
+
+### Act IX: the Crash Site (Stage 25)
+
+<!-- --- Act IX: the Crash Site --- -->
+A Harvester scout ship lies broken in the ruins of the capital, and the Brood is hatching from it (GDD §15.0 "The Crash
+Site (Act IX phase 2)" and the rows after it). Still hidden from the stage select until the lead's integration. Four
+zones on the clock: **the Crater** (glassed black rock; the crater's alien turf is already growing at the start),
+**the Hatchery** (5:00, green-black resin), **the Wreck** (10:00, the ship's hull plates) and **the Glass Spire**
+(15:00, the capital's broken paving and spires of fused glass). The Brood lead the timeline, the Harvesters, a Vrask
+hunter now and then and the Luminous fight with them.
+
+- **Infestation.** Wherever a Concord enemy falls on the Crash Site an **egg** sits for 6 s. Any spell or summon hit
+  clears it (a cleared egg is not a kill: no XP or drops); left alone, a broodling hatches. Broodlings that hatched lay
+  no eggs of their own, and at most 24 eggs lie at once.
+- **The Burrower** (the Brood's soldier) digs in and tunnels under your ring, out of reach; a dirt mound shows 1 s
+  before it bursts up among your summons. Keep blockers inside the ring.
+- **The Acid Spitter** lobs acid over your ring (arcing: the ring never stops it) that leaves a burning green puddle;
+  the puddles hurt your summons and you, never enemies. Kill it on approach and step out of the green.
+- **The Brood Matriarch** (the miniboss, 10:30) is a winged queen-guard who spits egg sacs over the ring; they land as
+  eggs. Swords only graze her in the air.
+- **The Hive Mother** (17:00): **the Brood** (egg waves around you and Burrowers from every side), **the Burrow** (she
+  dives under the arena, a big mound shows where you stood, and she erupts there, leaving alien turf), **the Flight**
+  (she takes to the air and rains acid). When she falls, a short ending text.
+- **Rewards.** Slaying the Hive Mother unlocks **Bone Beetles** (slain foes near you burst into bone beetles that bite
+  the next foe; it evolves into **Hive of Bone** with its paired passive **Chitin**: beetles bite foe after foe, and
+  their kills burst too) and with it **the Broodbound** (a woman who wed the swarm; her innate Swarm Bride adds a beetle
+  to every burst). The achievement **Nothing Hatched** (beat the Hive Mother with no egg hatched before she falls)
+  unlocks Act IX's counter-passive **Anchored** (abductions hold your summons for less, and a hit on the saucer drops
+  them; offered in Act IX only).
+
+Autotest: `--stage=crash_site`, `--boss=hive_mother`, `--spawn=` with `burrower`, `acid_spitter`, `brood_egg`,
+`brood_matriarch`; lines `crash site`, `burrowers`, `acid`, `brood matriarch`, `hive mother`, and `act IX spell` /
+`act IX passives` when Bone Beetles, Chitin or Anchored was taken; the `beams` line counts `bone wall stops`.
+
+### Act IX: the Proving Moon (Stage 26)
+
+<!-- --- Act IX: the Proving Moon --- -->
+The Vrask take the necromancer to their hunting ground on the moon, to see what he is worth (GDD §15.0 "The Proving Moon
+(Act IX phase 2)" and the rows after it; `docs/act9/BRIEF_PHASE2.md`). The Vrask lead here: their hunters come more often
+and in hunting parties, their Brood beasts are the fodder, and the Harvesters and the Luminous fight beside them. Beams,
+Abduction, Terraforming and the Final Harvest work as on every Act IX stage. Still hidden from the stage select
+(`"playable": false`) until the lead's integration pass.
+
+- **Low gravity.** Knockback goes twice as far for everyone (STAGE key `gravity` 2.0, read only through
+  `ConcordRules.gravity()`): every knock you deal sends an enemy twice as far, the enemies' shoves throw your summons twice
+  as far, and the Warbeast and Vrask'Tal leap twice as far. Grave Step is a shadow step and stays as it is.
+- **Four zones:** the Landing (grey regolith, boulders), the Craters (crater rims), the Trophy Hall (dark stone, trophy
+  walls hung with skulls) and the Duelling Ring (the duellists' marked circles).
+- **The Warbeast** (11:30, in the Trophy Hall): the Vrask's armoured war-hound, the miniboss. Armour plates (flat armour:
+  weak blows barely scratch it; Wither shreds it). It crouches over a landing circle and **pounces** onto it from up to
+  300 px away (150 × the low gravity), over your ring, biting everything in the circle and throwing your summons out.
+- **Vrask'Tal, the Hunt-Lord** (17:00), three phases:
+  - **the Stalk:** cloaked while he moves (a shimmer: your summons' blows deal half, a spell hit reveals him for 2 s), he
+    hunts the **edge of your ring** (the summon near him farthest from you) with his glaive and his shoulder caster's
+    three-dot lock. Every summon he kills hangs a **skull** on his belt: +4% damage each, at most eight.
+  - **the Duel** (below 65%): he drops his cloak, comes for you, locks you with his caster and **leaps over the ring** onto
+    you (a landing circle; up to 400 px away on the moon).
+  - **the Last Trophy** (below 25%): he arms the bomb on his wrist, a **20 s countdown** shown as the objective text. Kill
+    him in time and it is off (the achievement **The Hunter Hunted**). If it ends, it blows up where he stands: within
+    190 px you are left at a quarter of your health (never killed by it; Grave Step does not dodge it), your summons are
+    destroyed, and **he dies in it** (the kill still counts for the unlock chain, never for the achievement). Keep away
+    from him while it counts.
+- **Rewards.** Slaying Vrask'Tal unlocks the spell **Soul Caster** (a shoulder cannon locks the three strongest foes with
+  three soul-teal dots, then fires into each; evolves into **Apex Predator**: five locks, harder against elites and bosses,
+  and every kill reloads it) with its paired passive **Trophy Rack** (each of its kills adds a trophy: more damage per
+  trophy, up to a cap). Reach Soul Caster Lv 5 to unlock **the Blooded** (female, figure style), the one human who
+  survived the Hunt; her innate **First Blood** locks one more target. **The Hunter Hunted** unlocks Act IX's
+  counter-passive **Mirror Bones** (offered only in Act IX: your summons take less beam damage, and the beams you reflect
+  hit a little harder).
+- **Autotest:** `--stage=proving_moon`, `--boss=vrask_tal`, `--spawn=warbeast@T`, `--spells=soul_caster`,
+  `--passives=trophy_rack,mirror_bones`, `--character=blooded`; lines `proving moon`, `warbeast`, `proving moon threats`
+  (with the reflected beams' share of the run's damage), `vrask'tal`, `act IX spell`, `act IX passives`.
+
+### Act IX: the Ark of the Concord (Stage 27)
+
+<!-- --- Act IX: the Ark --- -->
+**The Ark of the Concord** (Stage 27, the finale of Act IX; GDD §15.0 "The Ark of the Concord (Act IX phase 2)" and the
+rows after it; built, still hidden until the Act IX integration). The mothership in orbit over the dead world, in four
+zones on the clock: **the Hangar** (deck plates and landing marks), **the Specimen Vaults** (sealed tanks stand round
+you: break them and the beasts inside attack everyone, your army and the Concord alike), **the Reactor** (vents breathe
+alien ground that heals the Concord: break them, and burn the ground with your spells) and **the Bridge of Stars**
+(starfield glass). The Harvesters lead, with the Luminous mixed in: the **Grey Overseer** (a psionic pulse that stuns
+your summons near it for 1 s, after a widening ring; it shields the greys round it: kill it first) joins the drones and
+saucers, and at 12:30 the **Luminous Archon** (the miniboss, a being of pure light) comes: every blow it strikes is a
+beam, a fan of lances and a halo all round it, so catch them on your Orb Shield and your Warders' barriers and send
+them back into it. At 3:00 left **the Harvester** descends from its throne of rings: **the Council** (it fights with
+the Concord's powers in turn: Brood swarms from every side, the Vrask's cloak (a shimmer; your spells reveal it) and
+the Luminous beams), **the Reaping** (it rises, untouchable, and four emitters land round your ring: each lifts one of
+your summons in its tractor beam every few seconds, with no cap, until you destroy them) and **the Gardener** (its true
+form, a vast being of light and rings: rings of alien ground grow round you and heal the adds it calls; your spells
+burn them back). When it falls the stars go dark (a short ending text, no epilogue). Rewards: the spell **Tractor
+Beam** (a column of soul light lifts the strongest foe into the air and slams it down on the rest; bosses and
+structures are slammed in place; evolves into **Abduction**: three foes a cast, and every slam drags the foes round it
+in, with **Starseed**: the beam lifts sooner and the slam reaches wider), the character **the Starborn** (a grey who
+deserted the Harvesters; Deserter's Signal: one more foe lifted), the summon class **the Ghost Saucer** (a raised
+saucer that hovers over your army, fires short beams through the foes on their line and lifts small foes to drop
+them; it flies, so the Concord can never lift it; evolves into **Black Mothership**: three beams at once and two foes
+lifted, with **Crop Circles**: every summon's special holds its foes longer) and its Ossuary mastery, and the
+achievement **The Last Harvest** (beat the Harvester: the title The Unharvested). Autotest: `--stage=ark`,
+`--boss=harvester`, `--spells=tractor_lift`, `--classes=ghost_saucer`, `--character=starborn`,
+`--spawn=grey_overseer@T`, `luminous_archon@T`, `specimen_tank@T`, `vault_beast@T`, `reactor_vent@T`,
+`reap_emitter@T`; lines `ark`, `ark events`, `ark kinds`, `harvester`, `tractor beam`, `ghost saucer`.
 
 ### The illustrated epilogue
 
@@ -3039,6 +3143,19 @@ scripts/
                             streak, the saucer's tractor cone, the Final Harvest's eye (textures only; Act IX)
     concord_report.gd       The autotest's Act IX lines (beams, abduction, terraforming, final harvest, concord
                             kinds, concord stage)
+    crash_site_report.gd    The autotest's Crash Site lines (crash site, burrowers, acid, brood matriarch, hive
+                            mother) and its items (Bone Beetles, Chitin, Anchored; Act IX)
+    crash_site_ground.gd    The Crash Site's four zone floors (tiles/crash_site_<style>, Act IX)
+    crash_site_glyphs.gd    Code-drawn fallbacks of the Crash Site's obstacles and kinds (Act IX)
+    proving_moon_ground.gd  The Proving Moon's four zone floors (tiles/proving_moon_<style>, decals; Act IX)
+    proving_moon_glyphs.gd  Code fallbacks of the Warbeast, Vrask'Tal and his skull belt, and the stage's obstacles (Act IX)
+    proving_moon_report.gd  The autotest's Proving Moon lines (proving moon, warbeast, threats, vrask'tal; the Soul Caster
+                            and passives' item lines; Act IX)
+    ark_ground.gd           The Ark of the Concord's four zone floors (hangar, vaults, reactor, bridge; Act IX)
+    ark_glyphs.gd           Code fallbacks of the Ark's kinds, obstacles and the Harvester; its throne of rings,
+                            Tractor Beam's lift column, the Ghost Saucer's beams (textures only; Act IX)
+    ark_report.gd           The autotest's Ark lines (ark, ark kinds, harvester) and the Tractor Beam / Ghost
+                            Saucer lines (Act IX)
     fort_kessler_report.gd  The autotest's Fort Kessler lines (the stage, its kinds, Mammoth, the threats, Harrow) and
                             its items (Bone Mines, Tripwire, Armour-Piercing Bones)
     fort_kessler_ground.gd  Fort Kessler's floor: CityGround with each zone's look (checkpoints, minefields, aprons,
@@ -3140,6 +3257,8 @@ scripts/
     behaviors/blood_spawn_behavior.gd  Act VII: the Blood Spawn's Bloodthirst (Nosferatu's spill; Thirst Eternal's key)
     behaviors/fallen_hero_behavior.gd  Act VIII: the Fallen Hero's Hero's Slam (the orbit, the dive on the densest pack;
                             Black Paragon's stun and chain; Origin Story's key)
+    behaviors/ghost_saucer_behavior.gd  Act IX: the Ghost Saucer's short beams and lifts (EnemyLift); Black
+                            Mothership's three beams and two lifts; Crop Circles' key
     golem_kit.gd            Content wave 2: Ossuary Hunger, the Ossuary Titan's heal, barrier and
                             collapse wall (HordeDirector.golems, created by the first Golem)
     golem_texts.gd          Content wave 2: Bone Golem / Grave Masonry / Ossuary Titan card and
@@ -3369,7 +3488,8 @@ scripts/
                             burns_ground() (the one burn check, from CombatResolver.damage_enemy()), the Mirror
                             Bones / Anchored hooks (null on Acts I to VIII)
       concord_beams.gd      BEAMS: fire() (the one beam path), the aim, the hold and sweep, the reflection (Orb
-                            Shields, barriers), the prism split, the cap, the bot's danger hint
+                            Shields, barriers), the prism split, the Bone Wall stop (wall_d(), through
+                            EmpireShots.wall_block_t(), Act IX phase 2), the cap, the bot's danger hint
       abduction.gd          ABDUCTION: lift() (the one call), pick(), carry() (the one place that moves a lifted
                             summon), the rescue, the summon taken, the cap
       terraforming.gd       TERRAFORMING: the cells, the pods, seed() (phase 2's call), the heal on live turf,
@@ -3380,6 +3500,30 @@ scripts/
       broodling_kit.gd, grey_drone_kit.gd, saucer_kit.gd, vrask_hunter_kit.gd, lumen_sentinel_kit.gd, prism_kit.gd,
       concord_terraformer_kit.gd  The shared kinds (the probe, the hover and tractor beam, the cloak and lock, the
                             sweep, the Star-Seer's glint, the pod's roots)
+      acid_pools.gd         THE ACID PATH (Game.concord.acid, Act IX, the Crash Site): lob() (arcing globs with a
+                            landing telegraph), the burning puddles (summons and the necromancer, never enemies)
+      burrower_kit.gd, acid_spitter_kit.gd
+                            The Brood's shared soldiers: the dig, the tunnel (untargetable, ethereal), the mound,
+                            the burst; the acid lob
+      crash_site_director.gd The Crash Site: the crater's seeded turf, INFESTATION (lay_egg(), the one egg path;
+                            on_concord_death() and clear_egg(), CombatResolver's two hooks), Nothing Hatched, the
+                            Brood Matriarch's event
+      brood_egg_kit.gd, brood_matriarch_kit.gd
+                            The Infestation egg (the 6 s count, the hatch) and the miniboss (the egg sacs)
+      boss_hive_mother.gd   The Hive Mother: the Brood (egg waves, burrowers), the Burrow (dive, mound, eruption),
+                            the Flight (acid rain)
+      proving_moon_director.gd  The Proving Moon: the Warbeast's event, the Last Trophy objective (Act IX)
+      warbeast_kit.gd       The Warbeast: the pounce (x the low gravity), its plates (flat armour), the XP burst
+      boss_vrask_tal.gd     Vrask'Tal: the Stalk (the cloak, the ring-edge prey, the skulls), the Duel (the leap over
+                            the ring), the Last Trophy (the 20 s countdown, the bomb)
+      ark_director.gd       The Ark: the Specimen Vaults' tanks and the Reactor's vents (structure windows), the
+                            wrecks, the Luminous Archon's event, the objective lines (Act IX)
+      grey_overseer_kit.gd, luminous_archon_kit.gd, specimen_tank_kit.gd, vault_beast_kit.gd, reactor_vent_kit.gd,
+      reap_emitter_kit.gd   The Ark's kinds: the pulse (stun_unit()) and shields, the Archon's beams (boss
+                            override), the freed beasts (prey(): the one check of whom they attack), the vents'
+                            Terraforming.seed(), the Reaping's lifts (Abduction.lift())
+      boss_harvester.gd     The Harvester: the Council (swarms, the cloak, beams), the Reaping (emitters, the cap
+                            lifted), the Gardener (rings of turf, adds)
     pantheon/               The Olympian Republic (Act IV): its kits ("<id>_kit.gd", loaded by name after the
                             Eye's and the Empire's) and bosses ("boss_<id>.gd"), and the act's shared rules:
       pantheon_rules.gd     Game.pantheon: owns the wrath, the Phalanx and Glory, the one front test
@@ -3666,12 +3810,21 @@ scripts/
                             Sentinel, the Star-Seer) and the landing pod; the race / beam / abducts / cloak /
                             heals_on_turf keys; the Final Harvest's kind and companions (Act IX)
                             (crash_site_ / proving_moon_ / ark_enemy_data.gd: each stage's own, empty until phase 2)
+    ark_enemy_data.gd       The Ark's own kinds: the Luminous Archon, the specimen tank, the freed beast, the
+                            reactor vent, the Reaping emitter (Act IX; the Grey Overseer is a shared row)
+    harvester_data.gd       The Harvester's arrival, phases and numbers (Act IX)
+    tractor_lift_data.gd    Tractor Beam / Abduction rules, Starseed keys, Deserter's Signal key (Act IX; the
+                            spell node is abilities/spells/tractor_lift.gd, the lift helper abilities/enemy_lift.gd)
     concord_rules_data.gd   Act IX's shared rules: RACES, BEAMS and BEAM_STYLES, ABDUCTION, TERRAFORMING,
                             FINAL_HARVEST, the SOUNDS map, the Mirror Bones / Anchored keys
     stages/crash_site_stage.gd     Act IX stubs: the Crash Site, the Proving Moon and the Ark of the Concord; act 9,
     stages/proving_moon_stage.gd   "concord": true, zones, the "terraforming" overrides, a timeline of the shared
     stages/ark_stage.gd            kinds of all four races, the Final Harvest, placeholder floors / bosses; the
-                                   Proving Moon reserves "gravity" (phase 2)
+                                   Proving Moon reads "gravity" (ConcordRules.gravity())
+    proving_moon_enemy_data.gd  The Proving Moon's table: the Warbeast (Act IX)
+    vrask_tal_data.gd       Vrask'Tal's arrival and numbers (the Stalk, the Duel, the Last Trophy and its bomb)
+    soul_caster_data.gd     Soul Caster / Apex Predator rules, Trophy Rack keys, First Blood key (Act IX; the spell
+                            node is abilities/spells/soul_caster.gd)
     stages/ravensmoor_stage.gd     Act VII stubs: Ravensmoor, the Witchwood and Castle Sanguis; act 7,
     stages/witchwood_stage.gd      "court": true, zones, the "moon" overrides, a timeline of the shared kinds,
     stages/castle_sanguis_stage.gd the Endless Feast, placeholder floors / bosses (the Witchwood built: four

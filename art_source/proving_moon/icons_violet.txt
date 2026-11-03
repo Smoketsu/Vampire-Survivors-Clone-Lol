@@ -1,0 +1,7 @@
+A sheet of THREE separate pixel-art game ICON SYMBOLS in one row, evenly spaced with wide empty gaps between them, on a FULLY TRANSPARENT background (real alpha). Each symbol is simple, bold and centred in its third of the image, drawn as chunky low-resolution pixel art (each symbol about 24 pixels wide on a coarse grid, shown enlarged with crisp square pixels, nearest-neighbour, 1-pixel dark outline, flat colours, at most 3 shades per colour, light from the top-left). No frame, no badge background, no text, no letters.
+From left to right:
+1. SOUL CASTER: a compact bone-and-iron shoulder cannon pointing up-right, a soul-teal bolt leaving its muzzle, and three small soul-teal dots in a triangle beside it.
+2. TROPHY RACK: a short dark iron rack bar with three small bone skulls hanging from it on cords.
+3. MIRROR BONES: a white bone with a mirror-bright silver face, a thin magenta beam striking it and bouncing back off it at an angle.
+Colours: violet #160A21 #4A2569 #7A42AD #A35CFA; bone #8C7B5E #D9CCAA #F2EBD3; iron #1E2024 #3A3D44 #55595F; soul-teal #1F8C92 #3FE0E8; silver #6E7A8C #B4C0D0 #E6EEF7; magenta #FF2FB8.
+Attached: an approved icon of this game: match its pixel size, outline weight and flat look (only the symbol, not its frame).

@@ -277,13 +277,23 @@ func _orb_stops(b: Vector2, r: float) -> bool:
 ## Path fraction (0..1) at which a Bone Wall segment first blocks the path
 ## a -> b of radius `r` (INF = none; co-op: the nearest of every player's walls).
 func _wall_block_t(a: Vector2, b: Vector2, r: float) -> float:
+	return wall_block_t(game, a, b, r)
+
+
+## THE WALL LOOP, shared (Act IX, the Crash Site: ConcordBeams stops its beams
+## on the same walls): path fraction (0..1) at which a Bone Wall segment of any
+## player of run `g` first blocks the path a -> b of radius `r` (INF = none).
+## Every player's NecroSpellBook "bone_wall" node is asked through
+## BoneWall.shot_block_t() (the spell's walls, Bastion rings and an Ossuary
+## Titan's wall alike), each with that player's slot bound.
+static func wall_block_t(g: Game, a: Vector2, b: Vector2, r: float) -> float:
 	var best := INF
-	for k in game.all_players.size():
-		var prev := game.bind_index(k)
-		var wall: BoneWall = game.abilities.spells.nodes.get("bone_wall")  # Null until a wall exists.
+	for k in g.all_players.size():
+		var prev := g.bind_index(k)
+		var wall: BoneWall = g.abilities.spells.nodes.get("bone_wall")  # Null until a wall exists.
 		if wall != null:
 			best = minf(best, wall.shot_block_t(a, b, r))
-		game.unbind(prev)
+		g.unbind(prev)
 	return best
 
 

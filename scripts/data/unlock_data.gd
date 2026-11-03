@@ -251,6 +251,36 @@ const UNLOCKS := {
 	"origin_story": {"type": "passive", "boss": "paragon", "text": "Defeat Paragon at Liberty Heights to unlock."},  # Its paired passive (own decision), unlocked with it
 	"bane_of_heroes": {"type": "title", "achievement": "no_more_heroes",
 		"text": "Earn No More Heroes: beat Paragon with no Super at his side."},  # Own decision (the clear is recorded as a title, as Act VII's Ender of the Feast)
+	# --- Act IX: the Crash Site ---
+	# The Hive Mother's fall (owner-approved Act IX proposal "Rewards": Bone
+	# Beetles is unlocked by the Hive Mother) with its paired passive, offered on
+	# every stage; the stage's achievement Nothing Hatched earns Act IX's
+	# counter-passive Anchored (offered only in Act IX through its card row's
+	# "act"; the brief's pairing, GDD §15.0 "Act IX phase 2: owner answers").
+	"bone_beetles": {"type": "spell", "boss": "hive_mother", "text": "Slay the Hive Mother at the Crash Site to unlock."},  # Owner-approved Act IX proposal
+	"chitin": {"type": "passive", "boss": "hive_mother", "text": "Slay the Hive Mother at the Crash Site to unlock."},  # Bone Beetles' paired passive (owner-approved proposal), unlocked with it
+	"anchored": {"type": "passive", "achievement": "nothing_hatched", "text": "Earn Nothing Hatched: let no egg hatch on the Crash Site before the Hive Mother falls."},  # Brief (Nov 3, 2026): Nothing Hatched unlocks Anchored
+	# --- Act IX: the Proving Moon ---
+	# Vrask'Tal's fall (owner-approved Act IX proposal "Rewards": Soul Caster is
+	# unlocked by Vrask'Tal) with its paired passive, offered on every stage; the
+	# stage's achievement The Hunter Hunted earns Act IX's counter-passive Mirror
+	# Bones (brief: the lead's pairing, GDD §15.0 "Act IX phase 2: owner
+	# answers"; offered only in Act IX through its card row's "act").
+	"soul_caster": {"type": "spell", "boss": "vrask_tal", "text": "Slay Vrask'Tal on the Proving Moon to unlock."},  # Owner-approved Act IX proposal
+	"trophy_rack": {"type": "passive", "boss": "vrask_tal", "text": "Slay Vrask'Tal on the Proving Moon to unlock."},  # Soul Caster's paired passive (owner-approved proposal), unlocked with it
+	"mirror_bones": {"type": "passive", "achievement": "the_hunter_hunted", "text": "Earn The Hunter Hunted: kill Vrask'Tal before his Last Trophy goes off."},  # Brief (Nov 3, 2026): The Hunter Hunted unlocks Mirror Bones
+	# --- Act IX: the Ark ---
+	# The Harvester's fall (owner-approved Act IX proposal "Rewards": Tractor
+	# Beam is unlocked by the Harvester; the finale grants the Ghost Saucer):
+	# the spell with its paired passive, and the summon class with its paired
+	# passive, offered on every stage (no card-row "act" key). The title The
+	# Unharvested is The Last Harvest's reward (it only records the clear).
+	"tractor_lift": {"type": "spell", "boss": "harvester", "text": "Defeat the Harvester on the Ark of the Concord to unlock."},  # Owner-approved Act IX proposal
+	"starseed": {"type": "passive", "boss": "harvester", "text": "Defeat the Harvester on the Ark of the Concord to unlock."},  # Tractor Beam's paired passive (owner-approved proposal), unlocked with it
+	"ghost_saucer": {"type": "class", "boss": "harvester", "text": "Defeat the Harvester on the Ark of the Concord to unlock."},  # Owner-approved proposal: the finale's reward
+	"crop_circles": {"type": "passive", "boss": "harvester", "text": "Defeat the Harvester on the Ark of the Concord to unlock."},  # Its paired passive (own decision), unlocked with it
+	"the_unharvested": {"type": "title", "achievement": "last_harvest",
+		"text": "Earn The Last Harvest: beat the Harvester on the Ark of the Concord."},  # Own decision (the clear is recorded as a title, as Acts VI-VIII did)
 }
 
 ## End-screen plate heading of a newly unlocked item, by type.

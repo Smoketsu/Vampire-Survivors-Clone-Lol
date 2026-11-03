@@ -39,4 +39,6 @@ const POSES: Dictionary = {
 	"bosses/amaterasu": {1: "mirror"},  # TUNING (not in GDD) the mirror raised to the sky (BossAmaterasu: her beams' windups and her crossings)
 	# --- Act V: Castle Kurogane ---
 	"bosses/shogun": {3: "duel"},  # TUNING (not in GDD) the low iai stance with the blade drawn (BossShogun: the leap down and every cut he stands to draw in the duel)
+	# --- Act IX: the Crash Site ---
+	"bosses/hive_mother": {1: "cast", 3: "strike"},  # TUNING (not in GDD) her claws raised over the egg sac as she lays a wave / her claws thrust down as she bursts out of the ground (BossHiveMother; her Flight form is its own still, bosses/hive_mother_flight)
 }

@@ -1795,4 +1795,32 @@ const CONCORD_SOUNDS: Dictionary = {  # TUNING (not in GDD)
 			{"wave": "saw", "f0": 73.42, "start": 0.9, "dur": 2.6, "amp": 0.2, "attack": 0.9, "decay": 1.2, "lp0": 350.0, "lp1": 1200.0, "vib_hz": 4.5, "vib_depth": 0.004},
 			{"wave": "saw", "f0": 110.0, "start": 1.0, "dur": 2.5, "amp": 0.11, "attack": 0.9, "decay": 1.2, "lp0": 350.0, "lp1": 1100.0, "vib_hz": 4.5, "vib_depth": 0.004},
 			{"wave": "sine", "f0": 220.0, "start": 1.2, "dur": 2.3, "amp": 0.05, "attack": 0.8, "decay": 1.1}]},
+	# --- Act IX: the Crash Site --- (appended at the END: the pack's seeds follow its order)
+	# A Burrower's mound heaves and bursts: a low earthy rumble and a crack of dirt.
+	"burrow_rumble": {"dur": 0.9, "volume_db": -15.0, "max_voices": 2, "min_interval": 250, "pitch_var": 0.08, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.7, "amp": 0.3, "attack": 0.15, "decay": 0.35, "lp0": 260.0, "lp1": 180.0},
+			{"wave": "sine", "f0": 55.0, "f1": 38.0, "dur": 0.8, "amp": 0.3, "attack": 0.1, "decay": 0.4},
+			{"wave": "noise", "start": 0.55, "dur": 0.08, "amp": 0.35, "attack": 0.002, "decay": 0.05, "lp0": 2400.0, "lp1": 900.0}]},
+	# An Acid Spitter's lob: a wet hork, then a sizzling splash.
+	"acid_spit": {"dur": 0.7, "volume_db": -18.0, "max_voices": 3, "min_interval": 150, "pitch_var": 0.1, "priority": 1,
+		"layers": [
+			{"wave": "noise", "dur": 0.08, "amp": 0.3, "attack": 0.005, "decay": 0.05, "lp0": 1400.0, "lp1": 700.0},
+			{"wave": "sine", "f0": 320.0, "f1": 180.0, "dur": 0.1, "amp": 0.12, "attack": 0.005, "decay": 0.06},
+			{"wave": "noise", "start": 0.1, "dur": 0.55, "amp": 0.16, "attack": 0.03, "decay": 0.35, "lp0": 8000.0, "lp1": 4500.0}]},
+	# An Infestation egg breaks open: a soft wet crack and a short chitter.
+	"egg_hatch": {"dur": 0.5, "volume_db": -19.0, "max_voices": 2, "min_interval": 200, "pitch_var": 0.12, "priority": 1,
+		"layers": [
+			{"wave": "noise", "dur": 0.05, "amp": 0.35, "attack": 0.002, "decay": 0.03, "lp0": 3000.0, "lp1": 1200.0},
+			{"wave": "sine", "f0": 520.0, "f1": 380.0, "dur": 0.06, "amp": 0.1, "attack": 0.003, "decay": 0.04},
+			{"wave": "noise", "start": 0.12, "dur": 0.012, "amp": 0.3, "attack": 0.001, "decay": 0.004, "lp0": 6500.0},
+			{"wave": "noise", "start": 0.18, "dur": 0.012, "amp": 0.26, "attack": 0.001, "decay": 0.004, "lp0": 7000.0},
+			{"wave": "noise", "start": 0.25, "dur": 0.012, "amp": 0.24, "attack": 0.001, "decay": 0.004, "lp0": 6500.0}]},
+	# The Hive Mother's (and the Matriarch's) rasping shriek: a gliding buzz over a low growl.
+	"hive_scream": {"dur": 1.4, "volume_db": -12.0, "max_voices": 1, "min_interval": 900, "pitch_var": 0.05, "priority": 3,
+		"layers": [
+			{"wave": "saw", "f0": 420.0, "f1": 260.0, "dur": 1.2, "amp": 0.16, "attack": 0.08, "decay": 0.6, "lp0": 2600.0, "lp1": 1400.0, "vib_hz": 22.0, "vib_depth": 0.04},
+			{"wave": "square", "f0": 210.0, "f1": 130.0, "dur": 1.1, "amp": 0.08, "attack": 0.1, "decay": 0.6, "lp0": 1600.0, "lp1": 900.0, "vib_hz": 18.0, "vib_depth": 0.05},
+			{"wave": "noise", "dur": 1.2, "amp": 0.12, "attack": 0.1, "decay": 0.6, "lp0": 3000.0, "lp1": 1500.0},
+			{"wave": "sine", "f0": 70.0, "f1": 50.0, "dur": 1.3, "amp": 0.22, "attack": 0.1, "decay": 0.7}]},
 }

@@ -1,0 +1,12 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, a lean insect creature rearing back on its legs, its head thrust forward about to spit, a big swollen glowing acid sac on its back
+
+LOW-RESOLUTION pixel art: the whole SUBJECT is only 32 pixels tall, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims, lacing or engravings.
+
+Subject: an ACID SPITTER of the Brood (a creature, no sex, no clothes): a lean, long-legged GREEN-BLACK insect with spiky carapace plates, a narrow head with mandibles and glowing ACID-GREEN eyes, and one big round translucent swollen ACID SAC on its back glowing bright acid green, a drip of green at its mouth. Never violet or purple. Signature shape that must read in silhouette: the round glowing sac and the thrust-forward head.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: carapace #1B3A2A #2E6B45 #3E8A58; acid #1FA84A #3CFF6A #B8FF9A; claw tips dark #0A1A12; cream spines #C8BC9C #E0D2B0
+
+Outline: a clean 1-pixel dark outline around the whole subject in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the subject), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark. Draw ONLY ONE figure.
+Attached: (1) a game sprite of this act for pixel size, outline weight and flat look; (2) concept art of this unit for its shape only (do NOT copy its detail level or painted shading).

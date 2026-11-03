@@ -500,6 +500,41 @@ const HEIGHTS: Dictionary = {
 	"bosses/hive_mother": 96.0,  # TUNING (not in GDD) boss tier, female (figure redesign, chitin covers her completely): the Brood's queen, wings, horned helm and egg-sac abdomen (about 90 wide); idle strip
 	"structures/concord_terraformer": 40.0,  # TUNING (not in GDD) a landing pod rooted in alien turf, about 54 x 40 art px, vents glowing green; the steam is code
 	"structures/concord_terraformer_dead": 40.0,  # TUNING (not in GDD) the same pod cracked, charred and dark (destroyed)
+	# --- Act IX: the Crash Site (assets/sprites/concord/, bosses/, player/) ---
+	"concord/burrower": 34.0,  # TUNING (not in GDD) Brood soldier, a creature: a slate-dark armoured digger, cream claws (about 40 wide); walk strip
+	"concord/acid_spitter": 32.0,  # TUNING (not in GDD) Brood ranged, a creature: a green insect with a glowing acid sac (about 34 wide); walk strip
+	"concord/brood_matriarch": 64.0,  # TUNING (not in GDD) the miniboss, an insect creature (female by name): green-black chitin, wings, 60 x 60 art px plus 2 empty rows above and below for the hover bob; hover strip
+	"concord/brood_egg": 14.0,  # TUNING (not in GDD) an Infestation egg in a resin smear (about 14 wide); its hatch strip concord/brood_egg_hatch (4 frames of 16)
+	"concord/burrow_mound": 16.0,  # TUNING (not in GDD) a heaving dirt mound (about 28 wide; drawn scaled by BurrowerKit.draw_mound())
+	"bosses/hive_mother_flight": 100.0,  # TUNING (not in GDD) her Flight form (female, figure redesign, chitin covers her): wings spread wide, 100 x 96 art px plus 2 empty rows above and below for the hover bob; hover strip
+	"player/broodbound": 56.0,  # TUNING (not in GDD) character tier, female (figure redesign, a chitin gown covers chest and hips): the wing crown above
+	"player/broodbound_hyper": 56.0,  # TUNING (not in GDD) skin art: her body, gold chitin
+	"player/broodbound_untouchable": 56.0,  # TUNING (not in GDD) skin art: her body, the white phantom
+	"player/broodbound_deathlord": 56.0,  # TUNING (not in GDD) skin art: her body, the spiked crown above
+	# --- Act IX: the Proving Moon (assets/sprites/concord/, bosses/, player/) ---
+	"concord/warbeast": 44.0,  # TUNING (not in GDD) miniboss tier, a creature: the Vrask's armoured war-hound, long and low (about 92 wide); walk strip
+	"bosses/vrask_tal": 84.0,  # TUNING (not in GDD) boss tier, male: the Hunt-Lord, horned crest, shoulder caster, skull belt and glaive (about 106 wide); walk strip
+	"player/blooded": 56.0,  # TUNING (not in GDD) character tier, female (figure redesign, clothed): a brown hunting coat, the red braid, the shoulder cannon
+	"player/blooded_hyper": 56.0,  # TUNING (not in GDD) skin art: her body, white and gold
+	"player/blooded_untouchable": 56.0,  # TUNING (not in GDD) skin art: her body, the white phantom
+	"player/blooded_deathlord": 56.0,  # TUNING (not in GDD) skin art: her body, black iron and crimson, the small crown inside the same height
+	# --- Act IX: the Ark ---
+	"concord/grey_overseer": 38.0,  # TUNING (not in GDD) Harvester support, sex unmarked: a tall grey in a gunmetal mantle, a plasma crown; walk strip
+	"concord/luminous_archon": 64.0,  # TUNING (not in GDD) the miniboss, male: a being of white-gold light in crystal plates, a crown of shards; glide strip
+	"concord/vault_beast": 30.0,  # TUNING (not in GDD) a freed beast, a creature: six legs, rust-red hide, ochre crest, about 40 long; walk strip
+	"structures/specimen_tank": 40.0,  # TUNING (not in GDD) a sealed specimen tank, green fluid, a beast curled inside (tools/ark_tiles.py)
+	"structures/specimen_tank_dead": 22.0,  # TUNING (not in GDD) its shattered base and spilt fluid (ArkDirector's wreck)
+	"structures/reactor_vent": 30.0,  # TUNING (not in GDD) a round grated vent on a gunmetal collar, plasma below (tools/ark_tiles.py)
+	"structures/reactor_vent_dead": 22.0,  # TUNING (not in GDD) the same cracked and dark
+	"structures/reap_emitter": 46.0,  # TUNING (not in GDD) a gunmetal pylon with a plasma lens (tools/ark_tiles.py)
+	"bosses/harvester": 96.0,  # TUNING (not in GDD) boss tier, sex unmarked: the oldest grey, white robes, its great head (its throne of rings is code)
+	"bosses/harvester_true": 112.0,  # TUNING (not in GDD) its true form, a vast being of light and rings (the Gardener)
+	"player/starborn": 56.0,  # TUNING (not in GDD) character tier, female (figure redesign, suit covers chest and hips): a grey deserter in hull white and gunmetal
+	"player/starborn_hyper": 56.0,  # TUNING (not in GDD) skin art: her suit gilded
+	"player/starborn_untouchable": 56.0,  # TUNING (not in GDD) skin art: the white phantom
+	"player/starborn_deathlord": 56.0,  # TUNING (not in GDD) skin art: black iron, a crown above
+	"summons/ghost_saucer": 34.0,  # TUNING (not in GDD) a raised saucer, a machine: bone-grey hull, soul-light, 52 x 30 art px plus 2 empty rows above and below for the hover bob; hover strip
+	"summons/black_mothership": 40.0,  # TUNING (not in GDD) its evolution, larger, black and soul-lit, 54 x 36 art px plus 2 empty rows above and below; hover strip
 }
 
 ## Height (world px) used for a key missing from HEIGHTS.
@@ -602,6 +637,8 @@ const FLAT_SIZES: Dictionary = {
 	"overlays/maelstrom_whirl": 96.0,  # TUNING (not in GDD) a Maelstrom whirlpool from above, 92 x 96
 	# --- Act IX: the Concord of Stars ---
 	"concord/mothership_eye": 192.0,  # TUNING (not in GDD) the mothership's eye seen from below, a round 192 x 192 sky overlay with transparent corners (the Final Harvest fades it in; no screen read)
+	# --- Act IX: the Crash Site ---
+	"projectiles/bone_beetle": 10.0,  # TUNING (not in GDD) a Bone Beetles beetle from above, about 10 x 8, its head to the right
 }
 ## Longest side (px) for a flat sprite key missing from FLAT_SIZES.
 const DEFAULT_FLAT_SIZE: float = 20.0  # TUNING (not in GDD)

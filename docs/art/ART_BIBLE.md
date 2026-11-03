@@ -3047,3 +3047,103 @@ a frame, tiles along +x) and `effects/beam_hit.png` (6 frames of 64x64 grey burs
 `concord/mothership_eye.png` (192x192, the API source snapped to the Concord colours, round with transparent corners; the code fades it in).
 Seams checked on a 1280x720 mock (`docs/act9/art_mock_turf.png`); contact sheet `docs/act9/art_contact_sheet.png`. `art_check.py` rows against
 older stages' light floors fail the lightness gap for the dark Brood and Vrask (those floors are other acts').
+
+### Act IX: the Crash Site (phase 2, Nov 2026)
+
+<!-- --- Act IX: the Crash Site --- -->
+The Crash Site's own art (GDD §15.0 "Crash Site art (Act IX phase 2)"), rebuilt by `art_source/crash_site/make_art.py` from the API
+sources in `art_source/crash_site/raw/` (prompts beside the script, reference crops of the approved concepts in `refs/`; each prompt
+names the sex or says creature). Insects keep the Brood's own colours (green-black chitin, acid green, cream claws, a slate armour);
+the Hive Mother keeps her own `hive` ramp; never the player's violet and bone on a Concord unit.
+
+| Key | What it is | Art px | Notes |
+|---|---|---|---|
+| `concord/burrower` | creature: a slate-dark armoured digger, cream digging claws, one magenta eye, a little dirt | 32x34 | legs walk (hip 26) |
+| `concord/acid_spitter` | creature: a lean green-black insect with a glowing acid sac | 32x32 | legs walk (hip 21) |
+| `concord/brood_matriarch` | insect creature (female by name, not in the figure style): green-black chitin, four wings, cream claws, a pale-green egg sac | 60x60 + 2 empty rows each side | hover strip (bob 2); the concept's queen-guard of `act9_boss.png` with wings |
+| `bosses/hive_mother_cast` / `_strike` | her poses (BossPoseData 1 / 3): claws raised over the egg sac / bursting out of the ground | 96x96 / 84x96 | pixelated conversion, `hive`, `hive_bone`, gold (+ brown dirt on the strike) |
+| `bosses/hive_mother_flight` | her Flight form: wings fully spread, the sac tucked | 100x96 + 2 empty rows each side | hover strip (bob 2), drawn lifted by BossHiveMother |
+| `player/broodbound` | **female**, figure style: a green-black chitin gown (chest and hips covered), pale skin, acid-green eyes, a wing crown, bone beetles on her hand | 30x56 | straight conversion (the pixelated one lost her face); robe glide, bust box (9-21, rows 14-21), idle strip |
+| `player/broodbound_hyper` / `_untouchable` / `_deathlord` | her skins: gold and black chitin / the white phantom / black iron and crimson with a spiked crown | 30x56 / 30x56 / 38x56 | skin rigs from hers (`SKINS`) |
+| `projectiles/bone_beetle` | Bone Beetles' beetle, head to the right | 12x10 | the extra beetle the gold icon sheet came back with, turned 90 degrees |
+| `obstacles/crash_rubble_s/m/l`, `crash_hull_shard_s/l` (+ `_v` turned 90 degrees), `glass_spire_s/l` | the capital's rubble, the scout ship's torn hull plating, spires of fused glass | 26-42 wide | one API sheet cut apart |
+| `icons/bone_beetles`, `chitin`, `anchored` (violet), `hive_of_bone`, `ach_nothing_hatched` (gold) | badges on the approved frames | 32x32 | the violet sheet came back with a fourth symbol, skipped |
+
+**Drawn in code** (`art_source/crash_site/crash_site_tiles.py`, deterministic): the zone floors `tiles/crash_site_crater` (glassed black
+rock in Voronoi plates), `_hatchery` (green-black resin lumps), `_wreck` (32 px hull plates) and `_ruins` (offset paving slabs), each 128x128
+and seamless, dark and flat (the floor rule); `concord/brood_egg` (14x14, a green-black egg with an acid vein on a resin smear) and its
+hatch strip `concord/brood_egg_hatch` (4 frames of 16x16, played over the egg's last 1.2 s; the egg's slow pulse is a tint on game time, no
+flashing); `concord/burrow_mound` (28x16, scaled by `BurrowerKit.draw_mound()` for the Burrower and, larger, the Hive Mother's mound);
+`effects/acid_pool` (32x26 grey tint mask, tinted acid green by `AcidPools`). `art_check.py`: the hover stills fail "feet" by design (as the
+saucer); the dark Brood and the Broodbound fail the lightness gap on older acts' light floors (the Crash Site's floors are near-black).
+
+### Act IX: the Proving Moon (Stage 26; Act IX phase 2, Nov 2026)
+
+<!-- --- Act IX: the Proving Moon --- -->
+The Proving Moon's art (GDD §15.0 "The Proving Moon art (Act IX phase 2)"), in the Concord's style above: Vrask teal and
+dark gunmetal, hull-white blades, magenta lamps, grey regolith; never the player's violet and bone on a Concord unit (the
+trophy skulls are a weathered yellow-grey, `concord_hive_bone`). **The Warbeast** is a **creature**; **Vrask'Tal** is
+**male**; **the Blooded** is **female**, in the figure-redesign style (hourglass, fully clothed: a brown leather hunting coat
+buttoned to a high collar, a belt, trousers and boots; raised: grey-pale skin, soul-teal eyes, a dark-red braid, claw
+scars, a teal Vrask scale on a cord, a bone-and-iron shoulder cannon). Prompts in `art_source/proving_moon/<id>.txt` (the
+unit template, the sex or "a creature" named), raw API images in `art_source/proving_moon/raw/` (`blooded_a_unused.png`
+is the first Blooded try: the figure was too plain), references in `refs/` (the lineup's Vrask hunter, enlarged game
+sprites `concord/vrask_hunter`, `player/fallen_sergeant`, `bosses/vargr`, `concord/broodling`, two obstacles, a floor tile,
+two approved badges). The skins are made from the Blooded's raw image. Rebuild: `python3 art_source/proving_moon/make_art.py`
+(steps units, figures, badges, props, decals, floors, strips).
+
+| Sprite | Size (art px) | Notes |
+|---|---|---|
+| `concord/warbeast` | 92 × 44 | a creature: a long, low armoured war-hound, teal hide, gunmetal plates with teal trim, a magenta collar lamp; legs strip (hind / fore halves, hip 28) |
+| `bosses/vrask_tal` | 106 × 84 | male: the horned Hunt-Lord, shoulder caster, wrist bomb, skull belt, scale cloak, glaive; legs strip (hip 64). No attack poses yet (the still shows; the code lifts him on his leap and fades him while cloaked); his skull belt's kill count is drawn by code over it |
+| `player/blooded` (+ `_hyper`, `_untouchable`, `_deathlord`) | 30 × 56 (skins 32 / 32 / 28 × 56) | figure redesign; bust rig (12-22, rows 13-20) and idle strip; the Gilded Quarry (white and gold), white phantom with soul-teal, black iron and crimson with a small spiked crown. `art_check` lightness on the Graveyard soil +0.14 (need +0.15): the `brown` ramp has two shades and a brighter source does not move it; the Deathlord skin is dark by design, as every Deathlord skin |
+| `icons/soul_caster`, `trophy_rack`, `mirror_bones` | 32 × 32 | violet badges (the `abyssal_pact` frame) |
+| `icons/apex_predator`, `ach_the_hunter_hunted` | 32 × 32 | gold badges (the `tidecallers_host` frame) |
+| `obstacles/moon_boulder_s/m/l` | 28 / 40 / 54 wide | grey lunar boulders (circles of 12 / 18 / 24 px) |
+| `obstacles/crater_rim_s/m/l` | 48 / 64 / 82 wide | a raised regolith rim round a dark bowl (circles of 22 / 30 / 38 px) |
+| `obstacles/trophy_pillar_s/l` (+ `_v`) | 42 × 13 / 62 × 18 (end-on 28 × 54 / 70) | a dark cut-stone trophy wall, a teal-trimmed rail, yellow-grey alien skulls |
+| `decals/proving_moon_landing_crater`, `_craters_crater` | 24 × 20 | a small moon crater (the same decal in both zones) |
+| `decals/proving_moon_trophy_hall_skulls` | 28 × 24 | fallen trophy skulls and a broken cord |
+| `decals/proving_moon_duelling_ring_ring` | 40 × 39 | a faded teal duelling mark (a ring with four ticks) |
+| `tiles/proving_moon_landing`, `_craters`, `_trophy_hall`, `_duelling_ring` | 128 × 128 | `make_tile.py` quilts: one regolith texture (the Landing; darker for the Craters, paler for the Duelling Ring) and one of dark cut slabs (the Trophy Hall) |
+
+### Act IX: the Ark of the Concord (phase 2, Nov 2026)
+
+<!-- --- Act IX: the Ark --- -->
+Stage 27's kinds, boss and rewards (GDD §15.0 "The Ark of the Concord (Act IX phase 2)" and the rows after it), matched to the
+approved concepts `act9_lineup.png` (the Grey Overseer; the Lumen Sentinel for the Archon) and `act9_boss.png` (the Harvester and its
+rings). Every prompt names the sex (or says creature / machine): the greys' sex is unmarked (the Overseer, the Harvester), the Archon is
+male, the freed beast a creature, the saucers machines; the Starborn is a **female** grey in the figure-redesign style (a fully covering
+suit). No Concord unit is in violet and bone; the Ghost Saucer and Black Mothership are the necromancer's (raised), so they are bone and
+soul-teal. Prompts and the rebuild script are in `art_source/ark/` (`make_art.py`: units through `prepare_sprite.py --ink-l 0.15` with
+explicit ramps, the saucers padded 2 empty rows each side for the hover bob, the Starborn through `pixelate_source.py` first, the
+Deathlord skin straight with `grey` first and `--no-levels`, badges set on the approved violet / gold frames (the generator copied the
+reference badge in as a last symbol: skipped), `walk_cycle.py` strips and idle strips under `# --- Act IX: the Ark ---`). `--ref` the
+act's own sprites enlarged x4-12 nearest (the Grey Drone, the Lumen Sentinel, the Broodling, the Hive Mother, the Saucer) plus a crop of
+the concept; the Revenant Heroine for the Starborn's figure; the base sprite for the skins, the true form and Black Mothership.
+13 API images, about $0.30 (ledger). Contact sheet `docs/act9/ark_contact_sheet.png`.
+
+| Key | What it is | Art px | Notes |
+|---|---|---|---|
+| `concord/grey_overseer` | sex unmarked: tall grey, white robe, gunmetal collar, green brow mark | 16x38 | robe glide (hip 24) |
+| `concord/luminous_archon` | male: a being of white-gold light, crystal plates, a halo of shards | 38x64 | robe glide (hip 40) |
+| `concord/vault_beast` | creature: six-legged rust-red grazer-predator, brown crest, gold eyes | 48x30 | legs (hip 19); ramps crimson, brown, gold, lumen |
+| `bosses/harvester` | sex unmarked: the oldest grey, tattered white robes, spread arms | 72x96 | robe glide (hip 60); its throne of rings is code (`effects/ark_ring`) |
+| `bosses/harvester_true` | its true form: white-gold light inside four concentric gold rings | 72x112 | still (the Gardener) |
+| `player/starborn` | **female**, figure style: a grey deserter, hull-white suit, gunmetal coat, plasma seams | 30x56 | legs (hip 36), bust (12-24, rows 14-22) + `swish` (4-26, rows 26-35), idle strip |
+| `player/starborn_hyper` / `_untouchable` / `_deathlord` | the Gilded Deserter (gold and white), the white phantom, the Deathlord (black iron, crown, crimson sash) | 30 / 30 / 28 x56 | rigs derived (`SKINS`) |
+| `summons/ghost_saucer` | machine: a raised saucer, bone plates, soul-teal dome and lamps | 52x34 (30 + 2 empty rows each side) | hover strip (bob 2) |
+| `summons/black_mothership` | machine: a black saucer, bone trim, three prongs, soul-teal lenses | 54x40 (36 + 2 + 2) | hover strip (bob 2) |
+| `icons/tractor_lift`, `starseed`, `ghost_saucer`, `crop_circles` | violet badges | 32x32 | |
+| `icons/star_abduction`, `black_mothership`, `ach_last_harvest` | gold badges | 32x32 | |
+
+**Drawn on the grid** by `tools/ark_tiles.py` (deterministic, no API): the zone floors `tiles/ark_hangar` (gunmetal deck plates,
+rivets, a dim plasma guide stripe), `ark_vaults` (a dark grating between sunken specimen-tank lids, dim glass so the units read),
+`ark_reactor` (a grating with a dim plasma glow in its slots, brighter at seeded hot spots), `ark_bridge` (starfield glass under
+gunmetal ribs), 128x128 seamless; the obstacles `obstacles/ark_crate_s/_l` (+ `_v`), `ark_console_s/_l` (+ `_v`), `ark_pillar_s/_l`; the
+structures `structures/specimen_tank` (+ `_dead`), `reactor_vent` (+ `_dead`), `reap_emitter`; and `effects/ark_ring` (64x64, a grey tint
+mask squashed into the throne's tilted rings by the code).
+
+Code-drawn (no PNG): the Grey Overseer's widening pulse ring, the Archon's glow, Tractor Beam's column of soul light and the lifted
+foe's mark (the enemy's body stays on the ground: an Enemy has no draw offset), the Ghost Saucer's short beams, the Reaping's glow over
+the ring, the true form's glow over the base sprite when its art is missing.

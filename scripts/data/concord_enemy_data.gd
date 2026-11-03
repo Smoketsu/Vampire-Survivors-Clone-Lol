@@ -329,4 +329,144 @@ const ENEMIES := {
 		"race": "harvesters",  # The Harvesters' terraforming (the report lists it with them).
 		"heals_on_turf": false,  # Brief: false for structures
 	},  # The landing pod.
+	# --- Act IX: the Crash Site ---
+	# The Brood, soldier: THE BURROWER (a creature; owner-approved proposal:
+	# "Tunnels in and bursts up inside the ring (a dirt mound 1 s ahead) |
+	# Blockers inside the ring"). A slate-dark armoured insect with cream
+	# digging claws. On the field it DIGS IN (dig_time s, still hittable), then
+	# travels UNDERGROUND (Enemy.untargetable: out of the enemy grid, so nothing
+	# aims at it or hits it; Enemy.ethereal: no summon body-blocks it, it
+	# passes under the obstacles) at burrow_speed px/s toward a point
+	# surface_dist px from the necromancer on its own side (inside the Bone
+	# Ring, among the summons); there a DIRT MOUND shows for mound_time s (a
+	# texture; it is still underground), then it BURSTS UP: every summon and
+	# necromancer within burst_radius px takes burst_damage (time-scaled) once,
+	# and it fights on with the shared melee AI. Knocked or pulled more than
+	# reburrow_dist px from the necromancer it digs in again (at most once
+	# every reburrow_every s). BurrowerKit.
+	"burrower": {
+		"display_name": "Burrower",
+		"max_hp": 46.0,  # TUNING (not in GDD) a soldier
+		"move_speed": 48.0,  # TUNING (not in GDD) px/s on the surface
+		"damage": 5.0,  # TUNING (not in GDD) its claws in reach, before the time scaling
+		"attack_interval": 1.0,  # TUNING (not in GDD) s
+		"attack_range": 6.0,  # TUNING (not in GDD) px
+		"radius": 10.0,  # TUNING (not in GDD) px (~34 px sprite)
+		"armor": 0.2,  # TUNING (not in GDD) armoured chitin
+		"xp": 4,  # TUNING (not in GDD)
+		"behavior": "melee",
+		"projectile_speed": 0.0,
+		"undead_damage_mult": 1.0,
+		"heal_amount": 0.0,
+		"heal_interval": 0.0,
+		"heal_radius": 0.0,
+		"target_priority": 0.5,  # TUNING (not in GDD) 0..1
+		"mass": 2.0,  # TUNING (not in GDD)
+		"faction": FACTION,
+		"kit": "burrower",
+		"race": "brood",  # Owner: the Brood lead Stage 25
+		"dig_time": 0.6,  # TUNING (not in GDD) s it digs in (still hittable)
+		"burrow_speed": 105.0,  # TUNING (not in GDD) px/s underground
+		"surface_dist": 62.0,  # TUNING (not in GDD) px from the necromancer it surfaces (the ring is 60-150 px)
+		"mound_time": 1.0,  # Owner-approved proposal: "a dirt mound 1 s ahead"
+		"burst_radius": 30.0,  # TUNING (not in GDD) px
+		"burst_damage": 4.0,  # TUNING (not in GDD) before the time scaling, once a body (first pass 6)
+		"reburrow_dist": 300.0,  # TUNING (not in GDD) px
+		"reburrow_every": 9.0,  # TUNING (not in GDD) s
+		"mound_radius": 18.0,  # TUNING (not in GDD) px of the mound drawn (and its danger hint)
+	},  # The Burrower.
+	# The Brood, ranged: THE ACID SPITTER (a creature; owner-approved proposal:
+	# "Lobs acid that leaves a burning puddle; arcing, so it ignores the ring |
+	# Kill it on approach"). A green insect with a swollen glowing acid sac.
+	# Its ranged attack is a LOB through AcidPools.lob() (THE acid path; never
+	# ProjectileManager): an arcing glob to its target's spot (fixed at the
+	# throw) in lob_flight s, with a landing telegraph; it splashes for
+	# acid_impact and leaves a puddle of acid_radius px for acid_life s that
+	# burns summons and the necromancer for acid_dps (time-scaled). AcidSpitterKit.
+	"acid_spitter": {
+		"display_name": "Acid Spitter",
+		"max_hp": 30.0,  # TUNING (not in GDD) frail: kill it on approach
+		"move_speed": 44.0,  # TUNING (not in GDD) px/s
+		"damage": 0.0,  # Unused: its lob's numbers below.
+		"attack_interval": 3.4,  # TUNING (not in GDD) s between two lobs
+		"attack_range": 210.0,  # TUNING (not in GDD) px
+		"radius": 9.0,  # TUNING (not in GDD) px (~32 px sprite)
+		"armor": 0.0,
+		"xp": 4,  # TUNING (not in GDD)
+		"behavior": "ranged",
+		"projectile_speed": 0.0,  # Unused: a lob through AcidPools.
+		"undead_damage_mult": 1.0,
+		"heal_amount": 0.0,
+		"heal_interval": 0.0,
+		"heal_radius": 0.0,
+		"target_priority": 0.6,  # TUNING (not in GDD) 0..1; kill it on approach
+		"mass": 1.0,  # TUNING (not in GDD)
+		"faction": FACTION,
+		"kit": "acid_spitter",
+		"race": "brood",  # Owner: the Brood lead Stage 25
+		"lob_flight": 0.9,  # TUNING (not in GDD) s in the air
+		"acid_radius": 28.0,  # TUNING (not in GDD) px
+		"acid_life": 3.0,  # TUNING (not in GDD) s (first pass 3.5)
+		"acid_dps": 3.0,  # TUNING (not in GDD) before the time scaling
+		"acid_impact": 3.0,  # TUNING (not in GDD) the splash, before the time scaling
+	},  # The Acid Spitter.
+	# --- Act IX: the Ark ---
+	# The Harvesters, support: THE GREY OVERSEER (owner-approved proposal: "A
+	# psionic pulse that stuns summons for 1 s; shields greys near it |
+	# Priority target"; sex unmarked, as the greys are: a tall grey in a
+	# gunmetal mantle with a glowing plasma crown). GreyOverseerKit: every
+	# pulse_every s, with a summon within pulse_radius px, it shows a widening
+	# psionic ring for pulse_windup s (the telegraph), then stuns every summon
+	# within pulse_radius px for pulse_stun s (CombatResolver.stun_unit(), THE
+	# summon stun path; source PULSE_SOURCE); every shield_every s it shields
+	# the greys (race "harvesters", not structures) within shield_radius px:
+	# shield_share of each one's max HP for shield_time s (Enemy.holy_shield,
+	# the existing shield path). It hangs back with the drones ("ranged" with
+	# no shot of its own).
+	"grey_overseer": {
+		"display_name": "Grey Overseer",  # Owner-approved proposal
+		"max_hp": 64.0,  # TUNING (not in GDD) support, sturdier than a drone
+		"move_speed": 40.0,  # TUNING (not in GDD) px/s
+		"damage": 0.0,  # Its pulse stuns; it never strikes.
+		"attack_interval": 2.0,
+		"attack_range": 120.0,  # TUNING (not in GDD) px it keeps from the necromancer (its pulse reaches the ring)
+		"radius": 10.0,  # TUNING (not in GDD) px (~38 px sprite)
+		"armor": 0.1,  # TUNING (not in GDD)
+		"xp": 6,  # TUNING (not in GDD)
+		"behavior": "ranged",  # Advances and hangs back; its kit fires nothing.
+		"projectile_speed": 0.0,
+		"undead_damage_mult": 1.0,
+		"heal_amount": 0.0,
+		"heal_interval": 0.0,
+		"heal_radius": 0.0,
+		"target_priority": 0.9,  # TUNING (not in GDD) 0..1; owner-approved proposal: "Priority target"
+		"mass": 1.2,  # TUNING (not in GDD)
+		"faction": FACTION,
+		"kit": "grey_overseer",
+		"race": "harvesters",  # Owner-approved proposal: the Harvesters
+		"pulse_first": 3.0,  # TUNING (not in GDD) s before its first pulse
+		"pulse_every": 7.0,  # TUNING (not in GDD) s between two pulses (from the windup's start)
+		"pulse_windup": 0.8,  # TUNING (not in GDD) s the psionic ring widens (the telegraph)
+		"pulse_radius": 90.0,  # TUNING (not in GDD) px it stuns
+		"pulse_stun": 1.0,  # Owner-approved proposal: "stuns summons for 1 s"
+		"shield_first": 1.5,  # TUNING (not in GDD) s before its first shield
+		"shield_every": 6.0,  # TUNING (not in GDD) s between two shields
+		"shield_radius": 120.0,  # TUNING (not in GDD) px of the greys it shields
+		"shield_share": 0.35,  # TUNING (not in GDD) share of each grey's max HP
+		"shield_time": 5.0,  # TUNING (not in GDD) s a shield lasts
+		"shield_targets": 6,  # TUNING (not in GDD) greys a shield reaches at most
+	},  # The Grey Overseer.
 }
+
+# --- Act IX: the Crash Site ---
+## Kind id of the Brood's burrowing soldier (a shared row; BurrowerKit).
+const BURROWER: String = "burrower"
+## Kind id of the Brood's acid lobber (a shared row; AcidSpitterKit).
+const ACID_SPITTER: String = "acid_spitter"
+
+# --- Act IX: the Ark ---
+## Kind id of the Harvesters' support (the Ark's lead kind; any stage may use it).
+const GREY_OVERSEER: String = "grey_overseer"
+## Stun tag of the Grey Overseer's psionic pulse (CombatResolver.stun_unit()
+## stats: summon_stuns_overseer_pulse).
+const PULSE_SOURCE: String = "overseer_pulse"

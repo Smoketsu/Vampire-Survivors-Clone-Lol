@@ -1,0 +1,13 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter side view from slightly above (camera above and in front), FULL BODY, FACING RIGHT, prowling forward low to the ground, head lowered, jaws a little open
+
+LOW-RESOLUTION pixel art: the whole creature is only 44 pixels tall and about 70 pixels long, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims.
+
+Subject: THE WARBEAST, a CREATURE (an alien hunting animal, not a person): the reptilian hunters' armoured war-hound, as big as a horse, a heavy four-legged reptilian beast with a long low body, a broad flat head with a crest of short horns and a jaw of pale fangs, thick clawed legs and a heavy tail. Its hide is dark Vrask TEAL scales; over its back, shoulders, head and flanks it wears riveted dark GUNMETAL ARMOUR PLATES with teal trim, a gunmetal collar with a small magenta lamp, yellow slit eyes. Never violet or purple (those are the player's), never bone-white skulls on it.
+Signature shape that must read in silhouette: the long low armoured hound with the horned head and the plated back.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: scales teal #1B5C4E #2A8F7A #5CC2AA; armour plates gunmetal #1E242C #3A424C #5A6470; fangs and claws hull white #AEB8C4 #E8ECF0; collar lamp magenta #FF2FB8; eyes #FFE9A0
+
+Outline: a clean 1-pixel dark outline around the whole creature in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the subject), one subject only, centred, filling about 80% of the image width. No ground, no cast shadow, no scenery, no text, no frame, no watermark. Draw ONLY ONE creature.
+Attached: (1) a game sprite of the same race (the Vrask hunter) for pixel size, outline weight, flat look and its teal and gunmetal colours; (2) concept art of the Vrask hunter for the style of the armour only (do NOT copy its detail level or painted shading).

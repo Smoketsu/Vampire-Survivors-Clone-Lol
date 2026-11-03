@@ -34,7 +34,7 @@
 ## Determinism: no RNG; holds are an ordered list with pooling generations.
 ## Stats (the "abduction" line): abduction_lifts, abduction_rescues,
 ## abduction_taken, abduction_refused_cap, abduction_refused_heavy,
-## abduction_saucers_down, abduction_lifts_uncapped.
+## abduction_saucers_down, abduction_lifts_uncapped, abduction_anchored_breaks.
 class_name Abduction
 extends RefCounted
 
@@ -187,6 +187,7 @@ func on_saucer_hit(saucer: Enemy) -> void:
 		if h[0] == saucer and int(h[1]) == saucer.generation and game.concord.anchored_breaks(h[2] as SummonedUnit):
 			var u: SummonedUnit = h[2]
 			holds.remove_at(i)
+			game.stat_add("abduction_anchored_breaks", 1.0)  # Act IX, the Crash Site: Anchored broke the hold (its report line).
 			if u.active and u.generation == int(h[3]):
 				_drop(u, true)
 			continue

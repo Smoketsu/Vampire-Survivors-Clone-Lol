@@ -1,0 +1,12 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, a squat armoured digging insect creature half-risen out of a small mound of dirt, huge digging claws forward
+
+LOW-RESOLUTION pixel art: the whole SUBJECT is only 34 pixels tall, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims, lacing or engravings.
+
+Subject: a BURROWER of the Brood (a creature, no sex, no clothes): a squat, heavily armoured insect with overlapping dark SLATE-GREY and green-black back plates like a pill bug, a short blunt head with one glowing MAGENTA eye, two huge curved CREAM digging claws held forward, short legs, a little loose brown dirt at its feet. Never violet or purple, never bone-white skulls. Signature shape that must read in silhouette: the domed armoured back and the two huge digging claws.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: armour slate #22242E #3A3F4C #5A6070; green-black chitin #1B3A2A #2E6B45; claws cream #8A8070 #C8BC9C #E0D2B0; eye #A01C7A #FF2FB8; dirt #3A2C20 #5C4632
+
+Outline: a clean 1-pixel dark outline around the whole subject in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the subject), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark. Draw ONLY ONE figure.
+Attached: (1) a game sprite of this act for pixel size, outline weight and flat look; (2) concept art of this unit for its shape only (do NOT copy its detail level or painted shading; keep it slate and green-black, not purple).

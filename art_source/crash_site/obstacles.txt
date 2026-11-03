@@ -1,0 +1,10 @@
+A sheet of SEVEN separate pixel-art game OBSTACLE sprites for a top-down 2D horde-survival game (three-quarter top-down view, camera above and slightly in front), laid out in one row, evenly spaced with wide empty gaps between them, on a FULLY TRANSPARENT background (real alpha). The ruins of a capital city where an alien spaceship crashed. LOW-RESOLUTION pixel art, chunky simple shapes, crisp square pixels (nearest-neighbour), a clean 1-pixel dark outline, flat colours, at most 3 shades per material, light from the top-left. No ground under them, no cast shadows, no text.
+From left to right, each smaller than the next where noted:
+1. a SMALL heap of broken grey stone rubble (about 26 px wide);
+2. a MEDIUM heap of broken grey stone rubble with a bent steel rod (about 34 px wide);
+3. a LARGE heap of broken grey stone rubble and a cracked column stump (about 42 px wide);
+4. a SHORT torn shard of the alien ship's WHITE HULL plating lying on its side, jagged torn edges, a thin glowing green seam, gunmetal ribs underneath (wide and low, about 50 px wide and 26 px tall);
+5. a LONG torn shard of the same white hull plating lying on its side (about 66 px wide and 28 px tall);
+6. a SMALL spire of fused pale-green alien GLASS jutting up from the ground (about 22 px wide, 40 px tall);
+7. a TALL spire of the same fused glass, two jagged points (about 30 px wide, 56 px tall).
+Colours: stone #3A3A40 #5A5A62 #8A8A92; steel #3A424C #6E7A8C; hull white #AEB8C4 #E8ECF0; gunmetal #1E242C #3A424C; plasma green #1FA84A #3CFF6A; glass #2E5A56 #5E9C94 #A8DCD2.

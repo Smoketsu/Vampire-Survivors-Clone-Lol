@@ -22,6 +22,10 @@
 ##                 the burn (burn(), from the ONE check burns_ground()).
 ##   harvest     — FinalHarvest: the shared Act IX Reckoning (RECKONING
 ##                 "final_harvest"): the mothership's eye, the cap lifted.
+##   acid        — AcidPools (Act IX phase 2, the Crash Site): THE ACID PATH
+##                 (lob(): the Acid Spitter's lobs, the Hive Mother's acid
+##                 rain): arcing globs that leave burning puddles hurting
+##                 summons and the necromancer, never enemies.
 ## Hooks for the future counter-passives (exactly 1 / false today):
 ## mirror_reflect_mult(), mirror_taken_mult() (Mirror Bones),
 ## anchored_hold_mult(), anchored_breaks() (Anchored).
@@ -72,6 +76,9 @@ func _init(p_game: Game) -> void:
 	abduction = Abduction.new(p_game)
 	harvest = FinalHarvest.new(p_game, enabled)
 	add_child(harvest)
+	# --- Act IX: the Crash Site --- the acid puddles (on the ground, z -1).
+	acid = AcidPools.new(p_game)
+	add_child(acid)
 
 
 ## Per-tick update (Game, after the enemies, before the obstacle push-out): the
@@ -81,6 +88,7 @@ func step(delta: float) -> void:
 	beams.step(delta)
 	abduction.step(delta)
 	terraforming.step(delta)
+	acid.step(delta)  # Act IX, the Crash Site: lobs land, puddles burn.
 
 
 # =====================================================================================
@@ -135,9 +143,12 @@ func play_sound(event: String, pos: Vector2 = Vector2.INF, gap: float = 0.0) -> 
 
 
 ## The autotest autopilot's push away from every live Concord telegraph at
-## `p`: the aiming lines and live beams (ConcordBeams).
+## `p`: the aiming lines and live beams (ConcordBeams), the acid puddles and
+## landing circles (AcidPools; Act IX, the Crash Site). The kits' own
+## telegraphs (a Burrower's mound) are read through their kits'
+## danger_push(), the Hive Mother's through her Boss.danger_push().
 func danger_push(p: Vector2) -> Vector2:
-	return beams.danger_push(p)
+	return beams.danger_push(p) + acid.danger_push(p)
 
 
 # =====================================================================================
@@ -182,3 +193,37 @@ func anchored_hold_mult(u: SummonedUnit) -> float:
 ## passive does not exist.
 func anchored_breaks(u: SummonedUnit) -> bool:
 	return anchored_hold_mult(u) < 1.0
+
+
+# --- Act IX: the Crash Site ---
+## The acid puddles (child node: drawn on the ground): THE acid path (see the header).
+var acid: AcidPools
+# --- Act IX: the Proving Moon ---
+# LOW GRAVITY (GDD §15.0 "The Proving Moon (Act IX phase 2)"; owner-approved
+# proposal: "knockback goes twice as far for everyone, both armies, and leaps
+# are longer (one value in the stage data, read by the existing knockback
+# code)"). THE ONE ACCESSOR of the STAGE key "gravity" (the Proving Moon's
+# 2.0; 1.0 on every other stage, and when a Concord kind made these rules
+# elsewhere). Read only through game.concord, so nothing reads it while
+# game.concord is null (Acts I to VIII). Its reads, each a multiply or a
+# divide by exactly 1.0 off the moon:
+#   * Enemy._tick_timers(): the one enemy knockback decay
+#     (EnemyData.KNOCKBACK_DECAY) is divided by it (linear decay: twice the
+#     distance);
+#   * Enemy._rush_move(): the shared rush's charge_knockback shove on a summon
+#     is multiplied by it;
+#   * the Proving Moon's own kits (WarbeastKit, BossVraskTal): their shoves on
+#     summons and the necromancer and their leaps' reach are multiplied by it.
+# Grave Step is a shadow step, not a leap: it never reads it.
+
+## The stage's low-gravity multiplier (STAGE "gravity"; 1.0 when absent), read
+## once at creation (a run never changes stage).
+var _gravity: float = -1.0
+
+
+## THE LOW-GRAVITY MULTIPLIER (see the block header): the STAGE's "gravity"
+## (2.0 on the Proving Moon), 1.0 when the stage has none.
+func gravity() -> float:
+	if _gravity < 0.0:
+		_gravity = maxf(0.01, float(game.stage_def.get("gravity", 1.0)))
+	return _gravity

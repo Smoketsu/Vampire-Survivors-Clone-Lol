@@ -104,7 +104,13 @@ const SPELL_ORDER := ["shadow_bolt", "orb_shield", "shadow_blast",
 	# --- Act VIII: Fort Kessler ---
 	"bone_mines",
 	# --- Act VIII: Liberty Heights ---
-	"heros_fist"]
+	"heros_fist",
+	# --- Act IX: the Crash Site ---
+	"bone_beetles",
+	# --- Act IX: the Proving Moon ---
+	"soul_caster",
+	# --- Act IX: the Ark ---
+	"tractor_lift"]
 
 ## Spell definitions.
 ##   display_name — UI name.
@@ -859,6 +865,82 @@ const SPELLS := {
 			{"damage": 72.0, "cooldown": 2.4, "fling": 200.0, "fling_share": 0.47},  # TUNING (not in GDD) first pass 85 / 0.6
 		],
 	},
+	# --- Act IX: the Crash Site ---
+	# Bone Beetles (GDD §15.0 "Bone Beetles, Hive of Bone, Chitin and the
+	# Broodbound (Act IX)"; owner-approved proposal: "slain enemies burst into
+	# bone beetles that bite the next enemy"; unlocked by slaying the Hive
+	# Mother, UnlockData). No cooldown: every foe slain within `range` px of the
+	# necromancer bursts into `beetles` bone beetles (while fewer than `cap`
+	# live); each scuttles at `speed` px/s to the nearest other foe within
+	# `seek` px and bites it once for `damage`, crumbling after `life` s with
+	# no prey. Stat keys: damage, beetles, range (px), speed (px/s), seek (px),
+	# life (s), cap. Logic: BoneBeetles; fixed rules: BoneBeetlesData; Chitin
+	# (its paired passive) makes every bite hit harder.
+	"bone_beetles": {
+		"display_name": "Bone Beetles",  # Owner-approved proposal
+		"icon": "bone_beetles",
+		"description": "Slain foes burst into bone beetles that bite the next foe.",
+		"shared_card_pool": true,  # TUNING (not in GDD) an unlocked Act IX spell: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Bite damage", "beetles": "Beetles a foe", "range": "Range", "cap": "Most beetles"},
+		"levels": [
+			{"damage": 7.0, "beetles": 1, "range": 260.0, "speed": 230.0, "seek": 160.0, "life": 2.5, "cap": 12},  # TUNING (not in GDD) first pass 9
+			{"damage": 8.0, "beetles": 1, "range": 280.0, "speed": 240.0, "seek": 170.0, "life": 2.5, "cap": 16},  # TUNING (not in GDD) first pass 11
+			{"damage": 9.0, "beetles": 2, "range": 290.0, "speed": 250.0, "seek": 180.0, "life": 2.6, "cap": 20},  # TUNING (not in GDD) first pass 12
+			{"damage": 10.0, "beetles": 2, "range": 300.0, "speed": 255.0, "seek": 190.0, "life": 2.8, "cap": 24},  # TUNING (not in GDD) first pass 14
+			{"damage": 12.0, "beetles": 3, "range": 320.0, "speed": 260.0, "seek": 200.0, "life": 3.0, "cap": 28},  # TUNING (not in GDD) first pass 16 (with the evolution and Chitin 404k of the forced seed-7 run's 669k, 4.5x the top summon class)
+		],
+	},
+	# --- Act IX: the Proving Moon ---
+	# Soul Caster (GDD §15.0 "Soul Caster, Apex Predator, Trophy Rack and the
+	# Blooded (Act IX)"; owner-approved proposal: "a shoulder cannon that locks
+	# three targets with three red dots and fires"; brief: the dots in the
+	# spell's own soul colour; unlocked by slaying Vrask'Tal, UnlockData): every
+	# `cooldown` s (after the shot) it locks up to `targets` enemies within
+	# `range` px, the strongest first (three soul dots on each for `lock` s),
+	# then fires `damage` into each one still standing. Stat keys: damage,
+	# targets, lock (s), range (px), cooldown (s). Logic: SoulCaster; fixed
+	# rules: SoulCasterData; Trophy Rack (its paired passive) hangs a trophy
+	# for every kill (more damage each). A strong single-target spell.
+	"soul_caster": {
+		"display_name": "Soul Caster",  # Owner-approved proposal
+		"icon": "soul_caster",
+		"description": "A shoulder cannon locks three of the strongest foes, then fires a soul bolt into each.",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Shot damage", "targets": "Targets locked", "cooldown": "Cooldown (s)", "range": "Range (px)"},
+		"levels": [
+			{"damage": 20.0, "targets": 3, "lock": 0.6, "range": 300.0, "cooldown": 2.6},  # TUNING (not in GDD) owner-approved proposal: three targets
+			{"damage": 25.0, "targets": 3, "lock": 0.55, "range": 310.0, "cooldown": 2.45},  # TUNING (not in GDD)
+			{"damage": 31.0, "targets": 3, "lock": 0.55, "range": 320.0, "cooldown": 2.3},  # TUNING (not in GDD)
+			{"damage": 38.0, "targets": 3, "lock": 0.5, "range": 330.0, "cooldown": 2.15},  # TUNING (not in GDD)
+			{"damage": 46.0, "targets": 3, "lock": 0.45, "range": 340.0, "cooldown": 2.0},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act IX: the Ark ---
+	# Tractor Beam (id "tractor_lift": "tractor_beam" is a Concord sound and
+	# event id; GDD §15.0 "Tractor Beam, Abduction, Starseed and the Starborn";
+	# owner-approved proposal: "lifts the strongest enemy into the air and
+	# slams it down"; unlocked by defeating the Harvester, UnlockData): every
+	# `cooldown` s a column of soul light lifts the strongest foe within
+	# TractorLiftData.AIM_RANGE px for `lift_time` s (the one enemy-lift
+	# helper, EnemyLift: a stun), then slams it down for `damage` and
+	# slam_share x the damage to the foes within slam_radius px. Bosses,
+	# minibosses and structures are slammed in place. Logic: TractorLift; fixed
+	# rules: TractorLiftData. A single-target blow with a splash, like Hero's
+	# Fist, that also takes its target out of the fight for a moment.
+	"tractor_lift": {
+		"display_name": "Tractor Beam",  # Owner-approved proposal
+		"icon": "tractor_lift",
+		"description": "A beam of soul light lifts the strongest foe into the air and slams it down.",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Slam damage", "cooldown": "Cooldown (s)", "lift_time": "Lift (s)", "slam_radius": "Slam (px)", "slam_share": "Slam splash"},
+		"levels": [
+			{"damage": 38.0, "cooldown": 3.2, "lift_time": 0.9, "slam_radius": 48.0, "slam_share": 0.45},  # TUNING (not in GDD)
+			{"damage": 46.0, "cooldown": 3.05, "lift_time": 0.9, "slam_radius": 52.0, "slam_share": 0.48},  # TUNING (not in GDD)
+			{"damage": 56.0, "cooldown": 2.9, "lift_time": 0.95, "slam_radius": 56.0, "slam_share": 0.51},  # TUNING (not in GDD)
+			{"damage": 66.0, "cooldown": 2.75, "lift_time": 0.95, "slam_radius": 60.0, "slam_share": 0.54},  # TUNING (not in GDD)
+			{"damage": 78.0, "cooldown": 2.6, "lift_time": 1.0, "slam_radius": 64.0, "slam_share": 0.57},  # TUNING (not in GDD) Hero's Fist Lv5 72 / 2.4 s
+		],
+	},
 }
 
 ## Stat keys shown as a percentage on cards (fractions: 0.25 -> 25%).
@@ -891,7 +973,9 @@ const PERCENT_KEYS := ["lifesteal", "rot", "burst", "zone_damage", "zone_slow", 
 	# --- Act VIII: Fort Kessler ---
 	"shard_share",
 	# --- Act VIII: Liberty Heights ---
-	"fling_share", "crater_share"]
+	"fling_share", "crater_share",
+	# --- Act IX: the Ark ---
+	"slam_share", "quake_share"]
 ## Stat keys that are spell durations (s): the Lingering Malediction passive
 ## lengthens them (AbilityManager.apply_spell_mods()).
 const DURATION_KEYS := ["duration", "zone_duration", "slow_duration"]

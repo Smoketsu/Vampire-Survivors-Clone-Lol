@@ -1,0 +1,12 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, a calm confident pose, one hand raised with a few small bone-white beetles crawling over her fingers
+
+LOW-RESOLUTION pixel art: the whole SUBJECT is only 56 pixels tall, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims, lacing or engravings.
+
+Subject: THE BROODBOUND, a FEMALE playable necromancer who wed the swarm, in the game's figure-redesign style: an extremely exaggerated hourglass figure (very full bust, a tiny cinched waist, very wide hips), glamorous and eerie, her FACE CLEARLY VISIBLE: pale skin, glowing ACID-GREEN eyes, long straight BLACK hair, a small crown of dark-green insect wings on her head. A long fitted GOWN made of GREEN-BLACK CHITIN PLATES like an insect's shell, high-collared, with a slit skirt and shoulder plates; small BONE-WHITE BEETLES crawl on her shoulders and raised hand. Chest and hips FULLY COVERED by the chitin gown, never nude, tasteful. Never violet or purple (violet is the necromancer's), the chitin is green-black. Signature shape that must read in silhouette: the hourglass figure, the wing crown and the long chitin gown.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: chitin #0E1E16 #1B3A2A #2E6B45; acid green eyes and glints #1FA84A #3CFF6A; skin #8A8796 #B4B0BE #DAD6E2; hair #16141C #2E2A38; beetles bone #8A8070 #C8BC9C #E0D2B0
+
+Outline: a clean 1-pixel dark outline around the whole subject in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the subject), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark. Draw ONLY ONE figure.
+Attached: a female playable character of this game in the figure-redesign style, for the pixel size, outline weight, proportions and flat look (not its subject or its colours).

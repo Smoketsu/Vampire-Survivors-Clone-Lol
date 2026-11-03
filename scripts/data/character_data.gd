@@ -90,7 +90,13 @@ const ORDER := ["gravecaller", "umbral_warden", "voidcaller", "bone_oracle", "fa
 	# --- Act VIII: Fort Kessler ---
 	"fallen_sergeant",
 	# --- Act VIII: Liberty Heights ---
-	"revenant_heroine"]
+	"revenant_heroine",
+	# --- Act IX: the Crash Site ---
+	"broodbound",
+	# --- Act IX: the Proving Moon ---
+	"blooded",
+	# --- Act IX: the Ark ---
+	"starborn"]
 ## The default character (RunConfig, fresh saves, the autotest): today's game.
 const DEFAULT_ID: String = "gravecaller"
 ## Spell level that unlocks a character (owner rule: reach Lv 5 with its spell
@@ -154,6 +160,10 @@ const STAT_LABELS := {
 ##   swarm_extra_bats        NightSwarm.step (extra bats in his swarm; Act VII)
 ##   bone_mines_extra        BoneMines._drop (extra mines laid beside each one
 ##                           she drops; Act VIII)
+##   beetle_extra            BoneBeetles.on_enemy_killed (extra beetles in every
+##                           burst; Act IX)
+##   soul_caster_extra_targets  SoulCaster._lock (extra targets each Soul
+##                           Caster lock takes; Act IX)
 const INNATE_KEYS := ["orb_projectile_destroy", "blast_echo_delay", "blast_echo_damage", "spear_shard_max",
 	"spear_shard_cooldown", "summon_corpses", "grace_share", "grace_targets", "grace_range", "contagion_range",
 	"contagion_duration", "death_mark_slow", "bone_wall_duration", "soul_chains_extra_jumps", "wither_rot",
@@ -199,7 +209,13 @@ const INNATE_KEYS := ["orb_projectile_destroy", "blast_echo_delay", "blast_echo_
 	# --- Act VIII: Fort Kessler ---
 	"bone_mines_extra",
 	# --- Act VIII: Liberty Heights ---
-	"fist_extra_fists"]
+	"fist_extra_fists",
+	# --- Act IX: the Crash Site ---
+	"beetle_extra",
+	# --- Act IX: the Proving Moon ---
+	"soul_caster_extra_targets",
+	# --- Act IX: the Ark ---
+	"tractor_extra_lifts"]
 
 ## Orbit radius (px) of the Bone Oracle's Ossuary Ward shards around him.
 const SHARD_ORBIT_RADIUS: float = 27.0  # TUNING (not in GDD)
@@ -855,6 +871,82 @@ const CHARACTERS := {
 		"stats": {"max_hp": 10.0, "move_speed": 0.03},  # TUNING (not in GDD) a hero's toughness, still quick
 		"sprite": "player/revenant_heroine",
 		"tint": Color(0.40, 0.62, 0.95),  # TUNING (not in GDD) a hero's blue over the violet
+		"starts_unlocked": false,
+	},
+	# --- Act IX: the Crash Site ---
+	# The Broodbound (Bone Beetles' character; owner-approved Act IX proposal
+	# "Rewards": "Bone Beetles ... | The Broodbound, a woman who wed the swarm
+	# (figure style)"): FEMALE, in the figure-redesign style (clothed: chest and
+	# hips covered): a pale woman with long black hair in a fitted gown of the
+	# Brood's green-black chitin plates (never the player's violet and bone),
+	# acid-green eyes, a crown of small insect wings, bone beetles crawling on
+	# her shoulders. Bone Beetles must be unlocked (the Hive Mother) before she
+	# can be earned, by the usual Lv 5 rule. Own decision on her innate (the
+	# proposal names none): Swarm Bride, one more beetle in every burst
+	# (BoneBeetles.on_enemy_killed()).
+	"broodbound": {
+		"display_name": "The Broodbound",  # Owner-approved proposal
+		"title": "She wed the swarm in the crater's dark. It answers her now.",
+		"spell": "bone_beetles",
+		"innate": {
+			"id": "swarm_bride", "name": "Swarm Bride",
+			"description": "Bone Beetles release one more beetle from every slain foe.",
+			"values": {"beetle_extra": 1.0},  # TUNING (not in GDD) one more beetle a burst
+		},
+		"stats": {"max_hp": 5.0, "move_speed": 0.02},  # TUNING (not in GDD) chitin-plated, light on her feet
+		"sprite": "player/broodbound",
+		"tint": Color(0.45, 0.72, 0.5),  # TUNING (not in GDD) the Brood's green over the violet (until her art)
+		"starts_unlocked": false,
+	},
+	# --- Act IX: the Proving Moon ---
+	# The Blooded (Soul Caster's character; owner-approved Act IX proposal
+	# "Rewards": "Soul Caster ... | The Blooded, the one human who survived the
+	# Hunt (figure style)"): FEMALE, in the figure-redesign style (clothed,
+	# chest and hips covered): a raised huntress, grey-pale skin, soul-teal
+	# eyes, dark hair in a braid, three claw scars across one cheek, a fitted
+	# dark leather hunting coat buttoned over a high-necked top, trousers and
+	# boots, a Vrask trophy (a teal scale) on a cord, the shoulder cannon of
+	# Soul Caster on her right shoulder; never the Vrask's own armour. Soul
+	# Caster must be unlocked (Vrask'Tal) before she can be earned, by the usual
+	# Lv 5 rule. Own decision on her innate (the proposal names none): First
+	# Blood, her cannon locks one more target (SoulCaster._lock()).
+	"blooded": {
+		"display_name": "The Blooded",  # Owner-approved proposal
+		"title": "She was the Vrask's quarry. She took her trophy and came back.",
+		"spell": "soul_caster",
+		"innate": {
+			"id": "first_blood", "name": "First Blood",
+			"description": "Soul Caster locks one more foe.",
+			"values": {"soul_caster_extra_targets": 1.0},  # TUNING (not in GDD) extra targets a lock
+		},
+		"stats": {"move_speed": 0.05, "max_hp": -5.0},  # TUNING (not in GDD) a huntress: quick, a little frailer
+		"sprite": "player/blooded",
+		"tint": Color(0.62, 0.40, 0.36),  # TUNING (not in GDD) a hunter's red-brown leather over the violet
+		"starts_unlocked": false,
+	},
+	# --- Act IX: the Ark ---
+	# The Starborn (Tractor Beam's character; owner-approved Act IX proposal
+	# "Rewards": "Tractor Beam ... | The Starborn, a Harvester who deserted
+	# (figure style)"): FEMALE, in the figure-redesign style (clothed, chest
+	# and hips covered): a grey who deserted the Harvesters, in a covering
+	# suit of hull white and gunmetal with plasma-green seams, a long fitted
+	# coat, her great black eyes; never the necromancer's violet and bone
+	# (brief). Tractor Beam must be unlocked (the Harvester) before she can be
+	# earned, by the usual Lv 5 rule. Own decision on her innate (the proposal
+	# names none): she still knows the Harvesters' signals, so her beam lifts
+	# one more foe (TractorLift.step()).
+	"starborn": {
+		"display_name": "The Starborn",  # Owner-approved proposal
+		"title": "She fled the harvest. She came back to end it.",
+		"spell": "tractor_lift",
+		"innate": {
+			"id": "deserters_signal", "name": "Deserter's Signal",
+			"description": "Tractor Beam lifts one more foe.",
+			"values": {"tractor_extra_lifts": 1.0},  # TUNING (not in GDD) extra lifts a cast
+		},
+		"stats": {"max_hp": 5.0, "move_speed": 0.04},  # TUNING (not in GDD) a light, quick deserter
+		"sprite": "player/starborn",
+		"tint": Color(0.70, 0.86, 0.74),  # TUNING (not in GDD) a pale plasma green over the violet
 		"starts_unlocked": false,
 	},
 }
