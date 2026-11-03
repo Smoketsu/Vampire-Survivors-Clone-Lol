@@ -917,7 +917,7 @@ RIGS = {
     "concord/acid_spitter": dict(mode="legs", hip=21, back=(0, 15), front=(15, 32), rigid=[], spread=1, lift=1, dip=1),
     "concord/brood_matriarch": dict(mode="hover", bob=2, parts=[]),
     "bosses/hive_mother_flight": dict(mode="hover", bob=2, parts=[]),
-    "player/broodbound": dict(mode="robe", hip=32, rigid=[], sway=1, dip=1, bust=(9, 21, 14, 21, 2)),
+    "player/broodbound": dict(mode="robe", hip=32, rigid=[], sway=1, dip=1, bust=(14, 24, 14, 22, 2), bust_exclude=[(24, 32, 10, 24)]),  # Act IX R1 redo: the new insect-woman still (bust cols 14-23, rows 14-21; the raised arm beyond col 24 and the shoulder case left of col 14 stay still).
     # --- Act IX: the Proving Moon ---
     # The Warbeast (a creature) prowls on its four legs (its hind and fore pairs as the back and front halves, like Old
     # Greymane); Vrask'Tal strides (the cloak and glaive end above the hip); the Blooded (female, figure redesign) strides
@@ -1075,6 +1075,8 @@ SKINS = {
 }
 # Per-skin field overrides of the derived rig (same keys as RIGS), set after review.
 SKIN_FIX = {
+    # --- Act IX R1 redo: the Hyper Broodbound is 30 wide (the base 32): its own box, 2 px left of the base box, arm excluded. ---
+    "player/broodbound_hyper": {"bust": (12, 22, 14, 22, 2), "bust_exclude": [(22, 30, 10, 24)]},
     # --- Act VII: the Witchwood --- R1 redo: the Deathlord skin has its own upper (bust) box, the base's derived one with x1 + 2.
     "player/hedge_witch_deathlord": {"bust": (13, 25, 15, 21, 2)},
     # --- Act VII round 1 redo: the regenerated Deathlord skins are 44 wide (the bases 42 / 46), so their own splits and box ---
