@@ -1,0 +1,998 @@
+# Necropathy: Complete Game Inventory
+
+Rebuilt from the code (branch `claude/charming-lamport-upfhlz`, HEAD 0ba3048, after Act VIII). Generated from `scripts/data/`; every count is a data row count. Items marked **built, not yet playable (waiting on review)** exist in code but sit behind `"playable": false`.
+
+## Summary
+
+Built from the code on branch claude/charming-lamport-upfhlz at HEAD 0ba3048 (Act VIII integration), read from scripts/data/ and scripts/data/stages/. Counts are rows in the data tables, not estimates.
+
+| Item | Count |
+|---|---|
+| Stages | 24 (15 playable, 9 built not yet playable) |
+| Acts | 8 (Acts I-V playable, Acts VI-VIII built not yet playable) |
+| Stage bosses | 24 |
+| Enemy kinds (all data rows) | 159 = 111 regular + 23 minibosses + 25 structures |
+| Minibosses (flagged in data) | 23 |
+| Spells | 33 |
+| Evolutions | 55 (33 spell + 22 summon) |
+| Passives (incl. Profane Pact) | 70 (14 act-only counter-passives) |
+| Summon classes | 24 (23 offerable + the Profane Bishop, evolved only) |
+| Synergies | 14 |
+| Playable characters | 33 |
+| Skins | 72 (33 default + 33 Hyper + 4 achievement + 2 universal; 0 casket-only so far) + 5 recolours |
+| Ultimates | 4 |
+| Difficulties / run modifiers | 4 / 8 |
+| Achievements | 30 |
+| Titles | 8 |
+| Ossuary upgrades | 32 (172 purchasable levels, 6 trees incl. Oath) |
+| Masteries | 23 summon classes x 3 levels |
+| Relics / Grave Offerings | 15 / 6 |
+| Music tracks | 9 (Act I loop, 7 act scores, menu theme Grave Lullaby) |
+| Synthesised sound recipes | 201 |
+| Epilogue parts / panels / closing cards | 5 / 19 / 4 |
+| Codex tabs | 11 |
+| Sprite PNGs in assets/ | 2,191 |
+
+### Playtime
+
+Owner's estimate: a full clear of every stage takes about 13 hours. For scale, 24 stages at a 20:00 countdown is 8 hours of clock alone, before boss fights past 0:00, menus and build choices. This is an estimate, not a measured figure.
+
+### Status key
+
+- Playable: reachable from the stage select in a normal build.
+- Built, not yet playable (waiting on review): complete in code and data but hidden behind "playable": false (Acts VI, VII and VIII, nine stages). Everything those stages unlock (spells, passives, classes, characters, titles, achievements) is in the data and is marked the same way.
+- Planned or proposed: not in the game; listed only at the end.
+
+## Campaign: acts and stages
+
+### The 8 acts
+
+| Act | Name | Status | Stages | Shared rules | Reckoning at 0:00 |
+|---|---|---|---|---|---|
+| I | The Crimson Covenant | Playable | Graveyard, Crimson March, Sanctum | No shared act rules (the baseline). Stage mechanics: Graveyard empowered graves, desecration and Crypt Defender; Crimson March battle zones, outposts, ward generators, supply carts; Sanctum ward chambers, sacred altars, floor corruption. | The Reckoning / Dawn's Wrath |
+| II | The Ancient Eye | Playable | Gullhaven, Archive, Ul-Thalos | Dread (damage taken +5% per 25), Claims (fallen summons rise as hostile Drowned Thralls). Tide, ink wells, sinking island on the stages. | The Deep Rises / The Stacks Unwrite Themselves / The Waking |
+| III | The Electronic Empire | Playable | Scrap Wastes, Assembly Halls, Iron Citadel | Line of Fire, Lock-On, Steel has no soul (machines leave no corpse; cyborgs rise as Grave Gunners). | Purge Protocol (kill-drones, orbital strikes) |
+| IV | The Olympian Republic | Playable | Ilion, Olympus, Underworld | Wrath of the Gods (waves, lightning, fissures hitting both armies), Phalanx (shield fronts), Glory (Heroes grow with kills). | The Twilight of the Gods (Bronze Titans) |
+| V | The Shogunate of the Rising Sun | Playable | The Province, Kurogane, The Sun Road | The Sun's Course (day, dusk, night with darkness and lit lanterns), the Draw (iai cuts), From the Shadows (ambushes revealed by light). | The Endless Night |
+| VI | The Inferno | Built, not yet playable | The Gate, The Palace, Pandemonium | Hell Pits, Portals (sealable), Temptation (succubi charm summons). | The Last Judgment (portals open, pits open faster, the Adversary's hand) |
+| VII | The Sanguine Court | Built, not yet playable | Ravensmoor, The Witchwood, Castle Sanguis | Bloodfeast (enemies heal on hits, blood shield), Night Wings (bats fly over the ring), the Blood Moon every 4:00 for 45 s. | The Endless Feast (Blood Moon never sets, coffins release Vampire Nobles) |
+| VIII | The Last Line | Built, not yet playable | Skid Row, Fort Kessler, Liberty Heights | City blocks arenas, a clock escalation (gangs, police, SWAT, army, heroes), Armour (frontal cuts, vehicles, wrecks), Supers, Civilians. | Martial Law (every tier at once, artillery lines, the Supers return) |
+
+### The 24 stages
+
+| # | Stage | Act | Boss (arrives with 3:00 left) | Status | Soul Ash | Enemy HP mult | Music |
+|---|---|---|---|---|---|---|---|
+| 1 | The Desecrated Graveyard | I | Sir Alaric, the Gravebreaker | Playable | x1 | x1 | Act I run loop (unnamed in data) |
+| 2 | The Crimson March | I | Marshal Vael, the Crimson Bulwark | Playable | x1.25 | x1.1 | Act I run loop (unnamed in data) |
+| 3 | The Sanctum of Judgment | I | Grand Inquisitor Seraphine, Voice of the Dawn | Playable | x1.5 | x1.1 | Act I run loop (unnamed in data) |
+| 4 | Gullhaven Harbour | II | Abbot Silas Merrow, Voice of the Deep | Playable | x1 | x1.15 | Below the Tide |
+| 5 | The Hollow Archive | II | The Archivist, Keeper of the Unwritten | Playable | x1.25 | x1.2 | Below the Tide |
+| 6 | Ul-Thalos, the Risen Spire | II | Vhal'Neth, the Dreaming Mother | Playable | x1.5 | x1.2 | Below the Tide |
+| 7 | The Scrap Wastes | III | Kestrel, the Dead Pixel | Playable | x1 | x1.3 | Iron Requiem |
+| 8 | The Assembly Halls | III | The Motherboard | Playable | x1.25 | x1.35 | Iron Requiem |
+| 9 | The Iron Citadel | III | Deus Ex Machina | Playable | x1.5 | x1.4 | Iron Requiem |
+| 10 | The Shores of Ilion | IV | Achilles, the Unkillable | Playable | x1 | x1.4 | Hymn of Bronze |
+| 11 | Mount Olympus | IV | Zeus, King of the Gods | Playable | x1.25 | x1.45 | Hymn of Bronze |
+| 12 | The Asphodel Underworld | IV | Hades, Lord of the Dead | Playable | x1.5 | x1.5 | Hymn of Bronze |
+| 13 | The Burning Province | V | Kage, Mistress of the Hidden Hand | Playable | x1 | x1.55 | The Setting Sun |
+| 14 | Castle Kurogane | V | Shogun Kurogane | Playable | x1.25 | x1.6 | The Setting Sun |
+| 15 | The Road to the Sun | V | Amaterasu, the Sun Goddess | Playable | x1.5 | x1.65 | The Setting Sun |
+| 16 | The Burning Gate | VI | Moloch, the Furnace King | Built, not yet playable | x1 | x1.75 | Hymn of the Pit |
+| 17 | The Palace of Silk and Ash | VI | Lilith, Queen of the Night | Built, not yet playable | x1.25 | x1.75 | Hymn of the Pit |
+| 18 | Pandemonium | VI | The Morning Star | Built, not yet playable | x1.5 | x1.75 | Hymn of the Pit |
+| 19 | Ravensmoor | VII | Vargr, the Moon-Eater | Built, not yet playable | x1 | x1.85 | Waltz of the Red Moon |
+| 20 | The Witchwood | VII | Isolde Vane, the Witch of the Red Moon | Built, not yet playable | x1.25 | x1.85 | Waltz of the Red Moon |
+| 21 | Castle Sanguis | VII | Queen Carmilla and the Elder | Built, not yet playable | x1.5 | x1.85 | Waltz of the Red Moon |
+| 22 | Skid Row | VIII | Don Marrow, the Kingpin | Built, not yet playable | x1 | x2 | Sirens at Midnight |
+| 23 | Fort Kessler | VIII | General Vance Harrow, the Hammer | Built, not yet playable | x1.25 | x2 | Sirens at Midnight |
+| 24 | Liberty Heights | VIII | Paragon, the Last Hero | Built, not yet playable | x1.5 | x2 | Sirens at Midnight |
+
+Every stage is a 20:00 countdown. The boss arrives at 17:00 (BOSS_TIME 1020 s). At 0:00 the Reckoning begins; dying after 0:00 is a victory. Soul Ash multipliers follow the per-act rule x1, x1.25, x1.5 (stage 1, 2, 3 of each act).
+
+### Stage zones
+
+| Stage | Zones (clock-driven, in order) | Reckoning banner |
+|---|---|---|
+| The Desecrated Graveyard | (single zone; stage events and graves) | THE RECKONING |
+| The Crimson March | The Burned Road, The Fortified Checkpoint, The Siege Camp, The Fortress Approach | THE RECKONING: THE FORTRESS GATES OPEN |
+| The Sanctum of Judgment | The Outer Courtyards, The Sanctified Halls, The Cloisters, The Final Sanctuary | DAWN'S WRATH: THE SANCTUM BLAZES WITH JUDGMENT |
+| Gullhaven Harbour | The Mudflats, The Fish Market, The Chapel of the Deep, The Seawall | THE DEEP RISES: THE EYE OPENS UPON YOU |
+| The Hollow Archive | The Reading Halls, The Ink Wells, The Orrery, The Unwritten Stacks | THE STACKS UNWRITE THEMSELVES: THE EYE OPENS UPON YOU |
+| Ul-Thalos, the Risen Spire | The Breakwater, The Sunken Steps, The Dream Gate, The Spire | THE WAKING: VHAL'NETH'S DREAM SWALLOWS THE ISLAND |
+| The Scrap Wastes | The Slag Fields, The Wreck Gullies, Pylon Ridge, The Outer Wall | PURGE PROTOCOL: ORBITAL STRIKES INBOUND |
+| The Assembly Halls | The Loading Docks, The Conveyor Floor, The Fabricator Hall, The Furnace | PURGE PROTOCOL: ORBITAL STRIKES INBOUND |
+| The Iron Citadel | The Shield Gates, The Laser Courts, The Spire Lifts, The Core | PURGE PROTOCOL: THE CITADEL TURNS ITS GUNS ON YOU |
+| The Shores of Ilion | The Beachhead, The Siege Camp, The Scaean Gate, The Walls | THE TWILIGHT OF THE GODS: THE SKY SPLITS |
+| Mount Olympus | The Field of Ares, The Groves of Artemis, The Terraces of Poseidon, The Summit | THE TWILIGHT OF THE GODS: THE SKY SPLITS |
+| The Asphodel Underworld | The Asphodel Fields, The Styx Crossing, The Judges' Hall, The Throne of Hades | THE TWILIGHT OF THE GODS: THE SKY SPLITS |
+| The Burning Province | The Paddies, The Bamboo Grove, The Burning Village, The Mountain Shrine | THE ENDLESS NIGHT: THE SUN NEVER RISES |
+| Castle Kurogane | The Outer Bailey, The Gatehouse, The Courtyards, The Keep | THE ENDLESS NIGHT: THE SUN NEVER RISES |
+| The Road to the Sun | The Torii Road, The Sacred Forest, The Shrine Steps, The High Plain of Heaven | THE ENDLESS NIGHT: THE SUN HAS GONE OUT |
+| The Burning Gate | The Ash Plain, The Cages, The River of Fire, The Gate | THE LAST JUDGMENT: THE PIT OPENS |
+| The Palace of Silk and Ash | The Rose Garden, The Hall of Mirrors, The Ballroom, The Queen's Chamber | THE LAST JUDGMENT: THE PIT OPENS |
+| Pandemonium | The Iron City, The Chain Bridges, The Cathedral of Ash, The Throne | THE LAST JUDGMENT: THE PIT OPENS |
+| Ravensmoor | The Moor, The Village, The Old Church, The Wolfwood | THE ENDLESS FEAST: THE MOON WILL NOT SET |
+| The Witchwood | The Fen, The Hanging Wood, The Standing Stones, The Cauldron | THE ENDLESS FEAST: THE MOON WILL NOT SET |
+| Castle Sanguis | The Courtyard, The Banquet Hall, The Crypt Gallery, The Throne of Blood | THE ENDLESS FEAST: THE MOON WILL NOT SET |
+| Skid Row | The Alleys, The Night Market, The Overpass, The Precinct | MARTIAL LAW: THE CITY BREAKS ITS LAST LINE ON YOU |
+| Fort Kessler | The Checkpoints, The Minefield, The Airfield, The Command Bunker | MARTIAL LAW: THE CITY BREAKS ITS LAST LINE ON YOU |
+| Liberty Heights | The Plaza, The Rooftops, The Tower Lobby, The Watchtower | MARTIAL LAW: THE CITY BREAKS ITS LAST LINE ON YOU |
+
+### Stage unlock chain
+
+| Stage | How it unlocks |
+|---|---|
+| The Desecrated Graveyard | Always open |
+| The Crimson March | Slay Sir Alaric in the Desecrated Graveyard to unlock. |
+| The Sanctum of Judgment | Slay Marshal Vael on the Crimson March to unlock. |
+| Gullhaven Harbour | Slay Grand Inquisitor Seraphine in the Sanctum of Judgment to unlock. |
+| The Hollow Archive | Slay Abbot Merrow in Gullhaven Harbour to unlock. |
+| Ul-Thalos, the Risen Spire | Slay the Archivist in the Hollow Archive to unlock. |
+| The Scrap Wastes | Slay Vhal'Neth on Ul-Thalos to unlock. |
+| The Assembly Halls | Delete Kestrel in the Scrap Wastes to unlock. |
+| The Iron Citadel | Shut down the Motherboard in the Assembly Halls to unlock. |
+| The Shores of Ilion | Bring down Deus Ex Machina in the Iron Citadel to unlock. |
+| Mount Olympus | Slay Achilles on the Shores of Ilion to unlock. |
+| The Asphodel Underworld | Topple Zeus on Mount Olympus to unlock. |
+| The Burning Province | Make Hades kneel in the Asphodel Underworld to unlock. |
+| Castle Kurogane | Slay Kage in the Burning Province to unlock. |
+| The Road to the Sun | Defeat Shogun Kurogane in his castle to unlock. |
+| The Burning Gate | Put out the sun on the Road to the Sun to unlock. |
+| The Palace of Silk and Ash | Slay Moloch at the Burning Gate to unlock. |
+| Pandemonium | Slay Lilith in the Palace of Silk and Ash to unlock. |
+| Ravensmoor | Cast down the Morning Star in Pandemonium to unlock. |
+| The Witchwood | Slay Vargr on Ravensmoor to unlock. |
+| Castle Sanguis | Slay Isolde Vane in the Witchwood to unlock. |
+| Skid Row | Slay Queen Carmilla in Castle Sanguis to unlock. |
+| Fort Kessler | Bring down Don Marrow on Skid Row to unlock. |
+| Liberty Heights | Defeat General Harrow at Fort Kessler to unlock. |
+
+## Bosses (24)
+
+| # | Boss | Stage | Phases | Status |
+|---|---|---|---|---|
+| 1 | Sir Alaric, the Gravebreaker | The Desecrated Graveyard | 2: five telegraphed attacks (Hammerfall, Divine Charge, Consecrated Ground, Call to Arms, Judgment of the Dead); Wrath at 50% HP | Playable |
+| 2 | Marshal Vael, the Crimson Bulwark | The Crimson March | 2: Cleave, Command, Standard, Shieldwall; then Last Stand | Playable |
+| 3 | Grand Inquisitor Seraphine, Voice of the Dawn | The Sanctum of Judgment | 3: Divine Judgment, Avatar of the Dawn, The Last Light | Playable |
+| 4 | Abbot Silas Merrow, Voice of the Deep | Gullhaven Harbour | 3: Robed (Sermon), The Change, High Water | Playable |
+| 5 | The Archivist, Keeper of the Unwritten | The Hollow Archive | 3: the Reading, the Footnotes, the Last Page | Playable |
+| 6 | Vhal'Neth, the Dreaming Mother | Ul-Thalos, the Risen Spire | 3: Dreaming, Stirring, Waking (arms and face) | Playable |
+| 7 | Kestrel, the Dead Pixel | The Scrap Wastes | 3: Marksman, Decoys, Twin Blades | Playable |
+| 8 | The Motherboard | The Assembly Halls | 3: base, Full Load (Magnet Pull), Overclock | Playable |
+| 9 | Deus Ex Machina | The Iron Citadel | 3: the Walker, the Siege Core, the Founder | Playable |
+| 10 | Achilles, the Unkillable | The Shores of Ilion | 3: the Duel, the Myrmidon Charge, the Rage after Patroclus | Playable |
+| 11 | Zeus, King of the Gods | Mount Olympus | 3: the Thunderer, the Storm Throne, the True Form | Playable |
+| 12 | Hades, Lord of the Dead | The Asphodel Underworld | 3: the Helm of Darkness, the Reclaiming, a final lord phase | Playable |
+| 13 | Kage, Mistress of the Hidden Hand | The Burning Province | 3: shadow clones, more clones with paired kunai, 'a hundred shadows' | Playable |
+| 14 | Shogun Kurogane | Castle Kurogane | 2: the Command Platform (the bar is his army), the Duel (iai slashes) | Playable |
+| 15 | Amaterasu, the Sun Goddess | The Road to the Sun | 3: Dawn, Noon, Sunset (her place in the sky is the phase) | Playable |
+| 16 | Moloch, the Furnace King | The Burning Gate | 3: the Furnace King, the Furnace Opens, the Molten King | Built, not yet playable |
+| 17 | Lilith, Queen of the Night | The Palace of Silk and Ash | 3: charm waves widen each phase; the last is her true demon form | Built, not yet playable |
+| 18 | The Morning Star | Pandemonium | 2: the Angel, the Beast (the Throne phase is cut) | Built, not yet playable |
+| 19 | Vargr, the Moon-Eater | Ravensmoor | 3: the Hunt, the Turning, the Moon-Eater | Built, not yet playable |
+| 20 | Isolde Vane, the Witch of the Red Moon | The Witchwood | 3: the Witch, the Three Sisters, the Red Moon | Built, not yet playable |
+| 21 | Queen Carmilla and the Elder | Castle Sanguis | 3: the Court (Queen), the Waking, the Elder | Built, not yet playable |
+| 22 | Don Marrow, the Kingpin | Skid Row | 3: the Bounty, the Call, the Last Stand | Built, not yet playable |
+| 23 | General Vance Harrow, the Hammer | Fort Kessler | 3: Command, the Hammer, Broken Arrow | Built, not yet playable |
+| 24 | Paragon, the Last Hero | Liberty Heights | 3: the Hero, Hope, No Restraint | Built, not yet playable |
+
+Phase lists are taken from each boss data file header and the README; Hades' last phase and Lilith's mid-phase names are not itemised in the data.
+
+## Minibosses (23 flagged + Supers)
+
+| Miniboss | Faction | Stage | Behaviour | Status |
+|---|---|---|---|---|
+| Cathedral Guardian | Covenant | Sanctum | melee | Playable |
+| The Harbourmaster | Ancient Eye | Harbour | melee | Playable |
+| The Librarian | Ancient Eye | Archive | melee | Playable |
+| The Trojan Horse | Empire | Scrap Wastes | melee | Playable |
+| The Beta Build | Empire | Assembly Halls | melee | Playable |
+| Valkyrie 2.0 | Empire | Iron Citadel | melee | Playable |
+| Polyphemus the Cyclops | Republic | Ilion | melee | Playable |
+| Ares, God of War | Republic | Olympus | melee | Playable |
+| Artemis, the Huntress | Republic | Olympus | ranged | Playable |
+| Poseidon, Lord of the Sea | Republic | Olympus | melee | Playable |
+| Cerberus | Republic | Underworld | melee | Playable |
+| Shuten-dōji, the Oni King | Shogunate | Burning Province | melee | Playable |
+| The General of the Left | Shogunate | Castle Kurogane | melee | Playable |
+| The Kirin | Shogunate | Road to the Sun | melee | Playable |
+| The Gatekeeper | Inferno | Burning Gate | melee | Built, not yet playable |
+| Naamah, the Elder Twin | Inferno | Palace of Silk and Ash | melee | Built, not yet playable |
+| Agrat, the Younger Twin | Inferno | Palace of Silk and Ash | melee | Built, not yet playable |
+| The Fallen Seraph General | Inferno | Pandemonium | melee | Built, not yet playable |
+| Old Greymane | Sanguine Court | Ravensmoor | melee | Built, not yet playable |
+| The Bog Mother | Sanguine Court | Witchwood | melee | Built, not yet playable |
+| The Chiropteran King | Sanguine Court | Castle Sanguis | melee | Built, not yet playable |
+| Big Sal | Last Line | Skid Row | melee | Built, not yet playable |
+| Mammoth | Last Line | Fort Kessler | melee | Built, not yet playable |
+
+Act VIII also promotes its Supers to zone minibosses at runtime (Liberty Heights: Blitz 17:30, Aurora 13:30, Atlas 8:30, Nightjar from 5:00). The Supers are listed with the Last Line enemies. Crimson March and the Graveyard have no flagged miniboss rows.
+
+## Enemies (159 kinds)
+
+All rows from the enemy data tables (EnemyData, MarchEnemyData, SanctumEnemyData, BattleSisterData and each act's shared and per-stage tables). Bosses are listed in their own section. The Reckoning Inquisitor ("Inquisitor of the End") is the Act I Reckoning kind and is counted in neither group.
+
+| Faction | Regular | Minibosses | Structures | Total |
+|---|---|---|---|---|
+| Crimson Covenant (Act I) | 14 | 1 | 5 | 20 |
+| The Ancient Eye (Act II) | 19 | 2 | 5 | 26 |
+| The Electronic Empire (Act III) | 11 | 3 | 7 | 21 |
+| The Olympian Republic (Act IV) | 15 | 5 | 2 | 22 |
+| The Shogunate (Act V) | 14 | 3 | 0 | 17 |
+| The Inferno (Act VI) | 10 | 4 | 1 | 15 |
+| The Sanguine Court (Act VII) | 11 | 3 | 3 | 17 |
+| The Last Line (Act VIII) | 17 | 2 | 2 | 21 |
+| Total | 111 | 23 | 25 | 159 |
+
+### Crimson Covenant (Act I)
+
+| Kind | Id | Class | Role and traits | Appears in |
+|---|---|---|---|---|
+| Covenant Recruit | recruit | regular | melee | shared / Graveyard |
+| Crimson Footman | footman | regular | melee | shared / Graveyard |
+| Zealous Archer | archer | regular | ranged | shared / Graveyard |
+| Covenant Chaplain | chaplain | regular | healer | shared / Graveyard |
+| Purifier | purifier | regular | purifier | shared / Graveyard |
+| Templar Knight | templar | regular | templar | shared / Graveyard |
+| Covenant Shieldbearer | shieldbearer | regular | melee | Crimson March |
+| Banner Bearer | banner_bearer | regular | banner | Crimson March |
+| Crimson Halberdier | halberdier | regular | melee | Crimson March |
+| Checkpoint Watchtower | watchtower | structure | structure | Crimson March |
+| Siege Outpost | outpost | structure | structure | Crimson March |
+| Holy Ward Generator | ward_generator | structure | structure | Crimson March |
+| Supply Cart | supply_cart | structure | cart | Crimson March |
+| Holy Standard | holy_standard | structure | structure | Crimson March |
+| Sanctified Sentinel | sanctified_sentinel | regular | melee, construct | Sanctum |
+| Radiant Inquisitor | radiant_inquisitor | regular | ranged, always elite | Sanctum |
+| High Confessor | high_confessor | regular | healer, always elite | Sanctum |
+| Sun Paladin | sun_paladin | regular | templar, always elite | Sanctum |
+| Cathedral Guardian | cathedral_guardian | miniboss | melee, always elite, construct | Sanctum |
+| Sister of the Scourge | battle_sister | regular | melee | Crimson March, Sanctum |
+
+### The Ancient Eye (Act II)
+
+| Kind | Id | Class | Role and traits | Appears in |
+|---|---|---|---|---|
+| Initiate of the Eye | eye_initiate | regular | melee | Act II shared |
+| Chanter of the Eye | eye_chanter | regular | melee | Act II shared |
+| Drowned Thrall | drowned_thrall | regular | melee | Act II shared |
+| Deep Kin | deep_kin | regular | melee | Harbour |
+| Tide Caller | tide_caller | regular | melee | Harbour |
+| Netcaster | netcaster | regular | melee | Harbour |
+| The Harbourmaster | harbourmaster | miniboss | melee, always elite | Harbour |
+| Herald of the Deep | deep_herald | regular | melee | Harbour |
+| Bell Buoy | bell_buoy | structure | structure | Harbour |
+| Smugglers' Cache | smuggler_cache | structure | structure | Harbour |
+| Scribe of the Unwritten | scribe | regular | melee | Archive |
+| Ink Wraith | ink_wraith | regular | melee, floating, phases through obstacles | Archive |
+| Pilgrim of the Spore | spore_pilgrim | regular | melee | Archive |
+| Gibbering Mass | gibbering_mass | regular | melee | Archive |
+| Lesser Mass | gibbering_lesser | regular | melee | Archive |
+| Least Mass | gibbering_least | regular | melee | Archive |
+| The Librarian | librarian | miniboss | melee, always elite, floating | Archive |
+| Rift | archive_rift | structure | structure, construct | Archive |
+| The Unwritten | unwritten_one | regular | melee, phases through obstacles | Archive |
+| A Footnote | archivist_copy | regular | melee | Archive |
+| Siren of the Eye | eye_siren | regular | banner, always elite | Ul-Thalos |
+| Spawn of the Deep | eye_spawn | regular | melee | Ul-Thalos |
+| Hierophant of the Eye | eye_hierophant | regular | banner, always elite | Ul-Thalos |
+| Dream Pillar | dream_pillar | structure | structure | Ul-Thalos |
+| Arm of Vhal'Neth | vhalneth_arm | structure | structure | Ul-Thalos |
+| Dreamspawn of the Waking | eye_waking_horror | regular | melee | Ul-Thalos |
+
+### The Electronic Empire (Act III)
+
+| Kind | Id | Class | Role and traits | Appears in |
+|---|---|---|---|---|
+| Scout Drone | scout_drone | regular | ranged, machine, floating, phases through obstacles | Act III shared |
+| Line Trooper | line_trooper | regular | ranged, cyborg | Act III shared |
+| Spotter | spotter | regular | ranged, cyborg, always elite | Act III shared |
+| Kill-Drone | kill_drone | regular | ranged, machine, floating, phases through obstacles | Act III shared |
+| Aegis Bot | aegis_bot | regular | melee, machine | Scrap Wastes |
+| Mortar Walker | mortar_walker | regular | ranged, machine | Scrap Wastes |
+| Signal Pylon | signal_pylon | structure | structure, machine | Scrap Wastes |
+| The Trojan Horse | trojan_horse | miniboss | melee, machine, always elite | Scrap Wastes |
+| Swarm Rocket | trojan_rocket | regular | melee, machine, floating, phases through obstacles | Scrap Wastes |
+| Decoy Drone | kestrel_decoy | regular | ranged, machine, floating, phases through obstacles | Scrap Wastes |
+| Arc Engineer | arc_engineer | regular | ranged, cyborg | Assembly Halls |
+| Juggernaut | juggernaut | regular | melee, machine, always elite | Assembly Halls |
+| Fabricator | fabricator | structure | structure, machine | Assembly Halls |
+| The Beta Build | beta_build | miniboss | melee, machine, always elite | Assembly Halls |
+| Motherboard Turret | motherboard_turret | structure | structure, machine | Assembly Halls |
+| Valkyrie Duelist | valkyrie_duelist | regular | melee, cyborg, always elite | Iron Citadel |
+| Sentry Turret | sentry_turret | structure | structure, machine, construct | Iron Citadel |
+| Shield Generator | shield_generator | structure | structure, machine, construct | Iron Citadel |
+| Valkyrie 2.0 | valkyrie_prime | miniboss | melee, cyborg, always elite | Iron Citadel |
+| Leg Plate | deus_leg_plate | structure | structure, machine, construct | Iron Citadel |
+| Shield Drone | deus_shield_drone | structure | structure, machine, construct, floating, phases through obstacles | Iron Citadel |
+
+### The Olympian Republic (Act IV)
+
+| Kind | Id | Class | Role and traits | Appears in |
+|---|---|---|---|---|
+| Shade of the Dead | shade_of_dead | regular | melee, fodder, floating | Act IV shared |
+| Hoplite | hoplite | regular | melee, bronze | Act IV shared |
+| Hero | hero | regular | melee, always elite, bronze | Act IV shared |
+| Bronze Titan | bronze_titan | regular | melee, bronze | Act IV shared |
+| Legionary | legionary | regular | melee, bronze | Ilion |
+| Wolf of Rome | wolf_of_rome | regular | melee, fodder, bronze | Ilion |
+| Cyclops | cyclops | regular | melee | Ilion |
+| Polyphemus the Cyclops | polyphemus | miniboss | melee, always elite | Ilion |
+| Siege Tower | siege_tower | structure | cart, phases through obstacles | Ilion |
+| Centaur Archer | centaur_archer | regular | ranged, bronze | Olympus |
+| Amazon | amazon | regular | melee, always elite, bronze | Olympus |
+| Gorgon | gorgon | regular | melee, always elite | Olympus |
+| Hound of Artemis | moon_hound | regular | melee, fodder | Olympus |
+| Sea Serpent | sea_serpent | regular | melee, always elite | Olympus |
+| Ares, God of War | ares | miniboss | melee, always elite, bronze | Olympus |
+| Artemis, the Huntress | artemis | miniboss | ranged, always elite | Olympus |
+| Poseidon, Lord of the Sea | poseidon | miniboss | melee, always elite | Olympus |
+| Shade Hoplite | shade_hoplite | regular | melee | Underworld |
+| Cerberus | cerberus | miniboss | melee, always elite | Underworld |
+| Head of Cerberus | cerberus_head | structure | melee | Underworld |
+| Tartarus Warden | tartarus_warden | regular | melee | Underworld |
+| Shade Archer | shade_archer | regular | ranged, floating | Underworld |
+
+### The Shogunate (Act V)
+
+| Kind | Id | Class | Role and traits | Appears in |
+|---|---|---|---|---|
+| Ashigaru | ashigaru | regular | melee, fodder | Act V shared |
+| Samurai | samurai | regular | melee | Act V shared |
+| Teppo Gunner | teppo_gunner | regular | ranged | Act V shared |
+| Ninja | ninja | regular | melee | Act V shared |
+| Onryō | onryo | regular | melee, fodder, night only, floating | Act V shared |
+| Oni | oni | regular | melee, night only | Act V shared |
+| Kunoichi | kunoichi | regular | melee, always elite | Burning Province |
+| Kappa | kappa | regular | melee, fodder, night only | Burning Province |
+| Shuten-dōji, the Oni King | shuten_doji | miniboss | melee, always elite, night only | Burning Province |
+| Shadow of Kage | kage_clone | regular | melee | Burning Province |
+| Hatamoto | hatamoto | regular | melee, always elite | Castle Kurogane |
+| Kiba-musha | kiba_musha | regular | melee | Castle Kurogane |
+| The General of the Left | general_left | miniboss | melee, always elite | Castle Kurogane |
+| Kitsune | kitsune | regular | melee, night only | Road to the Sun |
+| Kitsune | fox_fire | regular | melee | Road to the Sun |
+| Sōhei | sohei | regular | melee | Road to the Sun |
+| The Kirin | kirin | miniboss | melee, always elite | Road to the Sun |
+
+### The Inferno (Act VI) - built, not yet playable
+
+| Kind | Id | Class | Role and traits | Appears in |
+|---|---|---|---|---|
+| The Damned | damned | regular | melee, fodder | Act VI shared |
+| Imp | imp | regular | melee, fodder, demon, flier, floating, phases through obstacles | Act VI shared |
+| Hell Knight | hell_knight | regular | melee, demon | Act VI shared |
+| Succubus | succubus | regular | melee, demon, flier, floating, phases through obstacles | Act VI shared |
+| Demon Brute | demon_brute | regular | melee, demon | Act VI shared |
+| Demon Portal | demon_portal | structure | structure, demon | Act VI shared |
+| Charmed | charmed | regular | melee | Act VI shared |
+| Hellhound | lava_hound | regular | melee, fodder, demon | Burning Gate |
+| Pit Cultist | pit_cultist | regular | melee | Burning Gate |
+| The Gatekeeper | gatekeeper | miniboss | melee, always elite, demon | Burning Gate |
+| Lilim Witch | lilim_witch | regular | melee, demon | Palace of Silk and Ash |
+| Naamah, the Elder Twin | twin_naamah | miniboss | melee, always elite, demon, flier, floating, phases through obstacles | Palace of Silk and Ash |
+| Agrat, the Younger Twin | twin_agrat | miniboss | melee, always elite, demon, flier, floating, phases through obstacles | Palace of Silk and Ash |
+| Fallen Angel | fallen_angel | regular | melee, demon, flier, floating, phases through obstacles | Pandemonium |
+| The Fallen Seraph General | seraph_general | miniboss | melee, always elite, demon | Pandemonium |
+
+### The Sanguine Court (Act VII) - built, not yet playable
+
+| Kind | Id | Class | Role and traits | Appears in |
+|---|---|---|---|---|
+| Blood Thrall | blood_thrall | regular | melee, fodder | Act VII shared |
+| Vampire Bat | vampire_bat | regular | melee, fodder, floating, phases through obstacles | Act VII shared |
+| Blood Knight | blood_knight | regular | melee | Act VII shared |
+| Werewolf | werewolf | regular | ranged | Act VII shared |
+| Vampire Noble | vampire_noble | regular | melee | Act VII shared |
+| Coffin | court_coffin | structure | structure | Act VII shared |
+| Ghoul | ghoul | regular | melee, fodder | Act VII shared |
+| Crimson Witch | crimson_witch | regular | ranged | Act VII shared |
+| Bloated Thrall | bloated_thrall | regular | melee | Act VII shared |
+| Chiropteran | chiropteran | regular | melee, floating, phases through obstacles | Act VII shared |
+| Old Greymane | old_greymane | miniboss | melee, always elite | Ravensmoor |
+| Sleeping Coffin | sleeping_coffin | structure | structure | Ravensmoor |
+| The Bog Mother | bog_mother | miniboss | melee | Witchwood |
+| Sister of the Red Moon | isolde_sister | regular | ranged | Witchwood |
+| Hex Stone | hex_stone | structure | structure | Witchwood |
+| The Chiropteran King | chiropteran_king | miniboss | melee, always elite, floating, phases through obstacles | Castle Sanguis |
+| Blood Bearer | blood_bearer | regular | melee, fodder | Castle Sanguis |
+
+### The Last Line (Act VIII) - built, not yet playable
+
+| Kind | Id | Class | Role and traits | Appears in |
+|---|---|---|---|---|
+| Civilian | civilian | regular | melee, tier gangs, fodder | Act VIII shared |
+| Street Thug | street_thug | regular | melee, tier gangs, fodder | Act VIII shared |
+| Gang Gunner | gang_gunner | regular | ranged, tier gangs, fodder | Act VIII shared |
+| Riot Cop | riot_cop | regular | melee, tier police | Act VIII shared |
+| Squad Car | squad_car | regular | melee, tier police, vehicle | Act VIII shared |
+| SWAT Breacher | swat_breacher | regular | ranged, tier swat | Act VIII shared |
+| Field Medic | field_medic | regular | healer, tier swat | Act VIII shared |
+| Rifleman | rifleman | regular | ranged, tier army | Act VIII shared |
+| Tank | tank | regular | melee, tier army, vehicle | Act VIII shared |
+| Blitz | blitz | regular | melee, tier heroes, always elite | Act VIII shared |
+| Burning Wreck | city_wreck | structure | structure, tier army | Act VIII shared |
+| Machine Gunner | machine_gunner | regular | ranged, tier army | Act VIII shared |
+| Attack Helicopter | attack_helicopter | regular | melee, tier army, vehicle, phases through obstacles | Act VIII shared |
+| Atlas | atlas | regular | melee, tier heroes, always elite | Act VIII shared |
+| Aurora | aurora | regular | melee, tier heroes, always elite | Act VIII shared |
+| Nightjar | nightjar | regular | melee, tier heroes, always elite | Act VIII shared |
+| Big Sal's Armoured Limo | armoured_limo | regular | melee, tier gangs, vehicle | Skid Row |
+| Big Sal | big_sal | miniboss | melee, tier gangs, always elite | Skid Row |
+| Bounty Board | bounty_board | structure | structure, tier gangs | Skid Row |
+| Mammoth | mammoth | miniboss | melee, tier army, always elite, vehicle | Fort Kessler |
+| Conscript | conscript | regular | melee, tier army, fodder | Liberty Heights |
+
+## Spells and evolutions (33 + 33)
+
+12 base-game spells (3 starter spells and 9 later ones) and 21 act spells, one unlocked by each stage boss from Act II onward. Each has one evolution, delivered by a treasure chest once the spell and its paired passive are at Lv 5 and 8:00 has elapsed. Six active slots compete among spells and summon classes.
+
+| Spell | Evolution | Paired passive (Lv 5) | Origin | Unlock | Description | Evolution effect |
+|---|---|---|---|---|---|---|
+| Shadow Bolt | Void Barrage | Soul Conduit | Base game | Base game | Fires homing shadow bolts at nearby foes. | Rapid piercing void bolts that split into shards on impact. |
+| Shadow Orb Shield | Eclipse Ward | Warding Ritual | Base game | Base game | Shadow orbs circle you, striking foes and catching projectiles. | Six eclipse orbs guard you and pulse with dark damage. |
+| Shadow Blast | Abyssal Detonation | Abyssal Focus | Base game | Base game | Shadow erupts around you, wounding and slowing nearby foes. | A blast drags foes inward, then the abyss detonates again. |
+| Bone Spear | Ossuary Lance | Shade Stride | Base game | Base game | Hurls piercing bone spears ahead of you as you walk. | Great bone lances skewer every foe ahead and behind and drive them back. |
+| Soul Siphon | Soul Rapture | Vampiric Rite | Base game | Base game | Soul tethers drain the strongest nearby foes to heal you. | More tethers feed you; tethered foes burst and spare life mends your undead. |
+| Corpse Explosion | Grave Eruption | Necrotic Expanse | Base game | Base game | Detonates fresh corpses near you in bursts of bone. | Corpses erupt into bone-spike fields, and their victims erupt in turn. |
+| Plague Cloud | Pestilence | Lingering Malediction | Base game | Base game | Plague clouds settle on packed foes and rot them to take more damage. | Creeping plague clouds deepen the Rot and end in a Death Nova. |
+| Death Mark | Doom Brand | Grim Ledger | Base game | Base game | Brands the strongest foes, and the branded dead rise to fight for you. | Branded foes explode in doom when they die, then rise as Risen. |
+| Bone Wall | Charnel Bastion | Grave Dominion | Base game | Base game | Raises a wall of bone spikes that holds foes back and tears them. | A ring of bone walls encloses you, then bursts into shrapnel. |
+| Soul Chains | Chains of the Damned | Spirit Binding | Base game | Base game | Soul lightning arcs from foe to foe, slowing each one it strikes. | Soul lightning leaps farther and drags every foe it strikes toward the first. |
+| Wither | Necrotic Blight | Necrotic Vigor | Base game | Base game | A decay aura withers nearby foes and rots their armour away. | A wide blight withers the foes around you and feeds you their life. |
+| Raise Dead | Legion of Bones | Restless Dead | Base game | Base game | Skeletons briefly claw up beside nearby foes, beyond your army's limit. | A legion of skeletons rises, each bursting into bone shards when it falls. |
+| Undertow | Maelstrom | Salt of the Deep | Act II | Slay Abbot Silas Merrow in Gullhaven Harbour to unlock. | A wave rolls out before you, shoving foes back and leaving slowing shallows. | Every wave ends in a whirlpool that drags foes into one knot and grinds them. |
+| Forbidden Verse | The Unwritten Word | Marginalia | Act II | Slay the Archivist in the Hollow Archive to unlock. | Pages of scripture circle you, cutting foes and inscribing them to burst into ink. | Six pages circle you, and every ink burst can set off another. |
+| Call of the Drowned | Tidecaller's Host | Abyssal Pact | Act II | Slay Vhal'Neth, the Dreaming Mother, on Ul-Thalos. | Tendrils drag the strongest foes under; those they drown rise to fight for you. | The drowned rise as Spawns of the Deep that seize your foes and hold them fast. |
+| Hollow Puppet | Puppet King | Strings of the Dead | Act III | Shut down the Motherboard in the Assembly Halls to unlock. | Strings of soul seize the strongest foe nearby: it fights for you, then dies. | Two puppets dance on your strings, and each one bursts when it dies. |
+| Death Ray | Event Horizon | Conductive Marrow | Act III | Slay Kestrel, the Dead Pixel, in the Scrap Wastes to unlock. | A soul laser sweeps a full circle around you; its kills spark lightning. | Two soul lasers sweep opposite each other; every kill sets off wild chain lightning. |
+| Scrap Swarm | Deathless Swarm | Machine Soul | Act III | Defeat Deus Ex Machina in the Iron Citadel to unlock. | Drones of bone and scrap orbit beyond your ring and shoot foes before they reach your army. | A greater swarm, and every foe it kills sends another drone into the orbit. |
+| Paris's Arrow | Arrow of Fate | Mortal Heel | Act IV | Slay Achilles on the Shores of Ilion to unlock. | Ghost arrows swing around the strongest foes and strike them from behind. | More ghost arrows, and one that kills flies on to the next foe's back. |
+| Stolen Thunder | Gigantomachy | Titan's Blood | Act IV | Slay Zeus on Mount Olympus to unlock. | A charged bolt strikes the strongest foe and leaps on to armoured ones. | Three stolen bolts fall at once, and every leap of the lightning cracks a thunderclap. |
+| River Styx | Lethe's Flood | Ferryman's Toll | Act IV | Make Hades kneel in the Asphodel Underworld to unlock. | A black river opens across your foes' path: it drains and slows whatever crosses it. | Two crossing rivers of forgetting: foes that wade in forget themselves and stand still. |
+| Hundred Shadows | Thousand Shadows | Hidden Hand | Act V | Slay Kage in the Burning Province to unlock. | Shadow clones step out of you, throw kunai, then echo your next spell. | Five shadows echo every spell, then burst into blades when they fade. |
+| Black Sun | Eclipse of Heaven | Stolen Dawn | Act V | Put out the sun: defeat Amaterasu on the Road to the Sun to unlock. | A dark sun orbits you and burns a short beam through the nearest group of foes. | Two dark suns eclipse the sky: longer beams that end in a burst of black corona. |
+| Banner of the Dead | Hundred Banners | Warlord's Seal | Act V | Slay Shogun Kurogane in Castle Kurogane to unlock. | Plant a war banner where you stand: your dead near it attack faster. | A ring of war banners rises round you, and their war drums beat on your foes. |
+| Brimstone | Rain of Fire | Furnace Heart | Act VI | Slay Moloch at the Burning Gate to unlock. | Burning stones fall on the thickest crowd and leave fire where they land. | Brimstone pours from the sky in a burning rain that leaves the ground on fire. |
+| Temptation | Unholy Desire | Velvet Chains | Act VI | Slay Lilith in the Palace of Silk and Ash to unlock. | Charm the strongest foe near you: it fights for you for a while. | Three foes at once burn with desire for you, and burst when the spell lets them go. |
+| Fall from Grace | Lightbringer | Pride | Act VI | Cast down the Morning Star in Pandemonium to unlock. | A fallen star crashes down on the strongest foe near you. | Three morning stars fall on the mightiest foes, and every crash flares out in a ring of light. |
+| Moonfang | Wolf of the Red Moon | Pack Blood | Act VII | Slay Vargr on Ravensmoor to unlock. | Spectral wolf jaws snap at the nearest foes and leave them bleeding. | A red spectral wolf leaps from pack to pack, and every bite leaves them bleeding. |
+| Hex Circle | Witches' Sabbath | Moonlit Rite | Act VII | Slay Isolde Vane in the Witchwood to unlock. | A crimson circle under you drains every foe inside it, and you drink a little of it. | Your circle grows, and three lesser circles dance around it, draining all they cross. |
+| Night Swarm | Nocturne | Old Blood | Act VII | Slay Queen Carmilla and the Elder in Castle Sanguis to unlock. | Spectral bats circle you and dart at your foes. | A night of bats wheels around you, and every bite leaps on to the next throat. |
+| Hearse Run | Funeral Procession | Black Car | Act VIII | Slay Don Marrow on Skid Row to unlock. | A spectral hearse drives a lane through your foes. | A procession of spectral hearses drives through your foes, and the dead it makes walk behind it. |
+| Bone Mines | Killing Ground | Tripwire | Act VIII | Slay General Harrow at Fort Kessler to unlock. | You drop bone mines as you walk. Enemies set them off; your dead never do. | The ground you walk becomes a minefield, and every blast throws bone shrapnel. |
+| Hero's Fist | Doomsday | Secret Identity | Act VIII | Defeat Paragon at Liberty Heights to unlock. | A spectral fist slams the strongest foe and sends it flying through the rest. | Two fists fall like the end of the world, and every foe they fling lands in a crater. |
+
+Act VI, VII and VIII spells (Brimstone, Tempt, Fall from Grace, Moonfang, Witch Circle, Night Swarm, Hearse Run, Bone Mines, Hero's Fist) are built, not yet playable (waiting on review).
+
+## Passives (70)
+
+55 passives are paired with an evolution (every evolution needs its paired passive at Lv 5); 14 are act-only counter-passives earned by an achievement and offered only on that act's stages; plus the Profane Pact.
+
+| Passive | Type | Origin | Unlock | Effect |
+|---|---|---|---|---|
+| Grave Dominion | Paired: Charnel Bastion (spell) | Base game | Open | Raises the capacity of every summon class you command. |
+| Necrotic Vigor | Paired: Necrotic Blight (spell) | Base game | Open | Increases maximum health of all minions. |
+| Dark Command | Paired: Death Knight (summon) | Base game | Open | Increases minion attack damage and attack speed. |
+| Soul Recycling | Paired: Winter Revenant (summon) | Base game | Open | Fallen summons are replaced faster. |
+| Soul Conduit | Paired: Void Barrage (spell) | Base game | Open | Harvested souls add damage to your spells. |
+| Warding Ritual | Paired: Eclipse Ward (spell) | Base game | Open | Protective sigils dull every blow you take. |
+| Abyssal Focus | Paired: Abyssal Detonation (spell) | Base game | Open | Your spells return faster from the abyss. |
+| Forbidden Knowledge | Paired: Lich (summon) | Base game | Open | Forbidden rites empower your Undead Mages. |
+| Dark Benediction | Paired: Profane Bishop (summon) | Base game | Open | Unholy blessings strengthen your heals, wards and barriers. |
+| Shade Stride | Paired: Ossuary Lance (spell) | Base game | Open | You move faster, gliding like a shade across the graves. |
+| Vampiric Rite | Paired: Soul Rapture (spell) | Base game | Open | Stolen life slowly seeps back into you. |
+| Necrotic Expanse | Paired: Grave Eruption (spell) | Base game | Open | Your blasts, clouds and bursts spread wider. |
+| Lingering Malediction | Paired: Pestilence (spell) | Base game | Open | Your clouds, spike fields and slows linger longer. |
+| Bone Plating | Paired: Bone Colossus (summon) | Base game | Open | Bone plates turn the edge of every blow your minions take. |
+| Unholy Precision | Paired: Gravebow (summon) | Base game | Open | Your minions' attacks can strike critically for double damage. |
+| Unholy Resilience | Paired: Cathedral Horror (summon) | Base game | Open | Your minions shrug off slams, sweeps, holy fire and consecrated ground. |
+| Bound Souls | Paired: Shadow Reaper (summon) | Base game | Open | Your minions move faster, roam farther and return to you sooner. |
+| Grim Ledger | Paired: Doom Brand (spell) | Base game | Open | Elites, minibosses and bosses take more damage from everything. |
+| Spirit Binding | Paired: Chains of the Damned (spell) | Base game | Open | Every slow, chill, freeze and stun you inflict lasts longer. |
+| Restless Dead | Paired: Legion of Bones (spell) | Base game | Open | Temporary summons last longer and strike harder. |
+| Blood Scent | Paired: Hellhound (summon) | Base game | Open | Your swiftest dead move and attack faster. |
+| Mournsong | Paired: Keening Lady (summon) | Base game | Open | Slows, chills, curses, Rot and Dirges you inflict all last longer. |
+| Siegecraft | Paired: Ossuary Engine (summon) | Base game | Open | Summons deal more damage to structures, elites and minibosses. |
+| Profane Pact | Profane Pact (opt-in difficulty) | Base game | Open | A dark pact brings more, stronger foes and richer spoils from every death. |
+| Fallen Grace | Paired: Seraph of Ruin (summon) | Act II | Slay Grand Inquisitor Seraphine. | Your summons' special attacks recharge faster. |
+| Salt of the Deep | Paired: Maelstrom (spell) | Act II | Slay Abbot Silas Merrow in Gullhaven Harbour to unlock. | Slowed, chilled and frozen foes take more damage from everything. |
+| Brinewalker | Counter-passive, Act II only | Act II | Earn Low Tide: clear Gullhaven Harbour. | Water and ink slow you less, and your summons too once it grows. |
+| Marginalia | Paired: The Unwritten Word (spell) | Act II | Slay the Archivist in the Hollow Archive to unlock. | Every blast a death sets off hits harder. |
+| Iron Mind | Counter-passive, Act II only | Act II | Earn Nothing Unwritten: burn every forbidden tome in one Hollow Archive run. | Dread takes hold of you more slowly, and kills calm it faster. |
+| Abyssal Pact | Paired: Tidecaller's Host (spell) | Act II | Slay Vhal'Neth, the Dreaming Mother, on Ul-Thalos. | Temporary summons release a healing soul burst when they crumble. |
+| Crushing Depths | Paired: Leviathan (summon) | Act II | Slay Vhal'Neth, the Dreaming Mother, on Ul-Thalos. | Summons strike harder at foes that are held, stunned or frozen. |
+| Grave Masonry | Paired: Ossuary Titan (summon) | Content wave 2: Bone Golem | Earn Bone Legion: Skeleton Warriors slay 1,000 foes. | Your Warriors, Abominations and Golems take less damage and hold their ground longer. |
+| Strings of the Dead | Paired: Puppet King (spell) | Act III | Shut down the Motherboard in the Assembly Halls to unlock. | Your temporary dead draw the foes around them and rise sturdier. |
+| Overclock | Paired: Wraith Drone (summon) | Act III | Shut down the Motherboard in the Assembly Halls to unlock. | Your ranged summons attack faster. |
+| Signal Ghost | Counter-passive, Act III only | Act III | Earn Cold Assembly: destroy every fabricator in one Assembly Halls run. | The Empire's Lock-On lines take longer to paint on you. |
+| Conductive Marrow | Paired: Event Horizon (spell) | Act III | Slay Kestrel, the Dead Pixel, in the Scrap Wastes to unlock. | Your Death Ray reaches farther and cuts a wider line. |
+| Lead-Lined Bones | Counter-passive, Act III only | Act III | Earn Static in the Wastes: clear the Scrap Wastes. | Bullets and shells hurt your summons less. |
+| Machine Soul | Paired: Deathless Swarm (spell) | Act III | Defeat Deus Ex Machina in the Iron Citadel to unlock. | Every hit you and your dead land pierces part of the foe's armour. |
+| Recoil Frame | Paired: Deus Revenant (summon) | Act III | Defeat Deus Ex Machina in the Iron Citadel to unlock. | Your ranged summons fire faster and reach farther. |
+| Mortal Heel | Paired: Arrow of Fate (spell) | Act IV | Slay Achilles on the Shores of Ilion to unlock. | Every hit that strikes a foe from behind deals more. |
+| Bronze Breaker | Counter-passive, Act IV only | Act IV | Earn Heel Found: slay Achilles with a blow to his back or heel. | Your summons' blows on a locked shield wall's front hit harder. |
+| Titan's Blood | Paired: Gigantomachy (spell) | Act IV | Slay Zeus on Mount Olympus to unlock. | Your Stolen Thunder charges faster and leaps to more armoured foes. |
+| Grounded Bones | Counter-passive, Act IV only | Act IV | Earn Twilight of the Gods: clear the Pantheon Trial on Mount Olympus. | The gods' lightning and waves hurt you and your dead less. |
+| Ferryman's Toll | Paired: Lethe's Flood (spell) | Act IV | Make Hades kneel in the Asphodel Underworld to unlock. | Every slowed foe that dies pays the ferryman: you heal and your Dread Rally fills. |
+| Myrmidon Oath | Paired: Legion of Tartarus (summon) | Act IV | Make Hades kneel in the Asphodel Underworld to unlock. | Your front-line dead swear to hold: they are hardier and strike harder. |
+| Hidden Hand | Paired: Thousand Shadows (spell) | Act V | Slay Kage in the Burning Province to unlock. | Your spells strike foes busy fighting your summons harder. |
+| Paper Lanterns | Counter-passive, Act V only | Act V | Earn No Shadow Unlit: light 20 stone lanterns in one Burning Province run and slay Kage. | Your light reaches farther, and ambushes show earlier. |
+| Stolen Dawn | Paired: Eclipse of Heaven (spell) | Act V | Put out the sun: defeat Amaterasu on the Road to the Sun to unlock. | The dawn you stole feeds your dark sun: its beams come sooner and mend you. |
+| Oni's Resolve | Paired: Oni Lord (summon) | Act V | Put out the sun: defeat Amaterasu on the Road to the Sun to unlock. | Your dead have a demon's will: stuns on them wear off sooner. |
+| Warlord's Seal | Paired: Hundred Banners (spell) | Act V | Slay Shogun Kurogane in Castle Kurogane to unlock. | Your dead near you attack faster under your seal of command. |
+| Unbending | Counter-passive, Act V only | Act V | Earn Regiments Broken: slay the Shogun after breaking all six of his banners. | The samurai's Draw cuts your summons for less. |
+| Furnace Heart | Paired: Rain of Fire (spell) | Act VI | Slay Moloch at the Burning Gate to unlock. | Your spells strike foes standing in fire harder. |
+| Salt Circle | Counter-passive, Act VI only | Act VI | Earn Gate Crashed: seal 5 portals in one Burning Gate run and slay Moloch. | A ring of salt shields your summons: the Hell Pits burn them for less. |
+| Velvet Chains | Paired: Unholy Desire (spell) | Act VI | Slay Lilith in the Palace of Silk and Ash to unlock. | Your charmed foes are bound tighter: they serve longer and strike harder. |
+| Sweet Surrender | Paired: Lilim Matriarch (summon) | Act VI | Slay Lilith in the Palace of Silk and Ash to unlock. | Foes your Succubi kiss give in sooner and serve you longer. |
+| Faithless | Counter-passive, Act VI only | Act VI | Earn Unmoved: slay Lilith without a single summon charmed during her fight. | Your dead keep no faith with hell: charms on them wear off sooner. |
+| Pride | Paired: Lightbringer (spell) | Act VI | Cast down the Morning Star in Pandemonium to unlock. | Your falling stars come sooner and strike the mighty harder. |
+| Crown of Horns | Paired: Prince of Hell (summon) | Act VI | Cast down the Morning Star in Pandemonium to unlock. | Your dead's special attacks strike harder. |
+| Pack Blood | Paired: Wolf of the Red Moon (spell) | Act VII | Slay Vargr on Ravensmoor to unlock. | Foes bleeding from Moonfang take more damage from every hit. |
+| Silver Bones | Counter-passive, Act VII only | Act VII | Earn Coffin Nails: break every sleeping coffin on Ravensmoor before it opens. | Silver in your dead's bones: they strike werewolves and vampire nobles harder, and the nobles' mist breaks sooner. |
+| Moonlit Rite | Paired: Witches' Sabbath (spell) | Act VII | Slay Isolde Vane in the Witchwood to unlock. | Your spells strike foes inside your hex circle harder. |
+| Embalmed | Counter-passive, Act VII only | Act VII | Earn The Coven Breaks: kill Isolde's three sisters within 1 second of each other. | Your dead are embalmed: the Court heals less from biting them. |
+| Old Blood | Paired: Nocturne (spell) | Act VII | Slay Queen Carmilla and the Elder in Castle Sanguis to unlock. | Your bats dart sooner, and their bites feed you. |
+| Thirst Eternal | Paired: Nosferatu (summon) | Act VII | Slay Queen Carmilla and the Elder in Castle Sanguis to unlock. | Every heal your dead receive is stronger. |
+| Black Car | Paired: Funeral Procession (spell) | Act VIII | Slay Don Marrow on Skid Row to unlock. | Foes struck by a hearse reel: they are slowed for a while. |
+| Kevlar Bones | Counter-passive, Act VIII only | Act VIII | Earn No Witnesses: kill every civilian of Skid Row's opening crowd before one flees. | Your dead are laced with kevlar: the city's guns hurt them less. |
+| Tripwire | Paired: Killing Ground (spell) | Act VIII | Slay General Harrow at Fort Kessler to unlock. | Your bone mines go off from farther away, and slow every foe caught in the blast. |
+| Armour-Piercing Bones | Counter-passive, Act VIII only | Act VIII | Earn Broken Arrow: kill General Harrow before his strike lands. | Your dead strike through shields and armour plate: fronts stop less of their blows. |
+| Secret Identity | Paired: Doomsday (spell) | Act VIII | Defeat Paragon at Liberty Heights to unlock. | Your fist strikes sooner, and the foes it flings hit harder. |
+| Origin Story | Paired: Black Paragon (summon) | Act VIII | Defeat Paragon at Liberty Heights to unlock. | Every summon's special reaches wider. |
+
+Counter-passives for Acts VI, VII and VIII (Salt Circle, Faithless, Silver Bones, Embalmed, Kevlar Bones, Armour-Piercing Bones) are built, not yet playable (waiting on review).
+
+## Summon classes (24) and summon evolutions (22)
+
+| Class | Origin | Attack style | Evolution and paired passive | Unlock | Description |
+|---|---|---|---|---|---|
+| Skeleton Warrior | Base game | melee | Death Knight (needs Dark Command, transform) | Open | Skeleton warriors that hold the line and shield you. |
+| Skeletal Archer | Base game | arrow | Gravebow (needs Unholy Precision, transform) | Open | Skeletal archers that hold their ground and loose arrows from afar. |
+| Undead Mage | Base game | aoe | Lich (needs Forbidden Knowledge, transform) | Open | Undead mages hurl dark orbs that burst over packed foes. |
+| Grave Mender | Base game | heal | Profane Bishop (needs Dark Benediction, merge) | Open | Grave menders that mend your undead and you. |
+| Crypt Warder | Base game | ward | Profane Bishop (needs Dark Benediction, merge) | Open | Crypt warders that ward you and shield threatened allies. |
+| Profane Bishop | Base game | heal | (evolved form of Mender + Warder) | Evolved only | Profane bishops that heal, ward and burn foes with an unholy aura. |
+| Corpse Abomination | Base game | melee | Bone Colossus (needs Bone Plating, transform) | Open | Hulking abominations that block foes and stomp the ground around them. |
+| Grave Rogue | Base game | melee | Shadow Reaper (needs Bound Souls, transform) | Open | Grave rogues that dash through foes and leave them bleeding. |
+| Crypt Gargoyle | Base game | melee | Cathedral Horror (needs Unholy Resilience, transform) | Open | Crypt gargoyles that fly over the fray and dive onto packed foes. |
+| Frost Wraith | Base game | frost | Winter Revenant (needs Soul Recycling, transform) | Open | Frost wraiths that chill foes and lock packs in Deep Freeze. |
+| Bone Hound | Base game | melee | Hellhound (needs Blood Scent, transform) | Open | Bone hounds that hunt one prey as a pack, biting harder together. |
+| Banshee | Base game | dirge | Keening Lady (needs Mournsong, transform) | Open | A floating banshee whose wailing Dirge slows foes and weakens their blows. |
+| Corpse Catapult | Base game | boulder | Ossuary Engine (needs Siegecraft, transform) | Open | Corpse catapults that hang back and lob boulders at packs and structures. |
+| Fallen Seraph | Act II | feather | Seraph of Ruin (needs Fallen Grace, transform) | Slay Grand Inquisitor Seraphine. | A fallen seraph who dives onto packed foes and leaves a ring of cutting feathers. |
+| Spawn of the Deep | Act II | melee | Leviathan (needs Crushing Depths, transform) | Slay Vhal'Neth, the Dreaming Mother, on Ul-Thalos. | Tentacled spawn of the deep that seize foes and hold them fast. |
+| Bone Golem | Content wave 2: Bone Golem | melee | Ossuary Titan (needs Grave Masonry, transform) | Earn Bone Legion: Skeleton Warriors slay 1,000 foes. | A slow fortress of bone that holds its ground, slams foes and grows from your fallen. |
+| Grave Drone | Act III | dart | Wraith Drone (needs Overclock, transform) | Shut down the Motherboard in the Assembly Halls to unlock. | A swarm of skull drones that hovers over your army and fires bone darts. |
+| Iron Revenant | Act III | suppress | Deus Revenant (needs Recoil Frame, transform) | Defeat Deus Ex Machina in the Iron Citadel to unlock. | A reanimated war walker that holds the ring's heart and lays down slowing suppressive fire. |
+| Myrmidon Shade | Act IV | melee | Legion of Tartarus (needs Myrmidon Oath, transform) | Make Hades kneel in the Asphodel Underworld to unlock. | Undead hoplites that hold the ring three shields wide and spear through the foes behind. |
+| Bound Oni | Act V | melee | Oni Lord (needs Oni's Resolve, transform) | Put out the sun: defeat Amaterasu on the Road to the Sun to unlock. | Chained oni brutes that hold the front and stun whatever their iron club lands on. |
+| Succubus | Act VI | allure | Lilim Matriarch (needs Sweet Surrender, transform) | Slay Lilith in the Palace of Silk and Ash to unlock. | Bound succubi that float behind your ring and charm foes to fight beside your dead. |
+| Archfiend | Act VI | melee | Prince of Hell (needs Crown of Horns, transform) | Cast down the Morning Star in Pandemonium to unlock. | Winged demons bound in undeath that hold the front and cleave whole ranks aside. |
+| Blood Spawn | Act VII | melee | Nosferatu (needs Thirst Eternal, transform) | Slay Queen Carmilla and the Elder in Castle Sanguis to unlock. | Fast vampire brawlers that heal themselves with every blow. |
+| Fallen Hero | Act VIII | melee | Black Paragon (needs Origin Story, transform) | Defeat Paragon at Liberty Heights to unlock. | Raised heroes that fly around your ring and slam into packs. |
+
+### Summon evolutions
+
+| Evolution | Base class(es) | Paired passive | Kind | Origin |
+|---|---|---|---|---|
+| Death Knight | warrior | Dark Command | transform | Base game |
+| Lich | mage | Forbidden Knowledge | transform | Base game |
+| Profane Bishop | mender, warder | Dark Benediction | merge | Base game |
+| Winter Revenant | frost_wraith | Soul Recycling | transform | Base game |
+| Shadow Reaper | rogue | Bound Souls | transform | Base game |
+| Cathedral Horror | gargoyle | Unholy Resilience | transform | Base game |
+| Gravebow | archer | Unholy Precision | transform | Base game |
+| Bone Colossus | abomination | Bone Plating | transform | Base game |
+| Hellhound | bone_hound | Blood Scent | transform | Base game |
+| Keening Lady | banshee | Mournsong | transform | Base game |
+| Ossuary Engine | corpse_catapult | Siegecraft | transform | Base game |
+| Seraph of Ruin | fallen_seraph | Fallen Grace | transform | Act II |
+| Leviathan | spawn_of_the_deep | Crushing Depths | transform | Act II |
+| Ossuary Titan | bone_golem | Grave Masonry | transform | Content wave 2: Bone Golem |
+| Wraith Drone | grave_drone | Overclock | transform | Act III |
+| Deus Revenant | iron_revenant | Recoil Frame | transform | Act III |
+| Legion of Tartarus | myrmidon_shade | Myrmidon Oath | transform | Act IV |
+| Oni Lord | bound_oni | Oni's Resolve | transform | Act V |
+| Lilim Matriarch | bound_succubus | Sweet Surrender | transform | Act VI |
+| Prince of Hell | archfiend | Crown of Horns | transform | Act VI |
+| Nosferatu | blood_spawn | Thirst Eternal | transform | Act VII |
+| Black Paragon | fallen_hero | Origin Story | transform | Act VIII |
+
+### Synergies (14)
+
+| Synergy | Effect |
+|---|---|
+| Shieldwall of the Damned | Warders raise bone barriers on your frontline warriors. |
+| Volley of the Fallen | Mage explosions mark foes; archers deal bonus damage to marked foes. |
+| March of the Deathless | Your summons move faster and slowly regenerate. |
+| The Unholy Host | An unholy aura: all summons attack faster and take less damage. |
+| Flesh Rampart | Abomination stomps stagger foes; warriors hit staggered foes harder. |
+| Killing Field | Catapults aim at the foes an Abomination staggers and hit them harder. |
+| Death from Above | Rogues hit swooped foes harder; the first hit on one resets the dash. |
+| The Wild Hunt | A foe a Gargoyle swoops on becomes the pack's prey; bites on it hit harder. |
+| Cold Blood | Rogues dash at chilled and frozen foes and hit them harder. |
+| Shatterfall | Catapults aim at frozen foes; boulders hit frozen foes much harder. |
+| Requiem | Mage explosions hit weakened foes harder and stretch the Dirge. |
+| Baying of the Damned | Every Dirge sends the bone hounds into a frenzy. |
+| The Charnel Menagerie | Four of the newer horrors: they deal more damage and return faster. |
+| Bone Bastion | Summons near a Bone Golem take less damage, far less while it is planted. |
+
+Synergies switch on at Lv 2 of each required class. Bone Bastion (Bone Golem plus any blocker) was added with content wave 2; the Charnel Menagerie needs any 4 of the 7 newer classes. Acts V-VIII classes (Bound Oni, Succubus, Archfiend, Blood Spawn, Fallen Hero) have no dedicated synergies in the data. Classes unlocked by Acts VI-VIII bosses (Succubus, Archfiend, Blood Spawn, Fallen Hero) are built, not yet playable (waiting on review).
+
+## Characters (33) and skins (72)
+
+One playable character per spell, each with one innate passive. The Gravecaller is the default (no innate, baseline stats). Characters of Act VI-VIII spells are built, not yet playable (waiting on review).
+
+| Character | Starting spell | Innate | Unlock | Origin |
+|---|---|---|---|---|
+| The Gravecaller | Shadow Bolt | (none: baseline) | Open | Base game |
+| The Umbral Warden | Shadow Orb Shield | Eclipsed Guard | Spell reaches Lv 5 in any run | Base game |
+| The Voidcaller | Shadow Blast | Echoing Dark | Spell reaches Lv 5 in any run | Base game |
+| The Bone Oracle | Bone Spear | Ossuary Ward | Spell reaches Lv 5 in any run | Base game |
+| The Fallen Confessor | Soul Siphon | Stolen Grace | Spell reaches Lv 5 in any run | Base game |
+| The Carrion Lord | Corpse Explosion | Grave Harvest | Spell reaches Lv 5 in any run | Base game |
+| The Plague Scholar | Plague Cloud | Contagion | Spell reaches Lv 5 in any run | Base game |
+| The Doomsayer | Death Mark | Ill Omen | Spell reaches Lv 5 in any run | Base game |
+| The Barrow Warden | Bone Wall | Stonebone | Spell reaches Lv 5 in any run | Base game |
+| The Soulbinder | Soul Chains | Conductor | Spell reaches Lv 5 in any run | Base game |
+| The Wither Witch | Wither | Creeping Rot | Spell reaches Lv 5 in any run | Base game |
+| The Grave Herald | Raise Dead | Restless | Spell reaches Lv 5 in any run | Base game |
+| The Brine Widow | Undertow | Riptide | Spell reaches Lv 5 in any run | Act II |
+| The Heretic Scribe | Forbidden Verse | Illuminated Margins | Spell reaches Lv 5 in any run | Act II |
+| The Tide Widow | Call of the Drowned | Drowned Chorus | Spell reaches Lv 5 in any run | Act II |
+| The Marionette | Hollow Puppet | Puppeteer | Spell reaches Lv 5 in any run | Act III |
+| The Lightning Abbess | Death Ray | Storm Litany | Spell reaches Lv 5 in any run | Act III |
+| The Rust Prophet | Scrap Swarm | Scrap Prophecy | Spell reaches Lv 5 in any run | Act III |
+| The Doomed Prophetess | Paris's Arrow | Foretold Fall | Spell reaches Lv 5 in any run | Act IV |
+| The Oathbreaker | Stolen Thunder | Kinslayer | Spell reaches Lv 5 in any run | Act IV |
+| The Ferrywoman | River Styx | Ferry of Souls | Spell reaches Lv 5 in any run | Act IV |
+| The Grave Kunoichi | Hundred Shadows | Many Faces | Spell reaches Lv 5 in any run | Act V |
+| The Shrine Maiden of Night | Black Sun | Night Prayer | Spell reaches Lv 5 in any run | Act V |
+| The Ronin Revenant | Banner of the Dead | Unbowed Banner | Spell reaches Lv 5 in any run | Act V |
+| The Furnace Priest | Brimstone | Stoker | Spell reaches Lv 5 in any run | Act VI |
+| The Succubus Queen | Temptation | Heartbreaker | Spell reaches Lv 5 in any run | Act VI |
+| The Fallen Saint | Fall from Grace | Second Fall | Spell reaches Lv 5 in any run | Act VI |
+| The Moon-Cursed Huntress | Moonfang | Hunter's Moon | Spell reaches Lv 5 in any run | Act VII |
+| The Hedge Witch | Hex Circle | Hedge Lore | Spell reaches Lv 5 in any run | Act VII |
+| The Dhampir | Night Swarm | Half-Blood | Spell reaches Lv 5 in any run | Act VII |
+| The Undertaker | Hearse Run | Last Ride | Spell reaches Lv 5 in any run | Act VIII |
+| The Fallen Sergeant | Bone Mines | Sapper's Hands | Spell reaches Lv 5 in any run | Act VIII |
+| The Revenant Heroine | Hero's Fist | Back From the Dead | Spell reaches Lv 5 in any run | Act VIII |
+
+### Skins (cosmetic only)
+
+| Kind | Count | Detail |
+|---|---|---|
+| Default | 33 | One per character |
+| Hyper skins | 33 | One per character, earned by a Hyper clear with that character on the Sanctum |
+| Achievement skins | 4 | The Dread Sovereign (The Gravecaller): Slay Grand Inquisitor Seraphine while commanding Warriors, Archers, Mages and a priest order; The Ivory Seer (The Bone Oracle): Earn Bone Legion: Skeleton Warriors slay 1,000 foes; The Plague Doctor (The Plague Scholar): Slay 5,000 enemies while they Rot (Plague Cloud); The Heretic Saint (The Fallen Confessor): Slay 50 High Confessors |
+| Universal skins | 2 | Untouchable, Deathlord (any character) |
+| Casket-only skins | 0 | Slot exists (SkinData.CASKET_SKINS), empty until art exists |
+
+### Hyper skin names
+
+| Character | Hyper skin |
+|---|---|
+| The Gravecaller | Eclipsed Gravecaller |
+| The Umbral Warden | Sunless Warden |
+| The Voidcaller | Starless Voidcaller |
+| The Bone Oracle | Gilded Oracle |
+| The Carrion Lord | Crowned Carrion Lord |
+| The Fallen Confessor | Fallen Seraph |
+| The Plague Scholar | Blighted Scholar |
+| The Doomsayer | Final-Hour Doomsayer |
+| The Barrow Warden | Gilded Barrow King |
+| The Soulbinder | Radiant Soulbinder |
+| The Wither Witch | Thorn-Crowned Witch |
+| The Grave Herald | Golden Herald |
+| The Brine Widow | Pearl-Crowned Widow |
+| The Heretic Scribe | Illuminated Heretic |
+| The Tide Widow | Gilded Tide Widow |
+| The Marionette | Gilded Marionette |
+| The Lightning Abbess | Gilded Stormbride |
+| The Rust Prophet | Gilded Prophet |
+| The Doomed Prophetess | Gilded Sibyl |
+| The Oathbreaker | Gilded Oathbreaker |
+| The Ferrywoman | Golden Ferrywoman |
+| The Grave Kunoichi | Gilded Kunoichi |
+| The Shrine Maiden of Night | Maiden of the Golden Dawn |
+| The Ronin Revenant | Gilded Ronin |
+| The Furnace Priest | Gilded Furnace Priest |
+| The Succubus Queen | The Golden Temptress |
+| The Fallen Saint | Saint of the Morning |
+| The Moon-Cursed Huntress | Huntress of the Golden Moon |
+| The Hedge Witch | The Gilded Hedge Witch |
+| The Dhampir | Gilded Dhampir |
+| The Undertaker | The Gilded Undertaker |
+| The Fallen Sergeant | The Golden Sergeant |
+| The Revenant Heroine | Golden Age Heroine |
+
+## Run systems, difficulty and modes
+
+### Difficulty levels
+
+| Level | Boss HP | Soul Ash | Description |
+|---|---|---|---|
+| Initiate | x0.8 | x0.8 | Easier scaling. The Covenant grows stronger more slowly and hits softer. |
+| Necromancer | x1.0 | x1.0 | Standard. The Covenant as it was meant to be fought. |
+| Lich | x1.15 | x1.5 | Increased HP and aggression. Tougher soldiers close in faster. |
+| Deathlord | x1.3 | x2.0 | The hardest. Stronger, faster soldiers, and elites march among them. |
+
+### Run modifiers
+
+| Modifier | Effect | Soul Ash bonus |
+|---|---|---|
+| Endless Crusade | +30% enemy spawn rate (and a 30% larger horde on the field). | +20% |
+| Hardened Faith | +25% enemy health (the boss gets a fifth of it). | +20% |
+| Divine Fury | +20% enemy damage. | +20% |
+| Purge the Unholy | More Purifiers: x2.5 of them, and they join the march from 3:00. | +15% |
+| Scarcity | Grave Feast drops are 60% rarer and heal half as much. | +10% |
+| Frail Master | The necromancer starts with 30% less max HP. | +15% |
+| Vengeful Dead | Your undead deal 20% more damage but have 30% less HP. | +10% |
+| Holy Retribution | Slain elites burst into a ring of 8 radiant bolts. | +15% |
+
+### Profane Pact, Profane Oath and Hyper mode
+
+- Profane Pact: an in-run passive, 5 levels (to +25% spawn, +25% HP, +15% damage for +40% XP, +60% Soul Ash, +75% drop chance).
+- Profane Oath: an Ossuary option, 5 tiers of opt-in difficulty for richer rewards.
+- Hyper mode: unlocked by slaying Seraphine once. Growth part of enemy HP/damage scaling x2, stage boss HP x1.5, Soul Ash +100%. Hyper clears earn a gold badge per stage and character.
+
+### Ultimates
+
+| Ultimate | Tagline | Effect |
+|---|---|---|
+| Dread Rally | Raise and rally the army | Raises every fallen summon, heals the army 30%, +40% damage and attack speed for 8 s, knocks foes back. |
+| Sovereign's Decree | Your dead take the blows | For 8 s every summon taunts foes near it and takes 50% less damage; you cannot be targeted. |
+| Eclipse | Darkness stops the world | Darkness for 4 s: every foe on screen freezes (bosses are slowed 60%), then takes +30% damage for 6 s. |
+| Grave Tide | The slain rise for you | For 10 s every foe that dies rises as a Risen fighting for you for 12 s. |
+
+Dread Rally is the default; the other three are earned by achievements. Grave Step is the dash (Shift / RB).
+
+### Power-ups
+
+Six pickups: Magnet, Feast, Hyper, Stasis, Frenzy, Nova.
+
+### Game modes
+
+- Solo run (any unlocked stage, character, difficulty, modifiers, Hyper).
+- Online co-op: 2 players, lobby codes through a Cloudflare relay, one lockstep simulation, shared XP bar, downed and revived by the partner, enemies x2 spawns, boss HP x1.7. Same platform only.
+- Autotest and --coop-bot headless modes for development.
+
+### Platforms
+
+- Windows and Linux desktop builds.
+- Web build for desktop browsers (GitHub Pages).
+- Phones and tablets in landscape in the browser (touch controls, mobile UI scale, Reduced effects default).
+- Native Android and iOS apps: deferred, not built.
+
+## The Ossuary (meta-progression)
+
+32 upgrades with 172 purchasable levels. 13 upgrades have levels 6-10, gated by difficulty clears (levels 6-7 Lich, 8-9 Deathlord, 10 Deathlord + Hyper). Soul Ash is kept on death and restarts its multiplier per act.
+
+| Tree | Upgrade | Levels | Effect |
+|---|---|---|---|
+| Necromancy | Necrotic Marrow | 10 | Grave-marrow thickens the bones of every summon. |
+| Necromancy | Sharpened Bones | 10 | Your undead strike with honed bone and rusted steel. |
+| Necromancy | Grave Call | 10 | The fallen answer your call sooner. |
+| Necromancy | Risen Vanguard | 2 | More Skeleton Warriors rise with you, from the very first second. |
+| Necromancy | Legion of Bone | 1 | Every summon class you command fields one more soldier. |
+| Necromancy | Bone Reserve | 3 | A fallen summon that rises again returns behind a barrier of bone. |
+| Necromancy | Commander's Presence | 3 | Every summon class you command makes all of them strike harder. |
+| Shadowcraft | Umbral Potency | 10 | Your shadow spells bite deeper. |
+| Shadowcraft | Quickened Rites | 10 | Practised incantations return faster. |
+| Shadowcraft | Widening Dark | 10 | Shadow Blast and evolved pulses reach farther. |
+| Shadowcraft | Shadow Mastery | 1 | The pinnacle of shadowcraft: a final surge of spell power. |
+| Shadowcraft | Restless Shade | 10 | Your Grave Step gathers its shadow sooner. |
+| Shadowcraft | Echo Weaving | 1 | Your spells start echoing one level sooner. |
+| Shadowcraft | Dark Tithe | 3 | Foes you slay yourself feed your ultimate's meter more. |
+| Survival | Grave-Hardened Flesh | 10 | Bind grave-earth into your own body. |
+| Survival | Bone Mail | 10 | A ribcage of bone plates turns aside every blow (armor). |
+| Survival | Fleet Shade | 10 | Glide over the graveyard like a shadow. |
+| Survival | Undying Will | 1 | Once per run, rise from death with half your health in a burst of grave-fire. |
+| Survival | Twin Shadow | 1 | Your shadow splits in two: store a second Grave Step. |
+| Survival | Last Rites | 3 | The first time you fall below a quarter of your health, death looks away. |
+| Survival | Grave Ward | 1 | Begin every run behind a ward that swallows a whole blow. |
+| Fortune | Soul Magnet | 10 | XP crystals are drawn to you from farther away. |
+| Fortune | Grave Tithe | 10 | Every soul you harvest yields a little more experience (reward luck). |
+| Fortune | Ash Harvest | 10 | Sift more Soul Ash from every battle (reward luck). |
+| Fortune | Fate's Thread | 3 | Pull one more thread of fate: +1 level-up reroll per run. |
+| Fortune | Banishing Rite | 3 | Cast one more offer into the void: +1 level-up banish per run. |
+| Fortune | Gilded Chests | 3 | A chest may weigh two rewards and keep the one nearest its peak. |
+| Fortune | Elite Bounty | 3 | Every elite you slay pays more Soul Ash. |
+| Dominion (opens after Seraphine) | Head Start | 2 | Begin every run a level ahead, your first picks waiting. |
+| Dominion (opens after Seraphine) | Chosen Vanguard | 1 | The first summon class you raise in a run rises one level higher. |
+| Dominion (opens after Seraphine) | Patient Grave | 2 | Skipping a level-up hands you back a reroll. |
+| Oath | Profane Oath | 5 | Swear yourself to the grave: from the first second, more and stronger Covenant soldiers, and richer XP, Soul Ash and power-ups. |
+
+### Masteries (23 classes x 3 levels)
+
+One per offerable summon class, unlocked when the class reaches Lv 5 in any run: warrior, archer, mage, mender, warder, abomination, rogue, gargoyle, frost_wraith, bone_hound, banshee, corpse_catapult, fallen_seraph, spawn_of_the_deep, bone_golem, grave_drone, iron_revenant, myrmidon_shade, bound_oni, bound_succubus, archfiend, blood_spawn, fallen_hero. Prices 190 / 250 / 320 Soul Ash.
+
+### Relics (15; 1 to 3 slots)
+
+| Relic | Effect | Price |
+|---|---|---|
+| Grave Lantern | Chests +1 upgrade, fewer power-ups | 400 |
+| Black Banner | Ultimate starts half charged | 250 |
+| Bone Abacus | A free reroll every 5 levels | 300 |
+| Hollow Crown | +1 active slot, -10% max HP | 600 |
+| Mourner's Bell | Elites drop a Grave Feast | 300 |
+| Bone Flute | Summons return faster, -10% minion HP | 300 |
+| Martyr's Nail | Spells +15%, minions -10% damage | 350 |
+| War Drum | Minions +12%, spells -10% damage | 350 |
+| Shade Cloak | +1 Grave Step, -6% speed | 300 |
+| Seer's Eye | +2 banishes, -1 reroll | 250 |
+| Leaden Shroud | -10% damage taken, -10% speed | 350 |
+| Tallow Candle | Spells 10% faster, -15% area | 300 |
+| Lich's Phylactery | +1 revival, -20% max HP | 450 |
+| Deathlord's Seal | +1 of every summon, -15% max HP | 550 |
+| Fallen Halo | Ultimate charges 35% faster | 450 |
+
+### Grave Offerings (6)
+
+| Offering | Effect | Price |
+|---|---|---|
+| Tithe of Insight | +10% XP this run | 450 |
+| Gilded Coffer | One extra chest at 6:00 | 500 |
+| Borrowed Relic | A random relic in a 4th slot | 550 |
+| Blood Vigil | +2 rerolls, +2 banishes | 400 |
+| Second Breath | +1 revival this run | 600 |
+| War Horn | Ultimate starts full | 350 |
+
+### Recolour Caskets
+
+350 Soul Ash a casket; one unowned prize each; rarity weights Common 60, Rare 30, Epic 10, Legendary 3 (only while a legendary prize exists), with a pity Epic on the 10th. Recolours: Bone, Blood, Abyss, Gilded, Verdant (5). Cosmetic only.
+
+## Achievements (30) and titles (8)
+
+| Achievement | Condition | Reward |
+|---|---|---|
+| Bone Legion | Skeleton Warriors slay 1,000 foes | The Bone Golem summon class, the Ivory Seer skin |
+| Heretic's Bane | Defeat 500 Covenant Chaplains | Title Heretic's Bane, a gold Chaplain-skull frame |
+| Dread Sovereign | Slay a stage boss while commanding Warriors, Archers, Mages and a priest order | Ultimate Sovereign's Decree |
+| Dawn Extinguished | Defeat Grand Inquisitor Seraphine in the Sanctum of Judgment | Ultimate Eclipse, the Act I epilogue |
+| Low Tide | Clear Gullhaven Harbour | The Brinewalker passive |
+| Nothing Unwritten | Burn every forbidden tome in one Hollow Archive run | The Iron Mind passive |
+| The Dead God Serves | Slay Vhal'Neth, the Dreaming Mother, on Ul-Thalos and raise her | Title Master of the Drowned, the Act II epilogue |
+| Mass Grave | Raise 500 temporary undead in one run | Ultimate Grave Tide |
+| Untouchable | Reach 0:00 on any stage without dropping below half health | The Untouchable skin (any character) |
+| Full Ossuary | Hold 4 evolutions at once in one run (spell or summon) | Title Archnecromancer |
+| Deathlord's Due | Clear any stage on Deathlord difficulty | The Deathlord skin (any character) |
+| Swift Judgment | Slay a stage boss within 45 s of its arrival | Title Executioner |
+| Cold Assembly | Destroy every fabricator in one Assembly Halls run | The Signal Ghost passive |
+| Static in the Wastes | Clear the Scrap Wastes | The Lead-Lined Bones passive |
+| Nothing Is Deathless | Defeat Deus Ex Machina in the Iron Citadel | Title Breaker of Engines, the Act III epilogue |
+| Heel Found | Slay Achilles with a blow to his back or heel | The Bronze Breaker passive |
+| Twilight of the Gods | Clear the Pantheon Trial on Mount Olympus | The Grounded Bones passive |
+| Empty Throne | Make Hades kneel in the Asphodel Underworld | The Act IV epilogue |
+| No Shadow Unlit | Light 20 stone lanterns in one Burning Province run and slay Kage | The Paper Lanterns passive |
+| The Sun Goes Out | Defeat Amaterasu on the Road to the Sun | The Act V epilogue |
+| Regiments Broken | Slay Shogun Kurogane after breaking all six of his banners | The Unbending passive |
+| Gate Crashed | Seal 5 demon portals in one Burning Gate run and slay Moloch | The Salt Circle passive |
+| Unmoved | Slay Lilith in the Palace of Silk and Ash with no summon charmed during her fight | The Faithless passive |
+| Morning Star Falls | Cast down the Morning Star in Pandemonium | The title Sovereign of Pandemonium |
+| Coffin Nails | Break every sleeping coffin on Ravensmoor before it opens | The Silver Bones passive |
+| The Coven Breaks | Kill Isolde's three sisters within 1 second of each other | The Embalmed passive |
+| Last Supper | Beat the Elder in Castle Sanguis | The title Ender of the Feast |
+| No Witnesses | Kill every civilian of Skid Row's opening crowd before one flees the streets | The Kevlar Bones passive |
+| Broken Arrow | Kill General Harrow before his strike lands | The Armour-Piercing Bones passive |
+| No More Heroes | Beat Paragon at Liberty Heights with no Super at his side | The title Bane of Heroes |
+
+### Titles
+
+| Title | Earned by achievement |
+|---|---|
+| Heretic's Bane | Heretic's Bane |
+| Master of the Drowned | The Dead God Serves |
+| Archnecromancer | Full Ossuary |
+| Executioner | Swift Judgment |
+| Breaker of Engines | Nothing Is Deathless |
+| Sovereign of Pandemonium | Morning Star Falls |
+| Ender of the Feast | Last Supper |
+| Bane of Heroes | No More Heroes |
+
+Achievements for the Act VI-VIII stages (Gate Crashed, Unmoved, Morning Star Falls, Coffin Nails, The Coven Breaks, Last Supper, No Witnesses, Broken Arrow, No More Heroes) and the titles Sovereign of Pandemonium, Ender of the Feast and Bane of Heroes are built, not yet playable (waiting on review). Boss and achievement unlock rows in total: 91.
+
+## Audio, Codex and story
+
+### Music (9 tracks)
+
+| Track | Used by |
+|---|---|
+| Act I run loop | Acts I stages |
+| Below the Tide | Act II |
+| Iron Requiem | Act III |
+| Hymn of Bronze | Act IV |
+| The Setting Sun | Act V |
+| Hymn of the Pit | Act VI (built, not yet playable) |
+| Waltz of the Red Moon | Act VII (built, not yet playable) |
+| Sirens at Midnight | Act VIII (built, not yet playable) |
+| Grave Lullaby | Main menu |
+
+All sound and music is synthesised in-engine. Sound recipes: Sounds 59, Empire 44, Pantheon 38, Shogunate 21, Inferno 14, Court 15, City 10 = 201. Act packs (Empire, Pantheon, Shogunate, Inferno, Court, City) render lazily when the act's music starts.
+
+### Codex (11 tabs)
+
+Achievements, Spells, Summons, Covenant, Ancient Eye, Empire, Republic, Shogunate, Inferno, Court, Last Line. Entries stay dark silhouettes until a run meets them; evolutions show only once obtained.
+
+### Epilogue and closing cards
+
+| Part | Opened by | Panels |
+|---|---|---|
+| Act I: When the Dawn Went Out | Dawn Extinguished | 3 |
+| Act II: The Dead God Serves | The Dead God Serves | 4 |
+| Act III: The Machines Go Dark | Nothing Is Deathless | 4 |
+| Act IV: The Gods Are Silent | Empty Throne | 4 |
+| Act V: The Sun Goes Out | The Sun Goes Out | 4 |
+
+| Closing card | After |
+|---|---|
+| The Beacons Burn | Act II |
+| The River Runs Dry | Act III |
+| The Sun Still Rises | Act IV |
+| The Pit Keeps Count | Act V |
+
+Acts VI, VII and VIII have no epilogue part and no closing card yet (owner decision: wait until the act order is settled). The victory screen shows a per-stage title and boss line for every stage.
+
+### Art
+
+| Folder | PNG files |
+|---|---|
+| sprites/obstacles | 478 |
+| sprites/player | 333 |
+| sprites/icons | 298 |
+| sprites/tiles | 112 |
+| sprites/summons | 103 |
+| sprites/bosses | 97 |
+| sprites/decals | 79 |
+| ui | 61 |
+| sprites/aoe | 59 |
+| sprites/empire_fx | 52 |
+| sprites/effects | 50 |
+| sprites/city | 43 |
+| sprites/pantheon | 40 |
+| sprites/eye | 37 |
+| sprites/holy | 36 |
+| sprites/empire | 35 |
+| sprites/projectiles | 34 |
+| sprites/structures | 33 |
+| sprites/enemies | 33 |
+| sprites/shogunate | 33 |
+| sprites/inferno | 31 |
+| sprites/court | 28 |
+| sprites/epilogue | 23 |
+| sprites/menu | 22 |
+| sprites/markers | 10 |
+| sprites/pickups | 10 |
+| sprites/volleys | 7 |
+| sprites/overlays | 6 |
+| sprites/telegraphs | 6 |
+| sprites/ui | 1 |
+| sprites/spells | 1 |
+| Total | 2191 |
+
+## Planned and proposed content (NOT in the game)
+
+Nothing in this section exists in code. Source files: docs/act9/PROPOSAL.md, docs/proposals/NEW_ACTS_AND_ORDER.md, docs/GDD.md section 15.0.
+
+| Act | Status | Stages and bosses | Shared rules |
+|---|---|---|---|
+| Act IX: The Concord of Stars | Planned; owner answers recorded, concept art only, no code | 25 The Crash Site (Hive Mother), 26 The Proving Moon (Vrask'Tal, the Hunt-Lord), 27 The Ark of the Concord (the Harvester). Races: Brood, Vrask, Harvesters, Luminous | Beams, Abduction, Terraforming |
+| Act X: seasons (The Turning Year) | Concept only | Seasons and nature; named The Turning Year in the order proposal (stages 37-39 there) | Not designed |
+| The Black Tide (pirate act) | Proposed, awaiting owner | The Smuggler's Cutter (Captain Ezekiel Crow), The Treasure Galleon (Admiral Isabeau Marrec), The Maelstrom (Captain Cornelius Vandermere) | Boarding, the Deck, Strikes from the Sea |
+| The Age of Titans (prehistoric act) | Proposed, awaiting owner | The Fern Basin (Scarmaw), The Great Plain (Old Ironbrow), The Last Day (Old Gravejaw); the meteor mechanic | Primeval rules (see proposal) |
+| The Necropolis Dynasty (Egyptian act) | Proposed, awaiting owner | The Necropolis of Sand (Anubis), The Temple of the Lioness (Sekhmet), The Hall of Two Truths (Osiris and Ammit) | Rebirth and dynasty rules |
+| The Hall of the Slain (Norse act) | On the docket, not scheduled | The Barrow Fields, The Longhouse of Heroes, The Frozen Root | The Choosing, Fimbulwinter, Shield Wall (candidates) |
+
+The same proposal recommends reordering to 13 acts and 39 stages (Part One I-VIII ending with the Inferno, Part Two IX-XIII). The owner has not answered it; the current order in the game is the ORDER list above.
+
+## What the data does not say
+
+- Boss base HP is not shown: several data files hold per-phase or per-body values (Shogun, Vhal'Neth, Carmilla and the Elder), so a single number would mislead.
+- Hades' final phase name and Lilith's phase names are not itemised in the data headers.
+- The Act I run loop has no title in the data.
+- Total playtime of 13 hours is the owner's estimate, not derived from data.
+- Sound recipe counts are rows at the top level of each sound table and may include recipe variants.
+- Enemy rows include spawned sub-kinds (Lesser and Least Mass, Swarm Rocket, Decoy Drone, Shadow of Kage) and boss-fight structures (Cerberus heads, Vhal'Neth arms, Leg Plates).
