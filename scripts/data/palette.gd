@@ -251,3 +251,44 @@ const CITY_POLICE_BLUE := Color(0.180, 0.373, 0.816)  # #2E5FD0
 const CITY_SIREN_RED := Color(0.847, 0.165, 0.165)  # #D82A2A
 ## Hero orange ("hero_orange"): the speedster's suit, a super's plate accent.
 const CITY_HERO_ORANGE := Color(0.941, 0.478, 0.118)  # #F07A1E
+
+# --- Act IX: the Concord of Stars ---
+# GDD §15.0 "Act IX foundation (phase 1)": the fixed values of docs/act9/BRIEF_FOUNDATION.md
+# (tools/palette.json ramps hull, gunmetal, plasma, laser, chitin, hive, vrask, lumen, turf, owned by the
+# art pass). Hull white and gunmetal, plasma green and laser magenta against starfield black; each race
+# adds one accent of its own. Gold keeps its meaning (evolution / chest / victory) and crimson stays
+# danger; the Luminous's pale light is never the UI gold, and no Concord kind wears the necromancer's
+# violet and bone (the Hive Mother's purple is her own ramp).
+
+## Concord outline ink (tools/palette.json "hull" ramp, darkest): every Concord sprite's outline; starfield black.
+const CONCORD_INK := Color(0.027, 0.031, 0.059)  # #07080F
+## Hull shade ("hull_shade"): the saucer's hull and the greys' suits in shadow.
+const CONCORD_HULL_SHADE := Color(0.682, 0.722, 0.769)  # #AEB8C4
+## Hull white ("hull"): the saucer's hull, the greys' skin and suits lit, the terraformer pod's shell.
+const CONCORD_HULL := Color(0.910, 0.925, 0.941)  # #E8ECF0
+## Dark gunmetal ("gunmetal_dark"): armour plates, weapon housings in shadow, the Vrask's dark armour.
+const CONCORD_GUNMETAL_DARK := Color(0.118, 0.141, 0.173)  # #1E242C
+## Gunmetal ("gunmetal"): armour plates, the saucer's underside, the pod's struts.
+const CONCORD_GUNMETAL := Color(0.227, 0.259, 0.298)  # #3A424C
+## Dark plasma ("plasma_dark"): plasma lights in shadow, the tractor cone's edge, the turf heal's rim.
+const CONCORD_PLASMA_DARK := Color(0.122, 0.659, 0.290)  # #1FA84A
+## Plasma green ("plasma"): the saucer's lights, the tractor beam, the pods' vents, the heal shimmer.
+const CONCORD_PLASMA := Color(0.235, 1.000, 0.416)  # #3CFF6A
+## Laser magenta ("laser"): every Concord aiming line and beam (ConcordBeams), the act's signature colour.
+const CONCORD_LASER := Color(1.000, 0.184, 0.722)  # #FF2FB8
+## Chitin ("chitin"): the Brood's green-black carapace.
+const CONCORD_CHITIN := Color(0.106, 0.227, 0.165)  # #1B3A2A
+## Lit chitin ("chitin_light"): highlights on the Brood's carapace.
+const CONCORD_CHITIN_LIGHT := Color(0.180, 0.420, 0.271)  # #2E6B45
+## Hive purple ("hive"): the Hive Mother only (her own chitin; never the necromancer's violet).
+const CONCORD_HIVE := Color(0.416, 0.247, 0.627)  # #6A3FA0
+## Hive bone ("hive_bone"): the Hive Mother's horned helm and spines.
+const CONCORD_HIVE_BONE := Color(0.878, 0.824, 0.690)  # #E0D2B0
+## Vrask teal ("vrask"): the Vrask's scales.
+const CONCORD_VRASK := Color(0.165, 0.561, 0.478)  # #2A8F7A
+## Lumen ("lumen"): the Luminous's pale light (never the UI gold).
+const CONCORD_LUMEN := Color(1.000, 0.914, 0.627)  # #FFE9A0
+## Dark turf ("turf_dark"): the alien ground's shadow and a scorched cell's char.
+const CONCORD_TURF_DARK := Color(0.102, 0.110, 0.133)  # #1A1C22
+## Turf ("turf"): the alien flesh ground Terraforming spreads.
+const CONCORD_TURF := Color(0.353, 0.165, 0.416)  # #5A2A6A

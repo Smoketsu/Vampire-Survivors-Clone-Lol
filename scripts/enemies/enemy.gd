@@ -632,7 +632,8 @@ func motion_lunge(dir: Vector2, power: float) -> void:
 ## kind's in empire/ (Act III), an Olympian Republic kind's in pantheon/ (Act
 ## IV), a Shogunate kind's in shogunate/ (Act V), an Inferno kind's in inferno/
 ## (Act VI), a Sanguine Court kind's in court/ (Act VII), a Last Line kind's
-## in city/ (Act VIII): used when it has no enemies/ art (visual only;
+## in city/ (Act VIII), a Concord of Stars kind's in concord/ (Act IX): used
+## when it has no enemies/ art (visual only;
 ## every Act I kind keeps its enemies/ key).
 func motion_sprite_key() -> String:
 	if wears != "":
@@ -653,6 +654,8 @@ func motion_sprite_key() -> String:
 			return "court/" + kind  # Act VII: a Sanguine Court kind's art.
 		if SpriteBank.has("city/" + kind):
 			return "city/" + kind  # Act VIII: a Last Line kind's art.
+		if SpriteBank.has("concord/" + kind):
+			return "concord/" + kind  # Act IX: a Concord of Stars kind's art.
 	return key
 
 
