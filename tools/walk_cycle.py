@@ -151,6 +151,11 @@ SPIN = (1.0, 0.6, 0.3, 0.6, 1.0, 0.6, 0.3, 0.6)
 # (1, the same leg mirrored about its hip): a cosine, back at frame 4, forward again at frame 8.
 # The far leg runs half a cycle behind, so the legs really alternate instead of closing and opening.
 STRIDE_SWING = tuple((1.0 - float(np.cos(2.0 * np.pi * f / 8))) / 2.0 for f in range(8))
+# Float (a robe rig's optional `float` key, Act IX art review round 1: the Harvester, the Grey Overseer and the Luminous Archon
+# "float instead of walk"): per frame, how far the body above the hip has sunk, as a share of the rig's `float` px. One slow
+# sink and rise per cycle (the hem hangs and sways under it, no step dip). The stills fill their frame to row 0 and the hem to
+# the bottom row, so the figure bobs by sinking from the still (frame 0, the highest point) instead of rising above it.
+FLOAT_SINK = (0.0, 0.5, 0.5, 1.0, 1.0, 0.5, 0.5, 0.0)
 # Flap rig (mode "flap"): per frame, how far each wing is turned about its shoulder pivot, as a share of the wing's `degrees`
 # (+1 = fully raised, -1 = fully down): one sine over the 8 frames, 0 on frame 0 = the still.
 FLAP_WAVE = tuple(float(np.sin(2.0 * np.pi * f / 8)) for f in range(8))
@@ -231,6 +236,7 @@ TYRE = ["city_ink", "city_asphalt_dark", "city_asphalt", "city_concrete", "city_
 #   mode    "legs" (two legs), "robe" (one hem layer), "stride" (see `stride`) or "hover" (a flyer: the whole
 #           sprite bobs, HOVER_BOB, and only its `parts` move: wings flap, rotors spin).
 #   bob     px the sprite rises at the top of the bob ("hover").
+#   float   px the body above the hip sinks at the bottom of the bob, per FLOAT_SINK (a robe rig that floats: one slow bob, the hem sways, no step dip).
 #   parts   "hover": list of moving parts, each a dict: `box` (x0, x1, y0, y1) of the still
 #           holding it, optional `colors` (palette names: only those pixels of the box are
 #           the part, so a rotor can be lifted off the flame behind it), `kind` "flap" (each
@@ -925,16 +931,16 @@ RIGS = {
     "concord/warbeast": dict(mode="legs", hip=28, back=(0, 46), front=(46, 92), rigid=[], spread=2, lift=2, dip=1),
     "bosses/vrask_tal": dict(mode="legs", hip=64, back=(0, 58), front=(58, 106), rigid=[], spread=3, lift=3, dip=1),
     "player/blooded": dict(mode="legs", hip=34, back=(0, 16), front=(16, 30), rigid=[], spread=2, lift=2, dip=1,
-                           bust=(12, 22, 13, 20, 2)),
+                           bust=(16, 26, 13, 20, 2)),  # x + 4 (owner, Act IX art review round 1).
     # --- Act IX: the Ark ---
     # The Grey Overseer, the Luminous Archon and the Harvester glide (robe: the long robe / the light-trail sways); the freed
     # beast scuttles (legs: its back and front legs); the Starborn (female, figure redesign) strides with the bust box bouncing,
     # the coat's `swish` and an idle strip; the Ghost Saucer and Black Mothership hover (the whole hull bobs 2 px). Boxes read
     # from each still (art px, [start, end)).
-    "concord/grey_overseer": dict(mode="robe", hip=24, rigid=[], sway=1, dip=1),
-    "concord/luminous_archon": dict(mode="robe", hip=40, rigid=[], sway=1, dip=1),
+    "concord/grey_overseer": dict(mode="robe", hip=24, rigid=[], sway=1, dip=1, float=1),
+    "concord/luminous_archon": dict(mode="robe", hip=40, rigid=[], sway=2, dip=1, float=2),
     "concord/vault_beast": dict(mode="legs", hip=19, back=(0, 24), front=(24, 48), rigid=[], spread=2, lift=1, dip=1),
-    "bosses/harvester": dict(mode="robe", hip=60, rigid=[], sway=1, dip=1),
+    "bosses/harvester": dict(mode="robe", hip=60, rigid=[], sway=2, dip=1, float=2),
     "player/starborn": dict(mode="legs", hip=36, back=(0, 15), front=(15, 30), rigid=[], spread=1, lift=1, dip=1,
                             bust=(12, 24, 14, 22, 2), swish=(4, 26, 26, 35, 1)),
     "summons/ghost_saucer": dict(mode="hover", bob=2, parts=[]),
@@ -1515,6 +1521,8 @@ def frames_of(key: str) -> list:
     for f in range(FRAMES):
         step, pose = divmod(f, POSES)  # Step 0 swings the back leg, step 1 the front one.
         dy = DIP[pose] * rig.get("dip", 1)
+        if "float" in rig:  # A floating robe: one slow bob, not a step dip.
+            dy = int(round(FLOAT_SINK[f] * rig["float"]))
         body = [_move(parts["rigid"], dy), _move(parts["upper"], dy)]
         if rig["mode"] == "legs":
             g = TOGETHER[pose] * rig["spread"]  # Px each foot moves toward the other.
