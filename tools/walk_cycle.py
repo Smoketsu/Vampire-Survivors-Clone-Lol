@@ -865,7 +865,9 @@ RIGS = {
     # --- Act VIII: Skid Row ---
     # Art review round 1 (act 8): the limo's wheels turn (`wheels`, no bob).
     "city/armoured_limo": dict(mode="legs", hip=24, back=(0, 42), front=(42, 84), rigid=[], spread=0, lift=0, dip=0,
-                            wheels=[dict(c=(41.0, 31.0), r=(3.0, 2.5), colors=TYRE), dict(c=(52.0, 29.5), r=(2.5, 4.5), colors=TYRE)]),
+                            wheels=[dict(c=(7.5, 18.0), r=(2.5, 3.0)), dict(c=(41.5, 29.5), r=(2.5, 3.0))]),
+    # Round 4 (owner: "the right bumper is rotating, needs to be the back wheel"): the real wheels are the two orange hubs on the near side
+    # (back wheel (7.5, 18), front wheel (41.5, 29.5), seen on a contrast-boosted 12x crop); the discs at (41, 31) and (52, 29.5) sat on the body / bumper and are gone.
     # Round 2 (act 8, owner: "the grill of the car is spinning now"): the third disc (62.5, 27.5) sat on the front grille's grey slats and is gone.
     "city/big_sal": dict(mode="legs", hip=37, back=(0, 24), front=(24, 48), rigid=[], spread=2, lift=2, dip=1),
     # Art review round 1 (act 8, owner: "some animated cigar smoke"): puffs rise from the cigar tip (`smoke`).
