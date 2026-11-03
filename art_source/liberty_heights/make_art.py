@@ -29,7 +29,7 @@ UNITS = {
     "city/atlas": ("art_source/city/atlas.png", ["--ramps", "moss,gold,skin,brown", "--ink-l", "0.15"]),
     "city/nightjar": ("art_source/city/nightjar.png", ["--ramps", "concrete,violet,neon_cyan,steel", "--ink-l", "0.15"]),
     "city/conscript": ("art_source/city/conscript.png", ["--ramps", "olive,skin,steel,asphalt", "--ink-l", "0.15"]),
-    "bosses/paragon": ("art_source/bosses/paragon.png", ["--ramps", "marble,steel,gold,police,skin,siren_red", "--ink-l", "0.15"]),
+    "bosses/paragon": ("art_source/bosses/paragon.png", ["--ramps", "marble,police,siren_red,skin,steel", "--ink-l", "0.15"]),
     "summons/fallen_hero": ("art_source/summons/fallen_hero.png", ["--ramps", "grey,steel,velvet,soul", "--ink-l", "0.12"]),
     "summons/black_paragon": ("art_source/summons/black_paragon.png", ["--ramps", "grey,steel,velvet,soul", "--ink-l", "0.12"]),
 }
@@ -41,6 +41,9 @@ FIGURES = {
     "player/revenant_heroine_untouchable": ("art_source/player/revenant_heroine_untouchable.png", 56, ["--ramps", "marble,soul,grey"]),
     "player/revenant_heroine_deathlord": ("art_source/player/revenant_heroine_deathlord.png", 56, ["--ramps", "velvet,grey,crimson,skin", "--no-levels"]),  # velvet first and --no-levels keep the black iron black (ART_BIBLE, Act VII round 1)
 }
+# Figures converted straight by prepare_sprite.py (no pixelate_source step): the redone Deathlord heroine (Act VIII round 1,
+# bolder bare-skin look: the straight conversion kept her face and skin clearer at 56 px).
+DIRECT = ["player/revenant_heroine_deathlord"]
 # Icon sheets: file -> (badge frame to set the symbols on, the symbol ids left to right; "" = skip).
 ICONS = {
     "icons_violet.png": ("icons/abyssal_pact", ["heros_fist", "secret_identity", "fallen_hero", "origin_story", ""]),
@@ -99,6 +102,10 @@ def figures() -> None:
     for key, (src, height, extra) in FIGURES.items():
         keep = (ROOT / src).read_bytes()  # The untouched source (prepare_sprite archives the file it is given).
         pix = SCRATCH / (key.replace("/", "_") + ".png")
+        if key in DIRECT:
+            run(["tools/prepare_sprite.py", src, key, "--ink-l", "0.15", "--art-height", str(height)] + extra)
+            (ROOT / src).write_bytes(keep)
+            continue
         run(["tools/pixelate_source.py", src, str(height), str(pix)])
         run(["tools/prepare_sprite.py", str(pix), key, "--ink-l", "0.15", "--no-cleanup", "--art-height", str(height)] + extra)
         (ROOT / src).write_bytes(keep)

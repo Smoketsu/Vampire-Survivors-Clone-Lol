@@ -256,6 +256,12 @@ STRIDE_FAR_SHADE = {"bronze_light": "bronze", "bronze": "bronze_dark", "marble_l
 #           after the bust box through the same _bounce() field on axis "x", timed by SWISH_SWAY
 #           in the walk and SWISH_IDLE in the idle (each one frame behind the hips). It may
 #           reach below the hip / waist: the idle's waist check skips its columns there.
+#   fire    mode "fire" (Mammoth only, Act VIII art review round 1: a firing cycle instead of a walk; the strip is kept short and self-contained):
+#           dict(gun=(x0, x1, y0, y1), recoil=[px per frame x FRAMES], flash=[radius px per frame x FRAMES, 0 = no flash],
+#           tip=(x, y) the flash centre at the barrel tip, color=(r, g, b, a) a colour the still already holds). The opaque pixels of the
+#           `gun` box slide back (left) by recoil[f] px, the rest of the sprite (hull, treads, turrets) never moves, and a diamond flash of
+#           the given radius is drawn at `tip` on frames where flash[f] > 0 (3 of 8 frames: never a fast strobe, never filling the sprite).
+#           Frame 0 is the still. Pixels only move; the flash uses only the given still colour (_fire_frames()).
 RIGS = {
     # The pilot (ART_BIBLE "Walk cycles"): the three units with the most screen time.
     "player/necromancer": dict(mode="legs", hip=47, back=(0, 20), front=(20, 33), rigid=[(33, 46, 0, None)], spread=1, lift=1, dip=1),
@@ -708,7 +714,13 @@ RIGS = {
     # in his power armour; the Fallen Sergeant strides with the figure-redesign bust box and an idle strip.
     "city/machine_gunner": dict(mode="legs", hip=30, back=(0, 20), front=(20, 46), rigid=[], spread=1, lift=1, dip=1),
     "city/attack_helicopter": dict(mode="hover", bob=2, parts=[]),
-    "city/mammoth": dict(mode="legs", hip=44, back=(0, 54), front=(54, 108), rigid=[], spread=0, lift=1, dip=1),
+    # Act VIII art review round 1 (figures): Mammoth was redrawn with a much bigger main gun (118 px wide now) and plays a FIRING cycle
+    # in place of a roll (the owner's note on the tank: "can we instead get a firing animation?"; the game plays this strip while it
+    # moves). A self-contained rig of its own (mode "fire", _fire_frames()), not Group A's shared tank rig: the hull and treads stay
+    # still, the main gun (opaque pixels of `gun`) slides back along its barrel and returns, and a muzzle flash (the still's hazard
+    # yellow) blooms and fades at the barrel tip.
+    "city/mammoth": dict(mode="fire", gun=(76, 118, 0, 22), recoil=[0, 1, 3, 3, 2, 1, 0, 0],
+                         flash=[0, 5, 4, 3, 0, 0, 0, 0], tip=(112, 14), color=(242, 196, 24, 255)),
     "bosses/harrow": dict(mode="legs", hip=50, back=(0, 33), front=(33, 72), rigid=[], spread=2, lift=2, dip=1),
     "bosses/harrow_command": dict(mode="legs", hip=44, back=(0, 34), front=(34, 68), rigid=[], spread=0, lift=1, dip=1),
     "player/fallen_sergeant": dict(mode="legs", hip=36, back=(0, 15), front=(15, 32), rigid=[], spread=2, lift=2, dip=1,
@@ -772,6 +784,12 @@ RIGS = {
     "city/aurora": dict(mode="robe", hip=30, rigid=[], sway=1, dip=1, bust=(19, 30, 9, 16, 1)),
     "player/revenant_heroine": dict(mode="legs", hip=33, back=(0, 24), front=(24, 38), rigid=[], spread=1, lift=1, dip=1,
                                     bust=(15, 30, 13, 21, 2), swish=(12, 32, 24, 32, 1)),
+    # Act VIII art review round 1 (figures): the redone, bolder Deathlord heroine (bare midriff / shoulders / thighs) has her own rig
+    # (it no longer derives the base's): bust box on her chest (cols 20-30, rows 14-21), the dark glove / arm beside it excluded,
+    # the hip `swish` over the high-cut hips.
+    "player/revenant_heroine_deathlord": dict(mode="legs", hip=34, back=(0, 24), front=(24, 40), rigid=[], spread=1, lift=1, dip=1,
+                                              bust=(20, 31, 14, 21, 2, 2), swish=(14, 32, 26, 34, 1),
+                                              bust_exclude=[(28, 36, 12, 22, 150)]),
     "summons/fallen_hero": dict(mode="robe", hip=30, rigid=[], sway=1, dip=1),
     "summons/black_paragon": dict(mode="robe", hip=34, rigid=[], sway=1, dip=1),
     "bosses/paragon": dict(mode="robe", hip=40, rigid=[], sway=1, dip=1),
@@ -896,7 +914,6 @@ SKINS = {
     # --- Act VIII: Liberty Heights ---
     "player/revenant_heroine_hyper": "player/revenant_heroine",
     "player/revenant_heroine_untouchable": "player/revenant_heroine",
-    "player/revenant_heroine_deathlord": "player/revenant_heroine",
 }
 # Per-skin field overrides of the derived rig (same keys as RIGS), set after review.
 SKIN_FIX = {
@@ -1307,6 +1324,29 @@ def _lift(layer: np.ndarray, n: int, top: int) -> np.ndarray:
     return out
 
 
+def _fire_frames(still: np.ndarray, rig: dict) -> list:
+    """The FRAMES frames of a "fire" rig (Mammoth): the gun box's pixels recoil along the barrel, a diamond muzzle flash blooms at `tip`.
+    Recoil / flash tables are indexed by frame; frame 0 must equal the still (recoil 0, no flash)."""
+    x0, x1, y0, y1 = rig["gun"]
+    cx, cy = rig["tip"]
+    col = np.array(rig["color"], dtype=np.uint8)  # Flash colour (taken from the still's own palette).
+    out = []
+    for f in range(FRAMES):
+        frame = still.copy()
+        back = rig["recoil"][f]  # Recoil of the main gun in px (to the left) this frame.
+        if back:
+            frame[y0:y1, x0:x1] = 0
+            frame[y0:y1, x0:x1 - back] = still[y0:y1, x0 + back:x1]
+            # The gun slid back over hull pixels at its root: keep the hull where the still had it (the gun box starts on the barrel).
+        r = rig["flash"][f]  # Flash radius in px this frame (0 = none).
+        for yy in range(cy - r, cy + r + 1) if r else []:
+            for xx in range(cx - r, cx + r + 1):
+                if abs(xx - cx) + abs(yy - cy) <= r and 0 <= xx < frame.shape[1] and 0 <= yy < frame.shape[0]:
+                    frame[yy, xx] = col
+        out.append(frame)
+    return out
+
+
 def frames_of(key: str) -> list:
     """The FRAMES walk frames of `key` (RGBA arrays the still's size); frame 0 is the still
     (except a "stride" rig's, whose frame 0 is the mirrored stance)."""
@@ -1314,6 +1354,11 @@ def frames_of(key: str) -> list:
     rig = RIGS[key]
     if rig["mode"] == "stride":
         return stride_frames(key, still, rig)
+    if rig["mode"] == "fire":
+        out = _fire_frames(still, rig)
+        if not np.array_equal(out[0], still):
+            sys.exit(f"{key}: frame 0 differs from the still (rig error)")
+        return out
     if rig["mode"] == "flap":
         out = _flap_frames(still, rig)
         if not np.array_equal(out[0], still):

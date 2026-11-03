@@ -2983,3 +2983,8 @@ they read), and the Deathlord skin's face is small.
 - Redone from the old source as the reference with "ONLY ONE figure" in the prompt; prompts updated in `art_source/ravensmoor/*.txt`, `art_source/court/blood_knight.txt`, `art_source/castle_sanguis/{nosferatu,dhampir_deathlord}.txt`.
 - Black coats (Nosferatu, both Deathlord skins) need the `velvet` ramp first and `--no-levels`; with `grey` alone they snap to mid grey.
 - `bosses/elder_vampire` (90x120, `art_source/castle_sanguis/elder_vampire.txt`) is the Elder's first form; `bosses/elder` is the second. Its walk is the robe glide (hip 84).
+
+<!-- --- Act VIII art review, round 1 (figures) --- -->
+Paragon is red / white / blue with red eyes (no emblem; ramps `marble,police,siren_red,skin,steel`); Mammoth has the long main gun and a bigger
+machine-gun turret (118 x 60) and a firing-cycle walk strip (`walk_cycle.py` mode `fire`: gun recoil + a hazard-yellow muzzle flash on 3 of 8 frames);
+the Revenant Heroine Deathlord is bolder (bare midriff / shoulders / thighs, chest and hips covered) with her own bust / swish rig.

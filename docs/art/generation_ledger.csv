@@ -1205,3 +1205,12 @@ utc,key,model,quality,size,refs,text_in,image_in,image_out,usd_est,file
 2026-11-02 22:08,player/revenant_heroine_untouchable,gpt-image-2.5-flare,medium,1024x1024,1,201,1024,439,0.0224,revenant_heroine_untouchable.png
 2026-11-02 22:08,player/revenant_heroine_deathlord,gpt-image-2.5-flare,medium,1024x1024,1,304,1024,439,0.0229,revenant_heroine_deathlord.png
 2026-11-02 22:08,summons/black_paragon,gpt-image-2.5-flare,medium,1024x1024,1,233,1024,439,0.0225,black_paragon.png
+2026-11-03 03:22,city/mammoth,gpt-image-2.5-flare,medium,1536x1024,2,723,1624,343,0.0269,mammoth_a.png
+2026-11-03 03:23,city/mammoth,gpt-image-2.5-flare,medium,1536x1024,1,713,1024,343,0.0220,mammoth_b.png
+2026-11-03 03:23,city/mammoth,gpt-image-2.5-flare,medium,1536x1024,1,713,1024,343,0.0220,mammoth_c.png
+2026-11-03 03:23,city/mammoth,gpt-image-2.5-flare,medium,1536x1024,1,739,1024,343,0.0222,mammoth_d.png
+2026-11-03 03:24,city/mammoth,gpt-image-2.5-flare,medium,1536x1024,1,739,1024,343,0.0222,mammoth_e.png
+2026-11-03 03:24,bosses/paragon,gpt-image-2.5-flare,medium,1024x1024,1,642,1024,439,0.0246,paragon_a.png
+2026-11-03 03:24,bosses/paragon,gpt-image-2.5-flare,medium,1024x1024,1,642,1024,439,0.0246,paragon_b.png
+2026-11-03 03:25,player/revenant_heroine_deathlord,gpt-image-2.5-flare,medium,1024x1024,2,395,2048,439,0.0315,hd_a.png
+2026-11-03 03:25,player/revenant_heroine_deathlord,gpt-image-2.5-flare,medium,1024x1024,2,395,2048,439,0.0315,hd_b.png
