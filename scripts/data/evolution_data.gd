@@ -102,7 +102,9 @@ const ORDER := ["void_barrage", "eclipse_ward", "abyssal_detonation",
 	# --- Act VIII: Fort Kessler ---
 	"killing_ground",
 	# --- Act VIII: Liberty Heights ---
-	"doomsday"]
+	"doomsday",
+	# --- Act IX: the Proving Moon ---
+	"apex_predator"]
 
 ## Evolution definitions.
 ##   base         — spell id that evolves (AbilityData.SPELLS key).
@@ -734,6 +736,27 @@ const EVOLUTIONS := {
 		"stats": {
 			"damage": 95.0, "cooldown": 2.3, "fists": 2, "fling": 240.0, "fling_share": 0.5,  # TUNING (not in GDD) first pass 110 / 2.2 s / 0.65: ~500k damage in the forced seed-7 run, far ahead of every source
 			"crater": 64.0, "crater_share": 0.4,  # TUNING (not in GDD) the evolution flag: the crater where a flung foe lands (first pass 0.6)
+		},
+	},
+	# --- Act IX: the Proving Moon ---
+	# Apex Predator (GDD §15.0 "Soul Caster, Apex Predator, Trophy Rack and the
+	# Blooded (Act IX)"; owner-approved proposal "Soul Caster -> Apex Predator
+	# (+ Trophy Rack)"): Soul Caster + Trophy Rack (a NEW passive, owner rule:
+	# at Lv 5). Own decision on its kit: five targets, harder shots, x
+	# elite_mult on elites, minibosses and bosses, and every kill gives back
+	# `refund` s of the cooldown (the predator never stops). Detected by the
+	# "refund" key.
+	"apex_predator": {
+		"base": "soul_caster",
+		"passive": "trophy_rack",
+		"display_name": "Apex Predator",  # Owner-approved proposal
+		"icon": "apex_predator",
+		"description": "Five locks, harder shots that hunt the strongest, and every kill reloads the cannon.",
+		"labels": {"damage": "Shot damage", "targets": "Targets locked", "elite_mult": "Vs elites and bosses", "refund": "Reload per kill (s)", "cooldown": "Cooldown (s)"},
+		"stats": {
+			"damage": 58.0, "targets": 5, "lock": 0.4, "range": 360.0, "cooldown": 1.9,  # TUNING (not in GDD)
+			"elite_mult": 1.5,  # TUNING (not in GDD) x on elites, minibosses and bosses
+			"refund": 0.25,  # TUNING (not in GDD) the evolution flag: s of the cooldown given back per kill
 		},
 	},
 }

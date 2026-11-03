@@ -278,7 +278,10 @@ const CONCORD_BROOD: Array[String] = ["broodling"]
 ## The Harvesters' kinds (race "harvesters"), and the landing pod.
 const CONCORD_HARVESTERS: Array[String] = ["grey_drone", "saucer", "concord_terraformer"]
 ## The Vrask's kinds (race "vrask").
-const CONCORD_VRASK: Array[String] = ["vrask_hunter"]
+const CONCORD_VRASK: Array[String] = ["vrask_hunter",
+	# --- Act IX: the Proving Moon --- (the Warbeast, the miniboss, with its race:
+	# the Concord tab groups by race and has no champions section)
+	"warbeast"]
 ## The Luminous's kinds (race "luminous").
 const CONCORD_LUMINOUS: Array[String] = ["lumen_sentinel", "prism"]
 ## Concord stage bosses (StageRegistry.BOSS_ARRIVALS ids).
@@ -511,6 +514,8 @@ const DESCRIPTIONS: Dictionary = {
 	"hive_mother": "The Hive Mother, the Brood's queen grown into the crater: egg waves, a burrow under your ring, and acid from the sky.",  # Owner-approved Act IX proposal
 	"vrask_tal": "Vrask'Tal, the Hunt-Lord: he stalks your ring cloaked, duels you with his glaive, and arms the bomb on his wrist.",  # Owner-approved Act IX proposal
 	"harvester": "The Harvester, the oldest of its kind: the one who planted the world, come to reap what is left.",  # Owner-approved Act IX proposal
+	# --- Act IX: the Proving Moon ---
+	"warbeast": "The Vrask's armoured hound. It crouches, then pounces over your ring onto you, and the moon's low gravity throws your dead far. Its plates shrug off weak blows.",  # Owner-approved Act IX proposal
 }
 
 ## Sprite key of an entry whose art is not "<category folder>/<id>":
@@ -764,6 +769,8 @@ const ACHIEVEMENT_ICONS: Dictionary = {
 	"broken_arrow": "ach_broken_arrow",  # TUNING (not in GDD)
 	# --- Act VIII: Liberty Heights ---
 	"no_more_heroes": "ach_no_more_heroes",  # TUNING (not in GDD)
+	# --- Act IX: the Proving Moon ---
+	"the_hunter_hunted": "ach_the_hunter_hunted",  # TUNING (not in GDD)
 }
 ## IconGlyph kind drawn when an achievement badge PNG is missing.
 const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
@@ -819,6 +826,8 @@ const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
 	"broken_arrow": "armour_piercing_bones",
 	# --- Act VIII: Liberty Heights ---
 	"no_more_heroes": "heros_fist",
+	# --- Act IX: the Proving Moon ---
+	"the_hunter_hunted": "mirror_bones",
 }
 ## Screen title (TITLE tier).
 const TITLE: String = "Codex"  # TUNING (not in GDD)

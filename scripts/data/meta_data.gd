@@ -438,7 +438,9 @@ const ACHIEVEMENT_ORDER := ["bone_legion", "heretics_bane", "dread_sovereign", "
 	# --- Act VIII: Fort Kessler ---
 	"broken_arrow",
 	# --- Act VIII: Liberty Heights ---
-	"no_more_heroes"]
+	"no_more_heroes",
+	# --- Act IX: the Proving Moon ---
+	"the_hunter_hunted"]
 
 ## Achievement definitions (GDD §9.4 "Example Achievement Unlocks"). Each
 ## achievement is tracked and recorded in the save and pays a one-time Soul
@@ -657,6 +659,14 @@ const ACHIEVEMENTS := {
 	# TitleData).
 	"no_more_heroes": {"display_name": "No More Heroes", "description": "Beat Paragon at Liberty Heights with no Super at his side",
 		"stat": "paragon_no_heroes_kills", "goal": 1, "unlock": "The title Bane of Heroes", "bounty": 500},  # Owner-approved proposal; bounty TUNING (not in GDD) as Last Supper
+	# --- Act IX: the Proving Moon ---
+	# Owner-approved Act IX achievement "The Hunter Hunted" ("beat Vrask'Tal
+	# before the countdown ends"): a run in which Vrask'Tal fell to anything but
+	# his own Last Trophy bomb (BossVraskTal sets the run stat
+	# proving_moon_hunter_hunted; MetaProgress counts the runs, lifetime
+	# hunter_hunted_runs). It unlocks the counter-passive Mirror Bones (brief).
+	"the_hunter_hunted": {"display_name": "The Hunter Hunted", "description": "Kill Vrask'Tal before his Last Trophy goes off",
+		"stat": "hunter_hunted_runs", "goal": 1, "unlock": "The Mirror Bones passive", "bounty": 300},  # Owner-approved Act IX proposal; bounty TUNING (not in GDD) as Broken Arrow
 }
 
 # --- Content wave 2: B. Achievement rewards ---

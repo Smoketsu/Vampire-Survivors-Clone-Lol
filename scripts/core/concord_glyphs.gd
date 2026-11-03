@@ -33,6 +33,10 @@ static func draw_enemy(ci: CanvasItem, kind: String, o: Vector2, r: float, flash
 		return false
 	# Phase 2: each Act IX stage's own fallbacks go here, before the shared
 	# kinds' (as CourtGlyphs asks RavensmoorGlyphs first).
+	# --- Act IX: the Proving Moon ---
+	if kind == ProvingMoonEnemyData.WARBEAST:
+		ProvingMoonGlyphs.draw_warbeast(ci, o, r, flash, false)
+		return true
 	match kind:
 		"broodling":
 			_broodling(ci, o, r, flash)

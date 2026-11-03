@@ -88,3 +88,22 @@ func draw_body(e: Enemy, ci: CanvasItem) -> void:
 		return
 	SpriteBank.draw_disc(ci, Vector2(0.0, -e.radius * 0.4), e.radius * 1.1, Color(Palette.CONCORD_VRASK, a * 0.6 * wob))
 	SpriteBank.draw_disc(ci, Vector2(0.0, -e.radius * 0.4), e.radius * 0.6, Color(Palette.CONCORD_HULL, a * 0.5 * wob))
+
+
+# --- Act IX: the Proving Moon ---
+## THE CLOAK'S HIT RULE as one helper, so Vrask'Tal's Stalk (BossVraskTal, a Boss
+## without a kit) cloaks through the same mechanism as the hunter's taken_mult()
+## above: the share of a hit tagged `source` a body cloaked with the `c` numbers
+## (a row's "cloak") takes while `is_cloaked`: a SPELL hit
+## (HundredShadowsData.is_spell_source(): "area damage reveals it") lands in
+## full; any other hit while cloaked deals cloaked_taken. 1 when not cloaked.
+static func cloak_hit_mult(c: Dictionary, source: String, is_cloaked: bool) -> float:
+	if not is_cloaked or c.is_empty() or HundredShadowsData.is_spell_source(source):
+		return 1.0
+	return float(c.get("cloaked_taken", 0.5))
+
+
+## True when a hit tagged `source` reveals a cloaked body (a spell hit), the
+## hunter's rule.
+static func cloak_revealed_by(source: String) -> bool:
+	return HundredShadowsData.is_spell_source(source)

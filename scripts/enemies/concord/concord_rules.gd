@@ -182,3 +182,34 @@ func anchored_hold_mult(u: SummonedUnit) -> float:
 ## passive does not exist.
 func anchored_breaks(u: SummonedUnit) -> bool:
 	return anchored_hold_mult(u) < 1.0
+
+
+# --- Act IX: the Proving Moon ---
+# LOW GRAVITY (GDD §15.0 "The Proving Moon (Act IX phase 2)"; owner-approved
+# proposal: "knockback goes twice as far for everyone, both armies, and leaps
+# are longer (one value in the stage data, read by the existing knockback
+# code)"). THE ONE ACCESSOR of the STAGE key "gravity" (the Proving Moon's
+# 2.0; 1.0 on every other stage, and when a Concord kind made these rules
+# elsewhere). Read only through game.concord, so nothing reads it while
+# game.concord is null (Acts I to VIII). Its reads, each a multiply or a
+# divide by exactly 1.0 off the moon:
+#   * Enemy._tick_timers(): the one enemy knockback decay
+#     (EnemyData.KNOCKBACK_DECAY) is divided by it (linear decay: twice the
+#     distance);
+#   * Enemy._rush_move(): the shared rush's charge_knockback shove on a summon
+#     is multiplied by it;
+#   * the Proving Moon's own kits (WarbeastKit, BossVraskTal): their shoves on
+#     summons and the necromancer and their leaps' reach are multiplied by it.
+# Grave Step is a shadow step, not a leap: it never reads it.
+
+## The stage's low-gravity multiplier (STAGE "gravity"; 1.0 when absent), read
+## once at creation (a run never changes stage).
+var _gravity: float = -1.0
+
+
+## THE LOW-GRAVITY MULTIPLIER (see the block header): the STAGE's "gravity"
+## (2.0 on the Proving Moon), 1.0 when the stage has none.
+func gravity() -> float:
+	if _gravity < 0.0:
+		_gravity = maxf(0.01, float(game.stage_def.get("gravity", 1.0)))
+	return _gravity

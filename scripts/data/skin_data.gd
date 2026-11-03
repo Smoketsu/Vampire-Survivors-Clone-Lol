@@ -111,6 +111,8 @@ const HYPER_NAMES := {
 	"fallen_sergeant": "The Golden Sergeant",  # TUNING (not in GDD)
 	# --- Act VIII: Liberty Heights ---
 	"revenant_heroine": "Golden Age Heroine",  # TUNING (not in GDD)
+	# --- Act IX: the Proving Moon ---
+	"blooded": "The Gilded Quarry",  # TUNING (not in GDD)
 }
 ## Sprite-multiply tint of each Hyper skin (gilded; the Eclipsed Gravecaller
 ## and the Sunless / Starless pair are darkened with a gold corona instead).
@@ -169,6 +171,8 @@ const HYPER_TINTS := {
 	"fallen_sergeant": Color(1.2, 1.05, 0.62),  # TUNING (not in GDD) gilded (the drawn skin replaces the tint)
 	# --- Act VIII: Liberty Heights ---
 	"revenant_heroine": Color(1.2, 1.05, 0.62),  # TUNING (not in GDD) gilded (the drawn skin replaces the tint)
+	# --- Act IX: the Proving Moon ---
+	"blooded": Color(1.2, 1.05, 0.62),  # TUNING (not in GDD) gilded (the drawn skin replaces the tint)
 }
 ## Emblem and accent shared by every Hyper skin: a gold sun corona.
 const HYPER_ACCENT := Color(1.0, 0.82, 0.3)  # TUNING (not in GDD) Palette.GOLD

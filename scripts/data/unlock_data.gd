@@ -251,6 +251,15 @@ const UNLOCKS := {
 	"origin_story": {"type": "passive", "boss": "paragon", "text": "Defeat Paragon at Liberty Heights to unlock."},  # Its paired passive (own decision), unlocked with it
 	"bane_of_heroes": {"type": "title", "achievement": "no_more_heroes",
 		"text": "Earn No More Heroes: beat Paragon with no Super at his side."},  # Own decision (the clear is recorded as a title, as Act VII's Ender of the Feast)
+	# --- Act IX: the Proving Moon ---
+	# Vrask'Tal's fall (owner-approved Act IX proposal "Rewards": Soul Caster is
+	# unlocked by Vrask'Tal) with its paired passive, offered on every stage; the
+	# stage's achievement The Hunter Hunted earns Act IX's counter-passive Mirror
+	# Bones (brief: the lead's pairing, GDD §15.0 "Act IX phase 2: owner
+	# answers"; offered only in Act IX through its card row's "act").
+	"soul_caster": {"type": "spell", "boss": "vrask_tal", "text": "Slay Vrask'Tal on the Proving Moon to unlock."},  # Owner-approved Act IX proposal
+	"trophy_rack": {"type": "passive", "boss": "vrask_tal", "text": "Slay Vrask'Tal on the Proving Moon to unlock."},  # Soul Caster's paired passive (owner-approved proposal), unlocked with it
+	"mirror_bones": {"type": "passive", "achievement": "the_hunter_hunted", "text": "Earn The Hunter Hunted: kill Vrask'Tal before his Last Trophy goes off."},  # Brief (Nov 3, 2026): The Hunter Hunted unlocks Mirror Bones
 }
 
 ## End-screen plate heading of a newly unlocked item, by type.

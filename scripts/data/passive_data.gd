@@ -202,7 +202,9 @@ const ORDER := ["grave_dominion", "necrotic_vigor", "dark_command", "soul_recycl
 	# --- Act VIII: Fort Kessler ---
 	"tripwire", "armour_piercing_bones",
 	# --- Act VIII: Liberty Heights ---
-	"secret_identity", "origin_story"]
+	"secret_identity", "origin_story",
+	# --- Act IX: the Proving Moon ---
+	"trophy_rack", "mirror_bones"]
 
 ## Passives that only help summons (a "dead" level-up card while no summon
 ## class is owned, see AbilityManager.build_offers()).
@@ -246,7 +248,9 @@ const ARMY_PASSIVES := ["grave_dominion", "necrotic_vigor", "dark_command", "sou
 	# --- Act VIII: Fort Kessler ---
 	"armour_piercing_bones",
 	# --- Act VIII: Liberty Heights ---
-	"origin_story"]
+	"origin_story",
+	# --- Act IX: the Proving Moon ---
+	"mirror_bones"]
 
 # --- Act III: the Assembly Halls ---
 ## Overclock (paired with the Grave Drone): a summon class is "ranged" (and
@@ -1755,6 +1759,52 @@ const PASSIVES := {
 			{"special_reach": 0.15},  # TUNING (not in GDD)
 			{"special_reach": 0.20},  # TUNING (not in GDD)
 			{"special_reach": 0.25},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act IX: the Proving Moon ---
+	# Trophy Rack (Soul Caster's paired passive; owner-approved Act IX proposal:
+	# "Apex Predator (+ Trophy Rack)"; unlocked with the spell by Vrask'Tal and
+	# offered on every stage). Own decision on its effect: every enemy Soul
+	# Caster kills hangs a trophy (SoulCaster.trophies, for the run), and each
+	# trophy up to trophy_cap adds trophy_dmg to its shots (SoulCaster._fire(),
+	# the one read). Read only by SoulCaster: exactly nothing without the spell.
+	"trophy_rack": {
+		"display_name": "Trophy Rack",  # Owner-approved proposal
+		"icon": "trophy_rack",
+		"description": "Every foe your Soul Caster kills hangs a trophy, and every trophy makes its shots hit harder.",
+		"labels": {"trophy_dmg": ["Soul Caster damage per trophy", "pct"], "trophy_cap": ["Trophies counted", "num"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"trophy_dmg": 0.01, "trophy_cap": 10},  # TUNING (not in GDD) +10% at most
+			{"trophy_dmg": 0.012, "trophy_cap": 14},  # TUNING (not in GDD)
+			{"trophy_dmg": 0.014, "trophy_cap": 18},  # TUNING (not in GDD)
+			{"trophy_dmg": 0.016, "trophy_cap": 22},  # TUNING (not in GDD)
+			{"trophy_dmg": 0.018, "trophy_cap": 25},  # TUNING (not in GDD) +45% at most
+		],
+	},
+	# Act IX's counter-passive Mirror Bones (owner-approved Act IX proposal:
+	# "Mirror Bones (reflected beams deal more and summons take less beam
+	# damage)"; unlocked by the Proving Moon achievement The Hunter Hunted and
+	# offered only in Act IX through its card row's "act"). The foundation's
+	# hooks read it, nothing else: ConcordRules.mirror_reflect_mult() (x 1 +
+	# reflect_damage on every beam the bound player's Orb Shield or his army's
+	# barriers reflect; kept modest, brief: the reflected beams are already
+	# strong) and ConcordRules.mirror_taken_mult() (a Concord beam's tick on a
+	# summon deals 1 - beam_reduction). Keys ConcordRulesData.MIRROR_REFLECT_KEY
+	# and MIRROR_TAKEN_KEY.
+	"mirror_bones": {
+		"display_name": "Mirror Bones",  # Owner-approved proposal
+		"icon": "mirror_bones",
+		"description": "Your dead are polished like mirrors: beams burn them less, and the beams you turn back burn hotter.",
+		"labels": {"beam_reduction": ["Beam damage to summons", "neg_pct"], "reflect_damage": ["Reflected beam damage", "pct"]},
+		"act": 9,  # Owner-approved: the act's counter-passives are offered only in Act IX (Unlocks.act_allows())
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"beam_reduction": 0.10, "reflect_damage": 0.04},  # TUNING (not in GDD)
+			{"beam_reduction": 0.18, "reflect_damage": 0.08},  # TUNING (not in GDD)
+			{"beam_reduction": 0.26, "reflect_damage": 0.12},  # TUNING (not in GDD)
+			{"beam_reduction": 0.33, "reflect_damage": 0.16},  # TUNING (not in GDD)
+			{"beam_reduction": 0.40, "reflect_damage": 0.20},  # TUNING (not in GDD) brief: keep reflect_damage modest
 		],
 	},
 }
