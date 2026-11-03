@@ -1,0 +1,13 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), a hovering flying saucer seen from above and the front-side, nearly flat on, a wide round hull
+
+LOW-RESOLUTION pixel art: the whole saucer is only 64 pixels wide and about 32 high, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims, lacing or engravings.
+
+Subject: a SAUCER (a machine, no crew visible), a classic flying saucer of the Harvesters: a wide white-hulled disc with a raised glass-less dome on top, a gunmetal ring around the rim studded with a row of glowing PLASMA-GREEN lamps, a darker underside with a green emitter ring (no beam drawn). Symmetrical, facing the viewer, clean panel lines kept big and simple.
+Signature shape that must read in silhouette: the wide flat disc with the small dome on top.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: hull white #E8ECF0 #AEB8C4; gunmetal ring and underside #3A424C #1E242C; plasma green lamps and emitter #3CFF6A #1FA84A
+
+Outline: a clean 1-pixel dark outline around the whole subject in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the subject), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark. Draw ONLY ONE figure.
+Attached: (1) a game sprite for pixel size, outline weight and flat look; (2) concept art of this unit for the costume only (do NOT copy its detail level or painted shading).

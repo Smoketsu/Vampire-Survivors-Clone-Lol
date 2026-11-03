@@ -214,6 +214,13 @@ FACTION_RAMPS = {
     # would snap onto them; the keys that need them add them in KEY_RAMPS.
     "city": ["asphalt", "concrete", "olive", "hazard", "neon_pink", "neon_cyan", "police", "siren_red",
              "skin", "brown", "bone"],
+    # --- Act IX: the Concord of Stars (assets/sprites/concord/) ---
+    # Hull white and gunmetal, plasma green and laser magenta lights, the Brood's green-black chitin, the Vrask's teal
+    # scales, the Luminous's pale white-gold, the Star-Seer's lavender skin; the Hive Mother's purple (`hive`, `hive_bone`)
+    # is added to her key only (it sits near the player's violet). Never the player's violet, the undead's bone or teal,
+    # or the Covenant's crimson (no `violet`, `bone`, `soul`, `crimson` here). Each hue has its own ramp (palette.json),
+    # as in Act VIII. The bosses/ and structures/ keys of the act are converted with an explicit --ramps list.
+    "concord": ["hull", "gunmetal", "plasma", "laser", "chitin", "vrask", "lumen", "lavender"],
 }
 # Per-key exceptions to FACTION_RAMPS: key -> (ramps added, ramps removed). The arcane
 # blue of the Mage and Lich and the icy cyan of the frost summons never mix (GDD 15.0 art
@@ -229,6 +236,10 @@ KEY_RAMPS = {
     # --- Act VIII: the Last Line ---
     "city/field_medic": (["moss"], []),  # the medic's green skirt and satchel, beside the ivory coat
     "city/blitz": (["hero"], ["skin"]),  # the orange suit; the face is behind helmet and goggles, so no skin ramp to steal the orange
+    # --- Act IX: the Concord of Stars ---
+    "bosses/hive_mother": (["hive", "hive_bone", "gold"], ["violet", "bone", "soul", "crimson"]),  # her purple chitin, cream spines and gold eyes only (the bosses/ folder has no faction set)
+    "concord/prism": ([], ["chitin", "vrask", "plasma"]),  # the Star-Seer: hull gown, laser trim, lumen hair, lavender skin
+    "concord/grey_drone": ([], ["lavender", "lumen", "vrask", "chitin"]),  # a silver grey with a plasma probe
 }
 # Ramps holding less than this share (0-1) of the opaque pixels are dropped (re-snapped).
 RAMP_MIN_SHARE = 0.03

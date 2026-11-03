@@ -1214,3 +1214,13 @@ utc,key,model,quality,size,refs,text_in,image_in,image_out,usd_est,file
 2026-11-03 03:24,bosses/paragon,gpt-image-2.5-flare,medium,1024x1024,1,642,1024,439,0.0246,paragon_b.png
 2026-11-03 03:25,player/revenant_heroine_deathlord,gpt-image-2.5-flare,medium,1024x1024,2,395,2048,439,0.0315,hd_a.png
 2026-11-03 03:25,player/revenant_heroine_deathlord,gpt-image-2.5-flare,medium,1024x1024,2,395,2048,439,0.0315,hd_b.png
+2026-11-03 05:29,concord/broodling,gpt-image-2.5-flare,medium,1024x1024,2,548,404,439,0.0191,broodling_a.png
+2026-11-03 05:29,concord/grey_drone,gpt-image-2.5-flare,medium,1024x1024,2,564,452,439,0.0196,grey_drone_a.png
+2026-11-03 05:29,concord/lumen_sentinel,gpt-image-2.5-flare,medium,1024x1024,2,568,652,439,0.0212,lumen_sentinel_a.png
+2026-11-03 05:29,concord/saucer,gpt-image-2.5-flare,medium,1024x1024,2,529,600,439,0.0206,saucer_a.png
+2026-11-03 05:29,concord/vrask_hunter,gpt-image-2.5-flare,medium,1024x1024,2,597,716,439,0.0219,vrask_hunter_a.png
+2026-11-03 05:30,concord/hive_mother,gpt-image-2.5-flare,medium,1024x1024,2,625,766,439,0.0224,hive_mother_a.png
+2026-11-03 05:30,concord/prism,gpt-image-2.5-flare,medium,1024x1024,2,681,692,439,0.0221,prism_a.png
+2026-11-03 05:30,concord/mothership_eye,gpt-image-2.5-flare,medium,1024x1024,1,365,418,439,0.0183,mothership_eye_a.png
+2026-11-03 05:30,structures/concord_terraformer_dead,gpt-image-2.5-flare,medium,1024x1024,2,543,1306,439,0.0263,concord_terraformer_dead_a.png
+2026-11-03 05:30,structures/concord_terraformer,gpt-image-2.5-flare,medium,1024x1024,2,549,1306,439,0.0264,concord_terraformer_a.png

@@ -1,0 +1,13 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), a landed alien pod seen from above and the front-side, a squat egg-shaped pod half-sunk in a mat of purple fleshy roots
+
+LOW-RESOLUTION pixel art: the whole pod is only 54 pixels wide and about 40 high, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims, lacing or engravings.
+
+Subject: a CONCORD TERRAFORMER, a landing pod (a machine, no crew): a squat white-and-gunmetal egg-shaped pod with a cracked-open hatch ring on top and several glowing PLASMA-GREEN vents venting a little green steam, rooted into a mat of veined PURPLE alien flesh turf whose thick veins and roots creep up the pod's sides, with a few green spores.
+Signature shape that must read in silhouette: the egg-shaped pod with roots spreading around its base.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: pod hull #E8ECF0 #AEB8C4; gunmetal ring #3A424C #1E242C; plasma green vents and spores #3CFF6A #1FA84A; alien flesh turf #1A1C22 #5A2A6A #7E4A90
+
+Outline: a clean 1-pixel dark outline around the whole subject in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the subject), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark. Draw ONLY ONE pod.
+Attached: (1) a game sprite for pixel size, outline weight and flat look; (2) concept art of the alien ground for the colours only (do NOT copy its detail level).

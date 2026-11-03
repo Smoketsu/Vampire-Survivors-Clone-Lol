@@ -43,7 +43,9 @@ const TABS: Array = [["feats", "Achievements"], ["spells", "Spells"], ["summons"
 		# --- Act VII: the Sanguine Court ---
 		["court", "Court"],
 		# --- Act VIII: the Last Line ---
-		["city", "Last Line"]]  # TUNING (not in GDD) Act II adds the Ancient Eye tab, Act III the Electronic Empire's, Act IV the Olympian Republic's, Act V the Shogunate's, Act VI the Inferno's, Act VII the Sanguine Court's, Act VIII the Last Line's
+		["city", "Last Line"],
+		# --- Act IX: the Concord of Stars ---
+		["concord", "Concord"]]  # TUNING (not in GDD) Act II adds the Ancient Eye tab, Act III the Electronic Empire's, Act IV the Olympian Republic's, Act V the Shogunate's, Act VI the Inferno's, Act VII the Sanguine Court's, Act VIII the Last Line's, Act IX the Concord's
 
 ## Summon classes shown on the Summons page (UnitData ids, card order). The
 ## Profane Bishop is a merge evolution, so it sits with the evolutions.
@@ -266,6 +268,22 @@ const CITY_HEROES: Array[String] = ["blitz",
 ## Last Line stage bosses (StageRegistry.BOSS_ARRIVALS ids).
 const CITY_BOSSES: Array[String] = ["don_marrow", "harrow", "paragon"]
 
+# --- Act IX: the Concord of Stars ---
+## Act IX, the Concord of Stars (GDD §15.0 "Act IX foundation (phase 1)"; the
+## Concord tab), GROUPED BY RACE (one coalition, owner): the Brood, the
+## Harvesters, the Vrask, the Luminous, then its stage bosses
+## (StageRegistry.BOSS_ARRIVALS ids). Each Act IX stage adds its own as it is
+## built (phase 2). The landing pod sits with the Harvesters (it is slain).
+const CONCORD_BROOD: Array[String] = ["broodling"]
+## The Harvesters' kinds (race "harvesters"), and the landing pod.
+const CONCORD_HARVESTERS: Array[String] = ["grey_drone", "saucer", "concord_terraformer"]
+## The Vrask's kinds (race "vrask").
+const CONCORD_VRASK: Array[String] = ["vrask_hunter"]
+## The Luminous's kinds (race "luminous").
+const CONCORD_LUMINOUS: Array[String] = ["lumen_sentinel", "prism"]
+## Concord stage bosses (StageRegistry.BOSS_ARRIVALS ids).
+const CONCORD_BOSSES: Array[String] = ["hive_mother", "vrask_tal", "harvester"]
+
 ## Section headers of each page: page id -> [[section id, header text], ...].
 const SECTIONS: Dictionary = {
 	"spells": [["spells", "Spells"], ["spell_evolutions", "Evolutions"]],  # TUNING (not in GDD)
@@ -284,6 +302,9 @@ const SECTIONS: Dictionary = {
 	# --- Act VIII: the Last Line (grouped by tier) ---
 	"city": [["city_civilians", "Civilians"], ["city_gangs", "Gangs"], ["city_police", "Police"], ["city_swat", "SWAT and the Guard"],
 		["city_army", "The Army"], ["city_heroes", "The Heroes"], ["city_bosses", "Bosses"]],  # TUNING (not in GDD) Act VIII
+	# --- Act IX: the Concord of Stars (grouped by race) ---
+	"concord": [["concord_brood", "The Brood"], ["concord_harvesters", "The Harvesters"], ["concord_vrask", "The Vrask"],
+		["concord_luminous", "The Luminous"], ["concord_bosses", "Bosses"]],  # TUNING (not in GDD) Act IX
 }
 
 ## One-sentence descriptions of the Covenant (the enemy data has none),
@@ -479,6 +500,17 @@ const DESCRIPTIONS: Dictionary = {
 	"aurora": "A flier who rains energy blasts on your ring. Any stun drops her out of the sky, and she is open until she rises.",  # Owner-approved Act VIII proposal (Supers)
 	"nightjar": "A vigilante who grapples your dead out of the ring. He must land to strike: hold him there with a blocker.",  # Owner-approved Act VIII proposal (Supers)
 	"conscript": "Young Guardsmen with bayonets, sent in crowds to hold the heart of the city.",  # TUNING (not in GDD) Liberty Heights's army fodder
+	# --- Act IX: the Concord of Stars ---
+	"broodling": "Small, fast insects of the Brood, in swarms of twelve. Anything kills them; there are just so many.",  # Owner-approved Act IX proposal
+	"grey_drone": "Small greys in squads. A magenta line from a probe is a beam about to fire: step out of it.",  # Owner-approved Act IX proposal (Beams)
+	"saucer": "It hovers over your ring and lifts your dead in a tractor beam. Shoot it down before they are gone.",  # Owner-approved Act IX proposal (Abduction)
+	"concord_terraformer": "A landing pod that roots and grows alien ground. The Concord heals on it; your spells burn it back.",  # Owner answer Oct 31, 2026 (Terraforming)
+	"vrask_hunter": "A hunter who shimmers as it moves, then locks three red dots on its prey. Your spells reveal it.",  # Owner-approved Act IX proposal
+	"lumen_sentinel": "A being of light whose beams sweep your ring. Its shield soaks the first blows; reflect its beams back at it.",  # Owner-approved Act IX proposal
+	"prism": "The Star-Seer. A beam that passes through her splits into three: kill her before the beams line up.",  # Owner-approved Act IX proposal
+	"hive_mother": "The Hive Mother, the Brood's queen grown into the crater: egg waves, a burrow under your ring, and acid from the sky.",  # Owner-approved Act IX proposal
+	"vrask_tal": "Vrask'Tal, the Hunt-Lord: he stalks your ring cloaked, duels you with his glaive, and arms the bomb on his wrist.",  # Owner-approved Act IX proposal
+	"harvester": "The Harvester, the oldest of its kind: the one who planted the world, come to reap what is left.",  # Owner-approved Act IX proposal
 }
 
 ## Sprite key of an entry whose art is not "<category folder>/<id>":
@@ -548,6 +580,12 @@ const LOCKED_HINT: Dictionary = {
 	"city_army": "Slay one to record it.",  # TUNING (not in GDD) Act VIII army
 	"city_heroes": "Slay one to record it.",  # TUNING (not in GDD) Act VIII heroes
 	"city_bosses": "Face it to record it.",  # TUNING (not in GDD) Act VIII bosses
+	# --- Act IX: the Concord of Stars ---
+	"concord_brood": "Slay one to record it.",  # TUNING (not in GDD) Act IX
+	"concord_harvesters": "Slay one to record it.",  # TUNING (not in GDD) Act IX Harvesters
+	"concord_vrask": "Slay one to record it.",  # TUNING (not in GDD) Act IX Vrask
+	"concord_luminous": "Slay one to record it.",  # TUNING (not in GDD) Act IX Luminous
+	"concord_bosses": "Face it to record it.",  # TUNING (not in GDD) Act IX bosses
 	"evolution": "Undiscovered.",  # TUNING (not in GDD) owner rule: no hint
 }
 ## Name shown for a locked entry.
@@ -591,6 +629,12 @@ const TAGS: Dictionary = {
 	"city_army": "The army",  # TUNING (not in GDD) Act VIII army
 	"city_heroes": "Super",  # TUNING (not in GDD) Act VIII heroes
 	"city_bosses": "Stage boss",  # TUNING (not in GDD) Act VIII bosses
+	# --- Act IX: the Concord of Stars ---
+	"concord_brood": "The Brood",  # TUNING (not in GDD) Act IX
+	"concord_harvesters": "The Harvesters",  # TUNING (not in GDD) Act IX
+	"concord_vrask": "The Vrask",  # TUNING (not in GDD) Act IX
+	"concord_luminous": "The Luminous",  # TUNING (not in GDD) Act IX
+	"concord_bosses": "Stage boss",  # TUNING (not in GDD) Act IX bosses
 }
 
 # --- Layout (layout px at 1280x720; TUNING, not in GDD) -----------------------------
@@ -816,11 +860,13 @@ static func is_known(cat: String, id: String) -> bool:
 					or INFERNO_SOLDIERS.has(id) or INFERNO_CHAMPIONS.has(id) \
 					or COURT_SOLDIERS.has(id) or COURT_CHAMPIONS.has(id) \
 					or CITY_CIVILIANS.has(id) or CITY_GANGS.has(id) or CITY_POLICE.has(id) \
-					or CITY_SWAT.has(id) or CITY_ARMY.has(id) or CITY_HEROES.has(id)  # Act IV to Act VIII
+					or CITY_SWAT.has(id) or CITY_ARMY.has(id) or CITY_HEROES.has(id) \
+					or CONCORD_BROOD.has(id) or CONCORD_HARVESTERS.has(id) or CONCORD_VRASK.has(id) \
+					or CONCORD_LUMINOUS.has(id)  # Act IV to Act IX
 		BOSS:
 			return BOSSES.has(id) or EYE_BOSSES.has(id) or EMPIRE_BOSSES.has(id) or PANTHEON_BOSSES.has(id) \
 					or SHOGUNATE_BOSSES.has(id) or INFERNO_BOSSES.has(id) or COURT_BOSSES.has(id) \
-					or CITY_BOSSES.has(id)  # (Act VIII last)
+					or CITY_BOSSES.has(id) or CONCORD_BOSSES.has(id)  # (Act IX last)
 	return false
 
 
@@ -839,11 +885,13 @@ static func total(cat: String) -> int:
 					+ INFERNO_SOLDIERS.size() + INFERNO_CHAMPIONS.size() \
 					+ COURT_SOLDIERS.size() + COURT_CHAMPIONS.size() \
 					+ CITY_CIVILIANS.size() + CITY_GANGS.size() + CITY_POLICE.size() \
-					+ CITY_SWAT.size() + CITY_ARMY.size() + CITY_HEROES.size()  # Act IV to Act VIII
+					+ CITY_SWAT.size() + CITY_ARMY.size() + CITY_HEROES.size() \
+					+ CONCORD_BROOD.size() + CONCORD_HARVESTERS.size() + CONCORD_VRASK.size() \
+					+ CONCORD_LUMINOUS.size()  # Act IV to Act IX
 		BOSS:
 			return BOSSES.size() + EYE_BOSSES.size() + EMPIRE_BOSSES.size() + PANTHEON_BOSSES.size() \
 					+ SHOGUNATE_BOSSES.size() + INFERNO_BOSSES.size() + COURT_BOSSES.size() \
-					+ CITY_BOSSES.size()  # (Act VIII last)
+					+ CITY_BOSSES.size() + CONCORD_BOSSES.size()  # (Act IX last)
 	return 0
 
 
@@ -876,6 +924,9 @@ static func enemy_row(id: String) -> Dictionary:
 	var city := EnemyDirector.city_def(id)  # Act VIII kinds ({} when none).
 	if not city.is_empty():
 		return city
+	var concord := EnemyDirector.concord_def(id)  # Act IX kinds ({} when none).
+	if not concord.is_empty():
+		return concord
 	match id:
 		"alaric":
 			return EnemyData.BOSS

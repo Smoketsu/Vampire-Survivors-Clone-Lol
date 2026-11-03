@@ -675,6 +675,55 @@ const SIREN_SCORE := {
 		"sweeps": [[0.4, 3.6, 640.0, 860.0], [3.6, 3.6, 860.0, 640.0], [8.4, 3.6, 640.0, 860.0], [11.6, 3.6, 860.0, 640.0]]},  # TUNING (not in GDD) [start (s), length (s), from Hz, to Hz]
 }
 
+# --- Act IX: the Concord of Stars ---
+## "The Reaping Stars", the Act IX run loop (GDD §15.0 "The Reaping Stars and the Concord
+## sounds"): the RunLoopSynth score of every stage whose STAGE has "music": "starsong". A vast,
+## cold space track in D Phrygian dominant (D Eb F# G A Bb C), 24 s: four 6 s chord segments
+## (open fifths and seconds, no thirds: Dsus2, Ebsus2, Gsus2, Bbsus2). A slow pulse (the
+## existing "pulse" job, one soft low note every 1.5 s) under glassy pads (the existing "organ"
+## job with inharmonic partials and a very slow swell), a very low drone, a sparse glint of
+## glass (the existing "hits" job), a soft swelling "harvest" horn (the existing "horn" job
+## with a slow attack: it is the Reckoning's colour) and a high, choir-like line (the new
+## "choir" job). Never shrill: everything above 1 kHz is a sine or low-passed. Rendered lazily
+## (Sfx), never under the autotest.
+const STARSONG_SCORE := {
+	"loop_seconds": 24.0,  # TUNING (not in GDD) four 6 s chord segments
+	"root_hz": 36.71,  # TUNING (not in GDD) D1, a very low drone under D
+	"chords": [
+		[146.83, 220.0, 329.63],
+		[155.56, 233.08, 349.23],
+		[196.0, 293.66, 440.0],
+		[116.54, 174.61, 261.63],
+	],  # TUNING (not in GDD) Dsus2, Ebsus2, Gsus2, Bbsus2: open and cold, no thirds
+	"drone_lp_hz": 45.0,  # TUNING (not in GDD) a soft, deep void hum
+	"wind_lp_hz": 600.0,  # TUNING (not in GDD) a faint starfield hiss
+	"wind_swells": 3.0,  # TUNING (not in GDD)
+	"vibrato_hz": 0.25,  # TUNING (not in GDD) the pad barely wavers
+	"vibrato_depth": 0.002,  # TUNING (not in GDD)
+	# The slow pulse (replaces the heartbeat): a soft low note every 1.5 s, a deeper one every 6 s.
+	"pulse": {"step": 1.5, "hz": 55.0, "dur": 0.9, "amp": 0.14, "decay": 0.3, "lp0": 380.0, "lp1": 110.0,
+		"accent_every": 4, "accent_amp": 0.22},  # TUNING (not in GDD) A1
+	# Glass glints: a quiet inharmonic ping every 6 s, 3 s into each segment.
+	"hits": {"every": 6.0, "offset": 3.0, "root_hz": 880.0, "dur": 2.2, "decay": 0.7,
+		"partials": [[1.0, 0.045], [2.76, 0.022], [4.1, 0.01]], "click": 0.01},  # TUNING (not in GDD)
+	# Glassy pads: sine partials at slightly inharmonic ratios, swelling in over 2 s.
+	"organ": {"attack": 2.0, "decay": 4.0, "vib_hz": 0.4, "vib_depth": 0.002,
+		"partials": [[1.0, 0.05], [2.0, 0.03], [3.01, 0.02], [5.02, 0.012], [7.03, 0.006]],
+		"notes": [[0.0, 293.66, 5.9], [6.0, 311.13, 5.9], [12.0, 392.0, 5.9], [18.0, 349.23, 5.8]]},  # TUNING (not in GDD) [start (s), Hz, length (s)]
+	# The harvest horn: a long, soft swell of a saw and its fifth that blooms and fades (twice a loop).
+	"horn": {"starts": [0.5, 12.5], "dur": 5.6, "attack": 2.6, "decay": 2.4, "amp": 0.04,
+		"lp0": 220.0, "lp1": 900.0,
+		"notes": [[73.42, 110.0], [98.0, 146.83]]},  # TUNING (not in GDD)
+	# The choir: four detuned saws per note through a low-pass, a slow vowel-like swell and vibrato.
+	"choir": {"amp": 0.03, "attack": 1.3, "decay": 2.2, "lp0": 1100.0, "lp1": 1500.0, "vib_hz": 4.5, "vib_depth": 0.006,
+		"detune": 1.004, "octave_amp": 0.4,
+		"notes": [
+			[0.5, 440.0, 3.0], [3.5, 369.99, 2.4],
+			[6.5, 466.16, 2.8], [9.5, 523.25, 2.4],
+			[12.5, 587.33, 3.0], [15.5, 466.16, 2.4],
+			[18.5, 698.46, 2.6], [21.5, 440.0, 2.3]]},  # TUNING (not in GDD) [start (s), Hz, length (s)]
+}
+
 ## Run-loop scores by STAGE "music" id (Sfx.play_music() modes; "" / absent =
 ## the Act I loop): "tide" = "Below the Tide" (Act II), "iron" = "Iron Requiem"
 ## (Act III), "bronze" = "Hymn of Bronze" (Act IV), "sun" = "The Setting Sun" (Act V), "brimstone" = "Hymn of the Pit" (Act VI), "sanguine" = "Waltz of the Red Moon" (Act VII), "siren" = "Sirens at Midnight" (Act VIII). Each has its own fixed synth seed (Sfx.SCORE_SEEDS).
@@ -686,6 +735,8 @@ const SCORES := {
 	"brimstone": BRIMSTONE_SCORE,  # Act VI
 	"sanguine": SANGUINE_SCORE,  # Act VII
 	"siren": SIREN_SCORE,  # Act VIII
+	# --- Act IX: the Concord of Stars ---
+	"starsong": STARSONG_SCORE,  # Act IX: "The Reaping Stars"
 }
 ## Sound pack each score asks for when its run starts (Sfx.prepare_pack():
 ## "empire" = EMPIRE_SOUNDS, the Act III effects; "pantheon" = PANTHEON_SOUNDS,
@@ -697,6 +748,8 @@ const SCORE_PACKS := {
 	"brimstone": "inferno",  # Act VI
 	"sanguine": "court",  # Act VII
 	"siren": "city",  # Act VIII
+	# --- Act IX: the Concord of Stars ---
+	"starsong": "concord",  # Act IX: the Concord sound pack
 }
 
 ## Act III sound effects (the Electronic Empire; recipe keys as SOUNDS). Kept
@@ -1660,4 +1713,86 @@ const CITY_SOUNDS: Dictionary = {  # TUNING (not in GDD)
 			{"wave": "noise", "dur": 0.05, "amp": 0.35, "attack": 0.002, "decay": 0.02, "lp0": 1800.0, "lp1": 900.0},
 			{"wave": "sine", "f0": 220.0, "f1": 160.0, "dur": 0.08, "amp": 0.14, "attack": 0.002, "decay": 0.04},
 			{"wave": "noise", "start": 0.06, "dur": 1.0, "amp": 0.22, "attack": 0.08, "decay": 0.6, "lp0": 7000.0, "lp1": 4000.0}]},
+}
+
+# --- Act IX: the Concord of Stars ---
+## Act IX sound effects (the Concord; recipe keys as SOUNDS). Kept OUT of SOUNDS like the other
+## packs: Sfx renders it lazily the first time an Act IX run's music ("starsong") is asked for
+## (Sfx.prepare_pack("concord"); seeds Sfx.PACK_SEED + Sfx.PACK_SEED_OFFSETS["concord"] + i).
+## Nothing plays them until the lead wires the foundation's sound map.
+const CONCORD_SOUNDS: Dictionary = {  # TUNING (not in GDD)
+	# The aiming line: a thin, rising whine with a faint beating twin.
+	"beam_charge": {"dur": 1.0, "volume_db": -18.0, "max_voices": 3, "min_interval": 250, "pitch_var": 0.03, "priority": 2,
+		"layers": [
+			{"wave": "sine", "f0": 600.0, "f1": 2600.0, "dur": 0.95, "amp": 0.16, "attack": 0.75, "decay": 0.5},
+			{"wave": "sine", "f0": 608.0, "f1": 2640.0, "dur": 0.95, "amp": 0.08, "attack": 0.75, "decay": 0.5},
+			{"wave": "tri", "f0": 1200.0, "f1": 5000.0, "dur": 0.9, "amp": 0.03, "attack": 0.7, "decay": 0.4, "lp0": 5000.0},
+			{"wave": "noise", "dur": 0.9, "amp": 0.02, "attack": 0.7, "decay": 0.3, "lp0": 3000.0, "lp1": 7000.0}]},
+	# A held, buzzing laser tone that tapers and ends cleanly.
+	"beam_fire": {"dur": 1.3, "volume_db": -16.0, "max_voices": 3, "min_interval": 200, "pitch_var": 0.03, "priority": 2,
+		"layers": [
+			{"wave": "saw", "f0": 220.0, "dur": 1.25, "amp": 0.14, "attack": 0.02, "decay": 3.0, "lp0": 2800.0, "vib_hz": 38.0, "vib_depth": 0.02},
+			{"wave": "square", "f0": 440.0, "dur": 1.25, "amp": 0.04, "attack": 0.03, "decay": 3.0, "lp0": 2200.0},
+			{"wave": "sine", "f0": 880.0, "dur": 1.25, "amp": 0.08, "attack": 0.02, "decay": 3.0},
+			{"wave": "sine", "f0": 55.0, "dur": 1.25, "amp": 0.14, "attack": 0.03, "decay": 2.5}]},
+	# A bright glassy ping, then a short reversed swell as its tail.
+	"beam_reflect": {"dur": 0.7, "volume_db": -16.0, "max_voices": 4, "min_interval": 80, "pitch_var": 0.05, "priority": 2,
+		"layers": [
+			{"wave": "sine", "f0": 2600.0, "f1": 2500.0, "dur": 0.35, "amp": 0.2, "attack": 0.001, "decay": 0.1},
+			{"wave": "sine", "f0": 3900.0, "start": 0.005, "dur": 0.3, "amp": 0.1, "attack": 0.001, "decay": 0.08},
+			{"wave": "sine", "f0": 5200.0, "start": 0.01, "dur": 0.25, "amp": 0.05, "attack": 0.001, "decay": 0.06},
+			{"wave": "sine", "f0": 3300.0, "f1": 4200.0, "start": 0.2, "dur": 0.3, "amp": 0.08, "attack": 0.26, "decay": 0.05},
+			{"wave": "noise", "start": 0.2, "dur": 0.3, "amp": 0.03, "attack": 0.27, "decay": 0.04, "lp0": 6000.0, "lp1": 9000.0}]},
+	# A low, wobbling hum.
+	"tractor_beam": {"dur": 1.5, "volume_db": -17.0, "max_voices": 2, "min_interval": 400, "pitch_var": 0.03, "priority": 1,
+		"layers": [
+			{"wave": "sine", "f0": 92.0, "dur": 1.45, "amp": 0.3, "attack": 0.25, "decay": 2.5, "vib_hz": 6.0, "vib_depth": 0.07},
+			{"wave": "saw", "f0": 92.5, "dur": 1.45, "amp": 0.1, "attack": 0.25, "decay": 2.5, "lp0": 320.0, "vib_hz": 5.0, "vib_depth": 0.08},
+			{"wave": "sine", "f0": 184.0, "dur": 1.45, "amp": 0.07, "attack": 0.3, "decay": 2.5, "vib_hz": 6.5, "vib_depth": 0.06}]},
+	# A summon is taken: a rising whoosh that thins out into a high whisper.
+	"abduction": {"dur": 1.6, "volume_db": -13.0, "max_voices": 2, "min_interval": 300, "pitch_var": 0.04, "priority": 3,
+		"layers": [
+			{"wave": "noise", "dur": 1.2, "amp": 0.3, "attack": 0.55, "decay": 0.3, "lp0": 300.0, "lp1": 5500.0},
+			{"wave": "sine", "f0": 200.0, "f1": 2200.0, "dur": 1.0, "amp": 0.14, "attack": 0.7, "decay": 0.3},
+			{"wave": "sine", "f0": 2200.0, "f1": 4200.0, "start": 0.9, "dur": 0.65, "amp": 0.05, "attack": 0.05, "decay": 0.2},
+			{"wave": "tri", "f0": 90.0, "f1": 60.0, "dur": 0.8, "amp": 0.14, "attack": 0.2, "decay": 0.4, "lp0": 400.0}]},
+	# A saucer is shot down: electric sputters, a falling whine, then a crash.
+	"saucer_down": {"dur": 1.4, "volume_db": -11.0, "max_voices": 2, "min_interval": 250, "pitch_var": 0.05, "priority": 3,
+		"layers": [
+			{"wave": "noise", "dur": 0.06, "amp": 0.3, "attack": 0.001, "decay": 0.02, "lp0": 7000.0, "lp1": 3000.0},
+			{"wave": "noise", "start": 0.1, "dur": 0.05, "amp": 0.26, "attack": 0.001, "decay": 0.015, "lp0": 7000.0, "lp1": 3000.0},
+			{"wave": "noise", "start": 0.19, "dur": 0.07, "amp": 0.32, "attack": 0.001, "decay": 0.02, "lp0": 7000.0, "lp1": 3000.0},
+			{"wave": "noise", "start": 0.33, "dur": 0.05, "amp": 0.24, "attack": 0.001, "decay": 0.015, "lp0": 7000.0, "lp1": 3000.0},
+			{"wave": "saw", "f0": 420.0, "f1": 60.0, "dur": 0.9, "amp": 0.18, "attack": 0.01, "decay": 0.4, "lp0": 2500.0, "lp1": 500.0, "vib_hz": 30.0, "vib_depth": 0.15},
+			{"wave": "noise", "start": 0.55, "dur": 0.8, "amp": 0.4, "attack": 0.004, "decay": 0.25, "lp0": 3500.0, "lp1": 250.0},
+			{"wave": "sine", "f0": 80.0, "f1": 32.0, "start": 0.55, "dur": 0.7, "amp": 0.4, "attack": 0.005, "decay": 0.3}]},
+	# Spell fire burning alien ground: a soft sizzle and hiss with a few crackles.
+	"ground_burn": {"dur": 1.0, "volume_db": -21.0, "max_voices": 3, "min_interval": 180, "pitch_var": 0.08, "priority": 1,
+		"layers": [
+			{"wave": "noise", "dur": 0.95, "amp": 0.12, "attack": 0.05, "decay": 0.4, "lp0": 7500.0, "lp1": 4000.0},
+			{"wave": "noise", "start": 0.08, "dur": 0.012, "amp": 0.14, "attack": 0.001, "decay": 0.004, "lp0": 9000.0},
+			{"wave": "noise", "start": 0.26, "dur": 0.012, "amp": 0.12, "attack": 0.001, "decay": 0.004, "lp0": 9000.0},
+			{"wave": "noise", "start": 0.41, "dur": 0.012, "amp": 0.14, "attack": 0.001, "decay": 0.004, "lp0": 9000.0},
+			{"wave": "noise", "start": 0.6, "dur": 0.012, "amp": 0.1, "attack": 0.001, "decay": 0.004, "lp0": 9000.0},
+			{"wave": "sine", "f0": 130.0, "f1": 80.0, "dur": 0.5, "amp": 0.04, "attack": 0.1, "decay": 0.25}]},
+	# Insects: a short, uneven clicking, quiet.
+	"brood_chitter": {"dur": 0.45, "volume_db": -22.0, "max_voices": 3, "min_interval": 120, "pitch_var": 0.12, "priority": 1,
+		"layers": [
+			{"wave": "noise", "dur": 0.012, "amp": 0.4, "attack": 0.001, "decay": 0.004, "lp0": 6500.0, "lp1": 3500.0},
+			{"wave": "noise", "start": 0.05, "dur": 0.012, "amp": 0.32, "attack": 0.001, "decay": 0.004, "lp0": 7000.0, "lp1": 3500.0},
+			{"wave": "noise", "start": 0.09, "dur": 0.012, "amp": 0.38, "attack": 0.001, "decay": 0.004, "lp0": 6000.0, "lp1": 3000.0},
+			{"wave": "noise", "start": 0.17, "dur": 0.012, "amp": 0.3, "attack": 0.001, "decay": 0.004, "lp0": 7000.0, "lp1": 3500.0},
+			{"wave": "noise", "start": 0.21, "dur": 0.012, "amp": 0.36, "attack": 0.001, "decay": 0.004, "lp0": 6500.0, "lp1": 3000.0},
+			{"wave": "noise", "start": 0.3, "dur": 0.012, "amp": 0.28, "attack": 0.001, "decay": 0.004, "lp0": 7000.0, "lp1": 3500.0},
+			{"wave": "sine", "f0": 3200.0, "f1": 3600.0, "start": 0.06, "dur": 0.03, "amp": 0.05, "attack": 0.002, "decay": 0.01},
+			{"wave": "sine", "f0": 3000.0, "f1": 3400.0, "start": 0.22, "dur": 0.03, "amp": 0.04, "attack": 0.002, "decay": 0.01}]},
+	# The Final Harvest: a deep opening groan and a low horn that blooms.
+	"harvest_eye": {"dur": 3.6, "volume_db": -9.0, "max_voices": 1, "min_interval": 3000, "pitch_var": 0.02, "priority": 3,
+		"layers": [
+			{"wave": "saw", "f0": 40.0, "f1": 72.0, "dur": 2.8, "amp": 0.22, "attack": 1.2, "decay": 1.5, "lp0": 150.0, "lp1": 520.0, "vib_hz": 3.0, "vib_depth": 0.03},
+			{"wave": "noise", "dur": 2.6, "amp": 0.14, "attack": 1.0, "decay": 1.2, "lp0": 200.0, "lp1": 650.0},
+			{"wave": "sine", "f0": 36.7, "start": 0.2, "dur": 3.0, "amp": 0.34, "attack": 0.7, "decay": 1.6},
+			{"wave": "saw", "f0": 73.42, "start": 0.9, "dur": 2.6, "amp": 0.2, "attack": 0.9, "decay": 1.2, "lp0": 350.0, "lp1": 1200.0, "vib_hz": 4.5, "vib_depth": 0.004},
+			{"wave": "saw", "f0": 110.0, "start": 1.0, "dur": 2.5, "amp": 0.11, "attack": 0.9, "decay": 1.2, "lp0": 350.0, "lp1": 1100.0, "vib_hz": 4.5, "vib_depth": 0.004},
+			{"wave": "sine", "f0": 220.0, "start": 1.2, "dur": 2.3, "amp": 0.05, "attack": 0.8, "decay": 1.1}]},
 }

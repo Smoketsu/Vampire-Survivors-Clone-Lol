@@ -186,6 +186,11 @@
 ## armour_front_hits, armour_front_dmg_prevented); flat armour is the existing
 ## path. damage_unit() reads the Kevlar Bones hook (Armour.kevlar_mult(): less
 ## RANGED City damage to summons; exactly 1 while the passive is not built).
+## Act IX (the Concord of Stars; GDD §15.0 "Terraforming"; Game.concord is null
+## on every other act, so none of this runs there): THE ONE BURN CHECK — at the
+## very end of damage_enemy(), a hit that dealt damage tells
+## ConcordRules.on_enemy_hit(), which burns the alien ground around the enemy
+## when the source is a SPELL (ConcordRules.burns_ground(), the one test).
 ## Online co-op (CoopSession): every rule above reads the BOUND player's
 ## passives, synergies, meter and innate, so each entry point first binds the
 ## player the hit belongs to (the one path for "whose hit"), then restores the
@@ -483,6 +488,10 @@ func damage_enemy(e: Enemy, amount: float, source: String, as_slot: int = -1, or
 		game.horde.evolutions.on_enemy_killed(e, source)  # Lich raise-the-dead.
 		game.innates.on_enemy_killed(e, source)  # Character innates (no-op without one).
 		_kill_enemy(e, is_minion_source(source))
+	# --- Act IX: the Concord of Stars --- the one burn check: a spell hit burns
+	# the alien ground around the enemy it hit (only while Game.concord exists).
+	if game.concord != null and dealt > 0.0:
+		game.concord.on_enemy_hit(e, source)
 	return dealt
 
 
