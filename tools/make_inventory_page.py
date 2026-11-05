@@ -53,7 +53,7 @@ BOX = 56
 # Height in px a small sprite is scaled up towards (integer factor only).
 TARGET_H = 48
 # Folders searched, in order, for an enemy id (faction folders, then structures, then bosses).
-ENEMY_DIRS = ["enemies", "holy", "court", "city", "eye", "empire", "pantheon",
+ENEMY_DIRS = ["enemies", "holy", "court", "city", "concord", "eye", "empire", "pantheon",
               "shogunate", "inferno", "structures", "bosses", "projectiles"]
 # Data ids whose sprite file is named differently: (folder-less) id -> file stem.
 ID_ALIASES = {

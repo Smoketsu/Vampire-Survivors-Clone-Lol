@@ -4006,6 +4006,21 @@ targets that are already expected to die. Menders and Bishops do the same with
 `data/`. Per-run levels, timers and live instances belong to the
 directors and managers.
 
+### Tools: the game inventory
+
+`docs/INVENTORY.md` (and its browsable page with sprite thumbnails) lists everything in the game: every act and stage,
+boss, enemy kind, spell and evolution, passive, summon class, character, skin, achievement, Ossuary upgrade and the
+planned content. It is generated from the data files, so rebuild it after content lands (no Godot, no network):
+
+```bash
+tools/rebuild_inventory.sh <out-dir>     # out-dir: any folder outside the repo
+```
+
+That runs `tools/inventory_extract.py` (data files to `model.json`), `tools/inventory_render.py` (sections, the plain
+page and `docs/INVENTORY.md`) and `tools/make_inventory_page.py` (the final `necropathy_inventory.html` with lazy
+thumbnails). The hand-written parts (boss phase lists, each act's shared-rule summary, the planned-content section) are
+marked in `inventory_render.py`; update them when an act is added.
+
 ---
 
 ## Headless verification / autotest
