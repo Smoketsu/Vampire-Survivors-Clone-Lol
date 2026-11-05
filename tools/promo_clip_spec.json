@@ -1,0 +1,297 @@
+{
+ "name": "necropathy_tiktok",
+ "render": [
+  270,
+  480
+ ],
+ "size": [
+  1080,
+  1920
+ ],
+ "fps": 30,
+ "lufs": -14,
+ "shots": [
+  {
+   "id": "hook",
+   "stage": "graveyard",
+   "seed": 3,
+   "start": 840,
+   "seconds": 2.7,
+   "texts": [
+    {
+     "text": "YOU'RE NOT\nTHE HERO.",
+     "font": "jersey",
+     "size": 57,
+     "scale": 3,
+     "color": "cream",
+     "y": 300,
+     "from": 0.0,
+     "to": 1.3
+    },
+    {
+     "text": "YOU'RE THE\nHORDE.",
+     "font": "jersey",
+     "size": 57,
+     "scale": 3,
+     "color": "gold",
+     "y": 300,
+     "from": 1.35,
+     "to": 2.7
+    }
+   ]
+  },
+  {
+   "id": "early",
+   "stage": "graveyard",
+   "seed": 3,
+   "start": 60,
+   "seconds": 2.3,
+   "texts": [
+    {
+     "text": "1 MINUTE IN",
+     "font": "jersey",
+     "size": 38,
+     "scale": 3,
+     "color": "cream",
+     "y": 1230,
+     "from": 0.0,
+     "to": 2.3
+    },
+    {
+     "text": "a few skeletons",
+     "font": "jersey",
+     "size": 28,
+     "scale": 3,
+     "color": "teal",
+     "y": 1350,
+     "from": 0.2,
+     "to": 2.3
+    }
+   ]
+  },
+  {
+   "id": "late",
+   "stage": "graveyard",
+   "seed": 3,
+   "start": 960,
+   "seconds": 2.6,
+   "texts": [
+    {
+     "text": "16 MINUTES IN",
+     "font": "jersey",
+     "size": 38,
+     "scale": 3,
+     "color": "gold",
+     "y": 1230,
+     "from": 0.0,
+     "to": 2.6
+    },
+    {
+     "text": "the Bone Ring",
+     "font": "jersey",
+     "size": 28,
+     "scale": 3,
+     "color": "teal",
+     "y": 1350,
+     "from": 0.2,
+     "to": 2.6
+    }
+   ]
+  },
+  {
+   "id": "act1",
+   "stage": "graveyard",
+   "seed": 3,
+   "start": 1035,
+   "seconds": 2.6,
+   "texts": [
+    {
+     "text": "ACT I",
+     "font": "jersey",
+     "size": 38,
+     "scale": 3,
+     "color": "gold",
+     "y": 1230,
+     "from": 0.0,
+     "to": 2.6
+    },
+    {
+     "text": "Sir Alaric's crusade",
+     "font": "jersey",
+     "size": 28,
+     "scale": 3,
+     "color": "cream",
+     "y": 1350,
+     "from": 0.1,
+     "to": 2.6
+    }
+   ]
+  },
+  {
+   "id": "act4",
+   "stage": "olympus",
+   "seed": 3,
+   "start": 1040,
+   "seconds": 2.6,
+   "texts": [
+    {
+     "text": "ACT IV",
+     "font": "jersey",
+     "size": 38,
+     "scale": 3,
+     "color": "gold",
+     "y": 1230,
+     "from": 0.0,
+     "to": 2.6
+    },
+    {
+     "text": "Mount Olympus",
+     "font": "jersey",
+     "size": 28,
+     "scale": 3,
+     "color": "cream",
+     "y": 1350,
+     "from": 0.1,
+     "to": 2.6
+    }
+   ]
+  },
+  {
+   "id": "act5",
+   "stage": "kurogane",
+   "seed": 3,
+   "start": 1100,
+   "seconds": 2.6,
+   "texts": [
+    {
+     "text": "ACT V",
+     "font": "jersey",
+     "size": 38,
+     "scale": 3,
+     "color": "gold",
+     "y": 1230,
+     "from": 0.0,
+     "to": 2.6
+    },
+    {
+     "text": "Castle Kurogane",
+     "font": "jersey",
+     "size": 28,
+     "scale": 3,
+     "color": "cream",
+     "y": 1350,
+     "from": 0.1,
+     "to": 2.6
+    }
+   ]
+  },
+  {
+   "id": "act8",
+   "stage": "liberty_heights",
+   "seed": 3,
+   "start": 1040,
+   "seconds": 2.6,
+   "texts": [
+    {
+     "text": "ACT VIII",
+     "font": "jersey",
+     "size": 38,
+     "scale": 3,
+     "color": "gold",
+     "y": 1230,
+     "from": 0.0,
+     "to": 2.6
+    },
+    {
+     "text": "Liberty Heights",
+     "font": "jersey",
+     "size": 28,
+     "scale": 3,
+     "color": "cream",
+     "y": 1350,
+     "from": 0.1,
+     "to": 2.6
+    }
+   ]
+  },
+  {
+   "id": "act9",
+   "stage": "ark",
+   "seed": 3,
+   "start": 780,
+   "seconds": 2.6,
+   "texts": [
+    {
+     "text": "ACT IX",
+     "font": "jersey",
+     "size": 38,
+     "scale": 3,
+     "color": "gold",
+     "y": 1230,
+     "from": 0.0,
+     "to": 2.6
+    },
+    {
+     "text": "The Ark of the Concord",
+     "font": "jersey",
+     "size": 28,
+     "scale": 3,
+     "color": "cream",
+     "y": 1350,
+     "from": 0.1,
+     "to": 2.6
+    }
+   ]
+  },
+  {
+   "id": "end",
+   "stage": "graveyard",
+   "seed": 3,
+   "start": 900,
+   "seconds": 3.2,
+   "dim": 0.6,
+   "logo": {
+    "y": 420,
+    "scale": 3,
+    "from": 0.0,
+    "to": 3.2
+   },
+   "texts": [
+    {
+     "text": "9 ACTS  \u00b7  27 STAGES",
+     "font": "jersey",
+     "size": 28,
+     "scale": 3,
+     "color": "violet",
+     "y": 780,
+     "from": 0.3,
+     "to": 3.2
+    },
+    {
+     "text": "FREE IN YOUR BROWSER",
+     "font": "jersey",
+     "size": 38,
+     "scale": 3,
+     "color": "gold",
+     "y": 1000,
+     "from": 0.5,
+     "to": 3.2
+    },
+    {
+     "text": "LINK IN BIO",
+     "font": "jersey",
+     "size": 57,
+     "scale": 3,
+     "color": "teal",
+     "y": 1160,
+     "from": 0.8,
+     "to": 3.2
+    }
+   ]
+  }
+ ],
+ "crop": [
+  216,
+  384
+ ]
+}

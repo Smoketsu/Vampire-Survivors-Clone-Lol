@@ -185,6 +185,10 @@
 ##                         walk / idle strips, icons, effect strips, markers, decals) and
 ##                         prints them sorted with counts at the end ("[art-miss]" lines).
 ##                         Only meaningful in a window (headless skips _draw). Drawing only.
+##   --movie-spans=T:N,... Promo clips (MovieSpans; needs a window and --write-movie): the run
+##                         fast-forwards with drawing off and plays at x1 only for N game
+##                         seconds from each game second T, printing `[movie] span` frame
+##                         marks that tools/make_promo_clip.py uses to cut the AVI.
 ##   --art-shots=T,...     Debug (art audit): at each game second T saves the window as
 ##                         <--shot-dir>/art_<T>.png (a window only; drawing only).
 ##   --draw-probe=T        With --monitor on the Web build: from game second T, hides one
@@ -323,6 +327,8 @@ var autotest_art_misses: bool = false
 ## Debug (--art-shots=T,...): game seconds (ascending) at which the window is saved
 ## to autotest_shot_dir as art_<T>.png (empty = none; drawing only).
 var autotest_art_shots: PackedFloat32Array = PackedFloat32Array()
+## Promo clips (--movie-spans=T:N,...): the span list text for MovieSpans ("" = off).
+var autotest_movie_spans: String = ""
 ## Autotest: game seconds between two MonitorProbe lines (--monitor=N; 0 = off).
 var autotest_monitor: float = 0.0
 ## Autotest: "reduced" when --effects=reduced draws with Effects = Reduced
@@ -407,6 +413,8 @@ func _parse_args(args: PackedStringArray) -> void:
 			autotest_adaptive = arg.get_slice("=", 1).to_lower()  # AdaptiveQuality: off or a pinned level.
 		elif arg == "--art-misses":
 			autotest_art_misses = true  # Debug: the art audit's missing-sprite list (SpriteBank).
+		elif arg.begins_with("--movie-spans="):
+			autotest_movie_spans = arg.get_slice("=", 1).strip_edges()  # Promo clips (MovieSpans).
 		elif arg.begins_with("--art-shots="):
 			for t: String in arg.get_slice("=", 1).split(",", false):
 				autotest_art_shots.append(t.to_float())  # Debug: art audit screenshots (game seconds).

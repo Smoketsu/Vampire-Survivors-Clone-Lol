@@ -435,6 +435,8 @@ var _boss_death_time: float = -1.0
 var _reckoning_time: float = -1.0
 ## Peak simultaneous entity counts.
 var _peak: Dictionary = {"enemies": 0, "summons": 0, "projectiles": 0, "effects": 0, "crystals": 0}
+## Promo clips (--movie-spans): the span controller, null when the option is off.
+var _movie: MovieSpans = null
 ## Real-time start (ms) for the wall-clock duration line.
 var _real_start_msec: int = 0
 ## Necromancer max HP at the first step (after Soul Ash upgrades and the
@@ -614,6 +616,10 @@ func _ready() -> void:
 	Engine.time_scale = speed
 	Engine.physics_ticks_per_second = int(roundf(60.0 * speed))
 	Engine.max_physics_steps_per_frame = maxi(8, int(ceilf(8.0 * speed)))
+	if GameState.autotest_movie_spans != "":
+		_movie = MovieSpans.new()  # Promo clips: x1 only inside the listed spans (opt-in).
+		add_child(_movie)
+		_movie.setup(GameState.autotest_movie_spans, speed)
 	_real_start_msec = Time.get_ticks_msec()
 	for _i in TIME_MARKS.size():
 		_level_at_mark.append(-1)
@@ -659,6 +665,10 @@ func _apply_forced_classes() -> void:
 
 ## Called by Game after each simulation step.
 func step(delta: float) -> void:
+	if _movie != null and _movie.update(game.elapsed):
+		print("[movie] all spans done")
+		get_tree().quit(0)
+		return
 	if not _forced_done:
 		_apply_forced_classes()
 	while _next_spawn < _spawns.size() and game.elapsed >= float(_spawns[_next_spawn]["time"]):
