@@ -1,0 +1,119 @@
+{
+ "name": "day06",
+ "render": [
+  1080,
+  1920
+ ],
+ "size": [
+  1080,
+  1920
+ ],
+ "fps": 30,
+ "lufs": -14,
+ "art_scale": 2,
+ "shots": [
+  {
+   "id": "s0",
+   "stage": "sanctum",
+   "seed": 3,
+   "start": 1030,
+   "seconds": 5.6,
+   "texts": [
+    {
+     "text": "Epic Boss Fights!",
+     "font": "jersey",
+     "size": 57,
+     "scale": 2,
+     "color": "gold",
+     "y": 230,
+     "from": 0.0,
+     "to": 5.6
+    }
+   ]
+  },
+  {
+   "id": "s1",
+   "stage": "sanctum",
+   "seed": 3,
+   "start": 1055,
+   "seconds": 5.6,
+   "texts": [
+    {
+     "text": "Epic Boss Fights!",
+     "font": "jersey",
+     "size": 57,
+     "scale": 2,
+     "color": "gold",
+     "y": 230,
+     "from": 0.0,
+     "to": 5.6
+    }
+   ]
+  },
+  {
+   "id": "s2",
+   "stage": "underworld",
+   "seed": 3,
+   "start": 1035,
+   "seconds": 5.6,
+   "texts": [
+    {
+     "text": "Every Stage Has",
+     "font": "jersey",
+     "size": 57,
+     "scale": 2,
+     "color": "cream",
+     "y": 230,
+     "from": 0.0,
+     "to": 5.6
+    },
+    {
+     "text": "Its Own Boss!",
+     "font": "jersey",
+     "size": 57,
+     "scale": 2,
+     "color": "gold",
+     "y": 352,
+     "from": 0.0,
+     "to": 5.6
+    }
+   ]
+  },
+  {
+   "id": "end",
+   "stage": "graveyard",
+   "seed": 3,
+   "start": 900,
+   "seconds": 3.2,
+   "dim": 0.6,
+   "logo": {
+    "y": 520,
+    "scale": 3,
+    "from": 0.0,
+    "to": 3.2
+   },
+   "texts": [
+    {
+     "text": "FREE IN YOUR BROWSER",
+     "font": "jersey",
+     "size": 38,
+     "scale": 3,
+     "color": "gold",
+     "y": 900,
+     "from": 0.3,
+     "to": 3.2
+    },
+    {
+     "text": "LINK IN BIO",
+     "font": "jersey",
+     "size": 57,
+     "scale": 3,
+     "color": "teal",
+     "y": 1080,
+     "from": 0.7,
+     "to": 3.2
+    }
+   ]
+  }
+ ]
+}

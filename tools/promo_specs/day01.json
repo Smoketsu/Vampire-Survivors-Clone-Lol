@@ -1,0 +1,159 @@
+{
+ "name": "day01",
+ "render": [
+  1080,
+  1920
+ ],
+ "size": [
+  1080,
+  1920
+ ],
+ "fps": 30,
+ "lufs": -14,
+ "art_scale": 2,
+ "shots": [
+  {
+   "id": "s0",
+   "stage": "graveyard",
+   "seed": 7,
+   "start": 700,
+   "seconds": 5.6,
+   "texts": [
+    {
+     "text": "Command an Army",
+     "font": "jersey",
+     "size": 57,
+     "scale": 2,
+     "color": "cream",
+     "y": 230,
+     "from": 0.0,
+     "to": 5.6
+    },
+    {
+     "text": "of the Dead!",
+     "font": "jersey",
+     "size": 57,
+     "scale": 2,
+     "color": "gold",
+     "y": 352,
+     "from": 0.0,
+     "to": 5.6
+    }
+   ]
+  },
+  {
+   "id": "s1",
+   "stage": "graveyard",
+   "seed": 7,
+   "start": 830,
+   "seconds": 5.6,
+   "texts": [
+    {
+     "text": "Warriors Block,",
+     "font": "jersey",
+     "size": 57,
+     "scale": 2,
+     "color": "cream",
+     "y": 230,
+     "from": 0.0,
+     "to": 5.6
+    },
+    {
+     "text": "Priests Heal,",
+     "font": "jersey",
+     "size": 57,
+     "scale": 2,
+     "color": "cream",
+     "y": 352,
+     "from": 0.0,
+     "to": 5.6
+    },
+    {
+     "text": "Archers Fire!",
+     "font": "jersey",
+     "size": 57,
+     "scale": 2,
+     "color": "gold",
+     "y": 474,
+     "from": 0.0,
+     "to": 5.6
+    }
+   ]
+  },
+  {
+   "id": "s2",
+   "stage": "graveyard",
+   "seed": 7,
+   "start": 960,
+   "seconds": 5.6,
+   "texts": [
+    {
+     "text": "Warriors Block,",
+     "font": "jersey",
+     "size": 57,
+     "scale": 2,
+     "color": "cream",
+     "y": 230,
+     "from": 0.0,
+     "to": 5.6
+    },
+    {
+     "text": "Priests Heal,",
+     "font": "jersey",
+     "size": 57,
+     "scale": 2,
+     "color": "cream",
+     "y": 352,
+     "from": 0.0,
+     "to": 5.6
+    },
+    {
+     "text": "Archers Fire!",
+     "font": "jersey",
+     "size": 57,
+     "scale": 2,
+     "color": "gold",
+     "y": 474,
+     "from": 0.0,
+     "to": 5.6
+    }
+   ]
+  },
+  {
+   "id": "end",
+   "stage": "graveyard",
+   "seed": 3,
+   "start": 900,
+   "seconds": 3.2,
+   "dim": 0.6,
+   "logo": {
+    "y": 520,
+    "scale": 3,
+    "from": 0.0,
+    "to": 3.2
+   },
+   "texts": [
+    {
+     "text": "FREE IN YOUR BROWSER",
+     "font": "jersey",
+     "size": 38,
+     "scale": 3,
+     "color": "gold",
+     "y": 900,
+     "from": 0.3,
+     "to": 3.2
+    },
+    {
+     "text": "LINK IN BIO",
+     "font": "jersey",
+     "size": 57,
+     "scale": 3,
+     "color": "teal",
+     "y": 1080,
+     "from": 0.7,
+     "to": 3.2
+    }
+   ]
+  }
+ ]
+}

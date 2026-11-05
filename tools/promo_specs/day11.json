@@ -1,0 +1,139 @@
+{
+ "name": "day11",
+ "render": [
+  1080,
+  1920
+ ],
+ "size": [
+  1080,
+  1920
+ ],
+ "fps": 30,
+ "lufs": -14,
+ "art_scale": 2,
+ "shots": [
+  {
+   "id": "s0",
+   "stage": "crimson_march",
+   "seed": 6,
+   "start": 1192,
+   "seconds": 5.6,
+   "texts": [
+    {
+     "text": "Survive the",
+     "font": "jersey",
+     "size": 57,
+     "scale": 2,
+     "color": "cream",
+     "y": 230,
+     "from": 0.0,
+     "to": 5.6
+    },
+    {
+     "text": "Reckoning!",
+     "font": "jersey",
+     "size": 57,
+     "scale": 2,
+     "color": "gold",
+     "y": 352,
+     "from": 0.0,
+     "to": 5.6
+    }
+   ]
+  },
+  {
+   "id": "s1",
+   "stage": "crimson_march",
+   "seed": 6,
+   "start": 1199,
+   "seconds": 5.6,
+   "texts": [
+    {
+     "text": "At 0:00 the",
+     "font": "jersey",
+     "size": 57,
+     "scale": 2,
+     "color": "cream",
+     "y": 230,
+     "from": 0.0,
+     "to": 5.6
+    },
+    {
+     "text": "Reckoning Begins!",
+     "font": "jersey",
+     "size": 57,
+     "scale": 2,
+     "color": "gold",
+     "y": 352,
+     "from": 0.0,
+     "to": 5.6
+    }
+   ]
+  },
+  {
+   "id": "s2",
+   "stage": "crimson_march",
+   "seed": 6,
+   "start": 1211,
+   "seconds": 5.6,
+   "texts": [
+    {
+     "text": "Near-Unbeatable",
+     "font": "jersey",
+     "size": 57,
+     "scale": 2,
+     "color": "cream",
+     "y": 230,
+     "from": 0.0,
+     "to": 5.6
+    },
+    {
+     "text": "Enemies Swarm In!",
+     "font": "jersey",
+     "size": 57,
+     "scale": 2,
+     "color": "gold",
+     "y": 352,
+     "from": 0.0,
+     "to": 5.6
+    }
+   ]
+  },
+  {
+   "id": "end",
+   "stage": "graveyard",
+   "seed": 3,
+   "start": 900,
+   "seconds": 3.2,
+   "dim": 0.6,
+   "logo": {
+    "y": 520,
+    "scale": 3,
+    "from": 0.0,
+    "to": 3.2
+   },
+   "texts": [
+    {
+     "text": "FREE IN YOUR BROWSER",
+     "font": "jersey",
+     "size": 38,
+     "scale": 3,
+     "color": "gold",
+     "y": 900,
+     "from": 0.3,
+     "to": 3.2
+    },
+    {
+     "text": "LINK IN BIO",
+     "font": "jersey",
+     "size": 57,
+     "scale": 3,
+     "color": "teal",
+     "y": 1080,
+     "from": 0.7,
+     "to": 3.2
+    }
+   ]
+  }
+ ]
+}

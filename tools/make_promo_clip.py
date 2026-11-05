@@ -318,13 +318,16 @@ def main():
     found = capture(spec, shots, work, a.godot, a.force, a.jobs)
     if a.only_capture:
         return
+    os.makedirs(out, exist_ok=True)
+    cwork = os.path.join(work, "cut_" + spec.get("name", "promo"))  # per-clip intermediates: clips can render in parallel sharing the recordings
+    os.makedirs(cwork, exist_ok=True)
     cuts = []
     for s in shots:
         print("[cut] %s" % s["id"], flush=True)
-        cuts.append(cut(spec, s, found[s["id"]], work))
+        cuts.append(cut(spec, s, found[s["id"]], cwork))
     mp4 = os.path.join(out, spec.get("name", "promo") + ".mp4")
-    total = assemble(spec, cuts, mp4, work)
-    storyboard(mp4, total, os.path.join(out, "storyboard.png"), work)
+    total = assemble(spec, cuts, mp4, cwork)
+    storyboard(mp4, total, os.path.join(out, "storyboard.png"), cwork)
     print("[done] %s  %.1f s  %.1f MB" % (mp4, total, os.path.getsize(mp4) / 1e6))
 
 
