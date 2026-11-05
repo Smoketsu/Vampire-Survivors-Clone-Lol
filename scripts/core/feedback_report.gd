@@ -216,11 +216,26 @@ static func _clock(t: float) -> String:
 ## A Feedback button went down: on the Web build, arms the link for `context`
 ## so the browser's release event opens it (see the header). Elsewhere nothing.
 static func arm(context: Dictionary) -> void:
-	if not can_open() or not OS.has_feature("web"):
+	if not can_open():
+		return
+	arm_link(url_for(build(context)))
+
+
+## The shared browser-link path (the Feedback buttons and the demo's Wishlist
+## button, DemoMode.store_button()): on the Web build, arms `url` so the
+## browser's release event opens it. Nothing for "", under the autotest,
+## headless or off the Web.
+static func arm_link(url: String) -> void:
+	if not link_allowed(url) or not OS.has_feature("web"):
 		return
 	web_prepare()
 	JavaScriptBridge.eval("window.__necroFb = {url: %s, until: Date.now() + %d, state: 'armed'};" % [
-		JSON.stringify(url_for(build(context))), int(FeedbackData.WEB_ARM_SECONDS * 1000.0)], true)
+		JSON.stringify(url), int(FeedbackData.WEB_ARM_SECONDS * 1000.0)], true)
+
+
+## True when link `url` may be opened now: set, a real window, not the autotest.
+static func link_allowed(url: String) -> bool:
+	return url != "" and not GameState.autotest and DisplayServer.get_name() != "headless"
 
 
 ## A Feedback button was pressed: opens the form for `context` (desktop:
@@ -229,6 +244,16 @@ static func arm(context: Dictionary) -> void:
 ## opened; false while not set up, under the autotest and headless.
 static func open(context: Dictionary) -> bool:
 	if not can_open():
+		return false
+	return open_link(url_for(build(context)))
+
+
+## The shared browser-link path's press: opens `url` (desktop: OS.shell_open;
+## Web: the armed tab opens on the release, or OS.shell_open when nothing could
+## arm it). Returns true when a link was (or will be) opened; false for "",
+## under the autotest and headless.
+static func open_link(url: String) -> bool:
+	if not link_allowed(url):
 		return false
 	if OS.has_feature("web"):
 		var state: Variant = JavaScriptBridge.eval("(window.__necroFb && Date.now() <= window.__necroFb.until && window.__necroFb.state) || ''", true)
@@ -239,7 +264,7 @@ static func open(context: Dictionary) -> bool:
 		if st == "armed" and InputHints.device() != InputHints.Device.PAD:
 			return true  # A key press: its key-up opens the tab.
 		JavaScriptBridge.eval("window.__necroFb = null;", true)
-	OS.shell_open(url_for(build(context)))
+	OS.shell_open(url)
 	return true
 
 

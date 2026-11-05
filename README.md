@@ -229,6 +229,40 @@ build the tab is opened inside the browser's own release of the click, tap or ke
 it through (a press that drags off the button opens nothing); a controller press cannot count as a gesture
 for the browser, so there the tab may be blocked.
 
+### Demo mode (the free demo build)
+
+A **demo switch** for the free Act I web demo that the marketing plan (`docs/marketing/MARKETING_PLAN.md` §2.3) proposes
+as the funnel to the paid Steam release (GDD §15.0 "Demo mode (owner request, Nov 2026)"). The public GitHub Pages build
+**stays the full game**; the demo is a second build.
+
+- **How it switches:** `DemoMode.on()` (`scripts/core/demo_mode.gd`) is true only in a build exported with the custom
+  feature tag `demo` (the **Web Demo** preset) or with the test flag `--demo`. Everything it holds is data in
+  `scripts/data/demo_data.gd` (`ACTS`, `OPEN_ITEMS`, the words, `STORE_URL`, the save suffix). Without the switch nothing
+  changes (same-seed summaries identical).
+- **What the demo contains:** Act I (the Desecrated Graveyard, the Crimson March, the Sanctum of Judgment) with its usual
+  unlock chain, every Act I spell, passive, summon class and character, the Ossuary (all tabs), Hyper, skins and caskets,
+  and online co-op (Act I stages, demo players only). The act tabs of Acts II-IX and their stage cards are shown but
+  locked, reading **Full game**; a soul-teal line under the cards says how many acts the full game adds, and a
+  **Wishlist** button beside Back opens `DemoData.STORE_URL` once the owner sets it (empty: no button). Nothing from Acts
+  II-IX can be offered or unlocked: their spells, passives, classes, characters and titles stay locked (also the Act II
+  Fallen Seraph that Seraphine's fall opens in the full game), even if a full-game save code is restored into the demo.
+  The title screen shows a small **Demo** badge under the logo.
+- **Saves:** the demo keeps its progress in `user://save_demo.cfg` (the full game: `user://save.cfg`), so both can live
+  in one browser without mixing; settings are shared. To take demo progress into the full game, copy the save code in
+  the demo's Settings → Save and restore it in the full game (importing a demo save automatically is not built).
+- **Build it:**
+
+  ```bash
+  mkdir -p build/web_demo && touch build/.gdignore
+  godot --headless --export-release "Web Demo" build/web_demo/index.html
+  python3 tools/patch_web_audio.py build/web_demo/index.js   # required, as for the Web build
+  ```
+
+  CI: set the repository variable `WEB_DEMO` to `true` and the optional job `export-web-demo` runs the demo check,
+  exports the demo and uploads it as the artifact `Necropathy-web-demo` (it publishes nothing).
+- **Check it:** `godot --headless res://tools/demo_check.tscn -- --autotest --demo` (and without `--demo`) checks every
+  gate; a `--demo` autotest plays the demo's rules and its `demo` summary line must report `full_game_offers=0`.
+
 ### Audio, Feel & Settings
 
 - **Audio, with no audio files.** `Synth` builds every sound effect and a 12 s
@@ -3228,6 +3262,10 @@ scripts/
                             where: menu / pause / results with the run's facts; settings) and the
                             form link (FORM_URL + prefill + URL-encoded report); opens it in the
                             browser (never under the autotest); the Web build's pop-up-safe arming
+                            (arm_link() / open_link(), shared with the demo's Wishlist button)
+    demo_mode.gd            DemoMode: the one path of the demo switch (feature tag `demo` or --demo):
+                            stage / item / character gates, the demo save file, the co-op version,
+                            the title badge, the stage select's call to action, the autotest line
     autotest.gd             Headless self-test driver
   player/necromancer.gd
   player/grave_step.gd      Grave Step dash: charges, obstacle-clamped step, i-frames, shadow trail
@@ -3892,6 +3930,8 @@ scripts/
     epilogue_data.gd        The epilogue's parts, paragraphs, picture panels and pans, closing card,
                             layout and slide timings
     confirm_data.gd         The confirm dialogs' texts and sizes
+    demo_data.gd            The demo build: its acts, the lockable items it keeps open, "Full game",
+                            the badge / call-to-action words, STORE_URL, the save and co-op suffixes
     feedback_data.gd        The feedback form: FORM_URL and DETAILS_ENTRY (empty = no Feedback
                             buttons), the report's words and length cap, the button sizes and icon
     summon_evolution_data.gd Summon evolution recipes (Death Knight, Lich, Profane Bishop,
@@ -4100,6 +4140,7 @@ Options (after `--`):
 | `--ultimate=ID` | The ultimate (`ultimate_data.gd`): `dread_rally` (default, today's game), `sovereigns_decree`, `eclipse` or `grave_tide`; locks are bypassed. The bots cast it with the Dread Rally rule; the header names it and an `ultimate` line follows the unchanged `dread rally` line: casts, Decree time, enemies taunted, summon damage prevented, hits on the necromancer ignored (and their damage); Eclipse foes frozen, bosses slowed, foes exposed and the exposure's bonus damage; Grave Tide Risen raised, capped, their damage and kills. |
 | `--hyper` | Hyper mode (`HyperData`: enemy HP / damage growth ×2, stage boss HP ×1.5, Soul Ash +100%), bypassing the Seraphine unlock. Every summary has a `hyper` line (on / off, the effective growth and boss HP, the 0:00 multipliers vs the standard game, the Hyper Soul Ash line, seconds survived past 0:00, the unlock and Hyper-clear state, in memory only without `--meta-save`). |
 | `--victory-preview` | Debug (with or without `--autotest`): skips the menu, raises a small army and after 6 game seconds ends the run as a scripted victory (83 s past 0:00, the boss slain, four evolutions, seven chests; `VictoryData.PREVIEW_*`), so the last stand and the victory card can be seen and screenshot at once; `--stage=`, `--difficulty=`, `--character=`, `--hyper` and `--skin=` apply. Nothing is saved. Every victory's summary has a `victory screen` line: `title=<stage title> best_overtime=<s> new_record=<bool> highlights=<n>` (the card's logic runs headless; under the autotest the Best starts from an empty in-memory record). |
+| `--demo` | Demo mode (`DemoMode`, `DemoData`), as in the **Web Demo** build: only Act I is playable (an autotest `--stage=` outside it plays the Graveyard) and no full-game item is ever offered or unlocked. Works with or without `--autotest` (a desktop preview of the demo's menus). Every summary has a `demo` line: `on=<bool> \| acts=1 \| stages=graveyard,crimson_march,sanctum \| save=<file> \| full_game_offers=<n>` (NEW cards offered this run that are not demo items; 0 in every `--demo` run). |
 | `--feedback-url=URL`, `--feedback-entry=ID` | Debug: use `URL` as the feedback form's link (and `ID`, e.g. `entry.123456789`, as its prefilled field) instead of `FeedbackData.FORM_URL` / `DETAILS_ENTRY`, so the Feedback buttons show and their open path can be tried with a dummy link before the owner's form exists. Never opens anything under the autotest. Every summary ends with a `feedback` line: `url_set=<bool> \| report_chars=<menu>/<pause>/<results>` (three sample reports built headless, at most 1500 characters each) `\| url_chars=<n> \| opened=never (autotest)`. |
 | `--skin=ID` | Forces a skin (a `SkinData` id, e.g. `dread_sovereign`, `gravecaller_hyper`, `plague_doctor`, `wither_witch_hyper`, or a universal one such as `gravecaller_untouchable` / `brine_widow_deathlord`), ignoring its unlock and character, for screenshots. Cosmetic only. Every summary has a `skins` line (the worn skin and whether its art exists or the palette fallback is drawn, this run's and the lifetime skin counters, skins unlocked and new ones) and builds the setup screen's Hyper / skin row once, headless. |
 | `--recolour=ID` | Forces a skin recolour (`bone`, `blood`, `abyss`, `gilded` or `verdant`, `RecolourData`) on the worn skin, ignoring ownership, for screenshots. Cosmetic only. Adds a `recolours` summary line (the family, its casket rarity, the sprite remapped); default runs print nothing new. |
@@ -4260,6 +4301,8 @@ the live build instead of about 30):
    and on a manual run of `main`, pushes the Web build to a separate public repository that GitHub Pages serves.
    **publish-pages** (optional, off by default) deploys it to this repository's own Pages instead. itch.io
    publishing was dropped (owner decision, Oct 2026: GDD §15.0 "GitHub Pages is the web home").
+   **export-web-demo** (optional, off by default: repository variable `WEB_DEMO` = `true`) exports the **Web Demo**
+   preset and uploads it as the `Necropathy-web-demo` artifact, publishing nothing (see *Demo mode* above).
 
 To publish a downloadable release, bump `config/version` in `project.godot` (shown on the main menu) and the
 `application/*_version` fields in `export_presets.cfg`, write the player-facing notes in

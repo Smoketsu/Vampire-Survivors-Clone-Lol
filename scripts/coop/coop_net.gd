@@ -377,7 +377,7 @@ static func is_valid_code(p_code: String) -> bool:
 ## co-op gates, where both processes share one tree).
 static func game_version() -> String:
 	var version := str(ProjectSettings.get_setting("application/config/version", "dev"))  # Version number.
-	return "%s+%s" % [version, build_id()]
+	return DemoMode.coop_version("%s+%s" % [version, build_id()])  # The demo: "-demo" (never in a full-game lobby).
 
 
 ## The exported build's id (the commit CI built it from), else DEV_BUILD_ID.

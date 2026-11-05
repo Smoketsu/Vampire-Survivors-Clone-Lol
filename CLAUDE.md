@@ -223,7 +223,11 @@ Pages) stays optional and off. Artifacts are kept 7 days (test logs 3): a full a
 **always** `python3 tools/patch_web_audio.py build/web/index.js` (shares sample buffers; without it phone tabs
 run out of memory and reload mid-run; GDD §15.0 "Web audio buffer patch"; it also runs `tools/patch_web_gl.py`, which makes
 deleted WebGL ids reusable: without it every polygon Godot redraws leaks memory and iPhones reload the page mid-fight,
-GDD §15.0 "Web GL id leak patch"). Prefer textures over `draw_circle` / `draw_arc` / `draw_colored_polygon` in
+GDD §15.0 "Web GL id leak patch"). **Demo build** (GDD §15.0 "Demo mode (owner request, Nov 2026)"): the "Web Demo"
+preset (custom feature tag `demo`, `build/web_demo/`, same patch step) or `--demo` turns `DemoMode` on (Act I only, later
+acts "Full game", `user://save_demo.cfg`; data in `demo_data.gd`); never anywhere else, so the full game stays identical;
+optional CI job `export-web-demo` (variable `WEB_DEMO` = `true`, artifact `Necropathy-web-demo`, publishes nothing).
+Prefer textures over `draw_circle` / `draw_arc` / `draw_colored_polygon` in
 anything redrawn every frame (each polygon costs GL objects on the Web).
 
 ## Balance targets (check with multi-seed batches, `--mortal`)

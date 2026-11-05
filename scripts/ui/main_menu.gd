@@ -10,6 +10,7 @@
 ## and the lifetime stats as small pixel icons with numbers (runs, best time,
 ## bosses slain, achievements; MaskIcon, names in tooltips). The version sits
 ## small in the bottom-right corner and the input hint strip at the bottom.
+## The demo build (DemoMode) hangs a small soul-teal "Demo" badge off the logo.
 ## The diorama's dark band is fitted to the column (set_band()). A column
 ## longer than FrontDoorData.MENU_ROOMY_ITEMS buttons (Feedback, the Epilogue)
 ## starts higher with smaller gaps, and two or more past it drop the tagline,
@@ -131,11 +132,27 @@ func _ready() -> void:
 ## The title: the living pixel-art logo when its PNG exists, else the word.
 func _title() -> Control:
 	var logo := MenuLogo.new()
+	var t: Control = logo  # The logo, or the text title without its art.
 	if logo.has_art():
 		logo.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
-		return logo
-	logo.free()
-	return UiTheme.title("Necropathy", Palette.NECRO_GREEN)
+	else:
+		logo.free()
+		t = UiTheme.title("Necropathy", Palette.NECRO_GREEN)
+	if DemoMode.on():
+		t.add_child(_demo_badge())
+	return t
+
+
+## Demo (DemoMode): the small soul-teal "Demo" badge hung off the title's
+## bottom-right corner (a child of it, so the column's layout is unchanged).
+static func _demo_badge() -> Control:
+	var b := DemoMode.badge()
+	b.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_RIGHT)
+	b.grow_horizontal = Control.GROW_DIRECTION_BEGIN
+	b.grow_vertical = Control.GROW_DIRECTION_BEGIN
+	b.offset_right = DemoData.BADGE_INSET.x
+	b.offset_bottom = DemoData.BADGE_INSET.y
+	return b
 
 
 ## A skull divider the width of the logo (ornament between the blocks).

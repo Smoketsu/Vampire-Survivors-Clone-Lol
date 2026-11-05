@@ -1,6 +1,7 @@
 ## Meta — persistent meta-progression autoload (GDD §9.2 Soul Ash, §9.4
 ## achievements, §15.7 q50 "what persists"). Owns everything that outlives a
-## run and saves it to user://save.cfg (ConfigFile), separate from
+## run and saves it to user://save.cfg (ConfigFile; the demo build to
+## user://save_demo.cfg, DemoMode.save_path()), separate from
 ## user://settings.cfg:
 ##   * Soul Ash balance and the purchased tier of every upgrade (MetaData),
 ##   * lifetime statistics (runs, best time, total kills, boss kills...),
@@ -153,7 +154,9 @@ const DEFAULT_PATH: String = "user://save.cfg"
 ## Upper clamp for any stored counter (guards against absurd edited values).
 const MAX_STORED: int = 1000000000
 
-## File used by load_save() / save() (tests point this somewhere else).
+## File used by load_save() / save() (tests point this somewhere else). The
+## demo build saves to its own file (DemoMode.save_path(): user://save_demo.cfg),
+## set in _ready().
 var save_path: String = DEFAULT_PATH
 ## Current Soul Ash balance.
 var soul_ash: int = 0
@@ -258,6 +261,9 @@ const STAGE_RECORD_KEYS := ["runs", "victories", "best_time", "boss_kills",
 
 
 func _ready() -> void:
+	save_path = DemoMode.save_path(DEFAULT_PATH)  # The demo keeps its own progress file (DemoData.SAVE_SUFFIX).
+	if DemoMode.on():
+		print("[demo] demo mode on: stages %s, save %s" % [",".join(DemoMode.demo_stages()), save_path])
 	_reset()
 	if not GameState.autotest or GameState.autotest_meta_save:
 		load_save()
@@ -833,8 +839,8 @@ func spell_max_level(spell: String) -> int:
 ## starting spell reached CharacterData.UNLOCK_LEVEL in some run. (Whether
 ## the character exists in this build is CharacterModifiers.is_available().)
 func is_character_unlocked(id: String) -> bool:
-	if not CharacterModifiers.is_known(id):
-		return false
+	if not CharacterModifiers.is_known(id) or not DemoMode.allows_character(id):
+		return false  # The demo: a character of a full-game spell stays locked.
 	var d: Dictionary = CharacterData.CHARACTERS[id]
 	return bool(d["starts_unlocked"]) or spell_max_level(String(d["spell"])) >= CharacterData.UNLOCK_LEVEL
 
@@ -958,9 +964,10 @@ func _load_codex(cfg: ConfigFile) -> void:
 # =====================================================================================
 
 ## True when stage `id` may be played: no `unlock` requirement, or the
-## required stage's boss was slain at least `boss_kills` times.
+## required stage's boss was slain at least `boss_kills` times. In the demo a
+## stage outside its acts is never unlocked (DemoMode.allows_stage()).
 func is_stage_unlocked(id: String) -> bool:
-	if not StageRegistry.STAGES.has(id):
+	if not StageRegistry.STAGES.has(id) or not DemoMode.allows_stage(id):
 		return false
 	var req: Dictionary = StageRegistry.STAGES[id]["unlock"]
 	if req.is_empty():

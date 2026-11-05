@@ -35,6 +35,12 @@
 #   deploy-relay - on pushes to main after coop-net: deploys the co-op relay Worker (server/relay) with
 #               wrangler when the secrets CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID exist
 #               (skipped otherwise; docs/coop/RELAY_SETUP.md).
+#   export-web-demo - OPTIONAL, off by default: when the repository variable WEB_DEMO is
+#               "true", exports the "Web Demo" preset (the Web build with the `demo` feature
+#               tag: Act I only, its own save file; GDD 15.0 "Demo mode (owner request, Nov
+#               2026)"), checks DemoMode with tools/demo_check.tscn and uploads the build as the
+#               artifact Necropathy-web-demo. It publishes nothing; the full game stays the
+#               Pages build.
 #   4. publish-pages - OPTIONAL, off by default: deploys the Web build to this
 #               repository's own GitHub Pages when the repository variable WEB_PAGES is
 #               "true" (Settings -> Pages -> "GitHub Actions"; needs a public repository
@@ -151,6 +157,18 @@ jobs:
             echo "::error::Errors/warnings during the Ossuary check"; exit 1
           fi
           grep -qF "[ossuary_check] PASS" ossuary_check.log
+
+      - name: Demo mode check (demo gates on, full game unchanged)
+        if: matrix.id == 'graveyard'
+        run: |
+          set -euo pipefail
+          timeout 60 "$GODOT_BIN" --headless res://tools/demo_check.tscn -- --autotest --demo 2>&1 | tee demo_check_on.log
+          timeout 60 "$GODOT_BIN" --headless res://tools/demo_check.tscn -- --autotest 2>&1 | tee demo_check_off.log
+          if grep -qE "SCRIPT ERROR|ERROR:|WARNING:" demo_check_on.log demo_check_off.log; then
+            echo "::error::Errors/warnings during the demo check"; exit 1
+          fi
+          grep -qF "[demo_check] PASS" demo_check_on.log
+          grep -qF "[demo_check] PASS" demo_check_off.log
 
       - name: Autotest (${{ matrix.name }})
         run: |
@@ -416,6 +434,77 @@ jobs:
           # The three zips the release job attaches once every test has passed.
           name: Necropathy-release-zips
           path: build/Necropathy-*.zip
+          retention-days: 7
+
+  # OPTIONAL demo build (GDD 15.0 "Demo mode (owner request, Nov 2026)"): off unless the
+  # repository variable WEB_DEMO is "true" (Settings -> Secrets and variables -> Actions ->
+  # Variables). Exports the "Web Demo" preset, runs the demo check and uploads the build as
+  # the artifact Necropathy-web-demo. No publishing: nothing waits for it and it pushes nowhere.
+  export-web-demo:
+    if: vars.WEB_DEMO == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache Godot and the Web templates
+        uses: actions/cache@v4
+        with:
+          path: |
+            /home/runner/godot
+            ~/.local/share/godot/export_templates/4.3.stable
+          # Its own key: this job keeps only the Web templates (the export job's cache holds all three).
+          key: godot-${{ env.GODOT_VERSION }}-linux-templates-web-demo
+
+      - name: Download Godot and the Web templates
+        run: |
+          if [ ! -x "$GODOT_BIN" ]; then
+            mkdir -p "$(dirname "$GODOT_BIN")"
+            curl -sSL -o /tmp/godot.zip "$GODOT_URL"
+            unzip -q /tmp/godot.zip -d "$(dirname "$GODOT_BIN")"
+          fi
+          # TEMPLATE_DIR: where Godot looks for 4.3 export templates on Linux.
+          TEMPLATE_DIR=~/.local/share/godot/export_templates/4.3.stable
+          if [ ! -f "$TEMPLATE_DIR/web_nothreads_release.zip" ]; then
+            mkdir -p "$TEMPLATE_DIR"
+            curl -sSL -o /tmp/templates.tpz "$TEMPLATES_URL"
+            unzip -q -o -j /tmp/templates.tpz \
+              templates/web_nothreads_release.zip templates/web_nothreads_debug.zip \
+              templates/version.txt -d "$TEMPLATE_DIR"
+            rm /tmp/templates.tpz
+          fi
+
+      - name: Check demo mode
+        run: |
+          "$GODOT_BIN" --headless --import > /dev/null 2>&1
+          timeout 120 "$GODOT_BIN" --headless res://tools/demo_check.tscn -- --autotest --demo 2>&1 | tee demo_check.log
+          if grep -qE "SCRIPT ERROR|ERROR:|WARNING:" demo_check.log; then
+            echo "::error::Errors in the demo check"; exit 1
+          fi
+          grep -qF "[demo_check] PASS" demo_check.log
+
+      - name: Export the Web Demo
+        run: |
+          mkdir -p build/web_demo
+          # build/.gdignore keeps Godot from importing the export's PNGs as project resources.
+          touch build/.gdignore
+          # Build id: CoopNet.game_version() appends it (and "-demo"), so co-op pairs only identical demo builds.
+          echo "${GITHUB_SHA::12}" > build_id.txt
+          "$GODOT_BIN" --headless --export-release "Web Demo" build/web_demo/index.html 2>&1 | tee export_web_demo.log
+          test -s build/web_demo/index.html && test -s build/web_demo/index.wasm && test -s build/web_demo/index.pck
+          if grep -qE "SCRIPT ERROR|ERROR:" export_web_demo.log; then
+            echo "::error::Errors during the Web Demo export"; exit 1
+          fi
+          # The same Web patches as the full build (GDD 15.0 "Web audio buffer patch", "Web GL id leak patch").
+          python3 tools/patch_web_audio.py build/web_demo/index.js
+
+      - name: Upload Web Demo build
+        uses: actions/upload-artifact@v4
+        with:
+          # The export folder (index.html at the root of the artifact zip).
+          name: Necropathy-web-demo
+          path: build/web_demo/
+          # Kept 7 days, like the other builds (a full artifact store blocks every publish).
           retention-days: 7
 
   # Creates the GitHub Release on a pushed v* tag, only after every playthrough

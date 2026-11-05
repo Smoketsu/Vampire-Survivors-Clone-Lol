@@ -124,6 +124,13 @@
 ##                         open path can be tried with a dummy link before the
 ##                         owner's form exists. Never opens anything under the
 ##                         autotest (its summary only reports url_set=true).
+##   --demo                Demo mode (DemoMode, DemoData; GDD §15.0 "Demo mode
+##                         (owner request, Nov 2026)"), as in a build exported
+##                         with the `demo` feature tag: only the demo's acts
+##                         (Act I) are playable and no full-game item is ever
+##                         offered. Works with or without --autotest (a desktop
+##                         preview of the demo's menus); an autotest --stage=
+##                         outside the demo falls back to the Graveyard.
 ##   --feedback-entry=ID   Debug: the form's prefill field id (e.g.
 ##                         entry.123456789) instead of FeedbackData.DETAILS_ENTRY.
 ##   --coop-bot            Online co-op without the network (docs/coop/DESIGN.md):
@@ -329,6 +336,9 @@ var feedback_url: String = ""
 ## Debug: the form's prefill field id from --feedback-entry= ("" =
 ## FeedbackData.DETAILS_ENTRY).
 var feedback_entry: String = ""
+## True when --demo turns demo mode on (DemoMode.on(); the exported demo
+## build turns it on with its feature tag instead).
+var demo_flag: bool = false
 ## Stage chosen last in the stage select this session (focused next time).
 var last_stage_id: String = StageRegistry.DEFAULT_ID
 ## Whether the F3 debug overlay is shown; persists across restarts.
@@ -342,6 +352,9 @@ func _ready() -> void:
 	_parse_args(_web_args())  # Web build only: the page URL's test flag (empty elsewhere).
 	if OS.get_environment("NECROPATHY_AUTOTEST") == "1" or OS.get_environment("GRAVEBOUND_AUTOTEST") == "1":
 		autotest = true  # GRAVEBOUND_AUTOTEST: the pre-rename name, still accepted.
+	if DemoMode.on() and not DemoMode.allows_stage(autotest_stage):
+		print("[demo] --stage=%s is full game only: the autotest plays %s" % [autotest_stage, StageRegistry.DEFAULT_ID])
+		autotest_stage = StageRegistry.DEFAULT_ID
 	if not autotest:
 		SaveMigration.run()  # First autoload: carry the Gravebound saves over before Settings / Meta load.
 
@@ -369,6 +382,8 @@ func _parse_args(args: PackedStringArray) -> void:
 			autotest = true
 		elif arg == "--mortal":
 			autotest_mortal = true
+		elif arg == "--demo":
+			demo_flag = true  # Demo mode (DemoMode), like the demo build's feature tag.
 		elif arg == "--victory-preview":
 			victory_preview = true  # Content wave 2: debug preview of the victory screen.
 		elif arg.begins_with("--feedback-url="):

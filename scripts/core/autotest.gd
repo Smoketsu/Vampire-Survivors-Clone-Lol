@@ -60,6 +60,10 @@
 ##     category (spells learned, summon classes raised, Covenant kinds slain,
 ##     bosses faced; CodexLog), how many were new to the save, and the save's
 ##     codex totals (Meta [codex]; in memory only unless --meta-save),
+##   * demo mode (DemoMode; --demo, or the demo build's feature tag): a "demo"
+##     line says whether it is on, the acts / stages it allows, its save file
+##     and how many NEW cards offered this run were full-game items (must be 0
+##     with --demo; counted in every run, read only),
 ##   * the Feedback buttons: a last "feedback" line says whether a form link is
 ##     set (FeedbackData.FORM_URL or --feedback-url=) and the length of three
 ##     sample reports (main menu, pause, results) built headless; nothing is
@@ -489,6 +493,9 @@ var _new_offers: int = 0
 var _new_later_offers: int = 0
 ## Hands that held at least one later-item NEW card.
 var _hands_with_later: int = 0
+## Demo line: NEW cards offered this run whose item is not in the demo
+## (DemoMode.item_in_demo(); 0 in every demo run).
+var _full_game_offers: int = 0
 ## Distinct later items offered at least once (id -> true).
 var _later_seen: Dictionary = {}
 ## Highest Profane Pact level seen so far.
@@ -887,6 +894,8 @@ func _count_offers(offers: Array[Dictionary]) -> void:
 			continue
 		_new_offers += 1
 		var id := String(o["id"])
+		if not DemoMode.item_in_demo(id):
+			_full_game_offers += 1  # Demo line: a full-game card was offered.
 		var later := false  # The item is flagged "shared_card_pool" in its data.
 		match kind:
 			"spell": later = bool(AbilityData.SPELLS[id].get("shared_card_pool", false))
@@ -1596,6 +1605,7 @@ func finish(summary: Dictionary) -> void:
 	_print_soul_ash(summary)
 	_print_hyper_skins(summary)
 	RewardsReport.print_line(self, summary)  # Content wave 2: achievement rewards.
+	print("[autotest] demo: %s" % DemoMode.summary_line(_full_game_offers))  # Demo mode (DemoMode): read only.
 	print("[autotest] feedback: %s" % FeedbackReport.summary_line(game, summary))  # Feedback buttons: three sample reports built, nothing opened.
 	if game.coop != null:
 		game.coop.print_report()  # --coop-bot: a line per slot and the coop line (CoopSession).
