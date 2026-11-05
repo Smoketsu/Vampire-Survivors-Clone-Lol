@@ -189,6 +189,12 @@
 ##                         fast-forwards with drawing off and plays at x1 only for N game
 ##                         seconds from each game second T, printing `[movie] span` frame
 ##                         marks that tools/make_promo_clip.py uses to cut the AVI.
+##   --capture-scale=N     With --movie-spans: scales the picture so 1 art px = N window px
+##                         exactly (the window is the final video size, e.g. 1080x1920 at N=2:
+##                         no resampling afterwards); pass --view=(W/N)x(H/N) so the spawn ring
+##                         matches the visible area. Drawing only, opt-in.
+##   --hide-hud            With --movie-spans: hides the whole UI layer (HUD, level-up cards,
+##                         banners) so a shot shows only the world. Drawing only, opt-in.
 ##   --art-shots=T,...     Debug (art audit): at each game second T saves the window as
 ##                         <--shot-dir>/art_<T>.png (a window only; drawing only).
 ##   --draw-probe=T        With --monitor on the Web build: from game second T, hides one
@@ -329,6 +335,10 @@ var autotest_art_misses: bool = false
 var autotest_art_shots: PackedFloat32Array = PackedFloat32Array()
 ## Promo clips (--movie-spans=T:N,...): the span list text for MovieSpans ("" = off).
 var autotest_movie_spans: String = ""
+## Promo clips (--capture-scale=N): art px -> window px factor (0 = off, the normal stretch).
+var autotest_capture_scale: float = 0.0
+## Promo clips (--hide-hud): hide the UI layer while recording.
+var autotest_hide_hud: bool = false
 ## Autotest: game seconds between two MonitorProbe lines (--monitor=N; 0 = off).
 var autotest_monitor: float = 0.0
 ## Autotest: "reduced" when --effects=reduced draws with Effects = Reduced
@@ -415,6 +425,10 @@ func _parse_args(args: PackedStringArray) -> void:
 			autotest_art_misses = true  # Debug: the art audit's missing-sprite list (SpriteBank).
 		elif arg.begins_with("--movie-spans="):
 			autotest_movie_spans = arg.get_slice("=", 1).strip_edges()  # Promo clips (MovieSpans).
+		elif arg.begins_with("--capture-scale="):
+			autotest_capture_scale = arg.get_slice("=", 1).to_float()  # Promo clips (MovieSpans).
+		elif arg == "--hide-hud":
+			autotest_hide_hud = true  # Promo clips (MovieSpans).
 		elif arg.begins_with("--art-shots="):
 			for t: String in arg.get_slice("=", 1).split(",", false):
 				autotest_art_shots.append(t.to_float())  # Debug: art audit screenshots (game seconds).

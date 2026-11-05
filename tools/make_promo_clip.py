@@ -13,9 +13,10 @@ What it does (all from one JSON spec, default tools/promo_clip_spec.json):
                Text is drawn with the game's own fonts (Jacquard 24 / Jersey 10 from assets/fonts) at native size,
                no anti-aliasing, outlined, then enlarged by an integer (so it matches the pixel art), with a soft
                shadow, in the game's colours (UiTheme: gold, soul-teal, violet).
-  3. ASSEMBLE  Concatenates the shots (hard cuts), fades the audio at every cut and at both ends, measures and
-               normalises loudness (two-pass loudnorm, -14 LUFS integrated, -1.5 dBTP) and encodes
-               H.264 + AAC (yuv420p, 30 fps, faststart). Also writes a 6-frame contact sheet (storyboard.png).
+  3. ASSEMBLE  Concatenates the shots (hard cuts; the intermediates are lossless FFV1 RGB), fades the audio at
+               every cut and at both ends, measures and normalises loudness (two-pass loudnorm, -14 LUFS
+               integrated, -1.5 dBTP) and encodes H.264 high (yuv420p as TikTok requires, -tune animation,
+               CRF 14, keyint 60, nearest-neighbour everywhere) + AAC, 30 fps, faststart. Also writes a 6-frame contact sheet (storyboard.png).
 Nothing is committed from here (videos are build output).
 
 Usage:
@@ -25,11 +26,15 @@ Needs: python3 with Pillow, ffmpeg (with libx264, the `loudnorm` filter), xvfb-r
 
 Spec (JSON). Top level:
   "name"        output basename (<out>/<name>.mp4, <out>/storyboard.png)
-  "render"      [w, h] window the game is recorded at (px), 9:16 (270x480). A small window shows a small world
-                area, so the sprites come out big; the HUD still lays out (it hugs the edges).
-  "crop"        optional [w, h] centred crop of the recording before enlarging (216x384: the HUD's top bar and
-                bottom panels fall outside, the army is 1.25x bigger). 1080 / w must be an integer (5x) so the
-                pixel art stays crisp. Per-shot "crop" / "crop_dy" (shift down in recorded px) override.
+  "render"      [w, h] window the game is recorded at (px): the FINAL video size (1080x1920), so no frame is
+                ever resampled. (The first cut recorded a 270x480 window: Godot's canvas_items stretch then
+                shrank the 1280-wide world to 0.21x, the sprites became ~10 px smudges and were blown up 5x:
+                the grainy look the owner reported.)
+  "art_scale"   integer N: 1 art px = N window px exactly (`--capture-scale=N`, 2 = the game's own "Close"
+                zoom, a 540x960 world view; 3 = a 360x640 view). The tool also passes `--view=(w/N)x(h/N)` so the
+                enemy spawn ring fits that view, and `--hide-hud` so no HUD or level-up card is in frame.
+  "crop"        optional [w, h] centred crop of the recording (px, no scaling unless it differs from "size";
+                then nearest-neighbour by an integer). Per-shot "crop" / "crop_dy" override.
   "size"        [w, h] of the final video (1080 x 1920)
   "fps"         frames per second of the recording and the video (30)
   "lufs"        target integrated loudness (-14)
@@ -43,7 +48,8 @@ A shot:
   "extra"       optional list of more autotest args (e.g. ["--boss=alaric", "--character=bone_oracle"])
   "dim"         optional 0..1, darkens the picture (an end card behind text)
   "logo"        optional {"y": px, "scale": int}: the game's logo PNG (assets/ui/logo.png) at that y
-  "texts"       list of {"text": "LINE1\\nLINE2", "font": "jersey"|"jacquard", "size": native px (28 / 38 / 57 for
+  "texts"       (a text that lasts to the end of the shot has no fade-out, so repeating it in the next shot holds
+                it across the cut) list of {"text": "LINE1\\nLINE2", "font": "jersey"|"jacquard", "size": native px (28 / 38 / 57 for
                 Jersey, 43 for Jacquard), "scale": integer enlargement, "color": "gold"|"teal"|"cream"|"violet"|
                 "crimson", "y": top of the text block in the final video (px), "from": s, "to": s (within the shot)}
 Safe zone: keep text inside x 80..918 (TikTok's buttons sit on the right ~15%) and y 150..1500 (the caption, bottom
@@ -84,8 +90,14 @@ FADE_IN, FADE_OUT = 0.25, 0.9
 VIDEO_FADE_OUT = 0.5
 # Seconds a text takes to fade in / out (s).
 TEXT_FADE = 0.12
-# x264 quality (lower = better; 22 keeps the pixels clean for pixel art) and AAC bitrate.
-CRF, AAC_BITRATE = "22", "192k"
+# x264 quality (lower = better; 14 keeps hard pixel edges clean on the dithered floors) and AAC bitrate.
+CRF, AAC_BITRATE = "14", "192k"
+# Peak video bitrate allowed (VBV, Mbit/s): keeps a 30 s clip well under 150 MB.
+MAXRATE_MBIT = 60
+# Keyframe interval (frames) and x264 tune for flat-coloured pixel art.
+KEYINT, X264_TUNE = 60, "animation"
+# RGB -> YUV: nearest-neighbour scaling flags, accurate rounding and full chroma, BT.709 matrix.
+SWS = "flags=neighbor+accurate_rnd+full_chroma_int"
 
 
 def run(cmd, **kw):
@@ -105,12 +117,14 @@ def capture(spec, shots, work, godot, force, jobs):
     found = {}
     rw, rh = spec["render"]
     fps = spec["fps"]
+    art = int(spec.get("art_scale", 0))
+    view = ["--capture-scale=%d" % art, "--view=%dx%d" % (rw // art, rh // art), "--hide-hud"] if art else []
     todo = []  # (shot group, recording dir, spans text, command) per run that still has to be recorded
     plans = []
     for (stage, seed, extra), group in groups.items():
         group.sort(key=lambda s: s["start"])
         spans = ",".join("%g:%g" % (s["start"], s["seconds"]) for s in group)
-        tag = hashlib.sha1(("%s|%s|%s|%dx%d|%d" % (stage, spans, extra, rw, rh, fps)).encode()).hexdigest()[:8]
+        tag = hashlib.sha1(("%s|%s|%s|%dx%d|%d|%d" % (stage, spans, extra, rw, rh, fps, art)).encode()).hexdigest()[:8]
         d = os.path.join(work, "%s_%d_%s" % (stage, seed, tag))
         rec, log = os.path.join(d, "f.png"), os.path.join(d, "log.txt")  # Movie Maker: f00000000.png ... + f.wav
         plans.append((group, d, rec, log))
@@ -118,7 +132,7 @@ def capture(spec, shots, work, godot, force, jobs):
             cmd = ["xvfb-run", "-a", "-s", "-screen 0 %dx%dx24" % (max(rw, 1280), max(rh, 1280)),
                    godot, "--path", ROOT, "--resolution", "%dx%d" % (rw, rh), "--fixed-fps", str(fps),
                    "--write-movie", rec, "--", "--autotest", "--policy=army", "--seed=%d" % seed,
-                   "--stage=%s" % stage, "--speed=32", "--movie-spans=%s" % spans] + list(extra)
+                   "--stage=%s" % stage, "--speed=32", "--movie-spans=%s" % spans] + view + list(extra)
             todo.append((group, d, rec, log, cmd, stage, seed, spans))
 
     def record(job):
@@ -227,17 +241,20 @@ def cut(spec, shot, src, work):
     for p, y, a, b in layers:
         inputs += ["-loop", "1", "-framerate", str(fps), "-t", "%.3f" % dur, "-i", p]
         k_in = k + 1  # input 0 = frames, 1 = wav, then the overlay PNGs
-        fin = "fade=t=in:st=%.3f:d=%.3f:alpha=1," % (a, TEXT_FADE) if a > 0 else ""  # a text at 0 s is there from frame 1
-        filt.append("[%d:v]format=rgba,%sfade=t=out:st=%.3f:d=%.3f:alpha=1[t%d]" % (
-            k_in, fin, max(a, b - TEXT_FADE), TEXT_FADE, k))
+        fx = ["format=rgba"]
+        if a > 0:  # a text at 0 s is there from frame 1
+            fx.append("fade=t=in:st=%.3f:d=%.3f:alpha=1" % (a, TEXT_FADE))
+        if b < dur - 0.01:  # a text that runs to the shot's end is "held" across the cut (the next shot repeats it): no fade-out
+            fx.append("fade=t=out:st=%.3f:d=%.3f:alpha=1" % (max(a, b - TEXT_FADE), TEXT_FADE))
+        filt.append("[%d:v]%s[t%d]" % (k_in, ",".join(fx), k))
         filt.append("[%s][t%d]overlay=x=0:y=%d:format=auto[o%d]" % (last, k, y, k))
         last = "o%d" % k
         k += 1
-    filt.append("[%s]format=yuv420p[vout]" % last)
+    filt.append("[%s]format=rgb24[vout]" % last)  # stays RGB: the one RGB -> YUV step is the final encode
     filt.append("[1:a]asetpts=PTS-STARTPTS,afade=t=in:st=0:d=%g,afade=t=out:st=%.5f:d=%g[aout]" % (
         CUT_FADE, dur - CUT_FADE, CUT_FADE))
     run(["ffmpeg", "-v", "error", "-y"] + inputs + ["-filter_complex", ";".join(filt), "-map", "[vout]", "-map", "[aout]",
-        "-r", str(fps), "-c:v", "libx264", "-crf", "12", "-preset", "fast", "-pix_fmt", "yuv420p", "-c:a", "pcm_s16le",
+        "-r", str(fps), "-c:v", "ffv1", "-pix_fmt", "bgr0", "-c:a", "pcm_s16le",
         "-ar", "48000", "-ac", "2", "-t", "%.3f" % dur, out])
     return out, dur
 
@@ -261,9 +278,11 @@ def assemble(spec, cuts, out_mp4, work):
     j = json.loads(meas[meas.rindex("{"):meas.rindex("}") + 1])
     ln = "loudnorm=I=%g:TP=-1.5:LRA=11:measured_I=%s:measured_TP=%s:measured_LRA=%s:measured_thresh=%s:offset=%s:linear=true" % (
         target, j["input_i"], j["input_tp"], j["input_lra"], j["input_thresh"], j["target_offset"])
-    run(["ffmpeg", "-v", "error", "-y"] + inputs + ["-filter_complex", cat + ";[v]%s[vo];[a]%s,%s[ao]" % (vfade, afade, ln),
-        "-map", "[vo]", "-map", "[ao]", "-r", str(fps), "-c:v", "libx264", "-crf", CRF, "-preset", "slow", "-pix_fmt", "yuv420p",
-        "-profile:v", "high", "-c:a", "aac", "-b:a", AAC_BITRATE, "-ar", "48000", "-movflags", "+faststart", out_mp4])
+    run(["ffmpeg", "-v", "error", "-y"] + inputs + ["-filter_complex", cat + ";[v]%s,scale=out_color_matrix=bt709:%s,format=yuv420p[vo];[a]%s,%s[ao]" % (vfade, SWS, afade, ln),
+        "-map", "[vo]", "-map", "[ao]", "-r", str(fps), "-sws_flags", SWS,
+        "-c:v", "libx264", "-crf", CRF, "-preset", "slow", "-tune", X264_TUNE, "-profile:v", "high", "-level", "4.2",
+        "-maxrate", "%dM" % MAXRATE_MBIT, "-bufsize", "%dM" % (2 * MAXRATE_MBIT),
+        "-x264-params", "keyint=%d:min-keyint=%d:scenecut=0" % (KEYINT, KEYINT), "-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709", "-c:a", "aac", "-b:a", AAC_BITRATE, "-ar", "48000", "-movflags", "+faststart", out_mp4])
     return total
 
 
@@ -273,7 +292,7 @@ def storyboard(mp4, total, path, work):
     files = []
     for i, t in enumerate(times):
         f = os.path.join(work, "sb_%d.png" % i)
-        run(["ffmpeg", "-v", "error", "-y", "-ss", "%.2f" % t, "-i", mp4, "-frames:v", "1", "-vf", "scale=360:640:flags=lanczos", f])
+        run(["ffmpeg", "-v", "error", "-y", "-ss", "%.2f" % t, "-i", mp4, "-frames:v", "1", "-vf", "scale=360:640:flags=neighbor", f])
         files.append(f)
     sheet = Image.new("RGB", (360 * 3 + 40, 640 * 2 + 30), (20, 13, 31))
     for i, f in enumerate(files):

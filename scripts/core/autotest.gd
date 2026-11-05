@@ -665,6 +665,8 @@ func _apply_forced_classes() -> void:
 
 ## Called by Game after each simulation step.
 func step(delta: float) -> void:
+	if _movie != null:
+		_movie.apply_view(game)
 	if _movie != null and _movie.update(game.elapsed):
 		print("[movie] all spans done")
 		get_tree().quit(0)

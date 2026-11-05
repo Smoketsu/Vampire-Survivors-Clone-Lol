@@ -36,6 +36,8 @@ var _idx: int = 0
 var _in_span: bool = false
 ## Process frames counted since this node started (one movie frame each, video and audio; +-1).
 var _frames: int = 0
+## True once apply_view() has run.
+var _view_done: bool = false
 
 
 ## Parses "T:N,T:N" into spans (ascending by start).
@@ -51,6 +53,22 @@ func setup(text: String, fast: float) -> void:
 ## Counts the frames Godot Movie Maker writes (one per process frame, drawn or not).
 func _process(_delta: float) -> void:
 	_frames += 1
+
+
+## Applies the opt-in picture options once the game exists (--capture-scale, --hide-hud).
+## Drawing only: the window's content scale and the UI layer's visibility.
+func apply_view(game: Game) -> void:
+	if _view_done:
+		return
+	_view_done = true
+	var win: Window = get_window()
+	if GameState.autotest_capture_scale > 0.0:
+		# canvas_items stretch: effective scale = window width / 1280 (the base width) x content_scale_factor.
+		win.content_scale_factor = GameState.autotest_capture_scale * 1280.0 / float(win.size.x)
+	if GameState.autotest_hide_hud and game.hud != null:
+		var layer: Node = game.hud.get_parent().get_parent()  # HUD -> root Control -> UI CanvasLayer.
+		if layer is CanvasLayer:
+			(layer as CanvasLayer).visible = false
 
 
 ## Called by Autotest.step() after each simulation step with the game clock (s).
