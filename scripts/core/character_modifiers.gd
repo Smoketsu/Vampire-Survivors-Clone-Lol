@@ -162,6 +162,8 @@ static func spell_name(p_id: String) -> String:
 static func unlock_text(p_id: String) -> String:
 	if bool(def(p_id)["starts_unlocked"]):
 		return ""
+	if not DemoMode.allows_character(p_id):
+		return DemoMode.lock_line()  # The demo: a full-game character.
 	return "Reach Lv %d with %s in any run." % [CharacterData.UNLOCK_LEVEL, spell_name(p_id)]
 
 

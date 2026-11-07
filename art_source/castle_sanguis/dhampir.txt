@@ -1,0 +1,13 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, a confident hunter's stance, a long sabre held low in his front (right) hand, coat flaring
+
+LOW-RESOLUTION pixel art: the whole figure is only 56 pixels tall, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims, lacing or engravings. Details must be big enough to read at game size.
+
+Subject: THE DHAMPIR, a MALE playable necromancer-hunter, half vampire and half dead: a lean young man, very PALE grey skin, a sharp handsome face with a faint fang at the lip, ONE glowing RED eye and ONE glowing SOUL-TEAL eye, long WHITE hair tied back, a long BLACK hunter's greatcoat with a HIGH COLLAR and a BLOOD-RED lining, black gloves and tall black boots, a silver-edged black SABRE, two small spectral soul-teal BATS flying near his shoulder.
+Signature shape that must read in silhouette: the long flaring coat with the high collar, the white hair and the sabre.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: pale skin #C9C4CC #E6E2EA; white hair #B4C0D0 #E6EEF7; black coat velvet #160F1C #2B1E36 #4D3A5E; lining and red eye blood #5A0A14 #A3142A #E0384E; sabre silver #6E7A8C #B4C0D0; soul teal #1F7A5C #3FD39A #9CFFD8 (one eye, the bats).
+
+Outline: a clean 1-pixel dark outline around the whole figure in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the figure), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark.
+Attached: a playable character of this game for the pixel size, outline weight, proportions and flat look (not its subject).

@@ -1,0 +1,8 @@
+A sheet of FOUR separate pixel-art game ICON SYMBOLS in one row, evenly spaced with wide empty gaps between them, on a FULLY TRANSPARENT background (real alpha). Each symbol is simple, bold and centred in its quarter of the image, drawn as chunky low-resolution pixel art (each symbol about 24 pixels wide on a coarse grid, shown enlarged with crisp square pixels, nearest-neighbour, 1-pixel dark outline, flat colours, at most 3 shades per colour, light from the top-left). No frame, no badge background, no text, no letters.
+From left to right:
+1. BLACK SUN: a round pitch-black sun disc with a ring of bright violet flame (a corona) around it and one short dark beam shooting out to the lower right.
+2. STOLEN DAWN: a small golden rising sun half-swallowed by a black crescent, a few violet wisps drawn out of it into a skeletal bone hand below.
+3. BOUND ONI: the head of an ashen grey-red oni demon seen from the front, two ivory horns, glowing soul-teal eyes, a bone chain across its jaw.
+4. ONI'S RESOLVE: a broken bone chain, its links snapped in the middle, with a short iron kanabo club behind it and a small soul-teal flame above.
+Colours: black #0B0A10 #1C1426; violet #3B1F5C #6B39A6 #A35CFA; gold #E0A92E #FFDC66; bone #A79A80 #CFC7AE #EDE6D0; oni skin #4A2A2A #7A4038 #A35E50; iron #2A2D36 #4A4E5A; soul teal #1F7A5C #3FD39A #9CFFD8.
+Attached: an approved icon of this game: match its pixel size, outline weight and flat look (only the symbol, not its frame).

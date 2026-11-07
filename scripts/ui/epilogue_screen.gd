@@ -8,8 +8,8 @@
 ## EpilogueData.slide_time() (the last one waits); any key, pad button, click
 ## or tap moves on at once, Esc / pad B or the Skip button (for touch players)
 ## ends it. A part whose achievement is not earned yet is one "Sealed" slide
-## with its goal over its first picture as a dark silhouette; after Act II
-## comes the closing card (EpilogueData.CLOSING).
+## with its goal over its first picture as a dark silhouette; after each act's
+## part that has one comes its closing card (EpilogueData.CLOSINGS).
 ## While it plays the music is the slow "Grave Lullaby" cue
 ## (Sfx.MUSIC_EPILOGUE; on the Web it may still be rendering for the first
 ## seconds, the screen does not wait for it), and the menu theme comes back
@@ -106,13 +106,12 @@ class _PictureView extends Control:
 
 
 ## The main menu's Epilogue item: every part in order (sealed ones sealed),
-## then the closing card when Act II is open. Marks the open parts seen.
+## then each closing card after its open part. Marks the open parts seen.
 static func open_over(parent: Control) -> EpilogueScreen:
 	return _open(parent, _all_slides(false), _open_ids(false))
 
 
-## After a run: the open parts not seen yet (and the closing card after Act
-## II), marked seen; null when there is nothing new (or under the autotest).
+## After a run: the open parts not seen yet (and each closing card after its part), marked seen; null when there is nothing new (or under the autotest).
 static func play_unseen(parent: Control) -> EpilogueScreen:
 	if GameState.autotest:
 		return null
@@ -122,8 +121,9 @@ static func play_unseen(parent: Control) -> EpilogueScreen:
 		if EpilogueData.is_open(part) and not Meta.is_epilogue_seen(String(part["id"])):
 			s.append_array(_part_slides(part))
 			ids.append(String(part["id"]))
-			if String(part["id"]) == _closing_part_id():
-				s.append(_closing_slide())
+			var card := EpilogueData.closing_after(String(part["id"]))  # The card that follows this part, if any.
+			if not card.is_empty():
+				s.append(_closing_slide(card))
 	if s.is_empty():
 		return null
 	return _open(parent, s, ids)
@@ -162,14 +162,15 @@ static func _open(parent: Control, slides_in: Array, seen_ids: PackedStringArray
 
 
 ## Every part's slides in order (a sealed part as one sealed slide unless
-## `all`), then the closing card when the Act II part is open (or `all`).
+## `all`), then each closing card after its part when that part is open (or `all`).
 static func _all_slides(all: bool) -> Array:
 	var s: Array = []
 	for part: Dictionary in EpilogueData.PARTS:
 		if all or EpilogueData.is_open(part):
 			s.append_array(_part_slides(part))
-			if String(part["id"]) == _closing_part_id():
-				s.append(_closing_slide())
+			var card := EpilogueData.closing_after(String(part["id"]))  # The card that follows this part, if any.
+			if not card.is_empty():
+				s.append(_closing_slide(card))
 		else:
 			var goal := String((MetaData.ACHIEVEMENTS[String(part["achievement"])] as Dictionary)["description"])
 			var first: Array = (part["panels"] as Array)[0]  # Its first panel, shown as a silhouette.
@@ -187,12 +188,6 @@ static func _open_ids(all: bool) -> PackedStringArray:
 	return ids
 
 
-## The part the closing card follows (EpilogueData.CLOSING "after": Act II,
-## also now that the Act III part comes after it).
-static func _closing_part_id() -> String:
-	return String(EpilogueData.CLOSING["after"])
-
-
 ## One slide per paragraph of `part`, each with its panel and pan.
 static func _part_slides(part: Dictionary) -> Array:
 	var s: Array = []
@@ -205,9 +200,8 @@ static func _part_slides(part: Dictionary) -> Array:
 	return s
 
 
-## The closing card's slide (EpilogueData.CLOSING).
-static func _closing_slide() -> Dictionary:
-	var c: Dictionary = EpilogueData.CLOSING
+## The slide of closing card `c` (an EpilogueData.CLOSINGS row).
+static func _closing_slide(c: Dictionary) -> Dictionary:
 	var p: Array = c["panel"]
 	return {"panel": String(p[0]), "from": p[1], "to": p[2], "act": String(c["act"]),
 		"heading": String(c["heading"]), "text": String(c["line"]), "tag": String(c["tag"]), "sealed": false}

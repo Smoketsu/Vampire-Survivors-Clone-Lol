@@ -1,0 +1,13 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, a confident, glamorous pose, weight on one leg, one hand extended with a small soft green-white healing glow
+
+LOW-RESOLUTION pixel art: the whole figure is only 44 pixels tall and about 26 wide, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims, lacing or engravings.
+
+Subject: a FEMALE FIELD MEDIC (support), in the game's figure-redesign style: the most exaggerated hourglass figure (very full bust, an extremely tiny cinched waist less than half as wide as the hips, very wide curvy hips), glamorous and confident, her face clearly readable, FACE CLEARLY VISIBLE with big eyes and a gentle smile, short blonde hair in a small high ponytail kept well away from the neck and chest. A fitted white paramedic jacket with green trim zipped up over her chest, a short GREEN skirt (clearly green, wider than the waist) over black tights, white boots, a large green medical satchel with a white cross on her hip, hips and chest fully covered, never nude, tasteful.
+Signature shape that must read in silhouette: the hourglass figure, the white jacket against the green skirt, the small blonde ponytail and the green satchel at the hip.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: pale skin #D9B8A8 #A8806E; jacket bright ivory white #B4AA8A #E8E1C8 #FFFFFF; green skirt and satchel #3B5529 #6B7545 #76984A; blonde hair #E0A92E #A8742A; tights #1E2024 #3A3D44; boots #E8E1C8; cross white #FFFFFF; healing glow #3FE0E8
+
+Outline: a clean 1-pixel dark outline around the whole subject in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the subject), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark.
+Attached: (1) a game sprite for pixel size, outline weight and flat look; (2) concept art of this unit for the costume only (do NOT copy its detail level or painted shading).

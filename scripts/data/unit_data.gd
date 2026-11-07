@@ -43,7 +43,28 @@ const CLASS_ORDER := ["warrior", "archer", "mage", "mender", "warder", "bishop",
 		# --- Act III: the Iron Citadel ---
 		# Unlockable (UnlockData: defeating Deus Ex Machina), so a fresh save
 		# never offers it.
-		"iron_revenant"]
+		"iron_revenant",
+		# --- Act IV: the Asphodel Underworld ---
+		# Unlockable (UnlockData: defeating Hades), so a fresh save never offers it.
+		"myrmidon_shade",
+		# --- Act V: the Road to the Sun ---
+		# Unlockable (UnlockData: defeating Amaterasu), so a fresh save never offers it.
+		"bound_oni",
+		# --- Act VI: the Palace of Silk and Ash ---
+		# Unlockable (UnlockData: slaying Lilith), so a fresh save never offers it.
+		"bound_succubus",
+		# --- Act VI: Pandemonium ---
+		# Unlockable (UnlockData: defeating the Morning Star), so a fresh save never offers it.
+		"archfiend",
+		# --- Act VII: Castle Sanguis ---
+		# Unlockable (UnlockData: defeating Queen Carmilla and the Elder), so a fresh save never offers it.
+		"blood_spawn",
+		# --- Act VIII: Liberty Heights ---
+		# Unlockable (UnlockData: defeating Paragon), so a fresh save never offers it.
+		"fallen_hero",
+		# --- Act IX: the Ark ---
+		# Unlockable (UnlockData: defeating the Harvester), so a fresh save never offers it.
+		"ghost_saucer"]
 ## The four GDD §4.2 summon ROLES ("all 4 classes": the Dread Sovereign
 ## achievement), in SynergyManager.classes_met() format: an entry that is an
 ## Array means "any one of these", so after the priest split either priest
@@ -979,6 +1000,382 @@ const UNITS := {
 			"slow_duration": 1.2,  # TUNING (not in GDD) s (special_duration lengthens it)
 		},
 	},
+	# --- Act IV: the Asphodel Underworld ---
+	# Myrmidon Shade (owner-approved proposal: "the finale's reward: undead
+	# hoplites that fight as a three-shield phalanx on the ring"; GDD §15.0
+	# "Myrmidon Shades, Legion of Tartarus and Myrmidon Oath"): Achilles' own
+	# Myrmidons, dead and bound to the necromancer, in bone-grey bronze with
+	# soul-teal eyes. Three to a card, they hold the Bone Ring's outer posts like
+	# Warriors (formation "front", they block) and LOCK SHIELDS: a Myrmidon with
+	# two more in one chain (each within wall_range px of the next) is in the wall and takes wall_cut less from
+	# every hit (MyrmidonBehavior, "shieldwall"); their spear reaches far and
+	# runs through a second foe behind the first. No act rule (owner rule:
+	# summons work the same everywhere). Unlockable (UnlockData), then offered
+	# on every stage.
+	"myrmidon_shade": {
+		"display_name": "Myrmidon Shade",  # Owner-approved proposal ("the Myrmidon Shades")
+		"plural": "Myrmidon Shades",
+		"description": "Undead hoplites that hold the ring three shields wide and spear through the foes behind.",  # Card text: one short sentence (owner rule).
+		"max_hp": 70.0,  # TUNING (not in GDD) a little sturdier than a Warrior (60): bronze and a big shield
+		"damage": 9.0,  # TUNING (not in GDD) per spear thrust (Warrior 10)
+		"attack_interval": 1.25,  # TUNING (not in GDD) s
+		"attack_range": 30.0,  # TUNING (not in GDD) edge-to-edge reach (px): the spear outreaches a sword (Warrior 22)
+		"move_speed": 80.0,  # TUNING (not in GDD) px/s; a steady march (Warrior 85)
+		"radius": 10.0,  # TUNING (not in GDD)
+		"acquisition_range": 150.0,  # TUNING (not in GDD) px
+		"replenish_interval": 7.0,  # TUNING (not in GDD) s (Warrior 5): three come back one by one
+		"band_min": 35.0,  # TUNING (not in GDD) px, with the frontline
+		"band_max": 85.0,  # TUNING (not in GDD)
+		"w_pursuit": 0.8,  # TUNING (not in GDD) a wall pursues less than a Warrior
+		"w_formation": 0.5,  # TUNING (not in GDD) and keeps its place more
+		"w_separation": 0.6,  # TUNING (not in GDD) shoulder to shoulder
+		"w_threat": 0.1,  # TUNING (not in GDD)
+		"attack_profile": "melee",
+		"target_profile": "guard",
+		"windup": 0.22,  # TUNING (not in GDD) s; the spear drawn back
+		"projectile_speed": 0.0,
+		"splash_radius": 0.0,
+		"heal_amount": 0.0,
+		"kite_distance": 0.0,
+		"heal_role_priority": 0.9,  # TUNING (not in GDD) healers value the wall
+		"block_radius": 12.0,  # TUNING (not in GDD) blocks like a Warrior (px)
+		"block_mass": 3.5,  # TUNING (not in GDD) a braced shield (Warrior 3)
+		"engaged_speed_mult": 0.6,  # TUNING (not in GDD) touching enemies move at 60%, like a Warrior
+		"formation": "front",  # Owner-approved proposal: "a phalanx on the ring"
+		"capacity_bonus_mult": 1.0,  # TUNING (not in GDD) Grave Dominion V: +5, like the Warriors
+		"behavior": "shieldwall",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"special": {
+			"wall_range": 56.0,  # TUNING (not in GDD) px between two Myrmidons' centres to stand in one chain (about two Bone Ring posts; not area-scaled: no _radius suffix)
+			"wall_size": 3,  # Owner-approved proposal "a three-shield phalanx": Myrmidons that make a wall
+			"wall_cut": 0.3,  # TUNING (not in GDD) share of every hit a Myrmidon in the wall no longer takes
+			"pierce_reach": 26.0,  # TUNING (not in GDD) px behind the struck foe the spear runs on (not area-scaled)
+			"pierce_fraction": 0.6,  # TUNING (not in GDD) the second foe takes this x the thrust
+		},
+	},
+	# --- Act V: the Road to the Sun ---
+	# Bound Oni (owner-approved proposal: "Finale summon class: the Oni, bound
+	# oni brutes with kanabō (a heavy blocker with a stun smash)"; GDD §15.0 "The
+	# Bound Oni, the Oni Lord and Oni's Resolve"; id "bound_oni", so its stats and
+	# art never meet the enemy kind "oni"): an oni of the old stories, chained in
+	# bone and bound to the necromancer, soul-teal eyes. A heavy blocker on the
+	# Bone Ring's front posts (formation "front", it blocks like the
+	# Abomination) whose KANABŌ SMASH (OniBehavior, "kanabo") brings the iron
+	# club down in front of it: every foe in the circle is struck and STUNNED
+	# (CombatResolver.stun_enemy(): bosses and minibosses a quarter, elites
+	# half). No act rule (owner rule: summons work the same everywhere).
+	# Unlockable (UnlockData), then offered on every stage.
+	"bound_oni": {
+		"display_name": "Bound Oni",  # Owner-approved proposal ("the Oni, bound oni brutes")
+		"plural": "Bound Oni",
+		"description": "Chained oni brutes that hold the front and stun whatever their iron club lands on.",  # Card text: one short sentence (owner rule).
+		"max_hp": 240.0,  # TUNING (not in GDD) a heavy (Abomination 260)
+		"damage": 18.0,  # TUNING (not in GDD) a kanabō blow (Abomination 16)
+		"attack_interval": 1.7,  # TUNING (not in GDD) s
+		"attack_range": 18.0,  # TUNING (not in GDD) edge-to-edge reach (px): the long club
+		"move_speed": 64.0,  # TUNING (not in GDD) px/s, a heavy's pace (Abomination 62)
+		"radius": 15.0,  # TUNING (not in GDD) px
+		"acquisition_range": 140.0,  # TUNING (not in GDD) px
+		"replenish_interval": 18.0,  # TUNING (not in GDD) s, slow to rebuild (Abomination 20)
+		"band_min": 45.0,  # TUNING (not in GDD) px, with the front
+		"band_max": 95.0,  # TUNING (not in GDD)
+		"w_pursuit": 1.0,  # TUNING (not in GDD)
+		"w_formation": 0.4,  # TUNING (not in GDD)
+		"w_separation": 0.8,  # TUNING (not in GDD)
+		"w_threat": 0.0,  # TUNING (not in GDD) a brute never shies away
+		"attack_profile": "melee",
+		"target_profile": "guard",
+		"windup": 0.32,  # TUNING (not in GDD) s
+		"projectile_speed": 0.0,
+		"splash_radius": 0.0,
+		"heal_amount": 0.0,
+		"kite_distance": 0.0,
+		"heal_role_priority": 0.9,  # TUNING (not in GDD) healers value the brute
+		"block_radius": 19.0,  # TUNING (not in GDD) px, blocks like the Abomination
+		"block_mass": 7.0,  # TUNING (not in GDD) (Abomination 8)
+		"engaged_speed_mult": 0.45,  # TUNING (not in GDD) touching enemies move at 45%
+		"formation": "front",  # Owner-approved proposal: "a heavy blocker"
+		"capacity_bonus_mult": 0.4,  # TUNING (not in GDD) Grave Dominion V: +2, like the Abominations
+		"behavior": "kanabo",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"special": {
+			"smash_damage": 24.0,  # TUNING (not in GDD) to every foe in the circle
+			"smash_radius": 40.0,  # TUNING (not in GDD) px of the circle in front of it
+			"smash_cooldown": 5.5,  # TUNING (not in GDD) s
+			"smash_windup": 0.5,  # TUNING (not in GDD) s the club is raised (the circle telegraphed)
+			"smash_recover": 0.3,  # TUNING (not in GDD) s it stands after the blow
+			"smash_stun_duration": 1.0,  # Owner-approved proposal "a stun smash"; TUNING (not in GDD) s (special_duration lengthens it)
+			"smash_trigger": 26.0,  # TUNING (not in GDD) px edge to edge: it smashes when a foe is this close
+		},
+	},
+	# --- Act VI: the Palace of Silk and Ash ---
+	# The Succubus (owner-approved Act VI proposal: "the Succubus (unlocked by
+	# Lilith, like the Fallen Seraph by Seraphine: a flying charm support)"; GDD
+	# §15.0 "The Succubus, the Lilim Matriarch and Sweet Surrender"; id
+	# "bound_succubus", so its stats, art and Codex key never meet the enemy kind
+	# "succubus"): a succubus bound to the necromancer in bone chains,
+	# soul-teal eyes. A floating support on the ring's middle posts (hittable,
+	# not airborne: it floats like the Banshee) that throws kiss bolts and, with
+	# its CHARM (BoundSuccubusBehavior, "allure"), turns the foe it fights to
+	# fight beside the army for charm_duration s through the one Enthrall path
+	# (HordeDirector.enthrall_foe(): never a boss, miniboss or structure; the
+	# thrall hits for thrall_damage). No act rule (owner rule: summons work the
+	# same everywhere). Unlockable (UnlockData), then offered on every stage.
+	"bound_succubus": {
+		"display_name": "Succubus",  # Owner-approved proposal
+		"plural": "Succubi",
+		"description": "Bound succubi that float behind your ring and charm foes to fight beside your dead.",  # Card text: one short sentence (owner rule).
+		"max_hp": 46.0,  # TUNING (not in GDD) a frail support (Banshee 40)
+		"damage": 12.0,  # TUNING (not in GDD) a kiss bolt (Banshee 14)
+		"attack_interval": 1.6,  # TUNING (not in GDD) s
+		"attack_range": 160.0,  # TUNING (not in GDD) centre-to-edge (px); also the charm's reach
+		"move_speed": 96.0,  # TUNING (not in GDD) px/s, a flier
+		"radius": 10.0,  # TUNING (not in GDD)
+		"acquisition_range": 250.0,  # TUNING (not in GDD)
+		"replenish_interval": 15.0,  # TUNING (not in GDD) s
+		"band_min": 90.0,  # TUNING (not in GDD) midline (px)
+		"band_max": 150.0,  # TUNING (not in GDD)
+		"w_pursuit": 0.5,  # TUNING (not in GDD)
+		"w_formation": 0.6,  # TUNING (not in GDD)
+		"w_separation": 0.8,  # TUNING (not in GDD)
+		"w_threat": 0.9,  # TUNING (not in GDD) a frail support keeps out of the crowd
+		"attack_profile": "allure",
+		"target_profile": "dirge",  # Foes closing on the necromancer first (the Banshee's weights).
+		"windup": 0.25,  # TUNING (not in GDD) s
+		"projectile_speed": 280.0,  # TUNING (not in GDD) px/s
+		"splash_radius": 0.0,
+		"heal_amount": 0.0,
+		"kite_distance": 0.0,
+		"heal_role_priority": 0.6,  # TUNING (not in GDD)
+		"formation": "mid",
+		"capacity_bonus_mult": 0.4,  # TUNING (not in GDD) Grave Dominion V: +2
+		"behavior": "allure",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"special": {
+			"charm_cooldown": 9.0,  # TUNING (not in GDD) s between two charms
+			"charm_windup": 0.6,  # TUNING (not in GDD) s the kiss is blown (a pink line to the foe)
+			"charm_duration": 3.0,  # Owner-approved proposal "charms enemies briefly"; TUNING (not in GDD) the 3 s (special_duration lengthens it)
+			"thrall_damage": 16.0,  # TUNING (not in GDD) the thrall's hit (scaled like the class's damage)
+			"charm_targets": 1,  # TUNING (not in GDD) foes per charm (the Lilim Matriarch: 2)
+			"charm_spread": 0.0,  # TUNING (not in GDD) px around the first foe for the others (0 = none)
+		},
+	},
+	# --- Act VI: Pandemonium ---
+	# Archfiend (owner-approved proposal: "the finale's Archfiend (a winged heavy
+	# demon; evolution Prince of Hell)"; GDD §15.0 "The Archfiend, the Prince of
+	# Hell and Crown of Horns"): a horned demon with bat wings, bound to the
+	# necromancer in undeath (ashen grey-violet skin, soul-teal eyes, a bone
+	# collar), a huge black cleaver. A heavy blocker on the Bone Ring's front
+	# posts (formation "front", it blocks like the Abomination) whose HELLFIRE
+	# CLEAVE (ArchfiendBehavior, "hellfire") sweeps a wide arc in front of it,
+	# knocking every foe in it back. Winged, but it fights on the ground (it is
+	# no flier: summons never get act-only rules, and the Gargoyle keeps the
+	# air). Unlockable (UnlockData), then offered on every stage.
+	"archfiend": {
+		"display_name": "Archfiend",  # Owner-approved proposal
+		"plural": "Archfiends",
+		"description": "Winged demons bound in undeath that hold the front and cleave whole ranks aside.",  # Card text: one short sentence (owner rule).
+		"max_hp": 250.0,  # TUNING (not in GDD) a heavy (Bound Oni 240, Abomination 260)
+		"damage": 19.0,  # TUNING (not in GDD) a cleaver blow (Bound Oni 18)
+		"attack_interval": 1.6,  # TUNING (not in GDD) s
+		"attack_range": 18.0,  # TUNING (not in GDD) edge-to-edge reach (px): the long cleaver
+		"move_speed": 70.0,  # TUNING (not in GDD) px/s, a heavy that half-flies (Bound Oni 64)
+		"radius": 15.0,  # TUNING (not in GDD) px
+		"acquisition_range": 150.0,  # TUNING (not in GDD) px
+		"replenish_interval": 18.0,  # TUNING (not in GDD) s, slow to rebuild (Bound Oni 18)
+		"band_min": 45.0,  # TUNING (not in GDD) px, with the front
+		"band_max": 95.0,  # TUNING (not in GDD)
+		"w_pursuit": 1.0,  # TUNING (not in GDD)
+		"w_formation": 0.4,  # TUNING (not in GDD)
+		"w_separation": 0.8,  # TUNING (not in GDD)
+		"w_threat": 0.0,  # TUNING (not in GDD) a demon never shies away
+		"attack_profile": "melee",
+		"target_profile": "guard",
+		"windup": 0.3,  # TUNING (not in GDD) s
+		"projectile_speed": 0.0,
+		"splash_radius": 0.0,
+		"heal_amount": 0.0,
+		"kite_distance": 0.0,
+		"heal_role_priority": 0.9,  # TUNING (not in GDD) healers value the heavy
+		"block_radius": 19.0,  # TUNING (not in GDD) px, blocks like the Abomination
+		"block_mass": 7.0,  # TUNING (not in GDD) (Bound Oni 7)
+		"engaged_speed_mult": 0.45,  # TUNING (not in GDD) touching enemies move at 45%
+		"formation": "front",  # Owner-approved proposal: "a winged heavy demon"
+		"capacity_bonus_mult": 0.4,  # TUNING (not in GDD) Grave Dominion V: +2, like the Abominations
+		"behavior": "hellfire",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"special": {
+			"cleave_damage": 22.0,  # TUNING (not in GDD) to every foe in the arc
+			"cleave_radius": 46.0,  # TUNING (not in GDD) px of the arc from its centre
+			"cleave_arc": 70.0,  # TUNING (not in GDD) degrees each side (the Prince of Hell: 180, a full circle)
+			"cleave_cooldown": 5.0,  # TUNING (not in GDD) s
+			"cleave_windup": 0.4,  # TUNING (not in GDD) s the cleaver is raised (the arc telegraphed)
+			"cleave_recover": 0.3,  # TUNING (not in GDD) s it stands after the sweep
+			"cleave_knockback": 160.0,  # TUNING (not in GDD) px/s impulse, divided by the foe's mass
+			"cleave_trigger": 28.0,  # TUNING (not in GDD) px edge to edge: it cleaves when a foe is this close
+		},
+	},
+	# --- Act VII: Castle Sanguis ---
+	# Blood Spawn (owner-approved proposal: "Blood Spawn, fast vampire brawlers
+	# that heal themselves on every hit (a class special, so it works on every
+	# stage; evolution Nosferatu)"; GDD §15.0 "The Blood Spawn, Nosferatu and
+	# Thirst Eternal"): the necromancer's own vampires, raised from the Court's
+	# fallen (male, gaunt and pale grey-white, soul-teal eyes, bared fangs, torn
+	# black rags, long claws). Fast melee brawlers on the Bone Ring's front
+	# posts (formation "front"; they do not body-block: no block_radius) whose
+	# BLOODTHIRST (BloodSpawnBehavior, "bloodthirst") heals them for
+	# drink_share x the damage of every blow that lands, through the one
+	# unit-heal path. Unlockable (UnlockData), then offered on every stage.
+	"blood_spawn": {
+		"display_name": "Blood Spawn",  # Owner-approved proposal
+		"plural": "Blood Spawn",
+		"description": "Fast vampire brawlers that heal themselves with every blow.",  # Card text: one short sentence (owner rule).
+		"max_hp": 72.0,  # TUNING (not in GDD) a brawler that lives on its bites (Warrior 90, Rogue 38)
+		"damage": 9.0,  # TUNING (not in GDD) a claw rake
+		"attack_interval": 0.75,  # TUNING (not in GDD) s, fast
+		"attack_range": 10.0,  # TUNING (not in GDD) edge-to-edge reach (px)
+		"move_speed": 104.0,  # TUNING (not in GDD) px/s, fast (Rogue 112)
+		"radius": 10.0,  # TUNING (not in GDD) px
+		"acquisition_range": 170.0,  # TUNING (not in GDD) px
+		"replenish_interval": 10.0,  # TUNING (not in GDD) s
+		"band_min": 45.0,  # TUNING (not in GDD) px, with the front
+		"band_max": 100.0,  # TUNING (not in GDD)
+		"w_pursuit": 1.1,  # TUNING (not in GDD) eager
+		"w_formation": 0.35,  # TUNING (not in GDD)
+		"w_separation": 0.8,  # TUNING (not in GDD)
+		"w_threat": 0.0,  # TUNING (not in GDD) they never shy away
+		"attack_profile": "melee",
+		"target_profile": "guard",
+		"windup": 0.12,  # TUNING (not in GDD) s
+		"projectile_speed": 0.0,
+		"splash_radius": 0.0,
+		"heal_amount": 0.0,
+		"kite_distance": 0.0,
+		"heal_role_priority": 0.5,  # TUNING (not in GDD) they heal themselves
+		"formation": "front",  # Owner-approved proposal: "fast vampire brawlers"
+		"capacity_bonus_mult": 0.6,  # TUNING (not in GDD) Grave Dominion V: +3, like the Rogues
+		"behavior": "bloodthirst",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"special": {
+			"drink_share": 0.3,  # TUNING (not in GDD) share of each blow's damage it heals (no suffix: the special's scaling leaves it alone)
+		},
+	},
+	# --- Act VIII: Liberty Heights ---
+	# The Fallen Hero (owner-approved proposal: "Finale summon class: the Fallen
+	# Hero, a raised Super who flies around the ring and slams into packs
+	# (evolution Black Paragon)"; GDD §15.0 "The Fallen Hero, Black Paragon and
+	# Origin Story"): a hero of the living raised by the necromancer (MALE, own
+	# decision: a broad dead hero in a torn charcoal-and-silver suit with a
+	# tattered dark cape, grey skin, soul-teal eyes; no emblem). A melee fighter
+	# on the Bone Ring's front posts (formation "front"; no body-block: no
+	# block_radius) whose HERO'S SLAM (FallenHeroBehavior, "hero_slam") flies
+	# it round the ring and down on the densest pack. Unlockable (UnlockData),
+	# then offered on every stage.
+	"fallen_hero": {
+		"display_name": "Fallen Hero",  # Owner-approved proposal
+		"plural": "Fallen Heroes",
+		"description": "Raised heroes that fly around your ring and slam into packs.",  # Card text: one short sentence (owner rule).
+		"max_hp": 110.0,  # TUNING (not in GDD) a hero's body (Warrior 90, Gargoyle 70)
+		"damage": 12.0,  # TUNING (not in GDD) a punch (melee)
+		"attack_interval": 1.0,  # TUNING (not in GDD) s
+		"attack_range": 12.0,  # TUNING (not in GDD) edge-to-edge reach (px)
+		"move_speed": 98.0,  # TUNING (not in GDD) px/s
+		"radius": 12.0,  # TUNING (not in GDD) px
+		"acquisition_range": 200.0,  # TUNING (not in GDD) px
+		"replenish_interval": 14.0,  # TUNING (not in GDD) s
+		"band_min": 50.0,  # TUNING (not in GDD) px, with the front
+		"band_max": 110.0,  # TUNING (not in GDD)
+		"w_pursuit": 1.0,  # TUNING (not in GDD)
+		"w_formation": 0.4,  # TUNING (not in GDD)
+		"w_separation": 0.8,  # TUNING (not in GDD)
+		"w_threat": 0.05,  # TUNING (not in GDD)
+		"attack_profile": "melee",
+		"target_profile": "skirmisher",
+		"windup": 0.15,  # TUNING (not in GDD) s
+		"projectile_speed": 0.0,
+		"splash_radius": 0.0,
+		"heal_amount": 0.0,
+		"kite_distance": 0.0,
+		"heal_role_priority": 0.6,  # TUNING (not in GDD)
+		"formation": "front",  # Owner-approved proposal: it flies round the ring
+		"capacity_bonus_mult": 0.5,  # TUNING (not in GDD) Grave Dominion V: +2, a heavy class
+		"behavior": "hero_slam",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"special": {
+			"slam_damage": 34.0,  # TUNING (not in GDD) AoE damage where it lands
+			"slam_radius": 56.0,  # TUNING (not in GDD) impact radius (px)
+			"slam_cooldown": 6.5,  # TUNING (not in GDD) s between slams
+			"slam_takeoff": 0.25,  # TUNING (not in GDD) s rising in place (already airborne)
+			"slam_orbit": 0.55,  # TUNING (not in GDD) s flying round the ring before the dive
+			"slam_land": 0.3,  # TUNING (not in GDD) s settling after the last slam (still airborne)
+			"slam_speed": 360.0,  # TUNING (not in GDD) flight speed (px/s)
+			"slam_range": 300.0,  # TUNING (not in GDD) px from its necromancer it looks for a pack
+			"slam_min_enemies": 3,  # TUNING (not in GDD) foes around the pick (an elite / boss alone also counts)
+			"slam_knockback": 200.0,  # TUNING (not in GDD) px/s impulse, divided by enemy mass
+			"slam_lift": 22.0,  # TUNING (not in GDD) px the body is drawn above its shadow at full height
+			"slam_shake": 2.0,  # TUNING (not in GDD) screen-shake request (px, Juice)
+			"cluster_bonus": 0.5,  # TUNING (not in GDD) target-score bonus x cluster fullness while the slam is ready
+		},
+	},
+	# --- Act IX: the Ark ---
+	# The Ghost Saucer (owner-approved proposal: "Finale summon class: the Ghost
+	# Saucer, a flying ranged summon that fires short beams and lifts small
+	# enemies (evolution Black Mothership)"; GDD §15.0 "The Ghost Saucer, Black
+	# Mothership and Crop Circles"): a Concord saucer raised by the
+	# necromancer, a machine (no sex): a hull of bone-grey plates and
+	# soul-light, a cracked dome. It HOVERS over the army inside the Bone Ring
+	# with the support classes (formation "back", "flies": over the obstacles;
+	# enemies target and hit it; never liftable by the Concord) and fires SHORT
+	# BEAMS (attack_profile "saucer_beam", released by GhostSaucerBehavior,
+	# "saucer_lift"), and every lift_cooldown s it LIFTS a small foe through the
+	# one enemy-lift helper and drops it. Unlockable (UnlockData), then offered
+	# on every stage.
+	"ghost_saucer": {
+		"display_name": "Ghost Saucer",  # Owner-approved proposal
+		"plural": "Ghost Saucers",
+		"description": "A raised saucer that hovers over your army, fires short beams and lifts small foes.",  # Card text: one short sentence (owner rule).
+		"max_hp": 70.0,  # TUNING (not in GDD) a hull (Grave Drone 30, Gargoyle 70)
+		"damage": 8.0,  # TUNING (not in GDD) per beam, on every foe on its line
+		"attack_interval": 1.3,  # TUNING (not in GDD) s
+		"attack_range": 170.0,  # TUNING (not in GDD) centre-to-edge (px)
+		"move_speed": 96.0,  # TUNING (not in GDD) px/s; a quick hover
+		"radius": 10.0,  # TUNING (not in GDD) px
+		"acquisition_range": 250.0,  # TUNING (not in GDD)
+		"replenish_interval": 12.0,  # TUNING (not in GDD) s
+		"band_min": 30.0,  # TUNING (not in GDD) over the army, inside the ring (px)
+		"band_max": 70.0,  # TUNING (not in GDD)
+		"w_pursuit": 0.35,  # TUNING (not in GDD) it fires from where it hovers
+		"w_formation": 0.9,  # TUNING (not in GDD) keeps over the army
+		"w_separation": 0.9,  # TUNING (not in GDD)
+		"w_threat": 0.0,  # TUNING (not in GDD) hovers; never shies away
+		"attack_profile": "saucer_beam",  # Released by GhostSaucerBehavior (short beams).
+		"target_profile": "ranged",
+		"windup": 0.15,  # TUNING (not in GDD) s
+		"projectile_speed": 0.0,  # Unused: a beam, not a projectile.
+		"splash_radius": 0.0,
+		"heal_amount": 0.0,
+		"kite_distance": 0.0,
+		"heal_role_priority": 0.4,  # TUNING (not in GDD)
+		"formation": "back",  # Over the army: inside the Bone Ring with the support classes.
+		"capacity_bonus_mult": 0.5,  # TUNING (not in GDD) Grave Dominion V: +2
+		"flies": true,  # Owner-approved proposal: "a flying ranged summon" (SummonedUnit.flies; never liftable)
+		"behavior": "saucer_lift",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"special": {
+			"beams": 1,  # Beams an attack (Black Mothership 3).
+			"beam_spread": 0.25,  # TUNING (not in GDD) rad between two beams of one attack
+			"beam_length": 190.0,  # TUNING (not in GDD) px of a short beam (special_area lengthens it)
+			"beam_width": 7.0,  # TUNING (not in GDD) px each side of the line it strikes
+			"lift_cooldown": 7.0,  # TUNING (not in GDD) s between two lifts
+			"lift_duration": 1.2,  # TUNING (not in GDD) s a lifted foe hangs (Crop Circles lengthens it)
+			"lift_range": 170.0,  # TUNING (not in GDD) px it looks for a small foe
+			"lift_max_size": 12.0,  # TUNING (not in GDD) px: the biggest body it lifts ("small enemies"; not a *_radius key, so no area bonus grows it)
+			"lift_damage": 22.0,  # TUNING (not in GDD) the drop on the lifted foe (half to the foes round it)
+			"lift_radius": 36.0,  # TUNING (not in GDD) px round the drop
+			"lifts": 1,  # Foes it holds at once (Black Mothership 2).
+			"hover_lift": 16.0,  # TUNING (not in GDD) px the hull hovers above its shadow (drawing only)
+		},
+	},
 }
 
 ## Summon-ability progression, one entry per skill level (index 0 = level 1).
@@ -1158,6 +1555,75 @@ const LEVELS := {
 		{"count": 2, "damage_bonus": 0.2, "hp_bonus": 0.2},
 		{"count": 2, "damage_bonus": 0.35, "hp_bonus": 0.2, "special_duration": 0.3},
 		{"count": 3, "damage_bonus": 0.35, "hp_bonus": 0.2, "special_duration": 0.3, "speed_bonus": 0.15},
+	],
+	# --- Act IV: the Asphodel Underworld ---
+	# TUNING (not in GDD): three to a card (owner-approved "a three-shield
+	# phalanx"), 3 -> 6 Myrmidons; then sturdier walls and harder spears.
+	"myrmidon_shade": [
+		{"count": 3},
+		{"count": 3, "damage_bonus": 0.15, "hp_bonus": 0.1},
+		{"count": 4, "damage_bonus": 0.2, "hp_bonus": 0.2},
+		{"count": 5, "damage_bonus": 0.3, "hp_bonus": 0.25},
+		{"count": 6, "damage_bonus": 0.4, "hp_bonus": 0.3, "speed_bonus": 0.1},
+	],
+	# --- Act V: the Road to the Sun ---
+	# TUNING (not in GDD): one brute to a card (a heavy), 1 -> 3 Bound Oni; then
+	# harder, wider smashes and longer stuns.
+	"bound_oni": [
+		{"count": 1},
+		{"count": 1, "hp_bonus": 0.2, "special_bonus": 0.25},
+		{"count": 2, "hp_bonus": 0.2, "special_bonus": 0.25, "special_duration": 0.2},
+		{"count": 2, "hp_bonus": 0.4, "special_bonus": 0.35, "special_area": 0.2, "special_duration": 0.2},
+		{"count": 3, "hp_bonus": 0.4, "damage_bonus": 0.2, "special_bonus": 0.5, "special_area": 0.2, "special_duration": 0.3},
+	],
+	# --- Act VI: the Palace of Silk and Ash ---
+	# TUNING (not in GDD): 1 -> 3 Succubi; then longer charms and harder thralls.
+	"bound_succubus": [
+		{"count": 1},
+		{"count": 2, "hp_bonus": 0.1},
+		{"count": 2, "hp_bonus": 0.2, "special_bonus": 0.25, "special_duration": 0.2},
+		{"count": 3, "hp_bonus": 0.2, "damage_bonus": 0.15, "special_bonus": 0.35, "special_duration": 0.3},
+		{"count": 3, "hp_bonus": 0.3, "damage_bonus": 0.3, "special_bonus": 0.5, "special_duration": 0.4, "special_haste": 0.15},
+	],
+	# --- Act VI: Pandemonium ---
+	# TUNING (not in GDD): one demon to a card (a heavy), 1 -> 3 Archfiends;
+	# then harder, wider and quicker cleaves.
+	"archfiend": [
+		{"count": 1},
+		{"count": 1, "hp_bonus": 0.2, "special_bonus": 0.25},
+		{"count": 2, "hp_bonus": 0.2, "special_bonus": 0.25, "special_haste": 0.1},
+		{"count": 2, "hp_bonus": 0.4, "special_bonus": 0.35, "special_area": 0.2, "special_haste": 0.1},
+		{"count": 3, "hp_bonus": 0.4, "damage_bonus": 0.2, "special_bonus": 0.5, "special_area": 0.2, "special_haste": 0.2},
+	],
+	# --- Act VII: Castle Sanguis ---
+	# TUNING (not in GDD): a pack of brawlers, 2 -> 5 Blood Spawn; then tougher,
+	# harder and quicker.
+	"blood_spawn": [
+		{"count": 2},
+		{"count": 3, "hp_bonus": 0.1},
+		{"count": 3, "hp_bonus": 0.2, "damage_bonus": 0.15},
+		{"count": 4, "hp_bonus": 0.25, "damage_bonus": 0.2, "speed_bonus": 0.1},
+		{"count": 5, "hp_bonus": 0.3, "damage_bonus": 0.3, "speed_bonus": 0.15},
+	],
+	# --- Act VIII: Liberty Heights ---
+	# TUNING (not in GDD): 1 -> 3 Fallen Heroes; harder, wider, then more
+	# frequent slams.
+	"fallen_hero": [
+		{"count": 1},
+		{"count": 2},
+		{"count": 2, "hp_bonus": 0.2, "special_bonus": 0.25},
+		{"count": 3, "hp_bonus": 0.25, "special_bonus": 0.3, "special_area": 0.15},
+		{"count": 3, "hp_bonus": 0.3, "damage_bonus": 0.25, "special_bonus": 0.5, "special_area": 0.2, "special_haste": 0.2},
+	],
+	# --- Act IX: the Ark ---
+	# TUNING (not in GDD): 1 -> 3 Ghost Saucers; harder drops, wider beams,
+	# then more frequent lifts.
+	"ghost_saucer": [
+		{"count": 1},
+		{"count": 2},
+		{"count": 2, "hp_bonus": 0.2, "special_bonus": 0.25},
+		{"count": 3, "hp_bonus": 0.25, "special_bonus": 0.3, "special_area": 0.15},
+		{"count": 3, "hp_bonus": 0.3, "damage_bonus": 0.25, "special_bonus": 0.5, "special_area": 0.2, "special_haste": 0.2},
 	],
 }
 

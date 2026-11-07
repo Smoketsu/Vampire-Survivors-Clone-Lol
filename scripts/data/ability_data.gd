@@ -45,6 +45,11 @@
 ##                 every few seconds, cutting everything along it out to about
 ##                 420 px; a beam kill sparks lightning to a nearby enemy (the
 ##                 Scrap Wastes, Kestrel; logic DeathRay, rules DeathRayData).
+## Act IV's unlockable spells (owner-approved Act IV proposal "Rewards"; the
+## same rule):
+##   Stolen Thunder — a charged bolt strikes the strongest enemy and chains to
+##                 armoured foes (Mount Olympus, Zeus; logic StolenThunder,
+##                 rules StolenThunderData).
 class_name AbilityData
 extends RefCounted
 
@@ -69,7 +74,43 @@ const SPELL_ORDER := ["shadow_bolt", "orb_shield", "shadow_blast",
 	# --- Act III: the Scrap Wastes ---
 	"death_ray",
 	# --- Act III: the Iron Citadel ---
-	"scrap_swarm"]
+	"scrap_swarm",
+	# --- Act IV: the Shores of Ilion ---
+	"paris_arrow",
+	# --- Act IV: Mount Olympus ---
+	"stolen_thunder",
+	# --- Act IV: the Asphodel Underworld ---
+	"river_styx",
+	# --- Act V: the Burning Province ---
+	"hundred_shadows",
+	# --- Act V: the Road to the Sun ---
+	"black_sun",
+	# --- Act V: Castle Kurogane ---
+	"banner_of_the_dead",
+	# --- Act VI: the Burning Gate ---
+	"brimstone",
+	# --- Act VI: the Palace of Silk and Ash ---
+	"tempt",
+	# --- Act VI: Pandemonium ---
+	"fall_from_grace",
+	# --- Act VII: Ravensmoor ---
+	"moonfang",
+	# --- Act VII: the Witchwood ---
+	"witch_circle",
+	# --- Act VII: Castle Sanguis ---
+	"night_swarm",
+	# --- Act VIII: Skid Row ---
+	"hearse_run",
+	# --- Act VIII: Fort Kessler ---
+	"bone_mines",
+	# --- Act VIII: Liberty Heights ---
+	"heros_fist",
+	# --- Act IX: the Crash Site ---
+	"bone_beetles",
+	# --- Act IX: the Proving Moon ---
+	"soul_caster",
+	# --- Act IX: the Ark ---
+	"tractor_lift"]
 
 ## Spell definitions.
 ##   display_name — UI name.
@@ -456,6 +497,450 @@ const SPELLS := {
 			{"drones": 5, "damage": 15.0, "cooldown": 0.85, "range": 240.0, "orbit_speed": 1.2},  # TUNING (not in GDD) first pass 19 (with the evolution 296k damage in a forced army run)
 		],
 	},
+	# --- Act IV: the Shores of Ilion ---
+	# Paris's Arrow (owner-approved Act IV proposal "Rewards": "a spectral arrow
+	# that always strikes its target from behind (full damage through phalanx
+	# fronts)"; unlocked by slaying Achilles, UnlockData). Every `cooldown` s
+	# (start to start) it looses `arrows` violet ghost arrows at the strongest
+	# foes (most max HP first: it hunts champions) within `range` px; each
+	# swings around its target in `flight` s and strikes it FROM BEHIND (its
+	# origin behind the target's facing: CombatResolver.damage_enemy() with
+	# that origin, a shot), dealing `damage`: full damage through a locked
+	# shield front or a testudo, it breaks the wall it strikes and finds
+	# Achilles' back. Stat keys: damage, cooldown (s), arrows, range (px),
+	# flight (s). Logic: ParisArrow; fixed rules: ParisArrowData; Mortal Heel
+	# (its paired passive) raises every hit from behind, these included.
+	"paris_arrow": {
+		"display_name": "Paris's Arrow",
+		"icon": "paris_arrow",
+		"description": "Ghost arrows swing around the strongest foes and strike them from behind.",
+		"shared_card_pool": true,  # TUNING (not in GDD) an unlocked Act IV spell: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Arrow damage", "arrows": "Arrows", "cooldown": "Cooldown (s)", "range": "Range"},
+		"levels": [
+			{"damage": 30.0, "arrows": 1, "cooldown": 2.6, "range": 360.0, "flight": 0.55},  # TUNING (not in GDD) a single-target hunter (the act's champions and fronts)
+			{"damage": 36.0, "arrows": 2, "cooldown": 2.6, "range": 370.0, "flight": 0.55},  # TUNING (not in GDD)
+			{"damage": 42.0, "arrows": 2, "cooldown": 2.4, "range": 380.0, "flight": 0.5},  # TUNING (not in GDD)
+			{"damage": 50.0, "arrows": 3, "cooldown": 2.3, "range": 390.0, "flight": 0.5},  # TUNING (not in GDD)
+			{"damage": 58.0, "arrows": 3, "cooldown": 2.1, "range": 400.0, "flight": 0.45},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act IV: Mount Olympus ---
+	# Stolen Thunder (owner-approved Act IV proposal "Rewards": "a charged bolt
+	# on the strongest enemy that chains to armoured foes"; unlocked by slaying
+	# Zeus, UnlockData). Every `cooldown` s the bolt charges `thunder_charge` s
+	# over the necromancer, then strikes the foe with the most HP left within
+	# `range` px for `damage`, and chains up to `thunder_chains` hops to the
+	# nearest ARMOURED foe within `chain_range` px (each hop `chain_falloff`
+	# weaker); armoured foes take `armour_bonus` more. Logic: StolenThunder;
+	# fixed rules: StolenThunderData; Titan's Blood adds hops and cuts the
+	# charge (AbilityManager.apply_spell_mods(): thunder_chains, thunder_charge).
+	"stolen_thunder": {
+		"display_name": "Stolen Thunder",
+		"icon": "stolen_thunder",
+		"description": "A charged bolt strikes the strongest foe and leaps on to armoured ones.",
+		"shared_card_pool": true,  # TUNING (not in GDD) an unlocked Act IV spell: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Bolt damage", "thunder_chains": "Chain hops", "cooldown": "Bolt every (s)", "armour_bonus": "Bonus vs armour", "range": "Range"},
+		"levels": [
+			{"damage": 60.0, "cooldown": 3.6, "thunder_charge": 0.8, "range": 420.0, "thunder_chains": 2, "chain_range": 150.0, "chain_falloff": 0.15, "armour_bonus": 0.25},  # TUNING (not in GDD)
+			{"damage": 76.0, "cooldown": 3.4, "thunder_charge": 0.8, "range": 430.0, "thunder_chains": 3, "chain_range": 155.0, "chain_falloff": 0.15, "armour_bonus": 0.25},  # TUNING (not in GDD)
+			{"damage": 92.0, "cooldown": 3.2, "thunder_charge": 0.75, "range": 440.0, "thunder_chains": 3, "chain_range": 160.0, "chain_falloff": 0.12, "armour_bonus": 0.3},  # TUNING (not in GDD)
+			{"damage": 112.0, "cooldown": 3.0, "thunder_charge": 0.7, "range": 450.0, "thunder_chains": 4, "chain_range": 170.0, "chain_falloff": 0.12, "armour_bonus": 0.3},  # TUNING (not in GDD)
+			{"damage": 136.0, "cooldown": 2.8, "thunder_charge": 0.65, "range": 460.0, "thunder_chains": 5, "chain_range": 180.0, "chain_falloff": 0.1, "armour_bonus": 0.35},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act IV: the Asphodel Underworld ---
+	# River Styx (GDD §15.0 "River Styx, Lethe's Flood, Ferryman's Toll and the
+	# Ferrywoman"; owner-approved proposal: "a black river line that drains and
+	# slows whatever crosses it"; unlocked by defeating Hades, UnlockData): every
+	# `cooldown` s, `rivers` river line(s) `length` px long and 2 x `radius` px
+	# wide across the nearest foe's way, flowing `duration` s; every `tick` s each
+	# foe in the water takes `damage` and is slowed by `river_slow` for
+	# `slow_duration` s; the necromancer heals `drain_share` of it (at most
+	# `drain_cap` HP a second). Logic: RiverStyx; fixed rules: RiverStyxData.
+	"river_styx": {
+		"display_name": "River Styx",
+		"icon": "river_styx",
+		"description": "A black river opens across your foes' path: it drains and slows whatever crosses it.",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Drain per tick", "river_slow": "Slow", "length": "River length", "duration": "Duration (s)", "cooldown": "Cooldown (s)"},
+		"levels": [
+			{"rivers": 1, "damage": 6.0, "tick": 0.5, "river_slow": 0.30, "slow_duration": 0.8, "length": 170.0, "radius": 16.0, "duration": 4.0, "cooldown": 5.0, "drain_share": 0.04, "drain_cap": 3.0},  # TUNING (not in GDD)
+			{"rivers": 1, "damage": 8.0, "tick": 0.5, "river_slow": 0.32, "slow_duration": 0.8, "length": 190.0, "radius": 17.0, "duration": 4.5, "cooldown": 4.8, "drain_share": 0.04, "drain_cap": 3.0},  # TUNING (not in GDD)
+			{"rivers": 1, "damage": 9.0, "tick": 0.5, "river_slow": 0.35, "slow_duration": 0.8, "length": 210.0, "radius": 18.0, "duration": 5.0, "cooldown": 4.5, "drain_share": 0.05, "drain_cap": 4.0},  # TUNING (not in GDD)
+			{"rivers": 1, "damage": 11.0, "tick": 0.5, "river_slow": 0.38, "slow_duration": 0.8, "length": 230.0, "radius": 19.0, "duration": 5.5, "cooldown": 4.2, "drain_share": 0.05, "drain_cap": 4.0},  # TUNING (not in GDD)
+			{"rivers": 1, "damage": 13.0, "tick": 0.5, "river_slow": 0.40, "slow_duration": 0.8, "length": 250.0, "radius": 20.0, "duration": 6.0, "cooldown": 4.0, "drain_share": 0.06, "drain_cap": 5.0},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act V: the Burning Province ---
+	# Hundred Shadows (GDD §15.0 "Hundred Shadows, Hidden Hand and the Grave
+	# Kunoichi (Act V)"; owner-approved proposal: "shadow clones of the
+	# necromancer that echo your next spell cast"; unlocked by slaying Kage,
+	# UnlockData): every `cooldown` s, `clones` shadow clones step out around the
+	# necromancer for `life` s, each throwing a shadow kunai (`damage`) at the
+	# nearest foe within `range` px; each then ECHOES the necromancer's next
+	# spell hit with another kunai at that foe (`damage` + `echo_share` x the
+	# hit). Stat keys: damage, clones, cooldown (s), life (s), echo_share, range
+	# (px). Logic: HundredShadows; fixed rules: HundredShadowsData; Hidden Hand
+	# (its paired passive) raises every spell hit on a foe busy with a summon.
+	"hundred_shadows": {
+		"display_name": "Hundred Shadows",
+		"icon": "hundred_shadows",
+		"description": "Shadow clones step out of you, throw kunai, then echo your next spell.",
+		"shared_card_pool": true,  # TUNING (not in GDD) an unlocked Act V spell: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Kunai damage", "clones": "Clones", "echo_share": "Echo of the spell", "life": "Clone life (s)", "cooldown": "Cooldown (s)"},
+		"levels": [
+			{"damage": 14.0, "clones": 1, "cooldown": 5.5, "life": 4.0, "echo_share": 0.5, "range": 300.0},  # TUNING (not in GDD)
+			{"damage": 17.0, "clones": 2, "cooldown": 5.5, "life": 4.0, "echo_share": 0.5, "range": 310.0},  # TUNING (not in GDD)
+			{"damage": 21.0, "clones": 2, "cooldown": 5.0, "life": 4.5, "echo_share": 0.6, "range": 320.0},  # TUNING (not in GDD)
+			{"damage": 25.0, "clones": 3, "cooldown": 4.8, "life": 4.5, "echo_share": 0.6, "range": 330.0},  # TUNING (not in GDD)
+			{"damage": 30.0, "clones": 3, "cooldown": 4.5, "life": 5.0, "echo_share": 0.7, "range": 340.0},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act V: the Road to the Sun ---
+	# Black Sun (GDD §15.0 "Black Sun, Eclipse of Heaven, Stolen Dawn and the
+	# Shrine Maiden of Night"; owner-approved proposal: "a dark sun orbits the
+	# necromancer and fires a short beam at the nearest group"; unlocked by
+	# defeating Amaterasu, UnlockData): `suns` dark sun(s) orbit him
+	# (BlackSunData.ORBIT_RADIUS px); every `cooldown` s each fires a beam
+	# `sun_reach` px long and `sun_width` px wide at the nearest group of foes
+	# (the nearest foe within BlackSunData.AIM_RANGE and the foes within
+	# `group_radius` px of it), hitting every foe on it for `damage`. Logic:
+	# BlackSun; fixed rules: BlackSunData. (Its own keys, not the Death Ray's
+	# beam_length / beam_width: Conductive Marrow stays the Death Ray's.)
+	"black_sun": {
+		"display_name": "Black Sun",
+		"icon": "black_sun",
+		"description": "A dark sun orbits you and burns a short beam through the nearest group of foes.",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Beam damage", "sun_reach": "Beam reach", "cooldown": "Cooldown (s)"},
+		"levels": [
+			{"suns": 1, "damage": 12.0, "cooldown": 1.8, "sun_reach": 160.0, "sun_width": 14.0, "group_radius": 60.0},  # TUNING (not in GDD)
+			{"suns": 1, "damage": 15.0, "cooldown": 1.7, "sun_reach": 170.0, "sun_width": 15.0, "group_radius": 60.0},  # TUNING (not in GDD)
+			{"suns": 1, "damage": 17.0, "cooldown": 1.55, "sun_reach": 180.0, "sun_width": 16.0, "group_radius": 64.0},  # TUNING (not in GDD)
+			{"suns": 1, "damage": 20.0, "cooldown": 1.45, "sun_reach": 190.0, "sun_width": 17.0, "group_radius": 64.0},  # TUNING (not in GDD)
+			{"suns": 1, "damage": 23.0, "cooldown": 1.3, "sun_reach": 200.0, "sun_width": 18.0, "group_radius": 68.0},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act V: Castle Kurogane ---
+	# Banner of the Dead (owner-approved Act V proposal "Rewards": "a war banner
+	# planted where you stand; summons near it attack faster"; unlocked by
+	# slaying Shogun Kurogane, UnlockData). Every `cooldown` s it plants a war
+	# banner where the necromancer stands: the planting strikes every foe within
+	# `pulse_radius` px for `damage`; the banner stands `duration` s (at most
+	# `banners` at once) and every summon of his within `radius` px of it
+	# attacks `haste` faster (HordeDirector.attack_haste(), the one read; the
+	# same on every stage). Logic: BannerOfTheDead; fixed rules: BannerData.
+	"banner_of_the_dead": {
+		"display_name": "Banner of the Dead",
+		"icon": "banner_of_the_dead",
+		"description": "Plant a war banner where you stand: your dead near it attack faster.",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"haste": "Attack speed near it", "radius": "Banner reach", "banners": "Banners", "duration": "Duration (s)", "cooldown": "Cooldown (s)"},
+		"levels": [
+			{"damage": 20.0, "pulse_radius": 70.0, "haste": 0.20, "radius": 110.0, "banners": 1, "duration": 7.0, "cooldown": 9.0},  # TUNING (not in GDD) a support spell: the haste is its worth
+			{"damage": 26.0, "pulse_radius": 74.0, "haste": 0.25, "radius": 120.0, "banners": 1, "duration": 7.5, "cooldown": 8.5},  # TUNING (not in GDD)
+			{"damage": 32.0, "pulse_radius": 78.0, "haste": 0.30, "radius": 130.0, "banners": 2, "duration": 8.0, "cooldown": 8.0},  # TUNING (not in GDD)
+			{"damage": 40.0, "pulse_radius": 82.0, "haste": 0.35, "radius": 140.0, "banners": 2, "duration": 8.5, "cooldown": 7.5},  # TUNING (not in GDD)
+			{"damage": 48.0, "pulse_radius": 86.0, "haste": 0.40, "radius": 150.0, "banners": 2, "duration": 9.0, "cooldown": 7.0},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act VI: the Burning Gate ---
+	# Brimstone (GDD §15.0 "Brimstone, Rain of Fire, Furnace Heart and the
+	# Furnace Priest (Act VI)"; owner-approved proposal: "burning stones fall on
+	# the densest group and leave a short pit"; unlocked by slaying Moloch,
+	# UnlockData): every `cooldown` s, `stones` stones fall on the densest groups
+	# within `range` px, `damage` to every foe within `radius` px, then a pit of
+	# `pit_radius` px burns foes only for `pit_life` s at `pit_share` x the
+	# damage per s. Stat keys: damage, stones, radius (px), pit_radius (px),
+	# pit_life (s), pit_share, cooldown (s), range (px). Logic: Brimstone; fixed
+	# rules: BrimstoneData; Furnace Heart (its paired passive) raises every spell
+	# hit on a foe standing in fire.
+	"brimstone": {
+		"display_name": "Brimstone",  # Owner-approved proposal
+		"icon": "brimstone",
+		"description": "Burning stones fall on the thickest crowd and leave fire where they land.",
+		"shared_card_pool": true,  # TUNING (not in GDD) an unlocked Act VI spell: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Stone damage", "stones": "Stones", "radius": "Blast radius", "pit_share": "Fire per second", "pit_life": "Fire lasts (s)", "cooldown": "Cooldown (s)"},
+		"levels": [
+			{"damage": 20.0, "stones": 1, "radius": 34.0, "pit_radius": 26.0, "pit_life": 1.6, "pit_share": 0.25, "cooldown": 3.0, "range": 340.0},  # TUNING (not in GDD)
+			{"damage": 24.0, "stones": 2, "radius": 34.0, "pit_radius": 26.0, "pit_life": 1.8, "pit_share": 0.25, "cooldown": 3.0, "range": 340.0},  # TUNING (not in GDD)
+			{"damage": 28.0, "stones": 2, "radius": 38.0, "pit_radius": 30.0, "pit_life": 2.2, "pit_share": 0.3, "cooldown": 2.8, "range": 350.0},  # TUNING (not in GDD)
+			{"damage": 33.0, "stones": 3, "radius": 38.0, "pit_radius": 30.0, "pit_life": 2.4, "pit_share": 0.3, "cooldown": 2.7, "range": 350.0},  # TUNING (not in GDD)
+			{"damage": 40.0, "stones": 3, "radius": 42.0, "pit_radius": 34.0, "pit_life": 2.8, "pit_share": 0.35, "cooldown": 2.5, "range": 360.0},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act VI: the Palace of Silk and Ash ---
+	# Temptation (id "tempt": the Inferno's rule is Temptation and no spell id may
+	# meet a kind; GDD §15.0 "Temptation, Unholy Desire, Velvet Chains and the
+	# Succubus Queen"; owner-approved proposal: "charm the strongest nearby enemy
+	# to fight for you for 6 s"; unlocked by slaying Lilith, UnlockData): every
+	# `cooldown` s the `charms` strongest foes (most HP) within `range` px are
+	# charmed for `charm_time` s through the Enthrall path (never a boss,
+	# miniboss or structure), each fighting for you hitting for `damage`, then
+	# going back to its side. Logic: TemptSpell, Enthrall; fixed rules: TemptData.
+	"tempt": {
+		"display_name": "Temptation",  # Owner-approved proposal
+		"icon": "tempt",
+		"description": "Charm the strongest foe near you: it fights for you for a while.",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"charms": "Foes charmed", "charm_time": "Charm (s)", "damage": "Thrall hit", "range": "Reach", "cooldown": "Cooldown (s)"},
+		"levels": [
+			{"charms": 1, "charm_time": 6.0, "damage": 14.0, "range": 220.0, "cooldown": 7.0},  # Owner-approved proposal: the 6 s; the rest TUNING (not in GDD)
+			{"charms": 1, "charm_time": 6.0, "damage": 17.0, "range": 230.0, "cooldown": 6.5},  # TUNING (not in GDD)
+			{"charms": 1, "charm_time": 6.5, "damage": 20.0, "range": 240.0, "cooldown": 6.0},  # TUNING (not in GDD)
+			{"charms": 2, "charm_time": 6.5, "damage": 22.0, "range": 250.0, "cooldown": 6.0},  # TUNING (not in GDD)
+			{"charms": 2, "charm_time": 7.0, "damage": 25.0, "range": 260.0, "cooldown": 5.5},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act VI: Pandemonium ---
+	# Fall from Grace (GDD §15.0 "Fall from Grace, Lightbringer, Pride and the
+	# Fallen Saint"; owner-approved proposal: "a fallen star crashes on the
+	# strongest enemy"; unlocked by defeating the Morning Star, UnlockData):
+	# every `cooldown` s `stars` star(s) (1 before the evolution) fall for
+	# `fall_time` s on the strongest foes within FallFromGraceData.AIM_RANGE px
+	# (the most HP left) and crash: `damage` to the target, `splash` x that to
+	# every other foe within `radius` px (Necrotic Expanse widens it, like every
+	# spell radius). Logic: FallFromGrace; fixed rules: FallFromGraceData.
+	# A single-target spell: the tall foe it finds is what spell-only builds
+	# lacked (CLAUDE.md "Next" 7).
+	"fall_from_grace": {
+		"display_name": "Fall from Grace",
+		"icon": "fall_from_grace",
+		"description": "A fallen star crashes down on the strongest foe near you.",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Star damage", "radius": "Crash radius", "splash": "Splash", "cooldown": "Cooldown (s)"},
+		"levels": [
+			{"damage": 36.0, "radius": 40.0, "splash": 0.4, "fall_time": 0.6, "cooldown": 3.2},  # TUNING (not in GDD) a heavy single blow (first pass 46-106 at Lv 1-5: Lightbringer led every source by 4x in the agent run)
+			{"damage": 44.0, "radius": 42.0, "splash": 0.4, "fall_time": 0.6, "cooldown": 3.0},  # TUNING (not in GDD)
+			{"damage": 54.0, "radius": 44.0, "splash": 0.45, "fall_time": 0.55, "cooldown": 2.8},  # TUNING (not in GDD)
+			{"damage": 66.0, "radius": 46.0, "splash": 0.45, "fall_time": 0.55, "cooldown": 2.6},  # TUNING (not in GDD)
+			{"damage": 80.0, "radius": 48.0, "splash": 0.5, "fall_time": 0.5, "cooldown": 2.4},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act VII: Ravensmoor ---
+	# Moonfang (GDD §15.0 "Moonfang, Wolf of the Red Moon, Pack Blood and the
+	# Moon-Cursed Huntress (Act VII)"; owner-approved proposal: "spectral wolf
+	# jaws snap at the nearest group and leave bleeds"; unlocked by slaying
+	# Vargr, UnlockData): every `cooldown` s, `jaws` spectral jaws open over the
+	# nearest groups of foes within `range` px, close in MoonfangData.SNAP_TIME
+	# s and bite every foe within `radius` px for `damage`; each bitten foe
+	# bleeds `bleed_share` x the damage per s for `bleed_time` s. Stat keys:
+	# damage, jaws, radius (px), bleed_share, bleed_time (s), cooldown (s),
+	# range (px). Logic: Moonfang; fixed rules: MoonfangData; Pack Blood (its
+	# paired passive) makes every bleeding foe take more from every hit.
+	"moonfang": {
+		"display_name": "Moonfang",  # Owner-approved proposal
+		"icon": "moonfang",
+		"description": "Spectral wolf jaws snap at the nearest foes and leave them bleeding.",
+		"shared_card_pool": true,  # TUNING (not in GDD) an unlocked Act VII spell: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Bite damage", "jaws": "Jaws", "radius": "Bite radius", "bleed_share": "Bleed per second", "bleed_time": "Bleed lasts (s)", "cooldown": "Cooldown (s)"},
+		"levels": [
+			{"damage": 12.0, "jaws": 2, "radius": 26.0, "bleed_share": 0.2, "bleed_time": 3.0, "cooldown": 2.6, "range": 300.0},  # TUNING (not in GDD) first pass 16-34 damage at Lv 1-5 (409k with the evolution in the forced seed-7 run, 3x the top summon class)
+			{"damage": 14.0, "jaws": 2, "radius": 28.0, "bleed_share": 0.2, "bleed_time": 3.0, "cooldown": 2.5, "range": 310.0},  # TUNING (not in GDD)
+			{"damage": 17.0, "jaws": 3, "radius": 28.0, "bleed_share": 0.22, "bleed_time": 3.5, "cooldown": 2.4, "range": 320.0},  # TUNING (not in GDD)
+			{"damage": 20.0, "jaws": 3, "radius": 30.0, "bleed_share": 0.22, "bleed_time": 3.5, "cooldown": 2.3, "range": 330.0},  # TUNING (not in GDD)
+			{"damage": 24.0, "jaws": 4, "radius": 32.0, "bleed_share": 0.25, "bleed_time": 4.0, "cooldown": 2.2, "range": 340.0},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act VII: the Witchwood ---
+	# Hex Circle (GDD §15.0 "Hex Circle, Witches' Sabbath, Moonlit Rite and the
+	# Hedge Witch (Act VII)"; owner-approved proposal: "a crimson circle under
+	# the necromancer that drains every enemy inside"; unlocked by slaying
+	# Isolde, UnlockData; id "witch_circle"): a circle of `radius` px follows the
+	# necromancer; every `cooldown` s it deals `damage` to every foe inside and
+	# the necromancer heals `drain` x the damage dealt, at most `heal_cap` HP
+	# per s. Stat keys: damage, radius (px), cooldown (s), drain (share),
+	# heal_cap (HP/s). Logic: WitchCircle; fixed rules: WitchCircleData; Moonlit
+	# Rite (its paired passive) raises every spell hit on a foe inside it.
+	"witch_circle": {
+		"display_name": "Hex Circle",  # Owner-approved proposal
+		"icon": "witch_circle",
+		"description": "A crimson circle under you drains every foe inside it, and you drink a little of it.",
+		"shared_card_pool": true,  # TUNING (not in GDD) an unlocked Act VII spell: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Drain per pulse", "radius": "Radius", "cooldown": "Pulse every (s)", "drain": "Drunk back", "heal_cap": "Heal cap (HP/s)"},
+		"levels": [
+			{"damage": 6.0, "radius": 72.0, "cooldown": 1.0, "drain": 0.10, "heal_cap": 2.0},  # TUNING (not in GDD) a step above Wither's Lv 1 (5 / 80 px), smaller
+			{"damage": 8.0, "radius": 76.0, "cooldown": 1.0, "drain": 0.12, "heal_cap": 2.5},  # TUNING (not in GDD)
+			{"damage": 10.0, "radius": 82.0, "cooldown": 0.9, "drain": 0.14, "heal_cap": 3.0},  # TUNING (not in GDD)
+			{"damage": 12.0, "radius": 88.0, "cooldown": 0.9, "drain": 0.16, "heal_cap": 3.5},  # TUNING (not in GDD)
+			{"damage": 15.0, "radius": 96.0, "cooldown": 0.8, "drain": 0.18, "heal_cap": 4.0},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act VII: Castle Sanguis ---
+	# Night Swarm (GDD §15.0 "Night Swarm, Nocturne, Old Blood and the Dhampir";
+	# owner-approved proposal: "a cloud of spectral bats circles the necromancer
+	# and darts at enemies"; unlocked by defeating Queen Carmilla and the Elder,
+	# UnlockData): `bats` spectral bats circle the necromancer `orbit` px out;
+	# each, every `cooldown` s, darts at the nearest foe within
+	# NightSwarmData.AIM_RANGE px and bites it for `damage`, then flies back.
+	# Logic: NightSwarm; fixed rules: NightSwarmData. A steady single-target
+	# spell around the necromancer: it answers the Court's fliers inside the ring.
+	"night_swarm": {
+		"display_name": "Night Swarm",
+		"icon": "night_swarm",
+		"description": "Spectral bats circle you and dart at your foes.",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"bats": "Bats", "damage": "Bite damage", "cooldown": "Dart every (s)"},
+		"levels": [
+			{"bats": 3, "damage": 7.0, "orbit": 46.0, "cooldown": 2.2},  # TUNING (not in GDD)
+			{"bats": 3, "damage": 9.0, "orbit": 48.0, "cooldown": 2.0},  # TUNING (not in GDD)
+			{"bats": 4, "damage": 10.0, "orbit": 50.0, "cooldown": 1.9},  # TUNING (not in GDD)
+			{"bats": 4, "damage": 12.0, "orbit": 52.0, "cooldown": 1.75},  # TUNING (not in GDD)
+			{"bats": 5, "damage": 13.0, "orbit": 54.0, "cooldown": 1.6},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act VIII: Skid Row ---
+	# Hearse Run (GDD §15.0 "Hearse Run, Funeral Procession, Black Car and the
+	# Undertaker (Act VIII)"; owner-approved proposal: "a spectral hearse drives
+	# a lane through the enemies"; unlocked by slaying Don Marrow, UnlockData):
+	# every `cooldown` s, `hearses` spectral hearses each pick a lane through
+	# one of the nearest groups within `range` px (a street lane on the city
+	# blocks, CityBlocks.lane(); a straight line from the necromancer
+	# elsewhere) and drive `length` px along it at `speed` px/s, striking every
+	# foe within `width` px once for `damage` and shoving it aside. Stat keys:
+	# damage, hearses, width (px), length (px), speed (px/s), cooldown (s),
+	# range (px). Logic: HearseRun; fixed rules: HearseRunData; Black Car (its
+	# paired passive) slows every foe a hearse strikes.
+	"hearse_run": {
+		"display_name": "Hearse Run",  # Owner-approved proposal
+		"icon": "hearse_run",
+		"description": "A spectral hearse drives a lane through your foes.",
+		"shared_card_pool": true,  # TUNING (not in GDD) an unlocked Act VIII spell: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Hit damage", "hearses": "Hearses", "width": "Lane width", "length": "Run length", "cooldown": "Cooldown (s)"},
+		"levels": [
+			{"damage": 14.0, "hearses": 1, "width": 20.0, "length": 520.0, "speed": 520.0, "cooldown": 3.2, "range": 320.0},  # TUNING (not in GDD)
+			{"damage": 16.0, "hearses": 1, "width": 22.0, "length": 540.0, "speed": 520.0, "cooldown": 3.1, "range": 330.0},  # TUNING (not in GDD)
+			{"damage": 19.0, "hearses": 2, "width": 22.0, "length": 560.0, "speed": 540.0, "cooldown": 3.0, "range": 340.0},  # TUNING (not in GDD)
+			{"damage": 22.0, "hearses": 2, "width": 24.0, "length": 580.0, "speed": 540.0, "cooldown": 2.9, "range": 350.0},  # TUNING (not in GDD)
+			{"damage": 26.0, "hearses": 3, "width": 26.0, "length": 600.0, "speed": 560.0, "cooldown": 2.8, "range": 360.0},  # TUNING (not in GDD) first pass 16-32 at Lv 1-5 (with the evolution 282k in the forced seed-7 run, 2.3x the top summon class)
+		],
+	},
+	# --- Act VIII: Fort Kessler ---
+	# Bone Mines (GDD §15.0 "Bone Mines, Killing Ground, Tripwire and the
+	# Fallen Sergeant (Act VIII)"; owner-approved proposal: "bone mines dropped
+	# along the necromancer's path, triggered by enemies"; unlocked by slaying
+	# General Harrow, UnlockData): every `cooldown` s, once the necromancer
+	# stands `spacing` px from every mine laid, a bone mine drops where he
+	# stands (at most `max_mines`, each lasting `life` s); armed, the first
+	# enemy within `trigger` px sets it off: `damage` to every enemy within
+	# `radius` px. Summons never set one off. Stat keys: damage, radius (px),
+	# trigger (px), max_mines, spacing (px), life (s), cooldown (s). Logic:
+	# BoneMines; fixed rules: BoneMinesData; Tripwire (its paired passive)
+	# widens the trigger and slows the foes caught.
+	"bone_mines": {
+		"display_name": "Bone Mines",  # Owner-approved proposal
+		"icon": "bone_mines",
+		"description": "You drop bone mines as you walk. Enemies set them off; your dead never do.",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Blast damage", "radius": "Blast radius", "max_mines": "Mines laid at once", "cooldown": "Drop every (s)"},
+		"levels": [
+			{"damage": 22.0, "radius": 40.0, "trigger": 14.0, "max_mines": 6, "spacing": 40.0, "life": 14.0, "cooldown": 1.4},  # TUNING (not in GDD)
+			{"damage": 27.0, "radius": 42.0, "trigger": 14.0, "max_mines": 7, "spacing": 40.0, "life": 14.0, "cooldown": 1.3},  # TUNING (not in GDD)
+			{"damage": 32.0, "radius": 45.0, "trigger": 15.0, "max_mines": 8, "spacing": 38.0, "life": 15.0, "cooldown": 1.2},  # TUNING (not in GDD)
+			{"damage": 38.0, "radius": 48.0, "trigger": 15.0, "max_mines": 10, "spacing": 36.0, "life": 15.0, "cooldown": 1.05},  # TUNING (not in GDD)
+			{"damage": 44.0, "radius": 52.0, "trigger": 16.0, "max_mines": 12, "spacing": 34.0, "life": 16.0, "cooldown": 0.9},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act VIII: Liberty Heights ---
+	# Hero's Fist (GDD §15.0 "Hero's Fist, Doomsday, Secret Identity and the
+	# Revenant Heroine"; owner-approved proposal: "a spectral fist slams the
+	# strongest enemy and sends it flying through the rest"; unlocked by
+	# defeating Paragon, UnlockData): every `cooldown` s a spectral fist slams
+	# the strongest foe within HerosFistData.AIM_RANGE px for `damage`, then
+	# sends it `fling` px flying away from the necromancer through the others
+	# (fling_share x the damage to each it passes). Logic: HerosFist; fixed
+	# rules: HerosFistData. A single-target blow that also breaks the pack
+	# behind it.
+	"heros_fist": {
+		"display_name": "Hero's Fist",
+		"icon": "heros_fist",
+		"description": "A spectral fist slams the strongest foe and sends it flying through the rest.",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Slam damage", "cooldown": "Cooldown (s)", "fling": "Flung (px)", "fling_share": "Flung foe's hit"},
+		"levels": [
+			{"damage": 34.0, "cooldown": 3.0, "fling": 140.0, "fling_share": 0.35},  # TUNING (not in GDD) first pass 40 / 0.4 (trimmed with Doomsday after the forced run)
+			{"damage": 42.0, "cooldown": 2.85, "fling": 155.0, "fling_share": 0.38},  # TUNING (not in GDD)
+			{"damage": 50.0, "cooldown": 2.7, "fling": 170.0, "fling_share": 0.41},  # TUNING (not in GDD)
+			{"damage": 60.0, "cooldown": 2.55, "fling": 185.0, "fling_share": 0.44},  # TUNING (not in GDD)
+			{"damage": 72.0, "cooldown": 2.4, "fling": 200.0, "fling_share": 0.47},  # TUNING (not in GDD) first pass 85 / 0.6
+		],
+	},
+	# --- Act IX: the Crash Site ---
+	# Bone Beetles (GDD §15.0 "Bone Beetles, Hive of Bone, Chitin and the
+	# Broodbound (Act IX)"; owner-approved proposal: "slain enemies burst into
+	# bone beetles that bite the next enemy"; unlocked by slaying the Hive
+	# Mother, UnlockData). No cooldown: every foe slain within `range` px of the
+	# necromancer bursts into `beetles` bone beetles (while fewer than `cap`
+	# live); each scuttles at `speed` px/s to the nearest other foe within
+	# `seek` px and bites it once for `damage`, crumbling after `life` s with
+	# no prey. Stat keys: damage, beetles, range (px), speed (px/s), seek (px),
+	# life (s), cap. Logic: BoneBeetles; fixed rules: BoneBeetlesData; Chitin
+	# (its paired passive) makes every bite hit harder.
+	"bone_beetles": {
+		"display_name": "Bone Beetles",  # Owner-approved proposal
+		"icon": "bone_beetles",
+		"description": "Slain foes burst into bone beetles that bite the next foe.",
+		"shared_card_pool": true,  # TUNING (not in GDD) an unlocked Act IX spell: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Bite damage", "beetles": "Beetles a foe", "range": "Range", "cap": "Most beetles"},
+		"levels": [
+			{"damage": 7.0, "beetles": 1, "range": 260.0, "speed": 230.0, "seek": 160.0, "life": 2.5, "cap": 12},  # TUNING (not in GDD) first pass 9
+			{"damage": 8.0, "beetles": 1, "range": 280.0, "speed": 240.0, "seek": 170.0, "life": 2.5, "cap": 16},  # TUNING (not in GDD) first pass 11
+			{"damage": 9.0, "beetles": 2, "range": 290.0, "speed": 250.0, "seek": 180.0, "life": 2.6, "cap": 20},  # TUNING (not in GDD) first pass 12
+			{"damage": 10.0, "beetles": 2, "range": 300.0, "speed": 255.0, "seek": 190.0, "life": 2.8, "cap": 24},  # TUNING (not in GDD) first pass 14
+			{"damage": 12.0, "beetles": 3, "range": 320.0, "speed": 260.0, "seek": 200.0, "life": 3.0, "cap": 28},  # TUNING (not in GDD) first pass 16 (with the evolution and Chitin 404k of the forced seed-7 run's 669k, 4.5x the top summon class)
+		],
+	},
+	# --- Act IX: the Proving Moon ---
+	# Soul Caster (GDD §15.0 "Soul Caster, Apex Predator, Trophy Rack and the
+	# Blooded (Act IX)"; owner-approved proposal: "a shoulder cannon that locks
+	# three targets with three red dots and fires"; brief: the dots in the
+	# spell's own soul colour; unlocked by slaying Vrask'Tal, UnlockData): every
+	# `cooldown` s (after the shot) it locks up to `targets` enemies within
+	# `range` px, the strongest first (three soul dots on each for `lock` s),
+	# then fires `damage` into each one still standing. Stat keys: damage,
+	# targets, lock (s), range (px), cooldown (s). Logic: SoulCaster; fixed
+	# rules: SoulCasterData; Trophy Rack (its paired passive) hangs a trophy
+	# for every kill (more damage each). A strong single-target spell.
+	"soul_caster": {
+		"display_name": "Soul Caster",  # Owner-approved proposal
+		"icon": "soul_caster",
+		"description": "A shoulder cannon locks three of the strongest foes, then fires a soul bolt into each.",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Shot damage", "targets": "Targets locked", "cooldown": "Cooldown (s)", "range": "Range (px)"},
+		"levels": [
+			{"damage": 20.0, "targets": 3, "lock": 0.6, "range": 300.0, "cooldown": 2.6},  # TUNING (not in GDD) owner-approved proposal: three targets
+			{"damage": 25.0, "targets": 3, "lock": 0.55, "range": 310.0, "cooldown": 2.45},  # TUNING (not in GDD)
+			{"damage": 31.0, "targets": 3, "lock": 0.55, "range": 320.0, "cooldown": 2.3},  # TUNING (not in GDD)
+			{"damage": 38.0, "targets": 3, "lock": 0.5, "range": 330.0, "cooldown": 2.15},  # TUNING (not in GDD)
+			{"damage": 46.0, "targets": 3, "lock": 0.45, "range": 340.0, "cooldown": 2.0},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act IX: the Ark ---
+	# Tractor Beam (id "tractor_lift": "tractor_beam" is a Concord sound and
+	# event id; GDD §15.0 "Tractor Beam, Abduction, Starseed and the Starborn";
+	# owner-approved proposal: "lifts the strongest enemy into the air and
+	# slams it down"; unlocked by defeating the Harvester, UnlockData): every
+	# `cooldown` s a column of soul light lifts the strongest foe within
+	# TractorLiftData.AIM_RANGE px for `lift_time` s (the one enemy-lift
+	# helper, EnemyLift: a stun), then slams it down for `damage` and
+	# slam_share x the damage to the foes within slam_radius px. Bosses,
+	# minibosses and structures are slammed in place. Logic: TractorLift; fixed
+	# rules: TractorLiftData. A single-target blow with a splash, like Hero's
+	# Fist, that also takes its target out of the fight for a moment.
+	"tractor_lift": {
+		"display_name": "Tractor Beam",  # Owner-approved proposal
+		"icon": "tractor_lift",
+		"description": "A beam of soul light lifts the strongest foe into the air and slams it down.",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Slam damage", "cooldown": "Cooldown (s)", "lift_time": "Lift (s)", "slam_radius": "Slam (px)", "slam_share": "Slam splash"},
+		"levels": [
+			{"damage": 38.0, "cooldown": 3.2, "lift_time": 0.9, "slam_radius": 48.0, "slam_share": 0.45},  # TUNING (not in GDD)
+			{"damage": 46.0, "cooldown": 3.05, "lift_time": 0.9, "slam_radius": 52.0, "slam_share": 0.48},  # TUNING (not in GDD)
+			{"damage": 56.0, "cooldown": 2.9, "lift_time": 0.95, "slam_radius": 56.0, "slam_share": 0.51},  # TUNING (not in GDD)
+			{"damage": 66.0, "cooldown": 2.75, "lift_time": 0.95, "slam_radius": 60.0, "slam_share": 0.54},  # TUNING (not in GDD)
+			{"damage": 78.0, "cooldown": 2.6, "lift_time": 1.0, "slam_radius": 64.0, "slam_share": 0.57},  # TUNING (not in GDD) Hero's Fist Lv5 72 / 2.4 s
+		],
+	},
 }
 
 ## Stat keys shown as a percentage on cards (fractions: 0.25 -> 25%).
@@ -466,7 +951,31 @@ const PERCENT_KEYS := ["lifesteal", "rot", "burst", "zone_damage", "zone_slow", 
 	# --- Act III: the Assembly Halls ---
 	"puppet_hp",
 	# --- Act III: the Scrap Wastes ---
-	"spark"]
+	"spark",
+	# --- Act IV: Mount Olympus ---
+	"armour_bonus", "chain_falloff", "clap_share",
+	# --- Act IV: the Asphodel Underworld ---
+	"river_slow", "drain_share",
+	# --- Act V: the Burning Province ---
+	"echo_share", "burst_share",
+	# --- Act V: Castle Kurogane ---
+	"haste",
+	# --- Act VI: the Burning Gate ---
+	"pit_share",
+	# --- Act VI: Pandemonium ---
+	"splash", "flare",
+	# --- Act VII: Ravensmoor ---
+	"bleed_share",
+	# --- Act VII: the Witchwood ---
+	"drain",
+	# --- Act VII: Castle Sanguis ---
+	"chain_share",
+	# --- Act VIII: Fort Kessler ---
+	"shard_share",
+	# --- Act VIII: Liberty Heights ---
+	"fling_share", "crater_share",
+	# --- Act IX: the Ark ---
+	"slam_share", "quake_share"]
 ## Stat keys that are spell durations (s): the Lingering Malediction passive
 ## lengthens them (AbilityManager.apply_spell_mods()).
 const DURATION_KEYS := ["duration", "zone_duration", "slow_duration"]
@@ -509,6 +1018,16 @@ const SIPHON_LEASH: float = 40.0  # TUNING (not in GDD)
 ## Seconds of heal_cap the lifesteal budget can bank (the cap is per second,
 ## so a full budget allows at most heal_cap * this HP in one pulse).
 const SIPHON_BUDGET_SECONDS: float = 1.0  # TUNING (not in GDD)
+## Drawing only (owner bug report "no visuals till Lv 3"): seconds a tether
+## that just dropped (its enemy died or strayed) keeps fading on screen, so the
+## one Lv 1-2 tether does not blink out between a kill and the next pulse.
+const SIPHON_FADE_TIME: float = 0.45  # TUNING (not in GDD)
+## Drawing only: seconds the drain flash stays on a tethered enemy after a pulse.
+const SIPHON_FLASH_TIME: float = 0.3  # TUNING (not in GDD)
+## Drawing only: width (px) of the tether's bright core (the glow is wider).
+const SIPHON_BEAM_WIDTH: float = 3.0  # TUNING (not in GDD)
+## Drawing only: size (px) of the drain flash on a tethered enemy.
+const SIPHON_FLASH_SIZE: float = 26.0  # TUNING (not in GDD)
 
 # --- Corpse Explosion / Grave Eruption (CorpseExplosion) ---------------------------
 

@@ -275,16 +275,19 @@ func _draw() -> void:
 		var length := float(_stats["beam_length"])
 		var w := float(_stats["beam_width"])
 		var beams := _struck.size()
-		for k in beams:
-			var a := _angle + TAU * float(k) / float(beams)  # This beam's angle.
-			for t in 4:
-				var ta := a - DeathRayData.TRAIL_ANGLE * float(t + 1) / 4.0  # Afterglow angle.
-				draw_line(p, p + Vector2.from_angle(ta) * length, Color(DeathRayData.GLOW, 0.16 - 0.035 * float(t)), w * 0.8)
-			var tip := p + Vector2.from_angle(a) * length
-			draw_line(p, tip, Color(DeathRayData.GLOW, 0.35), w + 4.0)
-			draw_line(p, tip, Color(DeathRayData.GLOW, 0.85), w)
-			draw_line(p, tip, DeathRayData.CORE, maxf(1.0, w * 0.35))
-			draw_circle(tip, w * 0.6, Color(DeathRayData.CORE, 0.7))
+		# Pixel art (EmpireFx: the soul-laser body at the beam's exact width, its glow,
+		# afterglow and tip burst; GDD §15.0 "Act III AoE art"), else the code lines.
+		if not EmpireFx.death_ray(self, p, _angle, beams, length, w, DeathRayData.TRAIL_ANGLE, game.elapsed):
+			for k in beams:
+				var a := _angle + TAU * float(k) / float(beams)  # This beam's angle.
+				for t in 4:
+					var ta := a - DeathRayData.TRAIL_ANGLE * float(t + 1) / 4.0  # Afterglow angle.
+					draw_line(p, p + Vector2.from_angle(ta) * length, Color(DeathRayData.GLOW, 0.16 - 0.035 * float(t)), w * 0.8)
+				var tip := p + Vector2.from_angle(a) * length
+				draw_line(p, tip, Color(DeathRayData.GLOW, 0.35), w + 4.0)
+				draw_line(p, tip, Color(DeathRayData.GLOW, 0.85), w)
+				draw_line(p, tip, DeathRayData.CORE, maxf(1.0, w * 0.35))
+				draw_circle(tip, w * 0.6, Color(DeathRayData.CORE, 0.7))
 	for arc in _arcs:
 		var life := arc.time_left / DeathRayData.ARC_TIME  # 1 -> 0 as it fades.
 		GraveSpellGlyphs.draw_lightning(self, arc.a, arc.b, arc.jag_seed, life, arc.wild)

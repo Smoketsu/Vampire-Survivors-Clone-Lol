@@ -36,6 +36,17 @@
 ## Act III, the Iron Citadel: when a CitadelDirector is set as `citadel`,
 ## resolve_all() ends with citadel.contain_all() (its Shield Gate walls are
 ## solid for the necromancer); null on every other stage.
+## Act VIII, the Last Line (GDD §15.0 "City blocks"): when the stage's zone
+## layout carries a "blocks" dictionary, `city_blocks` (CityBlocks) owns the
+## layout and obstacle_at() / _peek() ask it instead of the per-cell scatter: a
+## grid of building lots with streets and alleys, and the wrecks Convoy places.
+## Everything else here already goes through obstacle_at(), so the push-out and
+## slide, free_point(), is_blocked(), clear_length() and avoid_vector() see the
+## buildings unchanged; resolve_all() counts the building / wreck push-outs and
+## the enemies' contact with the faces, _draw() draws the buildings and wrecks
+## in view (CityGlyphs, textures), and free_point_toward() pulls a Bone Ring
+## post inside a building back toward the necromancer (StanceFormations, on a
+## blocks layout only). Null on every other stage, so nothing changes there.
 class_name Arena
 extends Node2D
 
@@ -104,6 +115,10 @@ var shore: SinkingDirector = null
 ## The Iron Citadel's director (set by CitadelDirector, null on every other
 ## stage): its Shield Gate walls push the necromancer out (see the header).
 var citadel: CitadelDirector = null
+# --- Act VIII: the Last Line ---
+## The city-block layout (CityBlocks; created in _ready() when the stage's zone
+## layout has "blocks", null on every other stage): see the header.
+var city_blocks: CityBlocks = null
 
 
 func _ready() -> void:
@@ -111,6 +126,10 @@ func _ready() -> void:
 	_apply_layout(game.stage_def["arena"])
 	var march: Dictionary = game.stage_def["march"]  # Crimson March config ({} elsewhere).
 	_road_half = float(march.get("road_half_width", 0.0))
+	# --- Act VIII: the Last Line --- the city blocks (only when the layout has them).
+	if _layout.has("blocks"):
+		city_blocks = CityBlocks.new(game.stage_def.get("blocks", {}), _layout["blocks"], int(_layout["layout_seed"]),
+				_clear_center, float(_layout["clear_radius"]))
 
 
 ## Switches to obstacle layout `layout` (a stage's "arena" dictionary) with
@@ -123,6 +142,8 @@ func set_layout(layout: Dictionary, clear_center: Vector2, clear_radius: float) 
 	_clear_center = clear_center
 	_cells.clear()
 	_center_cell = Vector2i(1 << 30, 1 << 30)  # Forces a redraw next frame.
+	if city_blocks != null and layout.has("blocks"):
+		city_blocks.set_zone(layout["blocks"], clear_center, clear_radius)  # Act VIII: new looks, the same streets.
 
 
 ## Keeps a circle of radius `r` around `pos` free of obstacle centres in every
@@ -136,7 +157,7 @@ func keep_clear(pos: Vector2, r: float) -> void:
 ## Stores `layout` (a copy, so set_layout() may change its clear radius).
 func _apply_layout(layout: Dictionary) -> void:
 	_layout = layout.duplicate()
-	_kinds = _layout["kinds"]
+	_kinds = _layout.get("kinds", {})  # (Act VIII: a blocks layout has none.)
 
 
 func _process(_delta: float) -> void:
@@ -146,6 +167,9 @@ func _process(_delta: float) -> void:
 	if c != _center_cell:
 		_center_cell = c
 		queue_redraw()
+	if city_blocks != null and city_blocks.dirty:
+		city_blocks.dirty = false  # Act VIII: a wreck was placed or burnt away.
+		queue_redraw()
 
 
 # =====================================================================================
@@ -154,6 +178,8 @@ func _process(_delta: float) -> void:
 
 ## The obstacle of the cell containing `pos`, or null.
 func obstacle_at(pos: Vector2) -> Obstacle:
+	if city_blocks != null:
+		return city_blocks.obstacle_at(pos)  # Act VIII: the building of the lot, or a wreck.
 	var key := Vector2i(floori(pos.x * _inv_cell), floori(pos.y * _inv_cell))
 	var o: Obstacle = _cells.get(key)
 	if o == null:
@@ -297,6 +323,33 @@ func free_point(pos: Vector2, r: float) -> Vector2:
 	return p if shore == null else shore.clamp_point(p, r)
 
 
+# --- Act VIII: the Last Line ---
+## THE RING-POST PATH on a city-block layout (StanceFormations, GDD §15.0
+## "City blocks"): a post at `pos` for a body of radius `r` that falls inside
+## a building (or a wreck) is pulled back along the line toward `toward` (the
+## necromancer) to the first free point, so the Bone Ring flattens along the
+## street instead of sending summons round the block. Terrain, not a summon
+## rule. Without city blocks it is exactly free_point().
+func free_point_toward(pos: Vector2, toward: Vector2, r: float) -> Vector2:
+	if city_blocks == null:
+		return free_point(pos, r)
+	city_blocks.ring_posts += 1
+	if not is_blocked(pos, r):
+		return pos
+	var to := toward - pos
+	var length := to.length()
+	if length > 0.01:
+		var dir := to / length
+		var t := ArenaData.RAY_STEP
+		while t < length:
+			var q := pos + dir * t
+			if not is_blocked(q, r):
+				city_blocks.ring_pulls += 1
+				return q
+			t += ArenaData.RAY_STEP
+	return free_point(pos, r)
+
+
 ## Distance (<= `length`) a body of radius `r` can travel from `from` along
 ## unit vector `dir` before touching an obstacle (sampled every RAY_STEP px).
 func clear_length(from: Vector2, dir: Vector2, length: float, r: float) -> float:
@@ -336,6 +389,8 @@ func resolve_all(delta: float) -> void:
 			if push != Vector2.ZERO:
 				p.position += push
 				resolved_player += 1
+				if city_blocks != null:
+					_count_city_push(o, false, delta)  # Act VIII: the "city blocks" line.
 	for h in game.all_hordes:  # The army (co-op: each one).
 		for u in h.units:
 			if not u.active or u.state == SummonedUnit.State.SPAWNING or u.airborne or u.flies:
@@ -344,6 +399,8 @@ func resolve_all(delta: float) -> void:
 			u.position = _resolve_body(u.position, u.radius, u.velocity, u.get_instance_id(), delta, now)
 			if u.position != before:
 				resolved_summons += 1
+				if city_blocks != null:
+					_count_city_push(obstacle_at(before), false, delta)  # Act VIII: the "city blocks" line.
 	for e in game.enemies.active:
 		if not e.active or e.phases_obstacles:
 			continue  # (A phasing body, the Ink Wraith, slips through obstacles.)
@@ -351,12 +408,26 @@ func resolve_all(delta: float) -> void:
 		e.position = _resolve_body(e.position, e.radius, e.velocity, e.get_instance_id(), delta, now)
 		if e.position != before:
 			resolved_enemies += 1
+			if city_blocks != null:
+				_count_city_push(obstacle_at(before), true, delta)  # Act VIII: the "city blocks" line.
 	if _frame % 600 == 0:
 		_purge_slide(now)
 	if shore != null:
 		shore.contain_all()  # Ul-Thalos: the sea is the edge of the world.
 	if citadel != null:
 		citadel.contain_all()  # Act III, the Iron Citadel: the Shield Gate walls.
+
+
+# --- Act VIII: the Last Line ---
+## Counts one push-out out of `o` on the city blocks (a building or a wreck);
+## an enemy's push-out out of a building adds `delta` s of face contact.
+func _count_city_push(o: Obstacle, enemy: bool, delta: float) -> void:
+	if CityBlocks.is_building(o):
+		city_blocks.building_pushes += 1
+		if enemy:
+			city_blocks.enemy_contact_s += delta
+	elif o != null:
+		city_blocks.wreck_pushes += 1
 
 
 ## Resolves one body: push-out, then turns the blocked (into-the-obstacle)
@@ -412,6 +483,9 @@ func _purge_slide(now: float) -> void:
 func _draw() -> void:
 	var center := Vector2(_center_cell) * ArenaData.REDRAW_CELL + Vector2.ONE * ArenaData.REDRAW_CELL * 0.5
 	var ext := ArenaData.DRAW_HALF_EXTENT
+	if city_blocks != null:
+		_draw_city(Rect2(center - Vector2.ONE * ext, Vector2.ONE * ext * 2.0))  # Act VIII: buildings and wrecks.
+		return
 	var c0 := Vector2i(floori((center.x - ext) * _inv_cell), floori((center.y - ext) * _inv_cell))
 	var c1 := Vector2i(floori((center.x + ext) * _inv_cell), floori((center.y + ext) * _inv_cell))
 	var coop := game != null and game.coop != null  # Co-op: drawing never fills the gameplay cache (see _peek()).
@@ -431,6 +505,8 @@ func _draw() -> void:
 ## there than on the partner's machine and could differ: the gameplay cache is
 ## filled only by the simulation, the same way on both.
 func _peek(pos: Vector2) -> Obstacle:
+	if city_blocks != null:
+		return city_blocks.peek(pos)  # Act VIII: the same rule for the lots.
 	var key := Vector2i(floori(pos.x * _inv_cell), floori(pos.y * _inv_cell))
 	var o: Obstacle = _cells.get(key)
 	if o == null:
@@ -438,8 +514,30 @@ func _peek(pos: Vector2) -> Obstacle:
 	return null if o == _empty else o
 
 
+# --- Act VIII: the Last Line ---
+## Draws the city blocks' buildings and wrecks overlapping `rect` (tiled
+## rooftop textures and wreck sprites through CityGlyphs; the code glyph when a
+## PNG is missing). Co-op drawing never fills the lot cache (as _peek()).
+func _draw_city(rect: Rect2) -> void:
+	var coop := game != null and game.coop != null
+	var r := city_blocks.lot_range(rect)  # [first lot, last lot].
+	for iy in range(r[0].y, r[1].y + 1):
+		for ix in range(r[0].x, r[1].x + 1):
+			var o := city_blocks.building_of(Vector2i(ix, iy), not coop)
+			if o != null:
+				CityGlyphs.draw_building(self, o)
+	var now := game.elapsed if game != null else 0.0
+	for w in city_blocks.wrecks:
+		if rect.has_point(w.obstacle.center):
+			CityGlyphs.draw_wreck(self, w.obstacle, w.axis, now - w.placed_at)
+
+
 ## Draws one obstacle; the solid outline matches its collision shape.
 func _draw_obstacle(o: Obstacle) -> void:
+	if game != null and game.shogunate != null:
+		ShogunateGlyphs.draw_long_shadow(self, o, game.shogunate.sun)  # Act V: the long dusk shadows (drawing only).
+		if ShogunateGlyphs.draw_lantern(self, o, game.shogunate.sun):
+			return  # Act V: a stone lantern, lit at night by the Sun's Course.
 	if EnvironmentArt.draw_obstacle(self, o):
 		return  # Its sprite (art pass); otherwise the code glyph below.
 	if MarchGlyphs.draw_obstacle(self, o):
@@ -458,6 +556,58 @@ func _draw_obstacle(o: Obstacle) -> void:
 		return  # A Scrap Wastes obstacle kind (Act III).
 	if CitadelGlyphs.draw_obstacle(self, o):
 		return  # An Iron Citadel obstacle kind (Act III).
+	if IlionGlyphs.draw_obstacle(self, o):
+		return  # A Shores of Ilion obstacle kind (Act IV).
+	if PantheonGlyphs.draw_obstacle(self, o):
+		return  # An Act IV stub's placeholder obstacle kind.
+	if OlympusGlyphs.draw_obstacle(self, o):
+		return  # A Mount Olympus obstacle kind (Act IV).
+	if UnderworldGlyphs.draw_obstacle(self, o):
+		return  # An Asphodel Underworld obstacle kind (Act IV).
+	if ShogunateGlyphs.draw_obstacle(self, o):
+		return  # An Act V stub's placeholder obstacle kind.
+	# --- Act V: the Burning Province ---
+	if ProvinceGlyphs.draw_obstacle(self, o):
+		return  # A Burning Province obstacle kind (Act V).
+	# --- Act V: the Road to the Sun ---
+	if SunRoadGlyphs.draw_obstacle(self, o):
+		return  # A Road to the Sun obstacle kind (Act V).
+	# --- Act V: Castle Kurogane ---
+	if KuroganeGlyphs.draw_obstacle(self, o):
+		return  # A Castle Kurogane obstacle kind (Act V).
+	# --- Act VI: the Inferno ---
+	if InfernoGlyphs.draw_obstacle(self, o):
+		return  # An Act VI stub's placeholder obstacle kind.
+	# --- Act VII: the Sanguine Court ---
+	if CourtGlyphs.draw_obstacle(self, o):
+		return  # An Act VII stub's placeholder obstacle kind.
+	# --- Act VI: the Burning Gate ---
+	if BurningGateGlyphs.draw_obstacle(self, o):
+		return  # A Burning Gate obstacle kind (Act VI).
+	# --- Act VI: the Palace of Silk and Ash ---
+	if SilkPalaceGlyphs.draw_obstacle(self, o):
+		return  # A Palace of Silk and Ash obstacle kind (Act VI).
+	# --- Act VI: Pandemonium ---
+	if PandemoniumGlyphs.draw_obstacle(self, o):
+		return  # A Pandemonium obstacle kind (Act VI).
+	# --- Act VII: Ravensmoor ---
+	if RavensmoorGlyphs.draw_obstacle(self, o):
+		return  # A Ravensmoor obstacle kind (Act VII).
+	# --- Act VII: the Witchwood ---
+	if WitchwoodGlyphs.draw_obstacle(self, o):
+		return  # A Witchwood obstacle kind (Act VII).
+	# --- Act VII: Castle Sanguis ---
+	if CastleSanguisGlyphs.draw_obstacle(self, o):
+		return  # A Castle Sanguis obstacle kind (Act VII).
+	# --- Act IX: the Concord of Stars ---
+	if ConcordGlyphs.draw_obstacle(self, o):
+		return  # An Act IX stub's placeholder obstacle kind.
+	# --- Act IX: the Proving Moon ---
+	if ProvingMoonGlyphs.draw_obstacle(self, o):
+		return  # A Proving Moon obstacle kind (Act IX).
+	# --- Act IX: the Ark ---
+	if ArkGlyphs.draw_obstacle(self, o):
+		return  # An Ark of the Concord obstacle kind (Act IX).
 	var c := o.center
 	var dark := Color(0.06, 0.06, 0.07)
 	match o.kind:

@@ -110,6 +110,33 @@
 ##                       multiplier in CombatResolver.damage_unit() for ranged
 ##                       sources, CombatResolver.is_ranged_source()). Evolves
 ##                       nothing.
+## plus Mount Olympus's two (Act IV, GDD §15.0 "Stolen Thunder, Titan's Blood and
+## the Oathbreaker" and "Twilight of the Gods and Grounded Bones"; both locked
+## until earned, UnlockData):
+##   Titan's Blood     — Stolen Thunder chains more hops and charges faster
+##                       (thunder_chains / thunder_charge in
+##                       AbilityManager.apply_spell_mods(); evolves Stolen
+##                       Thunder into Gigantomachy). Unlocked with the spell by
+##                       slaying Zeus.
+##   Grounded Bones    — an Act IV counter-passive ("act": 4, offered only on
+##                       Act IV stages; unlocked by the achievement Twilight of
+##                       the Gods): less lightning and wave damage (the Wrath of
+##                       the Gods) to the army and the necromancer
+##                       (DivineWrath.grounded_mult(), the one read, per target
+##                       slot). Evolves nothing.
+## plus Castle Kurogane's two (Act V, GDD §15.0 "Banner of the Dead, Warlord's
+## Seal and the Ronin Revenant" and "Regiments Broken and Unbending"; both
+## locked until earned, UnlockData):
+##   Warlord's Seal    — summons within BannerData.SEAL_RADIUS px of the
+##                       necromancer attack faster (HordeDirector
+##                       .attack_haste(), the one per-summon attack-speed read;
+##                       evolves Banner of the Dead into Hundred Banners).
+##                       Unlocked with the spell by slaying Shogun Kurogane.
+##   Unbending         — an Act V counter-passive ("act": 5, offered only on
+##                       Act V stages; unlocked by the achievement Regiments
+##                       Broken): the Draw's cuts hit summons for less
+##                       (DrawCuts.unbending_mult(), the foundation's one read,
+##                       per summon's own player). Evolves nothing.
 ## plus the opt-in difficulty passive (user request, data in PactData):
 ##   Profane Pact    — stronger, more numerous enemies for more XP, Soul Ash
 ##                     and power-up drops.
@@ -145,7 +172,43 @@ const ORDER := ["grave_dominion", "necrotic_vigor", "dark_command", "soul_recycl
 	# --- Act III: the Scrap Wastes ---
 	"conductive_marrow", "lead_lined_bones",
 	# --- Act III: the Iron Citadel ---
-	"machine_soul", "recoil_frame"]
+	"machine_soul", "recoil_frame",
+	# --- Act IV: the Shores of Ilion ---
+	"mortal_heel", "bronze_breaker",
+	# --- Act IV: Mount Olympus ---
+	"titans_blood", "grounded_bones",
+	# --- Act IV: the Asphodel Underworld ---
+	"ferrymans_toll", "myrmidon_oath",
+	# --- Act V: the Burning Province ---
+	"hidden_hand", "paper_lanterns",
+	# --- Act V: the Road to the Sun ---
+	"stolen_dawn", "onis_resolve",
+	# --- Act V: Castle Kurogane ---
+	"warlords_seal", "unbending",
+	# --- Act VI: the Burning Gate ---
+	"furnace_heart", "salt_circle",
+	# --- Act VI: the Palace of Silk and Ash ---
+	"velvet_chains", "sweet_surrender", "faithless",
+	# --- Act VI: Pandemonium ---
+	"pride", "crown_of_horns",
+	# --- Act VII: Ravensmoor ---
+	"pack_blood", "silver_bones",
+	# --- Act VII: the Witchwood ---
+	"moonlit_rite", "embalmed",
+	# --- Act VII: Castle Sanguis ---
+	"old_blood", "thirst_eternal",
+	# --- Act VIII: Skid Row ---
+	"black_car", "kevlar_bones",
+	# --- Act VIII: Fort Kessler ---
+	"tripwire", "armour_piercing_bones",
+	# --- Act VIII: Liberty Heights ---
+	"secret_identity", "origin_story",
+	# --- Act IX: the Crash Site ---
+	"chitin", "anchored",
+	# --- Act IX: the Proving Moon ---
+	"trophy_rack", "mirror_bones",
+	# --- Act IX: the Ark ---
+	"starseed", "crop_circles"]
 
 ## Passives that only help summons (a "dead" level-up card while no summon
 ## class is owned, see AbilityManager.build_offers()).
@@ -163,7 +226,39 @@ const ARMY_PASSIVES := ["grave_dominion", "necrotic_vigor", "dark_command", "sou
 	# --- Act III: the Scrap Wastes ---
 	"lead_lined_bones",
 	# --- Act III: the Iron Citadel ---
-	"recoil_frame"]
+	"recoil_frame",
+	# --- Act IV: the Shores of Ilion ---
+	"bronze_breaker",
+	# --- Act IV: the Asphodel Underworld ---
+	"myrmidon_oath",
+	# --- Act V: the Road to the Sun ---
+	"onis_resolve",
+	# --- Act V: Castle Kurogane ---
+	"warlords_seal", "unbending",
+	# --- Act VI: the Burning Gate ---
+	"salt_circle",
+	# --- Act VI: the Palace of Silk and Ash ---
+	"sweet_surrender", "faithless",
+	# --- Act VI: Pandemonium ---
+	"crown_of_horns",
+	# --- Act VII: Ravensmoor ---
+	"silver_bones",
+	# --- Act VII: the Witchwood ---
+	"embalmed",
+	# --- Act VII: Castle Sanguis ---
+	"thirst_eternal",
+	# --- Act VIII: Skid Row ---
+	"kevlar_bones",
+	# --- Act VIII: Fort Kessler ---
+	"armour_piercing_bones",
+	# --- Act VIII: Liberty Heights ---
+	"origin_story",
+	# --- Act IX: the Crash Site ---
+	"anchored",
+	# --- Act IX: the Proving Moon ---
+	"mirror_bones",
+	# --- Act IX: the Ark ---
+	"crop_circles"]
 
 # --- Act III: the Assembly Halls ---
 ## Overclock (paired with the Grave Drone): a summon class is "ranged" (and
@@ -223,7 +318,18 @@ const MINION_SPECIAL_SOURCES := ["bash", "abom_stomp", "rogue_dash", "gargoyle_s
 	# --- Content wave 2: Bone Golem --- (the slam's splash, GolemBehavior)
 	"golem_slam",
 	# --- Act III: the Iron Citadel --- (the Deus Revenant's missiles; the Rust Prophet's Risen scrap bolts)
-	"deus_revenant_missile", "scrap_bolt"]
+	"deus_revenant_missile", "scrap_bolt",
+	# --- Act IV: the Asphodel Underworld --- (the Myrmidon Shades' spear through a second foe)
+	"myrmidon_pierce",
+	# --- Act V: the Road to the Sun --- (the Bound Oni's kanabō smash and the Oni Lord's quake)
+	"oni_kanabo", "oni_quake",
+	# --- Act VI: Pandemonium --- (the Archfiend's Hellfire Cleave)
+	"archfiend_cleave",
+	# --- Act VIII: Liberty Heights --- (the Fallen Hero's and Black Paragon's slams, FallenHeroBehavior; also
+	# what lets Armour-Piercing Bones, Armour.pierce_share(), count them as summon hits)
+	"fallen_hero_slam", "black_paragon_slam",
+	# --- Act IX: the Ark --- (the Ghost Saucer's and Black Mothership's dropped foes, GhostSaucerBehavior)
+	"ghost_saucer_lift", "black_mothership_lift"]
 ## Unholy Resilience: enemy damage-source tags (CombatResolver.damage_unit
 ## `source`) that count as AREA or HOLY damage, tag -> category ("area" |
 ## "holy"; the category only splits the summary stats). Every other source
@@ -262,6 +368,29 @@ const AREA_HOLY_SOURCES := {
 	"beta_swipe": "area",  # TUNING (not in GDD) the Beta Build's weld swipe.
 	"motherboard_stamp": "area",  # TUNING (not in GDD) the Motherboard's press-stamps.
 	"motherboard_hurl": "area",  # TUNING (not in GDD) a hurled summon landing.
+	# --- Act V: the Road to the Sun ---
+	"sohei_sweep": "area",  # TUNING (not in GDD) a Sōhei's naginata sweep.
+	"kirin_horn": "holy",  # TUNING (not in GDD) the Kirin's Horn of Heaven rays.
+	"kirin_halo": "holy",  # TUNING (not in GDD) the Kirin's halo.
+	"amaterasu_mirror": "holy",  # TUNING (not in GDD) Amaterasu's mirror beams.
+	"amaterasu_mine": "area",  # TUNING (not in GDD) her sun-disc mines.
+	"amaterasu_zenith": "holy",  # TUNING (not in GDD) her noon beams on marked circles.
+	"amaterasu_glare": "holy",  # TUNING (not in GDD) the noon glare.
+	"amaterasu_sunset": "holy",  # TUNING (not in GDD) the setting-sun beam.
+	# --- Act VI: Pandemonium ---
+	"fallen_angel_dive": "area",  # TUNING (not in GDD) a Fallen Angel's landing.
+	"seraph_cleave": "holy",  # TUNING (not in GDD) the Fallen Seraph General's Judgment Cleave.
+	"seraph_feathers": "area",  # TUNING (not in GDD) his Wings of Ruin.
+	"morning_star_light": "holy",  # TUNING (not in GDD) the Morning Star's light beams.
+	"morning_star_dark": "area",  # TUNING (not in GDD) his dark beams.
+	"morning_star_slam": "area",  # TUNING (not in GDD) the Beast's slam.
+	# --- Act VII: Castle Sanguis ---
+	"carmilla_beam": "area",  # TUNING (not in GDD) Queen Carmilla's sweeping drain beam.
+	"elder_buffet": "area",  # TUNING (not in GDD) the Elder's wing buffet.
+	"king_drop": "area",  # TUNING (not in GDD) a summon the Chiropteran King drops.
+	# --- Act VIII: Liberty Heights ---
+	"atlas_throw": "area",  # TUNING (not in GDD) Atlas's thrown car (a landing circle).
+	"paragon_dive": "area",  # TUNING (not in GDD) Paragon's craters from orbit.
 }
 ## Bone Plating: a plated hit always keeps at least this fraction (0..1) of
 ## its damage, so the flat reduction never makes a summon immune to the
@@ -290,6 +419,10 @@ const BRINEWALKER_SUMMON_LEVEL: int = 3  # owner-approved
 ## Read by CombatResolver.damage_unit() (blocker_reduction) and
 ## HordeDirector.compute_stats() (hold_bonus).
 const MASONRY_CLASSES := ["warrior", "abomination", "bone_golem"]  # Owner-approved proposal 5
+# --- Act IV: the Asphodel Underworld ---
+## Myrmidon Oath: the front-line classes (the blockers on the Bone Ring's
+## outer posts) whose max HP and damage it raises (HordeDirector.compute_stats()).
+const OATH_CLASSES := ["warrior", "abomination", "bone_golem", "myrmidon_shade"]  # TUNING (not in GDD)
 # --- Act III: the Iron Citadel ---
 ## Recoil Frame: the attack profiles (UnitData "attack_profile", after a summon
 ## evolution's overlay) that count as RANGED summons: they fire faster and
@@ -960,6 +1093,815 @@ const PASSIVES := {
 			{"ranged_haste": 0.18, "ranged_reach": 0.12},  # TUNING (not in GDD)
 			{"ranged_haste": 0.24, "ranged_reach": 0.16},  # TUNING (not in GDD)
 			{"ranged_haste": 0.30, "ranged_reach": 0.20},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act IV: the Shores of Ilion ---
+	# Paris's Arrow's paired passive (owner-approved Act IV proposal: "Arrow of
+	# Fate (+ Mortal Heel)"); unlocked with the spell by Achilles and offered on
+	# every stage. Own decision on its effect: every DIRECTED hit (a shot or a
+	# blow with an origin) that strikes a foe from BEHIND deals back_damage more
+	# (CombatResolver.damage_enemy(), PantheonRules.hit_from_behind(): the one
+	# direction test, any enemy's facing), Paris's Arrow's hits included; it
+	# rewards the ring that surrounds, the Rogue's dash and the Gargoyle's dive.
+	"mortal_heel": {
+		"display_name": "Mortal Heel",
+		"icon": "mortal_heel",
+		"description": "Every hit that strikes a foe from behind deals more.",
+		"labels": {"back_damage": ["Damage from behind", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"back_damage": 0.08},  # TUNING (not in GDD)
+			{"back_damage": 0.16},  # TUNING (not in GDD)
+			{"back_damage": 0.24},  # TUNING (not in GDD)
+			{"back_damage": 0.32},  # TUNING (not in GDD)
+			{"back_damage": 0.40},  # TUNING (not in GDD)
+		],
+	},
+	# Act IV's counter-passive Bronze Breaker (owner-approved Act IV proposal:
+	# "summon hits on shielded fronts deal more"; unlocked by the achievement
+	# Heel Found and offered only in Act IV through its card row's "act").
+	# Phalanx.breaker_mult() (the foundation's one read,
+	# PantheonRulesData.BRONZE_BREAKER / BRONZE_BREAKER_KEY): a summon hit on a
+	# locked shield's front (or a Legionary's testudo) deals 1 + front_damage
+	# times its share.
+	"bronze_breaker": {
+		"display_name": "Bronze Breaker",  # Owner-approved proposal
+		"icon": "bronze_breaker",
+		"description": "Your summons' blows on a locked shield wall's front hit harder.",
+		"labels": {"front_damage": ["Summon damage to shield fronts", "pct"]},
+		"act": 4,  # Owner-approved: the act's counter-passives are offered only in Act IV (Unlocks.act_allows())
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"front_damage": 0.2},  # TUNING (not in GDD) a front shot 10% -> 12%, a front blow x1.2
+			{"front_damage": 0.4},  # TUNING (not in GDD)
+			{"front_damage": 0.6},  # TUNING (not in GDD)
+			{"front_damage": 0.8},  # TUNING (not in GDD)
+			{"front_damage": 1.0},  # TUNING (not in GDD) a front shot 10% -> 20%, a front blow x2
+		],
+	},
+	# --- Act IV: Mount Olympus ---
+	# Titan's Blood (owner-approved Act IV proposal: Stolen Thunder's paired
+	# passive; unlocked with the spell by slaying Zeus): the blood of the giants
+	# the gods buried: Stolen Thunder chains `chain_bonus` more hops and its
+	# charge is `charge_cut` shorter (AbilityManager.apply_spell_mods()). Pairs
+	# with Stolen Thunder -> Gigantomachy.
+	"titans_blood": {
+		"display_name": "Titan's Blood",
+		"icon": "titans_blood",
+		"description": "Your Stolen Thunder charges faster and leaps to more armoured foes.",
+		"labels": {"chain_bonus": ["Extra chain hops", "int"], "charge_cut": ["Charge time", "neg_pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"chain_bonus": 0.0, "charge_cut": 0.08},  # TUNING (not in GDD)
+			{"chain_bonus": 1.0, "charge_cut": 0.14},  # TUNING (not in GDD)
+			{"chain_bonus": 1.0, "charge_cut": 0.2},  # TUNING (not in GDD)
+			{"chain_bonus": 2.0, "charge_cut": 0.26},  # TUNING (not in GDD)
+			{"chain_bonus": 2.0, "charge_cut": 0.32},  # TUNING (not in GDD)
+		],
+	},
+	# Grounded Bones (owner-approved Act IV proposal: "less lightning and wave
+	# damage to the army"; Act IV's counter-passive, offered only in Act IV,
+	# unlocked by the achievement Twilight of the Gods): the share of the
+	# Wrath of the Gods' lightning and wave damage the necromancer and his army
+	# no longer take (DivineWrath.grounded_mult(), the one read, per target
+	# slot; PantheonRulesData.GROUNDED_BONES_KEY). The fissures are not cut.
+	"grounded_bones": {
+		"display_name": "Grounded Bones",
+		"icon": "grounded_bones",
+		"description": "The gods' lightning and waves hurt you and your dead less.",
+		"labels": {"wrath_reduction": ["Lightning and wave damage", "neg_pct"]},
+		"act": 4,  # Owner-approved: the act's counter-passives are offered only in Act IV (Unlocks.act_allows())
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"wrath_reduction": 0.1},  # TUNING (not in GDD)
+			{"wrath_reduction": 0.2},  # TUNING (not in GDD)
+			{"wrath_reduction": 0.3},  # TUNING (not in GDD)
+			{"wrath_reduction": 0.4},  # TUNING (not in GDD)
+			{"wrath_reduction": 0.5},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act IV: the Asphodel Underworld ---
+	# Ferryman's Toll (GDD §15.0 "River Styx, Lethe's Flood, Ferryman's Toll and
+	# the Ferrywoman"; unlocked by defeating Hades, UnlockData): every foe slain
+	# while SLOWED (any slow: the Styx, Frost Wraiths, Soul Chains, Death Mark...)
+	# pays the ferryman: the necromancer heals toll_heal HP (at most
+	# RiverStyxData.TOLL_HEAL_CAP_PER_S a second) and the Dread Rally gains
+	# toll_rally soul points (CombatResolver._kill_enemy(), the one kill path).
+	# Pairs with River Styx -> Lethe's Flood.
+	"ferrymans_toll": {
+		"display_name": "Ferryman's Toll",
+		"icon": "ferrymans_toll",
+		"description": "Every slowed foe that dies pays the ferryman: you heal and your Dread Rally fills.",
+		"labels": {"toll_heal": ["Heal per slowed kill", "num"], "toll_rally": ["Rally charge per slowed kill", "num"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"toll_heal": 0.2, "toll_rally": 0.2},  # TUNING (not in GDD)
+			{"toll_heal": 0.3, "toll_rally": 0.3},  # TUNING (not in GDD)
+			{"toll_heal": 0.4, "toll_rally": 0.4},  # TUNING (not in GDD)
+			{"toll_heal": 0.5, "toll_rally": 0.5},  # TUNING (not in GDD)
+			{"toll_heal": 0.6, "toll_rally": 0.6},  # TUNING (not in GDD)
+		],
+	},
+	# Myrmidon Oath (own decision: the Legion of Tartarus's paired passive, its
+	# name and rule; GDD §15.0 "Myrmidon Shades, Legion of Tartarus and Myrmidon
+	# Oath"; unlocked by defeating Hades): the front line swears to hold: the
+	# blockers on the Bone Ring's outer posts (OATH_CLASSES: Warriors,
+	# Abominations, the Bone Golem, the Myrmidon Shades and their evolutions)
+	# gain max HP and damage (HordeDirector.compute_stats()). Pairs with the
+	# Myrmidon Shades -> Legion of Tartarus.
+	"myrmidon_oath": {
+		"display_name": "Myrmidon Oath",
+		"icon": "myrmidon_oath",
+		"description": "Your front-line dead swear to hold: they are hardier and strike harder.",
+		"labels": {"front_hp": ["Front-line max HP", "pct"], "front_damage": ["Front-line damage", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"front_hp": 0.06, "front_damage": 0.04},  # TUNING (not in GDD)
+			{"front_hp": 0.12, "front_damage": 0.08},  # TUNING (not in GDD)
+			{"front_hp": 0.18, "front_damage": 0.12},  # TUNING (not in GDD)
+			{"front_hp": 0.24, "front_damage": 0.16},  # TUNING (not in GDD)
+			{"front_hp": 0.30, "front_damage": 0.20},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act V: the Burning Province ---
+	# Hundred Shadows' paired passive (owner-approved Act V proposal: "Thousand
+	# Shadows (+ Hidden Hand)"); unlocked with the spell by Kage and offered on
+	# every stage. Own decision on its effect: the hidden hand strikes while the
+	# foe looks elsewhere: every SPELL hit (HundredShadowsData.is_spell_source())
+	# on a foe busy fighting a summon (Enemy.targeting_summon) deals hand_damage
+	# more (CombatResolver.damage_enemy(), one block; stat hidden_hand_bonus_dmg).
+	"hidden_hand": {
+		"display_name": "Hidden Hand",
+		"icon": "hidden_hand",
+		"description": "Your spells strike foes busy fighting your summons harder.",
+		"labels": {"hand_damage": ["Spell damage to busy foes", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"hand_damage": 0.08},  # TUNING (not in GDD)
+			{"hand_damage": 0.16},  # TUNING (not in GDD)
+			{"hand_damage": 0.24},  # TUNING (not in GDD)
+			{"hand_damage": 0.32},  # TUNING (not in GDD)
+			{"hand_damage": 0.40},  # TUNING (not in GDD)
+		],
+	},
+	# Act V's counter-passive Paper Lanterns (owner-approved Act V proposal: "a
+	# wider light radius; ambushes show earlier"; unlocked by the achievement No
+	# Shadow Unlit and offered only in Act V through its card row's "act").
+	# SunCourse.lantern_mult() (the foundation's one read,
+	# ShogunateRulesData.PAPER_LANTERNS / PAPER_LANTERNS_KEY): the necromancer's
+	# light radius x (1 + light_radius), and the lit part of an ambush's smoke
+	# warning lasts that much longer (ShadowAmbush).
+	"paper_lanterns": {
+		"display_name": "Paper Lanterns",  # Owner-approved proposal
+		"icon": "paper_lanterns",
+		"description": "Your light reaches farther, and ambushes show earlier.",
+		"labels": {"light_radius": ["Light radius", "pct"]},
+		"act": 5,  # Owner-approved: the act's counter-passives are offered only in Act V (Unlocks.act_allows())
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"light_radius": 0.15},  # TUNING (not in GDD)
+			{"light_radius": 0.30},  # TUNING (not in GDD)
+			{"light_radius": 0.45},  # TUNING (not in GDD)
+			{"light_radius": 0.60},  # TUNING (not in GDD)
+			{"light_radius": 0.75},  # TUNING (not in GDD) 150 px -> 262 px
+		],
+	},
+	# --- Act V: the Road to the Sun ---
+	# Stolen Dawn (own decision: Eclipse of Heaven's paired passive, its rule;
+	# GDD §15.0 "Black Sun, Eclipse of Heaven, Stolen Dawn and the Shrine Maiden of
+	# Night"; unlocked by defeating Amaterasu, UnlockData): the dawn you stole
+	# feeds the dark sun: Black Sun's beams come beam_haste sooner and every
+	# volley of beams that strikes heals the necromancer beam_heal HP
+	# (AbilityManager.apply_spell_mods() on the Black Sun rows' own keys, like
+	# Titan's Blood; BlackSun heals). Pairs with Black Sun -> Eclipse of Heaven.
+	"stolen_dawn": {
+		"display_name": "Stolen Dawn",
+		"icon": "stolen_dawn",
+		"description": "The dawn you stole feeds your dark sun: its beams come sooner and mend you.",
+		"labels": {"beam_haste": ["Black Sun cooldown", "neg_pct"], "beam_heal": ["Heal per beam volley", "num"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"beam_haste": 0.04, "beam_heal": 0.3},  # TUNING (not in GDD)
+			{"beam_haste": 0.08, "beam_heal": 0.6},  # TUNING (not in GDD)
+			{"beam_haste": 0.12, "beam_heal": 0.9},  # TUNING (not in GDD)
+			{"beam_haste": 0.16, "beam_heal": 1.2},  # TUNING (not in GDD)
+			{"beam_haste": 0.20, "beam_heal": 1.5},  # TUNING (not in GDD)
+		],
+	},
+	# Oni's Resolve (own decision: the Oni Lord's paired passive, its name and
+	# rule; GDD §15.0 "The Bound Oni, the Oni Lord and Oni's Resolve"; unlocked by
+	# defeating Amaterasu): bound demons cannot be held: every stun on your
+	# summons (CombatResolver.stun_unit(), the one summon stun path: an oni's
+	# kanabō, a Gorgon's gaze, a Draw...) lasts stun_resist shorter. Works the
+	# same on every stage. Pairs with the Bound Oni -> the Oni Lord.
+	"onis_resolve": {
+		"display_name": "Oni's Resolve",
+		"icon": "onis_resolve",
+		"description": "Your dead have a demon's will: stuns on them wear off sooner.",
+		"labels": {"stun_resist": ["Summon stun time", "neg_pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"stun_resist": 0.10},  # TUNING (not in GDD)
+			{"stun_resist": 0.20},  # TUNING (not in GDD)
+			{"stun_resist": 0.30},  # TUNING (not in GDD)
+			{"stun_resist": 0.40},  # TUNING (not in GDD)
+			{"stun_resist": 0.50},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act V: Castle Kurogane ---
+	# Warlord's Seal (Banner of the Dead's paired passive; owner-approved Act V
+	# proposal: "Hundred Banners (+ Warlord's Seal)"; unlocked with the spell by
+	# Shogun Kurogane and offered on every stage). Own decision on its effect:
+	# the warlord's seal of command: every summon within BannerData.SEAL_RADIUS
+	# px of the necromancer attacks seal_haste faster (HordeDirector
+	# .attack_haste(), the one per-summon attack-speed read: the Bone Ring keeps
+	# most of the army inside it); it adds to a banner's haste.
+	"warlords_seal": {
+		"display_name": "Warlord's Seal",  # Owner-approved proposal
+		"icon": "warlord_seal",
+		"description": "Your dead near you attack faster under your seal of command.",
+		"labels": {"seal_haste": ["Attack speed near you", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"seal_haste": 0.04},  # TUNING (not in GDD)
+			{"seal_haste": 0.08},  # TUNING (not in GDD)
+			{"seal_haste": 0.12},  # TUNING (not in GDD)
+			{"seal_haste": 0.16},  # TUNING (not in GDD)
+			{"seal_haste": 0.20},  # TUNING (not in GDD)
+		],
+	},
+	# Act V's counter-passive Unbending (owner-approved Act V proposal: "Unbending
+	# (Draw cuts hit summons for less)"; unlocked by the achievement Regiments
+	# Broken and offered only in Act V through its card row's "act").
+	# DrawCuts.unbending_mult() (the foundation's one read,
+	# ShogunateRulesData.UNBENDING / UNBENDING_KEY): a Draw cut on a summon deals
+	# 1 - draw_reduction of its damage.
+	"unbending": {
+		"display_name": "Unbending",  # Owner-approved proposal
+		"icon": "unbending",
+		"description": "The samurai's Draw cuts your summons for less.",
+		"labels": {"draw_reduction": ["Draw cut damage to summons", "neg_pct"]},
+		"act": 5,  # Owner-approved: the act's counter-passives are offered only in Act V (Unlocks.act_allows())
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"draw_reduction": 0.15},  # TUNING (not in GDD)
+			{"draw_reduction": 0.25},  # TUNING (not in GDD)
+			{"draw_reduction": 0.35},  # TUNING (not in GDD)
+			{"draw_reduction": 0.45},  # TUNING (not in GDD)
+			{"draw_reduction": 0.55},  # TUNING (not in GDD) a cut 24 -> ~11 to a summon
+		],
+	},
+	# --- Act VI: the Burning Gate ---
+	# Furnace Heart (Brimstone's paired passive; owner-approved Act VI proposal:
+	# "Rain of Fire (+ Furnace Heart)"; unlocked with the spell by Moloch and
+	# offered on every stage). Own decision on its effect: a heart of the
+	# furnace: every SPELL hit (HundredShadowsData.is_spell_source()) on a foe
+	# standing in fire (a burning Brimstone pit, or a burning Hell Pit on an Act
+	# VI stage: Brimstone.in_fire()) deals heart_damage more
+	# (CombatResolver.damage_enemy(), one block; stat furnace_heart_bonus_dmg).
+	"furnace_heart": {
+		"display_name": "Furnace Heart",  # Owner-approved proposal
+		"icon": "furnace_heart",
+		"description": "Your spells strike foes standing in fire harder.",
+		"labels": {"heart_damage": ["Spell damage to burning foes", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"heart_damage": 0.08},  # TUNING (not in GDD)
+			{"heart_damage": 0.16},  # TUNING (not in GDD)
+			{"heart_damage": 0.24},  # TUNING (not in GDD)
+			{"heart_damage": 0.32},  # TUNING (not in GDD)
+			{"heart_damage": 0.40},  # TUNING (not in GDD) as Hidden Hand (first pass 0.5)
+		],
+	},
+	# Act VI's counter-passive Salt Circle (owner-approved Act VI proposal:
+	# "Salt Circle (summons take less pit damage)"; unlocked by the achievement
+	# Gate Crashed and offered only in Act VI through its card row's "act").
+	# HellPits.salt_circle_mult() (the foundation's one read,
+	# InfernoRulesData.SALT_CIRCLE / SALT_CIRCLE_KEY): a Hell Pit's burn on a
+	# summon deals 1 - pit_reduction of its damage.
+	"salt_circle": {
+		"display_name": "Salt Circle",  # Owner-approved proposal
+		"icon": "salt_circle",
+		"description": "A ring of salt shields your summons: the Hell Pits burn them for less.",
+		"labels": {"pit_reduction": ["Pit damage to summons", "neg_pct"]},
+		"act": 6,  # Owner-approved: the act's counter-passives are offered only in Act VI (Unlocks.act_allows())
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"pit_reduction": 0.15},  # TUNING (not in GDD)
+			{"pit_reduction": 0.25},  # TUNING (not in GDD)
+			{"pit_reduction": 0.35},  # TUNING (not in GDD)
+			{"pit_reduction": 0.45},  # TUNING (not in GDD)
+			{"pit_reduction": 0.55},  # TUNING (not in GDD) a summon in a pit 9 -> ~4 per s
+		],
+	},
+	# --- Act VI: the Palace of Silk and Ash ---
+	# Velvet Chains (Temptation's paired passive; owner-approved Act VI proposal:
+	# "Temptation -> Unholy Desire (+ Velvet Chains)"; unlocked with the spell by
+	# Lilith and offered on every stage). Own decision on its effect: the chains
+	# of desire hold tighter: Temptation's charms last chain_time longer and its
+	# thralls strike chain_power harder (AbilityManager.apply_spell_mods() on the
+	# Temptation rows' own keys, like Stolen Dawn: nothing else reads it).
+	"velvet_chains": {
+		"display_name": "Velvet Chains",  # Owner-approved proposal
+		"icon": "velvet_chains",
+		"description": "Your charmed foes are bound tighter: they serve longer and strike harder.",
+		"labels": {"chain_time": ["Temptation charm time", "pct"], "chain_power": ["Thrall damage", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"chain_time": 0.06, "chain_power": 0.06},  # TUNING (not in GDD)
+			{"chain_time": 0.12, "chain_power": 0.12},  # TUNING (not in GDD)
+			{"chain_time": 0.18, "chain_power": 0.18},  # TUNING (not in GDD)
+			{"chain_time": 0.24, "chain_power": 0.24},  # TUNING (not in GDD)
+			{"chain_time": 0.30, "chain_power": 0.30},  # TUNING (not in GDD)
+		],
+	},
+	# Sweet Surrender (own decision: the Lilim Matriarch's paired passive, its
+	# name and rule; GDD §15.0 "The Succubus, the Lilim Matriarch and Sweet
+	# Surrender"; unlocked with the Succubus by Lilith): the foes your Succubi
+	# kiss give in sooner and longer: the Succubus's charm comes allure_haste
+	# sooner and lasts allure_time longer (BoundSuccubusBehavior reads it from its
+	# own necromancer's build). Works the same on every stage. Pairs with the
+	# Succubus -> the Lilim Matriarch.
+	"sweet_surrender": {
+		"display_name": "Sweet Surrender",
+		"icon": "sweet_surrender",
+		"description": "Foes your Succubi kiss give in sooner and serve you longer.",
+		"labels": {"allure_haste": ["Succubus charm cooldown", "neg_pct"], "allure_time": ["Succubus charm time", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"allure_haste": 0.05, "allure_time": 0.10},  # TUNING (not in GDD)
+			{"allure_haste": 0.10, "allure_time": 0.20},  # TUNING (not in GDD)
+			{"allure_haste": 0.15, "allure_time": 0.30},  # TUNING (not in GDD)
+			{"allure_haste": 0.20, "allure_time": 0.40},  # TUNING (not in GDD)
+			{"allure_haste": 0.25, "allure_time": 0.50},  # TUNING (not in GDD)
+		],
+	},
+	# Act VI's counter-passive Faithless (owner-approved Act VI proposal:
+	# "Faithless (charms on summons last half as long)"; unlocked by the
+	# achievement Unmoved and offered only in Act VI through its card row's
+	# "act"). Temptation.faithless_mult() (the foundation's one read,
+	# InfernoRulesData.FAITHLESS / FAITHLESS_KEY): every charm on a summon (a
+	# succubus's kiss, Lilith's wave, Moloch's swallow) lasts 1 - charm_reduction
+	# of its time; at Lv 5 half as long (the proposal's number).
+	"faithless": {
+		"display_name": "Faithless",  # Owner-approved proposal
+		"icon": "faithless",
+		"description": "Your dead keep no faith with hell: charms on them wear off sooner.",
+		"labels": {"charm_reduction": ["Charm time on your summons", "neg_pct"]},
+		"act": 6,  # Owner-approved: the act's counter-passives are offered only in Act VI (Unlocks.act_allows())
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"charm_reduction": 0.10},  # TUNING (not in GDD)
+			{"charm_reduction": 0.20},  # TUNING (not in GDD)
+			{"charm_reduction": 0.30},  # TUNING (not in GDD)
+			{"charm_reduction": 0.40},  # TUNING (not in GDD)
+			{"charm_reduction": 0.50},  # Owner-approved proposal: "last half as long"
+		],
+	},
+	# --- Act VI: Pandemonium ---
+	# Pride (owner-approved proposal: Lightbringer's paired passive; own
+	# decision on its rule; GDD §15.0 "Fall from Grace, Lightbringer, Pride and
+	# the Fallen Saint"; unlocked by defeating the Morning Star, UnlockData):
+	# the sin that cast the Morning Star down: Fall from Grace's stars come
+	# star_haste sooner and strike an ELITE, a miniboss or a boss for
+	# pride_bonus more (AbilityManager.apply_spell_mods() on the spell rows' own
+	# keys, like Stolen Dawn; FallFromGrace reads "pride_bonus"). Pairs with
+	# Fall from Grace -> Lightbringer.
+	"pride": {
+		"display_name": "Pride",  # Owner-approved proposal
+		"icon": "pride",
+		"description": "Your falling stars come sooner and strike the mighty harder.",
+		"labels": {"star_haste": ["Fall from Grace cooldown", "neg_pct"], "pride_bonus": ["Star damage on elites and bosses", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"star_haste": 0.04, "pride_bonus": 0.10},  # TUNING (not in GDD)
+			{"star_haste": 0.08, "pride_bonus": 0.20},  # TUNING (not in GDD)
+			{"star_haste": 0.12, "pride_bonus": 0.30},  # TUNING (not in GDD)
+			{"star_haste": 0.16, "pride_bonus": 0.40},  # TUNING (not in GDD)
+			{"star_haste": 0.20, "pride_bonus": 0.50},  # TUNING (not in GDD)
+		],
+	},
+	# Crown of Horns (own decision: the Prince of Hell's paired passive, its
+	# name and rule; GDD §15.0 "The Archfiend, the Prince of Hell and Crown of
+	# Horns"; unlocked by defeating the Morning Star): a crown for the princes of
+	# your host: every summon class special (the *_damage keys of a UnitData
+	# "special": the Archfiend's cleave, the Abomination's stomp, the oni's
+	# smash, the gargoyle's swoop...) deals special_damage more
+	# (HordeDirector._special_stats(), its own category). Works the same on
+	# every stage. Pairs with the Archfiend -> the Prince of Hell.
+	"crown_of_horns": {
+		"display_name": "Crown of Horns",
+		"icon": "crown_of_horns",
+		"description": "Your dead's special attacks strike harder.",
+		"labels": {"special_damage": ["Summon special damage", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"special_damage": 0.08},  # TUNING (not in GDD)
+			{"special_damage": 0.16},  # TUNING (not in GDD)
+			{"special_damage": 0.24},  # TUNING (not in GDD)
+			{"special_damage": 0.32},  # TUNING (not in GDD)
+			{"special_damage": 0.40},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act VII: Ravensmoor ---
+	# Pack Blood (Moonfang's paired passive; owner-approved Act VII proposal:
+	# "Wolf of the Red Moon (+ Pack Blood)"; unlocked with the spell by Vargr and
+	# offered on every stage). Own decision on its effect: the pack smells blood:
+	# every hit on a foe BLEEDING from Moonfang (Moonfang.bleeding()) deals
+	# bleed_vulnerability more, from any source, summons and spells alike
+	# (CombatResolver.damage_enemy(), one block; stat pack_blood_bonus_dmg).
+	"pack_blood": {
+		"display_name": "Pack Blood",  # Owner-approved proposal
+		"icon": "pack_blood",
+		"description": "Foes bleeding from Moonfang take more damage from every hit.",
+		"labels": {"bleed_vulnerability": ["Damage to bleeding foes", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"bleed_vulnerability": 0.03},  # TUNING (not in GDD)
+			{"bleed_vulnerability": 0.06},  # TUNING (not in GDD)
+			{"bleed_vulnerability": 0.09},  # TUNING (not in GDD)
+			{"bleed_vulnerability": 0.12},  # TUNING (not in GDD)
+			{"bleed_vulnerability": 0.15},  # TUNING (not in GDD) every hit, not only spells: lower than Furnace Heart's 0.40; first pass 0.25 (147k bonus in the forced run)
+		],
+	},
+	# Act VII's counter-passive Silver Bones (owner-approved Act VII proposal:
+	# "Silver Bones (summon hits on werewolves and vampire nobles deal more, and
+	# mist form lasts half as long)"; unlocked by the achievement Coffin Nails
+	# and offered only in Act VII through its card row's "act"). The
+	# foundation's two hooks read it: CourtRules.silver_bones_mult() (a summon's
+	# hit on a werebeast or noble kind deals 1 + silver_damage) and
+	# CourtRules.silver_mist_mult() (a noble's mist lasts 1 - mist_reduction).
+	"silver_bones": {
+		"display_name": "Silver Bones",  # Owner-approved proposal
+		"icon": "silver_bones",
+		"description": "Silver in your dead's bones: they strike werewolves and vampire nobles harder, and the nobles' mist breaks sooner.",
+		"labels": {"silver_damage": ["Summon damage to werewolves and nobles", "pct"], "mist_reduction": ["Noble mist time", "neg_pct"]},
+		"act": 7,  # Owner-approved: the act's counter-passives are offered only in Act VII (Unlocks.act_allows())
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"silver_damage": 0.10, "mist_reduction": 0.10},  # TUNING (not in GDD)
+			{"silver_damage": 0.18, "mist_reduction": 0.20},  # TUNING (not in GDD)
+			{"silver_damage": 0.26, "mist_reduction": 0.30},  # TUNING (not in GDD)
+			{"silver_damage": 0.34, "mist_reduction": 0.40},  # TUNING (not in GDD)
+			{"silver_damage": 0.42, "mist_reduction": 0.50},  # Owner-approved proposal: "mist form lasts half as long" at Lv 5; damage TUNING (not in GDD)
+		],
+	},
+	# --- Act VII: the Witchwood ---
+	# Moonlit Rite (Hex Circle's paired passive; owner-approved Act VII proposal:
+	# "Witches' Sabbath (+ Moonlit Rite)"; unlocked with the spell by Isolde and
+	# offered on every stage). Own decision on its effect: the rite under the
+	# moon: every SPELL hit (HundredShadowsData.is_spell_source()) on a foe
+	# standing inside one of the necromancer's hex circles (WitchCircle
+	# .in_circle(): the Hex Circle and the Sabbath's dancing circles) deals
+	# rite_damage more (CombatResolver.damage_enemy(), one block; stat
+	# moonlit_rite_bonus_dmg). Pairs with Hex Circle -> Witches' Sabbath.
+	"moonlit_rite": {
+		"display_name": "Moonlit Rite",  # Owner-approved proposal
+		"icon": "moonlit_rite",
+		"description": "Your spells strike foes inside your hex circle harder.",
+		"labels": {"rite_damage": ["Spell damage inside your circle", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"rite_damage": 0.08},  # TUNING (not in GDD)
+			{"rite_damage": 0.16},  # TUNING (not in GDD)
+			{"rite_damage": 0.24},  # TUNING (not in GDD)
+			{"rite_damage": 0.32},  # TUNING (not in GDD)
+			{"rite_damage": 0.40},  # TUNING (not in GDD) as Furnace Heart
+		],
+	},
+	# Act VII's counter-passive Embalmed (owner-approved Act VII proposal:
+	# "Embalmed (enemies heal half as much from hitting summons)"; unlocked by
+	# the achievement The Coven Breaks and offered only in Act VII through its
+	# card row's "act"). Bloodfeast.embalmed_mult() (the foundation's one read,
+	# CourtRulesData.EMBALMED / EMBALMED_KEY): a Court enemy's feed on a summon
+	# heals it 1 - feed_reduction as much (Lv 5: half, the proposal's number).
+	"embalmed": {
+		"display_name": "Embalmed",  # Owner-approved proposal
+		"icon": "embalmed",
+		"description": "Your dead are embalmed: the Court heals less from biting them.",
+		"labels": {"feed_reduction": ["Court feeding on summons", "neg_pct"]},
+		"act": 7,  # Owner-approved: the act's counter-passives are offered only in Act VII (Unlocks.act_allows())
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"feed_reduction": 0.15},  # TUNING (not in GDD)
+			{"feed_reduction": 0.25},  # TUNING (not in GDD)
+			{"feed_reduction": 0.33},  # TUNING (not in GDD)
+			{"feed_reduction": 0.42},  # TUNING (not in GDD)
+			{"feed_reduction": 0.5},  # Owner-approved proposal: "enemies heal half as much from hitting summons"
+		],
+	},
+	# --- Act VII: Castle Sanguis ---
+	# Old Blood (owner-approved proposal: Nocturne's paired passive; own decision
+	# on its rule; GDD §15.0 "Night Swarm, Nocturne, Old Blood and the Dhampir";
+	# unlocked by defeating Queen Carmilla and the Elder, UnlockData): the
+	# oldest blood remembers the night: Night Swarm's bats dart swarm_haste
+	# sooner and each bite heals the necromancer for bite_heal x its damage (at
+	# most NightSwarmData.HEAL_CAP_PER_S HP a second; AbilityManager
+	# .apply_spell_mods() on the spell rows' own keys, like Pride; NightSwarm
+	# reads "bite_heal" and heals through CombatResolver.heal_player()). Pairs
+	# with Night Swarm -> Nocturne.
+	"old_blood": {
+		"display_name": "Old Blood",  # Owner-approved proposal
+		"icon": "old_blood",
+		"description": "Your bats dart sooner, and their bites feed you.",
+		"labels": {"swarm_haste": ["Night Swarm dart cooldown", "neg_pct"], "bite_heal": ["Bite damage healed", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"swarm_haste": 0.04, "bite_heal": 0.02},  # TUNING (not in GDD)
+			{"swarm_haste": 0.08, "bite_heal": 0.04},  # TUNING (not in GDD)
+			{"swarm_haste": 0.12, "bite_heal": 0.06},  # TUNING (not in GDD)
+			{"swarm_haste": 0.16, "bite_heal": 0.08},  # TUNING (not in GDD)
+			{"swarm_haste": 0.20, "bite_heal": 0.10},  # TUNING (not in GDD)
+		],
+	},
+	# Thirst Eternal (own decision: Nosferatu's paired passive, its name and
+	# rule; GDD §15.0 "The Blood Spawn, Nosferatu and Thirst Eternal"; unlocked
+	# by defeating Queen Carmilla and the Elder): the undying hunger of the
+	# Court, given to your dead: every heal a summon receives (priests, the
+	# Blood Spawn's own bites, Soul Recycling, every source) is unit_heal
+	# larger (CombatResolver.heal_unit(), THE one check in the one unit-heal
+	# path, read from the summon's own necromancer's build; 0 when not owned,
+	# so every other run is unchanged). Works the same on every stage. Pairs
+	# with the Blood Spawn -> Nosferatu.
+	"thirst_eternal": {
+		"display_name": "Thirst Eternal",
+		"icon": "thirst_eternal",
+		"description": "Every heal your dead receive is stronger.",
+		"labels": {"unit_heal": ["Summon healing", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"unit_heal": 0.10},  # TUNING (not in GDD)
+			{"unit_heal": 0.20},  # TUNING (not in GDD)
+			{"unit_heal": 0.30},  # TUNING (not in GDD)
+			{"unit_heal": 0.40},  # TUNING (not in GDD)
+			{"unit_heal": 0.50},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act VIII: Skid Row ---
+	# Black Car (Hearse Run's paired passive; owner-approved Act VIII proposal:
+	# "Funeral Procession (+ Black Car)"; unlocked with the spell by Don Marrow
+	# and offered on every stage). Own decision on its effect: the black car
+	# leaves them reeling: every foe a hearse strikes is slowed by hearse_slow
+	# for HearseRunData.BLACK_CAR_SLOW_TIME s (HearseRun reads it once per strike
+	# through CombatResolver.slow_enemy(), the one enemy slow path; stat
+	# hearse_black_car_slows).
+	"black_car": {
+		"display_name": "Black Car",  # Owner-approved proposal
+		"icon": "black_car",
+		"description": "Foes struck by a hearse reel: they are slowed for a while.",
+		"labels": {"hearse_slow": ["Slow on struck foes", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"hearse_slow": 0.15},  # TUNING (not in GDD)
+			{"hearse_slow": 0.22},  # TUNING (not in GDD)
+			{"hearse_slow": 0.29},  # TUNING (not in GDD)
+			{"hearse_slow": 0.36},  # TUNING (not in GDD)
+			{"hearse_slow": 0.45},  # TUNING (not in GDD)
+		],
+	},
+	# Act VIII's counter-passive Kevlar Bones (owner-approved Act VIII proposal:
+	# "Kevlar Bones (summons take less ranged damage)"; unlocked by the
+	# achievement No Witnesses and offered only in Act VIII through its card
+	# row's "act"). The foundation's hook reads it: Armour.kevlar_mult(), once in
+	# CombatResolver.damage_unit(): a RANGED City hit on a summon (a "ranged"
+	# City row's kind id or a CityEnemyData.RANGED_SOURCES tag) deals
+	# 1 - ranged_reduction (stat kevlar_dmg_prevented).
+	"kevlar_bones": {
+		"display_name": "Kevlar Bones",  # Owner-approved proposal
+		"icon": "kevlar_bones",
+		"description": "Your dead are laced with kevlar: the city's guns hurt them less.",
+		"labels": {"ranged_reduction": ["Ranged damage to summons", "neg_pct"]},
+		"act": 8,  # Owner-approved: the act's counter-passives are offered only in Act VIII (Unlocks.act_allows())
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"ranged_reduction": 0.10},  # TUNING (not in GDD)
+			{"ranged_reduction": 0.18},  # TUNING (not in GDD)
+			{"ranged_reduction": 0.26},  # TUNING (not in GDD)
+			{"ranged_reduction": 0.33},  # TUNING (not in GDD)
+			{"ranged_reduction": 0.40},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act VIII: Fort Kessler ---
+	# Tripwire (Bone Mines' paired passive; owner-approved Act VIII proposal:
+	# "Killing Ground (+ Tripwire)"; unlocked with the spell by General Harrow
+	# and offered on every stage). Own decision on its effect: every bone mine's
+	# trigger reaches trip_reach px farther (BoneMines._trigger()), and every
+	# foe caught in a bone mine's blast is slowed by trip_slow for
+	# BoneMinesData.TRIP_SLOW_TIME s (CombatResolver.slow_enemy(), the one slow
+	# path; Spirit Binding and Mournsong lengthen it). Read only by BoneMines:
+	# exactly nothing without the spell.
+	"tripwire": {
+		"display_name": "Tripwire",  # Owner-approved proposal
+		"icon": "tripwire",
+		"description": "Your bone mines go off from farther away, and slow every foe caught in the blast.",
+		"labels": {"trip_reach": ["Mine trigger reach (px)", "num"], "trip_slow": ["Blast slow", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"trip_reach": 4.0, "trip_slow": 0.15},  # TUNING (not in GDD)
+			{"trip_reach": 8.0, "trip_slow": 0.20},  # TUNING (not in GDD)
+			{"trip_reach": 12.0, "trip_slow": 0.25},  # TUNING (not in GDD)
+			{"trip_reach": 16.0, "trip_slow": 0.30},  # TUNING (not in GDD)
+			{"trip_reach": 20.0, "trip_slow": 0.35},  # TUNING (not in GDD)
+		],
+	},
+	# Act VIII's counter-passive Armour-Piercing Bones (owner answer of Nov 2,
+	# 2026, replacing Off the Grid: "summon hits ignore part of the Armour
+	# rule's shield-front reduction (riot shields, SWAT, tanks). Act VIII
+	# only"; unlocked by the Fort Kessler achievement Broken Arrow and offered
+	# only in Act VIII through its card row's "act"). ONE hook,
+	# Armour.front_mult() (Armour.pierce_share()): a summon-class hit on an
+	# armoured front keeps front x (1 - front_pierce) of the cut; flat armour,
+	# spells and the necromancer's own attacks are unchanged.
+	"armour_piercing_bones": {
+		"display_name": "Armour-Piercing Bones",  # Owner answer (Nov 2, 2026)
+		"icon": "armour_piercing_bones",
+		"description": "Your dead strike through shields and armour plate: fronts stop less of their blows.",
+		"labels": {"front_pierce": ["Armoured front ignored", "pct"]},
+		"act": 8,  # Owner answer: Act VIII only (Unlocks.act_allows())
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"front_pierce": 0.15},  # TUNING (not in GDD)
+			{"front_pierce": 0.25},  # TUNING (not in GDD)
+			{"front_pierce": 0.35},  # TUNING (not in GDD)
+			{"front_pierce": 0.45},  # TUNING (not in GDD)
+			{"front_pierce": 0.55},  # TUNING (not in GDD) about half the shield's cut gone at Lv 5
+		],
+	},
+	# --- Act VIII: Liberty Heights ---
+	# Secret Identity (owner-approved proposal: Doomsday's paired passive; own
+	# decision on its rule; GDD §15.0 "Hero's Fist, Doomsday, Secret Identity
+	# and the Revenant Heroine"; unlocked by defeating Paragon, UnlockData):
+	# nobody sees the blow coming: Hero's Fist recharges fist_haste sooner and
+	# the foe it flings strikes the others fist_fling harder (added to the
+	# spell's fling_share; AbilityManager.apply_spell_mods() on the spell rows'
+	# own keys, like Old Blood). Pairs with Hero's Fist -> Doomsday.
+	"secret_identity": {
+		"display_name": "Secret Identity",  # Owner-approved proposal
+		"icon": "secret_identity",
+		"description": "Your fist strikes sooner, and the foes it flings hit harder.",
+		"labels": {"fist_haste": ["Hero's Fist cooldown", "neg_pct"], "fist_fling": ["Flung foe's hit", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"fist_haste": 0.04, "fist_fling": 0.04},  # TUNING (not in GDD)
+			{"fist_haste": 0.08, "fist_fling": 0.08},  # TUNING (not in GDD)
+			{"fist_haste": 0.12, "fist_fling": 0.12},  # TUNING (not in GDD)
+			{"fist_haste": 0.16, "fist_fling": 0.16},  # TUNING (not in GDD)
+			{"fist_haste": 0.20, "fist_fling": 0.20},  # TUNING (not in GDD)
+		],
+	},
+	# Origin Story (own decision: Black Paragon's paired passive, its name and
+	# rule; GDD §15.0 "The Fallen Hero, Black Paragon and Origin Story";
+	# unlocked by defeating Paragon): every raised hero remembers how it began:
+	# every class special reaches special_reach wider (its *_radius / *_length
+	# keys; HordeDirector._special_stats(), THE one path of summon special
+	# numbers, its own category beside the level row's special_area; 0 when not
+	# owned, so every other run is unchanged). Works the same on every stage.
+	# Pairs with the Fallen Hero -> Black Paragon.
+	"origin_story": {
+		"display_name": "Origin Story",
+		"icon": "origin_story",
+		"description": "Every summon's special reaches wider.",
+		"labels": {"special_reach": ["Special reach", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"special_reach": 0.05},  # TUNING (not in GDD)
+			{"special_reach": 0.10},  # TUNING (not in GDD)
+			{"special_reach": 0.15},  # TUNING (not in GDD)
+			{"special_reach": 0.20},  # TUNING (not in GDD)
+			{"special_reach": 0.25},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act IX: the Crash Site ---
+	# Chitin (Bone Beetles' paired passive; owner-approved Act IX proposal:
+	# "Hive of Bone (+ Chitin)"; unlocked with the spell by the Hive Mother and
+	# offered on every stage). Own decision on its effect: the beetles grow
+	# chitin shells: every bone beetle bite deals bite_bonus more (BoneBeetles
+	# reads it once per bite; stat beetle_chitin_bonus_dmg; 0 while not owned).
+	"chitin": {
+		"display_name": "Chitin",  # Owner-approved proposal
+		"icon": "chitin",
+		"description": "Your bone beetles grow chitin shells: their bites hit harder.",
+		"labels": {"bite_bonus": ["Beetle bite damage", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"bite_bonus": 0.06},  # TUNING (not in GDD)
+			{"bite_bonus": 0.12},  # TUNING (not in GDD)
+			{"bite_bonus": 0.18},  # TUNING (not in GDD)
+			{"bite_bonus": 0.24},  # TUNING (not in GDD)
+			{"bite_bonus": 0.30},  # TUNING (not in GDD) first pass 0.45
+		],
+	},
+	# Act IX's counter-passive Anchored (owner-approved Act IX proposal and the
+	# brief: "abductions last half as long and break when the saucer takes
+	# damage"; unlocked by the Crash Site achievement Nothing Hatched and offered
+	# only in Act IX through its card row's "act"). The foundation's hooks read
+	# it: ConcordRules.anchored_hold_mult() (x the hold, 1 - hold_cut, in
+	# Abduction.lift()) and anchored_breaks() (any level: a hit on the saucer
+	# ends the hold, Abduction.on_saucer_hit(); stat abduction_anchored_breaks).
+	"anchored": {
+		"display_name": "Anchored",  # Owner-approved proposal
+		"icon": "anchored",
+		"description": "Your dead cling to the earth: tractor beams hold them for less, and a hit on the saucer drops them.",
+		"labels": {"hold_cut": ["Abduction hold", "neg_pct"]},
+		"act": 9,  # Owner-approved: the act's counter-passives are offered only in Act IX (Unlocks.act_allows())
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"hold_cut": 0.10},  # TUNING (not in GDD)
+			{"hold_cut": 0.20},  # TUNING (not in GDD)
+			{"hold_cut": 0.30},  # TUNING (not in GDD)
+			{"hold_cut": 0.40},  # TUNING (not in GDD)
+			{"hold_cut": 0.50},  # Brief: 0.5 at full ("half as long")
+		],
+	},
+	# --- Act IX: the Proving Moon ---
+	# Trophy Rack (Soul Caster's paired passive; owner-approved Act IX proposal:
+	# "Apex Predator (+ Trophy Rack)"; unlocked with the spell by Vrask'Tal and
+	# offered on every stage). Own decision on its effect: every enemy Soul
+	# Caster kills hangs a trophy (SoulCaster.trophies, for the run), and each
+	# trophy up to trophy_cap adds trophy_dmg to its shots (SoulCaster._fire(),
+	# the one read). Read only by SoulCaster: exactly nothing without the spell.
+	"trophy_rack": {
+		"display_name": "Trophy Rack",  # Owner-approved proposal
+		"icon": "trophy_rack",
+		"description": "Every foe your Soul Caster kills hangs a trophy, and every trophy makes its shots hit harder.",
+		"labels": {"trophy_dmg": ["Soul Caster damage per trophy", "pct"], "trophy_cap": ["Trophies counted", "num"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"trophy_dmg": 0.01, "trophy_cap": 10},  # TUNING (not in GDD) +10% at most
+			{"trophy_dmg": 0.012, "trophy_cap": 14},  # TUNING (not in GDD)
+			{"trophy_dmg": 0.014, "trophy_cap": 18},  # TUNING (not in GDD)
+			{"trophy_dmg": 0.016, "trophy_cap": 22},  # TUNING (not in GDD)
+			{"trophy_dmg": 0.018, "trophy_cap": 25},  # TUNING (not in GDD) +45% at most
+		],
+	},
+	# Act IX's counter-passive Mirror Bones (owner-approved Act IX proposal:
+	# "Mirror Bones (reflected beams deal more and summons take less beam
+	# damage)"; unlocked by the Proving Moon achievement The Hunter Hunted and
+	# offered only in Act IX through its card row's "act"). The foundation's
+	# hooks read it, nothing else: ConcordRules.mirror_reflect_mult() (x 1 +
+	# reflect_damage on every beam the bound player's Orb Shield or his army's
+	# barriers reflect; kept modest, brief: the reflected beams are already
+	# strong) and ConcordRules.mirror_taken_mult() (a Concord beam's tick on a
+	# summon deals 1 - beam_reduction). Keys ConcordRulesData.MIRROR_REFLECT_KEY
+	# and MIRROR_TAKEN_KEY.
+	"mirror_bones": {
+		"display_name": "Mirror Bones",  # Owner-approved proposal
+		"icon": "mirror_bones",
+		"description": "Your dead are polished like mirrors: beams burn them less, and the beams you turn back burn hotter.",
+		"labels": {"beam_reduction": ["Beam damage to summons", "neg_pct"], "reflect_damage": ["Reflected beam damage", "pct"]},
+		"act": 9,  # Owner-approved: the act's counter-passives are offered only in Act IX (Unlocks.act_allows())
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"beam_reduction": 0.10, "reflect_damage": 0.04},  # TUNING (not in GDD)
+			{"beam_reduction": 0.18, "reflect_damage": 0.08},  # TUNING (not in GDD)
+			{"beam_reduction": 0.26, "reflect_damage": 0.12},  # TUNING (not in GDD)
+			{"beam_reduction": 0.33, "reflect_damage": 0.16},  # TUNING (not in GDD)
+			{"beam_reduction": 0.40, "reflect_damage": 0.20},  # TUNING (not in GDD) brief: keep reflect_damage modest
+		],
+	},
+	# --- Act IX: the Ark ---
+	# Starseed (owner-approved proposal: Abduction's paired passive; own
+	# decision on its rule; GDD §15.0 "Tractor Beam, Abduction, Starseed and the
+	# Starborn"; unlocked by defeating the Harvester, UnlockData): the seed the
+	# Harvesters planted answers you now: Tractor Beam recharges starseed_haste
+	# sooner and its slam reaches starseed_reach wider
+	# (AbilityManager.apply_spell_mods() on the spell rows' own keys, like
+	# Secret Identity). Pairs with Tractor Beam -> Abduction.
+	"starseed": {
+		"display_name": "Starseed",  # Owner-approved proposal
+		"icon": "starseed",
+		"description": "Your Tractor Beam lifts sooner, and its slam reaches wider.",
+		"labels": {"starseed_haste": ["Tractor Beam cooldown", "neg_pct"], "starseed_reach": ["Slam reach", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"starseed_haste": 0.04, "starseed_reach": 0.05},  # TUNING (not in GDD)
+			{"starseed_haste": 0.08, "starseed_reach": 0.10},  # TUNING (not in GDD)
+			{"starseed_haste": 0.12, "starseed_reach": 0.15},  # TUNING (not in GDD)
+			{"starseed_haste": 0.16, "starseed_reach": 0.20},  # TUNING (not in GDD)
+			{"starseed_haste": 0.20, "starseed_reach": 0.25},  # TUNING (not in GDD)
+		],
+	},
+	# Crop Circles (own decision: Black Mothership's paired passive, its name
+	# and rule; GDD §15.0 "The Ghost Saucer, Black Mothership and Crop
+	# Circles"; unlocked by defeating the Harvester): the marks the saucers
+	# leave: every class special's held effects last special_hold longer (its
+	# *_duration keys: the Ghost Saucer's lift, freezes, stuns, chills;
+	# HordeDirector._special_stats(), THE one path of summon special numbers,
+	# its own category beside the level row's special_duration; 0 when not
+	# owned, so every other run is unchanged). Works the same on every stage.
+	# Pairs with the Ghost Saucer -> Black Mothership.
+	"crop_circles": {
+		"display_name": "Crop Circles",
+		"icon": "crop_circles",
+		"description": "Every summon's special holds its foes longer.",
+		"labels": {"special_hold": ["Special effects' length", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"special_hold": 0.06},  # TUNING (not in GDD)
+			{"special_hold": 0.12},  # TUNING (not in GDD)
+			{"special_hold": 0.18},  # TUNING (not in GDD)
+			{"special_hold": 0.24},  # TUNING (not in GDD)
+			{"special_hold": 0.30},  # TUNING (not in GDD)
 		],
 	},
 }

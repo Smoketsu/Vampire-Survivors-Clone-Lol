@@ -1,0 +1,6 @@
+A sheet of TWO separate pixel-art game OBSTACLE PROPS on a FULLY TRANSPARENT background (real alpha), with wide empty gaps between them. Three-quarter top-down view (camera above and in front, like a top-down action game), chunky low-resolution pixel art, crisp square pixels, 1-pixel dark outline, flat colours, at most 3 shades per material, light from the top-left. No ground, no cast shadow, no text.
+Top: a LONG HORIZONTAL prop (about 64 pixels long and 26 pixels deep): A CHARM FENCE of the Witchwood: a low crooked fence of black twisted stakes and dead branches lashed together, hung with little bone charms, twig dolls and red threads.
+Bottom: the SAME prop seen END-ON, standing vertically (about 24 pixels wide and 64 pixels tall: the same fence rotated to run away from the camera).
+Colours: black wood #1A1410 #3A2416 #6B4A2E; bone #8C7B5E #D9CCAA; red thread #A3142A #E0384E; moss #2E4A22 #4F7A36.
+Keep it a little darker and calmer than the characters (scenery), but clearly brighter than a near-black ground.
+Attached: an obstacle of this game. Match its pixel size, outline weight and flat look exactly.

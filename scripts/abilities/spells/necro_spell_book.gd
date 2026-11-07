@@ -26,9 +26,63 @@
 ## (WastesReport.print_items(), only when one was taken; ACT3_IDS, so the Act I
 ## and Act II lines keep their text):
 ##   Death Ray        -> DeathRay         (evolves into Event Horizon)
+## and Act IV's (owner-approved Act IV proposal; locked until earned), the
+## same way (ACT4_IDS; each stage's own report line):
+##   Paris's Arrow    -> ParisArrow       (evolves into Arrow of Fate)
 ## earned, UnlockData), each stage's in its own list with the generic NecroSpell
 ## hooks and its own autotest line (CitadelReport):
 ##   Scrap Swarm      -> ScrapSwarm       (evolves into Deathless Swarm; the Iron Citadel)
+## and Act IV's (Mount Olympus, OLYMPUS_IDS: the same generic hooks; its own
+## autotest line, OlympusReport):
+##   Stolen Thunder   -> StolenThunder    (evolves into Gigantomachy)
+## and Act IV's (each Act IV stage in its own list with the same hooks):
+##   River Styx       -> RiverStyx        (evolves into Lethe's Flood; the Asphodel Underworld)
+## and Act V's (each Act V stage in its own list with the same hooks; its own
+## autotest line, ProvinceReport):
+##   Hundred Shadows  -> HundredShadows   (evolves into Thousand Shadows; the Burning Province)
+## Hundred Shadows also hears every spell hit (on_spell_hit(), called once per
+## hit by CombatResolver.damage_enemy(): its clones echo the next spell cast).
+## and Act V's (each Act V stage in its own list with the same hooks):
+##   Black Sun        -> BlackSun         (evolves into Eclipse of Heaven; the Road to the Sun)
+## and Act V's (Castle Kurogane, KUROGANE_IDS: the same generic hooks; its own
+## autotest line, KuroganeReport.item_lines()):
+##   Banner of the Dead -> BannerOfTheDead (evolves into Hundred Banners)
+## and Act VI's (the Burning Gate, BURNING_GATE_IDS: stepped only; its own
+## autotest line, BurningGateReport.item_lines()):
+##   Brimstone        -> Brimstone        (evolves into Rain of Fire)
+## and Act VI's (the Palace of Silk and Ash, SILK_PALACE_IDS: stepped only; its
+## own autotest line, SilkPalaceReport.item_lines()):
+##   Temptation ("tempt") -> TemptSpell (evolves into Unholy Desire)
+## and Act VI's (Pandemonium, PANDEMONIUM_IDS: the same generic hooks; its own
+## autotest line, PandemoniumReport.item_lines()):
+##   Fall from Grace  -> FallFromGrace    (evolves into Lightbringer)
+## and Act VII's (Ravensmoor, RAVENSMOOR_IDS: stepped only; its own autotest
+## line, RavensmoorReport.item_lines()):
+##   Moonfang         -> Moonfang         (evolves into Wolf of the Red Moon)
+## and Act VII's (the Witchwood, WITCHWOOD_IDS: stepped only; its own autotest
+## line, WitchwoodReport.item_lines()):
+##   Hex Circle ("witch_circle") -> WitchCircle (evolves into Witches' Sabbath)
+## and Act VII's (Castle Sanguis, CASTLE_SANGUIS_IDS: stepped only; its own
+## autotest line, CastleSanguisReport.item_lines()):
+##   Night Swarm      -> NightSwarm       (evolves into Nocturne)
+## and Act VIII's (Skid Row, SKID_ROW_IDS: stepped only; its own autotest line,
+## SkidRowReport.item_lines()):
+##   Hearse Run       -> HearseRun        (evolves into Funeral Procession)
+## and Act IX's (the Crash Site, CRASH_SITE_IDS: stepped, with a kill hook; its
+## own autotest line, CrashSiteReport.item_lines()):
+##   Bone Beetles     -> BoneBeetles      (evolves into Hive of Bone)
+## and Act VIII's (Fort Kessler, FORT_KESSLER_IDS: stepped only; its own
+## autotest line, FortKesslerReport.item_lines()):
+##   Bone Mines       -> BoneMines        (evolves into Killing Ground)
+## and Act VIII's (Liberty Heights, LIBERTY_HEIGHTS_IDS: stepped only; its own
+## autotest line, LibertyHeightsReport.item_lines()):
+##   Hero's Fist      -> HerosFist        (evolves into Doomsday)
+## and Act IX's (the Proving Moon, PROVING_MOON_IDS: stepped only; its own
+## autotest line, ProvingMoonReport.item_lines()):
+##   Soul Caster      -> SoulCaster       (evolves into Apex Predator)
+## and Act IX's (the Ark, ARK_IDS: stepped only; its own autotest line,
+## ArkReport.item_lines()):
+##   Tractor Beam     -> TractorLift      (evolves into Abduction)
 ## Game calls after_physics() once per tick after obstacles are resolved
 ## (Bone Wall holds enemies there).
 ## Each spell node is created the first time its spell is learned and reads
@@ -74,6 +128,84 @@ const ACT3_IDS := [
 ## The Iron Citadel's unlockable spell (Deus Ex Machina's reward): stepped, kill
 ## hooked and after-physics hooked like ACT2_IDS, reported by CitadelReport.
 const CITADEL_IDS := ["scrap_swarm"]
+# --- Act IV: the Shores of Ilion ---
+## Act IV's unlockable spells (the generic NecroSpell hooks: stepped, kill
+## hooked and after-physics hooked like ACT3_IDS; each Act IV stage adds its
+## own here; reported by the stage's own report, IlionReport.print_items()).
+const ACT4_IDS := ["paris_arrow"]
+# --- Act IV: Mount Olympus ---
+## Mount Olympus's unlockable spell (Zeus's reward): stepped, kill hooked and
+## after-physics hooked like CITADEL_IDS, reported by OlympusReport.
+const OLYMPUS_IDS := ["stolen_thunder"]
+# --- Act IV: the Asphodel Underworld ---
+## The Asphodel Underworld's unlockable spell (Hades' reward): stepped, kill
+## hooked and after-physics hooked like CITADEL_IDS, reported by UnderworldReport.
+const UNDERWORLD_IDS := ["river_styx"]
+# --- Act V: the Burning Province ---
+## The Burning Province's unlockable spell (Kage's reward): stepped, kill
+## hooked and after-physics hooked like UNDERWORLD_IDS, reported by ProvinceReport.
+const PROVINCE_IDS := ["hundred_shadows"]
+# --- Act V: the Road to the Sun ---
+## The Road to the Sun's unlockable spell (Amaterasu's reward): stepped, kill
+## hooked and after-physics hooked like UNDERWORLD_IDS, reported by SunRoadReport.
+const SUN_ROAD_IDS := ["black_sun"]
+# --- Act V: Castle Kurogane ---
+## Castle Kurogane's unlockable spell (Shogun Kurogane's reward): stepped, kill
+## hooked and after-physics hooked like UNDERWORLD_IDS, reported by KuroganeReport.
+const KUROGANE_IDS := ["banner_of_the_dead"]
+# --- Act VI: the Burning Gate ---
+## The Burning Gate's unlockable spell (Moloch's reward): stepped like
+## UNDERWORLD_IDS (no kill or after-physics hook), reported by BurningGateReport.
+const BURNING_GATE_IDS := ["brimstone"]
+# --- Act VI: the Palace of Silk and Ash ---
+## The Palace of Silk and Ash's unlockable spell (Lilith's reward): stepped like
+## KUROGANE_IDS (it needs no kill or after-physics hook), reported by
+## SilkPalaceReport. Its id is "tempt" (never a kind or rule id).
+const SILK_PALACE_IDS := ["tempt"]
+# --- Act VI: Pandemonium ---
+## Pandemonium's unlockable spell (the Morning Star's reward): stepped, kill
+## hooked and after-physics hooked like KUROGANE_IDS, reported by PandemoniumReport.
+const PANDEMONIUM_IDS := ["fall_from_grace"]
+# --- Act VII: Ravensmoor ---
+## Ravensmoor's unlockable spell (Vargr's reward): stepped like BURNING_GATE_IDS
+## (no kill or after-physics hook), reported by RavensmoorReport.
+const RAVENSMOOR_IDS := ["moonfang"]
+# --- Act VII: the Witchwood ---
+## The Witchwood's unlockable spell (Isolde's reward): stepped like
+## BURNING_GATE_IDS (no kill or after-physics hook), reported by WitchwoodReport.
+## Its id is "witch_circle" (never a kind or the witches' own circle tag).
+const WITCHWOOD_IDS := ["witch_circle"]
+# --- Act VII: Castle Sanguis ---
+## Castle Sanguis's unlockable spell (Queen Carmilla and the Elder's reward):
+## stepped only (no kill or after-physics hook), reported by CastleSanguisReport.
+const CASTLE_SANGUIS_IDS := ["night_swarm"]
+# --- Act VIII: Skid Row ---
+## Skid Row's unlockable spell (Don Marrow's reward): stepped only (no kill or
+## after-physics hook), reported by SkidRowReport.
+const SKID_ROW_IDS := ["hearse_run"]
+# --- Act VIII: Fort Kessler ---
+## Fort Kessler's unlockable spell (General Harrow's reward): stepped only (no
+## kill or after-physics hook), reported by FortKesslerReport. Its id is
+## "bone_mines" (never the minefield's "kessler_mine").
+const FORT_KESSLER_IDS := ["bone_mines"]
+# --- Act VIII: Liberty Heights ---
+## Liberty Heights's unlockable spell (Paragon's reward): stepped only (no kill
+## or after-physics hook), reported by LibertyHeightsReport.
+const LIBERTY_HEIGHTS_IDS := ["heros_fist"]
+# --- Act IX: the Crash Site ---
+## The Crash Site's unlockable spell (the Hive Mother's reward): stepped, with
+## a kill hook (its beetles burst from slain foes; no after-physics hook),
+## reported by CrashSiteReport.
+const CRASH_SITE_IDS := ["bone_beetles"]
+# --- Act IX: the Proving Moon ---
+## The Proving Moon's unlockable spell (Vrask'Tal's reward): stepped only (no
+## kill or after-physics hook), reported by ProvingMoonReport.
+const PROVING_MOON_IDS := ["soul_caster"]
+# --- Act IX: the Ark ---
+## The Ark of the Concord's unlockable spell (the Harvester's reward): stepped
+## only (no kill or after-physics hook), reported by ArkReport. Its id is
+## "tractor_lift" (never the Concord's "tractor_beam" sound / event).
+const ARK_IDS := ["tractor_lift"]
 ## Damage-source stat tags of each spell (CombatResolver "dmg_<tag>"), base
 ## spell first, then its evolution's. Used for the autotest summary.
 const SOURCES := {
@@ -98,6 +230,42 @@ const SOURCES := {
 	"death_ray": ["death_ray", "event_horizon", "ray_spark"],
 	# --- Act III: the Iron Citadel ---
 	"scrap_swarm": ["scrap_swarm", "deathless_swarm"],
+	# --- Act IV: the Shores of Ilion ---
+	"paris_arrow": ["paris_arrow", "arrow_of_fate"],
+	# --- Act IV: Mount Olympus ---
+	"stolen_thunder": ["stolen_thunder", "gigantomachy", "thunderclap"],
+	# --- Act IV: the Asphodel Underworld ---
+	"river_styx": ["river_styx", "lethes_flood"],
+	# --- Act V: the Burning Province ---
+	"hundred_shadows": ["hundred_shadows", "thousand_shadows"],
+	# --- Act V: the Road to the Sun ---
+	"black_sun": ["black_sun", "eclipse_of_heaven", "eclipse_corona"],
+	# --- Act V: Castle Kurogane ---
+	"banner_of_the_dead": ["banner_of_the_dead", "hundred_banners"],
+	# --- Act VI: the Burning Gate ---
+	"brimstone": ["brimstone", "rain_of_fire", "brimstone_pit"],
+	# --- Act VI: the Palace of Silk and Ash --- (the thralls' blows, Unholy Desire's burst, the Succubus Queen's Heartbreaker)
+	"tempt": ["tempt", "unholy_desire", "desire_burst", "tempt_heartbreak"],
+	# --- Act VI: Pandemonium ---
+	"fall_from_grace": ["fall_from_grace", "lightbringer", "lightbringer_flare"],
+	# --- Act VII: Ravensmoor ---
+	"moonfang": ["moonfang", "wolf_of_the_red_moon", "moonfang_bleed"],
+	# --- Act VII: the Witchwood ---
+	"witch_circle": ["witch_circle", "witches_sabbath"],
+	# --- Act VII: Castle Sanguis ---
+	"night_swarm": ["night_swarm", "nocturne", "nocturne_leap"],
+	# --- Act VIII: Skid Row ---
+	"hearse_run": ["hearse_run", "funeral_procession"],
+	# --- Act VIII: Fort Kessler ---
+	"bone_mines": ["bone_mines", "killing_ground", "killing_ground_shards"],
+	# --- Act VIII: Liberty Heights ---
+	"heros_fist": ["heros_fist", "heros_fist_fling", "doomsday", "doomsday_crater"],
+	# --- Act IX: the Crash Site ---
+	"bone_beetles": ["bone_beetles", "hive_of_bone"],
+	# --- Act IX: the Proving Moon ---
+	"soul_caster": ["soul_caster", "apex_predator"],
+	# --- Act IX: the Ark ---
+	"tractor_lift": ["tractor_lift", "star_abduction", "star_abduction_quake"],
 }
 
 ## Owning run.
@@ -129,7 +297,7 @@ func step(delta: float) -> void:
 			node = _create(id)
 		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
 		node.step(delta, ab.spell_stats(id))
-	for id: String in ACT3_IDS + CITADEL_IDS:
+	for id: String in ACT3_IDS + CITADEL_IDS + ACT4_IDS + OLYMPUS_IDS:
 		if ab.spell_level(id) <= 0:
 			continue
 		var node: NecroSpell = nodes.get(id)  # The spell's node (created lazily).
@@ -137,6 +305,150 @@ func step(delta: float) -> void:
 			node = _create(id)
 		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
 		node.step(delta, ab.spell_stats(id))
+	# --- Act IV: the Asphodel Underworld ---
+	for id: String in UNDERWORLD_IDS:
+		if ab.spell_level(id) <= 0:
+			continue
+		var node: NecroSpell = nodes.get(id)  # The spell's node (created lazily).
+		if node == null:
+			node = _create(id)
+		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
+		node.step(delta, ab.spell_stats(id))
+	# --- Act V: the Burning Province ---
+	for id: String in PROVINCE_IDS:
+		if ab.spell_level(id) <= 0:
+			continue
+		var node: NecroSpell = nodes.get(id)  # The spell's node (created lazily).
+		if node == null:
+			node = _create(id)
+		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()); Hundred Shadows' clones.
+		node.step(delta, ab.spell_stats(id))
+	# --- Act V: the Road to the Sun ---
+	for id: String in SUN_ROAD_IDS:
+		if ab.spell_level(id) <= 0:
+			continue
+		var node: NecroSpell = nodes.get(id)  # The spell's node (created lazily).
+		if node == null:
+			node = _create(id)
+		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
+		node.step(delta, ab.spell_stats(id))
+	# --- Act V: Castle Kurogane ---
+	for id: String in KUROGANE_IDS:
+		if ab.spell_level(id) <= 0:
+			continue
+		var node: NecroSpell = nodes.get(id)  # The spell's node (created lazily).
+		if node == null:
+			node = _create(id)
+		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
+		node.step(delta, ab.spell_stats(id))  # Castle Kurogane's spell.
+	# --- Act VI: the Burning Gate ---
+	for id: String in BURNING_GATE_IDS:
+		if ab.spell_level(id) <= 0:
+			continue
+		var node: NecroSpell = nodes.get(id)  # The spell's node (created lazily).
+		if node == null:
+			node = _create(id)
+		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
+		node.step(delta, ab.spell_stats(id))  # The Burning Gate's spell.
+	# --- Act VI: the Palace of Silk and Ash ---
+	for id: String in SILK_PALACE_IDS:
+		if ab.spell_level(id) <= 0:
+			continue
+		var node: NecroSpell = nodes.get(id)  # The spell's node (created lazily).
+		if node == null:
+			node = _create(id)
+		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
+		node.step(delta, ab.spell_stats(id))  # The Palace of Silk and Ash's spell.
+	# --- Act VI: Pandemonium ---
+	for id: String in PANDEMONIUM_IDS:
+		if ab.spell_level(id) <= 0:
+			continue
+		var node: NecroSpell = nodes.get(id)  # The spell's node (created lazily).
+		if node == null:
+			node = _create(id)
+		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
+		node.step(delta, ab.spell_stats(id))  # Pandemonium's spell.
+	# --- Act VII: Ravensmoor ---
+	for id: String in RAVENSMOOR_IDS:
+		if ab.spell_level(id) <= 0:
+			continue
+		var node: NecroSpell = nodes.get(id)  # The spell's node (created lazily).
+		if node == null:
+			node = _create(id)
+		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
+		node.step(delta, ab.spell_stats(id))  # Ravensmoor's spell.
+	# --- Act VII: the Witchwood ---
+	for id: String in WITCHWOOD_IDS:
+		if ab.spell_level(id) <= 0:
+			continue
+		var node: NecroSpell = nodes.get(id)  # The spell's node (created lazily).
+		if node == null:
+			node = _create(id)
+		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
+		node.step(delta, ab.spell_stats(id))  # The Witchwood's spell.
+	# --- Act VII: Castle Sanguis ---
+	for id: String in CASTLE_SANGUIS_IDS:
+		if ab.spell_level(id) <= 0:
+			continue
+		var node: NecroSpell = nodes.get(id)  # The spell's node (created lazily).
+		if node == null:
+			node = _create(id)
+		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
+		node.step(delta, ab.spell_stats(id))  # Castle Sanguis's spell.
+	# --- Act VIII: Skid Row ---
+	for id: String in SKID_ROW_IDS:
+		if ab.spell_level(id) <= 0:
+			continue
+		var node: NecroSpell = nodes.get(id)  # The spell's node (created lazily).
+		if node == null:
+			node = _create(id)
+		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
+		node.step(delta, ab.spell_stats(id))  # Skid Row's spell.
+	# --- Act VIII: Fort Kessler ---
+	for id: String in FORT_KESSLER_IDS:
+		if ab.spell_level(id) <= 0:
+			continue
+		var node: NecroSpell = nodes.get(id)  # The spell's node (created lazily).
+		if node == null:
+			node = _create(id)
+		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
+		node.step(delta, ab.spell_stats(id))  # Fort Kessler's spell.
+	# --- Act VIII: Liberty Heights ---
+	for id: String in LIBERTY_HEIGHTS_IDS:
+		if ab.spell_level(id) <= 0:
+			continue
+		var node: NecroSpell = nodes.get(id)  # The spell's node (created lazily).
+		if node == null:
+			node = _create(id)
+		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
+		node.step(delta, ab.spell_stats(id))  # Liberty Heights's spell.
+	# --- Act IX: the Crash Site ---
+	for id: String in CRASH_SITE_IDS:
+		if ab.spell_level(id) <= 0:
+			continue
+		var node: NecroSpell = nodes.get(id)  # The spell's node (created lazily).
+		if node == null:
+			node = _create(id)
+		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
+		node.step(delta, ab.spell_stats(id))  # The Crash Site's spell.
+	# --- Act IX: the Proving Moon ---
+	for id: String in PROVING_MOON_IDS:
+		if ab.spell_level(id) <= 0:
+			continue
+		var node: NecroSpell = nodes.get(id)  # The spell's node (created lazily).
+		if node == null:
+			node = _create(id)
+		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
+		node.step(delta, ab.spell_stats(id))  # The Proving Moon's spell.
+	# --- Act IX: the Ark ---
+	for id: String in ARK_IDS:
+		if ab.spell_level(id) <= 0:
+			continue
+		var node: NecroSpell = nodes.get(id)  # The spell's node (created lazily).
+		if node == null:
+			node = _create(id)
+		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
+		node.step(delta, ab.spell_stats(id))  # The Ark's spell.
 
 
 ## Content wave 2: the Bone Wall node, created when missing (the Ossuary
@@ -185,6 +497,60 @@ func _create(id: String) -> NecroSpell:
 		# --- Act III: the Iron Citadel ---
 		"scrap_swarm":
 			node = ScrapSwarm.new()
+		# --- Act IV: the Shores of Ilion ---
+		"paris_arrow":
+			node = ParisArrow.new()
+		# --- Act IV: Mount Olympus ---
+		"stolen_thunder":
+			node = StolenThunder.new()
+		# --- Act IV: the Asphodel Underworld ---
+		"river_styx":
+			node = RiverStyx.new()
+		# --- Act V: the Burning Province ---
+		"hundred_shadows":
+			node = HundredShadows.new()
+		# --- Act V: the Road to the Sun ---
+		"black_sun":
+			node = BlackSun.new()
+		# --- Act V: Castle Kurogane ---
+		"banner_of_the_dead":
+			node = BannerOfTheDead.new()
+		# --- Act VI: the Burning Gate ---
+		"brimstone":
+			node = Brimstone.new()  # The Burning Gate's spell.
+		# --- Act VI: the Palace of Silk and Ash ---
+		"tempt":
+			node = TemptSpell.new()  # Temptation (its id "tempt").
+		# --- Act VI: Pandemonium ---
+		"fall_from_grace":
+			node = FallFromGrace.new()  # Pandemonium's spell.
+		# --- Act VII: Ravensmoor ---
+		"moonfang":
+			node = Moonfang.new()  # Ravensmoor's spell.
+		# --- Act VII: the Witchwood ---
+		"witch_circle":
+			node = WitchCircle.new()  # Hex Circle (its id "witch_circle").
+		# --- Act VII: Castle Sanguis ---
+		"night_swarm":
+			node = NightSwarm.new()  # Castle Sanguis's spell.
+		# --- Act VIII: Skid Row ---
+		"hearse_run":
+			node = HearseRun.new()  # Skid Row's spell.
+		# --- Act VIII: Fort Kessler ---
+		"bone_mines":
+			node = BoneMines.new()  # Fort Kessler's spell.
+		# --- Act VIII: Liberty Heights ---
+		"heros_fist":
+			node = HerosFist.new()  # Liberty Heights's spell.
+		# --- Act IX: the Crash Site ---
+		"bone_beetles":
+			node = BoneBeetles.new()  # The Crash Site's spell.
+		# --- Act IX: the Proving Moon ---
+		"soul_caster":
+			node = SoulCaster.new()  # The Proving Moon's spell.
+		# --- Act IX: the Ark ---
+		"tractor_lift":
+			node = TractorLift.new()  # The Ark's spell.
 		_:
 			node = PlagueCloud.new()
 	node.game = game
@@ -211,10 +577,39 @@ func on_enemy_killed(e: Enemy) -> void:
 		var node: NecroSpell = nodes.get(id)  # An Act II spell's node, if learned.
 		if node != null:
 			node.on_enemy_killed(e)
-	for id: String in ACT3_IDS + CITADEL_IDS:
+	for id: String in ACT3_IDS + CITADEL_IDS + ACT4_IDS + OLYMPUS_IDS:
 		var node: NecroSpell = nodes.get(id)  # An Act III spell's node, if learned.
 		if node != null:
 			node.on_enemy_killed(e)
+	for id: String in UNDERWORLD_IDS:
+		var node: NecroSpell = nodes.get(id)  # An Act IV spell's node, if learned (the Underworld).
+		if node != null:
+			node.on_enemy_killed(e)
+	# --- Act V: the Burning Province ---
+	for id: String in PROVINCE_IDS:
+		var node: NecroSpell = nodes.get(id)  # An Act V spell's node, if learned (the Province).
+		if node != null:
+			node.on_enemy_killed(e)
+	# --- Act V: the Road to the Sun ---
+	for id: String in SUN_ROAD_IDS:
+		var node: NecroSpell = nodes.get(id)  # An Act V spell's node, if learned (the Road to the Sun).
+		if node != null:
+			node.on_enemy_killed(e)
+	# --- Act V: Castle Kurogane ---
+	for id: String in KUROGANE_IDS:
+		var node: NecroSpell = nodes.get(id)  # An Act V spell's node, if learned (Castle Kurogane).
+		if node != null:
+			node.on_enemy_killed(e)  # Castle Kurogane's spell.
+	# --- Act VI: Pandemonium ---
+	for id: String in PANDEMONIUM_IDS:
+		var node: NecroSpell = nodes.get(id)  # An Act VI spell's node, if learned (Pandemonium).
+		if node != null:
+			node.on_enemy_killed(e)  # Pandemonium's spell.
+	# --- Act IX: the Crash Site ---
+	for id: String in CRASH_SITE_IDS:
+		var node: NecroSpell = nodes.get(id)  # The Crash Site's spell node, if learned.
+		if node != null:
+			node.on_enemy_killed(e)  # Bone Beetles: a slain foe bursts into beetles.
 
 
 ## Post-movement hook (Game._physics_process, after Arena.resolve_all()):
@@ -228,10 +623,47 @@ func after_physics(delta: float) -> void:
 		var node: NecroSpell = nodes.get(id)  # An Act II spell's node, if learned.
 		if node != null:
 			node.after_physics(delta)
-	for id: String in ACT3_IDS + CITADEL_IDS:
+	for id: String in ACT3_IDS + CITADEL_IDS + ACT4_IDS + OLYMPUS_IDS:
 		var node: NecroSpell = nodes.get(id)  # An Act III spell's node, if learned.
 		if node != null:
 			node.after_physics(delta)
+	for id: String in UNDERWORLD_IDS:
+		var node: NecroSpell = nodes.get(id)  # An Act IV spell's node, if learned (the Underworld).
+		if node != null:
+			node.after_physics(delta)
+	# --- Act V: the Road to the Sun --- (this loop and Castle Kurogane's run before the Province's, whose block runs on into on_spell_hit())
+	for id: String in SUN_ROAD_IDS:
+		var node: NecroSpell = nodes.get(id)  # An Act V spell's node, if learned (the Road to the Sun).
+		if node != null:
+			node.after_physics(delta)
+	# --- Act V: Castle Kurogane ---
+	for id: String in KUROGANE_IDS:
+		var node: NecroSpell = nodes.get(id)  # An Act V spell's node, if learned (Castle Kurogane).
+		if node != null:
+			node.after_physics(delta)  # Castle Kurogane's spell.
+	# --- Act V: the Burning Province ---
+	for id: String in PROVINCE_IDS:
+		var node: NecroSpell = nodes.get(id)  # An Act V spell's node, if learned (the Province).
+		if node != null:
+			node.after_physics(delta)
+	# --- Act VI: Pandemonium ---
+	for id: String in PANDEMONIUM_IDS:
+		var node: NecroSpell = nodes.get(id)  # An Act VI spell's node, if learned (Pandemonium).
+		if node != null:
+			node.after_physics(delta)  # Pandemonium's spell.
+
+
+# --- Act V: the Burning Province ---
+## A spell hit landed (CombatResolver.damage_enemy(), once per hit, only while
+## Hundred Shadows is learned): `amount` damage on `e` tagged `source`. Hundred
+## Shadows' clones echo the necromancer's next spell (HundredShadows.on_spell_hit());
+## a hit that is no spell (HundredShadowsData.is_spell_source()) is ignored.
+func on_spell_hit(e: Enemy, amount: float, source: String) -> void:
+	if not HundredShadowsData.is_spell_source(source):
+		return
+	var node: HundredShadows = nodes.get(HundredShadowsData.ID)  # The spell's node, if it ever stepped.
+	if node != null:
+		node.on_spell_hit(e, amount)
 
 
 ## Total damage dealt so far by spell `id` (base and evolved sources).

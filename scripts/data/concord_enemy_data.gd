@@ -1,0 +1,472 @@
+## ConcordEnemyData — immutable design data for the kinds THE CONCORD OF STARS
+## fields on every Act IX stage (GDD §15.0 "Act IX foundation (phase 1)";
+## owner-approved proposal docs/act9/PROPOSAL.md "Act IX: The Concord of
+## Stars"). Long ago something out in the dark seeded life on this world and
+## comes back to reap the dead; the necromancer has taken every soul, and the
+## Concord (a coalition of alien races under the Harvesters who rule it) comes
+## to find out why. One coalition (owner): the Brood lead Stage 25, the Vrask
+## Stage 26, the Harvesters Stage 27, the Luminous in every stage. The shared
+## kinds of phase 1 (one or two of each race, every one used by a rule):
+##   broodling      — the Brood: fodder; small, fast insects in swarms of 12.
+##   grey_drone     — the Harvesters: fodder; small greys in squads, a probe
+##                    that fires a short beam (BEAMS).
+##   saucer         — the Harvesters: an elite FLIER that hovers over the ring
+##                    and lifts a summon in a tractor beam (ABDUCTION); in
+##                    flight only airborne summons, ranged attacks, casters,
+##                    spells and volleys hit it (the Act VII Night Wings test).
+##   vrask_hunter   — the Vrask: an elite hunter, male; CLOAKED while it moves
+##                    (a shimmer), a three-dot plasma lock, then one shot (a
+##                    short beam).
+##   lumen_sentinel — the Luminous: ranged, male; sweeping beams; a shield that
+##                    soaks the first hits (the existing holy shield path).
+##   prism          — the Luminous: support, the Star-Seer (female, figure
+##                    style); a beam that passes through her splits into three.
+##   concord_terraformer — a landing pod (a STRUCTURE row) that roots and grows
+##                    alien ground around it (TERRAFORMING); Terraforming drops
+##                    it, this row names it, carries its look and lets
+##                    --spawn= drop one to test.
+## The Reckoning, the Final Harvest, has no kind of its own: its heavy is the
+## saucer (RECKONING_KIND) with the shared kinds as companions
+## (RECKONING_COMPANIONS), and its eye is a beam (ConcordRulesData.EYE_SOURCE).
+## Each stage's own kinds live in its own file (CrashSiteEnemyData,
+## ProvingMoonEnemyData, ArkEnemyData; empty until phase 2: the Burrower and
+## the Acid Spitter, the Warbeast, the Grey Overseer and the Luminous Archon,
+## the bosses' allies); EnemyDirector.enemy_def() looks them up through
+## concord_def(), this file first, after the Last Line's tables.
+##
+## Rows have every key of an EnemyData.ENEMIES row (same meaning) plus the
+## optional Concord keys (absent = off):
+##   faction       — "concord" (the Codex's Concord tab, the reports).
+##   kit           — a CovenantKit id; a Concord kit lives in
+##                   scripts/enemies/concord/<kit>_kit.gd (CovenantKits loads it
+##                   by name after the City's folder, so kit ids must be unique
+##                   across the eight folders). Every Concord kind has one (a
+##                   ConcordKit).
+##   race          — String, one of ConcordRulesData.RACES (the Codex and the
+##                   report group by it).
+##   beam          — Dictionary: the kind's beam: "style" (a
+##                   ConcordRulesData.BEAM_STYLES id) plus any of that style's
+##                   keys to override its numbers; absent = it fires none.
+##   abducts       — bool: a tractor beam (ABDUCTION; Abduction.lift()). Keys:
+##                   hover_radius (px from the nearest necromancer it hovers,
+##                   over the ring's edge), hover_turn (rad/s it circles there),
+##                   lift_range (px from it a summon can be picked), lift_every
+##                   (s between two lifts), carry_drift (px/s it drifts outward
+##                   while it holds a summon).
+##   cloak         — Dictionary: the Vrask cloak (absent = none): alpha (the
+##                   shimmer's opacity), cloaked_taken (share of a summon's or
+##                   a hazard's hit it takes while cloaked), reveal_time (s a
+##                   spell hit or its own shot reveals it), min_speed (px/s it
+##                   must move to stay cloaked).
+##   heals_on_turf — bool: heals on live alien ground (TERRAFORMING); absent =
+##                   true for every Concord kind but a structure.
+##   flight_melee_taken — share of a GROUNDED MELEE summon's blow a flier takes
+##                   in flight (FallenAngelKit.grounded_melee(); 0 = it finds
+##                   only air), the Night Wings test.
+##   lumen_shield  — share of its max HP its shield soaks before it is hurt
+##                   (Enemy.holy_shield, the existing path; never renewed).
+##   prism         — true: a beam whose line passes through it splits into
+##                   three (ConcordBeams; once per beam).
+##   fodder        — true: fodder (reports).
+##   elite_kind    — true: an elite of the roster (reports; it is NOT spawned
+##                   as an elite: its own row is already strong).
+##   figure        — true: a figure-style woman (the art pass's bust rig; no
+##                   rule reads it).
+## Flying uses the existing "flies" / "phases" / "floating" keys and the shield
+## the existing holy shield path: no second one.
+## The GDD gives no numbers: everything is TUNING (not in GDD) unless marked as
+## the owner-approved proposal.
+class_name ConcordEnemyData
+extends RefCounted
+
+## Faction id of the Concord's kinds (row "faction").
+const FACTION: String = "concord"
+## Kind id of the Brood's fodder.
+const BROODLING: String = "broodling"
+## Kind id of the Harvesters' fodder.
+const GREY_DRONE: String = "grey_drone"
+## Kind id of the Harvesters' abducting flier (the Final Harvest's heavy).
+const SAUCER: String = "saucer"
+## Kind id of the Vrask's hunter.
+const VRASK_HUNTER: String = "vrask_hunter"
+## Kind id of the Luminous's ranged sentinel.
+const LUMEN_SENTINEL: String = "lumen_sentinel"
+## Kind id of the Luminous's Star-Seer.
+const PRISM: String = "prism"
+## Kind id of the landing pod (a structure row; Terraforming drops it).
+const TERRAFORMER: String = "concord_terraformer"
+## Sprite key of the landing pod (assets/sprites/structures/).
+const TERRAFORMER_SPRITE: String = "structures/concord_terraformer"
+## Sprite key of a destroyed landing pod.
+const TERRAFORMER_DEAD_SPRITE: String = "structures/concord_terraformer_dead"
+## Sprite folder of the Concord's kinds (assets/sprites/concord/).
+const SPRITE_DIR: String = "concord/"
+## Ranged damage tags of the Concord beyond its "ranged" rows' kind ids (a
+## future counter-passive may read them; the beams' sources are their kinds').
+const RANGED_SOURCES: Array[String] = [ConcordRulesData.EYE_SOURCE]
+
+## The Final Harvest's heavy (the RECKONING "kind" of every Act IX stage):
+## the saucers fill the sky.
+const RECKONING_KIND: String = SAUCER
+## The Final Harvest's companions (the RECKONING "companions" of every Act IX
+## stage; brief: broodlings, grey drones, a Vrask hunter, a Lumen Sentinel).
+const RECKONING_COMPANIONS: Array = [
+	{"kind": BROODLING, "count": 12, "growth": 2.0},  # TUNING (not in GDD) a swarm
+	{"kind": GREY_DRONE, "count": 4, "growth": 1.0},  # TUNING (not in GDD) a squad
+	{"kind": VRASK_HUNTER, "count": 1, "growth": 0.34},  # TUNING (not in GDD) brief: a Vrask hunter
+	{"kind": LUMEN_SENTINEL, "count": 1, "growth": 0.34},  # TUNING (not in GDD) brief: a Lumen Sentinel
+]
+
+## The Concord's shared kinds, keyed by kind id.
+const ENEMIES := {
+	# The Brood, fodder: small, fast insects in swarms of 12 (owner-approved
+	# proposal: "Fast swarms of 12 | Anything").
+	"broodling": {
+		"display_name": "Broodling",
+		"max_hp": 9.0,  # TUNING (not in GDD) fodder, frail (the Vampire Bat 9)
+		"move_speed": 82.0,  # TUNING (not in GDD) px/s; fast
+		"damage": 2.0,  # TUNING (not in GDD) a claw, before the time scaling
+		"attack_interval": 0.9,  # TUNING (not in GDD) s
+		"attack_range": 4.0,  # TUNING (not in GDD) px
+		"radius": 6.0,  # TUNING (not in GDD) px (~22 px sprite)
+		"armor": 0.0,
+		"xp": 1,  # TUNING (not in GDD)
+		"behavior": "melee",
+		"projectile_speed": 0.0,
+		"undead_damage_mult": 1.0,
+		"heal_amount": 0.0,
+		"heal_interval": 0.0,
+		"heal_radius": 0.0,
+		"target_priority": 0.2,  # TUNING (not in GDD) 0..1, fodder
+		"mass": 0.5,  # TUNING (not in GDD)
+		"faction": FACTION,
+		"kit": "broodling",
+		"race": "brood",  # Owner: the Brood lead Stage 25
+		"fodder": true,
+	},  # The broodling.
+	# The Harvesters, fodder: small greys in squads with a glowing probe that
+	# fires a short beam (BEAMS "probe": a 1 s aiming line, then a short, thin
+	# beam that sweeps a little). Ranged: it advances and probes from range.
+	"grey_drone": {
+		"display_name": "Grey Drone",
+		"max_hp": 14.0,  # TUNING (not in GDD) fodder
+		"move_speed": 46.0,  # TUNING (not in GDD) px/s
+		"damage": 0.0,  # Unused: its probe beam's dps (BEAM_STYLES "probe").
+		"attack_interval": 3.6,  # TUNING (not in GDD) s between two probes (after the beam ends)
+		"attack_range": 130.0,  # TUNING (not in GDD) px (the probe beam reaches 150)
+		"radius": 8.0,  # TUNING (not in GDD) px (~28 px sprite)
+		"armor": 0.0,
+		"xp": 2,  # TUNING (not in GDD)
+		"behavior": "ranged",
+		"projectile_speed": 0.0,  # Unused: a beam, not a projectile.
+		"undead_damage_mult": 1.0,
+		"heal_amount": 0.0,
+		"heal_interval": 0.0,
+		"heal_radius": 0.0,
+		"target_priority": 0.35,  # TUNING (not in GDD) 0..1
+		"mass": 0.8,  # TUNING (not in GDD)
+		"faction": FACTION,
+		"kit": "grey_drone",
+		"race": "harvesters",  # Owner-approved proposal: the Harvesters
+		"fodder": true,
+		"beam": {"style": "probe"},  # Brief: a probe that fires a short beam (Beams)
+	},  # The grey drone.
+	# The Harvesters, an elite FLIER (Night Wings: no summon body-blocks it,
+	# grounded melee blows find only air; "phases": it passes over the
+	# obstacles; "floating": the ground spares it). It hovers over the ring's
+	# edge, picks the nearest liftable summon, shows a green tractor cone for
+	# the windup and lifts it (ABDUCTION; Abduction.lift()). It never attacks
+	# otherwise. Owner-approved proposal: "Elite, flying | Abduction |
+	# Gargoyles, Archers, spells".
+	"saucer": {
+		"display_name": "Saucer",
+		"max_hp": 110.0,  # TUNING (not in GDD) an elite flier
+		"move_speed": 74.0,  # TUNING (not in GDD) px/s
+		"damage": 0.0,  # Never strikes: the tractor beam only.
+		"attack_interval": 1.0,
+		"attack_range": 0.0,
+		"radius": 18.0,  # TUNING (not in GDD) px (~64 px sprite, top-down)
+		"armor": 0.15,  # TUNING (not in GDD) a hull
+		"xp": 8,  # TUNING (not in GDD)
+		"behavior": "melee",  # Unused: its kit flies it.
+		"projectile_speed": 0.0,
+		"undead_damage_mult": 1.0,
+		"heal_amount": 0.0,
+		"heal_interval": 0.0,
+		"heal_radius": 0.0,
+		"target_priority": 0.85,  # TUNING (not in GDD) 0..1; shoot it down in time
+		"mass": 3.0,  # TUNING (not in GDD)
+		"slow_resist": 0.5,  # TUNING (not in GDD)
+		"faction": FACTION,
+		"kit": "saucer",
+		"race": "harvesters",  # Owner-approved proposal: the Harvesters
+		"elite_kind": true,  # Brief: an elite flier
+		"flies": true,  # Brief: row "flies" (the Act VII Night Wings rule)
+		"phases": true,  # A flier crosses obstacles (Arena.resolve_all() skips it).
+		"floating": true,  # Over the ground (the terrain slows and fires spare it).
+		"flight_melee_taken": 0.0,  # Brief: grounded melee blows deal 0 in flight
+		"abducts": true,  # Owner-approved proposal: Abduction
+		"hover_radius": 170.0,  # TUNING (not in GDD) px from the necromancer (the ring is 60-150 px)
+		"hover_turn": 0.25,  # TUNING (not in GDD) rad/s it circles
+		"lift_range": 150.0,  # TUNING (not in GDD) px
+		"lift_every": 7.0,  # TUNING (not in GDD) s between two lifts
+		"carry_drift": 10.0,  # TUNING (not in GDD) px/s outward while it holds a summon
+	},  # The saucer.
+	# The Vrask, an elite hunter (male): CLOAKED while it moves (a shimmer: its
+	# body drawn at the cloak's alpha; while cloaked a summon's or a hazard's
+	# hit deals cloaked_taken of itself, and a SPELL hit reveals it for
+	# reveal_time s: "Area damage reveals it"); it stops to aim its shoulder
+	# caster: a three-dot plasma lock on its target for the aim, then one shot
+	# (BEAM_STYLES "lock": a 0.15 s pulse), uncloaked while it aims and fires.
+	"vrask_hunter": {
+		"display_name": "Vrask Hunter",
+		"max_hp": 70.0,  # TUNING (not in GDD) an elite
+		"move_speed": 56.0,  # TUNING (not in GDD) px/s
+		"damage": 4.0,  # TUNING (not in GDD) a glaive blow in reach, before the time scaling (its lock is a beam)
+		"attack_interval": 4.5,  # TUNING (not in GDD) s between two locks (after the shot)
+		"attack_range": 260.0,  # TUNING (not in GDD) px (the lock beam reaches 300)
+		"radius": 11.0,  # TUNING (not in GDD) px (~46 px sprite)
+		"armor": 0.15,  # TUNING (not in GDD) dark armour
+		"xp": 6,  # TUNING (not in GDD)
+		"behavior": "ranged",
+		"projectile_speed": 0.0,  # Unused: a beam.
+		"undead_damage_mult": 1.0,
+		"heal_amount": 0.0,
+		"heal_interval": 0.0,
+		"heal_radius": 0.0,
+		"target_priority": 0.7,  # TUNING (not in GDD) 0..1
+		"mass": 2.0,  # TUNING (not in GDD)
+		"faction": FACTION,
+		"kit": "vrask_hunter",
+		"race": "vrask",  # Owner: the Vrask lead Stage 26
+		"elite_kind": true,  # Owner-approved proposal: "Vrask Hunter | Elite"
+		"beam": {"style": "lock"},  # Owner-approved proposal: "a three-dot plasma caster lock, then a shot"
+		"cloak": {"alpha": 0.22, "cloaked_taken": 0.5, "reveal_time": 2.0, "min_speed": 8.0},  # TUNING (not in GDD) owner-approved proposal: "Cloaked (a shimmer while it moves) ... Area damage reveals it"
+	},  # The Vrask hunter.
+	# The Luminous, ranged (male): a being of white-gold light in crystal armour
+	# with a beam staff: SWEEPING BEAMS (BEAM_STYLES "sweep") and a SHIELD that
+	# soaks the first hits (Enemy.holy_shield, the existing path: lumen_shield
+	# of its max HP, never renewed). Owner-approved proposal: "Reflect its
+	# beams; Wither".
+	"lumen_sentinel": {
+		"display_name": "Lumen Sentinel",
+		"max_hp": 58.0,  # TUNING (not in GDD)
+		"move_speed": 40.0,  # TUNING (not in GDD) px/s
+		"damage": 0.0,  # Unused: its beam's dps (BEAM_STYLES "sweep").
+		"attack_interval": 6.5,  # TUNING (not in GDD) s between two sweeps (after the beam ends; first pass 5)
+		"attack_range": 220.0,  # TUNING (not in GDD) px (the sweep reaches 260)
+		"radius": 11.0,  # TUNING (not in GDD) px (~46 px sprite)
+		"armor": 0.1,  # TUNING (not in GDD) crystal armour
+		"xp": 5,  # TUNING (not in GDD)
+		"behavior": "ranged",
+		"projectile_speed": 0.0,  # Unused: a beam.
+		"undead_damage_mult": 1.0,
+		"heal_amount": 0.0,
+		"heal_interval": 0.0,
+		"heal_radius": 0.0,
+		"target_priority": 0.6,  # TUNING (not in GDD) 0..1
+		"mass": 1.6,  # TUNING (not in GDD)
+		"faction": FACTION,
+		"kit": "lumen_sentinel",
+		"race": "luminous",  # Owner: the Luminous are mixed into every stage
+		"beam": {"style": "sweep"},  # Owner-approved proposal: "Sweeping beams"
+		"lumen_shield": 0.3,  # TUNING (not in GDD) owner-approved proposal: "a shield that soaks the first hits" (first pass 0.5)
+	},  # The Lumen Sentinel.
+	# The Luminous, support: THE STAR-SEER (female, figure style; pale lavender
+	# skin, white-gold hair, a floating prism, an opaque high-necked gown). She
+	# fires nothing: a Concord beam whose line passes through her ends there
+	# and splits into three (ConcordBeams; once per beam). She keeps to the
+	# beams' lines from range (behavior "ranged" with no shot).
+	"prism": {
+		"display_name": "Star-Seer",
+		"max_hp": 44.0,  # TUNING (not in GDD)
+		"move_speed": 42.0,  # TUNING (not in GDD) px/s
+		"damage": 0.0,  # Fires nothing.
+		"attack_interval": 2.0,
+		"attack_range": 200.0,  # TUNING (not in GDD) px (where she hangs back)
+		"radius": 10.0,  # TUNING (not in GDD) px (~44 px sprite)
+		"armor": 0.0,
+		"xp": 5,  # TUNING (not in GDD)
+		"behavior": "ranged",  # Advances and hangs back like a caster; its kit fires nothing.
+		"projectile_speed": 0.0,
+		"undead_damage_mult": 1.0,
+		"heal_amount": 0.0,
+		"heal_interval": 0.0,
+		"heal_radius": 0.0,
+		"target_priority": 0.75,  # TUNING (not in GDD) 0..1; "kill it before the beams line up"
+		"mass": 1.0,  # TUNING (not in GDD)
+		"faction": FACTION,
+		"kit": "prism",
+		"race": "luminous",  # Owner: the Luminous are mixed into every stage
+		"prism": true,  # Owner-approved proposal: "Splits any beam that passes through it into three"
+		"figure": true,  # Owner-approved proposal: the Star-Seer, figure style
+	},  # The Star-Seer.
+	# A LANDING POD (a structure): it falls on a telegraphed streak, roots and
+	# grows alien ground around it, one ring of cells at a time
+	# (TERRAFORMING). Destroyed, it stops growing; its ground stays until
+	# burnt. Never healed by the turf.
+	"concord_terraformer": {
+		"display_name": "Terraformer Pod",
+		"max_hp": 150.0,  # TUNING (not in GDD)
+		"move_speed": 0.0,
+		"damage": 0.0,
+		"attack_interval": 1.0,
+		"attack_range": 0.0,
+		"radius": 16.0,  # TUNING (not in GDD) px
+		"armor": 0.2,  # TUNING (not in GDD) a hull
+		"xp": 8,  # TUNING (not in GDD)
+		"behavior": "structure",
+		"projectile_speed": 0.0,
+		"undead_damage_mult": 1.0,
+		"heal_amount": 0.0,
+		"heal_interval": 0.0,
+		"heal_radius": 0.0,
+		"target_priority": 0.65,  # TUNING (not in GDD) 0..1; break the pods
+		"mass": 60.0,  # Immovable.
+		"is_structure": true,
+		"faction": FACTION,
+		"kit": "concord_terraformer",
+		"race": "harvesters",  # The Harvesters' terraforming (the report lists it with them).
+		"heals_on_turf": false,  # Brief: false for structures
+	},  # The landing pod.
+	# --- Act IX: the Crash Site ---
+	# The Brood, soldier: THE BURROWER (a creature; owner-approved proposal:
+	# "Tunnels in and bursts up inside the ring (a dirt mound 1 s ahead) |
+	# Blockers inside the ring"). A slate-dark armoured insect with cream
+	# digging claws. On the field it DIGS IN (dig_time s, still hittable), then
+	# travels UNDERGROUND (Enemy.untargetable: out of the enemy grid, so nothing
+	# aims at it or hits it; Enemy.ethereal: no summon body-blocks it, it
+	# passes under the obstacles) at burrow_speed px/s toward a point
+	# surface_dist px from the necromancer on its own side (inside the Bone
+	# Ring, among the summons); there a DIRT MOUND shows for mound_time s (a
+	# texture; it is still underground), then it BURSTS UP: every summon and
+	# necromancer within burst_radius px takes burst_damage (time-scaled) once,
+	# and it fights on with the shared melee AI. Knocked or pulled more than
+	# reburrow_dist px from the necromancer it digs in again (at most once
+	# every reburrow_every s). BurrowerKit.
+	"burrower": {
+		"display_name": "Burrower",
+		"max_hp": 46.0,  # TUNING (not in GDD) a soldier
+		"move_speed": 48.0,  # TUNING (not in GDD) px/s on the surface
+		"damage": 5.0,  # TUNING (not in GDD) its claws in reach, before the time scaling
+		"attack_interval": 1.0,  # TUNING (not in GDD) s
+		"attack_range": 6.0,  # TUNING (not in GDD) px
+		"radius": 10.0,  # TUNING (not in GDD) px (~34 px sprite)
+		"armor": 0.2,  # TUNING (not in GDD) armoured chitin
+		"xp": 4,  # TUNING (not in GDD)
+		"behavior": "melee",
+		"projectile_speed": 0.0,
+		"undead_damage_mult": 1.0,
+		"heal_amount": 0.0,
+		"heal_interval": 0.0,
+		"heal_radius": 0.0,
+		"target_priority": 0.5,  # TUNING (not in GDD) 0..1
+		"mass": 2.0,  # TUNING (not in GDD)
+		"faction": FACTION,
+		"kit": "burrower",
+		"race": "brood",  # Owner: the Brood lead Stage 25
+		"dig_time": 0.6,  # TUNING (not in GDD) s it digs in (still hittable)
+		"burrow_speed": 105.0,  # TUNING (not in GDD) px/s underground
+		"surface_dist": 62.0,  # TUNING (not in GDD) px from the necromancer it surfaces (the ring is 60-150 px)
+		"mound_time": 1.0,  # Owner-approved proposal: "a dirt mound 1 s ahead"
+		"burst_radius": 30.0,  # TUNING (not in GDD) px
+		"burst_damage": 4.0,  # TUNING (not in GDD) before the time scaling, once a body (first pass 6)
+		"reburrow_dist": 300.0,  # TUNING (not in GDD) px
+		"reburrow_every": 9.0,  # TUNING (not in GDD) s
+		"mound_radius": 18.0,  # TUNING (not in GDD) px of the mound drawn (and its danger hint)
+	},  # The Burrower.
+	# The Brood, ranged: THE ACID SPITTER (a creature; owner-approved proposal:
+	# "Lobs acid that leaves a burning puddle; arcing, so it ignores the ring |
+	# Kill it on approach"). A green insect with a swollen glowing acid sac.
+	# Its ranged attack is a LOB through AcidPools.lob() (THE acid path; never
+	# ProjectileManager): an arcing glob to its target's spot (fixed at the
+	# throw) in lob_flight s, with a landing telegraph; it splashes for
+	# acid_impact and leaves a puddle of acid_radius px for acid_life s that
+	# burns summons and the necromancer for acid_dps (time-scaled). AcidSpitterKit.
+	"acid_spitter": {
+		"display_name": "Acid Spitter",
+		"max_hp": 30.0,  # TUNING (not in GDD) frail: kill it on approach
+		"move_speed": 44.0,  # TUNING (not in GDD) px/s
+		"damage": 0.0,  # Unused: its lob's numbers below.
+		"attack_interval": 3.4,  # TUNING (not in GDD) s between two lobs
+		"attack_range": 210.0,  # TUNING (not in GDD) px
+		"radius": 9.0,  # TUNING (not in GDD) px (~32 px sprite)
+		"armor": 0.0,
+		"xp": 4,  # TUNING (not in GDD)
+		"behavior": "ranged",
+		"projectile_speed": 0.0,  # Unused: a lob through AcidPools.
+		"undead_damage_mult": 1.0,
+		"heal_amount": 0.0,
+		"heal_interval": 0.0,
+		"heal_radius": 0.0,
+		"target_priority": 0.6,  # TUNING (not in GDD) 0..1; kill it on approach
+		"mass": 1.0,  # TUNING (not in GDD)
+		"faction": FACTION,
+		"kit": "acid_spitter",
+		"race": "brood",  # Owner: the Brood lead Stage 25
+		"lob_flight": 0.9,  # TUNING (not in GDD) s in the air
+		"acid_radius": 28.0,  # TUNING (not in GDD) px
+		"acid_life": 3.0,  # TUNING (not in GDD) s (first pass 3.5)
+		"acid_dps": 3.0,  # TUNING (not in GDD) before the time scaling
+		"acid_impact": 3.0,  # TUNING (not in GDD) the splash, before the time scaling
+	},  # The Acid Spitter.
+	# --- Act IX: the Ark ---
+	# The Harvesters, support: THE GREY OVERSEER (owner-approved proposal: "A
+	# psionic pulse that stuns summons for 1 s; shields greys near it |
+	# Priority target"; sex unmarked, as the greys are: a tall grey in a
+	# gunmetal mantle with a glowing plasma crown). GreyOverseerKit: every
+	# pulse_every s, with a summon within pulse_radius px, it shows a widening
+	# psionic ring for pulse_windup s (the telegraph), then stuns every summon
+	# within pulse_radius px for pulse_stun s (CombatResolver.stun_unit(), THE
+	# summon stun path; source PULSE_SOURCE); every shield_every s it shields
+	# the greys (race "harvesters", not structures) within shield_radius px:
+	# shield_share of each one's max HP for shield_time s (Enemy.holy_shield,
+	# the existing shield path). It hangs back with the drones ("ranged" with
+	# no shot of its own).
+	"grey_overseer": {
+		"display_name": "Grey Overseer",  # Owner-approved proposal
+		"max_hp": 64.0,  # TUNING (not in GDD) support, sturdier than a drone
+		"move_speed": 40.0,  # TUNING (not in GDD) px/s
+		"damage": 0.0,  # Its pulse stuns; it never strikes.
+		"attack_interval": 2.0,
+		"attack_range": 120.0,  # TUNING (not in GDD) px it keeps from the necromancer (its pulse reaches the ring)
+		"radius": 10.0,  # TUNING (not in GDD) px (~38 px sprite)
+		"armor": 0.1,  # TUNING (not in GDD)
+		"xp": 6,  # TUNING (not in GDD)
+		"behavior": "ranged",  # Advances and hangs back; its kit fires nothing.
+		"projectile_speed": 0.0,
+		"undead_damage_mult": 1.0,
+		"heal_amount": 0.0,
+		"heal_interval": 0.0,
+		"heal_radius": 0.0,
+		"target_priority": 0.9,  # TUNING (not in GDD) 0..1; owner-approved proposal: "Priority target"
+		"mass": 1.2,  # TUNING (not in GDD)
+		"faction": FACTION,
+		"kit": "grey_overseer",
+		"race": "harvesters",  # Owner-approved proposal: the Harvesters
+		"pulse_first": 3.0,  # TUNING (not in GDD) s before its first pulse
+		"pulse_every": 7.0,  # TUNING (not in GDD) s between two pulses (from the windup's start)
+		"pulse_windup": 0.8,  # TUNING (not in GDD) s the psionic ring widens (the telegraph)
+		"pulse_radius": 90.0,  # TUNING (not in GDD) px it stuns
+		"pulse_stun": 1.0,  # Owner-approved proposal: "stuns summons for 1 s"
+		"shield_first": 1.5,  # TUNING (not in GDD) s before its first shield
+		"shield_every": 6.0,  # TUNING (not in GDD) s between two shields
+		"shield_radius": 120.0,  # TUNING (not in GDD) px of the greys it shields
+		"shield_share": 0.35,  # TUNING (not in GDD) share of each grey's max HP
+		"shield_time": 5.0,  # TUNING (not in GDD) s a shield lasts
+		"shield_targets": 6,  # TUNING (not in GDD) greys a shield reaches at most
+	},  # The Grey Overseer.
+}
+
+# --- Act IX: the Crash Site ---
+## Kind id of the Brood's burrowing soldier (a shared row; BurrowerKit).
+const BURROWER: String = "burrower"
+## Kind id of the Brood's acid lobber (a shared row; AcidSpitterKit).
+const ACID_SPITTER: String = "acid_spitter"
+
+# --- Act IX: the Ark ---
+## Kind id of the Harvesters' support (the Ark's lead kind; any stage may use it).
+const GREY_OVERSEER: String = "grey_overseer"
+## Stun tag of the Grey Overseer's psionic pulse (CombatResolver.stun_unit()
+## stats: summon_stuns_overseer_pulse).
+const PULSE_SOURCE: String = "overseer_pulse"

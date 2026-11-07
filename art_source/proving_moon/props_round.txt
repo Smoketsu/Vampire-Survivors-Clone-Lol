@@ -1,0 +1,7 @@
+A sheet of TWO separate pixel-art game OBSTACLE PROPS in one row on a FULLY TRANSPARENT background (real alpha), with a wide empty gap between them. Three-quarter top-down view (camera above and in front, like a top-down action game), chunky low-resolution pixel art, crisp square pixels, 1-pixel dark outline, flat colours, at most 3 shades per material, light from the top-left. No ground, no cast shadow, no text.
+From left to right (each about 48 pixels wide):
+1. A MOON BOULDER: a rounded heap of two or three grey lunar boulders, pitted with tiny craters, cold grey stone.
+2. A CRATER RIM: a small impact crater seen from above and in front: a raised ring of grey regolith and broken rock around a dark, deep bowl, one side a little higher.
+Colours: grey moon rock #2B2D33 #4A4D55 #6E727C #9AA0AA; the crater bowl #121318 #1B1D23; outline #0B0C10. A few faint teal pebbles #2A8F7A at most.
+Keep them a little darker and calmer than the characters (they are scenery), but clearly brighter than a near-black ground.
+Attached: an obstacle of this game. Match its pixel size, outline weight and flat look exactly.

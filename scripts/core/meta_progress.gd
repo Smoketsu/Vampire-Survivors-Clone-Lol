@@ -1,6 +1,7 @@
 ## Meta — persistent meta-progression autoload (GDD §9.2 Soul Ash, §9.4
 ## achievements, §15.7 q50 "what persists"). Owns everything that outlives a
-## run and saves it to user://save.cfg (ConfigFile), separate from
+## run and saves it to user://save.cfg (ConfigFile; the demo build to
+## user://save_demo.cfg, DemoMode.save_path()), separate from
 ## user://settings.cfg:
 ##   * Soul Ash balance and the purchased tier of every upgrade (MetaData),
 ##   * lifetime statistics (runs, best time, total kills, boss kills...),
@@ -54,6 +55,13 @@
 ## character last confirmed on the pre-run setup screen is remembered in
 ## `prerun_character` ([prerun] character). Older saves have neither and get
 ## nothing reached and the Gravecaller; unknown ids are ignored.
+## Masteries (Ossuary expansion step 4, MasteryData): a summon class's mastery
+## opens once a run took it to Lv 5 (`class_lv5`, saved [class_lv5] <class> = true,
+## recorded by HordeDirector.set_class_level() -> record_class_level(); filled from
+## the summon evolutions already found) and is bought level by level
+## (`mastery_levels`, saved [masteries] <class> = level). Additive sections: no
+## SAVE_VERSION bump, older saves load with nothing bought. The bonus reaches a
+## run through MetaModifiers (run_modifiers()); Refund all leaves masteries alone.
 ## Hyper mode and skins (owner-approved; HyperData, SkinData):
 ##   * `hyper_unlocked` turns true the first time HyperData.UNLOCK_BOSS_ID
 ##     (Grand Inquisitor Seraphine) is slain ([hyper] unlocked; an older save
@@ -69,7 +77,19 @@
 ##     <character> = <skin id>); skin UNLOCKS are not stored but derived
 ##     (is_skin_unlocked()) from the Hyper clears, achievements and three
 ##     lifetime counters (rot_kills, high_confessor_kills,
-##     seraphine_kills_full_army), so they can never disagree with them.
+##     seraphine_kills_full_army), so they can never disagree with them,
+##   * `owned_recolours` are the skin recolours owned (Ossuary expansion step
+##     6b, RecolourData; cosmetic): skin id -> PackedStringArray of recolour ids
+##     ([recolours] <skin id> = "bone,blood"), kept for good (Refund all does not
+##     return them), and `chosen_recolours` the one worn per skin
+##     ([recolour_pick] <skin id> = <recolour id>; absent = the skin's own
+##     colours). Additive sections: an older save has none and loads as "owns
+##     nothing"; no SAVE_VERSION step is needed. Since the Recolour Caskets (GDD
+##     §15.0 "Recolour Caskets (owner request, Oct 2026)") they are won, not
+##     bought: `caskets` (CasketLedger) opens caskets and keeps their seed, count,
+##     pity counter and spending ([caskets]) and the casket-only skins won
+##     ([casket_skins], read by is_skin_unlocked()); recolours an older save
+##     bought stay owned. Caskets are never refunded.
 ## award_run() reports what a run unlocked ("hyper_unlocked", "hyper_clear",
 ## "unlocked_skins") for the end screen. Older saves without these sections
 ## get the defaults; unknown ids are ignored.
@@ -105,6 +125,24 @@
 ## Epilogue (content wave 2): the parts of the illustrated epilogue already
 ## shown are kept in `epilogue_seen`, saved as [epilogue] seen_<part id> = true
 ## (older saves: none seen, so an earned part plays once after the next run).
+## Ossuary deep levels (expansion step 2, GDD §15.0 "Ossuary deep levels"):
+## the hardest difficulty of any victory, with and without Hyper, is kept in
+## `best_clear` / `best_hyper_clear` ([clears] best / best_hyper = a
+## DifficultyData id); max_open_tier() turns them into the highest level the
+## Ossuary sells (MetaData.LEVEL_GATES) and purchase_block() answers "gated"
+## above it. award_run() reports a newly opened level as "opened_tier". A save
+## from before version 2 gets a Deathlord clear from its Deathlord's Due
+## records (_load_clears()); its owned tiers are kept and nothing is refunded.
+## Ossuary new options (expansion step 3): the new upgrades are ordinary
+## [upgrades] keys (a missing key = level 0, so no save version bump); the
+## Dominion tree opens for buying once its boss was slain (tree_open(), read from
+## the stage records / the Hyper unlock), and purchase_block() answers "sealed"
+## before that; Elite Bounty raises the elites part of compute_ash().
+## Relics and Grave Offerings (Ossuary expansion steps 5 and 6a, GDD §15.0 "Relics
+## and Grave Offerings"): `relics` (RelicLedger) keeps the relics bought, the relic
+## slots and the relics last equipped ([relics] owned / slots, [prerun] relics; an
+## older save has none: no SAVE_VERSION step); it buys relics and slots and pays a
+## run's offering. run_modifiers(config) attaches the run's RelicEffects.
 ## Like Settings this script has no class_name; it is reached as `Meta`.
 extends Node
 
@@ -116,7 +154,9 @@ const DEFAULT_PATH: String = "user://save.cfg"
 ## Upper clamp for any stored counter (guards against absurd edited values).
 const MAX_STORED: int = 1000000000
 
-## File used by load_save() / save() (tests point this somewhere else).
+## File used by load_save() / save() (tests point this somewhere else). The
+## demo build saves to its own file (DemoMode.save_path(): user://save_demo.cfg),
+## set in _ready().
 var save_path: String = DEFAULT_PATH
 ## Current Soul Ash balance.
 var soul_ash: int = 0
@@ -166,6 +206,11 @@ var prerun_hyper: bool = false
 var prerun_ultimate: String = UltimateData.DEFAULT_ID
 ## Character id -> SkinData id last chosen for that character.
 var chosen_skins: Dictionary = {}
+## SkinData id -> PackedStringArray of the RecolourData ids owned for that skin
+## (won from caskets, or bought on an older save).
+var owned_recolours: Dictionary = {}
+## SkinData id -> RecolourData id worn on that skin ("" / absent = none).
+var chosen_recolours: Dictionary = {}
 ## Codex: CodexData category -> {entry id -> true} for every entry met in
 ## any run (one Dictionary per CodexData.CATEGORIES entry, always present).
 var codex_seen: Dictionary = {}
@@ -186,6 +231,28 @@ var _codex_save_queued: bool = false
 ## (the [epilogue] seen_<id> save keys): the epilogue plays an open, unseen
 ## part once on its own after a run (EpilogueScreen.play_unseen()).
 var epilogue_seen: Dictionary = {}
+# --- Ossuary deep levels (expansion step 2) ---
+## Hardest difficulty cleared: the DifficultyData.ORDER index (0 Initiate .. 3
+## Deathlord) of the hardest difficulty any victory (a run that reached 0:00, any
+## stage, Hyper or not) was on; -1 = no victory yet. Saved as [clears] best (the
+## difficulty id, "" = none). Opens the Ossuary's deep levels (max_open_tier()).
+var best_clear: int = -1
+## The same for victories with Hyper on ([clears] best_hyper; -1 = none).
+var best_hyper_clear: int = -1
+## Ossuary Masteries (expansion step 4): summon class id -> true once a run took
+## that class to MasteryData.UNLOCK_LEVEL (its mastery may be bought). Saved in
+## [class_lv5]; older saves are filled from the summon evolutions found so far.
+var class_lv5: Dictionary = {}
+## Ossuary Masteries: summon class id -> bought mastery level (0..MasteryData.MAX_LEVEL).
+## Saved in [masteries].
+var mastery_levels: Dictionary = {}
+# --- Relics and Grave Offerings (expansion steps 5 and 6a) ---
+## Relics bought, relic slots and the relics last equipped (RelicLedger).
+var relics: RelicLedger = RelicLedger.new()
+# --- Recolour Caskets (owner request, Oct 2026) ---
+## Caskets opened, their seed, pity counter and spending, and the casket-only
+## skins won (CasketLedger; [caskets], [casket_skins]).
+var caskets: CasketLedger = CasketLedger.new()
 
 ## Keys of every stage record (all floats, like the lifetime stats).
 const STAGE_RECORD_KEYS := ["runs", "victories", "best_time", "boss_kills",
@@ -194,6 +261,9 @@ const STAGE_RECORD_KEYS := ["runs", "victories", "best_time", "boss_kills",
 
 
 func _ready() -> void:
+	save_path = DemoMode.save_path(DEFAULT_PATH)  # The demo keeps its own progress file (DemoData.SAVE_SUFFIX).
+	if DemoMode.on():
+		print("[demo] demo mode on: stages %s, save %s" % [",".join(DemoMode.demo_stages()), save_path])
 	_reset()
 	if not GameState.autotest or GameState.autotest_meta_save:
 		load_save()
@@ -206,15 +276,21 @@ func _ready() -> void:
 ## Modifiers for a new run: the purchased tiers, or the --meta profile
 ## (MetaData.AUTOTEST_PROFILES) in the autotest. Nothing is written.
 ## The Profane Oath enters at its ACTIVE tier (the autotest: --oath=N).
-func run_modifiers() -> MetaModifiers:
+## The relics and offering of `config` (RelicEffects.for_run(); the autotest's
+## --relics / --offering / --meta=max) ride on the result (attach_rites()).
+func run_modifiers(config: RunConfig = null) -> MetaModifiers:
+	var m: MetaModifiers  # Upgrade tiers of this run.
 	if GameState.autotest:
 		var test_tiers: Dictionary = MetaData.autotest_tiers(GameState.autotest_meta)  # Profile tiers (never the Oath).
 		if GameState.autotest_oath > 0:
 			test_tiers[PactData.OATH_ID] = GameState.autotest_oath
-		return MetaModifiers.from_tiers(test_tiers)
-	var run_tiers := tiers.duplicate()  # Owned tiers with the Oath at its active tier.
-	run_tiers[PactData.OATH_ID] = oath_active_tier()
-	return MetaModifiers.from_tiers(run_tiers)
+		m = MetaModifiers.from_tiers(test_tiers, MasteryData.autotest_levels(GameState.autotest_meta))
+	else:
+		var run_tiers := tiers.duplicate()  # Owned tiers with the Oath at its active tier.
+		run_tiers[PactData.OATH_ID] = oath_active_tier()
+		m = MetaModifiers.from_tiers(run_tiers, mastery_levels)
+	m.attach_rites(RelicEffects.for_run(config))
+	return m
 
 
 ## Profane Oath tier applied to runs (never above the owned tier).
@@ -248,7 +324,9 @@ func set_oath_active(t: int) -> bool:
 ## Stage objectives (the Sanctum's cleansed chambers and destroyed altars,
 ## the run stat "objective_ash") are one more part, "objectives", of the
 ## subtotal (0 on stages without them).
-static func compute_ash(summary: Dictionary, ash_gain: float) -> Dictionary:
+## `elite_bonus` is the Elite Bounty upgrade's extra Soul Ash per elite (Ossuary
+## expansion step 3, MetaModifiers "elite_ash"): it raises the elites part itself.
+static func compute_ash(summary: Dictionary, ash_gain: float, elite_bonus: float = 0.0) -> Dictionary:
 	var st: Dictionary = summary.get("stats", {})
 	var countdown := float(summary.get("countdown", WaveData.RUN_DURATION))
 	var survived := minf(float(summary.get("time", 0.0)), countdown)
@@ -259,7 +337,7 @@ static func compute_ash(summary: Dictionary, ash_gain: float) -> Dictionary:
 	var parts := {
 		"time": floori(survived / 60.0 * MetaData.ASH_PER_MINUTE),
 		"kills": floori(float(kills) * MetaData.ASH_PER_KILL),
-		"elites": floori(float(elites) * MetaData.ASH_PER_ELITE),
+		"elites": floori(float(elites) * (MetaData.ASH_PER_ELITE + maxf(0.0, elite_bonus))),
 		"boss": floori(MetaData.ASH_BOSS_KILL) if boss else 0,
 		"reckoning": floori(past_zero * MetaData.ASH_PER_RECKONING_SECOND),
 		"objectives": floori(float(st.get("objective_ash", 0.0))),
@@ -316,7 +394,7 @@ static func compute_ash(summary: Dictionary, ash_gain: float) -> Dictionary:
 ## "achievements" (newly unlocked ids), "unlocked_stages" (stage ids opened
 ## by this run), "bounty" and "new_total" for the end screen / autotest.
 func award_run(summary: Dictionary, mods: MetaModifiers) -> Dictionary:
-	var award := compute_ash(summary, mods.value("ash_gain") if mods != null else 0.0)
+	var award := compute_ash(summary, mods.value("ash_gain") if mods != null else 0.0, mods.value("elite_ash") if mods != null else 0.0)
 	var st: Dictionary = summary.get("stats", {})
 	var skins_before := unlocked_skin_ids()  # Skins owned before this run.
 	var was_locked := PackedStringArray()  # Stages still locked before this run.
@@ -342,6 +420,28 @@ func award_run(summary: Dictionary, mods: MetaModifiers) -> Dictionary:
 	_add_lifetime("high_confessor_kills", float(st.get("kill_high_confessor", 0.0)))
 	_add_lifetime("archive_all_tomes_runs", 1.0 if float(st.get("archive_all_tomes", 0.0)) > 0.0 else 0.0)  # Nothing Unwritten (Act II)
 	_add_lifetime("assembly_cold_runs", 1.0 if float(st.get("assembly_all_fabricators", 0.0)) > 0.0 else 0.0)  # Cold Assembly (Act III)
+	_add_lifetime("achilles_heel_kills", float(st.get("achilles_heel_kills", 0.0)))  # Heel Found (Act IV, the Shores of Ilion)
+	_add_lifetime("province_unlit_runs", 1.0 if float(st.get("province_no_shadow_unlit", 0.0)) > 0.0 else 0.0)  # No Shadow Unlit (Act V, the Burning Province)
+	# --- Act V: Castle Kurogane ---
+	_add_lifetime("shogun_regiments_broken_kills", float(st.get("shogun_regiments_broken_kills", 0.0)))  # Regiments Broken (Act V, Castle Kurogane)
+	# --- Act VI: the Burning Gate ---
+	_add_lifetime("gate_crashed_runs", 1.0 if float(st.get("burning_gate_crashed", 0.0)) > 0.0 else 0.0)  # Gate Crashed (Act VI, the Burning Gate)
+	# --- Act VI: the Palace of Silk and Ash ---
+	_add_lifetime("lilith_unmoved_kills", float(st.get("lilith_unmoved_kills", 0.0)))  # Unmoved (Act VI, the Palace of Silk and Ash)
+	# --- Act VII: Ravensmoor ---
+	_add_lifetime("coffin_nails_runs", 1.0 if float(st.get("ravensmoor_coffin_nails", 0.0)) > 0.0 else 0.0)  # Coffin Nails (Act VII, Ravensmoor)
+	# --- Act VII: the Witchwood ---
+	_add_lifetime("coven_breaks_runs", 1.0 if float(st.get("witchwood_coven_breaks", 0.0)) > 0.0 else 0.0)  # The Coven Breaks (Act VII, the Witchwood)
+	# --- Act VIII: Skid Row ---
+	_add_lifetime("no_witnesses_runs", 1.0 if float(st.get("skid_row_no_witnesses", 0.0)) > 0.0 else 0.0)  # No Witnesses (Act VIII, Skid Row)
+	# --- Act VIII: Fort Kessler ---
+	_add_lifetime("broken_arrow_runs", 1.0 if float(st.get(HarrowData.STOPPED_STAT, 0.0)) > 0.0 else 0.0)  # Broken Arrow (Act VIII, Fort Kessler)
+	# --- Act VIII: Liberty Heights ---
+	_add_lifetime("paragon_no_heroes_kills", float(st.get("paragon_no_heroes_kills", 0.0)))  # No More Heroes (Act VIII, Liberty Heights)
+	# --- Act IX: the Crash Site ---
+	_add_lifetime("nothing_hatched_runs", 1.0 if float(st.get("crash_site_nothing_hatched", 0.0)) > 0.0 else 0.0)  # Nothing Hatched (Act IX, the Crash Site)
+	# --- Act IX: the Proving Moon ---
+	_add_lifetime("hunter_hunted_runs", 1.0 if float(st.get(VraskTalData.HUNTED_STAT, 0.0)) > 0.0 else 0.0)  # The Hunter Hunted (Act IX, the Proving Moon)
 	_add_run_counters(summary)  # Content wave 2: the one-run achievements' lifetime counters.
 	var slew_unlock_boss := bool(summary.get("boss_defeated", false)) and String(summary.get("boss_id", "")) == HyperData.UNLOCK_BOSS_ID  # Seraphine slain.
 	if slew_unlock_boss:
@@ -353,6 +453,9 @@ func award_run(summary: Dictionary, mods: MetaModifiers) -> Dictionary:
 	if slew_unlock_boss:
 		hyper_unlocked = true
 	award["hyper_clear"] = _record_hyper_clear(summary)
+	var open_before := max_open_tier()  # Ossuary deep levels open before this run.
+	_record_clear(summary)
+	award["opened_tier"] = max_open_tier() if max_open_tier() > open_before else 0  # Highest level this run opened (0 = none).
 	_add_lifetime("ash_earned", float(award["total"]))
 	lifetime["best_time"] = maxf(float(lifetime["best_time"]), float(summary.get("time", 0.0)))
 	lifetime["best_reckoning"] = maxf(float(lifetime["best_reckoning"]), float(summary.get("time_past_zero", 0.0)))
@@ -450,7 +553,9 @@ func prerun_config(stage_id: String) -> RunConfig:
 	c.set_character(prerun_character if is_character_unlocked(prerun_character) else CharacterData.DEFAULT_ID)
 	c.hyper = prerun_hyper and hyper_unlocked
 	c.skin_id = chosen_skin(c.character_key())
+	c.recolour_id = chosen_recolour(c.skin_id)  # Ossuary recolours: the one worn on that skin ("" = none).
 	c.set_ultimate(prerun_ultimate if Unlocks.is_open(prerun_ultimate) else UltimateData.DEFAULT_ID)  # Content wave 2.
+	c.relics = relics.equipped.duplicate()  # Relics: the last equipped set (no offering: one run each).
 	return c
 
 
@@ -459,9 +564,11 @@ func prerun_config(stage_id: String) -> RunConfig:
 ## saves when they changed.
 func remember_prerun(config: RunConfig) -> void:
 	var skin_changed := _remember_skin(config)  # The character's skin choice changed.
+	skin_changed = _remember_recolour(config) or skin_changed  # The skin's recolour choice changed.
+	var relics_changed := relics.remember(config.relics)  # The equipped relics changed.
 	if config.difficulty_id == prerun_difficulty and config.modifiers == prerun_modifiers \
 			and config.character_id == prerun_character and config.hyper == prerun_hyper and not skin_changed \
-			and config.ultimate_id == prerun_ultimate:
+			and config.ultimate_id == prerun_ultimate and not relics_changed:
 		return
 	prerun_difficulty = config.difficulty_id
 	prerun_modifiers = config.modifiers.duplicate()
@@ -482,6 +589,23 @@ func _remember_skin(config: RunConfig) -> bool:
 	if String(chosen_skins.get(ch, SkinData.default_skin(ch))) == id:
 		return false
 	chosen_skins[ch] = id
+	return true
+
+
+## Stores the recolour of `config` as its skin's choice (an owned recolour of
+## an unlocked skin, or none). Returns true if the stored choice changed.
+func _remember_recolour(config: RunConfig) -> bool:
+	var ch := config.character_key()  # The run's character.
+	var skin := config.skin_id if config.skin_id != "" else SkinData.default_skin(ch)  # Skin that wears it.
+	if not SkinData.skins_for(ch).has(skin) or not is_skin_unlocked(skin):
+		return false
+	var rc := config.recolour_id if owns_recolour(skin, config.recolour_id) else ""  # Only an owned one is kept.
+	if String(chosen_recolours.get(skin, "")) == rc:
+		return false
+	if rc == "":
+		chosen_recolours.erase(skin)
+	else:
+		chosen_recolours[skin] = rc
 	return true
 
 
@@ -525,7 +649,13 @@ func hyper_clear_count(stage_id: String) -> int:
 ## True when skin `id` may be worn (SkinData unlock rules; default skins
 ## always). Unknown ids are locked.
 func is_skin_unlocked(id: String) -> bool:
-	var row := SkinData.skin(id)  # The skin's data ({} if unknown).
+	return skin_row_unlocked(id, SkinData.skin(id))
+
+
+## True when skin `id` with SkinData row `row` may be worn (the rule of
+## is_skin_unlocked(); the casket check passes rows of its own). A casket-only
+## skin ("casket" unlock) is open once won from a casket (caskets, CasketLedger).
+func skin_row_unlocked(id: String, row: Dictionary) -> bool:
 	if row.is_empty():
 		return false
 	var u: Dictionary = row["unlock"]
@@ -540,6 +670,8 @@ func is_skin_unlocked(id: String) -> bool:
 			return float(lifetime.get(String(u["stat"]), 0.0)) >= float(u["goal"])
 		"reward":
 			return Unlocks.is_open(String(u["id"]))  # Content wave 2: a universal skin family (UnlockData "skin" row).
+		"casket":
+			return caskets.has_won(id)  # Recolour Caskets: a casket-only skin, won from a casket.
 	return false
 
 
@@ -592,6 +724,54 @@ func chosen_skin(character: String) -> String:
 	if id != "" and SkinData.skins_for(ch).has(id) and is_skin_unlocked(id):
 		return id
 	return SkinData.default_skin(ch)
+
+
+# =====================================================================================
+# Skin recolours (Ossuary expansion step 6b; RecolourData; cosmetic)
+# =====================================================================================
+
+## Recolours are won from the Ossuary's Caskets (`caskets`, CasketLedger; GDD
+## §15.0 "Recolour Caskets (owner request, Oct 2026)"); nothing buys one directly
+## any more. Those an older save bought stay owned.
+
+## True when recolour `id` is owned for skin `skin` (won, or bought on an older
+## save, and still offered by the skin). "" is never owned: it means no recolour.
+func owns_recolour(skin: String, id: String) -> bool:
+	if id == "" or not RecolourData.offered(skin, id):
+		return false
+	return (owned_recolours.get(skin, PackedStringArray()) as PackedStringArray).has(id)
+
+
+## The recolours owned for `skin`, in RecolourData.ORDER.
+func owned_recolour_ids(skin: String) -> PackedStringArray:
+	var out := PackedStringArray()  # Recolour ids.
+	for id: String in RecolourData.ids_for(skin):
+		if owns_recolour(skin, id):
+			out.append(id)
+	return out
+
+
+## The recolour worn on `skin` next run: its remembered choice while still owned,
+## else "" (the skin's own colours).
+func chosen_recolour(skin: String) -> String:
+	var id := String(chosen_recolours.get(skin, ""))  # Remembered choice.
+	return id if owns_recolour(skin, id) and is_skin_unlocked(skin) else ""
+
+
+## Remembers `id` ("" = none) as the recolour worn on `skin` and saves. An
+## unowned recolour is ignored (the choice stays); a no-op when it is already
+## the choice.
+func set_chosen_recolour(skin: String, id: String) -> void:
+	if id != "" and not owns_recolour(skin, id):
+		return
+	var rc := id  # The recolour to keep ("" = none).
+	if String(chosen_recolours.get(skin, "")) == rc:
+		return
+	if rc == "":
+		chosen_recolours.erase(skin)
+	else:
+		chosen_recolours[skin] = rc
+	save()
 
 
 # =====================================================================================
@@ -659,8 +839,8 @@ func spell_max_level(spell: String) -> int:
 ## starting spell reached CharacterData.UNLOCK_LEVEL in some run. (Whether
 ## the character exists in this build is CharacterModifiers.is_available().)
 func is_character_unlocked(id: String) -> bool:
-	if not CharacterModifiers.is_known(id):
-		return false
+	if not CharacterModifiers.is_known(id) or not DemoMode.allows_character(id):
+		return false  # The demo: a character of a full-game spell stays locked.
 	var d: Dictionary = CharacterData.CHARACTERS[id]
 	return bool(d["starts_unlocked"]) or spell_max_level(String(d["spell"])) >= CharacterData.UNLOCK_LEVEL
 
@@ -784,9 +964,10 @@ func _load_codex(cfg: ConfigFile) -> void:
 # =====================================================================================
 
 ## True when stage `id` may be played: no `unlock` requirement, or the
-## required stage's boss was slain at least `boss_kills` times.
+## required stage's boss was slain at least `boss_kills` times. In the demo a
+## stage outside its acts is never unlocked (DemoMode.allows_stage()).
 func is_stage_unlocked(id: String) -> bool:
-	if not StageRegistry.STAGES.has(id):
+	if not StageRegistry.STAGES.has(id) or not DemoMode.allows_stage(id):
 		return false
 	var req: Dictionary = StageRegistry.STAGES[id]["unlock"]
 	if req.is_empty():
@@ -842,6 +1023,61 @@ func tier(id: String) -> int:
 	return int(tiers.get(id, 0))
 
 
+## Records the difficulty of a victory in `summary` (any stage) in best_clear,
+## and in best_hyper_clear when Hyper was on. A defeat records nothing.
+func _record_clear(summary: Dictionary) -> void:
+	if not bool(summary.get("victory", false)):
+		return
+	var idx := DifficultyData.ORDER.find(String(summary.get("difficulty_id", DifficultyData.DEFAULT_ID)))  # Its difficulty (-1 unknown).
+	best_clear = maxi(best_clear, idx)
+	if bool(summary.get("hyper", false)):
+		best_hyper_clear = maxi(best_hyper_clear, idx)
+
+
+## True when the save holds the clear that difficulty gate `g` (a
+## MetaData.LEVEL_GATES row) asks for: a victory on its difficulty or a harder
+## one, with Hyper when the row says so.
+func gate_met(g: Dictionary) -> bool:
+	var need := DifficultyData.ORDER.find(String(g["difficulty"]))  # Required difficulty index.
+	return (best_hyper_clear if bool(g["hyper"]) else best_clear) >= need
+
+
+## The ONE accessor for which Ossuary levels are open: the highest level any
+## upgrade may be bought to (MetaData.UNGATED_MAX_TIER, raised by each
+## LEVEL_GATES row in turn while its clear is held). The Ossuary screen and
+## purchase_block() read it; the run modifiers never do (owned levels always apply).
+func max_open_tier() -> int:
+	var top := MetaData.UNGATED_MAX_TIER  # Open so far.
+	for g: Dictionary in MetaData.LEVEL_GATES:
+		if not gate_met(g):
+			break
+		top = maxi(top, int(g["to"]))
+	return top
+
+
+## Reads [clears] (missing section or keys, wrong types, unknown ids = none) and
+## fills it from older records where they suffice: a Deathlord victory (the
+## Deathlord's Due achievement or its lifetime counter, content wave 2) counts as
+## a Deathlord clear. Older records hold no Lich clear and no difficulty for a
+## Hyper clear, so those start empty. Lifetime stats and achievements are read first.
+func _load_clears(cfg: ConfigFile) -> void:
+	best_clear = _read_difficulty(cfg, "best")
+	best_hyper_clear = _read_difficulty(cfg, "best_hyper")
+	if achievements.has("deathlords_due") or float(lifetime.get("deathlord_victories", 0.0)) > 0.0:
+		best_clear = maxi(best_clear, DifficultyData.ORDER.find(MetaData.DEATHLORD_DIFFICULTY_ID))
+
+
+## DifficultyData.ORDER index of the difficulty id at [clears] `key` (-1 = none).
+static func _read_difficulty(cfg: ConfigFile, key: String) -> int:
+	var v: Variant = cfg.get_value("clears", key, "")
+	return DifficultyData.ORDER.find(String(v)) if typeof(v) == TYPE_STRING else -1
+
+
+## Difficulty id of DifficultyData.ORDER index `idx` ("" for -1 / out of range).
+static func _difficulty_key(idx: int) -> String:
+	return String(DifficultyData.ORDER[idx]) if idx >= 0 and idx < DifficultyData.ORDER.size() else ""
+
+
 ## True when upgrade `id` has every tier.
 func is_maxed(id: String) -> bool:
 	return tier(id) >= MetaData.max_tier(id)
@@ -858,13 +1094,30 @@ func next_cost(id: String) -> int:
 	return -1 if is_maxed(id) else MetaData.tier_cost(id, tier(id) + 1)
 
 
+## True when tree `tree_id` may be bought from: it has no MetaData.TREE_GATES row,
+## or its boss was slain once (a kill in the record of a stage whose boss slot is
+## that boss, or the Hyper unlock when that boss is HyperData.UNLOCK_BOSS_ID: both
+## are already in every save, so no save change was needed). Ossuary expansion step 3.
+func tree_open(tree_id: String) -> bool:
+	if not MetaData.TREE_GATES.has(tree_id):
+		return true
+	var boss := String(MetaData.TREE_GATES[tree_id])  # The boss that opens it.
+	return _boss_slain_on_record(boss) or (boss == HyperData.UNLOCK_BOSS_ID and hyper_unlocked)
+
+
 ## Why `id` cannot be bought right now: "" (it can), "maxed", "locked"
-## (prerequisite missing) or "cost" (not enough Soul Ash).
+## (prerequisite missing), "sealed" (its tree waits on a boss, tree_open()),
+## "gated" (its next level waits on a difficulty clear, max_open_tier()) or
+## "cost" (not enough Soul Ash).
 func purchase_block(id: String) -> String:
 	if is_maxed(id):
 		return "maxed"
+	if not tree_open(String(MetaData.UPGRADES[id]["tree"])):
+		return "sealed"
 	if not prerequisite_met(id):
 		return "locked"
+	if tier(id) + 1 > max_open_tier():
+		return "gated"
 	if soul_ash < next_cost(id):
 		return "cost"
 	return ""
@@ -901,6 +1154,89 @@ func refund_all() -> int:
 	save()
 	changed.emit()
 	return refund
+
+
+# =====================================================================================
+# Masteries (Ossuary expansion step 4): a small permanent bonus per summon class
+# =====================================================================================
+
+## Records that summon class `cls` reached level `lvl` in a run (Game: the
+## HordeDirector's class-level hook). The first time that is MasteryData.UNLOCK_LEVEL
+## the class's mastery opens; saved at once. Returns true when it just opened.
+func record_class_level(cls: String, lvl: int) -> bool:
+	if lvl < MasteryData.UNLOCK_LEVEL or class_lv5.has(cls) or not MasteryData.is_masterable(cls):
+		return false
+	class_lv5[cls] = true
+	save()
+	changed.emit()
+	return true
+
+
+## True when the mastery of `cls` may be bought (the class reached Lv 5 in some run).
+func is_mastery_open(cls: String) -> bool:
+	return class_lv5.has(cls)
+
+
+## Bought mastery level of `cls` (0 = none).
+func mastery_level(cls: String) -> int:
+	return int(mastery_levels.get(cls, 0))
+
+
+## Price of the next mastery level of `cls` (-1 when maxed).
+func mastery_cost(cls: String) -> int:
+	return MasteryData.price(mastery_level(cls) + 1)
+
+
+## Why the next mastery level of `cls` cannot be bought now: "" (it can),
+## "maxed", "locked" (the class never reached Lv 5) or "cost" (not enough Soul Ash).
+func mastery_block(cls: String) -> String:
+	if not MasteryData.is_masterable(cls):
+		return "locked"
+	if mastery_level(cls) >= MasteryData.MAX_LEVEL:
+		return "maxed"
+	if not is_mastery_open(cls):
+		return "locked"
+	if soul_ash < mastery_cost(cls):
+		return "cost"
+	return ""
+
+
+## Buys the next mastery level of `cls` and saves. Returns false if it was blocked.
+func buy_mastery(cls: String) -> bool:
+	if mastery_block(cls) != "":
+		return false
+	soul_ash -= mastery_cost(cls)
+	mastery_levels[cls] = mastery_level(cls) + 1
+	save()
+	changed.emit()
+	return true
+
+
+## Soul Ash invested in masteries.
+func mastery_spent_total() -> int:
+	var total := 0
+	for cls: String in MasteryData.CLASSES:
+		total += MasteryData.cost_up_to(mastery_level(cls))
+	return total
+
+
+## Reads [class_lv5] and [masteries] (missing sections, unknown ids, wrong types
+## = none). Fills class_lv5 from older records every time (idempotent): each
+## summon evolution already found (Meta [recipes]) needed its base classes at Lv 5.
+## A bought mastery always counts as open, so a hand-edited save cannot lock it away.
+func _load_masteries(cfg: ConfigFile) -> void:
+	for cls: String in MasteryData.CLASSES:
+		var v: Variant = cfg.get_value("class_lv5", cls, false)
+		if typeof(v) == TYPE_BOOL and bool(v):
+			class_lv5[cls] = true
+		mastery_levels[cls] = clampi(_read_int(cfg, "masteries", cls, 0), 0, MasteryData.MAX_LEVEL)
+		if int(mastery_levels[cls]) > 0:
+			class_lv5[cls] = true
+	for evo: String in discovered_recipes:
+		if SummonEvolutionData.EVOLUTIONS.has(evo):
+			for cls: String in SummonEvolutionData.EVOLUTIONS[evo]["bases"]:
+				if MasteryData.is_masterable(cls):
+					class_lv5[cls] = true
 
 
 # =====================================================================================
@@ -947,6 +1283,12 @@ func save() -> Error:
 		cfg.set_value("hyper_clears", key, true)
 	for ch: String in chosen_skins:
 		cfg.set_value("skins", ch, String(chosen_skins[ch]))
+	for skin: String in owned_recolours:
+		var ids := owned_recolour_ids(skin)  # Only ids the skin still offers.
+		if not ids.is_empty():
+			cfg.set_value("recolours", skin, ",".join(ids))
+	for skin: String in chosen_recolours:
+		cfg.set_value("recolour_pick", skin, String(chosen_recolours[skin]))
 	for cat: String in CodexData.CATEGORIES:
 		cfg.set_value("codex", cat, ",".join(PackedStringArray((codex_seen[cat] as Dictionary).keys())))
 	for kind: String in codex_kills:
@@ -957,6 +1299,15 @@ func save() -> Error:
 	cfg.set_value("prerun", "title", prerun_title)  # Content wave 2: the worn title ("" = none).
 	for id: String in epilogue_seen:  # Content wave 2: E. Illustrated epilogue.
 		cfg.set_value("epilogue", "seen_" + id, true)
+	cfg.set_value("clears", "best", _difficulty_key(best_clear))  # Ossuary deep levels: hardest difficulty cleared.
+	cfg.set_value("clears", "best_hyper", _difficulty_key(best_hyper_clear))
+	for cls: String in MasteryData.CLASSES:  # Ossuary Masteries (expansion step 4).
+		if class_lv5.has(cls):
+			cfg.set_value("class_lv5", cls, true)
+		if mastery_level(cls) > 0:
+			cfg.set_value("masteries", cls, mastery_level(cls))
+	relics.write(cfg)  # Relics: [relics] owned / slots, [prerun] relics.
+	caskets.write(cfg)  # Recolour Caskets: [caskets], [casket_skins].
 	var tmp := save_path + ".tmp"
 	var err := cfg.save(tmp)
 	if err != OK:
@@ -1008,10 +1359,15 @@ func load_save() -> void:
 	_load_recipes(cfg)
 	_load_characters(cfg)
 	_load_hyper_skins(cfg)
+	_load_recolours(cfg)
 	_load_codex(cfg)
 	_load_unlocks(cfg)
 	_load_title(cfg)
 	_load_epilogue(cfg)
+	_load_clears(cfg)
+	_load_masteries(cfg)
+	relics.read(cfg)  # Relics (after the clears: nothing there depends on them).
+	caskets.read(cfg)  # Recolour Caskets (independent of the rest).
 	if version > MetaData.SAVE_VERSION:
 		load_status = "newer"
 	elif version < MetaData.SAVE_VERSION:
@@ -1170,13 +1526,41 @@ func _load_hyper_skins(cfg: ConfigFile) -> void:
 			chosen_skins[ch] = String(sk)
 
 
+## Reads the skin recolours ([recolours], [recolour_pick]; absent sections =
+## none owned). Unknown skins / recolours are ignored; a pick that is not owned
+## is dropped. Only skins that exist in this build are read.
+func _load_recolours(cfg: ConfigFile) -> void:
+	for skin: String in SkinData.all_ids():
+		var raw: Variant = cfg.get_value("recolours", skin, "")
+		if typeof(raw) == TYPE_STRING and String(raw) != "":
+			var ids := PackedStringArray()  # Recolours of this skin that are valid.
+			for id: String in String(raw).split(",", false):
+				if RecolourData.offered(skin, id) and not ids.has(id):
+					ids.append(id)
+			if not ids.is_empty():
+				owned_recolours[skin] = ids
+		var pick: Variant = cfg.get_value("recolour_pick", skin, "")
+		if typeof(pick) == TYPE_STRING and owns_recolour(skin, String(pick)):
+			chosen_recolours[skin] = String(pick)
+
+
 ## Upgrades an older save layout in `cfg` (in memory) to SAVE_VERSION.
 ## Version 0 is a file without a save_version key; it has the version-1
 ## layout, so nothing moves. Future layout changes add one step per version
 ## here (rename / convert keys), so old saves keep loading.
+## 1 -> 2 (Ossuary deep levels): every owned tier is kept as it is (all were
+## 1-5, still valid) and nothing is refunded; the new [clears] section is
+## written empty here and filled from the older Deathlord records by
+## _load_clears() (the only clear an older save can prove).
 func _migrate(cfg: ConfigFile, from_version: int) -> void:
 	if from_version < 1:
 		cfg.set_value("meta", "save_version", 1)
+	if from_version < 2:
+		if not cfg.has_section_key("clears", "best"):
+			cfg.set_value("clears", "best", "")
+		if not cfg.has_section_key("clears", "best_hyper"):
+			cfg.set_value("clears", "best_hyper", "")
+		cfg.set_value("meta", "save_version", 2)
 
 
 ## Refunds tiers whose prerequisite is not met (a hand-edited save or a
@@ -1214,11 +1598,19 @@ func _reset() -> void:
 	prerun_hyper = false
 	prerun_ultimate = UltimateData.DEFAULT_ID
 	chosen_skins = {}
+	owned_recolours = {}
+	chosen_recolours = {}
 	codex_seen = _empty_codex()
 	codex_kills = {}
 	unlocked_items = {}
 	prerun_title = ""
 	epilogue_seen = {}
+	best_clear = -1
+	best_hyper_clear = -1
+	class_lv5 = {}
+	mastery_levels = {}
+	relics.reset()
+	caskets.reset()
 	load_status = "fresh"
 
 
@@ -1242,6 +1634,30 @@ static func _default_lifetime() -> Dictionary:
 		"archive_all_tomes_runs": 0.0,  # Hollow Archive runs that burned every tome (Nothing Unwritten)
 		# --- Act III: the Assembly Halls ---
 		"assembly_cold_runs": 0.0,  # Assembly Halls runs that destroyed every fabricator (Cold Assembly)
+		# --- Act IV: the Shores of Ilion ---
+		"achilles_heel_kills": 0.0,  # Achilles slain by a blow to his back or heel (Heel Found)
+		# --- Act V: the Burning Province ---
+		"province_unlit_runs": 0.0,  # Burning Province runs that slew Kage with 20 stone lanterns lit (No Shadow Unlit)
+		# --- Act V: Castle Kurogane ---
+		"shogun_regiments_broken_kills": 0.0,  # Shogun Kurogane slain after all six of his banners broke (Regiments Broken)
+		# --- Act VI: the Burning Gate ---
+		"gate_crashed_runs": 0.0,  # Burning Gate runs that slew Moloch with 5 portals sealed (Gate Crashed)
+		# --- Act VI: the Palace of Silk and Ash ---
+		"lilith_unmoved_kills": 0.0,  # Lilith slain with no summon charmed during her fight (Unmoved)
+		# --- Act VII: Ravensmoor ---
+		"coffin_nails_runs": 0.0,  # Ravensmoor runs that broke every sleeping coffin before it opened (Coffin Nails)
+		# --- Act VII: the Witchwood ---
+		"coven_breaks_runs": 0.0,  # runs in which Isolde's three sisters fell within 1 s of each other (The Coven Breaks)
+		# --- Act VIII: Skid Row ---
+		"no_witnesses_runs": 0.0,  # Skid Row runs that killed the whole opening crowd before one fled (No Witnesses)
+		# --- Act VIII: Fort Kessler ---
+		"broken_arrow_runs": 0.0,  # runs in which General Harrow fell before his Broken Arrow strike landed (Broken Arrow)
+		# --- Act VIII: Liberty Heights ---
+		"paragon_no_heroes_kills": 0.0,  # Paragon slain on Liberty Heights with no Super at his side (No More Heroes)
+		# --- Act IX: the Crash Site ---
+		"nothing_hatched_runs": 0.0,  # Crash Site runs that beat the Hive Mother with at most 10 eggs hatched before her fall (Nothing Hatched)
+		# --- Act IX: the Proving Moon ---
+		"hunter_hunted_runs": 0.0,  # runs in which Vrask'Tal fell to anything but his own Last Trophy bomb (The Hunter Hunted)
 		# --- Content wave 2: B. Achievement rewards (MetaProgress.run_counters()) ---
 		"best_temp_raised": 0.0,  # most temporary undead raised in one run (Mass Grave)
 		"untouchable_runs": 0.0,  # runs that reached 0:00 never below half HP (Untouchable)

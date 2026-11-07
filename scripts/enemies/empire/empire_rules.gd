@@ -192,7 +192,7 @@ func _salvo(t: float) -> void:
 ## take its damage (`dmg` / `summon_dmg`, times the damage scaling), tagged
 ## `source`; a hit on him counts as "<stat>_player_hits".
 func _land(at: Vector2, r: float, dmg: float, summon_dmg: float, source: String, stat: String) -> void:
-	game.effects.impact(at, r, Palette.EMPIRE_SIGNAL_AMBER)
+	game.effects.impact(at, r, Palette.EMPIRE_SIGNAL_AMBER, EmpireFxData.BLAST)  # Its strip when the art exists (visual only).
 	Sfx.play("orbital_strike", at)
 	for pl in game.all_players:  # Necromancer (co-op: either).
 		if pl.position.distance_to(at) <= r + pl.radius:
@@ -206,9 +206,11 @@ func _land(at: Vector2, r: float, dmg: float, summon_dmg: float, source: String,
 
 
 ## Draws every pending orbital strike (the Purge Protocol's and the Citadel's
-## guns', each with its own radius and telegraph): a warning-red circle (signal ramp,
-## never the Covenant's telegraph gold) that fills as the strike nears, and a
-## targeting cross at its centre. Visual only.
+## guns', each with its own radius and telegraph): the Empire's warning circle
+## with its targeting brackets and the uplink column (EmpireFx; GDD §15.0 "Act III
+## AoE art"), else a warning-red circle (signal ramp, never the Covenant's
+## telegraph gold) that fills as the strike nears, and a targeting cross at its
+## centre. Visual only.
 func _draw() -> void:
 	for i in _strikes.size():
 		var s := _strikes[i]
@@ -216,6 +218,8 @@ func _draw() -> void:
 		var tele := maxf(0.01, _strike_shape[i].y)  # Telegraph length (s).
 		var c := Vector2(s.x, s.y)  # Circle centre.
 		var k := clampf(1.0 - (s.z - game.elapsed) / tele, 0.0, 1.0)  # 0 -> 1 as it nears.
+		if EmpireFx.orbital(self, c, r, k):
+			continue
 		draw_circle(c, r * k, Color(Palette.EMPIRE_SIGNAL_RED, 0.18 + 0.12 * k))
 		draw_arc(c, r, 0.0, TAU, 40, Color(Palette.EMPIRE_SIGNAL_RED, 0.85), 2.0)
 		draw_arc(c, r * 0.55, 0.0, TAU, 28, Color(Palette.EMPIRE_SIGNAL_AMBER, 0.5), 1.0)

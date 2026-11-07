@@ -31,6 +31,30 @@ const STAGES := {
 	"wastes": {"title": "Signal Lost", "boss_line": "Kestrel's last pixel goes dark."},  # TUNING (not in GDD) Act III placeholder
 	"assembly": {"title": "The Line Stops", "boss_line": "The Motherboard crashes for good."},  # TUNING (not in GDD) Act III placeholder
 	"citadel": {"title": "Steel Bows to Bone", "boss_line": "Deus Ex Machina falls, and Varn with it."},  # TUNING (not in GDD) Act III placeholder
+	# --- Act IV: the Olympian Republic (placeholders until each stage is built) ---
+	"ilion": {"title": "The Walls Fall", "boss_line": "Achilles dies at the heel."},  # TUNING (not in GDD) Act IV placeholder
+	"olympus": {"title": "Olympus Is Silent", "boss_line": "Zeus's thunder dies on the summit."},  # TUNING (not in GDD) Act IV placeholder
+	"underworld": {"title": "The Empty Throne", "boss_line": "Hades kneels and gives up his crown."},  # TUNING (not in GDD) Act IV placeholder
+	# --- Act V: the Shogunate of the Rising Sun (placeholders until each stage is built) ---
+	"province": {"title": "The Province Burns Out", "boss_line": "Kage's last shadow is lit and gone."},  # TUNING (not in GDD) Act V placeholder
+	"kurogane": {"title": "The Banners Fall", "boss_line": "Shogun Kurogane's regiments are broken."},  # TUNING (not in GDD) Act V placeholder
+	"sun_road": {"title": "The Sun Goes Out", "boss_line": "Amaterasu falls, and the sun with her."},  # TUNING (not in GDD) Act V placeholder
+	# --- Act VI: the Inferno (placeholders until each stage is built) ---
+	"burning_gate": {"title": "The Gate Is Broken", "boss_line": "Moloch's furnace gutters and goes cold."},  # TUNING (not in GDD) Act VI placeholder
+	"silk_palace": {"title": "The Court Falls Silent", "boss_line": "Lilith's last kiss finds no one to take."},  # TUNING (not in GDD) Act VI placeholder
+	"pandemonium": {"title": "The Throne Is Empty", "boss_line": "The Morning Star falls, and hell answers to you."},  # TUNING (not in GDD) Act VI placeholder
+	# --- Act VII: the Sanguine Court (placeholders until each stage is built) ---
+	"ravensmoor": {"title": "The Moor Is Quiet", "boss_line": "Vargr's howl fades, and the moon pales."},  # TUNING (not in GDD) Act VII placeholder
+	"witchwood": {"title": "The Coven Breaks", "boss_line": "Isolde Vane's circle burns out in the fen."},  # TUNING (not in GDD) Act VII placeholder
+	"castle_sanguis": {"title": "The Feast Is Over", "boss_line": "The Elder turns to ash, and the Court's veil tears."},  # TUNING (not in GDD) Act VII placeholder
+	# --- Act VIII: the Last Line (placeholders until each stage is built) ---
+	"skid_row": {"title": "The Blocks Are Yours", "boss_line": "Don Marrow's limousine burns in the street."},  # TUNING (not in GDD) Act VIII placeholder
+	"fort_kessler": {"title": "The Line Is Broken", "boss_line": "General Harrow's hammer falls silent."},  # TUNING (not in GDD) Act VIII placeholder
+	"liberty_heights": {"title": "No More Heroes", "boss_line": "Paragon falls, and the living have no one left."},  # TUNING (not in GDD) Act VIII placeholder
+	# --- Act IX: the Concord of Stars (placeholders until each stage is built) ---
+	"crash_site": {"title": "The Hatchery Burns", "boss_line": "The Hive Mother falls back into her crater."},  # TUNING (not in GDD) Act IX placeholder
+	"proving_moon": {"title": "The Hunt Is Over", "boss_line": "Vrask'Tal's last trophy is his own."},  # TUNING (not in GDD) Act IX placeholder
+	"ark": {"title": "The Harvest Ends", "boss_line": "The Harvester falls, and the stars go dark."},  # TUNING (not in GDD) Act IX placeholder
 }
 ## Title of a victory on a stage missing from STAGES.
 const DEFAULT_TITLE: String = "Victory"  # TUNING (not in GDD)
@@ -40,6 +64,17 @@ const ACT_LINES := {
 	1: "You outlasted the Covenant. The Reckoning claimed you at last.",  # TUNING (not in GDD; the old shared subtitle)
 	2: "You outlasted the Eye. The Reckoning claimed you at last.",  # TUNING (not in GDD)
 	3: "You outlasted the Empire. The Purge Protocol deleted you at last.",  # TUNING (not in GDD) Act III
+	4: "You outlasted the gods. Their twilight buried you at last.",  # TUNING (not in GDD) Act IV
+	# --- Act V: the Shogunate of the Rising Sun ---
+	5: "You outlasted the Shogunate. The Endless Night swallowed you at last.",  # TUNING (not in GDD) Act V
+	# --- Act VI: the Inferno ---
+	6: "You outlasted the Inferno. The Last Judgment took you at last.",  # TUNING (not in GDD) Act VI
+	# --- Act VII: the Sanguine Court ---
+	7: "You outlasted the Court. The Endless Feast drank you dry at last.",  # TUNING (not in GDD) Act VII
+	# --- Act VIII: the Last Line ---
+	8: "You outlasted the city. Martial Law ground you down at last.",  # TUNING (not in GDD) Act VIII
+	# --- Act IX: the Concord of Stars ---
+	9: "You outlasted the Concord. The Final Harvest reaped you at last.",  # TUNING (not in GDD) Act IX
 }
 
 # --- The last stand (LastStand; seconds of real time from its start) ----------------

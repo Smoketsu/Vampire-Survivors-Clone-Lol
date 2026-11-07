@@ -14,10 +14,10 @@ you. Late in a run your summons can evolve into Death Knights, Liches, Profane
 Bishops, Shadow Reapers, Cathedral Horrors, Hellhounds, Keening Ladies and
 Ossuary Engines.
 
-This repository holds the game's three campaign stages, *The Desecrated
-Graveyard*, *The Crimson March* (unlocked by slaying Sir Alaric) and *The
-Sanctum of Judgment* (unlocked by slaying Marshal Vael), built in Godot 4.3
-with no addons. The art is true pixel art (PNGs in `assets/`; the code
+This repository holds the game's campaign: nine acts of three stages each,
+27 playable stages from *The Desecrated Graveyard* (Act I) to *The Ark of the
+Concord* (Act IX), each boss opening the next stage (Acts VI-IX went live in
+Nov 2026), built in Godot 4.3 with no addons. The art is true pixel art (PNGs in `assets/`; the code
 drawings remain as the fallback for any missing image), and the sound and
 music are synthesized at startup. Latest release notes:
 [`docs/release_notes/v0.7.0.md`](docs/release_notes/v0.7.0.md).
@@ -74,7 +74,7 @@ The project uses the GL Compatibility renderer, so it runs on almost any GPU.
 | Feedback (main menu, pause menu, results card; shown once the owner's form link is set) | Click it, or move the focus to it and press Enter: the feedback form opens in your browser (a new tab on the Web build) with a short report filled in; the game stays where it was (a paused run stays paused) | Focus + **A** (in a browser a controller press may be stopped by the pop-up blocker) |
 | Recipes (evolutions you have discovered) | **Recipes** in the pause menu; arrows move over the grid, Esc / Back closes | D-pad / stick move; **B** closes |
 | Debug overlay (FPS, counts, unit FSM states) | **F3** | — |
-| Ossuary (Soul Ash upgrades) | **Ossuary** in the main menu; arrows move, Enter buys; Esc closes | D-pad / stick move, **A** buys, **B** closes |
+| Ossuary (Soul Ash upgrades) | **Ossuary** in the main menu; **Q / E** switch tabs, arrows move, Enter buys; Esc closes | **LB / RB** switch tabs, D-pad / stick move, **A** buys, **B** closes |
 | Settings (Audio / Video / Controls tabs: volume, fullscreen, zoom Normal / Close, effects Full / Reduced, shake, damage numbers, reduce motion, keys) | **Settings** in the main or pause menu; **Q / E** switch tabs; Esc / Back closes | Focus + **A**; **LB / RB** switch tabs; **B** closes |
 | Codex (achievements, spells, summons, the Covenant) | **Codex** in the main menu; **Q / E** switch tabs, arrows move through the tiles, Esc / Back closes | **LB / RB** switch tabs; D-pad / stick move; **B** closes |
 | Credits (and the Godot / font licences) | **Credits** in the main menu; **Q / E** switch Credits / Licences, Up / Down scroll, Esc / Back closes | **LB / RB**, D-pad up / down, **B** closes |
@@ -228,6 +228,40 @@ while `FORM_URL` is empty the buttons are not shown at all (and the menu is exac
 build the tab is opened inside the browser's own release of the click, tap or key, so pop-up blockers let
 it through (a press that drags off the button opens nothing); a controller press cannot count as a gesture
 for the browser, so there the tab may be blocked.
+
+### Demo mode (the free demo build)
+
+A **demo switch** for the free Act I web demo that the marketing plan (`docs/marketing/MARKETING_PLAN.md` §2.3) proposes
+as the funnel to the paid Steam release (GDD §15.0 "Demo mode (owner request, Nov 2026)"). The public GitHub Pages build
+**stays the full game**; the demo is a second build.
+
+- **How it switches:** `DemoMode.on()` (`scripts/core/demo_mode.gd`) is true only in a build exported with the custom
+  feature tag `demo` (the **Web Demo** preset) or with the test flag `--demo`. Everything it holds is data in
+  `scripts/data/demo_data.gd` (`ACTS`, `OPEN_ITEMS`, the words, `STORE_URL`, the save suffix). Without the switch nothing
+  changes (same-seed summaries identical).
+- **What the demo contains:** Act I (the Desecrated Graveyard, the Crimson March, the Sanctum of Judgment) with its usual
+  unlock chain, every Act I spell, passive, summon class and character, the Ossuary (all tabs), Hyper, skins and caskets,
+  and online co-op (Act I stages, demo players only). The act tabs of Acts II-IX and their stage cards are shown but
+  locked, reading **Full game**; a soul-teal line under the cards says how many acts the full game adds, and a
+  **Wishlist** button beside Back opens `DemoData.STORE_URL` once the owner sets it (empty: no button). Nothing from Acts
+  II-IX can be offered or unlocked: their spells, passives, classes, characters and titles stay locked (also the Act II
+  Fallen Seraph that Seraphine's fall opens in the full game), even if a full-game save code is restored into the demo.
+  The title screen shows a small **Demo** badge under the logo.
+- **Saves:** the demo keeps its progress in `user://save_demo.cfg` (the full game: `user://save.cfg`), so both can live
+  in one browser without mixing; settings are shared. To take demo progress into the full game, copy the save code in
+  the demo's Settings → Save and restore it in the full game (importing a demo save automatically is not built).
+- **Build it:**
+
+  ```bash
+  mkdir -p build/web_demo && touch build/.gdignore
+  godot --headless --export-release "Web Demo" build/web_demo/index.html
+  python3 tools/patch_web_audio.py build/web_demo/index.js   # required, as for the Web build
+  ```
+
+  CI: set the repository variable `WEB_DEMO` to `true` and the optional job `export-web-demo` runs the demo check,
+  exports the demo and uploads it as the artifact `Necropathy-web-demo` (it publishes nothing).
+- **Check it:** `godot --headless res://tools/demo_check.tscn -- --autotest --demo` (and without `--demo`) checks every
+  gate; a `--demo` autotest plays the demo's rules and its `demo` summary line must report `full_game_offers=0`.
 
 ### Audio, Feel & Settings
 
@@ -428,7 +462,29 @@ all three show "Coming soon" until their stages are built (phase 2). The act's s
   rifle and fires for you as a **Grave Gunner**. Dread Rally still charges from every kill.
 - **The Purge Protocol.** At 0:00 kill-drones pour in from every edge while orbital strikes land
   on red circles, faster each minute.
-- **Music.** Act III runs play their own loop, "Iron Requiem" (a pulsing low synth, metallic hits
+- **Act V music and sounds.** "The Setting Sun" (`SoundData.SUN_SCORE`: a D "in" scale pad, taiko patterns, a
+  plucked koto and a breathy shakuhachi) and the eight Shogunate sounds (`SoundData.SHOGUNATE_SOUNDS`) render
+  lazily the same way once a stage uses `"music": "sun"`.
+- **Act VI music and sounds.** "Hymn of the Pit" (`SoundData.BRIMSTONE_SCORE`: a deep organ drone and pedal, slow war
+  drums, a dissonant Phrygian choir pad, a distorted bass pulse and a tolling bell) and the eight Inferno sounds
+  (`SoundData.INFERNO_SOUNDS`) render lazily the same way once a stage uses `"music": "brimstone"`.
+- **Act VII music and sounds.** "Waltz of the Red Moon" (`SoundData.SANGUINE_SCORE`: a gothic 3/4 waltz in A minor with a
+  harpsichord arpeggio, a church organ, swelling low strings, a plucked oom-pah-pah and a slow heartbeat once a bar) and the
+  eight Court sounds (`SoundData.COURT_SOUNDS`: `bite_feed`, `blood_shield`, `bat_screech`, `moon_rise`, `moon_set`,
+  `wolf_howl`, `coffin_creak`, `mist_form`) render lazily the same way once a stage uses `"music": "sanguine"`.
+- **Act VIII music and sounds.** "Sirens at Midnight" (`SoundData.SIREN_SCORE`: a dark urban night track in C minor at
+  120 bpm with a driving drum machine, a clean sub bass, a minor saw arpeggio, low brass stabs and a distant siren as a slow
+  soft pitch glide) and the eight City sounds (`SoundData.CITY_SOUNDS`: `siren_wail`, `gun_burst`, `engine_rev`,
+  `vehicle_wreck`, `crowd_panic`, `super_arrive`, `weakness_crack`, `tier_alarm`) render lazily the same way once a stage
+  uses `"music": "siren"`. `RunLoopSynth` gained three score jobs for it (`machine`, `sub`, `siren`).
+- **Act IX music and sounds.** "The Reaping Stars" (`SoundData.STARSONG_SCORE`: a vast, cold space track in D Phrygian
+  dominant with a very low drone, a slow pulse, glassy pads, quiet glass glints, a soft swelling harvest horn and a high
+  choir-like line) and the nine Concord sounds (`SoundData.CONCORD_SOUNDS`: `beam_charge`, `beam_fire`, `beam_reflect`,
+  `tractor_beam`, `abduction`, `saucer_down`, `ground_burn`, `brood_chitter`, `harvest_eye`) render lazily the same way once
+  a stage uses `"music": "starsong"`. `RunLoopSynth` gained one score job for it (`choir`).
+- **Music.** (Act IV's "Hymn of Bronze", a war drum under a Dorian pad with a plucked lyre and brass
+  swells, and its eight Pantheon sounds are rendered lazily the same way: `SoundData.BRONZE_SCORE`,
+  `PANTHEON_SOUNDS`; the stages switch to it with `"music": "bronze"`.) Act III runs play their own loop, "Iron Requiem" (a pulsing low synth, metallic hits
   and a cold arpeggio), and the Empire's weapons have their own synthesized sounds.
 
 The shared kinds so far: the **Scout Drone** (fast flying fodder with short zaps), the **Line
@@ -997,6 +1053,8 @@ structure (a 20:00 countdown, its boss with 3:00 left, the Reckoning at 0:00).
 | Chapter II, **The Crimson March** | slay Sir Alaric once (GDD §9.3) | Marshal Vael, the Crimson Bulwark | ×1.25 |
 | Chapter III, **The Sanctum of Judgment** | slay Marshal Vael once (GDD §9.3) | Grand Inquisitor Seraphine, Voice of the Dawn | ×1.5 |
 
+**The stage Soul Ash bonus restarts in every act** (owner decision Oct 2026, GDD §15.0 "Soul Ash per act and difficulty"): stage 1 of an act ×1, stage 2 ×1.25, stage 3 ×1.5. Graveyard / Gullhaven Harbour / Scrap Wastes ×1.0; Crimson March / Hollow Archive / Assembly Halls ×1.25; Sanctum / Ul-Thalos / Iron Citadel ×1.5. Acts IV-IX follow the same rule (the first stage of each act ×1.0, the finale ×1.5). Difficulty is the bigger lever (Initiate ×0.8, Necromancer ×1, Lich ×1.5, Deathlord ×2). The bonuses add on the run subtotal rather than multiply (see Difficulty & run modifiers). Measured payouts: `docs/ossuary/ECONOMY.md`, tool `tools/ash_measure.py`.
+
 ### Characters
 
 The **pre-run setup** screen (after the stage select) picks your
@@ -1064,8 +1122,8 @@ the difficulty and the active modifiers.
 |---|---|---|
 | **Initiate** ("easier scaling") | HP ×0.9 and damage ×0.8, and both grow 25% slower over time (×0.70 HP and ×0.66 damage by 0:00); boss HP ×0.8 | ×0.8 |
 | **Necromancer** (standard) | today's game, every value ×1 | ×1 |
-| **Lich** ("increased HP / aggression") | HP and damage ×1.05, growing faster over time (×1.28 HP and ×1.20 damage by 0:00); move speed ×1.05; boss HP ×1.15 | ×1.25 |
-| **Deathlord** ("hardest, with more elites") | HP and damage ×1.05, growing 40% faster (×1.42 HP and ×1.35 damage by 0:00); move speed ×1.06; 0.8% of trickle soldiers are promoted to elites (elite HP and size, but plain XP and no elite chest or power-up chance); boss HP ×1.3 | ×1.5 |
+| **Lich** ("increased HP / aggression") | HP and damage ×1.05, growing faster over time (×1.28 HP and ×1.20 damage by 0:00); move speed ×1.05; boss HP ×1.15 | ×1.5 |
+| **Deathlord** ("hardest, with more elites") | HP and damage ×1.05, growing 40% faster (×1.42 HP and ×1.35 damage by 0:00); move speed ×1.06; 0.8% of trickle soldiers are promoted to elites (elite HP and size, but plain XP and no elite chest or power-up chance); boss HP ×1.3 | ×2 |
 
 The levels mostly bite later in the run: an army that falls behind in the
 first minutes never recovers, so a harsh opening would make Deathlord a coin
@@ -1090,10 +1148,10 @@ Pact and the Profane Oath are one opt-in category whose bonuses **add**. So
 enemy HP = time scaling × stage × level HP × (1 + Pact + Oath + modifiers),
 and the same for damage and spawns. Soul Ash: every source pays its own line
 on the run subtotal, and the lines add: Ash Harvest, Pact, Oath, the stage
-bonus, **Difficulty** (−20% on Initiate up to +50% on Deathlord) and **Run
+bonus, **Difficulty** (−20% on Initiate up to +100% on Deathlord) and **Run
 modifiers** (the sum of the active modifiers' rewards, +125% with all eight).
 The setup screen's total is level ×ash + modifier rewards (Deathlord with
-every modifier: ×2.75).
+every modifier: ×3.25; owner decision Oct 2026, GDD §15.0 "Soul Ash per act and difficulty").
 
 ### Hyper mode & skins
 
@@ -1158,6 +1216,80 @@ size so the row keeps its width. The three
 counters (`rot_kills`, `high_confessor_kills`, `seraphine_kills_full_army`)
 are lifetime stats in the save; unlocks are derived from them, the
 achievements and the Hyper clears, never stored separately.
+
+#### Skin recolours and the Recolour Caskets (Ossuary expansion, a Soul Ash sink)
+
+For a player who owns everything: every skin you have unlocked (default, Hyper,
+achievement and universal alike) can be **recoloured**, a palette swap of the
+same sprite, its walk and idle strips and its portraits. Four of five families
+are offered on each skin: **Bone** (a near-greyscale ivory), **Blood** (crimson),
+**Abyss** (teal-blue) and **Gilded** (gold); the Hyper skins, already gold, offer
+**Verdant** (emerald) instead of Gilded. Recolours are owned **per skin** and kept
+for good. Purely cosmetic like every skin: a recolour never touches a stat, a rule
+or the simulation, and is not in the co-op checksum.
+
+**Recolours are not bought; they are won from Caskets** (owner request "a bit of
+gambling", Oct 2026, GDD §15.0 "Recolour Caskets (owner request, Oct 2026)"), the
+Ossuary's fifth tab:
+
+- **A casket** costs **350 Soul Ash** and holds ONE prize you do not own yet: a
+  recolour of a skin you have unlocked, or (later) a **casket-only skin**. Never a
+  duplicate; once everything is found the tab says so and Open is disabled
+  (nothing is charged). Kept for good: Refund all never returns casket spending.
+- **Rarity:** Common = Bone, Rare = Blood / Abyss, Epic = Gilded / Verdant,
+  Legendary = casket-only skins. Weights 60 / 30 / 10 / 3, over the tiers that
+  still hold a prize (renormalised; Legendary counts only while one exists); then a
+  uniform prize of the tier. **Pity:** after nine caskets in a row below Epic, the
+  tenth is the best tier at Epic or above that still holds a prize.
+- **The tab:** the casket on a stage, the price with the Soul Ash badge, **Open**
+  (desktop: one press; touch: a second tap, like Ossuary purchases), the odds per
+  tier, the pity line ("Epic or better within N") and the collection count
+  ("Recolours 12 / 88"). Opening plays a short reveal (about 1.15 s: the casket
+  rattles while its glow turns the tier's colour, bursts open, the skin rises out in
+  the won recolour, then its name, "<Skin> · <Recolour>", and the tier in its colour:
+  Common bone-white, Rare soul-teal, Epic gold, Legendary gold with a sheen). Press
+  again to skip; instant with Reduce motion. **Wear** then wears the prize on its
+  skin.
+- **Randomness:** never the gameplay RNG. The save keeps a casket seed (drawn once)
+  and the opened count; each opening seeds its own generator from the two, so a
+  save's results are reproducible (a fixed seed under the autotest).
+- **Future skins:** a casket-only skin is one `SkinData.CASKET_SKINS` row plus its
+  art (see `casket_data.gd`); none ship yet.
+- **Where you wear them:** the pre-run setup screen's hero panel, at the right end
+  of the line under the skin tiles: one **Recolour** button (a colour chip and the
+  family's name) that cycles *Default, Bone, Blood, Abyss, Gilded* for the chosen
+  skin. An owned one is worn at once and remembered per skin; an unowned one is
+  only previewed on the hero (a tease) and the line says it is found in the
+  Ossuary's Caskets. The button hides while the skin is locked. Recolours bought
+  directly on an older save stay owned.
+- **How it is drawn:** no new art and no shader. `Recolour` (`scripts/core/recolour.gd`)
+  remaps every colour of the sprite once, on the CPU (hue to the family's, a share of
+  the old hue offset kept so a skin keeps some variety, greys take the family's cast;
+  numbers in `recolour_data.gd`), and caches the new texture per sprite and
+  recolour; the one draw path is the `recolour` parameter of `SpriteBank.draw()`, so
+  the world, the pre-run hero, the skin tiles and the co-op bust all follow. The
+  run's necromancer is remapped at run start (`SkinGlyphs.warm()`), so the first
+  frame does not pay for it. A glyph without sprite art keeps its own colours.
+- **Save:** Meta `[recolours] <skin id> = "bone,blood"` (owned) and
+  `[recolour_pick] <skin id> = <recolour id>` (worn); the Caskets add
+  `[caskets] seed / opened / since_epic / spent` and `[casket_skins] <skin id> =
+  true` (`CasketLedger`, `Meta.caskets`); all additive sections, no save version
+  step; unknown ids are ignored on load.
+- **Co-op:** the pick travels in the loadout (`recolour_id`), so the partner sees
+  it (the plate's bust and the world); it is cosmetic and never read by the
+  simulation.
+- **Autotest:** `--recolour=bone|blood|abyss|gilded|verdant` forces one on the
+  worn skin (screenshots; ignores ownership) and adds a `recolours` summary line
+  (only then: default runs print nothing new). `tools/ossuary_check.gd` checks the
+  data, the remap, the save, the run config, the co-op loadout and the pre-run
+  control, and `tools/ossuary_casket_check.gd` the Caskets (determinism per seed, no
+  duplicate over the whole pool, the pool shrinking by one, empty pool and short
+  Soul Ash charging nothing, the pity on the 10th, tier fallback, save round trip,
+  Refund all, an injected casket-only skin, the tab). Its `--shot-prerun=PATH` mode
+  (with `--shot-char=`, `--shot-skin=`, `--shot-rc=`, `--shot-buy` for an unowned
+  preview, `--phone`) and `--shot=PATH --shot-what=caskets|casket_mid|casket_epic`
+  screenshot under xvfb. Shots: `docs/ossuary/shots/recolours/`,
+  `docs/ossuary/shots/caskets/`.
 
 ### Stage 1: The Desecrated Graveyard (Stage & Boss)
 
@@ -1269,7 +1401,7 @@ open). The zone is shown under the timer.
   tethers them only when no soldier is in range.
 - **Harder than the Graveyard**: from Zone II (4:00) enemies have ×1.1 HP and
   ×1.05 damage on top of the usual time scaling (Marshal Vael always), tougher
-  kinds arrive earlier, and Soul Ash is ×1.25 (its own end-screen line). The
+  kinds arrive earlier, and Soul Ash is ×1.25 (its own end-screen line; stage 2 of Act I). The
   first two minutes are recruit patrols only, like the Graveyard's opening:
   every build starts with Shadow Bolt and two warriors, and a harder opening
   snowballed into starved runs.
@@ -1312,7 +1444,7 @@ countdown with the boss at 17:00 like the other stages.
 - **The crypts beneath**: open crypts work like the Graveyard's empowered graves.
 - **Hardest stage**: its own kinds arrive from Zone II, and from Zone III
   (8:30) enemies also have ×1.1 HP and ×1.1 damage (the boss always), and
-  Soul Ash is ×1.5. The opening minute is recruits only, and the first four
+  Soul Ash is ×1.5 (stage 3 of Act I). The opening minute is recruits only, and the first four
   minutes use the March's opening numbers. The elite kinds (Radiant
   Inquisitors, High Confessors, Sun Paladins) come in scripted waves, never
   in the trickle.
@@ -1439,7 +1571,7 @@ integration").
 The last stage of Act II (GDD §15.0 "Ul-Thalos, the Risen Spire"; data in
 `scripts/data/stages/spire_stage.gd`).
 The god's city surfaces mid-ocean: wet green cyclopean stone and wrong angles around the spire
-where Vhal'Neth lies dreaming. Unlocked by slaying the Archivist; Soul Ash ×2.25.
+where Vhal'Neth lies dreaming. Unlocked by slaying the Archivist; Soul Ash ×1.5 (stage 3 of Act II).
 
 - **Four zones on the clock** (run by `MarchDirector`, as on the March and in the Sanctum): the
   Breakwater (20:00), the Sunken Steps (15:00), the Dream Gate (10:00) and the Spire (5:00),
@@ -1509,7 +1641,7 @@ where Vhal'Neth lies dreaming. Unlocked by slaying the Archivist; Soul Ash ×2.2
 The last stage of the campaign (GDD §15.0 "The Iron Citadel (Act III phase 2)" and the rows after
 it; data in `scripts/data/stages/citadel_stage.gd`). The Empire's throne of iron, where death was
 conquered with steel; Varn, the Root User, waits at its summit inside Deus Ex Machina. Unlocked by
-shutting down the Motherboard; Soul Ash ×3.0 (placeholder).
+shutting down the Motherboard; Soul Ash ×1.5 (stage 3 of Act III).
 
 - **Four zones on the clock** (`MarchDirector`): the Shield Gates (20:00), the Laser Courts
   (15:00), the Spire Lifts (10:00) and the Core (5:00), each with its own pixel-art floor
@@ -1522,7 +1654,8 @@ shutting down the Motherboard; Soul Ash ×3.0 (placeholder).
   more often.
 - **Citadel guns:** orbital strikes on red circles, more and faster in each zone (the Purge
   Protocol's strike code, shared). **Laser grids** (the Courts and the Core): red bands for 1 s,
-  then sweeping beams that hurt the Empire's soldiers too.
+  then sweeping beams that hurt the Empire's soldiers too; after the sweep each beam stays lit for
+  1.5 s as a burning line that hurts everything standing in it every 0.25 s.
 - **Sentry Turrets:** emplacements that aim (a red flare) and fire bursts at you or your nearest
   summon; each one destroyed pays 3 Soul Ash. Two waves rise at 7:30 and 13:40.
 - **Kinds:** the **Valkyrie Duelist** (an elite cyborg duellist who lunges through your ring at you;
@@ -1550,6 +1683,779 @@ shutting down the Motherboard; Soul Ash ×3.0 (placeholder).
   `citadel events`, `citadel kinds`, `ranged share`, `deus ex machina`, `scrap swarm` and
   `iron revenant` lines (`CitadelReport`).
 
+### Act IV: the Olympian Republic (live)
+
+<!-- --- Act IV: the Olympian Republic --- -->
+The necromancer's endless army has emptied the Underworld, and the gods come down to take the dead back:
+**the Olympian Republic**, Greek gods commanding Roman discipline (GDD §15.0 "Act IV foundation (phase 1)";
+owner-approved proposal `docs/act4/PROPOSAL.md`). The stage select has an **Act IV** tab (with more than
+three acts only the shown act's tab keeps its full name) with its three stages, **the Shores of Ilion**,
+**Mount Olympus** (the Pantheon Trial) and **the Asphodel Underworld** (bosses Achilles, the Unkillable;
+Zeus; Hades, Lord of the Dead); Deus Ex Machina's fall opens Ilion and each boss opens the next stage. All
+three are playable (owner decision Oct 25, 2026, GDD §15.0 "Act IV goes live"). The act's shared rules:
+
+- **Wrath of the Gods: the arena is the enemy.** Each stage's patron god strikes on a telegraphed rhythm,
+  and the strike hits **both armies**: **Poseidon's waves** (Ilion; a wall of water rolls across from one
+  edge every 90 s after a 3 s foam line, carries everyone it crosses about 140 px and drowns fodder),
+  **Zeus's lightning** (Olympus; bolts on marked circles after 1.2 s; a strike chains to bronze-clad
+  enemies nearby, so lure a phalanx under the storm) and **Hades' fissures** (Underworld; red lines open
+  into cracks that burn whoever stands on them, swallow corpses so nothing is raised there, and spit pale
+  shades).
+- **Phalanx.** Hoplites standing shoulder to shoulder (three or more, facing the same way) lock shields:
+  a bronze bar across their front. Shots from the front (arrows, bolts, volleys, spears) barely hurt them
+  and push nothing, and the wall advances at one pace. Hit them from the side or behind (Rogues, Bone
+  Hounds, flanking blockers) and the wall breaks for a moment; stomps, dives, area spells and arcing
+  boulders ignore the front.
+- **Glory.** Heroes (named demigods: Ajax, Hector, Atalanta) gain a Glory stack for every summon they
+  kill: +10% damage and size per stack, up to 10, with a growing gold aura and pips over the head. A
+  Hero slain with Glory pays a Soul Ash bounty (2 per stack) and, at 5+ stacks, a chest.
+- **The Twilight of the Gods.** At 0:00 waves, lightning and fissures fire together, faster each minute,
+  while Bronze Titans step out of the ground.
+- **Music.** "Hymn of Bronze" (`SoundData.BRONZE_SCORE`) and the lazy Pantheon sound pack.
+
+The shared kinds so far: the **Shade of the Dead** (pale, fast fodder in swarms), the **Hoplite** (spear
+and round shield, forms the Phalanx) and the **Hero** (an elite demigod who carries Glory); the
+**Bronze Titan** is the Twilight's heavy. The Codex has a **Republic** tab.
+
+### Stage 10: the Shores of Ilion (Act IV)
+
+<!-- --- Act IV: the Shores of Ilion --- -->
+The beach below besieged Troy (GDD §15.0 "The Shores of Ilion (Act IV phase 2)"). Four zones on the
+clock: **the Beachhead** (wet sand among beached warships and sea rocks), **the Siege Camp** (tents and
+palisades), **the Scaean Gate** (the paved road, fallen columns, broken wall) and **the Walls**. Its
+wrath is **Poseidon's waves** (every 90 s; lure the shield walls into them).
+
+- **Siege towers.** Wooden towers on wheels roll past you toward the walls of Troy (up the beach).
+  Burn one down and its garrison tumbles out stunned and it pays a Soul Ash bounty and an XP burst;
+  let it reach the walls and its garrison marches out half again as many, with no bounty.
+- **Its kinds.** The **Legionary** locks shields like the Hoplite and, locked, raises the **testudo**:
+  shots from anywhere but behind and catapult boulders from above glance off its roof of shields (blades,
+  stomps and shots from behind still bite). The **Wolf of Rome** comes in packs of five bronze wolves
+  that lunge at what they hunt. The **Cyclops** hurls boulders onto red landing circles and wears flat
+  armour.
+- **Polyphemus the Cyclops** (miniboss, 9:00 left): volleys of three boulders on landing circles, a
+  ground stomp that throws your army out, flat armour, and below half HP a rage (five boulders, faster).
+  His chest drops when he falls.
+- **Achilles, the Unkillable** (3:00 left): his front turns only slowly toward what he fights, and
+  **a hit to his front deals 10%**, a hit on his flank half; a hit to his **back or to the gold heel
+  mark under him** deals full damage and staggers him (surround him with the ring, dash Rogues and dive
+  Gargoyles at his back); area spells and damage over time deal half. He lunges down telegraphed
+  lanes with his spear (blockers do not stop him), below 65% calls his **Myrmidons** (a Hoplite shield
+  wall in front of him) and below 30% **rages after Patroclus**: helmet and shield gone, faster, two
+  lunges in a row, a spear whirl, and his front takes 30%. Slaying him unlocks **Paris's Arrow** and
+  **Mortal Heel**.
+- **Heel Found** (slay Achilles with a blow to his back or heel) unlocks **Bronze Breaker** (your
+  summons' blows on a locked shield front hit harder; offered only in Act IV).
+- **Paris's Arrow** (a spell, offered on every stage once unlocked): violet ghost arrows swing around
+  the strongest foes in range and strike them **from behind**, so shield fronts, the testudo and
+  Achilles' front never cut them (and they break the wall they hit). **Arrow of Fate** (Lv 5 + Mortal
+  Heel Lv 5, from a chest): four arrows, and an arrow that kills flies on to the next foe's back, up to
+  three times. **Mortal Heel** (its paired passive): every hit from behind a foe deals more, on every
+  stage. Its character is **the Doomed Prophetess**, a dead seer of Troy (innate *Foretold Fall*: her
+  arrows strike elites, champions and bosses 30% harder; Hyper skin *Gilded Sibyl*, and the Untouchable
+  and Deathlord skins).
+### Stage 11: Mount Olympus, the Pantheon Trial (Act IV)
+
+<!-- --- Act IV: Mount Olympus --- -->
+The owner's boss rush (GDD §15.0 "Mount Olympus (Act IV phase 2)" and the rows after it): the stage climbs
+the mountain under **Zeus's lightning** (bronze draws it, so lure the hoplites, centaurs, Amazons and even
+Ares under the storm), and each zone has its god. Unlocked by slaying Achilles. `--stage=olympus` runs it.
+
+- **Zones (clock-driven):** the **Field of Ares** (20:00, war-trampled earth, trophies of captured shields,
+  wrecked chariots), the **Groves of Artemis** (9:30, moonlit cypress and moss, small moon shrines), the
+  **Terraces of Poseidon** (6:00, wet marble terraces, fountains and balustrades) and the **Summit** (3:00,
+  storm-dark marble with gold joints, broken columns, braziers).
+- **The Pantheon Trial.** Three gods come down one at a time, each with **a third of Zeus's HP** (with the
+  boss's HP scaling, so it holds whenever they arrive), the HUD's miniboss bar (handed back to an older god
+  still alive) and **a chest**: **Ares, God of War** (14:00 left) cries war (every soldier on screen hits
+  harder and runs faster for 8 s) and charges with his spear down a marked lane; a heavy blocker (Warriors,
+  Abominations, the Golem) **impales** him: the charge stops, he is hurt and stunned. **Artemis, the
+  Huntress** (9:30; figure-redesign style) looses fans of moonlit arrows, calls her hounds and **steps from
+  grove to grove** (four moonlit rings are laid around you; crowd her with summons and she vanishes sooner).
+  **Poseidon, Lord of the Sea** (6:00) **floods half the arena** (a wall of water through the Wrath of the
+  Gods' own wave, from his side across you), throws his **trident** down a marked lane and raises a **sea
+  serpent** at two thirds and one third of his HP. Slay all three gods and Zeus in one run and the trial is
+  cleared.
+- **Zeus, King of the Gods** (3:00): **lightning storms** (marked circles around you, through the wrath:
+  they also chain through his own bronze host), the **thunderbolt beam** (a marked lane, then a white beam;
+  three lanes from the Storm Throne, below two thirds), and below a third he takes his **true colossal
+  form** (a marble giant veined with lightning: slower, heavier, a **Thunder Stomp** around him, bolts
+  raining faster).
+- **Kinds:** the **Centaur Archer** (fires while galloping straight at you; never slows to shoot), the
+  **Amazon** (elite, figure-redesign style: leaps over your front row onto a marked circle; a heavy
+  blocker under her landing catches her, stunned) and the **Gorgon** (elite, figure-redesign style: a
+  marked gaze cone turns every summon in it to **stone for 3 s**, and hurts you: kill her first or Grave
+  Step out of the cone); plus Artemis's **Hounds** and Poseidon's **Sea Serpent** (it lunges down a lane).
+- **Rewards.** Zeus unlocks **Stolen Thunder** (a charged bolt strikes the strongest foe and leaps on to
+  armoured ones, who take more; offered on every stage) with its paired passive **Titan's Blood** (more
+  hops, a faster charge); both at Lv 5 evolve it into **Gigantomachy** (three bolts at once, each hop
+  cracks a thunderclap). Its character, **the Oathbreaker** (a fallen demigod; innate **Kinslayer**: the
+  bolt strikes bosses, gods and Heroes 35% harder), with his Gilded, Untouchable and Deathlord skins. The
+  achievement **Twilight of the Gods** (clear the Pantheon Trial: a victory on Mount Olympus) unlocks the
+  Act IV counter-passive **Grounded Bones** (less lightning and wave damage to you and your army; offered
+  only in Act IV).
+### Stage 12: the Asphodel Underworld (Act IV finale)
+
+<!-- --- Act IV: the Asphodel Underworld --- -->
+The finale of Act IV (GDD §15.0 "The Asphodel Underworld (Act IV phase 2)" and the rows after it; data in
+`scripts/data/stages/underworld_stage.gd`). With Olympus silent, the necromancer goes down to the god who
+started it all. Unlocked by toppling Zeus; Soul Ash ×1.5 (stage 3 of Act IV, per-act rule). Hades' fissures are its Wrath of
+the Gods.
+
+- **Four zones on the clock** (`MarchDirector`): the Asphodel Fields (20:00), the Styx Crossing (15:00),
+  the Judges' Hall (10:00) and the Throne of Hades (5:00), each with its own pixel-art floor
+  (`UnderworldGround`) and obstacles (grave steles, dead poplars, ferry posts, Styx rocks, broken
+  columns, the judges' benches, obsidian spires, soul braziers).
+- **The River Styx** (the Styx Crossing and the Throne of Hades; `UnderworldDirector`): bands of black
+  water cross the land. Wading it slows you (35%) and the living foes (40%; floating shades, the boss and
+  minibosses do not wade), and a summon in the water forgets: a 2 s suppression zone on its stretch of
+  river (its hits there deal 60%, and nothing replaces a summon that falls in it until the zone ends).
+- **Kinds:** the **Shade Hoplite** (the dead still in their ranks: they lock shields like the living),
+  the **Shade Archer** (Troy's dead archers: a floating ranged soldier from 3:00 that shoots over your army's
+  ring; Centaur Archers join from 5:00, owner decision after playtest pass 2)
+  and the miniboss **Cerberus** at 8:30 left: his body cannot be struck; kill his three heads one by
+  one (fire breath, a pouncing bite on your spot, a howl that raises shades and slows your summons);
+  the last head kills him (his chest and 14 Soul Ash). Ilion's and Olympus's kinds join as guests once
+  their stages are merged.
+- **Hades, Lord of the Dead** (17:00), the first rival necromancer: **the Helm of Darkness** (cloaked,
+  he cannot be seen or struck, only his footprints in the asphodel; his fissures open across your
+  ring; then he shows himself and sweeps his bident), **the Reclaiming** (he marks the summons nearest
+  him: still marked after 2 s, a summon falls and rises as his shade for 10 s, killing it returns its
+  soul as Dread Rally charge; the gods of Olympus rise as shades for one attack each: Ares' charge,
+  Artemis's volley, Poseidon's wave, Zeus's bolts) and **Lord of the Dead** (a ring of Tartarus
+  Wardens around him: behind it he takes a quarter of every hit; break the ring and he staggers,
+  open). Beaten, he kneels and gives up his crown.
+- **Rewards** (unlocked by beating Hades, offered on every stage): the spell **River Styx** (a black
+  river across your foes' way that drains and slows whatever crosses it; evolution **Lethe's Flood**,
+  two crossing rivers that make foes forget themselves, with the passive **Ferryman's Toll**: every
+  slowed foe that dies heals you a little and fills your Dread Rally), the character **the
+  Ferrywoman** (starts with River Styx; a foe slain in her river rises as a Risen), the summon class
+  **Myrmidon Shades** (undead hoplites, three to a card, holding the ring's front; three in a chain
+  lock shields and take 30% less, their spear runs through a second foe; evolution **Legion of
+  Tartarus** with the passive **Myrmidon Oath**: your front line is hardier and hits harder) and the
+  achievement **Empty Throne** (opens the Act IV epilogue part "The Gods Are Silent", then the closing
+  card "The Sun Still Rises"; their pictures come at integration).
+- **Autotest:** `--stage=underworld`, `--boss=hades`, `--spells=river_styx`,
+  `--classes=myrmidon_shade`, `--passives=ferrymans_toll,myrmidon_oath`, `--character=ferrywoman`,
+  `--spawn=cerberus@T`, `shade_hoplite`, `tartarus_warden`; the summary gains the `underworld`,
+  `underworld events`, `underworld kinds`, `hades`, `hades claims`, `river styx` and `myrmidon shades`
+  lines (`UnderworldReport`).
+
+### Act V: the Shogunate of the Rising Sun (live)
+
+<!-- --- Act V: the Shogunate of the Rising Sun --- -->
+With Olympus fallen there is no more day for the dead to fear but one. Across the eastern sea a Shogun rules
+in the name of the sun goddess, and his armies sail to burn the night out: **the Shogunate of the Rising
+Sun** (GDD §15.0 "Act V foundation (phase 1)"; owner-approved proposal `docs/act5/PROPOSAL.md`). The stage
+select has an **Act V** tab with its three stages, **the Burning Province**, **Castle Kurogane** and **the
+Road to the Sun** (bosses Kage, Mistress of the Hidden Hand; Shogun Kurogane; Amaterasu); making Hades kneel
+opens the Province and each boss opens the next stage. All three are playable (owner decision Oct 26, 2026, GDD
+§15.0 "Act V goes live"). The act's shared rules:
+
+- **The Sun's Course.** Every Act V run goes from day to night on the 20:00 clock: **day** (20:00-13:00
+  left, clear light, the Shogunate's soldiers), **dusk** (13:00-7:00, the light turns orange and the
+  obstacles cast long shadows; ninja ambushes begin) and **night** (7:00-0:00): everything beyond the light
+  around the necromancer goes dark (dimmed, never hidden), the oni and the vengeful dead join the soldiers,
+  and stone lanterns light up as you pass, each a pool of light you can fight in for the rest of the night.
+- **The Draw.** Samurai elites stop, hand on the hilt, and a thin white line flashes from them for 0.8 s;
+  then one cut hits every body on the line, your summons and you. Step out of it, Grave Step through it, or
+  let a summon take it. At most three lines flash at once.
+- **From the Shadows.** Ninja squads do not walk in from the edge: a smoke puff in an obstacle's shadow near
+  you (sometimes inside the Bone Ring), and a second later they are there. A puff in light shows earlier; none
+  appears inside a lit lantern's pool.
+- **The Endless Night.** At 0:00 the sun never rises: oni and the vengeful dead come together, the dark
+  deepens, the light shrinks and they come faster each minute.
+- **Music.** For now Act V runs play the Act IV loop; "The Setting Sun" comes with the audio pass.
+
+The shared kinds so far: the **Ashigaru** (spear levies in wide ranks), the **Samurai** (its elites draw),
+the **Teppo Gunner** (arquebus volleys on a shared 6 s beat, then a long reload while still advancing), the
+**Ninja** (ambusher; shuriken, then the dagger), and at night the **Onryō** (a vengeful ghost that drifts
+through walls and the ring) and the **Oni** (a heavy whose iron kanabō stuns summons; flat armour; the Endless
+Night's kind). The Codex has a **Shogunate** tab.
+
+### Act V: the Burning Province (Stage 13)
+
+<!-- --- Act V: the Burning Province --- -->
+Rice terraces, bamboo groves and a village in flames (GDD §15.0 "The Burning Province (Act V phase 2)"; still
+`"playable": false` for the lead's pass). Four zones on the clock: **the Paddies** (flooded terraces: the water
+slows you, your summons and the Shogunate alike, through the one ground-slow path, but never the kappa), **the
+Bamboo Grove** (dense bamboo; from dusk the ninja come out of every shadow), **the Burning Village** (fire flares
+beside the burning houses and burns every body in it, foes too) and **the Mountain Shrine** (rows of stone
+lanterns that light the night). Its kinds: the **Kunoichi** (an elite out of the shadows: smoke bombs that blind
+your summons for 2 s, a lunge at you) and the **Kappa** (night fodder that the water never slows; it grabs a
+summon and holds it). At 6:00 left, at night only, **Shuten-dōji, the Oni King** staggers in: drunk, enormous,
+the oni's club smash and sake barrels that burst into fire on red circles. At 3:00 left **Kage, Mistress of the
+Hidden Hand**: she splits into shadow clones (only one is real; light shows the others false and they dissolve),
+plants smoke fields on the Bone Ring that blind your dead, and throws chained kunai that hook a summon and reel
+it out of the ring. Her fall unlocks **Hundred Shadows** (shadow clones that throw kunai and echo your next spell;
+evolves into **Thousand Shadows** with its paired passive **Hidden Hand**: spells strike foes busy with your
+summons harder) and so its character, **the Grave Kunoichi** (innate Many Faces: one more clone). The achievement
+**No Shadow Unlit** (light 20 stone lanterns in one Province run and slay Kage) unlocks **Paper Lanterns** (a
+wider light and earlier ambush warnings; offered only in Act V).
+
+### Stage 15: the Road to the Sun (Act V finale)
+
+<!-- --- Act V: the Road to the Sun --- -->
+The finale of Act V (GDD §15.0 "The Road to the Sun (Act V phase 2)" and the rows after it; data in
+`scripts/data/stages/sun_road_stage.gd`). A pilgrim road
+of torii gates climbing to the sun goddess's shrine above the clouds. Unlocked by defeating Shogun Kurogane;
+Soul Ash ×1.5 (the per-act rule: every act restarts at ×1 / ×1.25 / ×1.5).
+
+- **Four zones on the clock** (`MarchDirector`): the Torii Road (20:00), the Sacred Forest (15:00), the Shrine
+  Steps (10:00) and the High Plain of Heaven (5:00), each with its own pixel-art floor (`SunRoadGround`) and
+  obstacles (vermilion torii posts, stone markers, roped sacred cedars, mossy rocks, guardian lion-dogs, step
+  walls, cloud rocks, sun mirrors, and the Sun's Course's stone lanterns).
+- **Kinds:** the **Sōhei** (a warrior monk whose naginata sweeps a telegraphed wide arc), the **Kitsune** (night
+  support: she conjures **fox-fire illusions** of herself that your summons waste their blows on; light, such as
+  your own lamp or a lantern's pool, or any area damage (a spell, a splash, a hazard) dispels them) and the
+  miniboss **the Kirin**, a holy beast of light (a golden gallop down a telegraphed lane, the Horn of Heaven's
+  rays, a halo that burns the dead near it; chest and Soul Ash bounty). The other Act V stages' kinds join as
+  guest squads once they exist.
+- **Amaterasu, the Sun Goddess** (3:00 left). Her place in the sky is the phase, and her sky is the Sun's
+  Course's: at **dawn** she rises on the east edge (sweeping mirror beams, sun-disc mines), at **noon** she
+  stands overhead (beams fall on marked circles, and the noon glare scorches everything in the open: **the
+  obstacles' shadows are the only safe ground**), at **sunset** she sinks to the west (a wide setting-sun beam
+  across the arena, the light turning red as night closes in). While her sun is up the night's yokai hold
+  back. When she falls, **the sun goes out**: the night returns, and at 0:00 the Endless Night.
+- **Rewards** (offered on every stage once she falls): the spell **Black Sun** (a dark sun orbits you and burns
+  a short beam through the nearest group) → **Eclipse of Heaven** with its new passive **Stolen Dawn**; the
+  character **the Shrine Maiden of Night** (innate *Night Prayer*: a second beam at another group); the summon
+  class **the Bound Oni** (chained oni brutes holding the front; the kanabō smash stuns every foe it lands on)
+  → **the Oni Lord** (a quake around every smash) with its new passive **Oni's Resolve** (stuns on your summons
+  wear off sooner). The achievement **The Sun Goes Out** opens the Act V epilogue part (its panels and the
+  closing card "The Pit Keeps Count" come at integration).
+
+### Stage 14: Castle Kurogane (Act V)
+
+<!-- --- Act V: Castle Kurogane --- -->
+The Shogun's fortress (GDD §15.0 "Castle Kurogane (Act V phase 2)").
+Four zones on the clock: **the Outer Bailey** (trampled earth, outer walls, pines and garden rocks), **the
+Gatehouse** (granite paving among stone walls and timber gate fences), **the Courtyards** (raked gravel, pines,
+stone lanterns, sake barrels) and **the Keep** (dark floorboards, taiko drums). The Sun's Course, the Draw and
+the ambushes run as on every Act V stage.
+
+- **Its kinds.** The **Hatamoto** is an elite banner guard under a tall war banner: the soldiers near him fight
+  harder and move faster while he stands; kill the banner. The **Kiba-musha** is mounted samurai cavalry: it
+  reins in, a lane shows on the ground, then it gallops down it, striking you once and throwing your summons aside.
+- **The General of the Left** (miniboss, 9:00 left): a samurai general on a black war horse who charges straight
+  through your ring on a long telegraphed lane, calls three riders after his charges, and below 40% charges twice
+  in a row. His chest drops when he falls.
+- **Shogun Kurogane** (3:00 left): **his army is his health bar.** He stands on his command platform out of reach,
+  signalling with his war fan, while six regiments (600 soldiers, 1,200 in co-op) march one after another, each under its own
+  banner colour and with its own order: a spear wall (white), an arquebus line (indigo), a cavalry charge
+  (crimson), a ninja ambush out of the shadows (black), a samurai duel squad that draws (gold) and the night host
+  of oni and vengeful dead (sakura). His bar is the soldiers he has left: every Shogunate kill takes a point off,
+  and killing a regiment's **Hatamoto breaks it**: the rest flee and count as lost (a Hatamoto still standing when
+  the Shogun comes down can still be broken in the duel). At 10% he draws his blade
+  and comes down with six samurai of his honour guard for the **duel**: the rest of the bar is now his own life,
+  and he fights with **iai cuts**, white lines flashed from him through you and on past you, faster as his guard
+  falls; below a third of his life comes his last move, the **triple cut**: three lines at once crossing on you.
+- **Rewards.** Slaying him unlocks the spell **Banner of the Dead** (a war banner planted where you stand: the
+  planting strikes nearby foes and your summons near it attack faster; it evolves into **Hundred Banners**, a ring
+  of banners whose war drums beat on your foes, with the new passive **Warlord's Seal**: your summons near you
+  attack faster) and so its character, the **Ronin Revenant** (innate Unbowed Banner: his banners quicken the
+  dead even more; Hyper, Untouchable and Deathlord skins). The achievement **Regiments Broken** (slay the Shogun
+  after breaking all six banners) unlocks **Unbending** (the Draw's cuts hit your summons for less; offered only
+  in Act V).
+- **Autotest:** `--stage=kurogane`, `--boss=shogun`, `--spells=banner_of_the_dead`, `--passives=unbending`,
+  `--character=ronin_revenant`, `--spawn=hatamoto@T`, `kiba_musha@T`, `general_left@T`.
+
+### Act VI: the Inferno (foundation)
+
+<!-- --- Act VI: the Inferno --- -->
+Hell comes to collect. Every soul the necromancer raised was owed to the Pit, and its demons fight for them:
+**the Inferno** (GDD §15.0 "Act VI foundation (phase 1)"; owner-approved proposal `docs/act6/PROPOSAL.md`).
+The stage select has an **Act VI** tab with its three stages, **the Burning Gate**, **the Palace of Silk and
+Ash** and **Pandemonium** (bosses Moloch, the Furnace King; Lilith, Queen of the Night; the Morning Star),
+all playable (owner decision Nov 2026, GDD §15.0 "Acts VI–IX go live"); putting out Amaterasu's sun opens the Burning Gate and each boss
+opens the next stage. The act's shared rules:
+
+- **Hell Pits.** Burning pools on the ground hurt anyone standing in them, you, your summons, the damned and
+  the living; demons, imps and other fliers are spared. Each zone has its own fixed pits, and more open near you
+  on a telegraph (a glowing rim for 1.5 s) and close again. The Bone Ring flows around them; luring the damned
+  through them is the counterplay.
+- **Portals.** Demon portals pour out a squad every few seconds while you are near. Break one, or **seal** it:
+  stand inside its ring for 3 s and it closes at once and pays a Soul Ash bounty.
+- **Temptation.** A succubus's kiss charms one of your summons: pink hearts over it, it fights for hell for
+  6 s and then comes back (at most three at once). Kill the charmer and her charms break; break the charmed
+  body and the summon comes back at once, weakened.
+- **The Last Judgment.** At 0:00 every portal opens at once, the pits open faster each minute, demon brutes
+  step out and the Adversary's hand reaches up through the floor under you and your army.
+- **Music.** For now Act VI runs play the Act V loop; "Hymn of the Pit" comes with the audio pass.
+
+The shared kinds so far: **the Damned** (chained souls; they burn in the pits), the **Imp** (a fast flier with
+a pitchfork), the **Hell Knight** (ember armour, a burning greatsword's sweep), the **Succubus** (charms your
+summons; flies) and the **Demon Brute** (four arms, a ground slam that throws your dead aside, flat armour; the
+Last Judgment's heavy). The Codex has an **Inferno** tab.
+
+### Act VI: the Burning Gate (Stage 16)
+
+<!-- --- Act VI: the Burning Gate --- -->
+A plain of ash and obsidian before the gate of hell, the river of fire Phlegethon along its edge (GDD §15.0 "The
+Burning Gate (Act VI phase 2)" and the rows after it). Playable since Acts VI–IX went live.
+
+- **Four zones on the clock:** the Ash Plain (20:00), the Cages (15:00), the River of Fire (10:00) and the Gate
+  (5:00), each with its own floor, obstacles (ember rocks, cages of the damned, gate pillars) and fixed pits.
+- **The River of Fire.** In the third zone burning bands of fire run east-west across the world, every 1,500 px,
+  broken by fords. It is part of the Hell Pits (it burns, the ring flows around it and through the fords).
+- **Hellhounds.** Fast packs of lava hounds that leave a short trail of small pits behind them.
+- **Pit Cultists.** Living men who stop to chant a 3 s rite; if they finish, a demon portal tears open. Kill them
+  first (they also burn in the pits).
+- **The Gatekeeper** (miniboss, 9:00 left). A chained giant: his chains fly in a telegraphed fan and drag the first
+  summon or damned soul they hit to his feet (a summon is crushed, a soul devoured to heal him); a slam; he hauls
+  in coffles of the damned. Lead the damned through the pits to starve him.
+- **Moloch, the Furnace King** (3:00 left). He **swallows** your summons in a cone in front of him: they come back
+  burning, as his, for 6 s (break the body to free one; his death frees them all); he vents **fire waves** down
+  telegraphed lanes; he **cracks** the arena into pits around you. Below two thirds the furnace opens (more
+  swallowed, three-lane waves, more cracks); below a third he runs molten (faster, harder, burning footprints).
+- **Rewards.** Slaying Moloch unlocks **Brimstone** (burning stones fall on the densest groups and leave short
+  pits that burn enemies only; evolves into **Rain of Fire** with **Furnace Heart**: your spells hit foes standing
+  in fire harder) and so its character, **the Furnace Priest** (innate Stoker: one more stone; skins Gilded,
+  Untouchable, Deathlord). The achievement **Gate Crashed** (seal 5 portals in one run and slay Moloch) unlocks
+  the Act VI counter-passive **Salt Circle** (summons take less pit damage; offered only in Act VI).
+- **Autotest:** `--stage=burning_gate`, `--boss=moloch`, `--spells=brimstone`, `--passives=salt_circle`,
+  `--character=furnace_priest`, `--spawn=lava_hound@T`, `pit_cultist@T`, `gatekeeper@T`; lines `burning gate`,
+  `burning gate kinds`, `gatekeeper`, `moloch`, `act VI spell`, `act VI passives`.
+
+### Stage 17: the Palace of Silk and Ash (Act VI)
+
+<!-- --- Act VI: the Palace of Silk and Ash --- -->
+The court of desire (GDD §15.0 "The Palace of Silk and Ash (Act VI phase 2)" and the rows after it; data in
+`scripts/data/stages/silk_palace_stage.gd`; playable). Four zones on the clock:
+**the Rose Garden** (black-thorned roses), **the Hall of Mirrors** (every few seconds a mirror shimmers and a
+**reflection of you** steps out of it: the summons near it walk at it for a moment instead of fighting), **the
+Ballroom** (rose marble over a lava lake: the most fixed Hell Pits of the act) and **the Queen's Chamber**.
+- **Lilim Witches** (support) open small pits under your ring and heal the demons around a standing portal: kill
+  them first, seal the portals.
+- **The Twin Succubi** (miniboss, 8:20 left): two sisters who charm your summons in turns and drop a pink circle of
+  pain on you; kill one and the other rages. One chest, when the second falls.
+- **Lilith, Queen of the Night** (17:00): charm waves that turn a whole arc of your ring for 4 s (marked in hearts
+  first), a kiss that flies at you (your ring can catch it) and **marks** you for 5 s: every heal on you is
+  turned into damage; demon children (imps) born from her wings; at a third of her health her **true demon
+  form**, with a wing storm around her.
+- **Rewards** (slaying Lilith): the spell **Temptation** (charm the strongest foes near you: they fight for you for
+  6 s, then go back; a charmed foe that falls dies for good) evolving into **Unholy Desire** with **Velvet Chains**;
+  the character **the Succubus Queen** (innate Heartbreaker: a foe you charmed goes back losing part of its
+  health); the summon class **the Succubus** (a floating support that charms the foe it fights for a few
+  seconds) evolving into **the Lilim Matriarch** with **Sweet Surrender**. The achievement **Unmoved** (slay
+  Lilith with no summon charmed during her fight) unlocks the Act VI counter-passive **Faithless** (charms on your
+  summons wear off sooner; half as long at Lv 5).
+
+<!-- --- Act VI: Pandemonium --- -->
+**Pandemonium** (Stage 18, the finale of Part One; GDD §15.0 "Pandemonium (Act VI phase 2)" and the rows after it;
+playable). The capital of hell in four zones on the clock: **the Iron
+City**, **the Chain Bridges** (chain bridges over rivers of lava: the most fixed pits of the run), **the Cathedral of
+Ash** and **the Throne**. Its own kinds: the **Fallen Angel** (an elite who dives from above with a burning spear and
+leaves a short pit; aloft, your grounded blades only graze her: gargoyles, archers, mages and spells answer her) and,
+at 8:20 left, the miniboss **the Fallen Seraph General** (a cone cleave that cracks the ground, lines of burnt
+feathers, and at half health a flight of Fallen Angels). The other Act VI stages' kinds join as small guest squads.
+At 3:00 left **the Morning Star** rises: first **the Angel** (a burning sword, fans of light beams at you and dark
+beams crossing your army), then, burning away, **the Beast** of the throne (slams that leave pits, and rings of pits
+opening around you). When he falls, you take the throne. Rewards: the spell **Fall from Grace** (a fallen star on
+the strongest foe near you; evolves into **Lightbringer** with **Pride**), the character **the Fallen Saint**
+(Second Fall: a second star on the next-strongest foe), the summon class **the Archfiend** (a winged heavy demon
+whose Hellfire Cleave throws whole ranks aside; evolves into **the Prince of Hell** with **Crown of Horns**: every
+summon special hits harder) and its Ossuary mastery, and the achievement **Morning Star Falls** (the title
+Sovereign of Pandemonium).
+
+### Act VII: the Sanguine Court (foundation)
+
+<!-- --- Act VII: the Sanguine Court --- -->
+The dead who never served. Vampires, bats, werewolves and witches kept their own will in death, and the Court has
+fed on the living in secret for a thousand years; now the necromancer has turned the world's living into his dead,
+and the Court is starving: **the Sanguine Court** (GDD §15.0 "Act VII foundation (phase 1)"; owner-approved proposal
+`docs/act7/PROPOSAL.md`). The stage select has an **Act VII** tab with its three stages, **Ravensmoor**, **the
+Witchwood** and **Castle Sanguis** (bosses Vargr, the Moon-Eater; Isolde Vane, the Witch of the Red Moon; Queen
+Carmilla and the Elder), all playable (owner decision Nov 2026, GDD §15.0 "Acts VI–IX go live"); casting down the Morning Star opens Ravensmoor
+and each boss opens the next stage. The act's shared rules:
+
+- **Bloodfeast.** Court enemies heal on their melee hits: a vampire (the Blood Knight, the Vampire Noble) heals half
+  the damage it deals to your summons or to you, every other Court kind a quarter, and a red thread runs from the
+  victim to the feeder. Healing past full banks as a **blood shield** of up to a quarter of its max HP, spent
+  before its HP. **Rot and Wither halve it** on the enemies they touch; ranged summons and spells are never fed on,
+  and a barrier's or ward's share of a hit is not fed on either.
+- **Night Wings.** Vampire bats fly over the Bone Ring: no blocker stops them, and they go for you and the priests
+  inside. They must land to bite (a 0.5 s swoop, its shadow growing on the ground), and in the air only your
+  fliers (Gargoyles), ranged summons, spells and volleys hit them; a melee summon's blow finds only air.
+- **The Blood Moon.** Every 4:00 the moon turns red for 45 s (the HUD counts down the last 10 s before it rises,
+  then the time left). Under it every Court enemy feeds twice as hard and werewolves turn into beasts; save Dread
+  Rally for it.
+- **The Endless Feast.** At 0:00 the Blood Moon rises and never sets, the Court feeds three times as hard each
+  minute, and coffins open around you and release Vampire Nobles.
+- **Music.** For now Act VII runs play the Act VI loop; "Waltz of the Red Moon" comes with the audio pass.
+
+The shared kinds so far: the **Blood Thrall** (bitten servants, pale and slow; they feed a little), the **Vampire
+Bat** (swarms of 10; Night Wings), the **Blood Knight** (a halberd that cleaves and blood-red plate; a vampire that
+feeds on every hit), the **Werewolf** (a hunter with a silver crossbow until the Blood Moon or half HP, then a huge
+beast that lunges) and the **Vampire Noble** (the Countess: a blood-drain beam that feeds her from range, and at low
+HP 1.5 s of mist before she reforms nearer you), plus the Court's **coffin**. The Codex has a **Court** tab.
+
+### Act VII: Ravensmoor (Stage 19)
+
+<!-- --- Act VII: Ravensmoor --- -->
+A cursed village on the moors below the Court's castle, its people long since turned to thralls (GDD §15.0
+"Ravensmoor (Act VII phase 2)" and the rows after it). Playable since Acts VI–IX went live.
+
+- **Four zones on the clock, each changing as a Blood Moon sets:** the Moor (20:00), the Village (15:15), the Old
+  Church (11:15) and the Wolfwood (7:15), each with its own floor and obstacles (moor cairns, moor pines, village
+  fences, thralls' cottages, the old church's broken walls, grave crosses).
+- **Sleeping coffins.** Two lie near you at the start of each zone. Break one before the next Blood Moon for a Soul
+  Ash bounty (6 each, the end screen's objectives line); any left whole open when the moon rises, and a Vampire
+  Noble climbs out. Vargr's own moons open them too.
+- **Ghouls.** Packs of four grey corpse-eaters (from 2:30, a pack every 45 s, plus the waves). A free ghoul near a
+  dying foe claims its corpse, runs there and eats it, healing; the corpse is gone for every raise (Corpse
+  Explosion, Raise Dead, the Lich, Death Mark, Grave Tide). Kill them on the way or at the table.
+- **Old Greymane** (miniboss, 10:00 left), the pack's alpha, with three werewolf hunters: his howl turns every
+  werewolf near him into the beast at once and spurs them; a feeding lunge.
+- **Vargr, the Moon-Eater** (3:00 left), the werewolf king, who calls his own Blood Moon at each phase. **The
+  Hunt:** he circles your ring and lunges at your weakest summon. **The Turning** (below two thirds): he howls his
+  pack into beasts around him and leaps over the ring at you (a landing circle shows where). **The Moon-Eater**
+  (below a third): the arena goes dark but for a red circle around him, he lunges and leaps both, and every hit he
+  lands feeds him.
+- **Rewards.** Slaying Vargr unlocks **Moonfang** (spectral wolf jaws snap at the nearest groups and leave them
+  bleeding; evolves into **Wolf of the Red Moon** with **Pack Blood**: bleeding foes take more damage from every
+  hit) and so its character, **the Moon-Cursed Huntress** (innate Hunter's Moon: one more set of jaws; skins
+  Golden Moon, Untouchable, Deathlord). The achievement **Coffin Nails** (break every sleeping coffin before it
+  opens) unlocks the Act VII counter-passive **Silver Bones** (summons hit werewolves and nobles harder, and the
+  nobles' mist breaks sooner; offered only in Act VII).
+- **Autotest:** `--stage=ravensmoor`, `--boss=vargr`, `--spells=moonfang`, `--passives=silver_bones`,
+  `--character=moon_huntress`, `--spawn=ghoul@T`, `old_greymane@T`, `sleeping_coffin@T`; lines `ravensmoor`,
+  `ravensmoor kinds`, `old greymane`, `vargr`, `act VII spell`, `act VII passives`.
+
+### Act VII: the Witchwood (Stage 20)
+
+<!-- --- Act VII: the Witchwood --- -->
+A black fen and a wood of hanging charms where the Court's witches keep their sabbath (GDD §15.0 "The Witchwood (Act
+VII phase 2)" and the rows after it). Playable since Acts VI–IX went live.
+
+- **Four zones on the clock:** the Fen (20:00), the Hanging Wood (15:00), the Standing Stones (10:00) and the
+  Cauldron (5:00), each with its own floor and obstacles (fen snags, charm fences, standing stones, cauldrons).
+- **The Fen.** In the first zone still pools of black water lie on the ground; they slow everyone who wades them
+  (the necromancer and the summons through the one ground-slow path, Brinewalker applies; the living foes too).
+- **Hex stones.** From 1:00 and in every zone three hex stones rise around you. A Crimson Witch coven near a
+  standing stone can cast without the Blood Moon; a broken stone leaves dead ground where no coven casts.
+- **Crimson Witches** (any Act VII stage). Free witches band into covens of three; under the Blood Moon (or powered
+  by a stone) a coven chants a hex circle that heals the Court inside it and drains your summons. Kill one witch and
+  the circle fails.
+- **Bloated Thralls** (any Act VII stage). Slow heavies that burst into a blood pool when they die: Court units in it
+  heal (never a boss or miniboss). Kill them away from the knights.
+- **The Bog Mother** (miniboss, 9:00 left). A vast drowned witch wading in her own black water (it slows): her
+  weed-ropes mark the nearest summons, then drag them to her side to drown; a mire slam.
+- **Isolde Vane, the Witch of the Red Moon** (3:00 left). Hex circles under your ring, cauldron bombs that leave
+  healing pools for the thralls she calls. At two thirds she **splits into three sisters**: all three must fall
+  within 10 s of each other or the fallen rise again (weaker each time; after 100 s they stop rising). Then she
+  reforms and **calls the Blood Moon**, keeping it up until she falls.
+- **Rewards.** Slaying Isolde unlocks **Hex Circle** (a crimson circle under you drains every foe inside and you
+  drink a little of it; evolves into **Witches' Sabbath** with **Moonlit Rite**: your spells hit foes inside your
+  circle harder) and so its character, **the Hedge Witch** (innate Hedge Lore: every circle a quarter wider; skins
+  Gilded, Untouchable, Deathlord). The achievement **The Coven Breaks** (kill Isolde's three sisters within 1 s)
+  unlocks the Act VII counter-passive **Embalmed** (the Court heals less from biting your summons; offered only in
+  Act VII).
+- **Autotest:** `--stage=witchwood`, `--boss=isolde`, `--spells=witch_circle`, `--passives=embalmed`,
+  `--character=hedge_witch`, `--spawn=crimson_witch@T`, `bloated_thrall@T`, `bog_mother@T`, `hex_stone@T`; lines
+  `witchwood`, `witch hexes`, `witchwood kinds`, `bog mother`, `isolde`, `act VII spell`, `act VII passives`.
+
+<!-- --- Act VII: Castle Sanguis --- -->
+**Castle Sanguis** (Stage 21, the finale of Act VII; GDD §15.0 "Castle Sanguis (Act VII phase 2)" and the rows after
+it; playable). The Court's castle above the clouds in four zones on the
+clock: **the Courtyard**, **the Banquet Hall**, **the Crypt Gallery** and **the Throne of Blood**. In the Banquet
+Hall (and again before the throne) **blood fountains** heal every Court enemy standing in them; a Bone Wall segment
+or a Bone Golem on a fountain denies it. Its own kinds: the **Chiropteran** (an elite bat-man who glides over your
+ring and shrieks a cone that stuns your dead for 1.5 s: step out of it; any stage may use it) and, at 8:20 left, the
+miniboss **the Chiropteran King** (he seizes your dead, flies them off over the ring and drops them outside it,
+shrieks a wide stunning cone, and at half health a swarm of bats bursts from his wings). The other Act VII stages'
+kinds join as guest squads. At 3:00 left **Queen Carmilla** descends: **the Court** (she dances through your ring in
+mist, her drain beam sweeps your army, her nobles step out beside her), **the Waking** (she kneels at the Elder's
+coffin and feeds him: the boss bar becomes his and fills with every heal she lands and every **Blood Bearer** that
+reaches her; stuns, freezes and Soul Chains interrupt her, and a dead bearer brings nothing) and **the Elder** (the
+first vampire, with the health she gave him, in two forms: first **the vampire lord**, a fast duelist whose
+telegraphed blood-blade lunges cut through your ring and feed him, mist-stepping in when you are far; at half his
+health he transforms into **the bat-winged horror**: every bat on the map turns on you, he drains everything touching
+him and beats his wings). When he falls he turns to ash and the Court's veil tears (a short ending text, no epilogue).
+Rewards: the spell **Night Swarm** (spectral bats circle you and dart at the nearest foes; evolves into **Nocturne**,
+whose bites leap on to the next foe, with **Old Blood**: the bats dart sooner and their bites heal you), the
+character **the Dhampir** (Half-Blood: two more bats), the summon class **the Blood Spawn** (fast vampire brawlers
+that heal themselves with every blow; evolves into **Nosferatu**, who spill the blood they cannot hold to your most
+wounded summon nearby, with **Thirst Eternal**: every heal your dead receive is larger) and its Ossuary mastery, and
+the achievement **Last Supper** (beat the Elder: the title Ender of the Feast).
+
+### Act VIII: the Last Line (foundation)
+
+<!-- --- Act VIII: the Last Line --- -->
+Behind the Court's veil were the last great cities of the living, lit all night and armed, and they fight back:
+**the Last Line** (GDD §15.0 "Act VIII foundation (phase 1)" and the rows after it; owner-approved proposal
+`docs/act8/PROPOSAL.md`). The stage select has an **Act VIII** tab with its three stages, **Skid Row**, **Fort
+Kessler** and **Liberty Heights** (bosses Don Marrow, the Kingpin; General Vance Harrow, the Hammer; Paragon, the
+Last Hero), all playable (owner decision Nov 2026, GDD §15.0 "Acts VI–IX go live"); slaying Queen Carmilla opens Skid Row and each boss opens the
+next stage. The act's arenas and shared rules:
+
+- **City blocks.** The maps are a grid of rectangular buildings instead of scattered obstacles: 256 x 192 px
+  buildings, two by two in a block with a cross of 80 px alleys through it, and 192 px streets (a roadway and two
+  sidewalks) around every block. About a fifth of the lots are open (plazas, parking lots, parks), and the run
+  starts on a crossing of two streets. Your Bone Ring flattens along a street (a post inside a building is pulled
+  back toward you) and is round again at a crossing; the city's soldiers follow the streets to you.
+- **The escalation.** A plain clock (no Wanted Level): the gangs from 0:00, the police at 4:00, SWAT and the Guard
+  at 8:00, the army at 12:00 and the heroes at 15:00, each warned 10 s ahead by a banner, with the current tier on
+  the HUD. From the heroes, a Super arrives every 90 s.
+- **Armour.** Riot shields and tank fronts cut most of a hit from the front: flank them (arcing hits from above
+  ignore the front). Vehicles drive straight down a street lane at your street (their headlights show the lane 1 s
+  ahead), run over every summon in the lane and you (Grave Step dodges it), then turn and come again. A destroyed
+  vehicle becomes a burning wreck, a new obstacle for the rest of the run, that explodes 3 s later and hurts both
+  sides; a vehicle that rams a wreck stops and takes damage. The tank fires shells with a landing circle.
+- **Supers.** Named heroes with one power and one weakness on their plate. Blitz, the first: "Fast. Can't turn."
+  He dashes down a street through your ring; a dash that ends on a building, a wreck, a Bone Wall or a blocker
+  summon stuns him and **exposes** him (x1.5 damage taken for 4 s); until then he takes only x0.6.
+- **Civilians.** A crowd flees through the streets from the start, and more come until the army arrives. They
+  never fight back; your army kills them like any enemy, and each one drops XP. No sparing, no penalty.
+- **Martial Law.** At 0:00 every tier comes at once (tanks, riot cops, breachers and rifle squads), artillery walks
+  down the streets in lines of landing circles that hurt both sides, and every Super you met returns, one every
+  20 s. On a stage where you met none (Skid Row, Fort Kessler) the act's Supers come in turn instead, Blitz first,
+  then Aurora, Atlas and Nightjar, one standing at a time (owner, Nov 2, 2026).
+- **Police lights** pulse slowly (at most 1 Hz, a soft fade; never a flash).
+- **Music.** Act VIII runs play "Sirens at Midnight"; every City event (sirens, gunfire, engines, wrecks, the crowd,
+  a Super's arrival, a weakness cracking, the tier alarm) plays its own City sound. Rooftop antenna lamps blink slowly.
+
+The shared kinds so far: the **Civilian** (a man or a woman, running), the **Street Thug** (bats and pipes, in
+crowds), the **Gang Gunner** (two pistols sprayed from the hip), the **Riot Cop** (a shield front and a baton), the
+**Squad Car** (a vehicle), the **SWAT Breacher** (a flashbang that stuns your summons for 1 s, a shotgun), the
+**Field Medic** (heals the soldiers near her), the **Rifleman** (squads of four, short bursts), the **Tank** (front
+and flat armour, a cannon) and **Blitz** (the speedster Super). The Codex has a **Last Line** tab, grouped by tier.
+
+### Act VIII: Skid Row (Stage 22)
+
+<!-- --- Act VIII: Skid Row --- -->
+The docks and back streets of the last great city, where the dead first come up out of the sewers (GDD §15.0 "Skid
+Row (Act VIII phase 2)" and the rows after it). Playable since Acts VI–IX went live.
+
+- **Four zones on the clock over the same streets:** the Alleys (20:00), the Night Market (15:00: rows of lit neon
+  stalls in the open lots), the Overpass (10:00: the elevated road's shadow and its pillar footings over every other
+  street) and the Precinct (5:00: blue-trimmed precinct roofs, blue kerb paint). A zone changes the looks only; no
+  street moves.
+- **The ladder stops at SWAT** (owner): the gangs from 0:00, the police at 4:00, SWAT and the Guard at 8:00. No army
+  and no Supers before 0:00; Martial Law still throws every tier, and brings the act's Supers one at a time.
+- **Tear gas.** Riot cops (on every Act VIII stage) lob a canister at your ring every 14 s: a grey-green cloud that
+  slows your summons inside it for 4 s (the ground-slow path; Brinewalker helps). It clears when its cop falls.
+- **Big Sal and the Armoured Limo** (miniboss, 9:30 left). His black limo rams through your ring with an armoured
+  front (hit it from the side) while his crew sprays pistols out of both windows. Wreck it and Big Sal climbs out of
+  the burning wreck with a sledgehammer (a telegraphed swing): kill him for the miniboss chest.
+- **Don Marrow, the Kingpin** (3:00 left), a crime boss in a white suit. **The Bounty:** he raises a bounty board, a
+  priority target; while it stands the gangs come twice as thick. Break it. He fires a gold revolver. **The Call**
+  (below two thirds): squads of riot cops, SWAT breachers, a medic and now and then a squad car come together every
+  10 s until he falls. **The Last Stand** (below a third): his limo rolls up and he fights from behind its armour
+  (hit him from the side) with a gold minigun that sweeps a whole street lane through you after a gold warning:
+  step out of the lane or Grave Step through it.
+- **Rewards.** Slaying Don Marrow unlocks **Hearse Run** (spectral hearses drive street lanes through your foes;
+  evolves into **Funeral Procession** with its paired passive **Black Car**: processions of hearses, and the dead
+  they make rise as pallbearers) and its character **the Undertaker** (Last Ride: one more hearse a cast; a Hyper,
+  an Untouchable and a Deathlord skin). The achievement **No Witnesses** (kill every civilian of the opening crowd
+  before one flees the streets) unlocks the Act VIII counter-passive **Kevlar Bones** (the city's guns hurt your
+  summons less).
+- **Wrecks** now cover their whole footprint (60 x 38 art for the 52 x 36 wreck).
+
+### Act VIII: Fort Kessler (Stage 23)
+
+<!-- --- Act VIII: Fort Kessler --- -->
+A military base on the edge of the city, the army's last line against the dead (GDD §15.0 "Fort Kessler (Act VIII
+phase 2)" and the rows after it). Playable since Acts VI–IX went live.
+
+- **The escalation stops at the army** (gangs 0:00, police 2:30, SWAT 5:00, the army 7:30; no Super on the clock).
+  Martial Law still throws every tier at 0:00, and brings the act's Supers one at a time.
+- **Four zones on the clock** over the same city blocks: the Checkpoints (20:00; sandbags and barrier booms), the
+  Minefield (16:00), the Airfield (10:00; open concrete aprons) and the Command Bunker (6:00; bunker roofs).
+- **Minefields.** In the Minefield zone the open lots and some streets are mined: blinking mines (a slow blink) that go
+  off under anyone, your dead, you and the city's soldiers alike. Lure the soldiers over them; your Bone Ring steps
+  around them.
+- **New army kinds** (any stage may field them): the **Machine Gunner** kneels and sweeps a telegraphed fire lane
+  (step out of it, or put a Bone Wall in it) and the **Attack Helicopter** flies strafing runs down your street with
+  rocket pods (swords barely reach it: Gargoyles, Archers and spells bring it down; shot down, it crashes onto the
+  street).
+- **Mammoth** (miniboss, 8:30 left), a super-heavy tank with two turrets, each on its own cooldown; armoured in front,
+  and it burns into the biggest wreck in the city (two wreck cells).
+- **General Vance Harrow, the Hammer** (3:00 left). **Command:** from his armoured car he calls carpet-bombing lines down
+  your street (hurting his own soldiers too) and rifle squads. **The Hammer** (below 60%): he climbs out in power
+  armour (a front: hit him from the side), slams his hammer and calls tank columns. **Broken Arrow** (below 30%): he
+  orders a strike on his own position; a 30 s countdown shows as the HUD objective. Kill him in time and it is called
+  off; fail and the strike leaves you at a quarter of your HP (Grave Step does not dodge it), most of your army gone
+  and his army on screen dead; his armour takes it for him (he loses 40% of what he has left and his front).
+- **Rewards.** Slaying Harrow unlocks **Bone Mines** (you drop bone mines as you walk; enemies set them off, your dead
+  never do; evolves into **Killing Ground**, bone shrapnel from every blast, with **Tripwire**: mines go off from
+  farther and slow the foes caught) and so its character, **the Fallen Sergeant** (innate Sapper's Hands: two mines
+  where one drops; skins Golden Sergeant, Untouchable, Deathlord). The achievement **Broken Arrow** (kill Harrow before
+  his strike lands) unlocks the Act VIII counter-passive **Armour-Piercing Bones** (your summons' blows ignore part of
+  every armoured front; offered only in Act VIII).
+
+### Act VIII: Liberty Heights (Stage 24)
+
+<!-- --- Act VIII: Liberty Heights --- -->
+**Liberty Heights** (Stage 24, the finale of Act VIII; GDD §15.0 "Liberty Heights (Act VIII phase 2)" and the rows
+after it; playable). The heart of the city in four zones on the clock, each
+a new look over the same streets (towers and plazas, a quarter of the lots open): **the Plaza**, **the Rooftops**,
+**the Tower Lobby** and **the Watchtower**. The escalation starts high: the army from 0:00 (so only the opening crowd
+of civilians runs) and the heroes from 15:00. The army's kinds: the stage's own **Conscripts** (bayonets, in crowds),
+rifle squads and tanks (Fort Kessler's Machine Gunners and Attack Helicopters join as guests from 7:00).
+**The Supers lead one zone each as its miniboss** (a chest when they fall): **Blitz** in the Plaza, **Aurora** on the
+Rooftops ("Flies. Falls when stunned.": a flier who rains energy blasts on your ring; any stun drops her out of the
+sky and she is exposed until she rises), **Atlas** in the Tower Lobby ("Strong. Slow to throw.": he lifts a wreck off
+the street, or a parked car, and throws it at your spot; stun him during the long wind-up and he drops it, exposed)
+and **Nightjar** at the Watchtower ("Grapples. Must land to strike.": he reels your dead out of the ring with his
+grapple, then lands beside them; a blocker summon or a stun while he is landed exposes him). At 3:00 left
+**Paragon, the Last Hero** descends: **the Hero** (he flies over your ring, cuts telegraphed heat-vision lines through
+it and punches your biggest summon across the arena), **Hope** (every roster Super you have not killed this run flies
+to his side, and he cannot be harmed while they stand: kill them earlier and this phase is short) and **No
+Restraint** (the sky turns white, and he dives from orbit onto telegraphed craters that crack the streets). When he
+falls the living have no one left to defend them (a short ending text, no epilogue). Rewards: the spell **Hero's
+Fist** (a spectral fist slams the strongest foe and sends it flying through the rest; evolves into **Doomsday**: two
+fists, and every flung foe lands in a crater, with **Secret Identity**: the fist strikes sooner and the flung foe hits
+harder), the character **the Revenant Heroine** (Back From the Dead: one more fist), the summon class **the Fallen
+Hero** (raised heroes that fly around your ring and slam into packs; evolves into **Black Paragon**, whose slams stun
+and chain on to the next pack, with **Origin Story**: every summon's special reaches wider) and its Ossuary mastery,
+and the achievement **No More Heroes** (beat Paragon with no Super at his side: the title Bane of Heroes). Autotest:
+`--stage=liberty_heights`, `--boss=paragon`, `--spells=heros_fist`, `--classes=fallen_hero`,
+`--character=revenant_heroine`, `--spawn=atlas@T`, `aurora@T`, `nightjar@T`, `conscript@T`; lines `liberty heights`,
+`liberty heights events`, `liberty heights supers`, `paragon`, `heros fist`, `fallen hero`.
+
+### Act IX: the Concord of Stars (foundation)
+
+<!-- --- Act IX: the Concord of Stars --- -->
+Long ago something out in the dark seeded life on this world, and it comes back every few thousand years to reap the
+dead. This time there is nothing to reap: the necromancer has taken every soul. **The Concord of Stars**, a coalition
+of alien races under the Harvesters who rule it, comes to find out why (GDD §15.0 "Act IX foundation (phase 1)" and
+the rows after it; owner-approved proposal `docs/act9/PROPOSAL.md`). The stage select has an **Act IX** tab with its
+three stages, **the Crash Site**, **the Proving Moon** and **the Ark of the Concord** (bosses the Hive Mother,
+Vrask'Tal the Hunt-Lord and the Harvester), all playable (owner decision Nov 2026, GDD §15.0 "Acts VI–IX go live"); defeating Paragon opens the Crash
+Site and each boss opens the next stage. One coalition: the Brood lead the Crash Site, the Vrask the Proving Moon, the
+Harvesters the Ark, and the Luminous fight on every stage. The act's shared rules:
+
+- **Beams.** Concord weapons are continuous beams, not bullets: a thin magenta aiming line for 1 s (it follows its
+  target, then stops turning for the last 0.3 s), then a beam that holds and sweeps, cutting through every summon and
+  you on its line. Your Bone Ring does not block it, but a **Bone Wall** does: a beam stops at the first wall
+  segment on its line (the spell's walls, Charnel Bastion rings and an Ossuary Titan's wall alike; split beams and the
+  Final Harvest's eye too; never your own reflected beam). Otherwise get out of the line (Grave Step dodges it).
+  Your **Orb Shield** (one charge) and a summon with a **Warder or Bishop barrier** reflect a beam back along its line
+  into whoever fired it, hurting every enemy on the way. A beam that passes through a **Star-Seer** splits into three.
+  At most 6 beams at once.
+- **Abduction.** Saucers hover over the edge of your ring, mark a summon with a green tractor cone for 1 s and lift
+  it. It is held for 8 s: shoot the saucer down in time (Archers, Mages, Gargoyles, spells; swords cannot reach it)
+  and the summon drops back; otherwise it is gone until its class's next replenish. Heavy bodies (the Abomination,
+  the Colossus, the Golem) are too heavy to lift. At most 3 summons are held at once.
+- **Terraforming.** Landing pods fall on a telegraphed streak (from 0:40, more often each minute, three at most) and
+  root, growing a patch of alien flesh ground around them ring by ring. Concord units standing on it heal (3% of
+  their health a second; bosses don't). Your **spells** burn it back: a spell hit scorches the ground around its
+  target for 20 s. Break the pods to stop the growth.
+- **The Final Harvest.** At 0:00 the mothership opens its eye over the arena: its beam sweeps across you again and
+  again, saucers fill the sky, and the abduction cap is gone. The pods keep falling.
+- **Music.** The stubs play "Sirens at Midnight" for now; "The Reaping Stars" and the Concord sounds come with the
+  audio pass.
+
+The shared kinds so far: the **Broodling** (fast insects in swarms of twelve), the **Grey Drone** (small greys in
+squads with a probe beam), the **Saucer** (the abductor; a flier), the **Vrask Hunter** (a shimmer while it moves:
+your summons barely scratch it until a spell reveals it; a three-dot lock, then one shot), the **Lumen Sentinel**
+(sweeping beams, a shield that soaks the first hits) and the **Star-Seer** (splits the beams), plus the
+**Terraformer Pod**. The Codex has a **Concord** tab, grouped by race. Autotest: `--stage=crash_site|proving_moon|ark`,
+`--boss=hive_mother|vrask_tal|harvester`, `--spawn=` with the kinds above (`concord_terraformer@T` drops a pod); lines
+`beams`, `abduction`, `terraforming`, `final harvest`, `concord kinds`, `concord stage`.
+
+### Act IX: the Crash Site (Stage 25)
+
+<!-- --- Act IX: the Crash Site --- -->
+A Harvester scout ship lies broken in the ruins of the capital, and the Brood is hatching from it (GDD §15.0 "The Crash
+Site (Act IX phase 2)" and the rows after it). Playable since Acts VI–IX went live. Four
+zones on the clock: **the Crater** (glassed black rock; the crater's alien turf is already growing at the start),
+**the Hatchery** (5:00, green-black resin), **the Wreck** (10:00, the ship's hull plates) and **the Glass Spire**
+(15:00, the capital's broken paving and spires of fused glass). The Brood lead the timeline, the Harvesters, a Vrask
+hunter now and then and the Luminous fight with them.
+
+- **Infestation.** Wherever a Concord enemy falls on the Crash Site an **egg** sits for 6 s. Any spell or summon hit
+  clears it (a cleared egg is not a kill: no XP or drops); left alone, a broodling hatches. Broodlings that hatched lay
+  no eggs of their own, and at most 24 eggs lie at once.
+- **The Burrower** (the Brood's soldier) digs in and tunnels under your ring, out of reach; a dirt mound shows 1 s
+  before it bursts up among your summons. Keep blockers inside the ring.
+- **The Acid Spitter** lobs acid over your ring (arcing: the ring never stops it) that leaves a burning green puddle;
+  the puddles hurt your summons and you, never enemies. Kill it on approach and step out of the green.
+- **The Brood Matriarch** (the miniboss, 10:30) is a winged queen-guard who spits egg sacs over the ring; they land as
+  eggs. Swords only graze her in the air.
+- **The Hive Mother** (17:00): **the Brood** (egg waves around you and Burrowers from every side), **the Burrow** (she
+  dives under the arena, a big mound shows where you stood, and she erupts there, leaving alien turf), **the Flight**
+  (she takes to the air and rains acid). When she falls, a short ending text.
+- **Rewards.** Slaying the Hive Mother unlocks **Bone Beetles** (slain foes near you burst into bone beetles that bite
+  the next foe; it evolves into **Hive of Bone** with its paired passive **Chitin**: beetles bite foe after foe, and
+  their kills burst too) and with it **the Broodbound** (a woman who wed the swarm; her innate Swarm Bride adds a beetle
+  to every burst). The achievement **Nothing Hatched** (beat the Hive Mother with at most 10 eggs hatched before she falls)
+  unlocks Act IX's counter-passive **Anchored** (abductions hold your summons for less, and a hit on the saucer drops
+  them; offered in Act IX only).
+
+Autotest: `--stage=crash_site`, `--boss=hive_mother`, `--spawn=` with `burrower`, `acid_spitter`, `brood_egg`,
+`brood_matriarch`; lines `crash site`, `burrowers`, `acid`, `brood matriarch`, `hive mother`, and `act IX spell` /
+`act IX passives` when Bone Beetles, Chitin or Anchored was taken; the `beams` line counts `bone wall stops`.
+
+### Act IX: the Proving Moon (Stage 26)
+
+<!-- --- Act IX: the Proving Moon --- -->
+The Vrask take the necromancer to their hunting ground on the moon, to see what he is worth (GDD §15.0 "The Proving Moon
+(Act IX phase 2)" and the rows after it; `docs/act9/BRIEF_PHASE2.md`). The Vrask lead here: their hunters come more often
+and in hunting parties, their Brood beasts are the fodder, and the Harvesters and the Luminous fight beside them. Beams,
+Abduction, Terraforming and the Final Harvest work as on every Act IX stage. Playable since Acts VI–IX went live.
+
+- **Low gravity.** Knockback goes twice as far for everyone (STAGE key `gravity` 2.0, read only through
+  `ConcordRules.gravity()`): every knock you deal sends an enemy twice as far, the enemies' shoves throw your summons twice
+  as far, and the Warbeast and Vrask'Tal leap twice as far. Grave Step is a shadow step and stays as it is.
+- **Four zones:** the Landing (grey regolith, boulders), the Craters (crater rims), the Trophy Hall (dark stone, trophy
+  walls hung with skulls) and the Duelling Ring (the duellists' marked circles).
+- **The Warbeast** (11:30, in the Trophy Hall): the Vrask's armoured war-hound, the miniboss. Armour plates (flat armour:
+  weak blows barely scratch it; Wither shreds it). It crouches over a landing circle and **pounces** onto it from up to
+  300 px away (150 × the low gravity), over your ring, biting everything in the circle and throwing your summons out.
+- **Vrask'Tal, the Hunt-Lord** (17:00), three phases:
+  - **the Stalk:** cloaked while he moves (a shimmer: your summons' blows deal half, a spell hit reveals him for 2 s), he
+    hunts the **edge of your ring** (the summon near him farthest from you) with his glaive and his shoulder caster's
+    three-dot lock. Every summon he kills hangs a **skull** on his belt: +4% damage each, at most eight.
+  - **the Duel** (below 65%): he drops his cloak, comes for you, locks you with his caster and **leaps over the ring** onto
+    you (a landing circle; up to 400 px away on the moon).
+  - **the Last Trophy** (below 25%): he arms the bomb on his wrist, a **20 s countdown** shown as the objective text. Kill
+    him in time and it is off (the achievement **The Hunter Hunted**). If it ends, it blows up where he stands: within
+    190 px you are left at a quarter of your health (never killed by it; Grave Step does not dodge it), your summons are
+    destroyed, and **he dies in it** (the kill still counts for the unlock chain, never for the achievement). Keep away
+    from him while it counts.
+- **Rewards.** Slaying Vrask'Tal unlocks the spell **Soul Caster** (a shoulder cannon locks the three strongest foes with
+  three soul-teal dots, then fires into each; evolves into **Apex Predator**: five locks, harder against elites and bosses,
+  and every kill reloads it) with its paired passive **Trophy Rack** (each of its kills adds a trophy: more damage per
+  trophy, up to a cap). Reach Soul Caster Lv 5 to unlock **the Blooded** (female, figure style), the one human who
+  survived the Hunt; her innate **First Blood** locks one more target. **The Hunter Hunted** unlocks Act IX's
+  counter-passive **Mirror Bones** (offered only in Act IX: your summons take less beam damage, and the beams you reflect
+  hit a little harder).
+- **Autotest:** `--stage=proving_moon`, `--boss=vrask_tal`, `--spawn=warbeast@T`, `--spells=soul_caster`,
+  `--passives=trophy_rack,mirror_bones`, `--character=blooded`; lines `proving moon`, `warbeast`, `proving moon threats`
+  (with the reflected beams' share of the run's damage), `vrask'tal`, `act IX spell`, `act IX passives`.
+
+### Act IX: the Ark of the Concord (Stage 27)
+
+<!-- --- Act IX: the Ark --- -->
+**The Ark of the Concord** (Stage 27, the finale of Act IX; GDD §15.0 "The Ark of the Concord (Act IX phase 2)" and the
+rows after it; playable). The mothership in orbit over the dead world, in four
+zones on the clock: **the Hangar** (deck plates and landing marks), **the Specimen Vaults** (sealed tanks stand round
+you: break them and the beasts inside attack everyone, your army and the Concord alike), **the Reactor** (vents breathe
+alien ground that heals the Concord: break them, and burn the ground with your spells) and **the Bridge of Stars**
+(starfield glass). The Harvesters lead, with the Luminous mixed in: the **Grey Overseer** (a psionic pulse that stuns
+your summons near it for 1 s, after a widening ring; it shields the greys round it: kill it first) joins the drones and
+saucers, and at 12:30 the **Luminous Archon** (the miniboss, a being of pure light) comes: every blow it strikes is a
+beam, a fan of lances and a halo all round it, so catch them on your Orb Shield and your Warders' barriers and send
+them back into it. At 3:00 left **the Harvester** descends from its throne of rings: **the Council** (it fights with
+the Concord's powers in turn: Brood swarms from every side, the Vrask's cloak (a shimmer; your spells reveal it) and
+the Luminous beams), **the Reaping** (it rises, untouchable, and four emitters land round your ring: each lifts one of
+your summons in its tractor beam every few seconds, with no cap, until you destroy them) and **the Gardener** (its true
+form, a vast being of light and rings: rings of alien ground grow round you and heal the adds it calls; your spells
+burn them back). When it falls the stars go dark (a short ending text, no epilogue). Rewards: the spell **Tractor
+Beam** (a column of soul light lifts the strongest foe into the air and slams it down on the rest; bosses and
+structures are slammed in place; evolves into **Abduction**: three foes a cast, and every slam drags the foes round it
+in, with **Starseed**: the beam lifts sooner and the slam reaches wider), the character **the Starborn** (a grey who
+deserted the Harvesters; Deserter's Signal: one more foe lifted), the summon class **the Ghost Saucer** (a raised
+saucer that hovers over your army, fires short beams through the foes on their line and lifts small foes to drop
+them; it flies, so the Concord can never lift it; evolves into **Black Mothership**: three beams at once and two foes
+lifted, with **Crop Circles**: every summon's special holds its foes longer) and its Ossuary mastery, and the
+achievement **The Last Harvest** (beat the Harvester: the title The Unharvested). Autotest: `--stage=ark`,
+`--boss=harvester`, `--spells=tractor_lift`, `--classes=ghost_saucer`, `--character=starborn`,
+`--spawn=grey_overseer@T`, `luminous_archon@T`, `specimen_tank@T`, `vault_beast@T`, `reactor_vent@T`,
+`reap_emitter@T`; lines `ark`, `ark events`, `ark kinds`, `harvester`, `tractor beam`, `ghost saucer`.
+
 ### The illustrated epilogue
 
 The campaign epilogue (content wave 2, GDD §15.0 "Illustrated epilogue (content wave 2)") is a short
@@ -1561,7 +2467,10 @@ Machines Go Dark", opened by *Nothing Is Deathless*: the Empire's chrome city of
 Deus Ex Machina on its knees as the necromancer reaches into its core for Varn's soul, the machines
 gone dark and Varn bowing, the risen dead over the ruins of all three acts) and a closing card after
 Act II, "The Beacons Burn", where the holy orders' knights march out under the beacons (it stays after
-Act II once Act III is open, `EpilogueData.CLOSING["after"]`).
+Act II once Act III is open). Closing cards are one per act (`EpilogueData.CLOSINGS`, each with an `after`
+key naming its part); the second, "The River Runs Dry", follows the Act III part: a dried riverbed of the
+dead with an empty ferry and a lone lantern far below, gods silhouetted on a marble mountain in golden
+light above, the set-up of Act IV.
 
 - Each panel (1024×576 art px, `assets/sprites/epilogue/`) pans slowly in a framed window
   (944×424, 1 art px = 1 layout px through the sharp-pixel shader); the paragraph fades in under it.
@@ -1604,11 +2513,12 @@ Act II once Act III is open, `EpilogueData.CLOSING["after"]`).
   A strong run earns about **450** at no upgrades (about 550-610 with mid / max
   upgrades, Ash Harvest included): two or three mid-tier upgrades. A death at
   9-11 min still keeps about 100-150. The Reckoning pays only about 8% of a
-  good run. Buying everything costs **9,635** (8,965 before the two Grave
+  good run. Levels 1-5 of everything cost **9,635** (8,965 before the two Grave
   Step upgrades), about 21 good runs (16–27 including weaker runs and Ash
-  Harvest), plus 375 for the optional Profane Oath (10,010 in all). The Profane Pact and Oath rewards add their own bonus
+  Harvest); the **deep levels** (below) add **24,950**, so buying everything
+  costs **34,585**, and the **new options** (below) **8,560** more (**43,145**), plus 375 for the optional Profane Oath. The Profane Pact and Oath rewards add their own bonus
   lines on top (below).
-- **The Ossuary** (main menu) holds the four GDD §9.2 trees. Each upgrade
+- **The Ossuary** (main menu) holds the four GDD §9.2 trees (and Dominion, below). Each upgrade
   raises one stat per tier, costs rise per tier, and some need a prerequisite
   in the same tree:
 
@@ -1630,6 +2540,105 @@ Act II once Act III is open, `EpilogueData.CLOSING["after"]`).
   be bought answers with a thud and a shake. **Refund all** (respec) returns
   every spent Soul Ash after a confirmation. The screen is fully usable with
   keyboard or controller.
+- **Deep levels** (Ossuary expansion step 2, GDD §15.0 "Ossuary deep levels"):
+  the 13 upgrades with 3+ levels (Necrotic Marrow, Sharpened Bones, Grave Call,
+  Umbral Potency, Quickened Rites, Widening Dark, Restless Shade, Grave-Hardened
+  Flesh, Bone Mail, Fleet Shade, Soul Magnet, Grave Tithe, Ash Harvest) go up to
+  **level 10**. Levels 1-5 keep their values and prices; every new level gives
+  half of the upgrade's per-level value (Restless Shade 3%: level 10 = 2.45 s)
+  and costs ×1.10 the level before it (from the last old price, rounded to 5;
+  e.g. Necrotic Marrow 255 / 280 / 305 / 335 / 370 for +3% minion HP each, 45%
+  at level 10). A 3- or 4-level upgrade's own levels 4-5 are open from the
+  start. The one- and two-level upgrades (Risen Vanguard, Legion of Bone,
+  Shadow Mastery, Undying Will, Twin Shadow, Fate's Thread, Banishing Rite) and
+  the Profane Oath keep their tiers. Levels 6-10 are **gated by difficulty
+  clears** (a clear = reaching 0:00 on any stage): **6-7** after a clear on Lich
+  or harder, **8-9** after a Deathlord clear, **10** after a Deathlord clear with
+  Hyper. The save keeps the hardest difficulty cleared (`[clears]`, save
+  version 2; an older save's Deathlord's Due counts as a Deathlord clear;
+  nothing is refunded). The tiles show up to 10 pips, the gated ones as sealed
+  sockets; a tile whose next level is gated shows the gate (Lich / Deathlord /
+  Hyper) instead of a price and the detail panel the clear it needs ("Clear a
+  stage on Lich to open levels 6-7"). Refund all returns the deep levels too. In
+  co-op each partner's own levels (deep ones included) travel in the loadout
+  and apply to their own slot. `--meta=max` buys every level (gates ignored);
+  `--meta=mid` is unchanged; with any upgrades the autotest prints an
+  `ossuary:` line (levels owned / 140, levels 6-10 owned / 65, Soul Ash). The
+  check `godot --headless res://tools/ossuary_check.tscn -- --autotest` covers
+  prices, gates, the migration, Refund all and the co-op loadout (temp files only;
+  CI runs it in the Graveyard job; `--shot=PATH [--phone]` saves a screenshot).
+- **New options and Dominion** (Ossuary expansion step 3, GDD §15.0 "Ossuary new
+  options and Dominion"): sideways upgrades, small values, **8,560** Soul Ash in all
+  (everything in the trees is now **43,145**, plus 375 for the Oath). Each has its
+  own levels only (no deep levels, no difficulty gates):
+
+  | Tree | New upgrades (per level, levels, cost) |
+  |---|---|
+  | Necromancy | **Bone Reserve**: a summon replaced after falling rises with a barrier of 3% of its max HP per level (10% before the balance batch) (3, 120→380) · **Commander's Presence**: +1% minion damage per distinct summon class you command (3, 130→410; needs Sharpened Bones II) |
+  | Shadowcraft | **Echo Weaving**: spell echoes (Volleys) start at spell Lv 2 instead of 3 (1, 600; needs Umbral Potency II) · **Dark Tithe**: a kill not dealt by a summon charges the ultimate meter +25% more (3, 120→380) |
+  | Survival | **Last Rites**: the first time a hit leaves you under 25% HP, 0.5 s of invulnerability per level (3, 150→450; 1 s per level before the balance batch) · **Grave Ward**: start every run with a ward that blocks one whole hit (1 level, 250; needs Bone Mail I; a second level was dropped by the balance batch) |
+  | Fortune | **Gilded Chests**: 15% per level that a chest draw is weighed against a second draw and the one nearer its peak (the higher level) is kept (3, 140→430) · **Elite Bounty**: +1 Soul Ash per elite (3, 100→320) · Fate's Thread and Banishing Rite get a **third level** (450 / 520) |
+  | Dominion | **Head Start**: begin the run a level ahead per level, the picks waiting (2, 400→700; co-op: the host's, like the Oath) · **Chosen Vanguard**: the first summon class you raise starts one level higher (1, 450) · **Patient Grave**: your first skip per level hands back a reroll (2, 200→350) |
+
+  **Dominion** is the fifth tree: it opens for buying the first time Grand
+  Inquisitor Seraphine falls (read from the stage records or the Hyper unlock, so
+  older saves that slew her have it at once); before that its tiles are sealed
+  ("Slay the boss of the Sanctum to open Dominion"). Skips were already free and
+  unlimited, so the proposal's "free skip" became Patient Grave. The new upgrades
+  are ordinary `[upgrades]` save keys (no save version bump) and travel in the
+  co-op loadout like every level. `--meta=max` buys them all; `--meta=mid` leaves
+  them out and keeps Fate's Thread / Banishing Rite at 1 (unchanged); with upgrades
+  the autotest adds an `ossuary options:` line.
+- **The Ossuary tabs**: a tab bar over the screen, **Trees · Masteries · Relics ·
+  Offerings · Caskets** (Q / E or LB / RB switch; Back sits at its right end). Trees holds the
+  five tree columns (seven rows each; Dominion's column ends with the Profane Oath
+  tile, Lower Oath and Refund all) over the full-width detail panel. Each other tab
+  is a panel script (`scripts/ui/ossuary_<tab>_panel.gd`: a Control with
+  `refresh()` and a `changed` signal), loaded by path, so a tab whose panel does not
+  exist yet is simply not shown.
+- **Masteries** (Ossuary expansion step 4, GDD §15.0 "Ossuary Masteries"; the Masteries tab): each of the 18 offerable summon classes has a
+  mastery of 3 levels, **+2% max HP and +2% damage per level** (+4% each before the balance batch, docs/ossuary/BALANCE.md) for that class only (190 / 250 / 320 Soul Ash a class,
+  13,680 in all; the Myrmidon Shade joined with Act IV). It opens once you have taken that class to level 5 in any run (older saves open the classes of the
+  summon evolutions they already found); until then its tile is dimmed ("Lv 5") and the detail strip says "Take <class>
+  to level 5 in a run". An evolved form counts as its base class, the Profane Bishop as the better of Mender and Warder.
+  Masteries ride the one summon-stat path (`MetaModifiers.mastery_value()` → `HordeDirector.compute_stats()`), travel in
+  the co-op loadout (`mastery_levels`) and are not touched by Refund all. Save sections `[class_lv5]` and `[masteries]`.
+  `--meta=max` owns every mastery and prints a `masteries:` line; the other profiles own none.
+- **Relics** (Ossuary expansion step 5, GDD §15.0 "Relics and Grave Offerings";
+  data `relic_data.gd`): 15 run-shaping perks bought **once** in the Ossuary's
+  **Relics** tab and **equipped before a run** on the setup screen's **Rites**
+  strip (beside the ultimate picker): **1 slot** from the start, slots 2 and 3
+  cost 1,000 / 1,500. Grave Lantern 400 (chests +1 upgrade, power-ups half as
+  often), Black Banner 250 (soul meter starts half full), Bone Abacus 300 (a
+  free reroll every 5 levels), Hollow Crown 600 (+1 active slot, -10% max HP),
+  Mourner's Bell 300 (elites drop a Grave Feast), Bone Flute 300, Martyr's Nail
+  350, War Drum 350, Shade Cloak 300, Seer's Eye 250, Leaden Shroud 350, Tallow
+  Candle 300; sold only after a feat: Lich's Phylactery 450 (a Lich clear: +1
+  revival, -20% max HP), Deathlord's Seal 550 (a Deathlord clear: +1 of every
+  summon, -15% max HP), Fallen Halo 450 (an act's last stage cleared on Hyper:
+  the meter fills 35% faster). Everything: **8,000** Soul Ash. Relics are kept
+  by Refund all (upgrades only). Effects go through `RelicEffects`, attached to
+  the run's `game.meta` (stats add to the Ossuary stats; a few specials are read
+  where the game applies them). Save: `[relics] owned / slots`, `[prerun] relics`.
+- **Grave Offerings** (step 6a, `offering_data.gd`): one single-run boon per
+  run, chosen on the Rites strip and **paid when the run starts** (nothing is
+  paid if the run never starts; one the balance cannot pay is dropped; Restart /
+  Again / Next start without it): Tithe of Insight 450 (+10% XP), Gilded Coffer
+  500 (a chest beside you at 6:00), Borrowed Relic 550 (a random owned relic in
+  a 4th slot), Blood Vigil 400 (+2 rerolls, +2 banishes), Second Breath 600 (+1
+  revival), War Horn 350 (meter starts full): 40-68% of a good Necromancer run's
+  877. The **Offerings** tab only lists them.
+- In co-op each player's relics and offering travel in his loadout and apply to
+  his own slot; each pays his own offering from his own save. Autotest:
+  `--relics=a,b`, `--offering=ID`; `--meta=max` equips Bone Abacus, Black Banner
+  and Mourner's Bell (all slots); a `rites:` line prints when any is in effect.
+  Badges: `tools/relic_badges.py` (procedural); screenshots in
+  `docs/ossuary/shots/relics/`; `ossuary_check` also checks the relics
+  (`--shot-what=rites|picker|relics|offerings` for screenshots).
+- **Caskets** (the fifth tab; GDD §15.0 "Recolour Caskets (owner request, Oct
+  2026)"): 350 Soul Ash a casket, one skin recolour you do not own yet in each
+  (rarity tiers, a pity casket after nine misses below Epic); the cosmetic gamble
+  that replaced buying recolours. See *Skin recolours and the Recolour Caskets*.
 - **One modifier path.** At run start `Meta.run_modifiers()` turns the
   purchased tiers into a `MetaModifiers` object (`game.meta`). The existing
   stat code reads it in a few places (horde `compute_stats` / `capacity` /
@@ -1689,8 +2698,14 @@ Act II once Act III is open, `EpilogueData.CLOSING["after"]`).
   **meet** them in runs: a spell learned, a summon class raised, a Covenant
   kind slain (soldiers, structures, the Reckoning's Inquisitor, the
   Cathedral Guardian), a boss faced; until then they are dark silhouettes
-  named "Unknown". **Ancient Eye** (Act II) and **Empire** (Act III) list
-  their faction's soldiers, champions and bosses the same way.
+  named "Unknown". **Ancient Eye** (Act II), **Empire** (Act III),
+  **Republic** (Act IV, the Olympian Republic), **Shogunate** (Act V, the
+  Shogunate of the Rising Sun), **Inferno** (Act VI) and **Court** (Act VII,
+  the Sanguine Court) list their faction's soldiers, champions and bosses the
+  same way; **Last Line** (Act VIII) lists its kinds by escalation tier
+  (civilians, gangs, police, SWAT, army, heroes) and its bosses.
+  **Concord** (Act IX) lists its kinds by race (the Brood, the Harvesters,
+  the Vrask, the Luminous) and its bosses.
   **Evolutions follow the recipe rule**: until you obtain
   one it is a "?" with no name, art or hint (it reads the `[recipes]` book).
   Achievements use four new badge icons (`assets/sprites/icons/ach_*.png`).
@@ -1914,6 +2929,17 @@ collapsing arena, the Cathedral Guardian's beam, the Confessor's pillar and shie
 are procedural pixel art made by `python3 tools/covenant_aoe_art.py` and drawn by `CovenantFx`: band
 pieces tiled at 1:1 along the exact danger edge, a hatch tile clipped to the shape row by row, discs baked
 at the radii the game uses, so they stay crisp at any size (GDD §15.0 "Act I enemy AoE art").
+Act III's **ground effects, beams and zones** (orbital strikes, every Empire warning and the shared
+telegraphs on an Act III stage, impact strips, the Death Ray, the laser grid, Shield Gates, furnace
+channels, conveyor belts, the scrap storm veil, Deus's and the Motherboard's hazards) are procedural
+pixel art made by `python3 tools/empire_aoe_art.py` and drawn by `EmpireFx` on the same principles, in
+the Empire's own look: a hex-grid fill, a hazard-striped band with cyan-white ticks, a scan-line timing
+front and targeting brackets (GDD §15.0 "Act III AoE art").
+Act III's missing sprites (the Kill-Drone, the Trojan Swarm Rocket and its exhaust, the Scrap Swarm drones with a
+2-frame rotor strip, the scrap bolt, iron shell, soul round, the Empire's rail slug, Deus missile and mortar shell, the
+Deus Revenant's missile) are hand-built on the grid by `python3 tools/act3_projectiles.py [id]` (the Kill-Drone is one
+AI image); `SpriteBank.draw_flat_frame()` draws a frame of a flat strip; the Scrap Wastes' stage card is data in
+`FrontDoorData.VIGNETTES` (GDD §15.0 "Act III missing sprites").
 
 **Engine motion (tier 0, art pass).** Every unit is still one image, so the engine animates it
 procedurally: a **step bob** matched to its real speed, a small **lean** into the movement, a
@@ -1973,7 +2999,7 @@ snapped to the locked palette, lone-pixel cleanup; `--all` rebuilds every panel 
 | Stage 2 (§8.2, §7.4, §7.5) | The Crimson March: four battle zones on the clock with their own ground and obstacles, outposts, Holy Ward Generators, supply carts, three new Covenant soldiers (Shieldbearer, Banner Bearer, Halberdier) and Marshal Vael with Radiant Cleave, Crusader's Command, Holy Standard, Shieldwall and Last Stand. See *Stage 2* above. |
 | Stage 3 (§8.3, §7.2, §7.4) | The Sanctum of Judgment: four battle zones on the clock (courtyards, golden halls, cloisters, final sanctuary), two sanctified chambers with ward crystals, the Cathedral Guardian miniboss (slams, sweeping beam, its own HUD bar, chest), three optional sacred altars (−6% soldier HP each, one healer fewer for Seraphine), floor corruption, Dawn's Wrath with Sun Paladins, and four new Covenant kinds (Sanctified Sentinel, Radiant Inquisitor with suppression, High Confessor with holy shields and revivals, Sun Paladin). See *Stage 3* above. |
 | Stage 3 boss (§7.5) | Grand Inquisitor Seraphine with her three GDD phases (Divine Judgment, Avatar of the Dawn, The Last Light): radiant fans, delayed holy circles, Templar squads, teleports, healing attendants, rotating holy beams, barrages, constructs, undead suppression, the safe-zone Judgment nova, the collapsing arena and a final guard, the relic shatter and the ending text. She ends the Sanctum of Judgment; `--boss=seraphine` also puts her on any other stage. See *Stage 3 boss* above. |
-| Meta-progression (§9.2, §9.4) | Soul Ash earned every run (kept on death), the Ossuary shop with the four trees (18 upgrades, prerequisites, respec) plus the opt-in Profane Oath, 4 tracked achievements, the Codex (GDD §10.1 Collection / Codex and Achievements), and a versioned save in `user://save.cfg`. See *Meta-progression (Soul Ash)* above. |
+| Meta-progression (§9.2, §9.4) | Soul Ash earned every run (kept on death), the Ossuary shop with five trees (31 upgrades, 13 of them to level 10 behind difficulty gates, the Dominion tree opened by Seraphine, prerequisites, respec, a tab bar) plus the opt-in Profane Oath, 4 tracked achievements, the Codex (GDD §10.1 Collection / Codex and Achievements), and a versioned save in `user://save.cfg`. See *Meta-progression (Soul Ash)* above. |
 | Power-ups, chests, difficulty (§6.1, §8.5) | Six power-up drops with pity timer and despawn, treasure chests that deliver evolutions (the "special elite reward"), the Profane Pact passive and the Profane Oath meta upgrade. See *Power-ups & Profane Pact* above. |
 | Playable characters (§10.2, §11.4) | Twelve characters, one per spell, each with its starting spell, one innate passive and stat modifiers; chosen on the pre-run setup screen, unlocked by reaching Lv 5 with the character's spell, remembered in the save. The Gravecaller is the default and plays exactly like the game before characters. See *Characters* above. |
 | Difficulty levels and run modifiers (§8.4, §8.5, §10.2) | The four GDD difficulty levels and all eight GDD run modifiers, chosen on a pre-run setup screen that shows the total Soul Ash multiplier, remembered in the save and shown on the HUD and end screen. See *Difficulty & run modifiers* above. |
@@ -2058,6 +3084,118 @@ scripts/
                             Act III stubs' placeholder obstacles (Act III)
     empire_ground.gd        The Act III stubs' placeholder floor (the STAGE's "floor": scrap / assembly / citadel)
     empire_report.gd        The autotest's Act III lines (line of fire, lock-on, steel, purge protocol, kinds, stage)
+    pantheon_glyphs.gd      Code-drawn fallbacks of the Olympian Republic's kinds and the Act IV stubs'
+                            placeholder obstacles (Act IV)
+    pantheon_ground.gd      The Act IV stubs' placeholder floor (the STAGE's "floor": sand / marble / asphodel)
+    pantheon_report.gd      The autotest's Act IV lines (divine wrath, phalanx, glory, kinds, stage)
+    shogunate_glyphs.gd     Code-drawn fallbacks of the Shogunate's kinds and the Act V stubs' placeholder
+                            obstacles, the stone lantern (lit sprite at night) and the long dusk shadows (Act V)
+    shogunate_ground.gd     The Act V stubs' placeholder floor (the STAGE's "floor": paddy / castle / gravel)
+    shogunate_report.gd     The autotest's Act V lines (sun's course, the draw, from the shadows, kinds, stage)
+    province_report.gd      The Burning Province's autotest lines (province, province kinds, shuten-doji, kage,
+                            act V spell / passives)
+    province_ground.gd      The Burning Province's zone floors (paddies, bamboo, village, shrine) and paddy water
+    province_glyphs.gd      The Province's fallback glyphs, obstacles, barrels, chains, smoke (Act V)
+    sun_road_glyphs.gd      The Road to the Sun's code-drawn fallbacks (Kitsune, Sohei, Kirin, Amaterasu, obstacles)
+    sun_road_ground.gd      The Road to the Sun's four zone floors (torii road, forest, steps, heaven) (Act V)
+    sun_road_report.gd      The autotest's Road to the Sun lines (stage, kinds, Amaterasu, Black Sun, Bound Oni)
+    ilion_report.gd         The Shores of Ilion's autotest lines (ilion, ilion kinds, polyphemus, achilles,
+                            act IV spell / passives)
+    ilion_ground.gd         The Shores of Ilion's zone floors (beach, camp, gate, walls)
+    ilion_glyphs.gd         The Shores of Ilion's code shapes: boulders, Achilles' fallback, obstacles
+    olympus_ground.gd       Mount Olympus's four zone floors (field, grove, terrace, summit)
+    olympus_glyphs.gd       Code fallbacks of Mount Olympus's obstacles and of Zeus
+    olympus_report.gd       The autotest's Mount Olympus lines (olympus, pantheon trial, olympus kinds,
+                            wrath called, zeus) and the stolen thunder / grounded bones lines
+    underworld_ground.gd    The Asphodel Underworld's four zone floors and the River Styx (Act IV)
+    underworld_glyphs.gd    Its obstacles, Cerberus, Hades and his marks, the Styx (code fallbacks; Act IV)
+    underworld_report.gd    The autotest's Underworld lines (the stage, Cerberus, Hades, River Styx, the Myrmidons)
+    kurogane_ground.gd      Castle Kurogane's four zone floors (bailey, gatehouse, courtyard, keep; Act V)
+    kurogane_glyphs.gd      Code fallbacks of its obstacles, the Shogun and his command platform (Act V)
+    inferno_glyphs.gd       Code-drawn fallbacks of the Inferno's kinds and the Act VI stubs' obstacles; the
+                            Hell Pit, rim, heart and claw textures made once in code (Act VI)
+    inferno_ground.gd       The Act VI stubs' placeholder floor (the STAGE's "floor": ash / velvet / obsidian)
+    inferno_report.gd       The autotest's Act VI lines (hell pits, portals, temptation, kinds, last judgment,
+                            stage)
+    burning_gate_report.gd  The autotest's Burning Gate lines (burning gate, kinds, the Gatekeeper, Moloch) and
+                            the Brimstone / Furnace Heart / Salt Circle lines
+    burning_gate_ground.gd  The Burning Gate's four zone floors (tiles/burning_gate_<style>, Act VI)
+    burning_gate_glyphs.gd  Code-drawn fallbacks of the Burning Gate's obstacles, kinds and Moloch (Act VI)
+    silk_palace_ground.gd   The Palace of Silk and Ash's four zone floors (roses, mirrors, ballroom, chamber; Act VI)
+    silk_palace_glyphs.gd   Its code fallbacks (obstacles, the Lilim Witch, the twins, Lilith) and the thralls'
+                            look (Enthrall: the foe's own art, charmed pink, a heart over it)
+    silk_palace_report.gd   The autotest's Palace lines (the stage, its kinds, Lilith, Temptation, the Succubus,
+                            Faithless)
+    pandemonium_ground.gd   Pandemonium's four zone floors (iron / bridges / cathedral / throne; Act VI)
+    pandemonium_glyphs.gd   Code-drawn fallbacks of Pandemonium's kinds, the Morning Star and its obstacles (Act VI)
+    pandemonium_report.gd   The autotest's Pandemonium lines (pandemonium, kinds, morning star) and the Fall from
+                            Grace / Archfiend lines (Act VI)
+    court_glyphs.gd         Code-drawn fallbacks of the Sanguine Court's kinds (the beast, the mist, the coffin)
+                            and the Act VII stubs' obstacles; the thread and blood-shield textures (Act VII)
+    court_ground.gd         The Act VII stubs' placeholder floor (the STAGE's "floor": moor / fen / castle)
+    court_report.gd         The autotest's Act VII lines (bloodfeast, night wings, blood moon, kinds, endless
+                            feast, stage)
+    ravensmoor_report.gd    The autotest's Ravensmoor lines (ravensmoor, kinds, Old Greymane, Vargr) and the
+                            Moonfang / Pack Blood / Silver Bones lines (Act VII)
+    ravensmoor_ground.gd    Ravensmoor's four zone floors (tiles/ravensmoor_<style>, Act VII)
+    ravensmoor_glyphs.gd    Code-drawn fallbacks of Ravensmoor's obstacles, kinds and Vargr (Act VII)
+    witchwood_ground.gd     The Witchwood's four zone floors and the Fen's pools (tiles/witchwood_<style>, Act VII)
+    witchwood_glyphs.gd     Code-drawn fallbacks of the Witchwood's obstacles, kinds, hex stones, Isolde and the
+                            Fen's water (Act VII)
+    witchwood_report.gd     The autotest's Witchwood lines (witchwood, witch hexes, kinds, the Bog Mother, Isolde)
+                            and the Hex Circle / Moonlit Rite / Embalmed lines (Act VII)
+    castle_sanguis_ground.gd  Castle Sanguis's four zone floors (courtyard / banquet / crypt / throne; Act VII)
+    castle_sanguis_glyphs.gd  Code-drawn fallbacks of Castle Sanguis's kinds, Carmilla, the Elder, the blood fountain
+                            and its obstacles (Act VII)
+    castle_sanguis_report.gd  The autotest's Castle Sanguis lines (castle sanguis, kinds, carmilla) and the Night
+                            Swarm / Blood Spawn item lines (Act VII)
+    city_blocks.gd          THE CITY-BLOCK LAYOUT (Act VIII; owned by Arena as city_blocks): the lot grid, the
+                            one-lookup obstacle_at(), open lots, lane(), the wrecks (add_wreck()), the
+                            street-steering hint street_dir() and the bots' steer()
+    city_ground.gd          The Act VIII stubs' floor, drawn from the CityBlocks geometry (streets, alleys,
+                            crossings, crosswalks, sidewalks, open lots; tiles/city_* when present)
+    city_glyphs.gd          Code-drawn fallbacks of the Last Line's kinds; the buildings (tiles/city_roof_<style>
+                            atlases and roof decals) and wrecks, headlights, the light bar, the Supers' plate and
+                            crack, the landing circles (Act VIII)
+    city_lamps.gd           The slow red pulse of the rooftop antenna lamps in view (Act VIII; visual only, never
+                            headless)
+    skid_row_report.gd      The autotest's Skid Row lines (skid row, tear gas, big sal, don marrow) and the
+                            Hearse Run / Black Car / Kevlar Bones item lines (Act VIII)
+    skid_row_ground.gd      Skid Row's four zone looks over the city blocks: the market stalls, the overpass's
+                            shadow and footings, the precinct's paint (Act VIII)
+    skid_row_glyphs.gd      Code-drawn fallbacks of Skid Row's limo, Big Sal, the bounty board, Don Marrow and the
+                            spectral hearse (Act VIII)
+    city_report.gd          The autotest's Act VIII lines (city blocks, armour, supers, civilians, escalation,
+                            kinds, martial law, stage)
+    concord_ground.gd       The Act IX stubs' placeholder floor (styles ruins / moon / hull; Act IX)
+    concord_glyphs.gd       Code-drawn fallbacks of the Concord's kinds and the stubs' obstacles; the pod's falling
+                            streak, the saucer's tractor cone, the Final Harvest's eye (textures only; Act IX)
+    concord_report.gd       The autotest's Act IX lines (beams, abduction, terraforming, final harvest, concord
+                            kinds, concord stage)
+    crash_site_report.gd    The autotest's Crash Site lines (crash site, burrowers, acid, brood matriarch, hive
+                            mother) and its items (Bone Beetles, Chitin, Anchored; Act IX)
+    crash_site_ground.gd    The Crash Site's four zone floors (tiles/crash_site_<style>, Act IX)
+    crash_site_glyphs.gd    Code-drawn fallbacks of the Crash Site's obstacles and kinds (Act IX)
+    proving_moon_ground.gd  The Proving Moon's four zone floors (tiles/proving_moon_<style>, decals; Act IX)
+    proving_moon_glyphs.gd  Code fallbacks of the Warbeast, Vrask'Tal and his skull belt, and the stage's obstacles (Act IX)
+    proving_moon_report.gd  The autotest's Proving Moon lines (proving moon, warbeast, threats, vrask'tal; the Soul Caster
+                            and passives' item lines; Act IX)
+    ark_ground.gd           The Ark of the Concord's four zone floors (hangar, vaults, reactor, bridge; Act IX)
+    ark_glyphs.gd           Code fallbacks of the Ark's kinds, obstacles and the Harvester; its throne of rings,
+                            Tractor Beam's lift column, the Ghost Saucer's beams (textures only; Act IX)
+    ark_report.gd           The autotest's Ark lines (ark, ark kinds, harvester) and the Tractor Beam / Ghost
+                            Saucer lines (Act IX)
+    fort_kessler_report.gd  The autotest's Fort Kessler lines (the stage, its kinds, Mammoth, the threats, Harrow) and
+                            its items (Bone Mines, Tripwire, Armour-Piercing Bones)
+    fort_kessler_ground.gd  Fort Kessler's floor: CityGround with each zone's look (checkpoints, minefields, aprons,
+                            sandbags)
+    fort_kessler_glyphs.gd  Code fallbacks of General Harrow's art
+    liberty_heights_glyphs.gd  Liberty Heights's textures (the thrown car, the crack decal, Hero's Fist) and
+                            Paragon's code fallback (Act VIII)
+    liberty_heights_report.gd  The autotest's Liberty Heights lines (liberty heights, supers, paragon) and the
+                            Hero's Fist / Fallen Hero lines (Act VIII)
+    kurogane_report.gd      The autotest's Castle Kurogane lines (kurogane, kinds, the General, the Shogun) and
+                            the Banner of the Dead / Warlord's Seal / Unbending lines
     assembly_ground.gd      The Assembly Halls' zone floors (docks, conveyor, fabricator, furnace tiles)
     assembly_glyphs.gd      The Assembly Halls' code drawings: belts, furnace channels, jam fields, arcs, flames,
                             build frames, stamps, claws, the magnet, puppets on soul strings, fallback obstacles
@@ -2097,6 +3235,10 @@ scripts/
     environment_art.gd      Optional floor tiles and obstacle sprites (grid art), falls back to the code floors / glyphs
     skin_glyphs.gd          Cosmetic skins: the skin's art, else the character sprite / glyph with the
                             skin's palette tint, emblem and aura
+    recolour.gd             Skin recolours: the one palette remap of a sprite's pixels (cached per sprite and
+                            recolour; SpriteBank.draw()'s `recolour` parameter)
+    casket_ledger.gd        Recolour Caskets (Meta.caskets): the prize pool, the weighted roll with its pity,
+                            opening (seeded per save and count), wearing a prize; [caskets], [casket_skins]
     ground.gd               Procedural graveyard floor, redrawn only when the camera changes cell
     march_ground.gd         Crimson March floor: the road and each battle zone's look (extends Ground)
     march_glyphs.gd         Crimson March shapes: new soldiers, structures, Marshal Vael, obstacles, corpse piles
@@ -2120,6 +3262,10 @@ scripts/
                             where: menu / pause / results with the run's facts; settings) and the
                             form link (FORM_URL + prefill + URL-encoded report); opens it in the
                             browser (never under the autotest); the Web build's pop-up-safe arming
+                            (arm_link() / open_link(), shared with the demo's Wishlist button)
+    demo_mode.gd            DemoMode: the one path of the demo switch (feature tag `demo` or --demo):
+                            stage / item / character gates, the demo save file, the co-op version,
+                            the title badge, the stage select's call to action, the autotest line
     autotest.gd             Headless self-test driver
   player/necromancer.gd
   player/grave_step.gd      Grave Step dash: charges, obstacle-clamped step, i-frames, shadow trail
@@ -2137,6 +3283,15 @@ scripts/
     seraph_texts.gd         Act II: Fallen Seraph / Fallen Grace / Seraph of Ruin card and autotest text
     behaviors/seraph_behavior.gd  Act II: the Fallen Seraph's feather blades and Dive
     behaviors/golem_behavior.gd   Content wave 2: the Bone Golem's slam, Bulwark plant and growth
+    behaviors/bound_succubus_behavior.gd  Act VI: the Succubus's kiss bolts and charm (Enthrall), Sweet Surrender
+    enthrall.gd             Act VI: THE one path that turns a foe to your side for a while (Temptation, the
+                            Succubus): the thrall, its return, Heartbreaker and Unholy Desire's burst
+    behaviors/archfiend_behavior.gd  Act VI: the Archfiend's Hellfire Cleave (the Prince of Hell's full circle and dread)
+    behaviors/blood_spawn_behavior.gd  Act VII: the Blood Spawn's Bloodthirst (Nosferatu's spill; Thirst Eternal's key)
+    behaviors/fallen_hero_behavior.gd  Act VIII: the Fallen Hero's Hero's Slam (the orbit, the dive on the densest pack;
+                            Black Paragon's stun and chain; Origin Story's key)
+    behaviors/ghost_saucer_behavior.gd  Act IX: the Ghost Saucer's short beams and lifts (EnemyLift); Black
+                            Mothership's three beams and two lifts; Crop Circles' key
     golem_kit.gd            Content wave 2: Ossuary Hunger, the Ossuary Titan's heal, barrier and
                             collapse wall (HordeDirector.golems, created by the first Golem)
     golem_texts.gd          Content wave 2: Bone Golem / Grave Masonry / Ossuary Titan card and
@@ -2217,6 +3372,222 @@ scripts/
                             the Signal Ghost hook
       empire_kit.gd         Base kit: marching fire (bursts through EmpireShots), fire_shot() / fire_arc_at()
       drone_kit.gd, trooper_kit.gd, spotter_kit.gd   The Scout Drone / Kill-Drone, Line Trooper, Spotter
+    shogunate/              The Shogunate of the Rising Sun (Act V): its kits ("<id>_kit.gd", loaded by name
+                            after the Pantheon's) and bosses ("boss_<id>.gd"), and the act's shared rules:
+      shogunate_rules.gd    Game.shogunate: owns the Sun's Course, the Draw and the ambushes, the Endless
+                            Night's quickening, the bot's danger hint (null on Acts I to IV)
+      sun_course.gd         THE SUN'S COURSE: phase() (day / dusk / night / Endless Night) and light_at() from
+                            the clock, stone lanterns, the timeline helper (night kinds only at night), the
+                            night's darkness texture and the dusk tint, the Paper Lanterns hook
+      draw_cuts.gd          THE DRAW: draw(source, from, dir, opts): a white line for 0.8 s, then one cut on
+                            every body on it; max 3, boss override; the Unbending hook
+      sun_road_director.gd  The Road to the Sun: the Kirin's event, guest squads of the other Act V stages
+      boss_amaterasu.gd     Amaterasu: dawn / noon / sunset by her place in the sky (the SunCourse override)
+      amaterasu_hazards.gd  Her mirror beams, sun-disc mines, zenith circles, noon glare and shade, sunset beam
+      kitsune_kit.gd, fox_fire_kit.gd, sohei_kit.gd, kirin_kit.gd  The Road's kinds (fox-fire illusions,
+                            the naginata sweep, the Kirin's gallop / horn / halo)
+      shadow_ambush.gd      FROM THE SHADOWS: ambusher squads from obstacle shadows (or inside the Bone Ring)
+                            after a smoke puff, longer in light; the "ambush" event and segment trickle
+      shogunate_kit.gd      Base kit: the row flags (night, draws, ambusher, ethereal), start_draw(), light()
+      ashigaru_kit.gd, samurai_kit.gd, teppo_kit.gd, ninja_kit.gd, onryo_kit.gd, oni_kit.gd   The shared kinds
+      province_director.gd  The Burning Province: the paddy water (TerrainSlow), the village fires, Shuten-dōji
+                            (night only), No Shadow Unlit (Act V)
+      province_hazards.gd   The Province's fire patches and smoke clouds (sake and village fires; the smoke that
+                            blinds summons through CombatResolver.blind_unit())
+      boss_kage.gd          Kage: shadow clones revealed by light, smoke fields, chained kunai (the compel path)
+      kunoichi_kit.gd, kappa_kit.gd, shuten_doji_kit.gd, kage_clone_kit.gd   The Burning Province's kinds
+      kurogane_director.gd  Castle Kurogane: the General of the Left, the HUD objective of the Shogun's army
+      hatamoto_kit.gd, kiba_kit.gd, general_kit.gd   Hatamoto (banner colour), Kiba-musha (charging lane),
+                            the General of the Left (miniboss: charges through the ring, his riders)
+      boss_shogun.gd        Shogun Kurogane: the command platform (untargetable), his bar = his army, the duel
+                            (iai cuts and the triple cut through DrawCuts' boss override)
+      shogun_regiments.gd   His six regiments: the one count of soldiers left, the march, batches, breaks
+    inferno/                The Inferno (Act VI): its kits ("<id>_kit.gd", loaded by name after the
+                            Shogunate's) and bosses ("boss_<id>.gd"), and the act's shared rules:
+      inferno_rules.gd      Game.inferno: owns the pits, the portals, Temptation and the Last Judgment, the
+                            bot's danger hint and seal point (null on Acts I to V)
+      hell_pits.gd          THE HELL PITS: fixed pits per zone (a seeded cell hash) and telegraphed pits, the
+                            burn through CombatResolver, open_pit() for phase 2, avoid_point() (the ring's one
+                            pit check), the Salt Circle hook
+      demon_portals.gd      THE PORTALS: open() / the "portal" event, squads poured from a table, destroyed or
+                            sealed (3 s in the ring, a Soul Ash bounty), the bot's seek_point()
+      temptation.gd         TEMPTATION (HordeDirector.charm() / break_charms()): the parked summon and its
+                            hostile body, max 3, freed / broken / expired, the Faithless hook
+      last_judgment.gd      The Last Judgment: every portal at once, faster pits, the Adversary's hand
+      inferno_kit.gd        Base kit: the row flags (demon, flier, charmer, damned), try_charm(), a charmer's
+                            death breaks its charms
+      damned_kit.gd, imp_kit.gd, hell_knight_kit.gd, succubus_kit.gd, demon_brute_kit.gd   The shared kinds
+                            (the knight's sweep, the kiss, the brute's slam)
+      demon_portal_kit.gd, charmed_kit.gd   The portal's looping glow; a charmed body's hearts
+      burning_gate_director.gd  The Burning Gate (Act VI): the Gatekeeper's event and objective, Gate Crashed
+      lava_hound_kit.gd, pit_cultist_kit.gd   The Hellhound's trail of small pits; the Pit Cultist's portal rite
+      gatekeeper_kit.gd     The Gatekeeper: chains through the one pull path (pull()), slam, coffles of the damned
+      boss_moloch.gd        Moloch: the swallow (the charm path), fire waves, cracks (open_pit()), the Molten King
+      silk_palace_director.gd   The Palace of Silk and Ash: the Hall of Mirrors' reflections (misdirect()), the
+                            Twin Succubi's event, guest squads
+      lilim_witch_kit.gd, twin_succubus_kit.gd   The Lilim Witch (pits under the ring, portal rites); the Twin
+                            Succubi (charms in turn, the kiss of pain, the rage, the shared miniboss bar)
+      boss_lilith.gd, lilith_hazards.gd   Lilith: charm waves, the kiss and its mark, children, her true form
+      fallen_angel_kit.gd, seraph_general_kit.gd   Pandemonium's kinds: the Fallen Angel's dive (grazed aloft),
+                            the Fallen Seraph General (cleave, feathers, the Fallen Host)
+      pandemonium_director.gd  Pandemonium: the General's event and the guest squads
+      boss_morning_star.gd  The Morning Star: the Angel (sword, light and dark beams), the Beast (slams, pit rings)
+    court/                  The Sanguine Court (Act VII): its kits ("<id>_kit.gd", loaded by name after the
+                            Inferno's) and bosses ("boss_<id>.gd"), and the act's shared rules:
+      court_rules.gd        Game.court: owns Bloodfeast, Night Wings, the Blood Moon and the Endless Feast;
+                            the Silver Bones hooks and the bot's rally hint (null on Acts I to VI)
+      bloodfeast.gd         BLOODFEAST (CombatResolver.damage_unit() / damage_player()): heals through
+                            heal_enemy(), the blood shield (absorb()), Rot / Wither halve it, the red threads,
+                            the Embalmed hook
+      night_wings.gd        NIGHT WINGS: the rule's numbers and counters (the flag is Enemy.flies; the swoop
+                            and the in-flight hits are CourtKit's)
+      blood_moon.gd         THE BLOOD MOON: the clock (is_up(), force(), start_endless()), the red overlay
+                            (a BLEND_MODE_MUL rect) and the HUD line
+      endless_feast.gd      The Endless Feast: the moon never sets, feeding grows, coffins open
+      court_kit.gd          Base kit: the row flags (feeds, flies, werebeast, noble), a flier's swoop, the
+                            in-flight hit rule and the shadow, Silver Bones, the shield ring
+      blood_thrall_kit.gd, vampire_bat_kit.gd, blood_knight_kit.gd, werewolf_kit.gd, vampire_noble_kit.gd
+                            The shared kinds (the turning and the lunge, the drain beam and the mist)
+      court_coffin_kit.gd   The coffin: open_coffin(), nobles released on its own clock
+      ghoul_kit.gd          Ravensmoor's Ghoul: claim_corpse() (the kill path; the corpse is gone for every
+                            raise through Enemy.leaves_corpse()), the run to the corpse and the meal
+      old_greymane_kit.gd   Old Greymane: the howl (WerewolfKit.howl_turn(), a spur), the lunge, the miniboss bar
+      sleeping_coffin_kit.gd  Ravensmoor's sleeping coffin (one noble inside; tells the director when broken)
+      ravensmoor_director.gd  Ravensmoor: the coffin waves (bounty, opened by the moon), Coffin Nails, the ghoul
+                            packs, Old Greymane's event and objective
+      boss_vargr.gd         Vargr: the Hunt (circling, the lunge at the weakest summon), the Turning (the howl,
+                            the leap), the Moon-Eater (the darkness, harder feeding); vargr_dark.gd draws it
+      witch_hexes.gd        The witches' hexes (Act VII, the Witchwood; CourtRules.witch_hexes()): covens of three,
+                            the hex circles (cast_circle()), the hex stones' power and dead ground, the blood pools
+                            (open_pool(), the one pool path)
+      fen_water.gd          FenWater.wade(): the fen's black water slows everyone (TerrainSlow)
+      witchwood_director.gd The Witchwood: the Fen's pools, the hex stones per zone, the Bog Mother's and the covens'
+                            events, The Coven Breaks in the summary
+      crimson_witch_kit.gd, bloated_thrall_kit.gd, hex_stone_kit.gd
+                            The Witchwood's kinds (covens, the burst into a pool, the stone)
+      bog_mother_kit.gd     The Bog Mother (miniboss): her bog, the drag (the one pull path pull()), the mire slam
+      boss_isolde.gd, isolde_sister_kit.gd
+                            Isolde Vane: circles, cauldron bombs, thralls; the three sisters; the Red Moon
+      chiropteran_kit.gd, chiropteran_king_kit.gd, blood_bearer_kit.gd  Castle Sanguis's kinds: the Chiropteran's
+                            stunning shriek, the King's carry-off (the held hook) and great shriek, the bearers
+                            who walk to the kneeling Queen
+      castle_sanguis_director.gd  Castle Sanguis: the Banquet's blood fountains (the one denial check), the King's
+                            event, the guest squads
+      boss_carmilla.gd      Queen Carmilla and the Elder: the Court, the Waking (the Elder's bar fills), the Elder
+    city/                   The Last Line (Act VIII): its kits ("<id>_kit.gd", loaded by name after the Court's)
+                            and bosses ("boss_<id>.gd"), and the act's shared rules:
+      city_rules.gd         Game.city: owns the escalation, Armour, Convoy, the Supers, the civilians, the shells
+                            and Martial Law; armour_mult() (the one front call) and blast() (null on Acts I to VII)
+      escalation.gd         THE ESCALATION: the plain clock of tiers, the banner 10 s ahead, the HUD badge, the
+                            heroes' Supers every 90 s
+      armour.gd             ARMOUR: the front test (CombatResolver.damage_enemy()), the Kevlar Bones hook
+      convoy.gd             The vehicles: the run-over, the wrecks and their explosions, the headlight push
+      super_roster.gd       The Supers: the met list, call_super(), call_next(), the counters
+      civilians.gd          CIVILIANS: the 0:00 crowd, the trickle until the army, their own alive cap
+      city_shells.gd        Every landing circle: the tank's shells, the flashbangs, the artillery
+      martial_law.gd        Martial Law: artillery lines along the streets, the met Supers return (the act's
+                            Supers in turn on a stage that met none)
+      city_kit.gd           Base kit: the row flags (tier, armour_front, vehicle, civilian, super), the facing,
+                            a vehicle's drive (the lane, the turn, the ram, the headlights, the light bar)
+      super_kit.gd          The Supers' base kit: guarded / exposed, expose(), the plate
+      civilian_kit.gd, street_thug_kit.gd, gang_gunner_kit.gd, riot_cop_kit.gd, squad_car_kit.gd,
+      swat_breacher_kit.gd, field_medic_kit.gd, rifleman_kit.gd, tank_kit.gd, blitz_kit.gd, city_wreck_kit.gd
+                            The shared kinds (the flight, the spray, the riot cop's tear gas, the flashbang, the
+                            bursts, the cannon, the dash)
+      skid_row_director.gd  Skid Row: Big Sal's limo and his climb out of the wreck, the Bounty's doubled gangs,
+                            No Witnesses (Act VIII)
+      armoured_limo_kit.gd, big_sal_kit.gd, bounty_board_kit.gd  Skid Row's miniboss (the limo's crew, the
+                            sledgehammer) and Don Marrow's board
+      boss_don_marrow.gd, marrow_cover_kit.gd  Don Marrow: the Bounty, the revolver, the Call's squads, the Last
+                            Stand's limo cover (through Armour) and gold minigun sweeps
+      machine_gunner_kit.gd, attack_helicopter_kit.gd
+                            Fort Kessler's army kinds (the swept fire lane, the strafing runs and rocket pods)
+      fort_kessler_director.gd  Fort Kessler: the Minefields, Mammoth's event, Broken Arrow's HUD countdown
+      minefields.gd         THE MINEFIELDS: hashed mines in the Minefield zone, the trigger, the ring's avoid check
+      mammoth_kit.gd        Mammoth, Fort Kessler's miniboss: two turrets, the largest wreck
+      boss_harrow.gd        General Vance Harrow: the command car and carpet bombing, the power armour, the tank
+                            column, Broken Arrow and its strike
+      atlas_kit.gd, aurora_kit.gd, nightjar_kit.gd  Liberty Heights's Supers (shared rows): Atlas's lift
+                            (CityBlocks.remove_wreck()) and throw, Aurora's flight, blasts and fall, Nightjar's
+                            grapple (the held hook) and landing; each weakness calls expose()
+      conscript_kit.gd      Liberty Heights's army fodder
+      liberty_heights_director.gd  Liberty Heights: the zone Supers (call_next(), promoted to the zone's miniboss),
+                            the guest squads, the cracks of Paragon's craters
+      boss_paragon.gd       Paragon: the Hero (heat vision, the punch's fling), Hope (the roster Supers not yet
+                            killed), No Restraint (the dives, the craters); paragon_sky.gd draws the white sky
+    concord/                The Concord of Stars (Act IX): its kits ("<id>_kit.gd", loaded by name after the
+                            City's) and bosses ("boss_<id>.gd", phase 2), and the act's shared rules:
+      concord_rules.gd      Game.concord: owns the beams, Abduction, Terraforming and the Final Harvest;
+                            burns_ground() (the one burn check, from CombatResolver.damage_enemy()), the Mirror
+                            Bones / Anchored hooks (null on Acts I to VIII)
+      concord_beams.gd      BEAMS: fire() (the one beam path), the aim, the hold and sweep, the reflection (Orb
+                            Shields, barriers), the prism split, the Bone Wall stop (wall_d(), through
+                            EmpireShots.wall_block_t(), Act IX phase 2), the cap, the bot's danger hint
+      abduction.gd          ABDUCTION: lift() (the one call), pick(), carry() (the one place that moves a lifted
+                            summon), the rescue, the summon taken, the cap
+      terraforming.gd       TERRAFORMING: the cells, the pods, seed() (phase 2's call), the heal on live turf,
+                            burn()
+      final_harvest.gd      The Final Harvest: the mothership's eye (the eye beams, the sky overlay), the cap lifted
+      concord_kit.gd        Base kit: the row flags (race, beam, abducts, cloak, heals_on_turf), the beam fire, the
+                            Night Wings test for fliers, the Lumen shield
+      broodling_kit.gd, grey_drone_kit.gd, saucer_kit.gd, vrask_hunter_kit.gd, lumen_sentinel_kit.gd, prism_kit.gd,
+      concord_terraformer_kit.gd  The shared kinds (the probe, the hover and tractor beam, the cloak and lock, the
+                            sweep, the Star-Seer's glint, the pod's roots)
+      acid_pools.gd         THE ACID PATH (Game.concord.acid, Act IX, the Crash Site): lob() (arcing globs with a
+                            landing telegraph), the burning puddles (summons and the necromancer, never enemies)
+      burrower_kit.gd, acid_spitter_kit.gd
+                            The Brood's shared soldiers: the dig, the tunnel (untargetable, ethereal), the mound,
+                            the burst; the acid lob
+      crash_site_director.gd The Crash Site: the crater's seeded turf, INFESTATION (lay_egg(), the one egg path;
+                            on_concord_death() and clear_egg(), CombatResolver's two hooks), Nothing Hatched, the
+                            Brood Matriarch's event
+      brood_egg_kit.gd, brood_matriarch_kit.gd
+                            The Infestation egg (the 6 s count, the hatch) and the miniboss (the egg sacs)
+      boss_hive_mother.gd   The Hive Mother: the Brood (egg waves, burrowers), the Burrow (dive, mound, eruption),
+                            the Flight (acid rain)
+      proving_moon_director.gd  The Proving Moon: the Warbeast's event, the Last Trophy objective (Act IX)
+      warbeast_kit.gd       The Warbeast: the pounce (x the low gravity), its plates (flat armour), the XP burst
+      boss_vrask_tal.gd     Vrask'Tal: the Stalk (the cloak, the ring-edge prey, the skulls), the Duel (the leap over
+                            the ring), the Last Trophy (the 20 s countdown, the bomb)
+      ark_director.gd       The Ark: the Specimen Vaults' tanks and the Reactor's vents (structure windows), the
+                            wrecks, the Luminous Archon's event, the objective lines (Act IX)
+      grey_overseer_kit.gd, luminous_archon_kit.gd, specimen_tank_kit.gd, vault_beast_kit.gd, reactor_vent_kit.gd,
+      reap_emitter_kit.gd   The Ark's kinds: the pulse (stun_unit()) and shields, the Archon's beams (boss
+                            override), the freed beasts (prey(): the one check of whom they attack), the vents'
+                            Terraforming.seed(), the Reaping's lifts (Abduction.lift())
+      boss_harvester.gd     The Harvester: the Council (swarms, the cloak, beams), the Reaping (emitters, the cap
+                            lifted), the Gardener (rings of turf, adds)
+    pantheon/               The Olympian Republic (Act IV): its kits ("<id>_kit.gd", loaded by name after the
+                            Eye's and the Empire's) and bosses ("boss_<id>.gd"), and the act's shared rules:
+      pantheon_rules.gd     Game.pantheon: owns the wrath, the Phalanx and Glory, the one front test
+                            hit_from_front(), the bot's danger hint (null on Acts I to III)
+      divine_wrath.gd       WRATH OF THE GODS: one scheduler (waves / lightning / fissures) hitting both armies,
+                            the Twilight of the Gods after 0:00, Grounded Bones (per target slot), and the
+                            gods' public strike(kind, at, overrides) entry (Act IV, Mount Olympus)
+      olympus_director.gd   Mount Olympus: the Pantheon Trial (the gods' arrivals, the miniboss bar, the
+                            trial cleared) and Artemis's moonlit groves
+      god_kit.gd            Base of the trial's gods: a third of Zeus's HP (boss scaling), the miniboss bar,
+                            a boss's walk, the XP burst; ares_kit.gd, artemis_kit.gd, poseidon_kit.gd
+      boss_zeus.gd          Zeus: storms (through DivineWrath.strike()), the thunderbolt beam, the colossal form
+      olympus_hits.gd       The gods' lane and circle hits (Ares's charge, the trident, the beam, the stomp)
+      centaur_kit.gd, amazon_kit.gd, gorgon_kit.gd, moon_hound_kit.gd, sea_serpent_kit.gd   Mount Olympus's kinds
+                            the Twilight of the Gods after 0:00, the Grounded Bones hook
+      underworld_director.gd  The Asphodel Underworld: the River Styx (slow the living, the dead forget),
+                            Cerberus, guest squads (Act IV)
+      cerberus_kit.gd / cerberus_head_kit.gd  Cerberus, his three heads and their three attacks
+      shade_hoplite_kit.gd / tartarus_warden_kit.gd  The Underworld's dead hoplites; Hades' ring of the dead
+      boss_hades.gd / hades_hazards.gd  Hades: the Helm of Darkness, the Reclaiming (the Claims path), Lord of
+                            the Dead, the gods' shades, the kneeling finale
+      phalanx.gd            PHALANX: shield walls lock (3+ within 28 px), one pace, front / flank hits, the
+                            bronze shield line, the Bronze Breaker hook
+      glory.gd              GLORY: heroes' stacks on summon kills, the chest and Soul Ash payout
+      pantheon_kit.gd       Base kit: the facing, the lock state, the row flags (bronze, phalanx, hero, fodder)
+      shade_kit.gd, hoplite_kit.gd, hero_kit.gd, titan_kit.gd   Shade of the Dead, Hoplite, Hero, Bronze Titan
+      ilion_director.gd     The Shores of Ilion: siege towers rolling for the walls (garrison, bounty), Polyphemus
+      legionary_kit.gd, wolf_kit.gd, cyclops_kit.gd   Legionary (the testudo's roof), Wolf of Rome (packs, lunges),
+                            Cyclops (boulders on landing circles)
+      polyphemus_kit.gd, siege_tower_kit.gd   Polyphemus the Cyclops (miniboss), the siege tower's look
+      boss_achilles.gd      Achilles, the Unkillable: the heel (directed_hit_mult), lunges, the Myrmidons, the rage
       assembly_director.gd  The Assembly Halls: conveyor belts (push through TerrainSlow), fabricators (build,
                             thin the waves, Cold Assembly), furnace channels, the Beta Build event
       arc_engineer_kit.gd, juggernaut_kit.gd, fabricator_kit.gd, beta_build_kit.gd, motherboard_turret_kit.gd
@@ -2272,9 +3643,12 @@ scripts/
   pickups/chest.gd, chest_manager.gd       Pooled treasure chests and their drop rules
   pickups/chest_beacon.gd   Chest beacon: chevrons over the chests, ground glow, edge-arrow layout, autotest counts
   audio/sfx.gd              Autoload: audio buses, pooled voices with per-sound and global voice limits
-                            (score loops: "Below the Tide", "Iron Requiem"; the Act III sound pack, lazy)
+                            (score loops: "Below the Tide", "Iron Requiem", "Hymn of Bronze",
+                            "The Setting Sun"; the Act III, Act IV (`PANTHEON_SOUNDS`) and Act V
+                            (`SHOGUNATE_SOUNDS`) sound packs, lazy, seeds per pack)
   audio/synth.gd            Procedural sound and music synthesis (no audio files)
-  audio/run_loop_synth.gd   The in-run music loop's recipe as a list of small jobs (run at once, or over frames)
+  audio/run_loop_synth.gd   The in-run music loop's recipe as a list of small jobs (run at once, or over frames;
+                            scores add pulse / hits / arp (Act III) and drums / horn (Act IV) jobs)
                             (a score adds a tolling bell, or Act III's pulse, metallic hits and arpeggio)
   audio/startup_synth.gd    Web build: renders the sound bank and the run loop in per-frame steps (no threads)
   audio/menu_theme_synth.gd Main menu theme renderer: wavetable choir, music box, bell, harp, reverb (chunked);
@@ -2294,6 +3668,7 @@ scripts/
   fx/tide_water.gdshader    Gullhaven: the water, foam, seawall lip and surge drawn from the same test as TideDirector
   fx/sharp_pixel.gdshader   The sharp-pixel filter: grid pixel art (and the pixel fonts) crisp at any window scale
   fx/covenant_fx.gd         CovenantFx: the Covenant's area-effect pixel art (shared telegraphs, holy ground, Seraphine's hazards): tiles along edges, clipped hatch rows, baked discs
+  fx/empire_fx.gd           EmpireFx: Act III's ground effects, beams and zones as pixel art in the Empire's look (hex fill, hazard band, scan line, targeting brackets; code fallback)
   fx/flat_silhouette.gdshader  Pixel art as one flat colour (the Codex's unmet entries), sharp-pixel sampling
   ui/                       hud, level_up_panel, pause_menu, end_screen, main_menu,
                             debug_overlay, hud_bar, icon_glyph, ui_theme, settings_menu,
@@ -2414,6 +3789,109 @@ scripts/
     death_ray_data.gd       Act III: Death Ray / Event Horizon fixed rules (sweep start, sparks, drawing)
     empire_rules_data.gd    Act III's shared rules: LINE_OF_FIRE, SHOT_STYLES, LOCK_ON (+ Signal Ghost hook),
                             STEEL (Grave Gunners), PURGE (orbital strikes)
+    pantheon_enemy_data.gd  The Olympian Republic's shared kinds (Shade of the Dead, Hoplite, Hero, the
+                            Twilight's Bronze Titan) and the bronze / phalanx / hero / fodder flags (Act IV)
+    ilion_enemy_data.gd     The Shores of Ilion's kinds: Legionary (testudo), Wolf of Rome (packs), Cyclops,
+                            Polyphemus, the Siege Tower (olympus_ / underworld_enemy_data.gd: the other stages')
+    achilles_data.gd        Act IV: Achilles, the Unkillable (arrival, the heel table, lunges, the Myrmidons, the rage)
+    paris_arrow_data.gd     Act IV: Paris's Arrow / Arrow of Fate fixed rules (first volley, the strike from behind, drawing)
+    ilion_enemy_data.gd     Each Act IV stage's own kinds (olympus_ / underworld_enemy_data.gd likewise; empty
+                            until phase 2)
+    olympus_enemy_data.gd   Mount Olympus's kinds: the Centaur Archer, Amazon, Gorgon, the hounds, the sea
+                            serpent and the trial's gods (Ares, Artemis, Poseidon)
+    zeus_data.gd            Zeus's arrival, phases and numbers; the gods' HP share
+    stolen_thunder_data.gd  Stolen Thunder's fixed rules, Titan's Blood's and the Oathbreaker's keys
+    pantheon_rules_data.gd  Act IV's shared rules: WRATH (waves, lightning, fissures + Grounded Bones hook),
+                            TWILIGHT, PHALANX (+ Bronze Breaker hook), GLORY, the SOUNDS map
+    shogunate_enemy_data.gd The Shogunate's shared kinds (Ashigaru, Samurai, Teppo Gunner, Ninja, Onryō, Oni)
+                            and the night / draws / ambusher / ethereal flags (Act V)
+    province_enemy_data.gd  Each Act V stage's own kinds (kurogane_ / sun_road_enemy_data.gd likewise); the
+                            Province's: the Kunoichi, the Kappa, Shuten-dōji, Kage's shadow clones
+    kage_data.gd            Kage's arrival, clones, smoke fields, chained kunai and phases (Act V)
+    hundred_shadows_data.gd Hundred Shadows / Thousand Shadows fixed rules and the one spell-source test (Act V)
+    shogunate_rules_data.gd Act V's shared rules: SUN (+ Paper Lanterns hook), ENDLESS_NIGHT, DRAW (+ Unbending
+                            hook), AMBUSH, the volley beat, the SOUNDS map
+    stages/province_stage.gd       Act V stages: the Burning Province (built: zones, paddies, timeline, PROVINCE), Castle Kurogane and the Road to the Sun;
+    stages/kurogane_stage.gd       act 5, "shogunate": true, the Sun's Course timeline, the Endless Night
+    stages/sun_road_stage.gd       Reckoning, placeholder floors / obstacles / boss scripts, zone names
+    inferno_enemy_data.gd   The Inferno's shared kinds (the Damned, Imp, Hell Knight, Succubus, Demon Brute),
+                            the demon portal and the charmed body; the demon / flier / charmer / damned flags (Act VI)
+    burning_gate_enemy_data.gd  The Burning Gate's kinds: Hellhound (lava_hound), Pit Cultist, the Gatekeeper
+                            (silk_palace_ / pandemonium_enemy_data.gd: the other Act VI stages' own kinds)
+    moloch_data.gd          Moloch's arrival and fight: swallow, fire waves, cracks, the Molten King (Act VI)
+    brimstone_data.gd       Brimstone / Rain of Fire rules, Furnace Heart and Salt Circle keys, Stoker key (Act VI)
+    inferno_rules_data.gd   Act VI's shared rules: PITS (+ Salt Circle hook), PORTALS, TEMPTATION (+ Faithless
+                            hook), LAST_JUDGMENT, the SOUNDS map
+    stages/burning_gate_stage.gd   Act VI stubs: the Burning Gate, the Palace of Silk and Ash and Pandemonium;
+    stages/silk_palace_stage.gd    act 6, "inferno": true, zones, pits / portals overrides, a timeline of the
+    stages/pandemonium_stage.gd    shared kinds with portal events, the Last Judgment, placeholder floors / bosses
+    court_enemy_data.gd     The Sanguine Court's shared kinds (Blood Thrall, Vampire Bat, Blood Knight, Werewolf,
+                            Vampire Noble) and the coffin; the feeds / flies / werebeast / noble keys (Act VII);
+                            the Witchwood's block: the Crimson Witch and the Bloated Thrall
+                            (ravensmoor_ / witchwood_ / castle_sanguis_enemy_data.gd: each stage's own;
+                            Ravensmoor's: Old Greymane and the sleeping coffin; the Ghoul is a shared row)
+    vargr_data.gd           Vargr's arrival and fight (the Hunt, the Turning, the Moon-Eater) (Act VII)
+    moonfang_data.gd        Moonfang / Wolf of the Red Moon rules, Pack Blood and Silver Bones keys, Hunter's
+                            Moon key (Act VII)
+    harrow_data.gd          General Harrow's arrival and fight (Command, the Hammer, Broken Arrow and its strike)
+                            (Act VIII, Fort Kessler)
+    bone_mines_data.gd      Bone Mines / Killing Ground rules, Tripwire keys, Sapper's Hands key (Act VIII; the
+                            spell node is abilities/spells/bone_mines.gd)
+    court_rules_data.gd     Act VII's shared rules: BLOODFEAST (+ Embalmed / Silver Bones keys), NIGHT_WINGS,
+                            BLOOD_MOON, ENDLESS_FEAST, the SOUNDS map
+    concord_enemy_data.gd   The Concord of Stars' shared kinds (Broodling, Grey Drone, Saucer, Vrask Hunter, Lumen
+                            Sentinel, the Star-Seer) and the landing pod; the race / beam / abducts / cloak /
+                            heals_on_turf keys; the Final Harvest's kind and companions (Act IX)
+                            (crash_site_ / proving_moon_ / ark_enemy_data.gd: each stage's own, empty until phase 2)
+    ark_enemy_data.gd       The Ark's own kinds: the Luminous Archon, the specimen tank, the freed beast, the
+                            reactor vent, the Reaping emitter (Act IX; the Grey Overseer is a shared row)
+    harvester_data.gd       The Harvester's arrival, phases and numbers (Act IX)
+    tractor_lift_data.gd    Tractor Beam / Abduction rules, Starseed keys, Deserter's Signal key (Act IX; the
+                            spell node is abilities/spells/tractor_lift.gd, the lift helper abilities/enemy_lift.gd)
+    concord_rules_data.gd   Act IX's shared rules: RACES, BEAMS and BEAM_STYLES, ABDUCTION, TERRAFORMING,
+                            FINAL_HARVEST, the SOUNDS map, the Mirror Bones / Anchored keys
+    stages/crash_site_stage.gd     Act IX stubs: the Crash Site, the Proving Moon and the Ark of the Concord; act 9,
+    stages/proving_moon_stage.gd   "concord": true, zones, the "terraforming" overrides, a timeline of the shared
+    stages/ark_stage.gd            kinds of all four races, the Final Harvest, placeholder floors / bosses; the
+                                   Proving Moon reads "gravity" (ConcordRules.gravity())
+    proving_moon_enemy_data.gd  The Proving Moon's table: the Warbeast (Act IX)
+    vrask_tal_data.gd       Vrask'Tal's arrival and numbers (the Stalk, the Duel, the Last Trophy and its bomb)
+    soul_caster_data.gd     Soul Caster / Apex Predator rules, Trophy Rack keys, First Blood key (Act IX; the spell
+                            node is abilities/spells/soul_caster.gd)
+    stages/ravensmoor_stage.gd     Act VII stubs: Ravensmoor, the Witchwood and Castle Sanguis; act 7,
+    stages/witchwood_stage.gd      "court": true, zones, the "moon" overrides, a timeline of the shared kinds,
+    stages/castle_sanguis_stage.gd the Endless Feast, placeholder floors / bosses (the Witchwood built: four
+                                   zones, the Fen, hex stones, covens, the Bog Mother, Isolde; Act VII phase 2)
+    witchwood_enemy_data.gd The Witchwood's own kinds: the Bog Mother, Isolde's sisters, the hex stone (Act VII)
+    witch_hex_data.gd       The witches' covens, hex circles, hex stones and blood pools (Act VII)
+    isolde_data.gd          Isolde Vane's arrival and fight (Act VII)
+    witch_circle_data.gd    Hex Circle / Witches' Sabbath / Moonlit Rite / Hedge Lore / Embalmed ids and rules
+    hades_data.gd           Hades' arrival, fight, god-shade list (GOD_SHADES) and ending (Act IV)
+    amaterasu_data.gd       Amaterasu's arrival, fight, sky per phase (SKY) and ending (Act V)
+    morning_star_data.gd    The Morning Star's arrival, two phases (the Angel, the Beast) and ending (Act VI)
+    fall_from_grace_data.gd Fall from Grace / Lightbringer / Pride / Second Fall rules (Act VI)
+    carmilla_data.gd        Queen Carmilla and the Elder: arrival, three phases and ending (Act VII)
+    night_swarm_data.gd     Night Swarm / Nocturne / Old Blood / Half-Blood rules (Act VII)
+    skid_row_enemy_data.gd  Skid Row's own kinds: Big Sal's Armoured Limo, Big Sal, the bounty board (Act VIII)
+    don_marrow_data.gd      Don Marrow's arrival and fight (the Bounty, the Call, the Last Stand) (Act VIII)
+    hearse_run_data.gd      Hearse Run / Funeral Procession / Black Car / Last Ride / Kevlar Bones ids and rules
+                            (Act VIII)
+    paragon_data.gd         Paragon, the Last Hero: arrival, three phases and ending (Act VIII)
+    heros_fist_data.gd      Hero's Fist / Doomsday / Secret Identity / Back From the Dead rules (Act VIII)
+    black_sun_data.gd       Black Sun / Eclipse of Heaven rules, Stolen Dawn keys, Night Prayer key (Act V)
+    lilith_data.gd          Lilith's arrival, fight (charm waves, the kiss, children, her true form) (Act VI)
+    tempt_data.gd           The Enthrall path and Temptation / Unholy Desire rules, Velvet Chains keys,
+                            Heartbreaker key (Act VI)
+    silk_palace_enemy_data.gd   The Palace's kinds: the Lilim Witch, the Twin Succubi (Act VI)
+    sun_road_enemy_data.gd  The Road to the Sun's kinds: Kitsune, fox fire, Sohei, the Kirin (Act V)
+    river_styx_data.gd      River Styx / Lethe's Flood rules, Ferryman's Toll keys, the Ferrywoman's innate (Act IV)
+    kurogane_enemy_data.gd  Castle Kurogane's kinds: Hatamoto, Kiba-musha, the General of the Left (Act V)
+    shogun_data.gd          Shogun Kurogane: arrival, fight, the six REGIMENTS and the march (Act V)
+    banner_data.gd          Banner of the Dead / Hundred Banners rules, Warlord's Seal and the Ronin's keys (Act V)
+    stages/ilion_stage.gd          Act IV stubs: the Shores of Ilion, Mount Olympus and the Asphodel Underworld;
+    stages/olympus_stage.gd        act 4, "pantheon": true, their wrath kind, the Twilight of the Gods
+    stages/underworld_stage.gd     Reckoning, placeholder floors / obstacles / timelines / boss scripts, zone names
+                                   (the Underworld is built: zones, the Styx, timeline, UNDERWORLD, Hades)
     stages/wastes_stage.gd         Act III stages: the Scrap Wastes (built: zones, timeline, WASTES), the Assembly Halls
     stages/assembly_stage.gd       and the Iron Citadel; act 3, "empire": true, "Iron Requiem", the Purge
     stages/citadel_stage.gd        Protocol Reckoning, placeholder floors / obstacles / timelines / boss scripts
@@ -2452,6 +3930,8 @@ scripts/
     epilogue_data.gd        The epilogue's parts, paragraphs, picture panels and pans, closing card,
                             layout and slide timings
     confirm_data.gd         The confirm dialogs' texts and sizes
+    demo_data.gd            The demo build: its acts, the lockable items it keeps open, "Full game",
+                            the badge / call-to-action words, STORE_URL, the save and co-op suffixes
     feedback_data.gd        The feedback form: FORM_URL and DETAILS_ENTRY (empty = no Feedback
                             buttons), the report's words and length cap, the button sizes and icon
     summon_evolution_data.gd Summon evolution recipes (Death Knight, Lich, Profane Bishop,
@@ -2473,6 +3953,7 @@ scripts/
     aoe_art_data.gd         Player AoE art pieces, burst recipes, spacing, opacity and tier densities (AoeArt)
     marker_art_data.gd      Pixel-art keys and placement of the world markers, overlays and spell props (rally pennant, ice shell, brands, corpses, bone walls, boulders)
     covenant_fx_data.gd     Keys and drawing numbers of the Covenant's area-effect art (CovenantFx)
+    empire_fx_data.gd       Keys and drawing numbers of Act III's ground-effect, beam and zone art (EmpireFx)
     boss_pose_data.gd       Which attack-pose sprite each stage boss shows per attack phase
     view_data.gd            Camera zoom levels (Normal / Close) and the player's ground marker
     ui_art_data.gd          The UI kit and logo (9-slice margins, crests), pixel font sizes, the type tiers
@@ -2507,6 +3988,11 @@ scripts/
     skin_data.gd            Per-character (CharacterData) default / Hyper / achievement skins, the
                             universal Untouchable / Deathlord skins, unlock rules,
                             palette fallbacks (tint, accent, glow, emblem)
+    recolour_data.gd        Skin recolours (Bone, Blood, Abyss, Gilded, Verdant): the hue / saturation /
+                            value numbers, which four each skin offers (won from Caskets, no prices)
+    casket_data.gd          Recolour Caskets: the price (350), rarity tiers and weights, which tier each
+                            recolour is in, the pity rule; how to add a casket-only skin
+    casket_ui_data.gd       The Caskets tab: layout, reveal timing, sounds, words
     stance_data.gd          The Bone Ring: leash / recall / pull overrides, ring radii and spacing,
                             the switched-off flavour bonus
     character_data.gd       Playable characters: starting spell, innate (text + numbers), stats, art key,
@@ -2560,6 +4046,21 @@ targets that are already expected to die. Menders and Bishops do the same with
 `data/`. Per-run levels, timers and live instances belong to the
 directors and managers.
 
+### Tools: the game inventory
+
+`docs/INVENTORY.md` (and its browsable page with sprite thumbnails) lists everything in the game: every act and stage,
+boss, enemy kind, spell and evolution, passive, summon class, character, skin, achievement, Ossuary upgrade and the
+planned content. It is generated from the data files, so rebuild it after content lands (no Godot, no network):
+
+```bash
+tools/rebuild_inventory.sh <out-dir>     # out-dir: any folder outside the repo
+```
+
+That runs `tools/inventory_extract.py` (data files to `model.json`), `tools/inventory_render.py` (sections, the plain
+page and `docs/INVENTORY.md`) and `tools/make_inventory_page.py` (the final `necropathy_inventory.html` with lazy
+thumbnails). The hand-written parts (boss phase lists, each act's shared-rule summary, the planned-content section) are
+marked in `inventory_render.py`; update them when an act is added.
+
 ---
 
 ## Headless verification / autotest
@@ -2601,9 +4102,17 @@ Options (after `--`):
 | `--spells=a,b,...` | Any policy first takes these spells (ids from `AbilityData.SPELL_ORDER`, e.g. `bone_spear,soul_siphon,corpse_explosion,plague_cloud` or the later `death_mark,bone_wall,soul_chains` / `wither,raise_dead`) and their evolution passives, which also get ×8 card weight in hands and chests so they are offered reliably (a test-only hook; without `--spells` the draw is unchanged), never banishes them, and stops taking other new actives (or passives) once the free slots are down to the forced spells (or passives) still missing plus one spare, because chests can fill slots too (a hand with nothing else is rerolled or skipped). The `army`, `evolve` and `summon` bots never take a new item that is not on their build list (they reroll or skip), so the newer spells and the later summon classes do not change those baselines (`--classes` / `--spells` items are exempt); the `summon` and `army` bots also keep active slots free for the core classes they still lack (summon: Warriors, Mages, Menders, Warders; army: those plus Archers). Use it to exercise a spell and reach its evolution. |
 | `--passives=a,b,...` | Any policy first takes these passives (ids from `PassiveData.ORDER` except the Pact, e.g. `unholy_precision,unholy_resilience` or `blood_scent,mournsong,siegecraft`) exactly like the `--spells` items (score, ×8 card weight, slot reservation, never banished), so a passive's effect can be exercised. |
 | Bone Golem (content wave 2) | `--classes=bone_golem,...` and `--passives=grave_masonry` force the locked Golem and its passive. A run that had either prints a `bone golem` line: `absorbed=<n> max_growth=<%> bulwarks=<n> titan=<bool> bone_bastion_prevented=<dmg>`, then its level, alive / capacity, deaths, damage by source (slams with their volleys, splash, the Titan's wall), slams and slam hits, planted seconds, taunts, Grave Masonry's level and damage prevented, the Titan's heal, barriers and walls, and whether Bone Bastion was active. |
-| `--stage=ID` | Stage to play: `graveyard` (default), `crimson_march`, `sanctum`, the Act II stages `harbour`, `archive` and `spire`, or the Act III stubs `wastes`, `assembly` and `citadel`. Stage locks are ignored. Act II runs print a `dread` line (peak, average, end, Dread calmed by kills, seconds per 25-Dread step, Dread by source) and a `claims` line (claims, Thralls freed, expired, still risen at the end, refusals by the cap, claims by class). Gullhaven adds `tide` (level, seawall, High Water, surges and shoves, seconds in water for you / summons / enemies / swimmers), `harbour` and `harbour events` (buoys sunk and when, tolls, wave and trickle size, caches and chests, the Harbourmaster), `harbour kinds` / `harbour tricks` (also on any stage where a Harbour kind spawned, e.g. `--spawn=deep_kin@60x3`), `merrow` (when he is the boss, also `--boss=merrow`), `act II spell` (Undertow when learned) and `act II passives` (Salt of the Deep, Brinewalker). |
+| `--stage=ID` | Stage to play: `graveyard` (default), `crimson_march`, `sanctum`, the Act II stages `harbour`, `archive` and `spire`, the Act III stages `wastes`, `assembly` and `citadel`, the Act IV stages `ilion`, `olympus` and `underworld`, the Act V stages `province`, `kurogane` and `sun_road`, the Act VI stages `burning_gate`, `silk_palace` and `pandemonium`, the Act VII stages `ravensmoor`, `witchwood` and `castle_sanguis` (the summary adds the `bloodfeast`, `night wings`, `blood moon`, `court kinds`, `endless feast` and `court stage` lines; `--boss=vargr\|isolde\|carmilla`), the Act VIII stages `skid_row`, `fort_kessler` and `liberty_heights` (city blocks; the summary adds the `city blocks`, `armour`, `supers`, `civilians`, `escalation`, `city kinds`, `martial law` and `city stage` lines; `--boss=don_marrow\|harrow\|paragon`; `--spawn=` takes `civilian`, `street_thug`, `gang_gunner`, `riot_cop`, `squad_car`, `swat_breacher`, `field_medic`, `rifleman`, `tank`, `blitz` and `city_wreck`, Skid Row's `armoured_limo`, `big_sal` and `bounty_board`, and Fort Kessler's `machine_gunner`, `attack_helicopter` and `mammoth`; Skid Row adds `skid row` (Big Sal, the Bounty, No Witnesses), `tear gas`, `big sal` and `don marrow` lines, Fort Kessler adds the `fort kessler`, `fort kessler kinds`, `mammoth`, `fort kessler threats` (top summon-damage and summon-death sources) and `harrow` lines, and on any stage `act VIII spell` / `act VIII passives` when Hearse Run, Black Car, Kevlar Bones, Bone Mines, Tripwire or Armour-Piercing Bones were taken), or the Act IX stages `crash_site`, `proving_moon` and `ark` (see *Act IX* above). Stage locks are ignored. Act II runs print a `dread` line (peak, average, end, Dread calmed by kills, seconds per 25-Dread step, Dread by source) and a `claims` line (claims, Thralls freed, expired, still risen at the end, refusals by the cap, claims by class). Gullhaven adds `tide` (level, seawall, High Water, surges and shoves, seconds in water for you / summons / enemies / swimmers), `harbour` and `harbour events` (buoys sunk and when, tolls, wave and trickle size, caches and chests, the Harbourmaster), `harbour kinds` / `harbour tricks` (also on any stage where a Harbour kind spawned, e.g. `--spawn=deep_kin@60x3`), `merrow` (when he is the boss, also `--boss=merrow`), `act II spell` (Undertow when learned) and `act II passives` (Salt of the Deep, Brinewalker). |
 | (the Hollow Archive) | `--stage=archive` adds `archive` (tomes burned and when, Nothing Unwritten, seconds in ink / spores, the orrery's risings, turns and pushes, the Librarian), `archive rifts` (opened and when, closed early, closed by themselves, cultists spat out) and `archive events` lines; any Archive kind adds `archive enemies` (spawned / killed per kind), `archive kits` (curses, wraith rises and dives, spore clouds and their summon damage, mass splits, Librarian beams, summons turned, lashes, kills) and `archive hazards`; the Archivist adds `archivist` (phase times, kill time, pages and their hits, Footnotes and the damage wasted on copies, Erasure steps and pushes); Forbidden Verse adds `act ii spells`, Marginalia / Iron Mind `act ii passives`. `--spawn=` takes `scribe`, `ink_wraith`, `spore_pilgrim`, `gibbering_mass`, `librarian`, `archive_rift`, `unwritten_one`; `--boss=archivist`; `--character=heretic_scribe`. |
 | (Act III) | `--stage=wastes\|assembly\|citadel` (the Act III stubs) prints `line of fire` (shots fired, rails, arcs; stopped by summons, absorbed by barriers, stopped by Bone Walls, Orb intercepts; reached you and the damage; expired, capped, peak), `lock-on` (lines painted on you / on summons, refused at the cap, fired, cancelled by a slain Spotter, rails stopped by summons or reaching you, most lines at once), `steel` (machine and cyborg kills, Grave Gunners raised per raising effect, their damage and kills), `purge protocol` (orbital salvos and strikes, hits), `empire kinds` (spawned / killed and damage per kind), `empire stage` and `ranged share` (the share of Empire spawns that attack from range; every Act III stage). The Empire's lines also print on any stage where an Empire kind was forced: `--spawn=scout_drone@60x10,line_trooper@90x6,spotter@120`. Grave Gunners need a raising effect, e.g. `--spells=death_mark` or `--ultimate=grave_tide`; `--boss=kestrel\|motherboard\|deus_ex_machina`. The Scrap Wastes (`--stage=wastes`) adds `wastes` (pylons raised / destroyed and when, the share of shooter reach samples boosted, shrunk or storm-halved, storms, the Trojan Horse, objective Soul Ash), `wastes kinds` (Aegis shield blocks and breaks, mortar shells, rockets launched / intercepted / hitting you / shot down, decoys; also wherever a Wastes kind was forced, e.g. `--spawn=aegis_bot@60x6,mortar_walker@90x2,trojan_horse@120`), `trojan horse` and `kestrel` (when she is the boss, also `--boss=kestrel`). On any stage, `act III spell` (Death Ray when learned, e.g. `--spells=death_ray`) and `act III passives` (Conductive Marrow, Lead-Lined Bones, e.g. `--passives=lead_lined_bones`). |
+| (Act IV) | `--stage=ilion\|olympus\|underworld` (the Act IV stubs) prints `divine wrath` (the stage's kind; salvos and strikes per kind: waves, bolts, fissures; damage to enemies with the kills, to summons and to you; fodder drowned, lightning chains, corpses swallowed, shades spat, capped strikes, whether the Twilight began), `phalanx` (walls formed, bodies locked, front hits by shots and melee with the damage prevented, flank breaks, most bodies locked at once), `glory` (stacks gained, the peak, heroes killed and with how many stacks, chests and Soul Ash bounty), `pantheon kinds` (spawned / killed and damage per kind) and `pantheon stage`. The lines also print on any stage where a Pantheon kind was forced: `--spawn=hoplite@60x8,hero@90,shade_of_dead@30x12,bronze_titan@120`; `--boss=achilles\|zeus\|hades` (placeholder boss scripts until phase 2). |
+| (the Shores of Ilion) | `--stage=ilion` adds `ilion` (siege towers rolled / destroyed and when / reached the walls / rolling, garrison spilled and marched out, Polyphemus, objective Soul Ash), `ilion kinds` (testudo shots and boulders cut, wolf packs, packmates, lunges and hits, cyclops throws, boulders and hits; also wherever an Ilion kind was forced, e.g. `--spawn=legionary@60x6,wolf_of_rome@90,cyclops@120x2,siege_tower@150,polyphemus@180`), `polyphemus` and `achilles` (front / flank / back / heel / undirected hits, staggers, lunges, the Myrmidon guard, the rage, killed from behind; also `--boss=achilles`). On any stage, `act IV spell` (Paris's Arrow when learned, e.g. `--spells=paris_arrow`) and `act IV passives` (Mortal Heel, Bronze Breaker, e.g. `--passives=bronze_breaker`). |
+| (Act IV) | `--stage=ilion\|olympus\|underworld` (the Act IV stubs) prints `divine wrath` (the stage's kind; salvos and strikes per kind: waves, bolts, fissures; damage to enemies with the kills, to summons and to you; fodder drowned, lightning chains, corpses swallowed, shades spat, capped strikes, whether the Twilight began), `phalanx` (walls formed, bodies locked, front hits by shots and melee with the damage prevented, flank breaks, most bodies locked at once), `glory` (stacks gained, the peak, heroes killed and with how many stacks, chests and Soul Ash bounty), `pantheon kinds` (spawned / killed and damage per kind) and `pantheon stage`. The lines also print on any stage where a Pantheon kind was forced: `--spawn=hoplite@60x8,hero@90,shade_of_dead@30x12,bronze_titan@120`; `--boss=achilles\|zeus\|hades` (placeholder boss scripts until phase 2). Mount Olympus (built) adds `olympus` and `olympus events` (each god's arrival and fall, the groves, the trial), `pantheon trial` (Ares's war-cries, enemies buffed, charges, impalings; Artemis's volleys, hounds, teleports; Poseidon's floods, tridents, serpents), `olympus kinds` (centaurs, Amazon leaps and catches, Gorgon gazes and summons petrified, sea serpent lunges), `wrath called` (the gods' DivineWrath.strike() calls) and `zeus` (storms, beams, the Storm Throne and true form times, stomps); the gods and kinds can be forced anywhere (`--spawn=ares@60,artemis@90,poseidon@120,gorgon@30x2`), and on every stage `stolen thunder` / `grounded bones` print when used (`--character=oathbreaker`, `--passives=grounded_bones`). |
+| (Act V) | `--stage=province\|kurogane\|sun_road` (the Act V stubs) prints `sun's course` (when day, dusk, night and the Endless Night began; stone lanterns lit; ambushes revealed in light; night groups held back by day and night kinds activated by day, both 0 on a stub; Reckoning enemies quickened), `the draw` (lines drawn and on you, cuts, refused at the cap, cancelled by a slain drawer, most at once; bodies cut: you and each summon class; damage to summons and to you; dodged by the bot), `from the shadows` (squads and units, appeared, capped, inside the Bone Ring, obstacle shadow spots, revealed in light, the average warning), `shogunate kinds` (spawned / killed, first appearance and damage per kind; samurai draws, teppo shots, ninja shuriken, oni smashes and summons stunned) and `shogunate stage`. The Draw and kind lines also print on any stage where a Shogunate kind was forced (the Sun's Course stays day there): `--spawn=samurai@60x6,ninja@90x4,oni@120,onryo@30x10`; `--boss=kage\|shogun\|amaterasu` (placeholder boss scripts until phase 2). |
+| (Act V, the Burning Province) | `--stage=province` adds `province` (the paddy checks and slows, the kappa left unslowed, the village fires and their burns, Shuten-dōji, the lanterns lit toward No Shadow Unlit), `province kinds` (Kunoichi smokes, summons blinded and lunges; Kappa grapples; sake and village fires; smoke clouds), `shuten-doji` and `kage` (splits, clones revealed by light / faded / killed, smoke fields, kunai hooks and pulls, phases); `act V spell` / `act V passives` print when Hundred Shadows, Hidden Hand or Paper Lanterns was taken (e.g. `--spells=hundred_shadows --passives=paper_lanterns`, `--character=grave_kunoichi`). `--spawn=kunoichi@60x2,kappa@90x4,shuten_doji@120` works on any stage; `--boss=kage`. |
+| (Castle Kurogane) | `--stage=kurogane` adds `kurogane` (the General of the Left's arrival and fall), `kurogane kinds` (Hatamoto spawned and killed, aura pulses, Kiba-musha charges and their hits; also wherever a Kurogane kind was forced, e.g. `--spawn=hatamoto@60,kiba_musha@90x4,general_left@120`), `general of the left` (charges and hits, riders called, rage, kill time) and `shogun` (the bar, each regiment's order and fate, soldiers sent / killed / fled / lost, other kills taken off the bar, banners broken, when he came down, his guard, iai and triple cuts, Regiments Broken; also `--boss=shogun`). On any stage, `act V spell` (Banner of the Dead when learned, e.g. `--spells=banner_of_the_dead`) and `act V passives` (Warlord's Seal, Unbending, e.g. `--passives=unbending`). |
+| (Act VI) | `--stage=burning_gate\|silk_palace\|pandemonium` (the Act VI stubs) prints `hell pits` (pits opened: timed, Last Judgment, opened by kinds; refused; the most fixed pits live and the zone at the end; burns; damage to summons, to you, to enemies; pit kills and the damned burned), `portals` (opened, destroyed, sealed with the times and the Soul Ash bounty, standing at the end; squads and units poured, capped), `temptation` (charms, the most at once, broken by the charmer's death, expired, freed by breaking the body, refused at the cap; damage by charmed summons to summons and to you; by class), `inferno kinds` (spawned / killed, first appearance and damage per kind; knight sweeps, succubus kisses, brute slams), `last judgment` (after 0:00: portals opened, pits, the Adversary's grabs and their hits) and `inferno stage`. The army bot seals portals (it walks into a ring when its army holds and it is calm). The portal, temptation and kind lines also print on any stage where an Inferno kind was forced (the pits stay off there): `--spawn=succubus@60x2,demon_portal@90,hell_knight@120x4`; `--boss=moloch\|lilith\|morning_star` (placeholder boss scripts until phase 2). |
+| (Pandemonium) | `--stage=pandemonium` adds `pandemonium` (guest squads, objective Soul Ash) and its event log, `pandemonium kinds` (Fallen Angel dives and hits, blows grazed aloft / taken landed, spear pits; the Fallen Seraph General's cleaves, feathers, hits, pits, the Fallen Host and time to kill; also wherever they were forced, e.g. `--spawn=fallen_angel@60x3,seraph_general@120`) and `morning star` (the Beast's time, sword / beams / slams / pit rings, damage by attack). On any stage `fall from grace` (Fall from Grace / Lightbringer, Pride, Second Fall) and `archfiend` (the Archfiend / Prince of Hell, cleaves, dreads, Crown of Horns) print when used. |
 | (Assembly Halls) | `--stage=assembly` adds `assembly` (fabricators destroyed / placed / planned and when, soldiers built and capped, the wave and trickle thinning, Cold Assembly, the Beta Build, objective Soul Ash), `assembly floor` (seconds carried by belts for you / summons / enemies, furnace flares, furnace hits and damage per side), `assembly events`, `assembly kinds` (Arc Engineer repairs and jams, Juggernaut flames and flat armour, the Beta Build's swipes, rivets, patching and kill time) and `motherboard` (grabs, hurls, stamps, magnet pulls, turret builds, turrets and their shots, when Full Load and Overclock began, its damage). Reward lines print when owned: `hollow puppet` (`--spells=hollow_puppet`), `class grave_drone` (`--classes=grave_drone`), `signal ghost` (`--passives=signal_ghost`) and `marionette` (`--character=marionette`). `--spawn=arc_engineer@60x4,juggernaut@120x2,beta_build@180` works on any stage. |
 | (the Iron Citadel) | `--stage=citadel` adds `citadel` (gates raised / broken / locked down, garrison spawns, wall pushes, laser cycles and their hits on you, summons and enemies, citadel gun salvos, strikes and hits, turrets placed / destroyed / left behind, guests, objective Soul Ash), `citadel events`, `citadel kinds` (Duelist lunges: blocked / reached you / summons sliced; turret bursts; Valkyrie 2.0: spawned, killed and time to kill, dashes (blocked, hit you), bashes, storms, summon hits) and, when it fought, `deus ex machina` (phase times, plates broken, chaingun / salvo / footfall / stomp counts and hits, drones launched and downed, exposures, lances and their blocked ticks, hangars, pulses, teleports, machines gone dark, damage to you by attack). On every stage, `scrap swarm` (level, damage, kills, bolts, kill drones, peak drones, orbit radius; Machine Soul's bonus damage) and `iron revenant` (level, damage by source, bursts, shells, salvos, missiles; Recoil Frame) print only when used. |
 | `--unlocks=all\|none` | `all` lets every lockable Act II item (UnlockData) be offered; `none` (default) is a fresh save's card pool. Items forced by `--spells` / `--passives` / `--classes` are open either way. It opens the card pool only, never the achievement rewards (ultimates, titles, skins). |
@@ -2625,14 +4134,17 @@ Options (after `--`):
 | `--adaptive=off\|N` | Adaptive quality (`AdaptiveQuality`, drawing only): `off` keeps the adaptive level at 0, `N` (0-3) pins it; by default it adapts as in a player's run and prints a `[visual] adaptive quality:` line (not an `[autotest]` line: it follows wall-clock frame times). |
 | `--art-misses` | Art audit (debug, drawing only): `ArtMissLog` records every sprite key `SpriteBank` / `EnvironmentArt` looks up without a PNG (stills, walk / idle strips, icons, effect strips, markers, decals, floor tiles), dropping the probes another key answered (`enemies/` / `structures/` / `eye/` / `empire/` for one kind, `_2` / `_3` variants), and the unit bodies drawn without a walk strip; prints them sorted by count as `[art-miss]` lines at the end (never `[autotest]` lines). Meaningful only in a window (headless skips `_draw()`), e.g. under `xvfb-run` with `--rendering-driver opengl3 --resolution 1280x720`. |
 | `--art-shots=T,...` | Art audit (debug, drawing only): in a window, saves the screen at each game second T as `<--shot-dir>/art_<T>.png` (needs `--shot-dir=DIR`; a fractional T keeps its tenth, `art_0300.4.png`). |
+| `--movie-spans=T:N,...` | Promo clips (`MovieSpans`, window + `--write-movie` only; `tools/make_promo_clip.py`): the run fast-forwards with drawing off and plays at x1 only for N game seconds from each game second T, printing `[movie] span` frame marks, then quits after the last span. Does nothing when not passed. |
 | `--synergies=off` | A/B switch: no army synergy ever activates (the four original ones and the newer classes' nine). Every summary has a `synergy bonus` line (per newer synergy: the hits its mark bonus raised and the damage it added; the Baying frenzies; staggered / swooped marks; Death from Above dash resets; the seconds Requiem stretched), marked "(synergies off)" with this switch. |
 | `--spawn=k@T[xN],...` | Test hook: force-spawns N (default 1) enemies of kind `k` at T game seconds, in an arc on the spawn ring, on any stage (any kind id of `EnemyData`, `MarchEnemyData`, `BattleSisterData` or `SanctumEnemyData`), e.g. `--spawn=sanctified_sentinel@120x3,high_confessor@180x2,cathedral_guardian@300` or `--spawn=battle_sister@60x6`. When a Sanctum kind spawned, the summary adds `sanctum ...` lines (spawned / killed per kind; Sentinel sweeps and flat armour absorbed; Inquisitor zones and suppressions with the horde's suppression counters; Confessor heals, shields, revives and cancelled revives; Paladin ward pulses and damage prevented; Guardian slams, beams, kills, time to kill and chests). When a Sister of the Scourge spawned, a `battle sister` line adds her spawns and kills, lashes, lash hits on summons and on you, bodies per lash, zeal surges, and her lash and contact damage to you and to summons. |
 | `--character=ID` | Playable character (`character_data.gd`): `gravecaller` (default, today's game), `umbral_warden`, `voidcaller`, `bone_oracle`, `fallen_confessor`, `carrion_lord`, `plague_scholar`, `doomsayer`, `barrow_warden`, `soulbinder`, `wither_witch` or `grave_herald` (locks are bypassed; an unknown id is refused with an error and the Gravecaller plays). For any character but the Gravecaller, `army` / `evolve` / `summon` swap its starting spell (and that spell's evolution passive) into Shadow Bolt's (and Soul Conduit's) build priority and never banish them. The summary's `character` line reports the starting spell's final level, the stats, the innate's counters (projectiles destroyed, echo bursts and damage, shards grown / hits blocked, summon corpses and their bursts, grace healing, contagion spreads, Ill Omen slows, Stonebone wall seconds, Conductor extra jumps, Creeping Rot applications, Restless extra seconds) and the characters the run unlocked. Combines with `--classes=`, `--spells=`, `--passives=`, `--hyper` and `--skin=`. |
 | `--ultimate=ID` | The ultimate (`ultimate_data.gd`): `dread_rally` (default, today's game), `sovereigns_decree`, `eclipse` or `grave_tide`; locks are bypassed. The bots cast it with the Dread Rally rule; the header names it and an `ultimate` line follows the unchanged `dread rally` line: casts, Decree time, enemies taunted, summon damage prevented, hits on the necromancer ignored (and their damage); Eclipse foes frozen, bosses slowed, foes exposed and the exposure's bonus damage; Grave Tide Risen raised, capped, their damage and kills. |
 | `--hyper` | Hyper mode (`HyperData`: enemy HP / damage growth ×2, stage boss HP ×1.5, Soul Ash +100%), bypassing the Seraphine unlock. Every summary has a `hyper` line (on / off, the effective growth and boss HP, the 0:00 multipliers vs the standard game, the Hyper Soul Ash line, seconds survived past 0:00, the unlock and Hyper-clear state, in memory only without `--meta-save`). |
 | `--victory-preview` | Debug (with or without `--autotest`): skips the menu, raises a small army and after 6 game seconds ends the run as a scripted victory (83 s past 0:00, the boss slain, four evolutions, seven chests; `VictoryData.PREVIEW_*`), so the last stand and the victory card can be seen and screenshot at once; `--stage=`, `--difficulty=`, `--character=`, `--hyper` and `--skin=` apply. Nothing is saved. Every victory's summary has a `victory screen` line: `title=<stage title> best_overtime=<s> new_record=<bool> highlights=<n>` (the card's logic runs headless; under the autotest the Best starts from an empty in-memory record). |
+| `--demo` | Demo mode (`DemoMode`, `DemoData`), as in the **Web Demo** build: only Act I is playable (an autotest `--stage=` outside it plays the Graveyard) and no full-game item is ever offered or unlocked. Works with or without `--autotest` (a desktop preview of the demo's menus). Every summary has a `demo` line: `on=<bool> \| acts=1 \| stages=graveyard,crimson_march,sanctum \| save=<file> \| full_game_offers=<n>` (NEW cards offered this run that are not demo items; 0 in every `--demo` run). |
 | `--feedback-url=URL`, `--feedback-entry=ID` | Debug: use `URL` as the feedback form's link (and `ID`, e.g. `entry.123456789`, as its prefilled field) instead of `FeedbackData.FORM_URL` / `DETAILS_ENTRY`, so the Feedback buttons show and their open path can be tried with a dummy link before the owner's form exists. Never opens anything under the autotest. Every summary ends with a `feedback` line: `url_set=<bool> \| report_chars=<menu>/<pause>/<results>` (three sample reports built headless, at most 1500 characters each) `\| url_chars=<n> \| opened=never (autotest)`. |
 | `--skin=ID` | Forces a skin (a `SkinData` id, e.g. `dread_sovereign`, `gravecaller_hyper`, `plague_doctor`, `wither_witch_hyper`, or a universal one such as `gravecaller_untouchable` / `brine_widow_deathlord`), ignoring its unlock and character, for screenshots. Cosmetic only. Every summary has a `skins` line (the worn skin and whether its art exists or the palette fallback is drawn, this run's and the lifetime skin counters, skins unlocked and new ones) and builds the setup screen's Hyper / skin row once, headless. |
+| `--recolour=ID` | Forces a skin recolour (`bone`, `blood`, `abyss`, `gilded` or `verdant`, `RecolourData`) on the worn skin, ignoring ownership, for screenshots. Cosmetic only. Adds a `recolours` summary line (the family, its casket rarity, the sprite remapped); default runs print nothing new. |
 | `--modifiers=a,b` | Run modifiers (GDD §8.5): any of `endless_crusade`, `hardened_faith`, `divine_fury`, `purge_the_unholy`, `scarcity`, `frail_master`, `vengeful_dead`, `holy_retribution`, or `all`. The summary adds a `difficulty` line (level, modifiers and every effective multiplier, the Soul Ash parts) and a `difficulty results` line (the difficulty and modifier Soul Ash lines, trickle elites promoted, Holy Retribution bursts and their damage, the starting max HP). |
 
 Setting the environment variable `NECROPATHY_AUTOTEST=1` (or the pre-rename `GRAVEBOUND_AUTOTEST=1`) is the same as `--autotest`.
@@ -2771,10 +4283,13 @@ uptime.
 time, and everything that ships waits for all of them (GDD §15.0 "Parallel CI and lean testing": about 8-10 minutes from a push to
 the live build instead of about 30):
 
-1. **test:** seven parallel jobs, one per playthrough. Each imports the project with Godot 4.3 headless and runs one
-   full 20-minute autotest: the Graveyard with the naive and the army policy, the Crimson March
-   (`--stage=crimson_march`), the Sanctum (`--stage=sanctum --policy=army`) and each Act II stage with the army
-   policy (`--stage=harbour`, `archive`, `spire`) (`--quit-after 15000`, at most 10-15 wall-clock minutes per run).
+1. **test:** twenty-five parallel jobs, one per playthrough. Each imports the project with Godot 4.3 headless and runs
+   one full 20-minute autotest: the Graveyard with the naive and the army policy, the Crimson March
+   (`--stage=crimson_march`), the Sanctum (`--stage=sanctum --policy=army`) and each stage of Acts II and IV-IX with the
+   army policy (`--stage=harbour`, `archive`, `spire`, `ilion`, `olympus`, `underworld`, `province`, `kurogane`,
+   `sun_road`, `burning_gate`, `silk_palace`, `pandemonium`, `ravensmoor`, `witchwood`, `castle_sanguis`, `skid_row`,
+   `fort_kessler`, `liberty_heights`, `crash_site`, `proving_moon`, `ark`) (`--quit-after 15000`, at most 10-15
+   wall-clock minutes per run).
    A job fails on any `SCRIPT ERROR`, `ERROR:` or `WARNING:` line, or if its run doesn't complete; one failure does
    not cancel the others. Logs: `test-logs-<id>`.
 2. **export:** builds single-file Windows and Linux executables using `export_presets.cfg` (game data is embedded in
@@ -2787,6 +4302,8 @@ the live build instead of about 30):
    and on a manual run of `main`, pushes the Web build to a separate public repository that GitHub Pages serves.
    **publish-pages** (optional, off by default) deploys it to this repository's own Pages instead. itch.io
    publishing was dropped (owner decision, Oct 2026: GDD §15.0 "GitHub Pages is the web home").
+   **export-web-demo** (optional, off by default: repository variable `WEB_DEMO` = `true`) exports the **Web Demo**
+   preset and uploads it as the `Necropathy-web-demo` artifact, publishing nothing (see *Demo mode* above).
 
 To publish a downloadable release, bump `config/version` in `project.godot` (shown on the main menu) and the
 `application/*_version` fields in `export_presets.cfg`, write the player-facing notes in

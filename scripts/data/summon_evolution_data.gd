@@ -67,7 +67,21 @@ const ORDER := ["death_knight", "lich", "profane_bishop",
 	# --- Act III: the Assembly Halls ---
 	"wraith_drone",
 	# --- Act III: the Iron Citadel ---
-	"deus_revenant"]
+	"deus_revenant",
+	# --- Act IV: the Asphodel Underworld ---
+	"legion_of_tartarus",
+	# --- Act V: the Road to the Sun ---
+	"oni_lord",
+	# --- Act VI: the Palace of Silk and Ash ---
+	"lilim_matriarch",
+	# --- Act VI: Pandemonium ---
+	"prince_of_hell",
+	# --- Act VII: Castle Sanguis ---
+	"nosferatu",
+	# --- Act VIII: Liberty Heights ---
+	"black_paragon",
+	# --- Act IX: the Ark ---
+	"black_mothership"]
 
 ## Summon skill level every base class needs (user rule: Lv 5).
 const BASE_LEVEL_REQUIRED: int = 5  # TUNING (not in GDD) user rule
@@ -736,6 +750,243 @@ const EVOLUTIONS := {
 			"salvo_range": 340.0,  # TUNING (not in GDD) px
 			"salvo_radius": 40.0,  # TUNING (not in GDD) px
 			"salvo_fraction": 2.5,  # TUNING (not in GDD) x one shell
+		},
+	},
+	# --- Act IV: the Asphodel Underworld ---
+	# Legion of Tartarus (owner-approved proposal: "Myrmidon Shades (evolution
+	# Legion of Tartarus)"; GDD §15.0 "Myrmidon Shades, Legion of Tartarus and
+	# Myrmidon Oath"): Myrmidon Shade Lv 5 + Myrmidon Oath Lv 5 (a NEW passive,
+	# own decision, owner rule: maxed). The Myrmidons come back from Tartarus in
+	# black bronze: MyrmidonBehavior reads these special_set keys (final, not
+	# suffix-scaled):
+	#   wall_cut      — share of every hit a Myrmidon in a locked wall no longer takes;
+	#   pierce_count  — foes behind the struck one the spear runs through;
+	#   grip_slow / grip_time — every foe the spear strikes is slowed this much
+	#                   for this long (the grip of Tartarus).
+	"legion_of_tartarus": {
+		"mode": "transform",
+		"bases": ["myrmidon_shade"],
+		"passive": "myrmidon_oath",
+		"passive_level": 5,  # Owner rule: every evolution needs its paired passive maxed
+		"display_name": "Legion of Tartarus",  # Owner-approved proposal
+		"plural": "Legionaries of Tartarus",
+		"icon": "legion_of_tartarus",
+		"description": "The wall returns from Tartarus: harder shields, a spear through two more foes, and a grip that slows.",
+		"mult": {
+			"max_hp": 1.4,  # TUNING (not in GDD)
+			"damage": 1.3,  # TUNING (not in GDD)
+		},
+		"set": {
+			"radius": 11.0,  # TUNING (not in GDD) Myrmidons are 10
+			"block_mass": 4.5,  # TUNING (not in GDD) a heavier wall (Myrmidons 3.5)
+		},
+		"special_set": {
+			"wall_cut": 0.45,  # TUNING (not in GDD) (base 0.3)
+			"pierce_count": 2,  # TUNING (not in GDD) (base 1)
+			"grip_slow": 0.3,  # TUNING (not in GDD)
+			"grip_time": 1.0,  # TUNING (not in GDD) s
+		},
+	},
+	# --- Act V: the Road to the Sun ---
+	# The Oni Lord (owner-approved proposal: "the Oni ... evolution Oni Lord";
+	# GDD §15.0 "The Bound Oni, the Oni Lord and Oni's Resolve"): Bound Oni Lv 5 +
+	# Oni's Resolve Lv 5 (a NEW passive, own decision, owner rule: maxed). A
+	# great horned oni in bone chains broken loose, a kanabō studded with
+	# soul-teal iron. OniBehavior reads these special_set keys (final):
+	#   quake_radius   — px of the QUAKE the smash sends out around the blow
+	#                    (every foe in it struck for quake_fraction of the smash
+	#                    and knocked back, not stunned);
+	#   quake_fraction — share of the smash the quake deals.
+	"oni_lord": {
+		"mode": "transform",
+		"bases": ["bound_oni"],
+		"passive": "onis_resolve",
+		"passive_level": 5,  # Owner rule: every evolution needs its paired passive maxed
+		"display_name": "Oni Lord",  # Owner-approved proposal
+		"plural": "Oni Lords",
+		"icon": "oni_lord",
+		"description": "The chains break: a lord of the oni whose smash shakes the ground around it.",
+		"mult": {
+			"max_hp": 1.4,  # TUNING (not in GDD)
+			"damage": 1.3,  # TUNING (not in GDD)
+		},
+		"set": {
+			"radius": 17.0,  # TUNING (not in GDD) Bound Oni 15
+			"block_mass": 10.0,  # TUNING (not in GDD) Bound Oni 7
+		},
+		"special_set": {
+			"quake_radius": 92.0,  # TUNING (not in GDD) px
+			"quake_fraction": 0.5,  # TUNING (not in GDD)
+		},
+	},
+	# --- Act VI: the Palace of Silk and Ash ---
+	# The Lilim Matriarch (owner-approved Act VI proposal: "the Succubus ...
+	# evolution Lilim Matriarch"; GDD §15.0 "The Succubus, the Lilim Matriarch
+	# and Sweet Surrender"): Succubus Lv 5 + Sweet Surrender Lv 5 (a NEW passive,
+	# own decision, owner rule: maxed). A winged demon matriarch in broken bone
+	# chains, four horns and a bone crown, soul-teal eyes. BoundSuccubusBehavior
+	# reads these special_set keys (final):
+	#   charm_targets — foes each charm turns (the first and the nearest others);
+	#   charm_spread  — px around the first foe the others must stand within.
+	"lilim_matriarch": {
+		"mode": "transform",
+		"bases": ["bound_succubus"],
+		"passive": "sweet_surrender",
+		"passive_level": 5,  # Owner rule: every evolution needs its paired passive maxed
+		"display_name": "Lilim Matriarch",  # Owner-approved proposal
+		"plural": "Lilim Matriarchs",
+		"icon": "lilim_matriarch",
+		"description": "The chains break: a mother of demons whose kiss turns two foes at once.",
+		"mult": {
+			"max_hp": 1.35,  # TUNING (not in GDD)
+			"damage": 1.3,  # TUNING (not in GDD)
+		},
+		"set": {
+			"radius": 12.0,  # TUNING (not in GDD) Succubus 10
+		},
+		"special_set": {
+			"charm_targets": 2,  # TUNING (not in GDD)
+			"charm_spread": 90.0,  # TUNING (not in GDD) px
+		},
+	},
+	# --- Act VI: Pandemonium ---
+	# The Prince of Hell (owner-approved proposal: "the Archfiend ... evolution
+	# Prince of Hell"; GDD §15.0 "The Archfiend, the Prince of Hell and Crown of
+	# Horns"): Archfiend Lv 5 + Crown of Horns Lv 5 (a NEW passive, own decision,
+	# owner rule: maxed). Four great wings, a crown of spikes between its horns,
+	# a cleaver wreathed in soul-fire. ArchfiendBehavior reads these special_set
+	# keys (final):
+	#   cleave_arc     — degrees each side: 180, the sweep is a full circle;
+	#   dread_cut      — share (0..1) every foe it strikes deals less, for
+	#   dread_duration — s (CombatResolver.weaken_enemy(), the one debuff path;
+	#                    bosses and minibosses ArchfiendBehavior.DREAD_BOSS of it).
+	"prince_of_hell": {
+		"mode": "transform",
+		"bases": ["archfiend"],
+		"passive": "crown_of_horns",
+		"passive_level": 5,  # Owner rule: every evolution needs its paired passive maxed
+		"display_name": "Prince of Hell",  # Owner-approved proposal
+		"plural": "Princes of Hell",
+		"icon": "prince_of_hell",
+		"description": "A crowned prince of the Pit: its cleave sweeps all around it, and those it strikes cower.",
+		"mult": {
+			"max_hp": 1.4,  # TUNING (not in GDD)
+			"damage": 1.3,  # TUNING (not in GDD)
+		},
+		"set": {
+			"radius": 17.0,  # TUNING (not in GDD) Archfiend 15
+			"block_mass": 10.0,  # TUNING (not in GDD) Archfiend 7
+		},
+		"special_set": {
+			"cleave_arc": 180.0,  # TUNING (not in GDD) a full circle
+			"dread_cut": 0.25,  # TUNING (not in GDD) its foes deal 25% less
+			"dread_duration": 3.0,  # TUNING (not in GDD) s
+		},
+	},
+	# --- Act VII: Castle Sanguis ---
+	# Nosferatu (owner-approved proposal: "Blood Spawn ... evolution Nosferatu";
+	# GDD §15.0 "The Blood Spawn, Nosferatu and Thirst Eternal"): Blood Spawn Lv
+	# 5 + Thirst Eternal Lv 5 (a NEW passive, own decision, owner rule: maxed).
+	# Tall, bald and rat-fanged, long clawed fingers, a black coat. They drink
+	# deeper, and the blood they cannot hold spills to the most wounded summon
+	# near them. BloodSpawnBehavior reads these special_set keys (final):
+	#   drink_share  — share of each blow's damage it heals (Blood Spawn 0.3);
+	#   spill_share  — share of the heal past its full health given on;
+	#   spill_radius — px within which the most wounded other summon gets it
+	#                  (not scaled by special area: special_set is final).
+	"nosferatu": {
+		"mode": "transform",
+		"bases": ["blood_spawn"],
+		"passive": "thirst_eternal",
+		"passive_level": 5,  # Owner rule: every evolution needs its paired passive maxed
+		"display_name": "Nosferatu",  # Owner-approved proposal
+		"plural": "Nosferatu",
+		"icon": "nosferatu",
+		"description": "Ancient blood-drinkers: they drink deep, and the blood they cannot hold feeds your other dead.",
+		"mult": {
+			"max_hp": 1.4,  # TUNING (not in GDD)
+			"damage": 1.3,  # TUNING (not in GDD)
+		},
+		"set": {
+			"radius": 11.0,  # TUNING (not in GDD) Blood Spawn 10
+		},
+		"special_set": {
+			"drink_share": 0.45,  # TUNING (not in GDD)
+			"spill_share": 0.6,  # TUNING (not in GDD)
+			"spill_radius": 90.0,  # TUNING (not in GDD) px
+		},
+	},
+	# --- Act VIII: Liberty Heights ---
+	# Black Paragon (owner-approved proposal: "the Fallen Hero ... (evolution
+	# Black Paragon)"; GDD §15.0 "The Fallen Hero, Black Paragon and Origin
+	# Story"): Fallen Hero Lv 5 + Origin Story Lv 5 (a NEW passive, own
+	# decision, owner rule: maxed). The dead hero in black and silver with a
+	# ragged black cape, his eyes soul-teal fire. Every slam stuns what it hits
+	# and he flies on to the next pack. FallenHeroBehavior reads these
+	# special_set keys (final):
+	#   chain_slams     — more packs he slams before landing (each within
+	#                     FallenHeroBehavior.CHAIN_RANGE px of the last);
+	#   slam_stun       — s every foe a slam hits is stunned
+	#                     (CombatResolver.stun_enemy());
+	#   stun_boss_mult  — x that stun on bosses and minibosses;
+	#   stun_elite_mult — x that stun on elites.
+	"black_paragon": {
+		"mode": "transform",
+		"bases": ["fallen_hero"],
+		"passive": "origin_story",
+		"passive_level": 5,  # Owner rule: every evolution needs its paired passive maxed
+		"display_name": "Black Paragon",  # Owner-approved proposal
+		"plural": "Black Paragons",
+		"icon": "black_paragon",
+		"description": "The last hero, in black: every slam stuns, and he flies on to the next pack.",
+		"mult": {
+			"max_hp": 1.5,  # TUNING (not in GDD)
+			"damage": 1.35,  # TUNING (not in GDD)
+		},
+		"set": {
+			"radius": 13.0,  # TUNING (not in GDD) Fallen Hero 12
+		},
+		"special_mult": {
+			"slam_radius": 1.2,  # TUNING (not in GDD)
+		},
+		"special_set": {
+			"chain_slams": 1,  # TUNING (not in GDD)
+			"slam_stun": 0.6,  # TUNING (not in GDD) s
+			"stun_boss_mult": 0.25,  # TUNING (not in GDD) as the Cathedral Horror's
+			"stun_elite_mult": 0.6,  # TUNING (not in GDD)
+		},
+	},
+	# --- Act IX: the Ark ---
+	# Black Mothership (owner-approved proposal: "the Ghost Saucer ...
+	# (evolution Black Mothership)"; GDD §15.0 "The Ghost Saucer, Black
+	# Mothership and Crop Circles"): Ghost Saucer Lv 5 + Crop Circles Lv 5 (a
+	# NEW passive, own decision, owner rule: maxed). A black mothership of bone
+	# and soul-light, larger, three beams a volley and two foes held at once.
+	# GhostSaucerBehavior reads these special_set keys (final):
+	#   beams — beams an attack (fanned beam_spread rad apart);
+	#   lifts — foes it holds at once.
+	"black_mothership": {
+		"mode": "transform",
+		"bases": ["ghost_saucer"],
+		"passive": "crop_circles",
+		"passive_level": 5,  # Owner rule: every evolution needs its paired passive maxed
+		"display_name": "Black Mothership",  # Owner-approved proposal
+		"plural": "Black Motherships",
+		"icon": "black_mothership",
+		"description": "A black mothership of bone: three beams at once, and two foes lifted at a time.",
+		"mult": {
+			"max_hp": 1.5,  # TUNING (not in GDD)
+			"damage": 1.3,  # TUNING (not in GDD)
+		},
+		"set": {
+			"radius": 12.0,  # TUNING (not in GDD) Ghost Saucer 10
+		},
+		"special_mult": {
+			"lift_radius": 1.3,  # TUNING (not in GDD)
+		},
+		"special_set": {
+			"beams": 3,  # TUNING (not in GDD)
+			"lifts": 2,  # TUNING (not in GDD)
 		},
 	},
 }

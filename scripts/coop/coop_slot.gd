@@ -10,7 +10,7 @@ extends RefCounted
 ## Slot index (0 = the host, 1 = the guest; the fixed stepping order).
 var index: int = 0
 ## The lobby loadout of this player (CoopNet start_info "loadouts" entry, or the
-## autotest's): character_id, skin_id, ultimate_id, title_id, meta_levels,
+## autotest's): character_id, skin_id, ultimate_id, title_id, meta_levels, mastery_levels,
 ## unlocks, name. Read once at run start.
 var loadout: Dictionary = {}
 ## Display name (loadout "name"; "P1" / "P2" when none).

@@ -1,0 +1,13 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, standing tall and still, one hand held out palm up in a regal, commanding gesture
+
+LOW-RESOLUTION pixel art: the whole figure is only 120 pixels tall, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims, lacing or engravings. Details must be big enough to read at game size.
+
+Subject: THE ELDER in his FIRST FORM, the FIRST VAMPIRE as a cool, ancient, regal MALE vampire lord (the same being who later becomes the bat-winged horror, but here still in human shape): tall and lean, very PALE grey-white skin, a long gaunt aristocratic face with sharp cheekbones, long swept-back white-grey hair, glowing RED eyes, a thin cruel smile with two small fangs, pointed ears; a long black velvet coat-robe down to the ground with a HIGH STANDING COLLAR, a BLOOD-RED LINING showing at the open front and the long sleeves, a gold clasp at the throat, long pale fingers with dark nails, a heavy black cloak. No wings. Imposing and calm.
+Signature shape that must read in silhouette: the tall narrow body, the high collar and the long flowing cloak.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: pale skin #8E98A8 #B4B8C4 #DAD6E2; white-grey hair #9AA4B4 #D8DEE8; black velvet #160F1C #2B1E36 #4D3A5E; blood-red lining #5A0A14 #A3142A #E0384E; gold clasp #A87A1E #FFDC66; eyes #E0384E; fangs #EDE6D0.
+
+Outline: a clean 1-pixel dark outline around the whole figure in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the figure), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark.
+Attached: (1) the Elder's current bat-winged sprite for his face shape, ears, palette and pixel size only (do NOT copy the wings or the hunched monster body; ONLY ONE figure, human form, upright); (2) a boss sprite for outline weight and flat look.

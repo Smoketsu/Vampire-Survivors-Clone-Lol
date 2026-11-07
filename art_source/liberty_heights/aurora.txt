@@ -1,0 +1,13 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, hovering in the air with one glowing hand thrust forward, her cape flowing behind her, feet pointed down
+
+LOW-RESOLUTION pixel art: the whole figure is only 48 pixels tall, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims, lacing or engravings. Details must be big enough to read at game size.
+
+Subject: AURORA, a FEMALE FLYING ENERGY-BLASTER SUPERHEROINE, an original design, in the game's figure-redesign style: an extremely exaggerated hourglass figure (very full bust, a tiny cinched waist, very wide hips), glamorous and confident, her FACE CLEARLY VISIBLE with big eyes, long flowing BLONDE hair. A fitted WHITE bodysuit with GOLD trim lines, white gloves and tall white boots, a long flowing CREAM-AND-GOLD cape, both hands glowing with soft gold-white energy. Chest and hips FULLY COVERED, never nude, tasteful. NO chest emblem, NO logo, NO letters.
+Signature shape that must read in silhouette: the hourglass figure, the flowing cape and the glowing hands.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: suit white #B8B4AC #E8E4DA #FFFFFF; gold #8A6A1E #E0A92E #FFDC66; hair #B08A30 #E8C860; skin #C08060 #E8B898; energy #FFDC66 #FFFFFF.
+
+Outline: a clean 1-pixel dark outline around the whole figure in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the figure), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark.
+Attached: (1) a female game sprite in the figure-redesign style for pixel size, outline weight, proportions and flat look (not its subject); (2) concept art of this unit for the costume only (do NOT copy its detail level or painted shading).

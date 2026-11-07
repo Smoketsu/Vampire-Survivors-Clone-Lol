@@ -1,0 +1,10 @@
+Pixel-art game prop for a top-down 2D horde-survival game. Three-quarter top-down view (camera above and slightly in front), on a transparent background.
+LOW-RESOLUTION pixel art: the whole prop is only 110 pixels wide and about 80 pixels tall, shown enlarged so every pixel is a big crisp square block. Chunky simple shapes, no detail under 2 pixels, no anti-aliasing, no gradients, no dithering, no texture noise. A clean 1-pixel dark outline.
+
+Subject: the Shogun's COMMAND PLATFORM: a square raised wooden war platform on dark timber posts, about chest high, with a red lacquered railing with gold caps on the post tops, a short wooden stair on the front, and four tall narrow nobori war banners on poles at its corners (black and white cloth with a plain gold circle). The platform's top deck is EMPTY (nobody stands on it: a figure is drawn on top by the game).
+
+Colours: ONLY flat fills: dark timber #1A0B0C (outline) #4F3320 #8C6040; lacquer red #6A1418 #B3262B #E2594A; gold #8A6A1E #D9A93A #F5D870; white cloth #8E8A86 #CFCBC4 #F4F1EA; black cloth #161D38.
+Light from the top-left. Keep it a little darker and calmer than the characters (it is scenery), but clearly brighter than a near-black ground.
+
+Output: a PNG with a FULLY TRANSPARENT background, no ground, no cast shadow, no text, no watermark.
+Attached: an obstacle of this game. Match its pixel size, outline weight and flat look exactly.

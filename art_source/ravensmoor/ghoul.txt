@@ -1,0 +1,10 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors), in EXACTLY the same art style, pixel scale, outline treatment, shading and palette feel as the attached approved Court sprites (the Blood Thrall, the Vampire Bat, the Werewolf). Three-quarter top-down view, FULL BODY, FACING RIGHT, a hunched, gaunt walking pose. ONLY ONE figure.
+
+LOW-RESOLUTION pixel art: the whole figure is only about 38 pixels tall, on a coarse pixel grid shown enlarged so every pixel is a big crisp square block. Chunky readable shapes, no anti-aliasing, no gradients, no dithering, no texture noise, no soft glow.
+
+Subject: a MALE GHOUL (pack fodder of a vampire court), a gaunt hairless corpse-eater with pale grey skin, a hunched back, visible ribs, long thin arms with hooked claws that hang low in front, and a torn brown loincloth. THE HEAD IS VERY BIG, oversized and cartoonish (about 40 percent of the figure's whole height, wider than the chest), BALD, carried HIGH and thrust FORWARD ahead of the shoulders, clearly higher than the hunched back and separate from it. The FACE is clearly readable at this size: a heavy dark brow ridge, two HUGE bright glowing red eyes, each a big bright red-and-white oval about one quarter of the head's width, in deep dark eye sockets under the brow, a hooked nose, a pointed ear, a sunken cheek, a strong jaw, and a wide open mouth with jagged teeth and a VERY LONG, LOLLING TONGUE hanging far out and down, bright blood-red-pink, clearly visible in silhouette. Seen from the front-three-quarter so BOTH eyes show. The face is drawn in the same flat pixel style as the rest, not an overlay.
+
+Light from the top-left. 1-pixel dark outline in a darker shade of each part's own colour. Keep the figure clearly brighter than a near-black ground.
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame.
+Attached: style references only (do NOT copy their anatomy): the approved Court sprites and the Court lineup concept art, where the Ghoul is the gaunt grey figure.

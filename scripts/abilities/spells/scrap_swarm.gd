@@ -35,6 +35,8 @@ var _cd: PackedFloat32Array = PackedFloat32Array()
 var _extra: PackedFloat32Array = PackedFloat32Array()
 ## kills_by_deathless_swarm seen at the last tick (new kills = the difference).
 var _kills_seen: int = 0
+## Rotor frames shown per second by the drone art (2-frame strips; visual only).
+const ROTOR_FPS: float = 14.0  # TUNING (not in GDD) Hz
 ## Drones on the orbit this tick (drawing, summary).
 var _count: int = 0
 ## Most drones on the orbit at once this run (summary).
@@ -131,10 +133,17 @@ func _draw() -> void:
 	var base := _count - _extra.size()
 	for i in _count:
 		var at := p + Vector2.from_angle(_spin + TAU * float(i) / float(_count)) * _orbit
-		if not SpriteBank.draw(self, "projectiles/scrap_drone", at, false):
-			ScrapSwarm.draw_drone(self, at, ScrapSwarmData.DRONE_RADIUS, i >= base)
+		# Art: the 2-frame rotor strips (Act III missing sprites): the plain drone, the
+		# brighter violet-rotor one for a Deathless Swarm kill drone (i >= base). Game
+		# time picks the frame, so a run is unchanged.
+		var spin := int(game.elapsed * ROTOR_FPS) + i  # Rotor frame (drones out of step).
+		var key := "projectiles/scrap_drone_bright" if i >= base else "projectiles/scrap_drone"  # Strip key.
+		if SpriteBank.draw_flat_frame(self, key, 2, spin, at, 0.0):
+			continue
+		if not SpriteBank.draw_flat_frame(self, "projectiles/scrap_drone", 2, spin, at, 0.0):
+			ScrapSwarm.draw_drone(self, at, ScrapSwarmData.DRONE_RADIUS, i >= base)  # No art at all.
 		elif i >= base:
-			draw_arc(at, ScrapSwarmData.DRONE_RADIUS + 3.0, 0.0, TAU, 12, Color(Palette.VIOLET, 0.6), 1.0)
+			draw_arc(at, ScrapSwarmData.DRONE_RADIUS + 3.0, 0.0, TAU, 12, Color(Palette.VIOLET, 0.6), 1.0)  # Plain art only: the old ring marks a kill drone.
 
 
 ## A scrap drone without art at `at` (radius `r`): a bone-white wedge of scrap

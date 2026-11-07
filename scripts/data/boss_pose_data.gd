@@ -29,4 +29,16 @@ const POSES: Dictionary = {
 	"bosses/kestrel": {1: "aim"},  # TUNING (not in GDD) kneeling with the rifle raised on her perch (BossKestrel; the leap keeps the still; her blades are their own still, bosses/kestrel_blades)
 	# --- Act III: the Iron Citadel ---
 	"bosses/deus_ex_machina": {1: "fire"},  # TUNING (not in GDD) the Walker firing: chaingun spun up, missile pods open (BossDeusExMachina)
+	# --- Act IV: the Shores of Ilion ---
+	"bosses/achilles": {3: "strike"},  # TUNING (not in GDD) the low spear lunge (BossAchilles: the lunge's windup, run and recovery; his rage form is its own still, bosses/achilles_rage)
+	# --- Act IV: Mount Olympus ---
+	"bosses/zeus": {1: "cast"},  # TUNING (not in GDD) the thunderbolt raised to call a storm or the beam (BossZeus; his true form is its own still, bosses/zeus_colossus)
+	# --- Act IV: the Asphodel Underworld ---
+	"bosses/hades": {1: "bident"},  # TUNING (not in GDD) the bident swept forward (BossHades: the sweep's windup and the phase changes)
+	# --- Act V: the Road to the Sun ---
+	"bosses/amaterasu": {1: "mirror"},  # TUNING (not in GDD) the mirror raised to the sky (BossAmaterasu: her beams' windups and her crossings)
+	# --- Act V: Castle Kurogane ---
+	"bosses/shogun": {3: "duel"},  # TUNING (not in GDD) the low iai stance with the blade drawn (BossShogun: the leap down and every cut he stands to draw in the duel)
+	# --- Act IX: the Crash Site ---
+	"bosses/hive_mother": {1: "cast", 3: "strike"},  # TUNING (not in GDD) her claws raised over the egg sac as she lays a wave / her claws thrust down as she bursts out of the ground (BossHiveMother; her Flight form is its own still, bosses/hive_mother_flight)
 }

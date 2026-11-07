@@ -32,6 +32,60 @@
 ##             `partials` [[ratio, amp], ...] over root_hz, plus a noise click),
 ##   "arp"   — an arpeggio: one note every `step` s cycling up the current
 ##             loop segment's `chords` entry ({step, dur, amp, decay, lp0, wave}).
+## Act IV (SoundData.BRONZE_SCORE, "Hymn of Bronze") adds two more, the same way
+## ("arp" takes any Synth wave, so the lyre is a plucked "tri"):
+##   "drums" — a war drum every `step` s instead of the heartbeat ({step, hz0, hz1,
+##             dur, amp, decay, accent_every, accent_amp, slap, ghost_at, ghost_amp}),
+##   "horn"  — brass swells: per `starts` entry a saw and its fifth (`notes`
+##             [[root, fifth], ...]) through a rising low-pass ({starts, dur,
+##             attack, decay, amp, lp0, lp1, notes}).
+## Act V (SoundData.SUN_SCORE, "The Setting Sun") adds three more, the same way:
+##   "taiko" — drum patterns instead of the heartbeat: per `beats_per_bar`-beat bar
+##             (`beat` s a beat) the hits [beat, "don" | "ka", amp] of pattern
+##             bar % patterns.size() ({beat, beats_per_bar, don_hz0, don_hz1,
+##             don_dur, don_decay, ka_hz0, ka_hz1, ka_dur, ka_decay, slap, patterns}),
+##   "koto"  — plucked notes [start, Hz, amp, glide-to Hz (0 = none)] ({dur, decay,
+##             lp0, lp1, click, notes}),
+##   "flute" — breathy sustained notes [start, Hz, length] ({amp, breath, attack,
+##             decay, vib_hz, vib_depth, notes}).
+## Act VI (SoundData.BRIMSTONE_SCORE, "Hymn of the Pit") adds two more, the same way
+## (its war drum is the existing "drums", its bells the existing "hits"):
+##   "organ" — held pipe-organ pedal notes [start, Hz, length] built from sine
+##             `partials` [[ratio, amp], ...] ({attack, decay, vib_hz, vib_depth,
+##             partials, notes}),
+##   "snarl" — a distorted bass pulse: per `beat`-second beat of a `beats_per_bar` bar
+##             the pattern entries [beat, ratio, length in beats] on that bar's root
+##             (`roots`, Hz, bar b uses roots[b % roots.size()]), as saws plus a square
+##             through a low-pass, then soft-clipped by tanh(drive * x) ({beat,
+##             beats_per_bar, roots, pattern, drive, amp, decay, lp0, lp1}).
+## Act VII (SoundData.SANGUINE_SCORE, "Waltz of the Red Moon") adds one more, the same way
+## (its harpsichord is the existing "arp", its church organ the existing "organ", its low
+## strings the existing "horn", its slow heartbeat the default heartbeat job):
+##   "waltz" — an oom-pah-pah of plucked low strings: per `beat`-second beat of a
+##             `beats_per_bar` bar, bar b plays bars[b % bars.size()] = [bass Hz, [chord Hz,
+##             ...]]: the bass on beat 0 and the chord tones together on the other beats
+##             ({beat, beats_per_bar, bars, bass_amp, chord_amp, dur, decay, lp0, lp1}).
+## Act VIII (SoundData.SIREN_SCORE, "Sirens at Midnight") adds three more, the same way
+## (its arpeggio is the existing "arp", its low brass stabs the existing "horn" with a fast attack):
+##   "machine" — a drum machine instead of the heartbeat: per `step`-second step of a
+##               `steps_per_bar` bar, kick / snare / closed hat / open hat on the listed step
+##               indices ({step, steps_per_bar, kick_steps, snare_steps, hat_steps,
+##               open_hat_steps, kick_amp, snare_amp, hat_amp, open_hat_amp, kick_hz0, kick_hz1,
+##               kick_dur, snare_dur, hat_dur, open_hat_dur}),
+##   "sub"     — a clean sub bass: per `beat`-second beat of a `beats_per_bar` bar the pattern
+##               entries [beat, ratio, length in beats] on that bar's root (`roots`, Hz, bar b
+##               uses roots[b % roots.size()]) as a sine plus a faint triangle an octave up
+##               ({beat, beats_per_bar, roots, pattern, amp, octave_amp, decay}),
+##   "siren"   — a distant siren: each sweep [start s, length s, from Hz, to Hz] is a slow
+##               triangle glide through a low-pass, with a slightly detuned twin
+##               ({sweeps, amp, attack, decay, lp0, lp1, detune, detune_amp}).
+## Act IX (SoundData.STARSONG_SCORE, "The Reaping Stars") adds one more, the same way (its slow
+## pulse is the existing "pulse", its glassy pads the existing "organ" with inharmonic partials,
+## its glints the existing "hits", its harvest horn the existing "horn" with a slow attack):
+##   "choir" — a high choir-like line: each note [start s, Hz, length s] is four slightly detuned
+##             saws (spread by `detune`) plus a sine an octave up (`octave_amp`) through a low-pass
+##             that opens, with a slow attack and a vibrato
+##             ({notes, amp, attack, decay, lp0, lp1, vib_hz, vib_depth, detune, octave_amp}).
 ## Every note ends before the loop end, so the loop stays seamless.
 class_name RunLoopSynth
 extends RefCounted
@@ -164,12 +218,36 @@ func _init(rng_seed: int, score: Dictionary = {}) -> void:
 		_jobs.append(_job_toll)
 	elif score.has("pulse"):
 		_jobs.append(_job_pulse)  # Act III: the pulsing low synth replaces the heartbeat.
+	elif score.has("taiko"):
+		_jobs.append(_job_taiko)  # Act V: taiko patterns replace the heartbeat.
+	elif score.has("drums"):
+		_jobs.append(_job_drums)  # Act IV: the war drum replaces the heartbeat.
+	elif score.has("machine"):
+		_jobs.append(_job_machine)  # Act VIII: the drum machine replaces the heartbeat.
 	else:
 		_jobs.append(_job_heartbeat)
 	if score.has("hits"):
 		_jobs.append(_job_hits)  # Act III: metallic hits.
 	if score.has("arp"):
-		_jobs.append(_job_arp)  # Act III: the cold arpeggio.
+		_jobs.append(_job_arp)  # Act III: the cold arpeggio (Act IV: the lyre).
+	if score.has("horn"):
+		_jobs.append(_job_horn)  # Act IV: the brass swells.
+	if score.has("organ"):
+		_jobs.append(_job_organ)  # Act VI: the pipe-organ pedal.
+	if score.has("snarl"):
+		_jobs.append(_job_snarl)  # Act VI: the distorted bass pulse.
+	if score.has("waltz"):
+		_jobs.append(_job_waltz)  # Act VII: the plucked oom-pah-pah.
+	if score.has("sub"):
+		_jobs.append(_job_sub)  # Act VIII: the clean sub bass.
+	if score.has("siren"):
+		_jobs.append(_job_siren)  # Act VIII: the distant siren glide.
+	if score.has("choir"):
+		_jobs.append(_job_choir)  # Act IX: the high choir-like line.
+	if score.has("koto"):
+		_jobs.append(_job_koto)  # Act V: the plucked koto line.
+	if score.has("flute"):
+		_jobs.append(_job_flute)  # Act V: the shakuhachi lead.
 	_schedule(_job_peak, 0, _n, chunk)
 	_jobs.append(_job_alloc)
 	_schedule(_job_encode, 0, _n, chunk)
@@ -326,6 +404,265 @@ func _job_arp() -> void:
 		var tones: Array = chords[mini(chords.size() - 1, int(t / seg_s))]  # This segment's tones.
 		Synth.add_layer(_buf, Synth.MUSIC_RATE, {"wave": String(a["wave"]), "f0": float(tones[k % tones.size()]), "start": t,
 			"dur": dur, "amp": float(a["amp"]), "attack": 0.003, "decay": float(a["decay"]), "lp0": float(a["lp0"])}, _rng)
+
+
+## War drum (a score's "drums", Act IV): a skin thump (a falling sine with a
+## noise slap) every `step` s, every `accent_every`-th one louder, and a soft
+## ghost hit `ghost_at` of a step after each unaccented beat. A hit that would
+## not end before the loop end is skipped, so the loop stays seamless.
+func _job_drums() -> void:
+	var d: Dictionary = _score["drums"]
+	var step := float(d["step"])  # s between beats.
+	var dur := float(d["dur"])  # Hit length (s).
+	var every := int(d.get("accent_every", 0))  # Beats per accent (0 = none).
+	var k := 0  # Beat index.
+	while float(k) * step + dur < _loop_s:
+		var t := float(k) * step  # This beat (s).
+		var accent := every > 0 and k % every == 0  # A bar's first beat.
+		var amp := float(d["accent_amp"]) if accent else float(d["amp"])  # Thump level.
+		Synth.add_layer(_buf, Synth.MUSIC_RATE, {"wave": "sine", "f0": float(d["hz0"]), "f1": float(d["hz1"]), "start": t,
+			"dur": dur, "amp": amp, "attack": 0.003, "decay": float(d["decay"])}, _rng)
+		Synth.add_layer(_buf, Synth.MUSIC_RATE, {"wave": "noise", "start": t, "dur": 0.05, "amp": float(d["slap"]),
+			"decay": 0.012, "lp0": 1400.0}, _rng)
+		var ghost := t + step * float(d["ghost_at"])  # The soft after-beat.
+		if not accent and ghost + dur < _loop_s:
+			Synth.add_layer(_buf, Synth.MUSIC_RATE, {"wave": "sine", "f0": float(d["hz0"]) * 0.9, "f1": float(d["hz1"]),
+				"start": ghost, "dur": dur * 0.7, "amp": float(d["ghost_amp"]), "attack": 0.003, "decay": float(d["decay"])}, _rng)
+		k += 1
+
+
+## Brass swells (a score's "horn", Act IV): at each `starts` time a saw and its
+## fifth rise out of silence (slow attack) through a low-pass that opens, then
+## fade; each ends before the loop end.
+func _job_horn() -> void:
+	var h: Dictionary = _score["horn"]
+	var starts: Array = h["starts"]  # Swell start times (s).
+	var notes: Array = h["notes"]  # [root, fifth] (Hz) of each swell.
+	var dur := minf(float(h["dur"]), _loop_s)  # Swell length (s).
+	for k in starts.size():
+		var t := float(starts[k])  # This swell's start (s).
+		var pair: Array = notes[mini(k, notes.size() - 1)]  # Its two pitches.
+		for hz: float in pair:
+			Synth.add_layer(_buf, Synth.MUSIC_RATE, {"wave": "saw", "f0": hz, "start": t, "dur": minf(dur, _loop_s - t - 0.05),
+				"amp": float(h["amp"]), "attack": float(h["attack"]), "decay": float(h["decay"]),
+				"lp0": float(h["lp0"]), "lp1": float(h["lp1"]), "vib_hz": 5.0, "vib_depth": 0.004}, _rng)
+
+
+## Taiko (a score's "taiko", Act V): each bar plays one pattern of deep "don" and
+## rim "ka" hits; a hit that would not end before the loop end is skipped.
+func _job_taiko() -> void:
+	var t: Dictionary = _score["taiko"]
+	var beat := float(t["beat"])  # s per beat.
+	var bar_beats := int(t["beats_per_bar"])  # Beats per bar.
+	var patterns: Array = t["patterns"]  # Hit lists, one per pattern.
+	var bars := int(_loop_s / (beat * float(bar_beats)))  # Whole bars in the loop.
+	for b in bars:
+		for h: Array in patterns[b % patterns.size()]:
+			var at := (float(b * bar_beats) + float(h[0])) * beat  # Hit time (s).
+			var amp := float(h[2])  # Hit level.
+			if String(h[1]) == "don":
+				var dur := float(t["don_dur"])  # Hit length (s).
+				if at + dur >= _loop_s:
+					continue
+				Synth.add_layer(_buf, Synth.MUSIC_RATE, {"wave": "sine", "f0": float(t["don_hz0"]), "f1": float(t["don_hz1"]),
+					"start": at, "dur": dur, "amp": amp, "attack": 0.003, "decay": float(t["don_decay"])}, _rng)
+				Synth.add_layer(_buf, Synth.MUSIC_RATE, {"wave": "noise", "start": at, "dur": 0.05, "amp": float(t["slap"]),
+					"decay": 0.012, "lp0": 1200.0}, _rng)
+			else:
+				var dur := float(t["ka_dur"])  # Rim hit length (s).
+				if at + dur >= _loop_s:
+					continue
+				Synth.add_layer(_buf, Synth.MUSIC_RATE, {"wave": "sine", "f0": float(t["ka_hz0"]), "f1": float(t["ka_hz1"]),
+					"start": at, "dur": dur, "amp": amp, "attack": 0.002, "decay": float(t["ka_decay"])}, _rng)
+				Synth.add_layer(_buf, Synth.MUSIC_RATE, {"wave": "noise", "start": at, "dur": 0.03, "amp": amp * 0.6,
+					"decay": 0.008, "lp0": 4000.0}, _rng)
+
+
+## Koto (a score's "koto", Act V): plucked triangle notes with a short noise click
+## and a closing low-pass; a note may glide to a second pitch. Each is cut at the loop end.
+func _job_koto() -> void:
+	var k: Dictionary = _score["koto"]
+	for n: Array in k["notes"]:
+		var at := float(n[0])  # Note start (s).
+		var hz := float(n[1])  # Pitch (Hz).
+		var to_hz := float(n[3]) if float(n[3]) > 0.0 else hz  # Glide target (Hz).
+		Synth.add_layer(_buf, Synth.MUSIC_RATE, {"wave": "tri", "f0": hz, "f1": to_hz, "start": at,
+			"dur": minf(float(k["dur"]), _loop_s - at - 0.05), "amp": float(n[2]), "attack": 0.002, "decay": float(k["decay"]),
+			"lp0": float(k["lp0"]), "lp1": float(k["lp1"])}, _rng)
+		Synth.add_layer(_buf, Synth.MUSIC_RATE, {"wave": "noise", "start": at, "dur": 0.02, "amp": float(k["click"]),
+			"decay": 0.006, "lp0": 5000.0}, _rng)
+
+
+## Shakuhachi (a score's "flute", Act V): a sine with slow vibrato and an octave
+## overtone, plus a breath of filtered noise that swells in with the note.
+func _job_flute() -> void:
+	var f: Dictionary = _score["flute"]
+	for n: Array in f["notes"]:
+		var at := float(n[0])  # Note start (s).
+		var hz := float(n[1])  # Pitch (Hz).
+		var dur := minf(float(n[2]), _loop_s - at - 0.05)  # Note length (s).
+		Synth.add_layer(_buf, Synth.MUSIC_RATE, {"wave": "sine", "f0": hz, "start": at, "dur": dur, "amp": float(f["amp"]),
+			"attack": float(f["attack"]), "decay": float(f["decay"]), "vib_hz": float(f["vib_hz"]), "vib_depth": float(f["vib_depth"])}, _rng)
+		Synth.add_layer(_buf, Synth.MUSIC_RATE, {"wave": "sine", "f0": hz * 2.0, "start": at, "dur": dur, "amp": float(f["amp"]) * 0.18,
+			"attack": float(f["attack"]) * 1.4, "decay": float(f["decay"]), "vib_hz": float(f["vib_hz"]), "vib_depth": float(f["vib_depth"])}, _rng)
+		Synth.add_layer(_buf, Synth.MUSIC_RATE, {"wave": "noise", "start": at, "dur": dur, "amp": float(f["breath"]),
+			"attack": float(f["attack"]) * 0.8, "decay": float(f["decay"]), "lp0": hz * 2.5, "lp1": hz * 3.5}, _rng)
+
+
+## Pipe organ (a score's "organ", Act VI): each note is a stack of sine partials
+## that swells in slowly (the pedal of a cathedral organ gone wrong), with a faint
+## vibrato; each ends before the loop end.
+func _job_organ() -> void:
+	var o: Dictionary = _score["organ"]
+	var partials: Array = o["partials"]  # [[ratio, amp], ...] of the stack.
+	for n: Array in o["notes"]:
+		var at := float(n[0])  # Note start (s).
+		var hz := float(n[1])  # Fundamental (Hz).
+		var dur := minf(float(n[2]), _loop_s - at - 0.05)  # Note length (s).
+		for pr: Array in partials:
+			Synth.add_layer(_buf, Synth.MUSIC_RATE, {"wave": "sine", "f0": hz * float(pr[0]), "start": at, "dur": dur,
+				"amp": float(pr[1]), "attack": float(o["attack"]), "decay": float(o["decay"]),
+				"vib_hz": float(o["vib_hz"]), "vib_depth": float(o["vib_depth"])}, _rng)
+
+
+## Snarling bass (a score's "snarl", Act VI): the pattern's notes are rendered into a
+## scratch buffer (two detuned saws and a square through a closing low-pass), pushed
+## through tanh(drive * x) and added to the mix. A note that would not end before the
+## loop end is skipped.
+func _job_snarl() -> void:
+	var sn: Dictionary = _score["snarl"]
+	var beat := float(sn["beat"])  # s per beat.
+	var bar_beats := int(sn["beats_per_bar"])  # Beats per bar.
+	var roots: Array = sn["roots"]  # Bar root pitches (Hz).
+	var pattern: Array = sn["pattern"]  # [beat, ratio, length in beats] entries.
+	var drive := float(sn["drive"])  # Pre-clip gain.
+	var scratch := PackedFloat32Array()  # The un-distorted line.
+	scratch.resize(_n)
+	var bars := int(_loop_s / (beat * float(bar_beats)))  # Whole bars in the loop.
+	for b in bars:
+		var root := float(roots[b % roots.size()])  # This bar's root (Hz).
+		for h: Array in pattern:
+			var at := (float(b * bar_beats) + float(h[0])) * beat  # Note start (s).
+			var dur := float(h[2]) * beat  # Note length (s).
+			if at + dur >= _loop_s:
+				continue
+			var hz := root * float(h[1])  # Note pitch (Hz).
+			for v: Array in [[1.0, "saw", 1.0], [1.012, "saw", 0.8], [0.5, "square", 0.7]]:
+				Synth.add_layer(scratch, Synth.MUSIC_RATE, {"wave": String(v[1]), "f0": hz * float(v[0]), "start": at, "dur": dur,
+					"amp": float(v[2]), "attack": 0.006, "decay": float(sn["decay"]), "lp0": float(sn["lp0"]),
+					"lp1": float(sn["lp1"])}, _rng)
+	var amp := float(sn["amp"])  # Level of the clipped line in the mix.
+	for i in _n:
+		_buf[i] += tanh(drive * scratch[i]) * amp
+
+
+## Waltz strings (a score's "waltz", Act VII): per bar a plucked bass note on beat 0 and
+## the chord's tones on the other beats (triangle plucks through a closing low-pass). A
+## note that would not end before the loop end is skipped.
+func _job_waltz() -> void:
+	var w: Dictionary = _score["waltz"]
+	var beat := float(w["beat"])  # s per beat.
+	var bar_beats := int(w["beats_per_bar"])  # Beats per bar.
+	var bars_def: Array = w["bars"]  # [bass Hz, [chord Hz, ...]] per bar.
+	var dur := float(w["dur"])  # Note length (s).
+	var bars := int(_loop_s / (beat * float(bar_beats)))  # Whole bars in the loop.
+	for b in bars:
+		var bar: Array = bars_def[b % bars_def.size()]  # This bar's bass and chord.
+		for k in bar_beats:
+			var at := (float(b * bar_beats) + float(k)) * beat  # Beat time (s).
+			if at + dur >= _loop_s:
+				continue
+			var hzs: Array = [float(bar[0])] if k == 0 else bar[1]  # Pitches struck on this beat.
+			var amp := float(w["bass_amp"]) if k == 0 else float(w["chord_amp"])  # Level per pitch.
+			for hz: float in hzs:
+				Synth.add_layer(_buf, Synth.MUSIC_RATE, {"wave": "tri", "f0": hz, "start": at, "dur": dur, "amp": amp,
+					"attack": 0.004, "decay": float(w["decay"]), "lp0": float(w["lp0"]), "lp1": float(w["lp1"])}, _rng)
+
+
+## Drum machine (a score's "machine", Act VIII): per bar of `steps_per_bar` steps a falling-sine
+## kick, a noise-and-tone snare, closed hats and open hats on the listed step indices. A hit that
+## would not end before the loop end is skipped, so the loop stays seamless.
+func _job_machine() -> void:
+	var m: Dictionary = _score["machine"]
+	var step := float(m["step"])  # s per step.
+	var per_bar := int(m["steps_per_bar"])  # Steps in a bar.
+	var bars := int(_loop_s / (step * float(per_bar)))  # Whole bars in the loop.
+	for b in bars:
+		for k in per_bar:
+			var at := float(b * per_bar + k) * step  # This step (s).
+			if k in (m["kick_steps"] as Array) and at + float(m["kick_dur"]) < _loop_s:
+				Synth.add_layer(_buf, Synth.MUSIC_RATE, {"wave": "sine", "f0": float(m["kick_hz0"]), "f1": float(m["kick_hz1"]),
+					"start": at, "dur": float(m["kick_dur"]), "amp": float(m["kick_amp"]), "attack": 0.002, "decay": 0.09}, _rng)
+				Synth.add_layer(_buf, Synth.MUSIC_RATE, {"wave": "noise", "start": at, "dur": 0.02, "amp": float(m["kick_amp"]) * 0.25,
+					"decay": 0.006, "lp0": 2500.0}, _rng)
+			if k in (m["snare_steps"] as Array) and at + float(m["snare_dur"]) < _loop_s:
+				Synth.add_layer(_buf, Synth.MUSIC_RATE, {"wave": "noise", "start": at, "dur": float(m["snare_dur"]),
+					"amp": float(m["snare_amp"]), "attack": 0.001, "decay": 0.06, "lp0": 5500.0, "lp1": 2200.0}, _rng)
+				Synth.add_layer(_buf, Synth.MUSIC_RATE, {"wave": "tri", "f0": 220.0, "f1": 150.0, "start": at,
+					"dur": float(m["snare_dur"]) * 0.6, "amp": float(m["snare_amp"]) * 0.7, "attack": 0.001, "decay": 0.04}, _rng)
+			if k in (m["hat_steps"] as Array) and not k in (m["open_hat_steps"] as Array) and at + float(m["hat_dur"]) < _loop_s:
+				Synth.add_layer(_buf, Synth.MUSIC_RATE, {"wave": "noise", "start": at, "dur": float(m["hat_dur"]),
+					"amp": float(m["hat_amp"]), "attack": 0.001, "decay": 0.012, "lp0": 9000.0, "lp1": 6000.0}, _rng)
+			if k in (m["open_hat_steps"] as Array) and at + float(m["open_hat_dur"]) < _loop_s:
+				Synth.add_layer(_buf, Synth.MUSIC_RATE, {"wave": "noise", "start": at, "dur": float(m["open_hat_dur"]),
+					"amp": float(m["open_hat_amp"]), "attack": 0.002, "decay": 0.07, "lp0": 9000.0, "lp1": 5000.0}, _rng)
+
+
+## Sub bass (a score's "sub", Act VIII): the pattern's notes on each bar's root, a sine with a
+## faint triangle an octave up so small speakers still hear it. A note that would not end before
+## the loop end is skipped.
+func _job_sub() -> void:
+	var sb: Dictionary = _score["sub"]
+	var beat := float(sb["beat"])  # s per beat.
+	var bar_beats := int(sb["beats_per_bar"])  # Beats per bar.
+	var roots: Array = sb["roots"]  # Bar root pitches (Hz).
+	var bars := int(_loop_s / (beat * float(bar_beats)))  # Whole bars in the loop.
+	for b in bars:
+		var root := float(roots[b % roots.size()])  # This bar's root (Hz).
+		for h: Array in sb["pattern"]:
+			var at := (float(b * bar_beats) + float(h[0])) * beat  # Note start (s).
+			var dur := float(h[2]) * beat  # Note length (s).
+			if at + dur >= _loop_s:
+				continue
+			var hz := root * float(h[1])  # Note pitch (Hz).
+			Synth.add_layer(_buf, Synth.MUSIC_RATE, {"wave": "sine", "f0": hz, "start": at, "dur": dur,
+				"amp": float(sb["amp"]), "attack": 0.01, "decay": float(sb["decay"])}, _rng)
+			Synth.add_layer(_buf, Synth.MUSIC_RATE, {"wave": "tri", "f0": hz * 2.0, "start": at, "dur": dur,
+				"amp": float(sb["octave_amp"]), "attack": 0.01, "decay": float(sb["decay"]), "lp0": 600.0}, _rng)
+
+
+## Distant siren (a score's "siren", Act VIII): each sweep is a slow triangle glide between two
+## pitches through a low-pass, with a slightly detuned twin for a soft beating; each ends before
+## the loop end.
+func _job_siren() -> void:
+	var sr: Dictionary = _score["siren"]
+	for sw: Array in sr["sweeps"]:
+		var at := float(sw[0])  # Sweep start (s).
+		var dur := minf(float(sw[1]), _loop_s - at - 0.05)  # Sweep length (s).
+		for v: Array in [[1.0, 1.0], [float(sr["detune"]), float(sr["detune_amp"])]]:
+			Synth.add_layer(_buf, Synth.MUSIC_RATE, {"wave": "tri", "f0": float(sw[2]) * float(v[0]), "f1": float(sw[3]) * float(v[0]),
+				"start": at, "dur": dur, "amp": float(sr["amp"]) * float(v[1]), "attack": float(sr["attack"]),
+				"decay": float(sr["decay"]), "lp0": float(sr["lp0"]), "lp1": float(sr["lp1"])}, _rng)
+
+
+## Choir line (a score's "choir", Act IX): each note is four detuned saws (ratios 1/d^2, 1/d, d,
+## d^2 around the pitch, d = `detune`) and a quiet sine an octave up through a low-pass that opens,
+## with a slow attack and a vibrato; each ends before the loop end.
+func _job_choir() -> void:
+	var ch: Dictionary = _score["choir"]
+	var d := float(ch["detune"])  # Detune ratio between neighbouring voices.
+	for n: Array in ch["notes"]:
+		var at := float(n[0])  # Note start (s).
+		var hz := float(n[1])  # Pitch (Hz).
+		var dur := minf(float(n[2]), _loop_s - at - 0.05)  # Note length (s).
+		for r: float in [1.0 / (d * d), 1.0 / d, d, d * d]:
+			Synth.add_layer(_buf, Synth.MUSIC_RATE, {"wave": "saw", "f0": hz * r, "start": at, "dur": dur,
+				"amp": float(ch["amp"]), "attack": float(ch["attack"]), "decay": float(ch["decay"]),
+				"lp0": float(ch["lp0"]), "lp1": float(ch["lp1"]), "vib_hz": float(ch["vib_hz"]),
+				"vib_depth": float(ch["vib_depth"])}, _rng)
+		Synth.add_layer(_buf, Synth.MUSIC_RATE, {"wave": "sine", "f0": hz * 2.0, "start": at, "dur": dur,
+			"amp": float(ch["amp"]) * float(ch["octave_amp"]), "attack": float(ch["attack"]), "decay": float(ch["decay"]),
+			"vib_hz": float(ch["vib_hz"]), "vib_depth": float(ch["vib_depth"])}, _rng)
 
 
 ## Peak search over samples [a, b) of the finished mix.

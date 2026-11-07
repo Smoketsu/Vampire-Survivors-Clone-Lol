@@ -1,0 +1,12 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, a ready stance, the naginata held across the body ready to sweep.
+
+LOW-RESOLUTION pixel art: the whole figure is only 50 pixels tall, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims, lacing or engravings. Details must be big enough to read at game size.
+
+Subject: a MALE SOHEI warrior monk: a white cloth hood (katsura) wrapped over the head and lower face leaving the eyes, dark indigo monk robes over a lacquer-red chest plate, a white and gold kesa sash across the chest, wooden geta sandals, holding a long NAGINATA (a pole with a long curved steel blade) diagonally across his body, the blade high.
+Signature shape that must read in silhouette: the white hood and the long curved naginata blade.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: lacquer red #6A1418 #B3262B #E2594A; lacquer black and outline #1A0B0C; indigo #161D38 #2E3F74 #6A82C0; steel grey #4A5566 #8793A6 #C4CCD8; gold #8A6A1E #D9A93A #F5D870; skin #8C6040 #E0A882; wood and leather #4F3320 #8C6040; white cloth #8E8A86 #CFCBC4 #F4F1EA; sakura pink #A8546E #E494AC #F9D3DD.
+Outline: a clean 1-pixel dark outline around the whole figure in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the figure), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark.
+Attached: a sprite of this army: match its pixel size, outline weight and flat look exactly (not its subject).

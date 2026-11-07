@@ -1,0 +1,10 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, neutral ready stance.
+
+LOW-RESOLUTION pixel art: the whole figure is only 50 pixels tall, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims or engravings.
+
+Subject: THE FERRYWOMAN (female, figure-redesign style: hourglass figure, big bust, wide hips, fully clothed and modest), her "Deathlord" skin: the hood and cloak in BLACK IRON tones with a SPIKED dark crown over the hood, a dark crimson-lined cloak, the corset dress black with iron plates at the shoulders, the oar black with an iron blade and a crimson lantern flame, crimson glowing eyes. Colours: black iron #14161C #2A2D36 #4A4E5A #7C8290; crimson #3A0A0E #7A1418 #C81A28; skin bone #A79A80 #CFC7AE #EDE6D0.
+
+Outline: a clean 1-pixel dark outline around the whole figure in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the figure), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark.
+Attached: the approved sprite of this same character: keep her exact pose, figure, proportions, height, pixel size and outline; change only the costume colours and details described.

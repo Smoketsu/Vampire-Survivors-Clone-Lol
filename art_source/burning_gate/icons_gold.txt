@@ -1,0 +1,6 @@
+A sheet of TWO separate pixel-art game ICON SYMBOLS in one row, evenly spaced with a wide empty gap between them, on a FULLY TRANSPARENT background (real alpha). Each symbol is simple, bold and centred in its half of the image, drawn as chunky low-resolution pixel art (each symbol about 24 pixels wide on a coarse grid, shown enlarged with crisp square pixels, nearest-neighbour, 1-pixel dark outline, flat colours, at most 3 shades per colour, light from the top-left). No frame, no badge background, no text, no letters.
+From left to right:
+1. RAIN OF FIRE: five black burning stones falling in parallel diagonal streaks of orange flame from a dark cloud.
+2. GATE CRASHED: a broken black demon portal ring split in two by a gold crack, a horned bull skull lying broken beneath it.
+Colours: gold #8C6A1E #E0B848 #F7E08A; obsidian #0B0A10 #1E1A26 #352E40 #5A5068; lava #8A2A08 #E0601A #FFB347; bone #8C7B5E #D9CCAA; charm pink #FF6FB5.
+Attached: an approved icon of this game: match its pixel size, outline weight and flat look (only the symbol, not its frame).

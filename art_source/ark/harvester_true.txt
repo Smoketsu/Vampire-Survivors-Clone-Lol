@@ -1,0 +1,13 @@
+Pixel-art game BOSS sprite for a top-down 2D horde-survival game (like Vampire Survivors). Front view from slightly above, the whole figure centred, floating
+
+LOW-RESOLUTION pixel art: the whole figure is only 112 pixels tall, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims, lacing or engravings.
+
+Subject: THE HARVESTER'S TRUE FORM (sex not marked): the same tall grey alien as the attached sprite, but revealed as a vast being of LIGHT AND RINGS: its body now pale glowing white-gold, its robes turned to streaming bands of light, its huge egg-shaped head blazing with a bright green mark on the brow and two large black eyes, its long arms spread wide, and FOUR large CONCENTRIC GOLDEN RINGS standing behind and around it like a halo of orbits, two of them tilted across its body. Never violet or purple (violet and bone are the player's), never skulls.
+Signature shape that must read in silhouette: the head and spread arms inside the great concentric rings.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: light #C9A95C #FFE9A0 #FFF8E0; rings #C9A95C #FFE9A0 #E8ECF0; eyes black #07080F; brow mark #3CFF6A #1FA84A; a few gunmetal lines #3A424C
+
+Outline: a clean 1-pixel dark outline around the whole subject in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the subject), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark. Draw ONLY ONE figure.
+Attached: (1) the Harvester's own game sprite (same pixel size and look; this is the same being revealed); (2) the approved concept for the rings behind it (do NOT copy its painted shading).

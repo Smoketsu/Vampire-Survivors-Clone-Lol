@@ -89,7 +89,7 @@ func add_frame(at: Vector2, after: float) -> void:
 func _land_stamp(at: Vector2) -> void:
 	var h := float(def["stamp_size"]) * 0.5  # Half the square's side (px).
 	var mult := game.enemies.damage_mult * (boss.hit_mult() if boss != null and boss.active else 1.0)  # Time scaling x its buffs.
-	game.effects.impact(at, h * 1.2, Palette.EMPIRE_SIGNAL_AMBER)
+	game.effects.impact(at, h * 1.2, Palette.EMPIRE_SIGNAL_AMBER, EmpireFxData.BLAST)  # Its strip when the art exists (visual only).
 	Sfx.play("press_stamp", at)
 	game.shake(5.0)
 	for p in game.all_players:  # (Co-op: either necromancer.)
@@ -143,6 +143,8 @@ func _draw() -> void:
 	for l in landings:
 		var c := Vector2(l.x, l.y)
 		var k := clampf(1.0 - (l.z - t) / fl, 0.0, 1.0)
+		if EmpireFx.telegraph_circle(self, c, r, k):
+			continue  # The Empire's warning circle (GDD §15.0 "Act III AoE art").
 		draw_circle(c, r * k, Color(Palette.EMPIRE_SIGNAL_RED, 0.16 + 0.14 * k))
 		draw_arc(c, r, 0.0, TAU, 32, Color(Palette.EMPIRE_SIGNAL_RED, 0.85), 2.0)
 		draw_line(c - Vector2(r * 0.3, 0), c + Vector2(r * 0.3, 0), Color(Palette.EMPIRE_SIGNAL_GLOW, 0.8), 1.0)
@@ -152,6 +154,8 @@ func _draw() -> void:
 		var c := Vector2(f.x, f.y)
 		var k := clampf(1.0 - (f.z - t) / bt, 0.0, 1.0)
 		var side := 26.0  # Frame side (px).
+		if EmpireFx.build_frame(self, c, side, k):
+			continue
 		var sq := Rect2(c - Vector2(side, side) * 0.5, Vector2(side, side))
 		draw_rect(sq, Color(Palette.EMPIRE_SIGNAL_AMBER, 0.08 + 0.15 * k))
 		draw_rect(sq, Color(Palette.EMPIRE_SIGNAL_AMBER, 0.9), false, 2.0)

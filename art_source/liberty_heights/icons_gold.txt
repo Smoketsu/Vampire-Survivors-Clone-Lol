@@ -1,0 +1,8 @@
+A sheet of FOUR separate pixel-art game ICON SYMBOLS in one row, evenly spaced with wide empty gaps between them, on a FULLY TRANSPARENT background (real alpha). Each symbol is simple, bold and centred in its quarter of the image, drawn as chunky low-resolution pixel art (each symbol about 24 pixels wide on a coarse grid, shown enlarged with crisp square pixels, nearest-neighbour, 1-pixel dark outline, flat colours, at most 3 shades per colour, light from the top-left). No frame, no badge background, no text, no letters.
+From left to right:
+1. DOOMSDAY: two huge golden fists slamming down onto a cracked ground, a crater of orange fire between them.
+2. BLACK PARAGON: the head and shoulders of a dark superhero in black with silver trim facing right, a high ragged black cape collar, eyes burning soul-teal.
+3. NO MORE HEROES: a torn blue cape lying crumpled on cracked grey stone, a broken golden belt buckle beside it (no emblem, no letters).
+4. A plain round golden sun disc (spare).
+Colours: black #0B0A10 #1C1426; gold #8A6A1E #E0A92E #FFDC66; blue #1F3F94 #2E5FD0 #5C8CEA; grey #4A4E5A #8A8796 #C6C2CE; silver #6E7A8C #B4C0D0; fire #B0500F #F07A1E #FFA64D; soul teal #1F7A5C #3FD39A #9CFFD8.
+Attached: an approved icon of this game: match its pixel size, outline weight and flat look (only the symbol, not its frame).

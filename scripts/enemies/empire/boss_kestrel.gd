@@ -265,7 +265,7 @@ func _start_leap() -> void:
 func _land_on_perch() -> void:
 	position = _leap_to
 	velocity = Vector2.ZERO
-	game.effects.impact(position, radius * 2.0, Palette.EMPIRE_CHROME_LIGHT)
+	game.effects.impact(position, radius * 2.0, Palette.EMPIRE_CHROME_LIGHT, EmpireFxData.BLAST_CHROME)  # Its strip when the art exists (visual only).
 	Sfx.play("servo_step", position, 0.8)
 	_paint_triple()
 	_set_phase(Phase.PERCH)
@@ -346,7 +346,7 @@ func _start_blades() -> void:
 	attack_interval = float(boss_def["blade_interval"])
 	game.stat_add("kestrel_blades_at", game.elapsed)
 	game.enemies.show_banner(String(boss_def["blades_banner"]))
-	game.effects.impact(position, radius * 3.0, Palette.EMPIRE_SIGNAL_RED)
+	game.effects.impact(position, radius * 3.0, Palette.EMPIRE_SIGNAL_RED, EmpireFxData.BLAST_RED)  # Its strip when the art exists (visual only).
 	Sfx.play("boss_arrive", position, 1.2)
 	if motion != null:
 		motion.reset(UnitMotion.feet_of(motion_sprite_key(), "", radius), radius, MotionData.BOSS_SCALE, false)

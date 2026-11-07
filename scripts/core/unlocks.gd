@@ -6,6 +6,10 @@
 ##                       run's stage belongs to that act (Act II's
 ##                       counter-passives are offered only in Act II).
 ##   offerable(id, stage) — both: AbilityManager's card pool asks this.
+## Demo mode (DemoMode, GDD §15.0 "Demo mode (owner request, Nov 2026)"): a
+## lockable item outside DemoData.OPEN_ITEMS is closed in the demo whatever the
+## save says (is_open(), offerable_with()), no demo run unlocks it
+## (newly_unlocked()) and its lock text reads "Full game" (lock_text()).
 ## The autotest never reads or writes the player's save (CLAUDE.md), so its
 ## Meta is a fresh one: an item is open there when --unlocks=all was given or
 ## when --spells= / --passives= / --classes= forces it (GameState).
@@ -17,6 +21,8 @@ extends RefCounted
 static func is_open(id: String) -> bool:
 	if not UnlockData.UNLOCKS.has(id):
 		return true
+	if not DemoMode.allows_item(id):
+		return false  # The demo: full-game content stays closed, even for the autotest.
 	if GameState.autotest and GameState.autotest_forces(id):
 		return true
 	if GameState.autotest and GameState.autotest_unlock_all and not is_reward(id):
@@ -88,7 +94,7 @@ static func offerable(id: String, stage_def: Dictionary) -> bool:
 ## player's card pool follows their own progress.
 static func offerable_with(id: String, stage_def: Dictionary, unlocked: Dictionary) -> bool:
 	var open := not UnlockData.UNLOCKS.has(id) or unlocked.has(id) or (GameState.autotest and GameState.autotest_forces(id))
-	return open and act_allows(id, stage_def)
+	return open and DemoMode.allows_item(id) and act_allows(id, stage_def)
 
 
 ## The card row of item `id` (spell, passive or summon class; {} if none).
@@ -106,6 +112,8 @@ static func card_row(id: String) -> Dictionary:
 static func lock_text(id: String) -> String:
 	if not UnlockData.UNLOCKS.has(id):
 		return ""
+	if not DemoMode.allows_item(id):
+		return DemoMode.lock_line()  # The demo: "Full game".
 	return String((UnlockData.UNLOCKS[id] as Dictionary).get("text", ""))
 
 
@@ -115,8 +123,8 @@ static func lock_text(id: String) -> String:
 static func newly_unlocked(boss_id: String, achieved: Dictionary, already: Dictionary) -> PackedStringArray:
 	var out := PackedStringArray()
 	for id: String in UnlockData.UNLOCKS:
-		if already.has(id):
-			continue
+		if already.has(id) or not DemoMode.allows_item(id):
+			continue  # Already open, or full-game content in the demo.
 		var row: Dictionary = UnlockData.UNLOCKS[id]
 		if row.has("boss") and boss_id != "" and String(row["boss"]) == boss_id:
 			out.append(id)

@@ -1,0 +1,8 @@
+A SEAMLESS, tileable ground texture for a top-down 2D pixel-art game, seen straight from above. LOW-RESOLUTION pixel art: exactly 128 x 128 pixels, shown enlarged so every pixel is a big square block. The left edge must continue the right edge and the top edge the bottom edge.
+
+Subject: the floor of a dark BAMBOO GROVE: dark earth covered with fallen narrow bamboo leaves, a few roots and small stones. Very DARK and LOW CONTRAST: it is a background that every character must stand out from. No objects that look solid, no characters.
+
+Colours: ONLY flat fills from this list: earth #15190F (most of the tile), #1E2416, leaf litter #2E3A1E #3A3218, dark lines #0E110A. No gradients, no dithering, no noise.
+
+Output: a square PNG, the tile filling the whole image edge to edge. No border, no text, no watermark.
+Attached: an approved floor tile of this game, for the pixel size and darkness.

@@ -27,6 +27,8 @@
 ##   adjust_stats(u) / rooted() / taunt_reach(u)  per-unit stats after
 ##                       apply_stats(), a root without CASTING, a taunt
 ##                       (content wave 2: the Bone Golem).
+##   damage_taken_mult(u, source)  share of an enemy hit the unit still takes
+##                       (Act IV: the Myrmidon Shades' shield wall).
 ##
 ## Determinism (CLAUDE.md): only the seeded global RNG, never instance ids.
 class_name SummonBehavior
@@ -162,6 +164,15 @@ func rooted() -> bool:
 ## Golem Bulwark); 0 = none.
 func taunt_reach(_u: SummonedUnit) -> float:
 	return 0.0
+
+
+# --- Act IV: the Asphodel Underworld (a generic hook; 1 for every other class) ---
+
+## Share (0..1) of an enemy hit tagged `source` the unit still takes
+## (CombatResolver.damage_unit(), after the passives' cuts): the Myrmidon
+## Shades' locked shield wall. 1 = no cut (every other class).
+func damage_taken_mult(_u: SummonedUnit, _source: String) -> float:
+	return 1.0
 
 
 # =====================================================================================

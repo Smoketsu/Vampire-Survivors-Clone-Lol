@@ -12,6 +12,13 @@
 ##   "bulwark" Bone Golem         GolemBehavior (content wave 2)
 ##   "hover"  Grave Drone         GraveDroneBehavior (Act III, the Assembly Halls)
 ##   "suppress" Iron Revenant     RevenantBehavior (Act III, the Iron Citadel)
+##   "shieldwall" Myrmidon Shade  MyrmidonBehavior (Act IV, the Asphodel Underworld)
+##   "kanabo" Bound Oni           OniBehavior (Act V, the Road to the Sun)
+##   "allure" Succubus            BoundSuccubusBehavior (Act VI, the Palace of Silk and Ash)
+##   "hellfire" Archfiend         ArchfiendBehavior (Act VI, Pandemonium)
+##   "bloodthirst" Blood Spawn    BloodSpawnBehavior (Act VII, Castle Sanguis)
+##   "hero_slam" Fallen Hero      FallenHeroBehavior (Act VIII, Liberty Heights)
+##   "saucer_lift" Ghost Saucer   GhostSaucerBehavior (Act IX, the Ark of the Concord)
 ## It creates / reuses the per-unit instance and builds the class-specific
 ## level-up card lines (AbilityManager._summon_offer()), so the shared code
 ## only ever talks to this file and the SummonBehavior base class.
@@ -57,6 +64,27 @@ static func for_unit(current: SummonBehavior, kind: String) -> SummonBehavior:
 		# --- Act III: the Iron Citadel ---
 		"suppress":
 			b = RevenantBehavior.new()  # The Iron Revenant.
+		# --- Act IV: the Asphodel Underworld ---
+		"shieldwall":
+			b = MyrmidonBehavior.new()  # The Myrmidon Shades.
+		# --- Act V: the Road to the Sun ---
+		"kanabo":
+			b = OniBehavior.new()  # The Bound Oni.
+		# --- Act VI: the Palace of Silk and Ash ---
+		"allure":
+			b = BoundSuccubusBehavior.new()  # The Succubus.
+		# --- Act VI: Pandemonium ---
+		"hellfire":
+			b = ArchfiendBehavior.new()  # The Archfiend.
+		# --- Act VII: Castle Sanguis ---
+		"bloodthirst":
+			b = BloodSpawnBehavior.new()  # The Blood Spawn.
+		# --- Act VIII: Liberty Heights ---
+		"hero_slam":
+			b = FallenHeroBehavior.new()  # The Fallen Hero.
+		# --- Act IX: the Ark ---
+		"saucer_lift":
+			b = GhostSaucerBehavior.new()  # The Ghost Saucer.
 	if b != null:
 		b.kind = kind
 	return b
@@ -156,6 +184,55 @@ static func card_lines(cls: String, cur: Dictionary, nxt: Dictionary) -> PackedS
 			else:
 				_delta(out, "Shells per burst", a, b, "shells")
 				_delta(out, "Slow time (s)", a, b, "slow_duration")
+		# --- Act IV: the Asphodel Underworld ---
+		"shieldwall":
+			if a.is_empty():
+				out.append("Holds the ring's front; three side by side lock shields")
+				out.append("Shield wall: %d%% less damage; the spear runs through a foe behind" % int(roundf(float(b["wall_cut"]) * 100.0)))
+		# --- Act V: the Road to the Sun ---
+		"kanabo":
+			if a.is_empty():
+				out.append("Holds the ring's front like a wall of muscle")
+				out.append("Kanabo smash: stuns every foe it lands on for %.1f s" % float(b["smash_stun_duration"]))
+			else:
+				_delta(out, "Smash damage", a, b, "smash_damage")
+				_delta(out, "Stun (s)", a, b, "smash_stun_duration")
+		# --- Act VI: the Palace of Silk and Ash ---
+		"allure":
+			if a.is_empty():
+				out.append("Floats behind the ring and throws kiss bolts")
+				out.append("Charm: the foe it fights fights for you for %.1f s" % float(b["charm_duration"]))
+			else:
+				_delta(out, "Charm (s)", a, b, "charm_duration")
+				_delta(out, "Thrall hit", a, b, "thrall_damage")
+		# --- Act VI: Pandemonium ---
+		"hellfire":
+			if a.is_empty():
+				out.append("Holds the ring's front on spread wings")
+				out.append("Hellfire Cleave: sweeps a wide arc and throws the foes in it back")
+			else:
+				_delta(out, "Cleave damage", a, b, "cleave_damage")
+				_delta(out, "Cleave cooldown (s)", a, b, "cleave_cooldown")
+		# --- Act VII: Castle Sanguis ---
+		"bloodthirst":
+			if a.is_empty():
+				out.append("Fast brawlers on the ring's front")
+				out.append("Bloodthirst: every blow that lands heals them")
+		# --- Act VIII: Liberty Heights ---
+		"hero_slam":
+			if a.is_empty():
+				out.append("Flies around your ring, then slams the densest pack")
+			else:
+				_delta(out, "Slam damage", a, b, "slam_damage")
+				_delta(out, "Slam cooldown (s)", a, b, "slam_cooldown")
+		# --- Act IX: the Ark ---
+		"saucer_lift":
+			if a.is_empty():
+				out.append("Hovers over your army and fires short beams")
+				out.append("Lifts small foes and drops them hard")
+			else:
+				_delta(out, "Drop damage", a, b, "lift_damage")
+				_delta(out, "Lift cooldown (s)", a, b, "lift_cooldown")
 	return out
 
 

@@ -30,6 +30,10 @@
 ##                       the kit draws the enemy's body itself on `ci` (its
 ##                       body layer) instead of the kind's sprite / glyph (the
 ##                       default false).
+##   taken_mult(e, source)  Act V (the Road to the Sun: the Kitsune's fox-fire
+##                       illusions): share of a friendly hit tagged `source`
+##                       the enemy takes (Enemy.damage_taken_mult(), the one
+##                       read; the default 1 changes nothing).
 ##   danger_push(e, p)   autotest autopilot hint: a push away from this
 ##                       kit's live telegraph at `p` (zero when none).
 ##   draw_under(e) / draw_over(e, ci)  drawn before / after the body
@@ -104,6 +108,15 @@ func draws_body(_e: Enemy) -> bool:
 ## Draws the enemy's body on `_ci` (its body layer) when draws_body() is true.
 func draw_body(_e: Enemy, _ci: CanvasItem) -> void:
 	pass
+
+
+# --- Act V: the Road to the Sun (a generic hook; 1 for every other kit) ---
+## Share (0..1) of a friendly hit tagged `_source` the enemy takes
+## (Enemy.damage_taken_mult(), before every other modifier there): the
+## Kitsune's fox-fire illusions shrug off every blow (FoxFireKit). 1 = no
+## change (every other kit).
+func taken_mult(_e: Enemy, _source: String) -> float:
+	return 1.0
 
 
 ## True while a special runs (the autotest's stuck check skips the enemy).

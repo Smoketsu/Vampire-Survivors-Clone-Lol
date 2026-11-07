@@ -139,5 +139,7 @@ func draw_over(e: Enemy, ci: CanvasItem) -> void:
 			AssemblyGlyphs.draw_arc_beam(ci, Vector2(e.radius * 0.6, -e.radius * 0.4), m.position - e.position, 1.0 - age / ARC_FX_TIME)
 		i -= 1
 	if phase == JAMMING:
+		CovenantFx.base = Transform2D(0.0, Vector2(e.scale.x, 1.0), 0.0, Vector2.ZERO)  # The field art in world axes too.
 		AssemblyGlyphs.draw_jam_field(ci, jam_at - e.position, float(d["jam_radius"]), clampf(phase_time / maxf(0.01, float(d["jam_hold"])), 0.0, 1.0))
+		CovenantFx.base = Transform2D.IDENTITY
 	ci.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)

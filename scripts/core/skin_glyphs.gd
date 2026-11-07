@@ -19,12 +19,14 @@ extends RefCounted
 
 
 ## Draws skin `id` centred near `o` on `ci` (body radius `r`, white while
-## `flash`). Returns false (drawing nothing) for an unknown id.
-static func draw_skin(ci: CanvasItem, id: String, o: Vector2, r: float, flash: bool) -> bool:
+## `flash`), palette-swapped by `recolour` (RecolourData id, "" = the skin's own
+## colours; sprite art only, a code-drawn glyph keeps its palette). Returns
+## false (drawing nothing) for an unknown id.
+static func draw_skin(ci: CanvasItem, id: String, o: Vector2, r: float, flash: bool, recolour: String = "") -> bool:
 	var row := SkinData.skin(id)  # Skin data ({} if unknown).
 	if row.is_empty():
 		return false
-	if SpriteBank.draw(ci, String(row["sprite"]), o, flash):
+	if SpriteBank.draw(ci, String(row["sprite"]), o, flash, Color.WHITE, recolour):
 		return true  # The skin's own art exists.
 	var accent: Color = row["accent"]  # Emblem / aura colour (alpha 0 = none).
 	var emblem := String(row["emblem"])  # Emblem shape id.
@@ -47,14 +49,27 @@ static func draw_skin(ci: CanvasItem, id: String, o: Vector2, r: float, flash: b
 	if accent.a > 0.0 and behind:
 		_emblem(ci, emblem, top, unit, accent, row["glow"])
 	if has_art:
-		SpriteBank.draw(ci, base, o, flash, row["tint"])
+		SpriteBank.draw(ci, base, o, flash, row["tint"], recolour)
 	elif own_look:
-		CharacterGlyphs.draw_player(ci, ch, o, r, flash, row["tint"])
+		CharacterGlyphs.draw_player(ci, ch, o, r, flash, row["tint"], recolour)
 	else:
 		_glyph(ci, o, r, flash, row)
 	if accent.a > 0.0 and not behind:
 		_emblem(ci, emblem, top, unit, accent, row["glow"])
 	return true
+
+
+## Builds the recoloured art of the sprite skin `id` ("" = the character's
+## default look) of `character` draws, for recolour `recolour`, ahead of the
+## first frame (SpriteBank.warm_recolour()). Does nothing without a recolour.
+static func warm(id: String, character: String, recolour: String) -> void:
+	if recolour == "":
+		return
+	var key := SkinData.base_sprite(character)  # The character's own sprite.
+	var row := SkinData.skin(id)  # The skin ({} for the default look).
+	if not row.is_empty() and SpriteBank.has(String(row["sprite"])):
+		key = String(row["sprite"])  # The skin's own art.
+	SpriteBank.warm_recolour(key, recolour)
 
 
 ## Faint accent ellipse under the feet (on top of the player's ground ring).

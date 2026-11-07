@@ -1,0 +1,7 @@
+A sheet of FOUR separate pixel-art game OBSTACLE PROPS in one row, evenly spaced with wide empty gaps between them, on a FULLY TRANSPARENT background (real alpha). Three-quarter top-down view (camera above and in front, like a top-down action game), each prop standing upright on its base, chunky low-resolution pixel art (each prop about 30 pixels wide), crisp square pixels, 1-pixel dark outline, flat colours, at most 3 shades per material, light from the top-left. No ground, no cast shadow, no text.
+From left to right (a demon queen's palace in hell: rose gardens of black thorns, a hall of mirrors, a ballroom):
+1. A BLACK ROSE BUSH: a round bush of black thorny stems with dark crimson roses.
+2. A MARBLE COLUMN: a short thick round column of dark rose-veined marble with a gold capital and base.
+3. A PALACE MIRROR: a tall oval standing mirror in an ornate black and gold frame on clawed feet, the glass pale violet with a white highlight.
+4. A CANDELABRA: a tall black iron candelabra with five pink-flamed candles.
+Colours: black #0B0A10 #1E1A26 #352E40 #5A5068; crimson #5C1A3A #9B2D5E #D45C8A; rose marble #4A3A44 #7A6470 #B09AA6; gold #8A6A1E #D9A93A #F5D870; mirror violet #6A5A88 #A898C8 #E8E0F8; charm pink #FF6FB5 #FFB8DD.

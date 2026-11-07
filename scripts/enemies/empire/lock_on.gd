@@ -260,6 +260,8 @@ func _draw() -> void:
 		if _target_alive(i):
 			var t := _target[i].position  # Reticle on the painted target.
 			var r := 9.0 if locked else 12.0 - 3.0 * _time[i] / maxf(_paint[i], 0.01)
+			if EmpireFx.lock_reticle(self, t, r, locked, blink):
+				continue  # The reticle's pixel art (GDD §15.0 "Act III AoE art").
 			draw_arc(t, r, 0.0, TAU, 20, Color(col, 0.9), 1.5)
 			for k in 4:
 				var q := Vector2.from_angle(PI * 0.5 * float(k))

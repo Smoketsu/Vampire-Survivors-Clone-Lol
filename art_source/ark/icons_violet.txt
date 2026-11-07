@@ -1,0 +1,8 @@
+A sheet of FOUR separate pixel-art game ICON SYMBOLS in one row, evenly spaced with wide empty gaps between them, on a FULLY TRANSPARENT background (real alpha). Each symbol is simple, bold and centred in its quarter of the image, drawn as chunky low-resolution pixel art (each symbol about 24 pixels wide on a coarse grid, shown enlarged with crisp square pixels, nearest-neighbour, 1-pixel dark outline, flat colours, at most 3 shades per colour, light from the top-left). No frame, no badge background, no text, no letters.
+From left to right:
+1. TRACTOR BEAM: a downward cone of soul-teal light lifting a small dark horned monster silhouette off the ground, a light ring on the ground below.
+2. STARSEED: a glowing soul-teal seed shaped like a four-pointed star, with a small sprout curling out of it.
+3. GHOST SAUCER: a small round flying saucer of bone-white plates with a soul-teal glowing dome.
+4. CROP CIRCLES: three concentric soul-teal rings pressed into a field of dark stalks, seen from above.
+Colours: black #0B0A10 #1C1426; soul teal #1F7A5C #3FD39A #9CFFD8; bone #8C8674 #C8C0A8 #E6E0CC; dark field #2A2A1E #4A4A30.
+Attached: an approved icon of this game: match its pixel size, outline weight and flat look (only the symbol, not its frame).

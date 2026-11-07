@@ -366,8 +366,9 @@ func _draw() -> void:
 	for z in dead_zones:
 		var c := Vector2(z.x, z.y)  # Zone centre.
 		draw_arc(c, z.z, 0.0, TAU, 48, Color(Palette.EMPIRE_CHROME_LIGHT, 0.10), 2.0)
-		draw_circle(c, 10.0, Color(Palette.EMPIRE_CHROME_DARK, 0.6))
-		draw_line(c + Vector2(-9, 4), c + Vector2(12, -6), Palette.EMPIRE_CHROME, 3.0)
+		if not EmpireFx.pylon_stump(self, c):
+			draw_circle(c, 10.0, Color(Palette.EMPIRE_CHROME_DARK, 0.6))
+			draw_line(c + Vector2(-9, 4), c + Vector2(12, -6), Palette.EMPIRE_CHROME, 3.0)
 
 
 ## The storm's dust veil on `ci` (StormVeil): rings of ochre dust thickening
@@ -381,6 +382,9 @@ func draw_veil(ci: CanvasItem) -> void:
 	var clear := float(config["storm_clear_radius"])  # Clear radius around him (px).
 	var far := game.view_size().length() * 0.6 + 80.0  # Past the screen corners (px).
 	var dust: Color = config["storm_color"]  # Dust colour.
+	var half_view := game.view_size() * 0.5  # The view round him (px).
+	if EmpireFx.storm(ci, p, clear, far, dust, k, Rect2(p - half_view, half_view * 2.0), game.elapsed):
+		return  # The veil and grit textures (GDD §15.0 "Act III AoE art"); the rings below are the fallback.
 	var r := clear
 	var band := 46.0  # Ring width (px).
 	while r < far:

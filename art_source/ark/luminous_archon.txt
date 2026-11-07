@@ -1,0 +1,13 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, standing tall and gliding, both arms spread a little with beams of light gathering in its open hands, a halo of crystal shards behind its head
+
+LOW-RESOLUTION pixel art: the whole figure is only 64 pixels tall, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims, lacing or engravings.
+
+Subject: a MALE LUMINOUS ARCHON (a lord of the Luminous, male, a larger and grander kind of the attached Lumen Sentinel): a tall being of white-gold living light in heavy segmented crystal armour, a tall crested crystal helm with a blank glowing face, a crown-like HALO of sharp crystal shards floating behind the head, huge pointed shoulder plates, long glowing arms, a flowing glowing lower body that fades into a narrow point (no legs touching the ground, it glides). No staff. Not a woman. Never violet or purple (violet and bone are the player's), never bone-white skulls.
+Signature shape that must read in silhouette: the crested helm with the halo of shards, the huge pointed shoulders and the tapering glowing body.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: white-gold light #C9A95C #FFE9A0; crystal hull white #E8ECF0 #AEB8C4; a few dark joint lines #3A424C; the beams in its hands #FFE9A0 with one magenta spark #FF2FB8
+
+Outline: a clean 1-pixel dark outline around the whole subject in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the subject), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark. Draw ONLY ONE figure.
+Attached: (1) the Lumen Sentinel game sprite, for pixel size, outline weight and flat look, and the race's look (this unit is its larger lord); (2) concept art of the Lumen Sentinel for the costume only (do NOT copy its detail level or painted shading).

@@ -188,6 +188,27 @@ const CLASSES := {
 	# --- Act III: the Iron Citadel ---
 	"iron_revenant": {"trigger": "attack", "every": 3, "pattern": "fan", "counts": [4, 6], "spread": 30.0, "speed": 400.0,
 		"life": 0.55, "share": 0.4, "pierce": 1, "radius": 4.0, "style": "orb", "color": Color(0.70, 0.92, 0.86)},  # TUNING (not in GDD) a spray of soul-lit shrapnel
+	# --- Act IV: the Asphodel Underworld ---
+	"myrmidon_shade": {"trigger": "attack", "every": 3, "pattern": "fan", "counts": [3, 5], "spread": 20.0, "speed": 360.0,
+		"life": 0.4, "share": 0.35, "pierce": 1, "radius": 4.0, "style": "shard", "color": Color(0.87, 0.85, 0.76)},  # TUNING (not in GDD) a fan of bone spear-points thrown past the wall
+	# --- Act V: the Road to the Sun ---
+	"bound_oni": {"trigger": "special", "every": 1, "pattern": "ring", "counts": [6, 9], "speed": 260.0,
+		"life": 0.45, "share": 0.3, "pierce": 1, "radius": 4.0, "style": "shard", "color": Color(0.87, 0.85, 0.76)},  # TUNING (not in GDD) shards of stone thrown up by the kanabō
+	# --- Act VI: the Palace of Silk and Ash ---
+	"bound_succubus": {"trigger": "special", "every": 1, "pattern": "ring", "counts": [5, 8], "speed": 220.0,
+		"life": 0.5, "share": 0.3, "pierce": 1, "radius": 4.0, "style": "orb", "color": Color(1.0, 0.44, 0.71)},  # TUNING (not in GDD) a ring of charm-pink kisses around each charm
+	# --- Act VI: Pandemonium ---
+	"archfiend": {"trigger": "special", "every": 1, "pattern": "fan", "counts": [5, 7], "spread": 60.0, "speed": 300.0,
+		"life": 0.45, "share": 0.3, "pierce": 1, "radius": 4.0, "style": "orb", "color": Color(0.70, 0.92, 0.86)},  # TUNING (not in GDD) a fan of soul-fire embers off the cleave
+	# --- Act VII: Castle Sanguis ---
+	"blood_spawn": {"trigger": "attack", "every": 4, "pattern": "fan", "counts": [3, 4], "spread": 40.0, "speed": 300.0,
+		"life": 0.4, "share": 0.3, "pierce": 1, "radius": 3.5, "style": "shard", "color": Color(0.88, 0.22, 0.31)},  # TUNING (not in GDD) a spray of blood-red claw shards every fourth blow
+	# --- Act VIII: Liberty Heights ---
+	"fallen_hero": {"trigger": "special", "every": 1, "pattern": "ring", "counts": [6, 8], "speed": 280.0,
+		"life": 0.45, "share": 0.3, "pierce": 1, "radius": 4.0, "style": "orb", "color": Color(0.70, 0.92, 0.86)},  # TUNING (not in GDD) a ring of soul shards off every slam
+	# --- Act IX: the Ark ---
+	"ghost_saucer": {"trigger": "special", "every": 1, "pattern": "ring", "counts": [5, 7], "speed": 260.0,
+		"life": 0.45, "share": 0.3, "pierce": 1, "radius": 3.5, "style": "orb", "color": Color(0.70, 0.92, 0.86)},  # TUNING (not in GDD) a ring of soul-light where a lifted foe falls
 }
 
 ## Summon evolution id -> its showpiece volley (replaces the class volley once evolved;
@@ -230,6 +251,27 @@ const EVOLVED := {
 	# --- Act III: the Iron Citadel ---
 	"deus_revenant": {"trigger": "attack", "every": 3, "pattern": "spiral", "counts": [12], "speed": 300.0,
 		"life": 0.6, "share": 0.3, "pierce": 1, "radius": 4.5, "style": "orb", "color": Color(0.70, 0.92, 0.86), "curve": 1.6},  # TUNING (not in GDD) a whirl of shrapnel from the twin cannons
+	# --- Act IV: the Asphodel Underworld ---
+	"legion_of_tartarus": {"trigger": "attack", "every": 3, "pattern": "fan", "counts": [7], "spread": 44.0, "speed": 380.0,
+		"life": 0.45, "share": 0.3, "pierce": 2, "radius": 4.5, "style": "shard", "color": Color(0.70, 0.92, 0.86)},  # TUNING (not in GDD) a wide fan of soul-lit spear-points from the wall
+	# --- Act V: the Road to the Sun ---
+	"oni_lord": {"trigger": "special", "every": 1, "pattern": "ring", "counts": [14], "speed": 300.0,
+		"life": 0.55, "share": 0.3, "pierce": 2, "radius": 4.5, "style": "shard", "color": Color(0.70, 0.92, 0.86)},  # TUNING (not in GDD) the quake's ring of soul-lit stone
+	# --- Act VI: the Palace of Silk and Ash ---
+	"lilim_matriarch": {"trigger": "special", "every": 1, "pattern": "ring", "counts": [12], "speed": 250.0,
+		"life": 0.6, "share": 0.3, "pierce": 2, "radius": 4.5, "style": "orb", "color": Color(0.70, 0.92, 0.86)},  # TUNING (not in GDD) a soul-lit ring of kisses around each double charm
+	# --- Act VI: Pandemonium ---
+	"prince_of_hell": {"trigger": "special", "every": 1, "pattern": "ring", "counts": [12], "speed": 320.0,
+		"life": 0.5, "share": 0.3, "pierce": 2, "radius": 4.5, "style": "orb", "color": Color(0.70, 0.92, 0.86)},  # TUNING (not in GDD) the full-circle cleave's ring of soul-fire
+	# --- Act VII: Castle Sanguis ---
+	"nosferatu": {"trigger": "attack", "every": 3, "pattern": "ring", "counts": [8], "speed": 280.0,
+		"life": 0.45, "share": 0.3, "pierce": 2, "radius": 4.0, "style": "orb", "color": Color(0.70, 0.92, 0.86)},  # TUNING (not in GDD) a soul-lit ring of blood every third blow
+	# --- Act VIII: Liberty Heights ---
+	"black_paragon": {"trigger": "special", "every": 1, "pattern": "ring", "counts": [12], "speed": 320.0,
+		"life": 0.5, "share": 0.3, "pierce": 2, "radius": 4.5, "style": "orb", "color": Color(0.70, 0.92, 0.86)},  # TUNING (not in GDD) a full ring of soul-fire off every slam
+	# --- Act IX: the Ark ---
+	"black_mothership": {"trigger": "special", "every": 1, "pattern": "ring", "counts": [10], "speed": 300.0,
+		"life": 0.5, "share": 0.3, "pierce": 2, "radius": 4.0, "style": "orb", "color": Color(0.70, 0.92, 0.86)},  # TUNING (not in GDD) a full ring of soul-light where each lifted foe falls
 }
 
 # --- Spell echoes (every owned spell from LEVEL_ON) --------------------------------------
@@ -283,6 +325,57 @@ const SPELLS := {
 	# --- Act III: the Iron Citadel ---
 	"scrap_swarm": {"every": 5, "clock": "cooldown", "aim": "nearest", "pattern": "ring", "counts": [6, 9, 14], "speed": 280.0,
 		"life": 0.6, "share": 0.5, "pierce": 1, "radius": 3.5, "style": "shard", "color": Color(0.64, 0.36, 0.98)},  # TUNING (not in GDD) a ring of scrap shards (every 5 drone intervals)
+	# --- Act IV: the Shores of Ilion ---
+	"paris_arrow": {"every": 2, "clock": "cooldown", "aim": "strongest", "pattern": "seek", "counts": [2, 3, 5], "speed": 300.0,
+		"life": 1.2, "share": 0.35, "pierce": 0, "radius": 3.5, "style": "spark", "color": Color(0.80, 0.62, 1.0), "homing": 6.0},  # TUNING (not in GDD) a few small violet ghost darts seeking the strongest foe
+	# --- Act IV: Mount Olympus ---
+	"stolen_thunder": {"every": 1, "clock": "cooldown", "aim": "strongest", "pattern": "seek", "counts": [3, 5, 7], "speed": 300.0,
+		"life": 0.9, "share": 0.2, "pierce": 0, "radius": 3.5, "style": "spark", "color": Color(0.435, 0.714, 0.910), "homing": 8.0},  # TUNING (not in GDD) Aegean sparks that seek the strongest foe with each bolt
+	# --- Act IV: the Asphodel Underworld ---
+	"river_styx": {"every": 2, "clock": "cooldown", "aim": "nearest", "pattern": "fan", "counts": [3, 5, 7], "spread": 40.0, "speed": 220.0,
+		"life": 0.8, "share": 0.4, "pierce": 1, "radius": 4.0, "style": "orb", "color": Color(0.64, 0.36, 0.98)},  # TUNING (not in GDD) drops of black water flung after each new river
+	# --- Act V: the Burning Province ---
+	"hundred_shadows": {"every": 2, "clock": "cooldown", "aim": "nearest", "pattern": "fan", "counts": [3, 5, 8], "spread": 50.0, "speed": 420.0,
+		"life": 0.6, "share": 0.35, "pierce": 1, "radius": 3.5, "style": "dagger", "color": Color(0.45, 0.32, 0.78)},  # TUNING (not in GDD) a fan of shadow kunai with every other split
+	# --- Act V: the Road to the Sun ---
+	"black_sun": {"every": 3, "clock": "cooldown", "aim": "nearest", "pattern": "fan", "counts": [3, 5, 7], "spread": 30.0, "speed": 260.0,
+		"life": 0.7, "share": 0.4, "pierce": 1, "radius": 4.0, "style": "orb", "color": Color(0.64, 0.36, 0.98)},  # TUNING (not in GDD) embers of the dark sun flung after every third volley of beams
+	# --- Act V: Castle Kurogane ---
+	"banner_of_the_dead": {"every": 1, "clock": "cooldown", "aim": "nearest", "pattern": "ring", "counts": [6, 9, 14], "speed": 260.0,
+		"life": 0.6, "share": 0.4, "pierce": 1, "radius": 3.5, "style": "shard", "color": Color(0.64, 0.36, 0.98)},  # TUNING (not in GDD) a ring of violet bone shards with each planting
+	# --- Act VI: the Burning Gate ---
+	"brimstone": {"every": 2, "clock": "cooldown", "aim": "densest", "pattern": "ring", "counts": [5, 8, 12], "speed": 200.0,
+		"life": 0.6, "share": 0.35, "pierce": 1, "radius": 4.0, "style": "orb", "color": Color(1.0, 0.70, 0.28)},  # TUNING (not in GDD) a ring of embers thrown up by every other volley of stones
+	# --- Act VI: the Palace of Silk and Ash ---
+	"tempt": {"every": 1, "clock": "cooldown", "aim": "nearest", "pattern": "fan", "counts": [3, 5, 7], "spread": 36.0, "speed": 240.0,
+		"life": 0.7, "share": 0.4, "pierce": 1, "radius": 4.0, "style": "orb", "color": Color(0.85, 0.55, 1.0)},  # TUNING (not in GDD) a fan of violet-pink kisses blown with each charm
+	# --- Act VI: Pandemonium ---
+	"fall_from_grace": {"every": 2, "clock": "cooldown", "aim": "nearest", "pattern": "ring", "counts": [5, 7, 10], "speed": 240.0,
+		"life": 0.6, "share": 0.35, "pierce": 1, "radius": 3.5, "style": "orb", "color": Color(1.0, 0.82, 0.30)},  # TUNING (not in GDD) a ring of star-sparks with every other cast
+	# --- Act VII: Ravensmoor ---
+	"moonfang": {"every": 2, "clock": "cooldown", "aim": "nearest", "pattern": "fan", "counts": [3, 5, 8], "spread": 30.0, "speed": 360.0,
+		"life": 0.6, "share": 0.3, "pierce": 1, "radius": 3.5, "style": "shard", "color": Color(0.902, 0.933, 0.969)},  # TUNING (not in GDD) a fan of moonlit fang-shards with every other snap (Palette.COURT_MOON_LIGHT)
+	# --- Act VII: the Witchwood ---
+	"witch_circle": {"every": 3, "clock": "cooldown", "aim": "nearest", "pattern": "ring", "counts": [6, 9, 12], "speed": 160.0,
+		"life": 0.6, "share": 0.35, "pierce": 1, "radius": 3.5, "style": "orb", "color": Color(0.88, 0.22, 0.31)},  # TUNING (not in GDD) a ring of blood-red runes with every third pulse
+	# --- Act VII: Castle Sanguis ---
+	"night_swarm": {"every": 3, "clock": "cooldown", "aim": "nearest", "pattern": "fan", "counts": [3, 4, 6], "spread": 30.0, "speed": 260.0,
+		"life": 0.6, "share": 0.35, "pierce": 1, "radius": 3.5, "style": "orb", "color": Color(0.70, 0.92, 0.86)},  # TUNING (not in GDD) a fan of spectral wings every third dart cooldown
+	# --- Act VIII: Skid Row ---
+	"hearse_run": {"every": 2, "clock": "cooldown", "aim": "nearest", "pattern": "fan", "counts": [3, 5, 7], "spread": 24.0, "speed": 320.0,
+		"life": 0.6, "share": 0.3, "pierce": 2, "radius": 3.5, "style": "shard", "color": Color(0.55, 0.95, 0.8)},  # TUNING (not in GDD) a fan of spectral grave-lights with every other run
+	# --- Act VIII: Fort Kessler ---
+	"bone_mines": {"every": 3, "clock": "cooldown", "aim": "nearest", "pattern": "ring", "counts": [5, 7, 10], "speed": 220.0,
+		"life": 0.5, "share": 0.3, "pierce": 1, "radius": 3.5, "style": "shard", "color": Color(0.87, 0.85, 0.76)},  # TUNING (not in GDD) a ring of bone splinters with every third drop (Palette.BONE)
+	# --- Act VIII: Liberty Heights ---
+	"heros_fist": {"every": 2, "clock": "cooldown", "aim": "strongest", "pattern": "ring", "counts": [5, 6, 8], "speed": 260.0,
+		"life": 0.5, "share": 0.35, "pierce": 1, "radius": 3.5, "style": "orb", "color": Color(0.70, 0.92, 0.86)},  # TUNING (not in GDD) a ring of knuckle-sparks with every other cast
+	# --- Act IX: the Proving Moon ---
+	"soul_caster": {"every": 2, "clock": "cooldown", "aim": "strongest", "pattern": "fan", "counts": [3, 4, 6], "spread": 24.0, "speed": 300.0,
+		"life": 0.55, "share": 0.3, "pierce": 1, "radius": 3.0, "style": "orb", "color": Color(0.36, 0.94, 0.86)},  # TUNING (not in GDD) a fan of soul bolts from the cannon with every other shot (SoulCasterData.SOUL_COLOR)
+	# --- Act IX: the Ark ---
+	"tractor_lift": {"every": 2, "clock": "cooldown", "aim": "strongest", "pattern": "ring", "counts": [5, 6, 8], "speed": 240.0,
+		"life": 0.5, "share": 0.35, "pierce": 1, "radius": 3.5, "style": "orb", "color": Color(0.70, 0.92, 0.86)},  # TUNING (not in GDD) a ring of soul-light with every other lift
 }
 ## Range (px) within which a spell echo looks for its target (no target, no echo).
 const SPELL_RANGE: float = 340.0  # TUNING (not in GDD)

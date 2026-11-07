@@ -53,7 +53,7 @@ const ENEMY_DAMAGE_MULT: float = 1.05  # TUNING (not in GDD)
 ## starved army (30 foes alive at 1:00 instead of 15).
 const ENEMY_MULT_FROM: float = 240.0  # TUNING (not in GDD)
 ## Soul Ash multiplier of a run on this stage (shown as its own end-screen line).
-const ASH_MULT: float = 1.25  # TUNING (not in GDD) user brief "e.g. x1.25"
+const ASH_MULT: float = 1.25  # TUNING (not in GDD) owner decision Oct 2026, GDD §15.0 "Ossuary expansion: owner decisions"; each act restarts at x1 / x1.25 / x1.5
 
 ## The Reckoning (same escalation as the Graveyard; only the flavour differs).
 ## Keys as GraveyardStage.RECKONING.

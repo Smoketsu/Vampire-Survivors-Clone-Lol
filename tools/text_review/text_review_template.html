@@ -1,0 +1,526 @@
+<title>Text Review</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jacquard+24&family=Jersey+10&display=swap" rel="stylesheet">
+<style>
+  /* Colour tokens: light by default, the art review's dark palette under a dark scheme. */
+  :root {
+    color-scheme: light;
+    --ground: #F3EFE6;
+    --panel: #FFFFFF;
+    --panel-2: #E7E1D3;
+    --stage: #FAF7F0;
+    --line: #CFC8B8;
+    --ink: #1F2428;
+    --ink-dim: #5E6368;
+    --violet: #6B45B5;
+    --teal: #0F8F7A;
+    --gold: #9A6B00;
+    --crimson: #B8322E;
+    --on-accent: #FFFFFF;
+    --ph-bg: #E9E0F7;
+    --ph-ink: #4B2D86;
+    --cut: 10px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --ground: #161A1C;
+      --panel: #20252A;
+      --panel-2: #2A3036;
+      --stage: #101315;
+      --line: #3A424A;
+      --ink: #E6E1D6;
+      --ink-dim: #A39E94;
+      --violet: #8F6BD1;
+      --teal: #4FD1B8;
+      --gold: #E2B44C;
+      --crimson: #D9534F;
+      --on-accent: #0D1A17;
+      --ph-bg: #33294A;
+      --ph-ink: #C9B5F2;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --ground: #161A1C;
+    --panel: #20252A;
+    --panel-2: #2A3036;
+    --stage: #101315;
+    --line: #3A424A;
+    --ink: #E6E1D6;
+    --ink-dim: #A39E94;
+    --violet: #8F6BD1;
+    --teal: #4FD1B8;
+    --gold: #E2B44C;
+    --crimson: #D9534F;
+    --on-accent: #0D1A17;
+    --ph-bg: #33294A;
+    --ph-ink: #C9B5F2;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font: 19px/1.25 "Jersey 10", system-ui, sans-serif;
+    padding: 0 16px 64px;
+    padding-left: max(16px, env(safe-area-inset-left));
+    padding-right: max(16px, env(safe-area-inset-right));
+  }
+  h1, h2 { font-family: "Jacquard 24", serif; font-weight: 400; margin: 0; }
+  h1 { font-size: 43px; line-height: 1; }
+  h3, h4 { font-weight: 400; margin: 0; }
+  p { margin: 0; }
+  button, input, textarea { font: inherit; color: inherit; }
+
+  .top {
+    background: var(--ground);
+    border-bottom: 1px solid var(--line);
+    padding: 14px 16px 10px;
+    margin: 0 -16px;
+  }
+  .top-row { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 20px; }
+  .lede { color: var(--ink-dim); max-width: 74ch; margin-top: 4px; }
+  .tally { display: flex; gap: 14px; flex-wrap: wrap; font-size: 28px; margin-left: auto; }
+  .tally b { font-weight: 400; }
+  .tally .t-ok b { color: var(--teal); }
+  .tally .t-chg b { color: var(--crimson); }
+  .tally .t-left b { color: var(--gold); }
+  .bar { height: 6px; background: var(--panel-2); margin-top: 8px; display: flex; }
+  .bar i { display: block; height: 100%; }
+  .bar .b-ok { background: var(--teal); }
+  .bar .b-chg { background: var(--crimson); }
+  .controls { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; margin-top: 10px; }
+  .chips { display: flex; gap: 6px; flex-wrap: wrap; }
+  .chip { background: var(--panel-2); border: 0; padding: 4px 12px; cursor: pointer; min-height: 32px; }
+  .chip[aria-pressed="true"] { background: var(--violet); color: #fff; }
+  .search {
+    flex: 1 1 220px; min-width: 0; max-width: 420px; min-height: 34px; padding: 4px 10px;
+    background: var(--stage); border: 1px solid var(--line);
+  }
+  button:focus-visible, input:focus-visible, textarea:focus-visible, summary:focus-visible, nav a:focus-visible {
+    outline: 2px solid var(--teal); outline-offset: 2px;
+  }
+  nav { display: flex; gap: 4px 6px; flex-wrap: wrap; margin-top: 10px; }
+  nav button {
+    background: transparent; border: 1px solid var(--line); padding: 2px 10px; cursor: pointer; color: var(--ink-dim);
+    min-height: 30px; text-align: left;
+  }
+  nav button:hover { color: var(--ink); border-color: var(--violet); }
+  nav button .n { font-size: 15px; margin-left: 6px; }
+  nav button.done { border-color: var(--teal); color: var(--teal); }
+  .notice { margin-top: 10px; padding: 8px 12px; background: #3A2224; color: #F2C7C5; display: none; }
+  .notice.on { display: block; }
+
+  .cat { margin-top: 18px; background: var(--panel); border-left: 4px solid var(--violet); }
+  .cat > summary {
+    list-style: none; cursor: pointer; padding: 10px 14px; display: flex; flex-wrap: wrap; align-items: baseline;
+    gap: 2px 14px;
+  }
+  .cat > summary::-webkit-details-marker { display: none; }
+  .cat > summary::before { content: "\25B8"; color: var(--violet); margin-right: -6px; }
+  .cat[open] > summary::before { content: "\25BE"; }
+  .cat h2 { font-size: 34px; color: var(--violet); }
+  .cat .sub { color: var(--ink-dim); }
+  .cat .mini { flex: 1 1 100%; height: 4px; background: var(--panel-2); display: flex; }
+  .cat .mini i { display: block; height: 100%; }
+  .cat .mini .m-ok { background: var(--teal); }
+  .cat .mini .m-chg { background: var(--crimson); }
+  .cat .body { padding: 0 14px 14px; }
+  .folder { font-size: 28px; margin: 18px 0 6px; color: var(--ink); }
+  .folder .n { color: var(--ink-dim); font-size: 19px; }
+
+  .row { background: var(--stage); border-left: 4px solid var(--line); padding: 8px 12px 10px; margin-top: 6px; }
+  .row[data-v="ok"] { border-left-color: var(--teal); }
+  .row[data-v="change"] { border-left-color: var(--crimson); }
+  .row.gone { display: none; }
+  .txt { white-space: pre-wrap; overflow-wrap: anywhere; font-size: 22px; line-height: 1.2; }
+  .ph { background: var(--ph-bg); color: var(--ph-ink); padding: 0 2px; }
+  .sp { color: var(--ink-dim); opacity: .7; }
+  .meta {
+    color: var(--ink-dim); font: 12.5px/1.35 system-ui, sans-serif; margin-top: 3px; overflow-wrap: anywhere;
+  }
+  .tag { font: 11px/1 system-ui, sans-serif; text-transform: uppercase; letter-spacing: .04em; padding: 2px 5px; margin-left: 6px; }
+  .tag.unsure { background: var(--gold); color: var(--on-accent); }
+  .tag.template { background: var(--ph-bg); color: var(--ph-ink); }
+  .also { background: none; border: 0; padding: 0; color: var(--violet); cursor: pointer; font: 12.5px/1.35 system-ui, sans-serif; text-decoration: underline; }
+  .others { margin: 3px 0 0; padding-left: 16px; color: var(--ink-dim); font: 12px/1.4 system-ui, sans-serif; overflow-wrap: anywhere; }
+  .act { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 6px; }
+  .v, .nbtn {
+    border: 0; background: var(--panel-2); min-height: 34px; min-width: 72px; padding: 2px 14px; cursor: pointer;
+  }
+  .nbtn { min-width: 0; color: var(--ink-dim); }
+  .v.ok[aria-pressed="true"] { background: var(--teal); color: var(--on-accent); }
+  .v.chg[aria-pressed="true"] { background: var(--crimson); color: #fff; }
+  .readonly .v, .readonly .nbtn { opacity: .55; cursor: default; }
+  .readonly .note { opacity: .7; }
+  .saved { color: var(--ink-dim); margin-left: auto; font-size: 16px; }
+  .saved.err { color: var(--crimson); }
+  .note {
+    display: block; width: 100%; margin-top: 6px; resize: vertical; min-height: 54px; background: var(--panel);
+    border: 1px solid var(--line); padding: 6px 8px;
+  }
+  .more { margin-top: 10px; background: var(--panel-2); border: 0; padding: 6px 16px; cursor: pointer; min-height: 36px; }
+  .empty-filter { display: none; color: var(--ink-dim); margin-top: 24px; }
+  .empty-filter.on { display: block; }
+  @media (max-width: 520px) {
+    .tally { margin-left: 0; font-size: 19px; }
+    .txt { font-size: 20px; }
+    .cat h2 { font-size: 28px; }
+    .search { max-width: none; }
+  }
+</style>
+
+<div class="top">
+  <div class="top-row">
+    <h1>Text Review</h1>
+    <div class="tally" aria-live="polite">
+      <span class="t-ok"><b id="n-ok">0</b> OK</span>
+      <span class="t-chg"><b id="n-chg">0</b> Change</span>
+      <span class="t-left"><b id="n-left">{{TOTAL}}</b> left</span>
+    </div>
+  </div>
+  <p class="lede">Every line of text a player can see in Necropathy, except the one-word menu buttons. Press <b>OK</b> if a line is fine, or <b>Change</b> and write what it should say (or what is wrong). Placeholders such as <span class="ph">%d</span>, <span class="ph">%s</span> and <span class="ph">{name}</span> are filled in by the game. A gold <span class="tag unsure">unsure</span> tag means the scan was not certain the text is shown.</p>
+  <div class="bar" aria-hidden="true"><i class="b-ok" id="b-ok" style="width:0"></i><i class="b-chg" id="b-chg" style="width:0"></i></div>
+  <div class="controls">
+    <input class="search" id="q" type="search" placeholder="Search text, names, files" aria-label="Search" autocomplete="off">
+    <div class="chips" role="group" aria-label="Show">
+      <button type="button" class="chip" data-f="all" aria-pressed="true">All</button>
+      <button type="button" class="chip" data-f="left" aria-pressed="false">Left</button>
+      <button type="button" class="chip" data-f="ok" aria-pressed="false">OK</button>
+      <button type="button" class="chip" data-f="change" aria-pressed="false">Change</button>
+    </div>
+  </div>
+  <nav id="nav" aria-label="Categories"></nav>
+  <p class="notice" id="notice">Marks can't be saved in this view. Open the page on claude.ai while signed in to record them.</p>
+</div>
+
+<main id="main"></main>
+<p class="empty-filter" id="empty-filter">Nothing matches.</p>
+
+<script type="application/json" id="data">{{DATA}}</script>
+<script>
+(() => {
+  // The embedded review data: {collection, cats: [names], rows: [[id, cat, group, context, file, line, text, kind, others|0]]}.
+  const DATA = JSON.parse(document.getElementById("data").textContent);
+  // The db collection this round's marks are saved in.
+  const COLLECTION = DATA.collection;
+  // Rows shown per category before a "Show more" button (keeps the DOM light).
+  const CHUNK = 120;
+  // Every entry as an object, in page order.
+  const rows = DATA.rows.map(a => ({ id: a[0], c: a[1], g: a[2], x: a[3], f: a[4], l: a[5], t: a[6], k: a[7], o: a[8] || null, s: null }));
+  // Entries by id.
+  const byId = new Map(rows.map(r => [r.id, r]));
+  // Entry indexes per category.
+  const byCat = DATA.cats.map(() => []);
+  rows.forEach(r => byCat[r.c].push(r));
+  const TOTAL = rows.length;
+  // Latest saved review per id: {verdict, note, at, by}.
+  const reviews = new Map();
+  // The current verdict filter: all | left | ok | change.
+  let filter = "all";
+  // The current search text (lower case, trimmed).
+  let query = "";
+  // Per-category view state: {el, body, limit, open}.
+  const view = DATA.cats.map(() => ({ el: null, body: null, limit: CHUNK, open: false }));
+  // Rendered row elements by entry id.
+  const rowEls = new Map();
+  // The db namespace (null until resolved, or when this view cannot save).
+  let db = null;
+  // The viewer's opaque id, stored on each mark.
+  let me = null;
+  // True until the db lookup has answered (a click before that says "Still connecting").
+  let connecting = true;
+
+  const esc = s => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  const PH = /%[-+ 0#]*\d*(?:\.\d+)?[sdfxXcioeEgG]|%%|\{[A-Za-z_][A-Za-z0-9_]*\}/g;
+  function textHTML(t) {
+    let s = esc(t).replace(PH, m => '<span class="ph">' + m + "</span>");
+    s = s.replace(/^ +/, m => '<span class="sp">' + "␣".repeat(m.length) + "</span>");
+    s = s.replace(/ +$/, m => '<span class="sp">' + "␣".repeat(m.length) + "</span>");
+    return s;
+  }
+
+  const verdictOf = id => { const r = reviews.get(id); return r && r.verdict ? r.verdict : ""; };
+  function matches(r) {
+    if (filter !== "all") {
+      const v = verdictOf(r.id);
+      if (filter === "left" ? v : v !== filter) return false;
+    }
+    if (query) {
+      if (r.s === null) r.s = (r.t + "\n" + r.g + "\n" + r.x + "\n" + r.f + "\n" + DATA.cats[r.c]).toLowerCase();
+      if (!r.s.includes(query)) return false;
+    }
+    return true;
+  }
+
+  function rowHTML(r) {
+    const rv = reviews.get(r.id) || {};
+    const v = rv.verdict || "";
+    const note = rv.note || "";
+    let h = '<article class="row" data-id="' + r.id + '" data-v="' + v + '">';
+    h += '<p class="txt">' + textHTML(r.t) + "</p>";
+    h += '<p class="meta">' + esc(r.x) + " · " + esc(r.f) + ":" + r.l;
+    if (r.k === "unsure") h += '<span class="tag unsure" title="The scan could not tell if the player sees this">unsure</span>';
+    else if (r.k === "template") h += '<span class="tag template">template</span>';
+    if (r.o) h += ' · <button type="button" class="also">+' + r.o.length + " other place" + (r.o.length > 1 ? "s" : "") + "</button>";
+    h += "</p>";
+    h += '<div class="act"><button type="button" class="v ok" data-v="ok" aria-pressed="' + (v === "ok") + '">OK</button>'
+      + '<button type="button" class="v chg" data-v="change" aria-pressed="' + (v === "change") + '">Change</button>';
+    if (!(v === "change" || note)) h += '<button type="button" class="nbtn">Note</button>';
+    h += '<span class="saved"></span></div>';
+    if (v === "change" || note) h += noteHTML(note);
+    return h + "</article>";
+  }
+  function noteHTML(note) {
+    return '<textarea class="note" rows="2" placeholder="What should it say, or what is wrong?" aria-label="Note">' + esc(note) + "</textarea>";
+  }
+
+  function renderCat(ci) {
+    const st = view[ci];
+    if (!st.open) return;
+    const list = byCat[ci].filter(matches);
+    let h = "", lastG = null, shown = 0;
+    for (const r of list) {
+      if (shown >= st.limit) break;
+      if (r.g !== lastG) {
+        h += '<h3 class="folder">' + esc(r.g) + "</h3>";
+        lastG = r.g;
+      }
+      h += rowHTML(r);
+      shown++;
+    }
+    if (shown < list.length) h += '<button type="button" class="more" data-more="' + ci + '">Show ' + Math.min(CHUNK, list.length - shown) + " more (" + (list.length - shown) + " left)</button>";
+    if (!list.length) h = '<p class="sub" style="padding:10px 0;color:var(--ink-dim)">Nothing here matches.</p>';
+    // Forget the elements of this category's old rows.
+    byCat[ci].forEach(r => rowEls.delete(r.id));
+    st.body.innerHTML = h;
+    st.body.querySelectorAll(".row").forEach(el => rowEls.set(el.dataset.id, el));
+  }
+
+  function buildShell() {
+    const main = document.getElementById("main");
+    const nav = document.getElementById("nav");
+    DATA.cats.forEach((name, ci) => {
+      const det = document.createElement("details");
+      det.className = "cat";
+      det.id = "cat-" + ci;
+      det.dataset.ci = ci;
+      det.innerHTML = '<summary><h2 title="' + esc(name) + '">' + esc(name.replace(/ \(.*$/, "")) + '</h2><span class="sub" data-sub></span>'
+        + '<span class="mini" aria-hidden="true"><i class="m-ok" style="width:0"></i><i class="m-chg" style="width:0"></i></span></summary><div class="body"></div>';
+      main.appendChild(det);
+      view[ci].el = det;
+      view[ci].body = det.querySelector(".body");
+      const b = document.createElement("button");
+      b.type = "button";
+      b.dataset.ci = ci;
+      b.title = name;
+      b.innerHTML = esc(name.replace(/ \(.*$/, "")) + '<span class="n" data-nav></span>';
+      nav.appendChild(b);
+    });
+  }
+
+  function paintTotals() {
+    let ok = 0, chg = 0;
+    const per = DATA.cats.map(() => ({ ok: 0, chg: 0 }));
+    reviews.forEach((rv, id) => {
+      const r = byId.get(id);
+      if (!r) return;
+      if (rv.verdict === "ok") { ok++; per[r.c].ok++; }
+      else if (rv.verdict === "change") { chg++; per[r.c].chg++; }
+    });
+    document.getElementById("n-ok").textContent = ok;
+    document.getElementById("n-chg").textContent = chg;
+    document.getElementById("n-left").textContent = TOTAL - ok - chg;
+    document.getElementById("b-ok").style.width = (ok / TOTAL * 100) + "%";
+    document.getElementById("b-chg").style.width = (chg / TOTAL * 100) + "%";
+    const navBtns = document.querySelectorAll("#nav button");
+    DATA.cats.forEach((_, ci) => {
+      const n = byCat[ci].length, p = per[ci];
+      const sub = view[ci].el.querySelector("[data-sub]");
+      const shown = (query || filter !== "all") ? byCat[ci].reduce((a, r) => a + (matches(r) ? 1 : 0), 0) : n;
+      sub.textContent = (p.ok + p.chg) + " of " + n + " marked" + (p.chg ? " · " + p.chg + " to change" : "")
+        + ((query || filter !== "all") ? " · " + shown + " shown" : "");
+      const mini = view[ci].el.querySelector(".mini");
+      mini.children[0].style.width = (p.ok / n * 100) + "%";
+      mini.children[1].style.width = (p.chg / n * 100) + "%";
+      const nb = navBtns[ci];
+      nb.querySelector("[data-nav]").textContent = (p.ok + p.chg) + "/" + n;
+      nb.classList.toggle("done", p.ok + p.chg === n);
+    });
+  }
+
+  function paintRow(el) {
+    const id = el.dataset.id;
+    const rv = reviews.get(id) || {};
+    const v = rv.verdict || "";
+    el.dataset.v = v;
+    el.querySelectorAll(".v").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.v === v)));
+    let ta = el.querySelector(".note");
+    if (!ta && (v === "change" || rv.note)) {
+      el.querySelector(".nbtn")?.remove();
+      el.querySelector(".act").insertAdjacentHTML("afterend", noteHTML(rv.note || ""));
+      ta = el.querySelector(".note");
+    }
+    if (ta && document.activeElement !== ta) ta.value = rv.note || "";
+  }
+
+  function repaint() {
+    rowEls.forEach(paintRow);
+    rowEls.forEach((el, id) => el.classList.toggle("gone", !matches(byId.get(id))));
+    paintTotals();
+  }
+
+  function setView() {
+    let total = 0;
+    DATA.cats.forEach((_, ci) => { view[ci].limit = CHUNK; });
+    if (query || filter !== "all") rows.forEach(r => { if (matches(r)) total++; });
+    DATA.cats.forEach((_, ci) => {
+      // A search with few results opens the categories that hold them.
+      if (query && total > 0 && total <= 400 && byCat[ci].some(matches)) { view[ci].open = true; view[ci].el.open = true; }
+      renderCat(ci);
+    });
+    paintTotals();
+    document.getElementById("empty-filter").classList.toggle("on", (query || filter !== "all") && total === 0);
+  }
+
+  // Saves are serialized per document: one write at a time per id.
+  const pending = new Map();
+  async function save(el, patch) {
+    const status = el.querySelector(".saved");
+    if (!db) {
+      status.textContent = connecting ? "Still connecting\u2026" : "Not saved";
+      status.classList.add("err");
+      return;
+    }
+    const id = el.dataset.id;
+    const prev = reviews.get(id) || {};
+    const next = { verdict: prev.verdict || "", note: prev.note || "", ...patch, at: Date.now(), by: me || "" };
+    if (next.verdict === (prev.verdict || "") && next.note === (prev.note || "")) return;
+    reviews.set(id, next);
+    paintRow(el);
+    el.classList.toggle("gone", !matches(byId.get(id)));
+    paintTotals();
+    status.classList.remove("err");
+    status.textContent = "Saving…";
+    const run = (pending.get(id) || Promise.resolve()).then(() => db.doc(COLLECTION + "/" + id).set(next));
+    pending.set(id, run.catch(() => {}));
+    try {
+      await run;
+      status.textContent = "Saved";
+    } catch (e) {
+      status.classList.add("err");
+      status.textContent = e && e.code === "not_granted" ? "No permission to save" : "Couldn't save";
+    }
+  }
+
+  const main = document.getElementById("main");
+  // One delegated click listener for verdicts, notes, "other places" and "Show more".
+  main.addEventListener("click", ev => {
+    const t = ev.target;
+    if (!(t instanceof Element)) return;
+    const el = t.closest(".row");
+    if (t.closest(".more")) {
+      const ci = +t.closest(".more").dataset.more;
+      view[ci].limit += CHUNK;
+      renderCat(ci);
+      return;
+    }
+    if (!el) return;
+    const vb = t.closest(".v");
+    if (vb) {
+      const cur = verdictOf(el.dataset.id);
+      const ta = el.querySelector(".note");
+      save(el, { verdict: cur === vb.dataset.v ? "" : vb.dataset.v, note: ta ? ta.value.trim() : ((reviews.get(el.dataset.id) || {}).note || "") });
+      if (vb.dataset.v === "change") requestAnimationFrame(() => el.querySelector(".note")?.focus());
+      return;
+    }
+    if (t.closest(".nbtn")) {
+      t.closest(".nbtn").remove();
+      el.querySelector(".act").insertAdjacentHTML("afterend", noteHTML((reviews.get(el.dataset.id) || {}).note || ""));
+      const ta = el.querySelector(".note");
+      ta.focus();
+      return;
+    }
+    if (t.closest(".also")) {
+      const r = byId.get(el.dataset.id);
+      let ul = el.querySelector(".others");
+      if (ul) { ul.remove(); return; }
+      ul = document.createElement("ul");
+      ul.className = "others";
+      ul.innerHTML = r.o.map(o => "<li>" + esc(o[0]) + " · " + esc(o[1]) + ":" + o[2] + "</li>").join("");
+      el.querySelector(".meta").after(ul);
+    }
+  });
+  // A note is saved when its box loses focus after a change.
+  main.addEventListener("change", ev => {
+    const ta = ev.target;
+    if (ta instanceof HTMLTextAreaElement && ta.classList.contains("note")) {
+      const el = ta.closest(".row");
+      save(el, { note: ta.value.trim() });
+    }
+  });
+  // Opening a category renders its rows (closed ones stay empty).
+  main.addEventListener("toggle", ev => {
+    const det = ev.target;
+    if (!(det instanceof HTMLDetailsElement) || !det.classList.contains("cat")) return;
+    const ci = +det.dataset.ci;
+    view[ci].open = det.open;
+    if (det.open) renderCat(ci);
+  }, true);
+
+  document.getElementById("nav").addEventListener("click", ev => {
+    const b = ev.target instanceof Element && ev.target.closest("button");
+    if (!b) return;
+    const ci = +b.dataset.ci;
+    view[ci].el.open = true;
+    view[ci].el.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+
+  document.querySelectorAll(".chip[data-f]").forEach(ch => ch.addEventListener("click", () => {
+    filter = ch.dataset.f;
+    document.querySelectorAll(".chip[data-f]").forEach(c => c.setAttribute("aria-pressed", String(c === ch)));
+    setView();
+  }));
+  let timer = 0;
+  document.getElementById("q").addEventListener("input", ev => {
+    clearTimeout(timer);
+    timer = setTimeout(() => { query = ev.target.value.trim().toLowerCase(); setView(); }, 160);
+  });
+
+  buildShell();
+  paintTotals();
+
+  (async () => {
+    try {
+      if (!window.claude) throw new Error("no runtime");
+      db = await claude.use("db");
+      const user = await claude.use("user");
+      if (user) { try { me = await user.id(); } catch (e) {} }
+    } catch (e) { db = null; }
+    connecting = false;
+    if (!db) {
+      document.getElementById("notice").classList.add("on");
+      main.classList.add("readonly");
+      return;
+    }
+    db.collection(COLLECTION).onSnapshot(snap => {
+      snap.docChanges().forEach(ch => {
+        if (ch.type === "removed") reviews.delete(ch.doc.id);
+        else reviews.set(ch.doc.id, ch.doc.data());
+      });
+      repaint();
+    }, err => {
+      const n = document.getElementById("notice");
+      n.textContent = "Lost the connection to the saved marks (" + (err && err.code || "error") + "). Reload to try again.";
+      n.classList.add("on");
+    });
+  })();
+
+  // The first category opens by itself so the page is never blank.
+  view[0].el.open = true;
+})();
+</script>

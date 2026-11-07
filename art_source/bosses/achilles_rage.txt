@@ -1,0 +1,12 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, a wild battle-rage stance, roaring.
+
+LOW-RESOLUTION pixel art: the whole figure is only 118 pixels tall, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims or engravings, no muscle lines.
+
+Subject: the same hero as the attached sprite, ACHILLES in his RAGE after the death of his friend: his helmet is GONE, long dark brown hair flying wild, his mouth open in a war cry, eyes blazing; the gold cuirass dented, the shield thrown away, the short Aegean-blue cloak torn; he holds the LONG SPEAR raised high over his head in his back hand, ready to strike, his front hand a fist thrust forward. Bronze greaves, BARE HEELS in sandals.
+Signature shape: the bare wild-haired head and the spear raised high.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: bronze #1E1408 (outline) #6B4423 #A8702E #E0A955; marble white #8E8A86 #CFCBC4 #F4F1EA; Aegean blue #123E66 #2C77B8 #6FB6E8; skin #8C6040 #E0A882; wood and leather #4F3320 #8C6040; gold #6B4A12 #E0A92E #FFDC66; dark hair #2A1A10.
+Outline: a clean 1-pixel dark outline around the whole figure in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the figure), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark.
+Attached: (1) the hero's own sprite: keep his costume, colours, pixel size and outline exactly; (2) a sprite of this game for the flat look.

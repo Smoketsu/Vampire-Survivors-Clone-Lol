@@ -1,0 +1,14 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), a VEHICLE seen from above and a little from the front-side, drawn FACING RIGHT
+
+LOW-RESOLUTION pixel art: the whole vehicle is only 56 pixels tall and about 90 long, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims, lacing or engravings.
+
+Subject: GENERAL HARROW'S COMMAND VEHICLE: a big olive-drab armoured six-wheeled command car with a boxy armoured cabin, a tall radio antenna mast with a tiny red lamp, a roof-mounted box launcher of short rocket tubes, an open roof hatch with a MALE army general standing in it, seen from the chest up: an olive peaked cap (no badge), a stern face with a grey moustache, olive power-armour shoulders, one arm pointing forward giving orders. Two small headlights at the front (right). No star, no letters, no numbers, no flag, no badge, no insignia, no markings of any real army or agency.
+Signature shape that must read in silhouette: the big armoured six-wheeled car with the general standing in the roof hatch and the tall antenna.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: olive body #4B5330 #6B7545 lit #8A9558; tyres and windows #101114 #1E2024 #3A3D44; rocket box #3A3D44 #55595F; headlights #E8A43A; hazard trim #F2C418; skin #A8806E #D9B8A8; red lamp #D82A2A
+
+Outline: a clean 1-pixel dark outline around the whole subject in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the subject), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark.
+
+Attached: (1) a game sprite (the tank of this game) for pixel size, outline weight and flat look; (2) the approved concept art of this command vehicle (keep its look, not its detail level or painted shading).

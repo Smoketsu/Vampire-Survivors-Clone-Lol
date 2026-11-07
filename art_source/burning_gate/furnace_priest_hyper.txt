@@ -1,0 +1,12 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, walking calmly, swinging a censer of live coals on a chain
+
+LOW-RESOLUTION pixel art: the whole figure is only 56 pixels tall, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze.
+
+Subject: THE FURNACE PRIEST (a MALE undead priest, a playable hero), the SAME figure, pose and outfit as the attached character sprite (the tall horned mitre, long cassock, stole, skull face, swinging censer and short staff), recoloured as a cosmetic skin: GILDED: the cassock deep black with gold embroidery bands, the stole and mitre bright gold, the censer gold with white-hot coals, a small gold sun halo behind the mitre.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: cassock #0B0A10 #1E1A26 #352E40; gold #8C6A1E #E0B848 #F7E08A; skull face #8C7B5E #D9CCAA; coals and eyes #E0601A #FFB347 #FFF2C0
+
+Outline: a clean 1-pixel dark outline around the whole figure in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the figure), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark.
+Attached: (1) the Furnace Priest: copy his figure, pose and outline exactly, only change the colours and the small details named; (2) another hero's skin of the same kind for the look.

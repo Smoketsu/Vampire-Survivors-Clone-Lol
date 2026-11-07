@@ -272,7 +272,7 @@ func _go_loaded() -> void:
 	loaded = true
 	game.stat_add("motherboard_load_at", game.elapsed)
 	game.enemies.show_banner(String(boss_def["load_banner"]))
-	game.effects.impact(position, radius * 3.0, Palette.EMPIRE_SIGNAL_AMBER)
+	game.effects.impact(position, radius * 3.0, Palette.EMPIRE_SIGNAL_AMBER, EmpireFxData.BLAST)  # Its strip when the art exists (visual only).
 	Sfx.play("boss_arrive", position, 0.9)
 
 
@@ -281,7 +281,7 @@ func _go_overclock() -> void:
 	overclocked = true
 	game.stat_add("motherboard_overclock_at", game.elapsed)
 	game.enemies.show_banner(String(boss_def["overclock_banner"]))
-	game.effects.impact(position, radius * 3.0, Palette.EMPIRE_SIGNAL_RED)
+	game.effects.impact(position, radius * 3.0, Palette.EMPIRE_SIGNAL_RED, EmpireFxData.BLAST_RED)  # Its strip when the art exists (visual only).
 	Sfx.play("boss_arrive", position, 1.1)
 
 
@@ -409,7 +409,7 @@ func _land_hurl() -> void:
 	arm_held = [[], []]
 	if thrown.is_empty():
 		return
-	game.effects.impact(hurl_at, r * 1.2, Palette.EMPIRE_SIGNAL_AMBER)
+	game.effects.impact(hurl_at, r * 1.2, Palette.EMPIRE_SIGNAL_AMBER, EmpireFxData.BLAST)  # Its strip when the art exists (visual only).
 	Sfx.play("press_stamp", hurl_at, 1.2)
 	game.shake(5.0)
 	for p in game.all_players:  # (Co-op: every necromancer inside.)
@@ -629,7 +629,9 @@ func _draw_over(ci: CanvasItem) -> void:
 			if u.active:
 				claw = u.position - position + Vector2(0, -u.radius - 6.0)
 				open = false
+		CovenantFx.base = Transform2D(0.0, Vector2(scale.x, 1.0), 0.0, Vector2.ZERO)  # The claw art in world axes too.
 		AssemblyGlyphs.draw_claw(ci, root, claw, open)
+		CovenantFx.base = Transform2D.IDENTITY
 	ci.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 	if frozen:
 		PowerupGlyphs.draw_frozen(ci, Vector2.ZERO, radius)

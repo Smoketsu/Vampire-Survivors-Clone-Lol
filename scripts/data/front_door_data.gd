@@ -163,10 +163,42 @@ const STAGE_LINES: Dictionary = {
 	"wastes": "Your beacons drew the Empire. Meet it.",  # TUNING (not in GDD) Act III
 	"assembly": "Break the line that rebuilds the dead.",  # TUNING (not in GDD) Act III
 	"citadel": "Death was conquered with steel. Take it back.",  # TUNING (not in GDD) Act III
+	# --- Act IV: the Olympian Republic ---
+	"ilion": "The gods want the dead back. Meet them on the beach.",  # TUNING (not in GDD) Act IV
+	"olympus": "Climb the mountain. Face the Pantheon.",  # TUNING (not in GDD) Act IV
+	"underworld": "Go down to the god who started it.",  # TUNING (not in GDD) Act IV
+	# --- Act V: the Shogunate of the Rising Sun ---
+	"province": "The war burns the countryside. Fight it by day and by night.",  # TUNING (not in GDD) Act V
+	"kurogane": "Storm the Shogun's castle. Break his regiments.",  # TUNING (not in GDD) Act V
+	"sun_road": "Climb to the sun goddess. Put out the sun.",  # TUNING (not in GDD) Act V
+	# --- Act VI: the Inferno ---
+	"burning_gate": "Hell has come to collect. Meet it at the gate.",  # TUNING (not in GDD) Act VI
+	"silk_palace": "Walk the court of desire. Keep your dead your own.",  # TUNING (not in GDD) Act VI
+	"pandemonium": "Climb to the throne of the Adversary.",  # TUNING (not in GDD) Act VI
+	# --- Act VII: the Sanguine Court ---
+	"ravensmoor": "The starving Court comes down to the moors. Feed it nothing.",  # TUNING (not in GDD) Act VII
+	"witchwood": "Break the covens in the fen under the red moon.",  # TUNING (not in GDD) Act VII
+	"castle_sanguis": "Climb to the Court's banquet. End the feast.",  # TUNING (not in GDD) Act VII
+	# --- Act VIII: the Last Line ---
+	"skid_row": "The dead come up out of the sewers. The gangs own these blocks.",  # TUNING (not in GDD) Act VIII
+	"fort_kessler": "Break the army's last line at the edge of the city.",  # TUNING (not in GDD) Act VIII
+	"liberty_heights": "Climb the Heroes' Tower. No one is left to stop you.",  # TUNING (not in GDD) Act VIII
+	# --- Act IX: the Concord of Stars ---
+	"crash_site": "The stars came down on the capital. The Brood is hatching.",  # TUNING (not in GDD) Act IX
+	"proving_moon": "The Vrask take you to their moon, to see what you are worth.",  # TUNING (not in GDD) Act IX
+	"ark": "Board the Ark of the Concord and face the one who planted the world.",  # TUNING (not in GDD) Act IX
 }
 
 ## Size (px) of an act tab button on the stage select (Act I / Act II / Act III).
 const ACT_TAB_SIZE: Vector2 = Vector2(300.0, 40.0)  # TUNING (not in GDD)
+# --- Act IV: the Olympian Republic ---
+## Most act tabs shown at full size ("Act I · The Crimson Covenant"); with more
+## acts than this, only the shown act's tab keeps its full text and size and the
+## others shrink to ACT_TAB_COMPACT_SIZE showing the act name only, so the row
+## fits six acts at 1280 x 600 layout px (GDD §15.0 "Act IV foundation (phase 1)").
+const ACT_TABS_FULL_MAX: int = 3  # TUNING (not in GDD)
+## Size (px) of a compact act tab ("Act IV").
+const ACT_TAB_COMPACT_SIZE: Vector2 = Vector2(98.0, 40.0)  # TUNING (not in GDD) Act IX: 104 -> 98, so nine tabs keep a margin at 1280 px
 ## Lock line of a registered stage that is not yet playable (StageRegistry "playable").
 const COMING_SOON: String = "Coming soon"  # TUNING (not in GDD)
 
@@ -251,14 +283,18 @@ const VIGNETTES: Dictionary = {
 		],
 		"fx": "motes", "fx_color": Color8(176, 76, 192),
 	},  # TUNING (not in GDD) the Eye's biolume motes
-	# --- Act III: the Electronic Empire (placeholder scenes from the shared kinds' art
-	# until each stage brings its own floor, props and boss) ---
+	# --- Act III: the Electronic Empire (the Scrap Wastes: its own slag floor, wreckage, a signal pylon,
+	# its Aegis Bot, Scout Drones and Kestrel in her aim pose; Act III missing sprites) ---
 	"wastes": {
-		"tile": "tiles/march_burned",
+		"tile": "tiles/wastes_slag",
 		"items": [
-			["empire/scout_drone", 196, 70, true], ["empire/scout_drone", 244, 100, true],
-			["empire/spotter", 236, 170, true], ["empire/line_trooper", 196, 226, true],
+			["obstacles/titan_hull_s", 70, 96, false], ["obstacles/wreck_plate_s", 204, 92, false],
+			["obstacles/slag_mound_m", 150, 64, false], ["obstacles/tank_trap_s", 24, 150, false],
+			["empire/signal_pylon", 252, 128, false],
+			["empire/scout_drone", 122, 44, true],
+			["empire/aegis_bot", 100, 164, true],
 			["summons/warrior", 46, 214, false], ["summons/archer", 88, 224, false],
+			["bosses/kestrel_aim", 196, 226, true],
 		],
 		"fx": "embers", "fx_color": Color8(255, 174, 26),
 	},  # TUNING (not in GDD) signal-amber sparks
@@ -286,6 +322,173 @@ const VIGNETTES: Dictionary = {
 		],
 		"fx": "embers", "fx_color": Color8(224, 57, 30),
 	},  # TUNING (not in GDD) warning-red sparks
+	# --- Act IV: the Olympian Republic (placeholder scenes from the shared kinds' art
+	# until each stage brings its own floor, props and boss; a missing sprite is skipped) ---
+	"ilion": {
+		"tile": "tiles/harbour_mudflats",
+		"items": [
+			["pantheon/shade_of_dead", 210, 80, true], ["pantheon/hoplite", 200, 176, true],
+			["pantheon/hoplite", 236, 196, true], ["pantheon/hero", 172, 224, true],
+			["summons/warrior", 46, 214, false], ["summons/archer", 88, 224, false],
+		],
+		"fx": "motes", "fx_color": Color8(111, 182, 232),
+	},  # TUNING (not in GDD) aegean_light spray
+	"olympus": {
+		"tile": "tiles/sanctum_halls",
+		"items": [
+			["obstacles/marble_column_m", 26, 94, false], ["obstacles/marble_column_m", 250, 94, false],
+			["pantheon/hoplite", 214, 180, true], ["pantheon/hero", 176, 224, true],
+			["summons/warrior", 46, 214, false], ["summons/mage", 90, 224, false],
+		],
+		"fx": "embers", "fx_color": Color8(224, 169, 85),
+	},  # TUNING (not in GDD) bronze_light sparks of the storm
+	"underworld": {
+		"tile": "tiles/graveyard",
+		"items": [
+			["pantheon/shade_of_dead", 200, 90, true], ["pantheon/shade_of_dead", 240, 130, true],
+			["pantheon/bronze_titan", 186, 226, true],
+			["summons/warrior", 46, 214, false], ["summons/archer", 88, 224, false],
+		],
+		"fx": "wisps", "fx_color": Color8(207, 203, 196),
+	},  # TUNING (not in GDD) pale marble wisps of the dead
+	# --- Act V: the Shogunate of the Rising Sun (placeholder scenes from the shared kinds' art
+	# until each stage brings its own floor, props and boss; a missing sprite is skipped) ---
+	"province": {
+		"tile": "tiles/graveyard",
+		"items": [
+			["shogunate/ashigaru", 200, 90, true], ["shogunate/ashigaru", 236, 110, true],
+			["shogunate/samurai", 196, 186, true], ["shogunate/ninja", 150, 224, true],
+			["summons/warrior", 46, 214, false], ["summons/archer", 88, 224, false],
+		],
+		"fx": "embers", "fx_color": Color8(226, 89, 74),
+	},  # TUNING (not in GDD) lacquer_light embers of the burning village
+	"kurogane": {
+		"tile": "tiles/sanctum_halls",
+		"items": [
+			["shogunate/teppo_gunner", 214, 100, true], ["shogunate/samurai", 200, 180, true],
+			["shogunate/samurai", 236, 200, true],
+			["summons/warrior", 46, 214, false], ["summons/mage", 90, 224, false],
+		],
+		"fx": "motes", "fx_color": Color8(106, 130, 192),
+	},  # TUNING (not in GDD) indigo_light dusk motes
+	"sun_road": {
+		"tile": "tiles/sanctum_halls",
+		"items": [
+			["shogunate/onryo", 200, 90, true], ["shogunate/oni", 190, 220, true],
+			["summons/warrior", 46, 214, false], ["summons/archer", 88, 224, false],
+		],
+		"fx": "motes", "fx_color": Color8(249, 211, 221),
+	},  # TUNING (not in GDD) sakura_light petals
+	# --- Act VI: the Inferno (placeholder scenes from the shared kinds' art until each
+	# stage brings its own floor, props and boss; a missing sprite is skipped) ---
+	"burning_gate": {
+		"tile": "tiles/graveyard",
+		"items": [
+			["inferno/damned", 200, 96, true], ["inferno/damned", 236, 116, true],
+			["inferno/hell_knight", 196, 186, true], ["inferno/imp", 150, 120, true],
+			["summons/warrior", 46, 214, false], ["summons/archer", 88, 224, false],
+		],
+		"fx": "embers", "fx_color": Color8(255, 179, 71),
+	},  # TUNING (not in GDD) lava_light embers
+	"silk_palace": {
+		"tile": "tiles/sanctum_halls",
+		"items": [
+			["inferno/succubus", 206, 110, true], ["inferno/imp", 236, 190, true],
+			["summons/warrior", 46, 214, false], ["summons/mage", 90, 224, false],
+		],
+		"fx": "motes", "fx_color": Color8(255, 111, 181),
+	},  # TUNING (not in GDD) charm-pink motes
+	"pandemonium": {
+		"tile": "tiles/sanctum_halls",
+		"items": [
+			["structures/demon_portal", 210, 96, true], ["inferno/demon_brute", 196, 214, true],
+			["summons/warrior", 46, 214, false], ["summons/archer", 88, 224, false],
+		],
+		"fx": "embers", "fx_color": Color8(224, 96, 26),
+	},  # TUNING (not in GDD) lava embers
+	# --- Act VII: the Sanguine Court (placeholder scenes from the shared kinds' art
+	# until each stage brings its own floor, props and boss; a missing sprite is skipped) ---
+	"ravensmoor": {
+		"tile": "tiles/graveyard",
+		"items": [
+			["court/blood_thrall", 200, 100, true], ["court/blood_thrall", 236, 120, true],
+			["court/werewolf", 196, 190, true], ["court/vampire_bat", 150, 110, true],
+			["summons/warrior", 46, 214, false], ["summons/archer", 88, 224, false],
+		],
+		"fx": "motes", "fx_color": Color8(224, 56, 78),
+	},  # TUNING (not in GDD) blood_light motes
+	"witchwood": {
+		"tile": "tiles/graveyard",
+		"items": [
+			["court/vampire_bat", 206, 100, true], ["court/blood_knight", 200, 190, true],
+			["summons/warrior", 46, 214, false], ["summons/mage", 90, 224, false],
+		],
+		"fx": "motes", "fx_color": Color8(180, 192, 208),
+	},  # TUNING (not in GDD) moonlight motes
+	"castle_sanguis": {
+		"tile": "tiles/sanctum_halls",
+		"items": [
+			["structures/court_coffin", 210, 96, true], ["court/vampire_noble", 196, 196, true],
+			["summons/warrior", 46, 214, false], ["summons/archer", 88, 224, false],
+		],
+		"fx": "motes", "fx_color": Color8(163, 20, 42),
+	},  # TUNING (not in GDD) blood motes
+	# --- Act VIII: the Last Line (placeholder scenes from the shared kinds' art
+	# until each stage brings its own floor, props and boss; a missing sprite or
+	# tile is skipped) ---
+	"skid_row": {
+		"tile": "tiles/city_street",
+		"items": [
+			["city/street_thug", 200, 100, true], ["city/gang_gunner", 236, 120, true],
+			["city/civilian", 150, 180, true], ["city/street_thug", 196, 190, true],
+			["summons/warrior", 46, 214, false], ["summons/archer", 88, 224, false],
+		],
+		"fx": "motes", "fx_color": Color8(255, 79, 168),
+	},  # TUNING (not in GDD) neon pink motes
+	"fort_kessler": {
+		"tile": "tiles/city_street",
+		"items": [
+			["city/tank", 200, 110, true], ["city/rifleman", 196, 196, true], ["city/rifleman", 230, 180, true],
+			["summons/warrior", 46, 214, false], ["summons/mage", 90, 224, false],
+		],
+		"fx": "motes", "fx_color": Color8(242, 196, 24),
+	},  # TUNING (not in GDD) hazard yellow motes
+	"liberty_heights": {
+		"tile": "tiles/city_plaza",
+		"items": [
+			["city/blitz", 206, 110, true], ["city/civilian_woman", 150, 190, true], ["city/riot_cop", 200, 196, true],
+			["summons/warrior", 46, 214, false], ["summons/archer", 88, 224, false],
+		],
+		"fx": "motes", "fx_color": Color8(63, 224, 232),
+	},  # TUNING (not in GDD) neon cyan motes
+	# --- Act IX: the Concord of Stars (placeholder scenes from the shared kinds'
+	# art until each stage brings its own floor, props and boss; a missing sprite
+	# or tile is skipped) ---
+	"crash_site": {
+		"tile": "tiles/concord_turf",
+		"items": [
+			["concord/broodling", 196, 112, true], ["concord/broodling", 230, 128, true], ["concord/grey_drone", 210, 186, true],
+			["structures/concord_terraformer", 150, 150, true],
+			["summons/warrior", 46, 214, false], ["summons/archer", 88, 224, false],
+		],
+		"fx": "motes", "fx_color": Color8(60, 255, 106),
+	},  # TUNING (not in GDD) plasma-green motes
+	"proving_moon": {
+		"tile": "tiles/concord_turf",
+		"items": [
+			["concord/vrask_hunter", 204, 116, true], ["concord/lumen_sentinel", 236, 184, true], ["concord/broodling", 170, 196, true],
+			["summons/warrior", 46, 214, false], ["summons/mage", 90, 224, false],
+		],
+		"fx": "motes", "fx_color": Color8(42, 143, 122),
+	},  # TUNING (not in GDD) Vrask-teal motes
+	"ark": {
+		"tile": "tiles/concord_turf",
+		"items": [
+			["concord/saucer", 206, 96, true], ["concord/prism", 170, 188, true], ["concord/grey_drone", 228, 196, true],
+			["summons/warrior", 46, 214, false], ["summons/archer", 88, 224, false],
+		],
+		"fx": "motes", "fx_color": Color8(255, 47, 184),
+	},  # TUNING (not in GDD) laser-magenta motes
 }
 ## Ambient motes of a vignette: most at once, seconds between two (random in
 ## range), life (s), rise speed (px/s), sideways sway (px).
@@ -367,6 +570,13 @@ const COOP_GUEST_HINT: String = "The host picks the difficulty, modifiers and Hy
 const SKIN_TILES_FULL: int = 3  # TUNING (not in GDD)
 ## Compact skin portrait tile (px).
 const SKIN_TILE_COMPACT: Vector2 = Vector2(44.0, 64.0)  # TUNING (not in GDD)
+## Size (layout px) of the skin recolour cycle button at the end of the skin
+## detail line (chip and name; Ossuary expansion step 6b, RecolourData).
+const RECOLOUR_BUTTON: Vector2 = Vector2(104.0, 30.0)  # TUNING (not in GDD)
+## Skin detail line of a previewed recolour the skin does not own (%s = its
+## name): recolours are won from the Ossuary's Caskets, not bought here (GDD
+## §15.0 "Recolour Caskets (owner request, Oct 2026)").
+const RECOLOUR_UNOWNED_LINE: String = "%s: found in the Ossuary's Caskets"  # TUNING (not in GDD)
 ## Compact Hyper tile (px).
 const HYPER_TILE_COMPACT: Vector2 = Vector2(112.0, 64.0)  # TUNING (not in GDD)
 ## Gap between compact skin tiles (px; the full row uses 6).

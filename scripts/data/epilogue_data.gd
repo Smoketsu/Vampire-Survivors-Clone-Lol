@@ -8,7 +8,7 @@
 ## God Serves (Vhal'Neth slain and raised). Every paragraph has its own
 ## pixel-art picture panel (`panels`, assets/sprites/epilogue/<id>.png, made by
 ## tools/epilogue_panel.py; docs/art/ART_BIBLE.md "Epilogue panels") with a
-## slow pan; a closing card (CLOSING) after Act II hints at the sequel. The
+## slow pan; a closing card per act (CLOSINGS) hints at the sequel. The
 ## main menu shows its Epilogue button once either part is open
 ## (FrontDoorData.MENU_ITEMS); EpilogueScreen plays the slides, and plays the
 ## parts the player has not seen yet once on their own after a run (Meta
@@ -58,6 +58,8 @@ const PARTS := [
 		],
 	},
 	ACT3_PART,  # Act III, "The Machines Go Dark" (its row and panels below).
+	ACT4_PART,  # Act IV, "The Gods Are Silent" (its row and panels below; opened by Empty Throne).
+	ACT5_PART,  # Act V, "The Sun Goes Out" (its row and panels below; opened by The Sun Goes Out).
 ]
 # --- Act III: the Iron Citadel ---
 ## HOOK for the Act III part of the epilogue (owner-approved proposal: "a third
@@ -88,19 +90,129 @@ const ACT3_PART := {
 		["epilogue/act3_4", Vector2(0.5, 0.0), Vector2(0.5, 0.9)],  # TUNING (not in GDD) the three acts' ruins, down to the army of the dead
 	],
 }
-## The closing card after Act II (shown only once the Act II part is open):
-## the set-up of Act III (owner, wave 2 art review: "redo with electronic empire
-## vibes"; GDD §15.0 "Act III epilogue and the new closing card"): the beacons
-## lit for the dead are seen by the Electronic Empire, which nobody called. It
-## still closes Act II once Act III is open.
-const CLOSING := {
-	"after": "act2",  # TUNING (not in GDD) id of the PARTS row the card follows (Act II, also once Act III is open)
-	"act": "Beyond the realm",  # TUNING (not in GDD)
-	"heading": "The Beacons Burn",  # TUNING (not in GDD)
-	"line": "Far beyond the mountains, the holy orders the Covenant once led are lighting their beacons. They remember how to march, and they are marching on the dead.",  # TUNING (not in GDD) two lines; the banners name the orders. Owner decision (Act III art review round 4): the knights card stays, its blue star repainted gold; the Empire version is kept only as art_source/epilogue/close_empire.png
-	"tag": "To be continued.",  # TUNING (not in GDD) small dim line under the closing text
-	"panel": ["epilogue/close", Vector2(0.0, 0.0), Vector2(1.0, 0.85)],  # TUNING (not in GDD) the beacons, down to the knights at the gate
+# --- Act IV: the Asphodel Underworld ---
+## The Act IV part of the epilogue (now in PARTS; its four panels were made at
+## integration, GDD §15.0 "Act IV epilogue and the Sun Still Rises card"; the
+## original hook note follows).
+## HOOK for the Act IV part of the epilogue (owner-approved proposal: "Epilogue
+## parts: The Gods Are Silent (Act IV)"; "Empty Throne (beat Hades; opens the Act
+## IV epilogue)"). The Asphodel Underworld's agent leaves it OUT of PARTS: the
+## lead makes its panels at integration (tools/epilogue_panel.py,
+## art_source/epilogue/act4_<n>), fills `panels` (one per line), then appends
+## this row to PARTS after ACT3_PART, so the epilogue screen, the main menu's
+## Epilogue button (any_open()) and the autoplay-once flow pick it up with no
+## other change; the closing card "The Sun Still Rises" (CLOSINGS, after
+## "act4") then follows it. `achievement` is MetaData "empty_throne" (Hades
+## beaten in the Asphodel Underworld); its Meta flag will be [epilogue]
+## seen_act4. The text follows the proposal's story (the necromancer's army
+## emptied the Underworld; the gods came for the dead; Olympus fell; Hades
+## kneels and gives up his crown).
+const ACT4_PART := {
+	"id": "act4",  # TUNING (not in GDD)
+	"achievement": "empty_throne",
+	"act": "Act IV: The Olympian Republic",
+	"heading": "The Gods Are Silent",  # Owner-approved proposal
+	"lines": [
+		"The army of the dead had grown so vast that the Underworld stood empty. Hades complained to Olympus that his kingdom was a desert, and the gods came down to take the dead back.",  # Owner-approved proposal story
+		"Their legions broke on the shore of Ilion, and one by one the gods of the mountain fell silent: Ares, Artemis, Poseidon, and at last Zeus himself.",  # Owner-approved proposal story
+		"Below the world, in the grey fields of asphodel, the Lord of the Dead rose from his throne to fight for what was his. Beaten, he did not die. He knelt, and laid his crown at the necromancer's feet.",  # Owner-approved proposal ending
+		"The Styx runs again, and every soul it carries answers to one master. The gods are silent. The throne below is empty.",  # TUNING (not in GDD)
+	],
+	"panels": [
+		["epilogue/act4_1", Vector2(0.0, 0.6), Vector2(1.0, 0.3)],  # TUNING (not in GDD) across the asphodel fields and the dry Styx, from the necromancer along his army
+		["epilogue/act4_2", Vector2(0.5, 0.0), Vector2(0.5, 1.0)],  # TUNING (not in GDD) the descending gods in gold, down to the undead line
+		["epilogue/act4_3", Vector2(0.0, 0.5), Vector2(1.0, 0.5)],  # TUNING (not in GDD) from the necromancer across to Hades kneeling with his crown
+		["epilogue/act4_4", Vector2(0.5, 0.0), Vector2(0.5, 1.0)],  # TUNING (not in GDD) the empty marble thrones of Olympus, down to the army and the necromancer
+	],
 }
+# --- Act V: the Road to the Sun ---
+## HOOK for the Act V part of the epilogue (owner-approved proposal: "Act V's
+## epilogue part is The Sun Goes Out"; "The Sun Goes Out (beat Amaterasu; opens
+## the Act V epilogue)"). The Road to the Sun's agent leaves it OUT of PARTS:
+## the lead makes its panels at integration (tools/epilogue_panel.py,
+## art_source/epilogue/act5_<n>), fills `panels` (one per line), then appends
+## this row to PARTS after ACT4_PART, so the epilogue screen, the main menu's
+## Epilogue button (any_open()) and the autoplay-once flow pick it up with no
+## other change; the closing card "The Pit Keeps Count" (CLOSINGS, after
+## "act5") then follows it. `achievement` is MetaData "the_sun_goes_out"
+## (Amaterasu beaten on the Road to the Sun); its Meta flag will be [epilogue]
+## seen_act5. The text follows the proposal's story (with Olympus fallen, one
+## day was left for the dead to fear; the Shogun's armies sailed to burn the
+## night out; the Province burned, the castle fell, the sun goddess fell, and
+## the sun went out).
+const ACT5_PART := {
+	"id": "act5",  # TUNING (not in GDD)
+	"achievement": "the_sun_goes_out",
+	"act": "Act V: The Shogunate of the Rising Sun",
+	"heading": "The Sun Goes Out",  # Owner-approved proposal
+	"lines": [
+		"With Olympus fallen there was only one day left for the dead to fear. Across the eastern sea a Shogun ruled in the sun goddess's name, and she had seen the night spreading west.",  # Owner-approved proposal story
+		"His armies sailed to burn it out. The dead met them in the burning rice fields, and the ninja of the Hidden Hand could not hide from them in any shadow.",  # Owner-approved proposal story (TUNING the words)
+		"Castle Kurogane fell regiment by regiment, until the Shogun came down from his platform and drew his own blade, and was cut down by the night.",  # Owner-approved proposal story (TUNING the words)
+		"On the road above the clouds the sun goddess crossed the sky one last time. When she fell, the sun went out. There will be no dawn again: only the night, and the dead who walk in it.",  # Owner-approved proposal ending
+	],
+	"panels": [
+		["epilogue/act5_1", Vector2(0.0, 0.6), Vector2(1.0, 0.2)],  # TUNING (not in GDD) from the necromancer and his skeletons up the winding road to the torii and the low sun
+		["epilogue/act5_2", Vector2(0.0, 0.5), Vector2(1.0, 0.5)],  # TUNING (not in GDD) across the burning rice fields, from the dead line to the samurai and their banners
+		["epilogue/act5_3", Vector2(0.0, 0.6), Vector2(1.0, 0.6)],  # TUNING (not in GDD) from the necromancer and his skeletons across the castle courtyard to the fallen Shogun
+		["epilogue/act5_4", Vector2(1.0, 0.0), Vector2(0.0, 1.0)],  # TUNING (not in GDD) from the black sun in its last ring of gold, across the torii, down to the necromancer and the broken mirror and crown at his feet
+	],
+}
+## The closing cards, one per act, in reading order (owner: "tie everything
+## together nicely"; docs/act4/PROPOSAL.md "Closing cards"; GDD §15.0 "Closing
+## cards, one per act"). Each names the next enemy without showing it, and
+## follows the PARTS row its `after` key names: it is shown right after that
+## part's slides, once that part is open (and in the main menu's Epilogue
+## button and the autoplay-once flow alike). Keys: after (PARTS id), act (the
+## small label), heading, line (the closing text), tag (small dim line under
+## it), panel ([SpriteData key, pan start, pan end] as PARTS panels).
+## The card after Act II is the set-up of Act III (owner, wave 2 art review:
+## "redo with electronic empire vibes"; GDD §15.0 "Act III epilogue and the new
+## closing card"): the beacons lit for the dead are seen by the Electronic
+## Empire, which nobody called. It still closes Act II once Act III is open.
+## The card after Act III sets up Act IV, the Olympian Republic.
+const CLOSINGS := [
+	{
+		"after": "act2",  # TUNING (not in GDD) id of the PARTS row the card follows (Act II, also once Act III is open)
+		"act": "Beyond the realm",  # TUNING (not in GDD)
+		"heading": "The Beacons Burn",  # TUNING (not in GDD)
+		"line": "Far beyond the mountains, the holy orders the Covenant once led are lighting their beacons. They remember how to march, and they are marching on the dead.",  # TUNING (not in GDD) two lines; the banners name the orders. Owner decision (Act III art review round 4): the knights card stays, its blue star repainted gold; the Empire version is kept only as art_source/epilogue/close_empire.png
+		"tag": "To be continued.",  # TUNING (not in GDD) small dim line under the closing text
+		"panel": ["epilogue/close", Vector2(0.0, 0.0), Vector2(1.0, 0.85)],  # TUNING (not in GDD) the beacons, down to the knights at the gate
+	},
+	# --- Act IV: the Olympian Republic ---
+	{
+		"after": "act3",  # TUNING (not in GDD) follows the Act III part ("The Machines Go Dark")
+		"act": "Beneath the world",  # TUNING (not in GDD)
+		"heading": "The River Runs Dry",  # Owner-approved proposal (docs/act4/PROPOSAL.md "Closing cards")
+		"line": "Far below the world, the river of the dead has run dry, and its ferryman has no one left to carry. On a mountain of marble, the gods have noticed.",  # Owner-approved proposal
+		"tag": "To be continued.",  # TUNING (not in GDD)
+		"panel": ["epilogue/close_act3", Vector2(0.5, 0.0), Vector2(0.4, 1.0)],  # TUNING (not in GDD) the gods on the marble mountain, down to the empty ferry and the lantern
+	},
+	# --- Act IV: the Asphodel Underworld ---
+	# The card after Act IV sets up Act V, the Shogunate of the Rising Sun. It
+	# shows once the Act IV part (ACT4_PART, appended to PARTS by the lead) is
+	# open; its panel "epilogue/close_act4" is made by the lead at integration.
+	{
+		"after": "act4",  # TUNING (not in GDD) follows the Act IV part ("The Gods Are Silent")
+		"act": "Across the eastern sea",  # TUNING (not in GDD)
+		"heading": "The Sun Still Rises",  # Owner-approved proposal (docs/act4/PROPOSAL.md "Closing cards")
+		"line": "Olympus is silent and Hades kneels. Only one light still burns against the dead: across the eastern sea, a goddess opens her eyes.",  # Owner-approved proposal
+		"tag": "To be continued.",  # TUNING (not in GDD)
+		"panel": ["epilogue/close_act4", Vector2(0.0, 0.8), Vector2(1.0, 0.1)],  # TUNING (not in GDD) from the ruined throne across the dark sea to the torii and the opening eyes
+	},	# --- Act V: the Road to the Sun ---
+	# The card after Act V sets up Act VI, the Inferno. It shows once the Act V
+	# part (ACT5_PART, appended to PARTS by the lead) is open; its panel
+	# "epilogue/close_act5" is made by the lead at integration.
+	{
+		"after": "act5",  # TUNING (not in GDD) follows the Act V part ("The Sun Goes Out")
+		"act": "Far below",  # TUNING (not in GDD)
+		"heading": "The Pit Keeps Count",  # Owner-approved proposal (docs/act5/PROPOSAL.md)
+		"line": "The sun is out, and the night has no end. Far below, the souls owed to the Pit have stopped arriving, and something down there has started counting.",  # Owner-approved proposal
+		"tag": "To be continued.",  # TUNING (not in GDD)
+		"panel": ["epilogue/close_act5", Vector2(0.5, 0.0), Vector2(0.5, 1.0)],  # TUNING (not in GDD) from the rim of the Pit, with the ledger slabs, down to the two red embers in the dark
+	},
+]
 ## Line shown in place of a part that is still sealed.
 const SEALED: String = "Sealed. %s to read on."  # TUNING (not in GDD) %s = the achievement's goal
 ## Heading of a sealed part's slide.
@@ -175,3 +287,12 @@ static func any_open() -> bool:
 ## Seconds slide text `text` stays before the next slide (SLIDE_BASE + reading time).
 static func slide_time(text: String) -> float:
 	return SLIDE_BASE + SLIDE_PER_CHAR * float(text.length())
+
+
+## The closing card that follows part `part_id` (a PARTS id), or an empty
+## Dictionary when that part has none.
+static func closing_after(part_id: String) -> Dictionary:
+	for c: Dictionary in CLOSINGS:
+		if String(c["after"]) == part_id:
+			return c
+	return {}

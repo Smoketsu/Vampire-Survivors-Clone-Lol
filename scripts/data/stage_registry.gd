@@ -3,7 +3,19 @@
 ## Ancient Eye": Gullhaven Harbour -> the Hollow Archive -> Ul-Thalos, opened
 ## by slaying Seraphine; Act III, GDD §15.0 "Act III foundation (phase 1)": the
 ## Scrap Wastes -> the Assembly Halls -> the Iron Citadel, opened by slaying
-## Vhal'Neth). One entry per stage, each
+## Vhal'Neth; Act IV, GDD §15.0 "Act IV foundation (phase 1)": the Shores of
+## Ilion -> Mount Olympus -> the Asphodel Underworld, opened by slaying Deus Ex
+## Machina; Act V, GDD §15.0 "Act V foundation (phase 1)": the Burning Province
+## -> Castle Kurogane -> the Road to the Sun, opened by making Hades kneel; Act
+## VI, GDD §15.0 "Act VI foundation (phase 1)": the Burning Gate -> the Palace
+## of Silk and Ash -> Pandemonium, opened by putting out Amaterasu's sun; Act
+## VII, GDD §15.0 "Act VII foundation (phase 1)": Ravensmoor -> the Witchwood
+## -> Castle Sanguis, opened by casting down the Morning Star; Act VIII, GDD
+## §15.0 "Act VIII foundation (phase 1)": Skid Row -> Fort Kessler -> Liberty
+## Heights, opened by slaying Queen Carmilla; Act IX, GDD §15.0 "Act IX
+## foundation (phase 1)": the Crash Site -> the Proving Moon -> the Ark of the
+## Concord, opened by defeating Paragon). One
+## entry per stage, each
 ## the STAGE dictionary of its file under scripts/data/stages/. A run reads
 ## its stage through RunConfig.stage_def() as `Game.stage_def`; nothing else
 ## in the game hard-codes a stage.
@@ -37,7 +49,9 @@
 ##                        "sanctum" (SanctumGround), the Act II floors
 ##                        ("harbour", "archive", "spire") or "empire"
 ##                        (EmpireGround, the Act III placeholder floor drawn
-##                        from the STAGE's "floor" dictionary).
+##                        from the STAGE's "floor" dictionary) or "pantheon"
+##                        (PantheonGround, the Act IV placeholder floor, from
+##                        the same "floor" dictionary).
 ##   enemy_hp_mult / enemy_damage_mult — stage multipliers on the shared
 ##                        enemy time scaling (1.0 = Graveyard baseline).
 ##   enemy_mult_from    — elapsed game seconds from which those two
@@ -49,7 +63,11 @@
 ##                        Sanctum uses it for its battle zones only).
 ## Optional keys (absent = off):
 ##   act                — campaign act (1 = the Crimson Covenant, 2 = the
-##                        Ancient Eye, 3 = the Electronic Empire; absent = 1). The stage select shows one
+##                        Ancient Eye, 3 = the Electronic Empire, 4 = the
+##                        Olympian Republic, 5 = the Shogunate of the Rising
+##                        Sun, 6 = the Inferno, 7 = the Sanguine Court,
+##                        8 = the Last Line, 9 = the Concord of Stars;
+##                        absent = 1). The stage select shows one
 ##                        act at a time; Act II-only cards (PassiveData "act")
 ##                        are offered only on stages of that act.
 ##   playable           — false hides a registered stage from the stage select
@@ -91,13 +109,231 @@
 ##                        Citadel's guns, Sentry Turrets, Valkyrie 2.0, guest
 ##                        squads of the earlier Act III kinds); ground
 ##                        "citadel" is its CitadelGround (four zone floors).
+## --- Act IV: the Olympian Republic ---
+##   pantheon           — true: the Olympian Republic's shared rules (Act IV,
+##                        PantheonRules as Game.pantheon: Wrath of the Gods,
+##                        Phalanx, Glory, and the Twilight of the Gods when the
+##                        RECKONING has a "twilight" key).
+##   wrath              — the stage's Wrath of the Gods (DivineWrath): {"kind":
+##                        "waves" | "lightning" | "fissures", plus any key of
+##                        PantheonRulesData.WRATH[kind] to override it}.
+##   zones              — Act IV stubs: the planned zones ([{id, name, start}],
+##                        names only until phase 2 builds them).
+## --- Act IV: the Shores of Ilion ---
+##   ilion              — IlionDirector config (IlionStage.ILION, Act IV, the
+##                        Shores of Ilion: the siege towers rolling for the
+##                        walls, Polyphemus the Cyclops; its "siege_towers" /
+##                        "polyphemus" events); ground "ilion" is its
+##                        IlionGround (four zone floors).
+## --- Act IV: Mount Olympus ---
+##   olympus            — OlympusDirector config (OlympusStage.OLYMPUS: the
+##                        Pantheon Trial's gods, Artemis's groves); ground
+##                        "olympus" is its OlympusGround (four zone floors).
+## --- Act IV: the Asphodel Underworld ---
+##   underworld         — UnderworldDirector config (UnderworldStage.UNDERWORLD,
+##                        Act IV, the Asphodel Underworld: the River Styx in the
+##                        zones whose ZONES row has "styx": true, Cerberus, guest
+##                        squads of the earlier Act IV kinds); ground
+##                        "underworld" is its UnderworldGround (four zone floors
+##                        and the Styx).
+## --- Act V: the Shogunate of the Rising Sun ---
+##   shogunate          — true: the Shogunate's shared rules (Act V,
+##                        ShogunateRules as Game.shogunate: the Sun's Course, the
+##                        Draw, From the Shadows, and the Endless Night when the
+##                        RECKONING has an "endless_night" key); ground
+##                        "shogunate" is the placeholder ShogunateGround (from
+##                        the "floor" dictionary, styles paddy / castle / gravel).
+##   sun                — the stage's Sun's Course (SunCourse): any key of
+##                        ShogunateRulesData.SUN overrides it ({} = defaults:
+##                        dusk at 13:00 left, night at 7:00).
+##   zones              — Act V stubs too: the planned zones (names only).
+## Act V segment keys (SEGMENTS rows): "night_weights" (kinds that join the
+## trickle only at night, SunCourse.timeline_weights()) and "ambush"
+## ({"every", "kind", "count", "elite"}: ShadowAmbush's trickle from dusk on);
+## Act V event type "ambush" (its "groups" appear From the Shadows).
+## --- Act V: the Burning Province ---
+##   province           — ProvinceDirector config (ProvinceStage.PROVINCE, Act
+##                        V, the Burning Province: the paddy water in the zones
+##                        whose ground has a "paddy" share, the village fires in
+##                        a zone with "fires", Shuten-doji (its "shuten_doji"
+##                        event, night only), No Shadow Unlit); ground
+##                        "province" is its ProvinceGround (four zone floors and
+##                        the paddy water).
+## --- Act V: the Road to the Sun ---
+##   sun_road           — SunRoadDirector config (SunRoadStage.SUN_ROAD, Act V,
+##                        the Road to the Sun: the Kirin's "kirin" event, guest
+##                        squads of the other Act V stages' kinds); ground
+##                        "sun_road" is its SunRoadGround (four zone floors).
+## --- Act V: Castle Kurogane ---
+##   kurogane           — KuroganeDirector config (KuroganeStage.KUROGANE, Act V,
+##                        Castle Kurogane: the General of the Left, the HUD
+##                        objective of the Shogun's army; its "general_left"
+##                        event); ground "kurogane" is its KuroganeGround (four
+##                        zone floors).
+## --- Act VI: the Inferno ---
+##   inferno            — true: the Inferno's shared rules (Act VI, InfernoRules
+##                        as Game.inferno: the Hell Pits, the demon portals,
+##                        Temptation, and the Last Judgment when the RECKONING
+##                        has a "last_judgment" key); ground "inferno" is the
+##                        placeholder InfernoGround (from the "floor" dictionary,
+##                        styles ash / velvet / obsidian).
+##   pits               — the stage's Hell Pits (HellPits): any key of
+##                        InfernoRulesData.PITS overrides it ({} = defaults);
+##                        its fixed pits change with each of the "zones".
+##   portals            — the stage's demon portals (DemonPortals): any key of
+##                        InfernoRulesData.PORTALS ({} = defaults; "table" = the
+##                        squads they pour).
+##   zones              — Act VI stubs too: the planned zones (names and starts;
+##                        the Hell Pits read the starts).
+## Act VI event type "portal" ({count, banner, distance_min, distance_max,
+## table, pour_every}: DemonPortals.start_event()).
+## --- Act VI: the Burning Gate ---
+##   burning_gate       — BurningGateDirector config (BurningGateStage
+##                        .BURNING_GATE, Act VI, the Burning Gate: the
+##                        Gatekeeper's "gatekeeper" event, Gate Crashed); ground
+##                        "burning_gate" is its BurningGateGround (four zone
+##                        floors). Its "pits" also hold the River of Fire
+##                        ("band": HellPits._add_band()).
+## --- Act VI: the Palace of Silk and Ash ---
+##   silk_palace        — SilkPalaceDirector config (SilkPalaceStage.SILK_PALACE,
+##                        Act VI, the Palace of Silk and Ash: the Hall of Mirrors'
+##                        reflections, the Twin Succubi's "twins" event, guest
+##                        squads of the Burning Gate's kinds); ground
+##                        "silk_palace" is its SilkPalaceGround (four zone floors).
+## --- Act VI: Pandemonium ---
+##   pandemonium        — PandemoniumDirector config (PandemoniumStage.PANDEMONIUM,
+##                        Act VI, Pandemonium: the Fallen Seraph General's
+##                        "seraph_general" event, guest squads of the other Act
+##                        VI stages' kinds); ground "pandemonium" is its
+##                        PandemoniumGround (four zone floors).
+## --- Act VII: the Sanguine Court ---
+##   court              — true: the Sanguine Court's shared rules (Act VII,
+##                        CourtRules as Game.court: Bloodfeast, Night Wings, the
+##                        Blood Moon, and the Endless Feast when the RECKONING
+##                        has an "endless_feast" key); ground "court" is the
+##                        placeholder CourtGround (from the "floor" dictionary,
+##                        styles moor / fen / castle).
+##   moon               — the stage's Blood Moon (BloodMoon): any key of
+##                        CourtRulesData.BLOOD_MOON overrides it ({} = defaults).
+##   zones              — Act VII stubs too: the planned zones (names and starts).
+## --- Act VII: Ravensmoor ---
+##   ravensmoor         — RavensmoorDirector config (RavensmoorStage
+##                        .RAVENSMOOR, Act VII, Ravensmoor: the sleeping coffin
+##                        waves and their bounty, Coffin Nails, the ghoul packs,
+##                        Old Greymane's "greymane" event); ground "ravensmoor"
+##                        is its RavensmoorGround (four zone floors).
+## --- Act VII: the Witchwood ---
+##   witchwood          — WitchwoodDirector config (WitchwoodStage.WITCHWOOD, Act
+##                        VII, the Witchwood: the Fen's pools ("fen"), the hex
+##                        stones ("stones"), the Bog Mother's "bog_mother" event
+##                        and the "coven" events); ground "witchwood" is its
+##                        WitchwoodGround (four zone floors and the Fen's water).
+## --- Act VII: Castle Sanguis ---
+##   castle_sanguis     — CastleSanguisDirector config (CastleSanguisStage
+##                        .CASTLE_SANGUIS, Act VII, Castle Sanguis: the Banquet's
+##                        blood fountains, the Chiropteran King's
+##                        "chiropteran_king" event, guest squads of the other
+##                        Act VII stages' kinds); ground "castle_sanguis" is its
+##                        CastleSanguisGround (four zone floors).
+## --- Act VIII: the Last Line ---
+##   city               — true: the Last Line's shared rules (Act VIII,
+##                        CityRules as Game.city: the escalation, Armour,
+##                        Supers, Civilians, and Martial Law when the RECKONING
+##                        has a "martial_law" key); ground "city" is the
+##                        placeholder CityGround (from the "floor" dictionary,
+##                        styles docks / base / downtown, drawn from the
+##                        CityBlocks geometry).
+##   blocks             — the CITY-BLOCK LAYOUT's grid (CityBlocks, owned by
+##                        Arena): any key of CityBlockData.DEFAULTS overrides it
+##                        ({} = defaults). It switches the layout on only
+##                        together with an "arena" layout that carries its own
+##                        "blocks" dictionary (that zone's looks: styles,
+##                        open_share, open_styles; a zone never moves a street).
+##   escalation         — the stage's escalation (Escalation): any key of
+##                        CityRulesData.ESCALATION overrides it ({} = the full
+##                        default ladder; phase 2 sets each stage's "last").
+##   civilians          — the stage's civilians (Civilians): any key of
+##                        CityRulesData.CIVILIANS overrides it ({} = defaults).
+##   supers             — the Super ids the escalation sends here, in turn
+##                        (absent = CityRulesData.SUPERS "roster").
+##   zones              — Act VIII stubs too: the planned zones (names and starts).
+## --- Act VIII: Skid Row ---
+##   skid_row           — SkidRowDirector config (SkidRowStage.SKID_ROW, Act
+##                        VIII, Skid Row: Big Sal and the Armoured Limo's
+##                        "big_sal" event, the Bounty's doubled gangs while Don
+##                        Marrow's board stands, No Witnesses); ground
+##                        "skid_row" is its SkidRowGround (the four zone looks
+##                        over the city blocks).
+## --- Act VIII: Fort Kessler ---
+##   fort_kessler       — FortKesslerDirector config (FortKesslerStage
+##                        .FORT_KESSLER, Act VIII, Fort Kessler: the
+##                        minefields' numbers, the Mammoth and Broken Arrow
+##                        objectives; the "mammoth" event); ground
+##                        "fort_kessler" is its FortKesslerGround (the four
+##                        zone looks over CityGround).
+## --- Act VIII: Liberty Heights ---
+##   liberty_heights    — LibertyHeightsDirector config (LibertyHeightsStage
+##                        .LIBERTY_HEIGHTS, Act VIII, Liberty Heights: the zone
+##                        Supers in the roster's order, each promoted to its
+##                        zone's miniboss; guest squads of Fort Kessler's army
+##                        kinds; the cracks of Paragon's craters).
+## --- Act IX: the Concord of Stars ---
+##   concord            — true: the Concord of Stars' shared rules (Act IX,
+##                        ConcordRules as Game.concord: Beams, Abduction,
+##                        Terraforming, and the Final Harvest when the
+##                        RECKONING has a "final_harvest" key); ground
+##                        "concord" is the placeholder ConcordGround (from the
+##                        "floor" dictionary, styles ruins / moon / hull), on
+##                        the normal scattered-obstacle arena (no "blocks").
+##   terraforming       — the stage's Terraforming: any key of
+##                        ConcordRulesData.TERRAFORMING overrides it ({} = the
+##                        defaults; e.g. "boss_mult" lets a stage's boss heal on
+##                        the turf).
+##   gravity            — the Proving Moon's low gravity (owner-approved
+##                        proposal: "knockback goes twice as far for everyone,
+##                        both armies, and leaps are longer"; 2.0 there, absent
+##                        = 1): read only through ConcordRules.gravity() (the
+##                        enemy knockback decay is divided by it; the enemies'
+##                        shoves on summons and the Proving Moon kits' leaps
+##                        are multiplied by it).
+##   zones              — Act IX stubs too: the planned zones (names and starts).
+## --- Act IX: the Crash Site ---
+##   crash_site         — CrashSiteDirector config (CrashSiteStage.CRASH_SITE,
+##                        Act IX, the Crash Site: the crater's seeded turf,
+##                        Infestation's egg cap, Nothing Hatched, the Brood
+##                        Matriarch's "matriarch" event); ground "crash_site" is
+##                        its CrashSiteGround (the four zone floors).
+## --- Act IX: the Proving Moon ---
+##   proving_moon       — ProvingMoonDirector config (ProvingMoonStage
+##                        .PROVING_MOON, Act IX, the Proving Moon: the
+##                        Warbeast and Last Trophy objectives; the "warbeast"
+##                        event); ground "proving_moon" is its
+##                        ProvingMoonGround (the four zone floors).
+## --- Act IX: the Ark ---
+##   ark                — ArkDirector config (ArkStage.ARK, Act IX, the Ark of
+##                        the Concord: the Specimen Vaults' tanks and the
+##                        Reactor's vents as structure windows, the wrecks;
+##                        the "luminous_archon" event); ground "ark" is its
+##                        ArkGround (four zone floors).
 class_name StageRegistry
 extends RefCounted
 
 ## Stages in campaign order (stage select order, unlock chain).
 const ORDER := ["graveyard", "crimson_march", "sanctum", "harbour", "archive", "spire",
 	# --- Act III: the Electronic Empire ---
-	"wastes", "assembly", "citadel"]
+	"wastes", "assembly", "citadel",
+	# --- Act IV: the Olympian Republic ---
+	"ilion", "olympus", "underworld",
+	# --- Act V: the Shogunate of the Rising Sun ---
+	"province", "kurogane", "sun_road",
+	# --- Act VI: the Inferno ---
+	"burning_gate", "silk_palace", "pandemonium",
+	# --- Act VII: the Sanguine Court ---
+	"ravensmoor", "witchwood", "castle_sanguis",
+	# --- Act VIII: the Last Line ---
+	"skid_row", "fort_kessler", "liberty_heights",
+	# --- Act IX: the Concord of Stars ---
+	"crash_site", "proving_moon", "ark"]
 ## Stage used when none (or an unknown id) is given.
 const DEFAULT_ID: String = "graveyard"
 ## Stage id -> STAGE dictionary.
@@ -112,6 +348,30 @@ const STAGES := {
 	"wastes": WastesStage.STAGE,
 	"assembly": AssemblyStage.STAGE,
 	"citadel": CitadelStage.STAGE,
+	# --- Act IV: the Olympian Republic ---
+	"ilion": IlionStage.STAGE,
+	"olympus": OlympusStage.STAGE,
+	"underworld": UnderworldStage.STAGE,
+	# --- Act V: the Shogunate of the Rising Sun ---
+	"province": ProvinceStage.STAGE,
+	"kurogane": KuroganeStage.STAGE,
+	"sun_road": SunRoadStage.STAGE,
+	# --- Act VI: the Inferno ---
+	"burning_gate": BurningGateStage.STAGE,
+	"silk_palace": SilkPalaceStage.STAGE,
+	"pandemonium": PandemoniumStage.STAGE,  # Act VI, stage 18
+	# --- Act VII: the Sanguine Court ---
+	"ravensmoor": RavensmoorStage.STAGE,
+	"witchwood": WitchwoodStage.STAGE,
+	"castle_sanguis": CastleSanguisStage.STAGE,  # Act VII, stage 21
+	# --- Act VIII: the Last Line ---
+	"skid_row": SkidRowStage.STAGE,
+	"fort_kessler": FortKesslerStage.STAGE,
+	"liberty_heights": LibertyHeightsStage.STAGE,  # Act VIII, stage 24
+	# --- Act IX: the Concord of Stars ---
+	"crash_site": CrashSiteStage.STAGE,
+	"proving_moon": ProvingMoonStage.STAGE,
+	"ark": ArkStage.STAGE,  # Act IX, stage 27
 }
 
 ## Acts in order: act number -> {name, subtitle} (stage select tabs).
@@ -119,6 +379,18 @@ const ACTS := {
 	1: {"name": "Act I", "subtitle": "The Crimson Covenant"},
 	2: {"name": "Act II", "subtitle": "The Ancient Eye"},
 	3: {"name": "Act III", "subtitle": "The Electronic Empire"},
+	# --- Act IV: the Olympian Republic ---
+	4: {"name": "Act IV", "subtitle": "The Olympian Republic"},
+	# --- Act V: the Shogunate of the Rising Sun ---
+	5: {"name": "Act V", "subtitle": "The Shogunate of the Rising Sun"},
+	# --- Act VI: the Inferno ---
+	6: {"name": "Act VI", "subtitle": "The Inferno"},
+	# --- Act VII: the Sanguine Court ---
+	7: {"name": "Act VII", "subtitle": "The Sanguine Court"},
+	# --- Act VIII: the Last Line ---
+	8: {"name": "Act VIII", "subtitle": "The Last Line"},
+	# --- Act IX: the Concord of Stars ---
+	9: {"name": "Act IX", "subtitle": "The Concord of Stars"},
 }
 
 
@@ -162,4 +434,34 @@ const BOSS_ARRIVALS := {
 	"motherboard": MotherboardData.ARRIVAL,  # Act III: the Assembly Halls (its own data file)
 	# --- Act III: the Iron Citadel --- (its own data file, Act III phase 2)
 	"deus_ex_machina": DeusData.ARRIVAL,
+	# --- Act IV: the Olympian Republic (stubs: each stage's BOSS until phase 2
+	# gives the boss its own data file) ---
+	"achilles": IlionStage.BOSS,
+	"zeus": OlympusStage.BOSS,
+	"hades": UnderworldStage.BOSS,
+	# --- Act V: the Shogunate of the Rising Sun (stubs: each stage's BOSS until
+	# phase 2 gives the boss its own data file) ---
+	"kage": ProvinceStage.BOSS,
+	"shogun": KuroganeStage.BOSS,
+	"amaterasu": SunRoadStage.BOSS,
+	# --- Act VI: the Inferno (stubs: each stage's BOSS until phase 2 gives the
+	# boss its own data file) ---
+	"moloch": BurningGateStage.BOSS,
+	"lilith": SilkPalaceStage.BOSS,
+	"morning_star": PandemoniumStage.BOSS,  # Act VI, the finale's boss
+	# --- Act VII: the Sanguine Court (stubs: each stage's BOSS until phase 2
+	# gives the boss its own data file) ---
+	"vargr": RavensmoorStage.BOSS,
+	"isolde": WitchwoodStage.BOSS,
+	"carmilla": CastleSanguisStage.BOSS,  # Act VII, the finale's boss
+	# --- Act VIII: the Last Line (stubs: each stage's BOSS until phase 2 gives
+	# the boss its own data file) ---
+	"don_marrow": SkidRowStage.BOSS,
+	"harrow": FortKesslerStage.BOSS,
+	"paragon": LibertyHeightsStage.BOSS,  # Act VIII, the finale's boss
+	# --- Act IX: the Concord of Stars (stubs: each stage's BOSS until phase 2
+	# gives the boss its own data file) ---
+	"hive_mother": CrashSiteStage.BOSS,
+	"vrask_tal": ProvingMoonStage.BOSS,
+	"harvester": ArkStage.BOSS,  # Act IX, the finale's boss
 }

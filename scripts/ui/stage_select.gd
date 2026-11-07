@@ -20,6 +20,11 @@
 ## on the act of the last stage played. A registered stage that is not yet
 ## playable (StageRegistry "playable": false, the Act II foundation stubs) shows
 ## a locked card reading "Coming soon".
+## DEMO (DemoMode, GDD §15.0 "Demo mode (owner request, Nov 2026)"): every
+## act stays visible, but a stage outside the demo's acts is a locked card
+## reading "Full game" (Meta.is_stage_unlocked() closes it); a soul-teal line
+## under the cards says how many acts the full game adds, and a one-word
+## Wishlist button beside Back opens DemoData.STORE_URL once it is set.
 ## Choosing an unlocked stage opens the pre-run setup (PreRunSetup) over this
 ## screen (this screen's cards fade out while it is open); when it confirms,
 ## `stage_chosen` is emitted with the finished RunConfig. Backing out of it
@@ -57,6 +62,9 @@ var _act: int = 1
 var _act_tabs: Dictionary = {}
 ## The row holding the shown act's cards.
 var _row: HBoxContainer
+## Demo: the Wishlist button beside Back (null outside the demo or while
+## DemoData.STORE_URL is empty).
+var _store: Button = null
 
 
 ## Opens the screen over `parent`; focus returns to `refocus` when it closes.
@@ -89,12 +97,23 @@ func _ready() -> void:
 	_row.add_theme_constant_override("separation", FrontDoorData.CARD_GAP)
 	_row.alignment = BoxContainer.ALIGNMENT_CENTER
 	vb.add_child(_row)
+	if DemoMode.on():
+		vb.add_child(DemoMode.cta_line())  # Demo: "N more acts in the full game".
 	_back = Button.new()
 	_back.text = "Back"
 	_back.custom_minimum_size = FrontDoorData.STAGE_BACK_SIZE
 	_back.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	_back.pressed.connect(close)
-	vb.add_child(_back)
+	if DemoMode.store_enabled():
+		var foot := HBoxContainer.new()  # Demo: Back and Wishlist side by side.
+		foot.alignment = BoxContainer.ALIGNMENT_CENTER
+		foot.add_theme_constant_override("separation", FrontDoorData.CARD_GAP)
+		foot.add_child(_back)
+		_store = DemoMode.store_button()
+		foot.add_child(_store)
+		vb.add_child(foot)
+	else:
+		vb.add_child(_back)
 	var strip: Array = [[InputHints.MOVE, "Move"], ["ui_accept", "March"], ["ui_cancel", "Back"]]  # Bottom hints.
 	if not _act_tabs.is_empty():
 		strip.push_front([[InputHints.raw(KEY_Q, JOY_BUTTON_LEFT_SHOULDER), InputHints.raw(KEY_E, JOY_BUTTON_RIGHT_SHOULDER)], "Act"])
@@ -125,9 +144,8 @@ func _act_row() -> Control:
 	lb.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	row.add_child(lb)
 	for a: int in _acts():
-		var info: Dictionary = StageRegistry.ACTS[a]
 		var b := Button.new()
-		b.text = "%s · %s" % [String(info["name"]), String(info["subtitle"])]
+		b.text = _act_text(a, true)
 		b.custom_minimum_size = FrontDoorData.ACT_TAB_SIZE
 		b.focus_mode = Control.FOCUS_NONE  # Switched by Q / E or a click; focus stays on the cards.
 		b.set_meta(UiMotion.META_LIFT, false)
@@ -137,13 +155,39 @@ func _act_row() -> Control:
 	var rb := InputHints.chip(InputHints.raw(KEY_E, JOY_BUTTON_RIGHT_SHOULDER))
 	rb.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	row.add_child(rb)
+	# --- Act V: the Shogunate of the Rising Sun ---
+	# Compact from the first layout: five full tabs made the column wider than
+	# 1280 px before _show_act() shrank them, and the centred column kept that
+	# width (the cards sat ~160 px right of centre).
+	_size_act_tabs()
 	return row
+
+
+# --- Act IV: the Olympian Republic ---
+## Text of act `a`'s tab: "Act IV · The Olympian Republic" when `full`, else
+## "Act IV" (compact tabs, FrontDoorData.ACT_TABS_FULL_MAX).
+static func _act_text(a: int, full: bool) -> String:
+	var info: Dictionary = StageRegistry.ACTS[a]
+	return "%s · %s" % [String(info["name"]), String(info["subtitle"])] if full else String(info["name"])
+
+
+## Act IV: with more acts than FrontDoorData.ACT_TABS_FULL_MAX, only the shown
+## act's tab keeps its full text and size, the others are compact (the row
+## fits six acts at 1280 x 600 layout px); with fewer, every tab is full.
+func _size_act_tabs() -> void:
+	var compact := _act_tabs.size() > FrontDoorData.ACT_TABS_FULL_MAX  # Too many acts for full tabs.
+	for a: int in _act_tabs:
+		var b := _act_tabs[a] as Button
+		var full := not compact or a == _act  # This tab shows its subtitle.
+		b.text = _act_text(a, full)
+		b.custom_minimum_size = FrontDoorData.ACT_TAB_SIZE if full else FrontDoorData.ACT_TAB_COMPACT_SIZE
 
 
 ## Shows act `act`'s cards (rebuilt), the gold frame on its tab, and focuses
 ## `focus_id`'s card when it is in the act and unlocked, else the act's first.
 func _show_act(act: int, focus_id: String = "") -> void:
 	_act = act
+	_size_act_tabs()  # Act IV: compact tabs beyond three acts.
 	for a: int in _act_tabs:
 		UiTheme.style_button(_act_tabs[a] as Button, "button", "gold" if a == act else "")
 	for c: Node in _row.get_children():
@@ -253,10 +297,13 @@ func _lock_line(def: Dictionary) -> Control:
 
 
 ## "Slay <boss>" for the stage `def` requires (StageRegistry unlock), else
-## the stage's own unlock text; "Coming soon" for a stage not yet playable.
+## the stage's own unlock text; "Coming soon" for a stage not yet playable;
+## "Full game" for a stage outside the demo (DemoMode).
 static func _lock_text(def: Dictionary) -> String:
 	if not bool(def.get("playable", true)):
 		return FrontDoorData.COMING_SOON
+	if not DemoMode.allows_stage(String(def["id"])):
+		return DemoMode.lock_line()
 	var req: Dictionary = def.get("unlock", {})
 	var need := String(req.get("stage", ""))  # Stage whose boss must fall.
 	if StageRegistry.STAGES.has(need):
@@ -321,8 +368,13 @@ func _wire_focus() -> void:
 	var mid: Button = _cards[ids[ids.size() / 2]]
 	_back.focus_neighbor_top = _back.get_path_to(mid)
 	_back.focus_neighbor_left = _back.get_path_to(_back)
-	_back.focus_neighbor_right = _back.get_path_to(_back)
+	_back.focus_neighbor_right = _back.get_path_to(_back if _store == null else _store)
 	_back.focus_neighbor_bottom = _back.get_path_to(_back)
+	if _store != null:  # Demo: Wishlist to the right of Back.
+		_store.focus_neighbor_top = _store.get_path_to(mid)
+		_store.focus_neighbor_left = _store.get_path_to(_back)
+		_store.focus_neighbor_right = _store.get_path_to(_store)
+		_store.focus_neighbor_bottom = _store.get_path_to(_store)
 
 
 ## A card was pressed: an unlocked stage opens the pre-run setup with its

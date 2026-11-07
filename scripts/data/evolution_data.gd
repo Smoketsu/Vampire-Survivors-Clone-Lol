@@ -23,6 +23,11 @@
 ## plus Act III's unlockable spells (owner-approved Act III proposal; each with a
 ## NEW paired passive, unlocked with its spell):
 ##   Death Ray         + Conductive Marrow     = Event Horizon
+## plus Act IV's unlockable spells (owner-approved Act IV proposal "Rewards";
+## each with a NEW paired passive, unlocked with its spell):
+##   Paris's Arrow     + Mortal Heel           = Arrow of Fate
+##   Stolen Thunder    + Titan's Blood         = Gigantomachy
+##   River Styx        + Ferryman's Toll       = Lethe's Flood
 ##
 ## Evolution condition (GDD open question 27; decisions recorded in GDD
 ## §15.0): the base spell is at its max level (5), the paired passive is at
@@ -67,7 +72,43 @@ const ORDER := ["void_barrage", "eclipse_ward", "abyssal_detonation",
 	# --- Act III: the Scrap Wastes ---
 	"event_horizon",
 	# --- Act III: the Iron Citadel ---
-	"deathless_swarm"]
+	"deathless_swarm",
+	# --- Act IV: the Shores of Ilion ---
+	"arrow_of_fate",
+	# --- Act IV: Mount Olympus ---
+	"gigantomachy",
+	# --- Act IV: the Asphodel Underworld ---
+	"lethes_flood",
+	# --- Act V: the Burning Province ---
+	"thousand_shadows",
+	# --- Act V: the Road to the Sun ---
+	"eclipse_of_heaven",
+	# --- Act V: Castle Kurogane ---
+	"hundred_banners",
+	# --- Act VI: the Burning Gate ---
+	"rain_of_fire",
+	# --- Act VI: the Palace of Silk and Ash ---
+	"unholy_desire",
+	# --- Act VI: Pandemonium ---
+	"lightbringer",
+	# --- Act VII: Ravensmoor ---
+	"wolf_of_the_red_moon",
+	# --- Act VII: the Witchwood ---
+	"witches_sabbath",
+	# --- Act VII: Castle Sanguis ---
+	"nocturne",
+	# --- Act VIII: Skid Row ---
+	"funeral_procession",
+	# --- Act VIII: Fort Kessler ---
+	"killing_ground",
+	# --- Act VIII: Liberty Heights ---
+	"doomsday",
+	# --- Act IX: the Crash Site ---
+	"hive_of_bone",
+	# --- Act IX: the Proving Moon ---
+	"apex_predator",
+	# --- Act IX: the Ark ---
+	"star_abduction"]
 
 ## Evolution definitions.
 ##   base         — spell id that evolves (AbilityData.SPELLS key).
@@ -392,6 +433,374 @@ const EVOLUTIONS := {
 		"stats": {
 			"drones": 6, "damage": 18.0, "cooldown": 0.8, "range": 260.0, "orbit_speed": 1.3,  # TUNING (not in GDD) first pass 7 x 24 every 0.75 s dealt 256k in a forced army run
 			"kill_drones": 4,  # TUNING (not in GDD) the evolution flag: extra drones from kills, at most this many (first pass 6)
+		},
+	},
+	# --- Act IV: the Shores of Ilion ---
+	# Arrow of Fate (owner-approved Act IV proposal: "Paris's Arrow ... -> Arrow
+	# of Fate (+ Mortal Heel)"): Paris's Arrow + Mortal Heel (a NEW passive,
+	# owner rule: at Lv 5). Own decision on its kit: more arrows, and fate cannot
+	# be escaped: an arrow that kills its target flies on from the body to the
+	# next strongest foe within `fate_range` px it has not struck, up to
+	# `fate_jumps` times, each time from behind. Detected by the "fate_jumps" key.
+	"arrow_of_fate": {
+		"base": "paris_arrow",
+		"passive": "mortal_heel",
+		"display_name": "Arrow of Fate",
+		"icon": "arrow_of_fate",
+		"description": "More ghost arrows, and one that kills flies on to the next foe's back.",
+		"labels": {"damage": "Arrow damage", "arrows": "Arrows", "fate_jumps": "Fated jumps", "cooldown": "Cooldown (s)", "range": "Range"},
+		"stats": {
+			"damage": 64.0, "arrows": 4, "cooldown": 1.9, "range": 420.0, "flight": 0.45,  # TUNING (not in GDD)
+			"fate_jumps": 3,  # TUNING (not in GDD) the evolution flag: a killing arrow flies on, at most this many times
+			"fate_range": 220.0,  # TUNING (not in GDD) px from the body to its next target
+		},
+	},
+	# --- Act IV: Mount Olympus ---
+	# Gigantomachy (owner-approved Act IV proposal: Stolen Thunder + Titan's
+	# Blood, a NEW passive, owner rule: at Lv 5): the war of the giants. Each
+	# strike also hurls `giants` more bolts at the next strongest foes (each
+	# chaining the same way), and every hop cracks a thunderclap of `clap_share`
+	# of the hop's damage within `clap_radius` px. Detected by the "giants" key.
+	"gigantomachy": {
+		"base": "stolen_thunder",
+		"passive": "titans_blood",
+		"display_name": "Gigantomachy",
+		"icon": "gigantomachy",
+		"description": "Three stolen bolts fall at once, and every leap of the lightning cracks a thunderclap.",
+		"labels": {"damage": "Bolt damage", "giants": "Extra bolts", "thunder_chains": "Chain hops", "cooldown": "Bolts every (s)", "clap_share": "Thunderclap damage"},
+		"stats": {
+			"damage": 150.0, "cooldown": 2.6, "thunder_charge": 0.6, "range": 480.0, "thunder_chains": 5, "chain_range": 190.0, "chain_falloff": 0.1, "armour_bonus": 0.4,  # TUNING (not in GDD)
+			"giants": 2,  # TUNING (not in GDD) the evolution flag: extra bolts per strike
+			"clap_share": 0.4,  # TUNING (not in GDD) share of the hop's damage
+			"clap_radius": 46.0,  # TUNING (not in GDD) px
+		},
+	},
+	# --- Act IV: the Asphodel Underworld ---
+	# Lethe's Flood (GDD §15.0 "River Styx, Lethe's Flood, Ferryman's Toll and the
+	# Ferrywoman"; owner-approved proposal "River Styx -> Lethe's Flood (+
+	# Ferryman's Toll)"): River Styx + Ferryman's Toll (a NEW passive, owner rule:
+	# at Lv 5). Two crossing rivers, wider, longer and harder, and the water of
+	# forgetting: a foe entering a river is stunned `forget` s (bosses and
+	# minibosses a quarter, elites half: RiverStyxData). Detected by the "forget" key.
+	"lethes_flood": {
+		"base": "river_styx",
+		"passive": "ferrymans_toll",
+		"display_name": "Lethe's Flood",
+		"icon": "lethes_flood",
+		"description": "Two crossing rivers of forgetting: foes that wade in forget themselves and stand still.",
+		"labels": {"damage": "Drain per tick", "rivers": "Rivers", "length": "River length", "forget": "Forget (s)", "cooldown": "Cooldown (s)"},
+		"stats": {
+			"rivers": 2, "damage": 16.0, "tick": 0.5, "river_slow": 0.45, "slow_duration": 0.8, "length": 280.0, "radius": 24.0,  # TUNING (not in GDD)
+			"duration": 6.5, "cooldown": 4.0, "drain_share": 0.06, "drain_cap": 6.0,  # TUNING (not in GDD)
+			"forget": 1.2,  # TUNING (not in GDD) the evolution flag: s a foe entering a river stands stunned (once per river)
+		},
+	},
+	# --- Act V: the Burning Province ---
+	# Thousand Shadows (owner-approved Act V proposal: "Hundred Shadows ... ->
+	# Thousand Shadows (+ Hidden Hand)"): Hundred Shadows + Hidden Hand (a NEW
+	# passive, owner rule: at Lv 5). Own decision on its kit: five clones, each
+	# echoing the next `echoes` spell hits, and every clone bursts into a ring of
+	# shadow blades when its life ends (`burst_share` x damage to every foe
+	# within `burst_radius` px). Detected by the "burst_radius" key.
+	"thousand_shadows": {
+		"base": "hundred_shadows",
+		"passive": "hidden_hand",
+		"display_name": "Thousand Shadows",
+		"icon": "thousand_shadows",
+		"description": "Five shadows echo every spell, then burst into blades when they fade.",
+		"labels": {"damage": "Kunai damage", "clones": "Clones", "echoes": "Echoes each", "burst_radius": "Burst radius", "cooldown": "Cooldown (s)"},
+		"stats": {
+			"damage": 36.0, "clones": 5, "cooldown": 4.2, "life": 5.0, "echo_share": 0.8, "range": 360.0,  # TUNING (not in GDD)
+			"echoes": 3,  # TUNING (not in GDD) spell hits each clone echoes
+			"burst_radius": 50.0,  # TUNING (not in GDD) the evolution flag: px of a fading clone's burst
+			"burst_share": 1.0,  # TUNING (not in GDD) x damage of the burst
+		},
+	},
+	# --- Act V: the Road to the Sun ---
+	# Eclipse of Heaven (GDD §15.0 "Black Sun, Eclipse of Heaven, Stolen Dawn and
+	# the Shrine Maiden of Night"; owner-approved proposal "Black Sun -> Eclipse
+	# of Heaven (+ Stolen Dawn)"): Black Sun + Stolen Dawn (a NEW passive, owner
+	# rule: at Lv 5). Two dark suns orbit him, their beams longer and harder, and
+	# each beam ends in a CORONA burst (`corona` x the beam's damage to every foe
+	# within BlackSunData.CORONA_RADIUS px of its end). Detected by the "corona" key.
+	"eclipse_of_heaven": {
+		"base": "black_sun",
+		"passive": "stolen_dawn",
+		"display_name": "Eclipse of Heaven",
+		"icon": "eclipse_of_heaven",
+		"description": "Two dark suns eclipse the sky: longer beams that end in a burst of black corona.",
+		"labels": {"damage": "Beam damage", "suns": "Dark suns", "sun_reach": "Beam reach", "corona": "Corona", "cooldown": "Cooldown (s)"},
+		"stats": {
+			"suns": 2, "damage": 26.0, "cooldown": 1.2, "sun_reach": 240.0, "sun_width": 22.0, "group_radius": 72.0,  # TUNING (not in GDD)
+			"corona": 0.5,  # TUNING (not in GDD) the evolution flag: share of the beam's damage its corona deals
+		},
+	},
+	# --- Act V: Castle Kurogane ---
+	# Hundred Banners (owner-approved Act V proposal: "Banner of the Dead ->
+	# Hundred Banners (+ Warlord's Seal)"): Banner of the Dead + Warlord's Seal
+	# (a NEW passive, owner rule: at Lv 5). Own decision on its kit: each
+	# planting raises `banners` banners at once on a ring round the necromancer
+	# (BannerData.RING), and every banner beats a war drum every
+	# `pulse_interval` s: `pulse_damage` to every foe within `pulse_radius` px.
+	# Detected by the "pulse_interval" key.
+	"hundred_banners": {
+		"base": "banner_of_the_dead",
+		"passive": "warlords_seal",
+		"display_name": "Hundred Banners",
+		"icon": "hundred_banners",
+		"description": "A ring of war banners rises round you, and their war drums beat on your foes.",
+		"labels": {"haste": "Attack speed near them", "banners": "Banners", "pulse_damage": "War drum", "duration": "Duration (s)", "cooldown": "Cooldown (s)"},
+		"stats": {
+			"damage": 56.0, "pulse_radius": 84.0, "haste": 0.45, "radius": 130.0, "banners": 4, "duration": 10.0, "cooldown": 7.0,  # TUNING (not in GDD)
+			"pulse_damage": 16.0,  # TUNING (not in GDD) each war drum's beat
+			"pulse_interval": 2.0,  # TUNING (not in GDD) the evolution flag: s between two beats of each banner's drum
+		},
+	},
+	# --- Act VI: the Burning Gate ---
+	# Rain of Fire (owner-approved Act VI proposal: "Brimstone ... -> Rain of
+	# Fire (+ Furnace Heart)"): Brimstone + Furnace Heart (a NEW passive, owner
+	# rule: at Lv 5). Own decision on its kit: a true rain: `stones` stones fall
+	# one after another `rain_gap` s apart over the densest groups (the stones
+	# beyond the groups scatter `rain_spread` px around the densest), harder and
+	# wider, and their pits burn longer. Detected by the "rain_gap" key.
+	"rain_of_fire": {
+		"base": "brimstone",
+		"passive": "furnace_heart",
+		"display_name": "Rain of Fire",  # Owner-approved proposal
+		"icon": "rain_of_fire",
+		"description": "Brimstone pours from the sky in a burning rain that leaves the ground on fire.",
+		"labels": {"damage": "Stone damage", "stones": "Stones", "radius": "Blast radius", "pit_share": "Fire per second", "pit_life": "Fire lasts (s)", "cooldown": "Cooldown (s)"},
+		"stats": {
+			"damage": 36.0, "stones": 5, "radius": 44.0, "pit_radius": 38.0, "pit_life": 3.0, "pit_share": 0.3, "cooldown": 2.6, "range": 380.0,  # TUNING (not in GDD) first pass 46 dmg, 6 stones, 3.5 s, 0.4 (the forced smoke run: 260k damage, ahead of the Death Knights' 140k)
+			"rain_gap": 0.12,  # TUNING (not in GDD) the evolution flag: s between two stones of a rain
+			"rain_spread": 60.0,  # TUNING (not in GDD) px the stones beyond the groups scatter
+		},
+	},
+	# --- Act VI: the Palace of Silk and Ash ---
+	# Unholy Desire (owner-approved Act VI proposal "Rewards": "Temptation ->
+	# Unholy Desire (+ Velvet Chains)"): Temptation + Velvet Chains (a NEW
+	# passive, owner rule: at Lv 5). Own decision on its kit: three charms a
+	# cast, longer, harder-hitting thralls, and every charm that ends (or thrall
+	# that falls) BURSTS: `desire` x the thrall's hit to every foe within
+	# TemptData.BURST_RADIUS px (TemptData.BURST_SOURCE). Detected by the
+	# "desire" key.
+	"unholy_desire": {
+		"base": "tempt",
+		"passive": "velvet_chains",
+		"display_name": "Unholy Desire",  # Owner-approved proposal
+		"icon": "unholy_desire",
+		"description": "Three foes at once burn with desire for you, and burst when the spell lets them go.",
+		"labels": {"charms": "Foes charmed", "charm_time": "Charm (s)", "damage": "Thrall hit", "desire": "Burst", "cooldown": "Cooldown (s)"},
+		"stats": {
+			"charms": 3, "charm_time": 8.0, "damage": 30.0, "range": 280.0, "cooldown": 5.0,  # TUNING (not in GDD)
+			"desire": 1.0,  # TUNING (not in GDD) the evolution flag: share of the thrall's hit its burst deals; first pass 1.5 (151k burst damage in the forced run)
+		},
+	},
+	# --- Act VI: Pandemonium ---
+	# Lightbringer (GDD §15.0 "Fall from Grace, Lightbringer, Pride and the
+	# Fallen Saint"; owner-approved proposal "Fall from Grace -> Lightbringer (+
+	# Pride)"): Fall from Grace + Pride (a NEW passive, owner rule: at Lv 5).
+	# Three stars a cast on the three strongest foes, harder and wider, and each
+	# crash sends a FLARE ring out to FallFromGraceData.FLARE_RADIUS_MULT x the
+	# crash radius (`flare` x the damage to every foe in the ring beyond the
+	# crash). Detected by the "flare" key.
+	"lightbringer": {
+		"base": "fall_from_grace",
+		"passive": "pride",
+		"display_name": "Lightbringer",
+		"icon": "lightbringer",
+		"description": "Three morning stars fall on the mightiest foes, and every crash flares out in a ring of light.",
+		"labels": {"damage": "Star damage", "stars": "Stars", "radius": "Crash radius", "flare": "Flare", "cooldown": "Cooldown (s)"},
+		"stats": {
+			"stars": 3, "damage": 90.0, "radius": 52.0, "splash": 0.5, "fall_time": 0.45, "cooldown": 2.5,  # TUNING (not in GDD) first pass 120 / r56 / 2.2 s led every source by 4x
+			"flare": 0.25,  # TUNING (not in GDD) first pass 0.35; the evolution flag: share of the star's damage its flare ring deals
+		},
+	},
+	# --- Act VII: Ravensmoor ---
+	# Wolf of the Red Moon (owner-approved Act VII proposal: "Moonfang -> Wolf
+	# of the Red Moon (+ Pack Blood)"): Moonfang + Pack Blood (a NEW passive,
+	# owner rule: at Lv 5). Own decision on its kit: the jaws are a red wolf's
+	# that leaps from group to group: bigger, harder jaws, longer bleeds, and
+	# every jaw that bit something leaps on to the nearest unbitten foe within
+	# `chain_reach` px and snaps again, `chain` more times, `chain_gap` s apart.
+	# Detected by the "chain" key.
+	"wolf_of_the_red_moon": {
+		"base": "moonfang",
+		"passive": "pack_blood",
+		"display_name": "Wolf of the Red Moon",  # Owner-approved proposal
+		"icon": "wolf_of_the_red_moon",
+		"description": "A red spectral wolf leaps from pack to pack, and every bite leaves them bleeding.",
+		"labels": {"damage": "Bite damage", "jaws": "Jaws", "chain": "Leaps", "radius": "Bite radius", "bleed_share": "Bleed per second", "cooldown": "Cooldown (s)"},
+		"stats": {
+			"damage": 26.0, "jaws": 4, "radius": 34.0, "bleed_share": 0.25, "bleed_time": 4.0, "cooldown": 2.1, "range": 360.0,  # TUNING (not in GDD) first pass 40 / r36 / 0.35 / 4.5 s with 2 leaps (272k from the evolved jaws alone in the forced run)
+			"chain": 1,  # TUNING (not in GDD) the evolution flag: more snaps each jaw leaps on to (first pass 2)
+			"chain_gap": 0.18,  # TUNING (not in GDD) s between two snaps of a leaping jaw
+			"chain_reach": 130.0,  # TUNING (not in GDD) px a jaw leaps to its next group
+		},
+	},
+	# --- Act VII: the Witchwood ---
+	# Witches' Sabbath (owner-approved Act VII proposal: "Hex Circle -> Witches'
+	# Sabbath (+ Moonlit Rite)"): Hex Circle + Moonlit Rite (a NEW passive, owner
+	# rule: at Lv 5). Own decision on its kit: the coven of the necromancer's
+	# own: the circle grows and `sabbath_circles` smaller circles of
+	# `sabbath_radius` px orbit it `sabbath_orbit` px out at `sabbath_speed`
+	# rad/s, each draining like the first. Detected by the "sabbath_circles" key.
+	"witches_sabbath": {
+		"base": "witch_circle",
+		"passive": "moonlit_rite",
+		"display_name": "Witches' Sabbath",  # Owner-approved proposal
+		"icon": "witches_sabbath",
+		"description": "Your circle grows, and three lesser circles dance around it, draining all they cross.",
+		"labels": {"damage": "Drain per pulse", "radius": "Radius", "sabbath_circles": "Dancing circles", "cooldown": "Pulse every (s)", "drain": "Drunk back"},
+		"stats": {
+			"damage": 14.0, "radius": 104.0, "cooldown": 0.8, "drain": 0.2, "heal_cap": 5.0,  # TUNING (not in GDD) first pass 17 (358k in the forced run, ahead of Rain of Fire's 157k)
+			"sabbath_circles": 3,  # TUNING (not in GDD) the evolution flag: orbiting circles
+			"sabbath_radius": 40.0,  # TUNING (not in GDD) px; first pass 46
+			"sabbath_orbit": 160.0,  # TUNING (not in GDD) px from the necromancer
+			"sabbath_speed": 1.2,  # TUNING (not in GDD) rad/s
+		},
+	},
+	# --- Act VII: Castle Sanguis ---
+	# Nocturne (GDD §15.0 "Night Swarm, Nocturne, Old Blood and the Dhampir";
+	# owner-approved proposal "Night Swarm -> Nocturne (+ Old Blood)"): Night
+	# Swarm + Old Blood (a NEW passive, owner rule: at Lv 5). A greater swarm,
+	# and after each bite a bat LEAPS on to up to `chain` more foes within
+	# NightSwarmData.CHAIN_RANGE px (`chain_share` x the damage each). Detected
+	# by the "chain" key.
+	"nocturne": {
+		"base": "night_swarm",
+		"passive": "old_blood",
+		"display_name": "Nocturne",
+		"icon": "nocturne",
+		"description": "A night of bats wheels around you, and every bite leaps on to the next throat.",
+		"labels": {"bats": "Bats", "damage": "Bite damage", "chain": "Leaps", "chain_share": "Leap damage", "cooldown": "Dart every (s)"},
+		"stats": {
+			"bats": 8, "damage": 13.0, "orbit": 58.0, "cooldown": 1.5,  # TUNING (not in GDD) first pass 15 (Nocturne led every source by ~2x in the forced run)
+			"chain": 1, "chain_share": 0.5,  # TUNING (not in GDD) the evolution flag: leaps after each bite and their share of the bite
+		},
+	},
+	# --- Act VIII: Skid Row ---
+	# Funeral Procession (GDD §15.0 "Hearse Run, Funeral Procession, Black Car
+	# and the Undertaker (Act VIII)"; owner-approved proposal "Hearse Run ->
+	# Funeral Procession (+ Black Car)"): Hearse Run + Black Car (a NEW passive,
+	# owner rule: at Lv 5). Own decision on its kit: every hearse is a
+	# procession of `procession` cars `procession_gap` px apart, each striking
+	# on its own, and every foe a car kills rises as a PALLBEARER (a temporary
+	# Warrior, at most `pallbearers` a cast). Detected by the "procession" key.
+	"funeral_procession": {
+		"base": "hearse_run",
+		"passive": "black_car",
+		"display_name": "Funeral Procession",  # Owner-approved proposal
+		"icon": "funeral_procession",
+		"description": "A procession of spectral hearses drives through your foes, and the dead it makes walk behind it.",
+		"labels": {"damage": "Hit damage", "hearses": "Hearses", "procession": "Cars each", "pallbearers": "Pallbearers a cast", "cooldown": "Cooldown (s)"},
+		"stats": {
+			"damage": 26.0, "hearses": 3, "width": 28.0, "length": 640.0, "speed": 560.0, "cooldown": 2.7, "range": 380.0,  # TUNING (not in GDD) first pass 34 (244k from the processions alone in the forced seed-7 run)
+			"procession": 3,  # TUNING (not in GDD) the evolution flag: cars in each procession
+			"procession_gap": 46.0,  # TUNING (not in GDD) px between two cars
+			"pallbearers": 2,  # TUNING (not in GDD) most pallbearers a cast raises (first pass 3: 599 in the forced run)
+		},
+	},
+	# --- Act VIII: Fort Kessler ---
+	# Killing Ground (owner-approved Act VIII proposal: "Bone Mines -> Killing
+	# Ground (+ Tripwire)"): Bone Mines + Tripwire (a NEW passive, owner rule:
+	# at Lv 5). Own decision on its kit: bigger, harder mines laid faster, and
+	# each blast throws `shards` bone shards on a ring `shard_reach` px out,
+	# each hitting every enemy within `shard_radius` px for shard_share x the
+	# damage (source killing_ground_shards). Detected by the "shards" key.
+	"killing_ground": {
+		"base": "bone_mines",
+		"passive": "tripwire",
+		"display_name": "Killing Ground",  # Owner-approved proposal
+		"icon": "killing_ground",
+		"description": "The ground you walk becomes a minefield, and every blast throws bone shrapnel.",
+		"labels": {"damage": "Blast damage", "radius": "Blast radius", "max_mines": "Mines laid at once", "shards": "Shards", "shard_share": "Shard damage", "cooldown": "Drop every (s)"},
+		"stats": {
+			"damage": 50.0, "radius": 56.0, "trigger": 16.0, "max_mines": 14, "spacing": 32.0, "life": 16.0, "cooldown": 0.8,  # TUNING (not in GDD)
+			"shards": 6,  # TUNING (not in GDD) the evolution flag: bone shards a blast throws
+			"shard_share": 0.4,  # TUNING (not in GDD) of the blast's damage
+			"shard_reach": 64.0,  # TUNING (not in GDD) px out from the blast
+			"shard_radius": 26.0,  # TUNING (not in GDD) px each shard hits
+		},
+	},
+	# --- Act VIII: Liberty Heights ---
+	# Doomsday (GDD §15.0 "Hero's Fist, Doomsday, Secret Identity and the
+	# Revenant Heroine"; owner-approved proposal "Hero's Fist -> Doomsday (+
+	# Secret Identity)"): Hero's Fist + Secret Identity (a NEW passive, owner
+	# rule: at Lv 5). Two fists, harder and farther, and where a flung foe
+	# lands (or around an unmoved one) a CRATER of `crater` px strikes
+	# crater_share x the damage. Detected by the "crater" key.
+	"doomsday": {
+		"base": "heros_fist",
+		"passive": "secret_identity",
+		"display_name": "Doomsday",
+		"icon": "doomsday",
+		"description": "Two fists fall like the end of the world, and every foe they fling lands in a crater.",
+		"labels": {"damage": "Slam damage", "cooldown": "Cooldown (s)", "fists": "Fists", "fling": "Flung (px)", "fling_share": "Flung foe's hit", "crater": "Crater (px)", "crater_share": "Crater damage"},
+		"stats": {
+			"damage": 95.0, "cooldown": 2.3, "fists": 2, "fling": 240.0, "fling_share": 0.5,  # TUNING (not in GDD) first pass 110 / 2.2 s / 0.65: ~500k damage in the forced seed-7 run, far ahead of every source
+			"crater": 64.0, "crater_share": 0.4,  # TUNING (not in GDD) the evolution flag: the crater where a flung foe lands (first pass 0.6)
+		},
+	},
+	# --- Act IX: the Crash Site ---
+	# Hive of Bone (GDD §15.0 "Bone Beetles, Hive of Bone, Chitin and the
+	# Broodbound (Act IX)"; owner-approved proposal "Bone Beetles -> Hive of
+	# Bone (+ Chitin)"): Bone Beetles + Chitin (a NEW passive, owner rule: at
+	# Lv 5). Own decision on its kit: each beetle bites `bites` foes in turn,
+	# and a foe a beetle kills bursts too (the hive feeds itself, still under
+	# the cap). Detected by the "bites" key.
+	"hive_of_bone": {
+		"base": "bone_beetles",
+		"passive": "chitin",
+		"display_name": "Hive of Bone",  # Owner-approved proposal
+		"icon": "hive_of_bone",
+		"description": "A hive of bone beetles: each bites foe after foe, and every foe they kill bursts into more.",
+		"labels": {"damage": "Bite damage", "beetles": "Beetles a foe", "bites": "Bites each", "range": "Range", "cap": "Most beetles"},
+		"stats": {
+			"damage": 11.0, "beetles": 3, "range": 340.0, "speed": 280.0, "seek": 220.0, "life": 3.5, "cap": 32,  # TUNING (not in GDD) first pass 17 / cap 40 (377k from the hive alone in the forced seed-7 run)
+			"bites": 2,  # TUNING (not in GDD) the evolution flag: foes each beetle bites in turn (first pass 3)
+		},
+	},
+	# --- Act IX: the Proving Moon ---
+	# Apex Predator (GDD §15.0 "Soul Caster, Apex Predator, Trophy Rack and the
+	# Blooded (Act IX)"; owner-approved proposal "Soul Caster -> Apex Predator
+	# (+ Trophy Rack)"): Soul Caster + Trophy Rack (a NEW passive, owner rule:
+	# at Lv 5). Own decision on its kit: five targets, harder shots, x
+	# elite_mult on elites, minibosses and bosses, and every kill gives back
+	# `refund` s of the cooldown (the predator never stops). Detected by the
+	# "refund" key.
+	"apex_predator": {
+		"base": "soul_caster",
+		"passive": "trophy_rack",
+		"display_name": "Apex Predator",  # Owner-approved proposal
+		"icon": "apex_predator",
+		"description": "Five locks, harder shots that hunt the strongest, and every kill reloads the cannon.",
+		"labels": {"damage": "Shot damage", "targets": "Targets locked", "elite_mult": "Vs elites and bosses", "refund": "Reload per kill (s)", "cooldown": "Cooldown (s)"},
+		"stats": {
+			"damage": 58.0, "targets": 5, "lock": 0.4, "range": 360.0, "cooldown": 1.9,  # TUNING (not in GDD)
+			"elite_mult": 1.5,  # TUNING (not in GDD) x on elites, minibosses and bosses
+			"refund": 0.25,  # TUNING (not in GDD) the evolution flag: s of the cooldown given back per kill
+		},
+	},
+	# --- Act IX: the Ark ---
+	# Abduction (id "star_abduction": "abduction" is the Concord rule's source
+	# tag and class name; its display name stays "Abduction"; GDD §15.0
+	# "Tractor Beam, Abduction, Starseed and the Starborn"; owner-approved
+	# proposal "Tractor Beam -> Abduction (+ Starseed)"): Tractor Beam +
+	# Starseed (a NEW passive, owner rule: at Lv 5). Three foes lifted a cast,
+	# held longer, and every slam first DRAGS the foes within `pull` px in
+	# toward it (pull_force / mass) and shakes them for quake_share x the
+	# damage. Detected by the "pull" key.
+	"star_abduction": {
+		"base": "tractor_lift",
+		"passive": "starseed",
+		"display_name": "Abduction",  # Owner-approved proposal
+		"icon": "star_abduction",
+		"description": "Three foes rise into the light, and each falls like a star, dragging the rest in after it.",
+		"labels": {"damage": "Slam damage", "cooldown": "Cooldown (s)", "lifts": "Lifts", "lift_time": "Lift (s)", "slam_radius": "Slam (px)", "slam_share": "Slam splash", "pull": "Pull (px)", "quake_share": "Quake damage"},
+		"stats": {
+			"damage": 88.0, "cooldown": 2.4, "lifts": 3, "lift_time": 1.2, "slam_radius": 70.0, "slam_share": 0.5,  # TUNING (not in GDD) first pass 96 / 0.55
+			"pull": 120.0, "pull_force": 260.0, "quake_share": 0.18,  # TUNING (not in GDD) the evolution flag: the pull round each slam (first pass 0.3: 244k damage, 95k of it quake, in the forced seed-7 Graveyard run)
 		},
 	},
 }

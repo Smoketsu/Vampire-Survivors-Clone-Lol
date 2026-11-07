@@ -85,7 +85,7 @@ func blocks_shot(e: Enemy, vel: Vector2, dmg: float) -> bool:
 		shield = 0.0
 		down_until = g.elapsed + float(d["shield_recharge"])
 		g.stat_add("aegis_shield_breaks", 1.0)
-		g.effects.impact(e.position + facing * e.radius, e.radius * 1.4, Palette.EMPIRE_SIGNAL_AMBER)
+		g.effects.impact(e.position + facing * e.radius, e.radius * 1.4, Palette.EMPIRE_SIGNAL_AMBER, EmpireFxData.BLAST)  # Its strip when the art exists (visual only).
 		Sfx.play("shield_break", e.position)
 	e.queue_redraw()
 	return true

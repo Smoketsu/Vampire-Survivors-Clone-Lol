@@ -1,0 +1,1334 @@
+[
+ {
+  "file": "scripts/abilities/ability_manager.gd",
+  "line": 506,
+  "text": "t",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/abilities/ability_manager.gd",
+  "line": 655,
+  "text": "Skip",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/abilities/character_innates.gd",
+  "line": 259,
+  "text": "t",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/abilities/spells/black_sun.gd",
+  "line": 192,
+  "text": "a",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/abilities/spells/black_sun.gd",
+  "line": 193,
+  "text": "b",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/abilities/spells/river_styx.gd",
+  "line": 119,
+  "text": "a",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/abilities/spells/river_styx.gd",
+  "line": 120,
+  "text": "b",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/abilities/spells/river_styx.gd",
+  "line": 148,
+  "text": "a",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/abilities/spells/river_styx.gd",
+  "line": 148,
+  "text": "b",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/abilities/spells/river_styx.gd",
+  "line": 180,
+  "text": "a",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/abilities/spells/river_styx.gd",
+  "line": 181,
+  "text": "b",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/coop/coop_lockstep.gd",
+  "line": 288,
+  "text": "b",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/coop/coop_lockstep.gd",
+  "line": 307,
+  "text": "b",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/coop/coop_lockstep.gd",
+  "line": 310,
+  "text": "b",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/coop/coop_lockstep.gd",
+  "line": 316,
+  "text": "b",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/coop/coop_lockstep.gd",
+  "line": 799,
+  "text": "b",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/coop/coop_session.gd",
+  "line": 89,
+  "text": "P%d",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/core/arena.gd",
+  "line": 225,
+  "text": "h",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/core/arena.gd",
+  "line": 227,
+  "text": "v",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/core/arena.gd",
+  "line": 243,
+  "text": "x",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/core/difficulty_modifiers.gd",
+  "line": 477,
+  "text": "I",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/core/difficulty_modifiers.gd",
+  "line": 477,
+  "text": "V",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/core/difficulty_modifiers.gd",
+  "line": 477,
+  "text": "X",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/core/settings.gd",
+  "line": 45,
+  "text": "Pause",
+  "reason": "one-word-in-code"
+ },
+ {
+  "file": "scripts/core/victory_results.gd",
+  "line": 139,
+  "text": "%.2fM",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/core/victory_results.gd",
+  "line": 141,
+  "text": "%.1fk",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/core/victory_results.gd",
+  "line": 143,
+  "text": "%.2fk",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/data/casket_ui_data.gd",
+  "line": 111,
+  "text": "Open",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/data/casket_ui_data.gd",
+  "line": 113,
+  "text": "Wear",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/data/casket_ui_data.gd",
+  "line": 115,
+  "text": "Worn",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/data/codex_data.gd",
+  "line": 35,
+  "text": "Achievements",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/data/codex_data.gd",
+  "line": 35,
+  "text": "Spells",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/data/codex_data.gd",
+  "line": 35,
+  "text": "Summons",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/data/codex_data.gd",
+  "line": 35,
+  "text": "Covenant",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/data/codex_data.gd",
+  "line": 36,
+  "text": "Empire",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/data/codex_data.gd",
+  "line": 38,
+  "text": "Republic",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/data/codex_data.gd",
+  "line": 40,
+  "text": "Shogunate",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/data/confirm_data.gd",
+  "line": 16,
+  "text": "Cancel",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/data/confirm_data.gd",
+  "line": 27,
+  "text": "Refund",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/data/coop_lockstep_data.gd",
+  "line": 105,
+  "text": "Leave",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/data/feedback_data.gd",
+  "line": 57,
+  "text": "Feedback",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/data/front_door_data.gd",
+  "line": 18,
+  "text": "Play",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/data/front_door_data.gd",
+  "line": 19,
+  "text": "Co-op",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/data/front_door_data.gd",
+  "line": 20,
+  "text": "Codex",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/data/front_door_data.gd",
+  "line": 21,
+  "text": "Ossuary",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/data/front_door_data.gd",
+  "line": 22,
+  "text": "Settings",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/data/front_door_data.gd",
+  "line": 23,
+  "text": "Credits",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/data/front_door_data.gd",
+  "line": 24,
+  "text": "Feedback",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/data/front_door_data.gd",
+  "line": 25,
+  "text": "Quit",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/data/front_door_data.gd",
+  "line": 27,
+  "text": "Epilogue",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/data/mastery_ui_data.gd",
+  "line": 37,
+  "text": "Buy",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/data/ossuary_ui_data.gd",
+  "line": 179,
+  "text": "Buy",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/data/ossuary_ui_data.gd",
+  "line": 181,
+  "text": "Raise",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/data/ossuary_ui_data.gd",
+  "line": 183,
+  "text": "Free",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/data/ossuary_ui_data.gd",
+  "line": 189,
+  "text": "Back",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/data/ossuary_ui_data.gd",
+  "line": 195,
+  "text": "Refund",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/data/ossuary_ui_data.gd",
+  "line": 197,
+  "text": "Cancel",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/data/recipe_book_data.gd",
+  "line": 57,
+  "text": "Back",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/data/save_backup_data.gd",
+  "line": 20,
+  "text": "Backup",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/data/save_backup_data.gd",
+  "line": 22,
+  "text": "Restore",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/data/settings_ui_data.gd",
+  "line": 64,
+  "text": "Move",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/data/settings_ui_data.gd",
+  "line": 65,
+  "text": "Actions",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/data/settings_ui_data.gd",
+  "line": 96,
+  "text": "Select",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/data/settings_ui_data.gd",
+  "line": 98,
+  "text": "Rebind",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/data/settings_ui_data.gd",
+  "line": 100,
+  "text": "Back",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/data/settings_ui_data.gd",
+  "line": 102,
+  "text": "Key",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/data/settings_ui_data.gd",
+  "line": 104,
+  "text": "Pad",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/data/stages/archive_stage.gd",
+  "line": 222,
+  "text": "I",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/data/stages/archive_stage.gd",
+  "line": 226,
+  "text": "h",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/data/stages/archive_stage.gd",
+  "line": 235,
+  "text": "h",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/data/stages/archive_stage.gd",
+  "line": 245,
+  "text": "h",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/data/stages/archive_stage.gd",
+  "line": 254,
+  "text": "h",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/data/stages/assembly_stage.gd",
+  "line": 230,
+  "text": "x",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/data/stages/assembly_stage.gd",
+  "line": 231,
+  "text": "x",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/data/stages/assembly_stage.gd",
+  "line": 232,
+  "text": "x",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/data/stages/assembly_stage.gd",
+  "line": 236,
+  "text": "y",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/data/stages/assembly_stage.gd",
+  "line": 237,
+  "text": "y",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/data/stages/assembly_stage.gd",
+  "line": 251,
+  "text": "I",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/data/stages/citadel_stage.gd",
+  "line": 247,
+  "text": "I",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/data/stages/crimson_march_stage.gd",
+  "line": 333,
+  "text": "I",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/data/stages/harbour_stage.gd",
+  "line": 265,
+  "text": "I",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/data/stages/ilion_stage.gd",
+  "line": 226,
+  "text": "I",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/data/stages/kurogane_stage.gd",
+  "line": 232,
+  "text": "I",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/data/stages/olympus_stage.gd",
+  "line": 206,
+  "text": "I",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/data/stages/province_stage.gd",
+  "line": 232,
+  "text": "I",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/data/stages/sanctum_stage.gd",
+  "line": 337,
+  "text": "I",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/data/stages/spire_stage.gd",
+  "line": 262,
+  "text": "I",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/data/stages/sun_road_stage.gd",
+  "line": 212,
+  "text": "I",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/data/stages/underworld_stage.gd",
+  "line": 185,
+  "text": "I",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/data/stages/wastes_stage.gd",
+  "line": 233,
+  "text": "I",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/data/victory_data.gd",
+  "line": 164,
+  "text": "Next",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/data/victory_data.gd",
+  "line": 166,
+  "text": "Again",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/data/victory_data.gd",
+  "line": 168,
+  "text": "Menu",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/enemies/empire/assembly_director.gd",
+  "line": 141,
+  "text": "x",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/enemies/empire/assembly_director.gd",
+  "line": 157,
+  "text": "x",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/enemies/empire/assembly_director.gd",
+  "line": 268,
+  "text": "x",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/enemies/empire/assembly_director.gd",
+  "line": 488,
+  "text": "s",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/enemies/empire/assembly_director.gd",
+  "line": 519,
+  "text": "x",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/enemies/empire/assembly_director.gd",
+  "line": 581,
+  "text": "x",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/enemies/pantheon/divine_wrath.gd",
+  "line": 310,
+  "text": "c",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/enemies/pantheon/divine_wrath.gd",
+  "line": 327,
+  "text": "c",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/enemies/pantheon/divine_wrath.gd",
+  "line": 410,
+  "text": "c",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/enemies/pantheon/divine_wrath.gd",
+  "line": 471,
+  "text": "c",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/enemies/pantheon/divine_wrath.gd",
+  "line": 475,
+  "text": "a",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/enemies/pantheon/divine_wrath.gd",
+  "line": 475,
+  "text": "b",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/enemies/pantheon/divine_wrath.gd",
+  "line": 488,
+  "text": "c",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/enemies/pantheon/divine_wrath.gd",
+  "line": 489,
+  "text": "a",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/enemies/pantheon/divine_wrath.gd",
+  "line": 490,
+  "text": "b",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/enemies/pantheon/divine_wrath.gd",
+  "line": 518,
+  "text": "a",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/enemies/pantheon/divine_wrath.gd",
+  "line": 518,
+  "text": "b",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/enemies/pantheon/divine_wrath.gd",
+  "line": 519,
+  "text": "c",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/enemies/pantheon/divine_wrath.gd",
+  "line": 528,
+  "text": "a",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/enemies/pantheon/divine_wrath.gd",
+  "line": 528,
+  "text": "b",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/enemies/pantheon/divine_wrath.gd",
+  "line": 528,
+  "text": "c",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/enemies/pantheon/divine_wrath.gd",
+  "line": 528,
+  "text": "c",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/enemies/pantheon/divine_wrath.gd",
+  "line": 549,
+  "text": "c",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/enemies/pantheon/divine_wrath.gd",
+  "line": 556,
+  "text": "c",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/enemies/pantheon/divine_wrath.gd",
+  "line": 559,
+  "text": "b",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/enemies/pantheon/divine_wrath.gd",
+  "line": 559,
+  "text": "a",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/enemies/pantheon/divine_wrath.gd",
+  "line": 576,
+  "text": "c",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/enemies/pantheon/divine_wrath.gd",
+  "line": 605,
+  "text": "c",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/enemies/pantheon/divine_wrath.gd",
+  "line": 615,
+  "text": "c",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/enemies/pantheon/divine_wrath.gd",
+  "line": 616,
+  "text": "a",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/enemies/pantheon/divine_wrath.gd",
+  "line": 617,
+  "text": "b",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/enemies/pantheon/divine_wrath.gd",
+  "line": 629,
+  "text": "a",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/enemies/pantheon/divine_wrath.gd",
+  "line": 630,
+  "text": "b",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/horde/behaviors/bone_hound_behavior.gd",
+  "line": 161,
+  "text": "e",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/horde/behaviors/bone_hound_behavior.gd",
+  "line": 187,
+  "text": "e",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/horde/behaviors/bone_hound_behavior.gd",
+  "line": 192,
+  "text": "t",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/horde/behaviors/bone_hound_behavior.gd",
+  "line": 194,
+  "text": "t",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/horde/behaviors/rogue_behavior.gd",
+  "line": 258,
+  "text": "e",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/horde/behaviors/rogue_behavior.gd",
+  "line": 279,
+  "text": "e",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/horde/behaviors/rogue_behavior.gd",
+  "line": 284,
+  "text": "t",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/horde/behaviors/rogue_behavior.gd",
+  "line": 286,
+  "text": "t",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/horde/behaviors/special_evolutions.gd",
+  "line": 29,
+  "text": "s",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/horde/seraph_texts.gd",
+  "line": 54,
+  "text": "s",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/ui/chest_panel.gd",
+  "line": 182,
+  "text": "Claim",
+  "reason": "ui-text-one-word"
+ },
+ {
+  "file": "scripts/ui/chest_panel.gd",
+  "line": 197,
+  "text": "s",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/ui/chest_panel.gd",
+  "line": 256,
+  "text": "New",
+  "reason": "one-word-in-code"
+ },
+ {
+  "file": "scripts/ui/codex_screen.gd",
+  "line": 97,
+  "text": "Tab",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/ui/codex_screen.gd",
+  "line": 98,
+  "text": "Back",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/ui/codex_screen.gd",
+  "line": 141,
+  "text": "Back",
+  "reason": "ui-text-one-word"
+ },
+ {
+  "file": "scripts/ui/coop_join_pad.gd",
+  "line": 68,
+  "text": "Delete",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/ui/coop_join_pad.gd",
+  "line": 70,
+  "text": "Paste",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/ui/coop_join_pad.gd",
+  "line": 71,
+  "text": "Join",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/ui/coop_lobby.gd",
+  "line": 33,
+  "text": "Done",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/ui/coop_lobby.gd",
+  "line": 100,
+  "text": "Move",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/ui/coop_lobby.gd",
+  "line": 100,
+  "text": "Select",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/ui/coop_lobby.gd",
+  "line": 100,
+  "text": "Leave",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/ui/coop_lobby.gd",
+  "line": 157,
+  "text": "Copy",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/ui/coop_lobby.gd",
+  "line": 160,
+  "text": "Share",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/ui/coop_lobby.gd",
+  "line": 190,
+  "text": "Leave",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/ui/coop_lobby.gd",
+  "line": 192,
+  "text": "Stage",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/ui/coop_lobby.gd",
+  "line": 193,
+  "text": "Setup",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/ui/coop_lobby.gd",
+  "line": 194,
+  "text": "Start",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/ui/coop_lobby.gd",
+  "line": 197,
+  "text": "Setup",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/ui/coop_lobby.gd",
+  "line": 198,
+  "text": "Ready",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/ui/coop_player_card.gd",
+  "line": 82,
+  "text": "Host",
+  "reason": "ui-text-one-word"
+ },
+ {
+  "file": "scripts/ui/coop_player_card.gd",
+  "line": 98,
+  "text": "Host",
+  "reason": "ui-text-one-word"
+ },
+ {
+  "file": "scripts/ui/coop_results.gd",
+  "line": 37,
+  "text": "s",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/ui/coop_results.gd",
+  "line": 100,
+  "text": "s",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/ui/coop_screen.gd",
+  "line": 89,
+  "text": "Host",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/ui/coop_screen.gd",
+  "line": 90,
+  "text": "Join",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/ui/coop_screen.gd",
+  "line": 101,
+  "text": "Back",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/ui/coop_screen.gd",
+  "line": 102,
+  "text": "Move",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/ui/coop_screen.gd",
+  "line": 102,
+  "text": "Select",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/ui/coop_screen.gd",
+  "line": 102,
+  "text": "Back",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/ui/credits_screen.gd",
+  "line": 93,
+  "text": "Page",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/ui/credits_screen.gd",
+  "line": 94,
+  "text": "Scroll",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/ui/credits_screen.gd",
+  "line": 94,
+  "text": "Back",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/ui/credits_screen.gd",
+  "line": 121,
+  "text": "Back",
+  "reason": "ui-text-one-word"
+ },
+ {
+  "file": "scripts/ui/end_screen.gd",
+  "line": 252,
+  "text": "Restart",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/ui/end_screen.gd",
+  "line": 524,
+  "text": "Unlocked",
+  "reason": "one-word-in-code"
+ },
+ {
+  "file": "scripts/ui/end_screen.gd",
+  "line": 573,
+  "text": "s",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/ui/epilogue_screen.gd",
+  "line": 250,
+  "text": "Next",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/ui/epilogue_screen.gd",
+  "line": 250,
+  "text": "Skip",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/ui/epilogue_screen.gd",
+  "line": 271,
+  "text": "Skip",
+  "reason": "ui-text-one-word"
+ },
+ {
+  "file": "scripts/ui/hud.gd",
+  "line": 452,
+  "text": "%s %.1fs",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/ui/hud_abilities.gd",
+  "line": 110,
+  "text": "%.1fs",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/ui/input_hints.gd",
+  "line": 238,
+  "text": "LS",
+  "reason": "one-word-in-code"
+ },
+ {
+  "file": "scripts/ui/level_up_panel.gd",
+  "line": 128,
+  "text": "Cancel",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/ui/level_up_panel.gd",
+  "line": 217,
+  "text": "Cancel",
+  "reason": "ui-text-one-word"
+ },
+ {
+  "file": "scripts/ui/level_up_panel.gd",
+  "line": 311,
+  "text": "SPELL",
+  "reason": "one-word-in-code"
+ },
+ {
+  "file": "scripts/ui/level_up_panel.gd",
+  "line": 313,
+  "text": "PASSIVE",
+  "reason": "one-word-in-code"
+ },
+ {
+  "file": "scripts/ui/level_up_panel.gd",
+  "line": 315,
+  "text": "RESTORE",
+  "reason": "one-word-in-code"
+ },
+ {
+  "file": "scripts/ui/level_up_panel.gd",
+  "line": 315,
+  "text": "BOON",
+  "reason": "one-word-in-code"
+ },
+ {
+  "file": "scripts/ui/level_up_panel.gd",
+  "line": 315,
+  "text": "EVOLUTION",
+  "reason": "one-word-in-code"
+ },
+ {
+  "file": "scripts/ui/level_up_panel.gd",
+  "line": 317,
+  "text": "PACT",
+  "reason": "one-word-in-code"
+ },
+ {
+  "file": "scripts/ui/main_menu.gd",
+  "line": 119,
+  "text": "Move",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/ui/main_menu.gd",
+  "line": 119,
+  "text": "Select",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/ui/main_menu.gd",
+  "line": 311,
+  "text": "v%s",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/ui/menu_backdrop.gd",
+  "line": 466,
+  "text": "x",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/ui/menu_backdrop.gd",
+  "line": 716,
+  "text": "x",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/ui/ossuary_menu.gd",
+  "line": 59,
+  "text": "I",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/ui/ossuary_menu.gd",
+  "line": 59,
+  "text": "V",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/ui/ossuary_menu.gd",
+  "line": 59,
+  "text": "X",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/ui/ossuary_menu.gd",
+  "line": 602,
+  "text": "%d s",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/ui/ossuary_menu.gd",
+  "line": 602,
+  "text": "%.1f s",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/ui/pause_menu.gd",
+  "line": 100,
+  "text": "Resume",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/ui/pause_menu.gd",
+  "line": 101,
+  "text": "Recipes",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/ui/pause_menu.gd",
+  "line": 102,
+  "text": "Settings",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/ui/pause_menu.gd",
+  "line": 107,
+  "text": "Restart",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/ui/pause_menu.gd",
+  "line": 109,
+  "text": "Rally",
+  "reason": "one-word-in-code"
+ },
+ {
+  "file": "scripts/ui/pause_menu.gd",
+  "line": 110,
+  "text": "Move",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/ui/pause_menu.gd",
+  "line": 110,
+  "text": "Step",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/ui/pause_menu.gd",
+  "line": 111,
+  "text": "Resume",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/ui/pre_run_setup.gd",
+  "line": 62,
+  "text": "Begin",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/ui/pre_run_setup.gd",
+  "line": 114,
+  "text": "Begin",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/ui/pre_run_setup.gd",
+  "line": 224,
+  "text": "Back",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/ui/pre_run_setup.gd",
+  "line": 225,
+  "text": "Standard",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/ui/pre_run_setup.gd",
+  "line": 243,
+  "text": "Move",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/ui/pre_run_setup.gd",
+  "line": 243,
+  "text": "Select",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/ui/pre_run_setup.gd",
+  "line": 243,
+  "text": "Back",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/ui/pre_run_setup.gd",
+  "line": 637,
+  "text": "s",
+  "reason": "single-letter"
+ },
+ {
+  "file": "scripts/ui/rite_picker.gd",
+  "line": 132,
+  "text": "Move",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/ui/rite_picker.gd",
+  "line": 132,
+  "text": "Choose",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/ui/rite_picker.gd",
+  "line": 132,
+  "text": "Back",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/ui/stage_select.gd",
+  "line": 39,
+  "text": "Begin",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/ui/stage_select.gd",
+  "line": 93,
+  "text": "Back",
+  "reason": "ui-text-one-word"
+ },
+ {
+  "file": "scripts/ui/stage_select.gd",
+  "line": 98,
+  "text": "Move",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/ui/stage_select.gd",
+  "line": 98,
+  "text": "Back",
+  "reason": "button-label"
+ },
+ {
+  "file": "scripts/ui/title_frame.gd",
+  "line": 89,
+  "text": "o",
+  "reason": "single-letter"
+ }
+]

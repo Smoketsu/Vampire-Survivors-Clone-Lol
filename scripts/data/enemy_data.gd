@@ -9,6 +9,14 @@
 class_name EnemyData
 extends RefCounted
 
+## Seconds an enemy's sprite flashes white after a hit (Enemy.on_hit(); visual
+## only). Range 0+; 0 = no flash.
+const HIT_FLASH_TIME: float = 0.08  # TUNING (not in GDD)
+## Whether stage bosses and minibosses flash white when hit. Off (owner request,
+## Oct 2026): the flash hid their art on every hit; they keep the hit squash
+## (UnitMotion) as their hit feedback. GDD §15.0 "Bosses don't flash".
+const BIG_HIT_FLASH: bool = false  # TUNING (not in GDD)
+
 ## Display / iteration order of regular enemy kinds.
 const ORDER := ["recruit", "footman", "archer", "chaplain", "purifier", "templar"]
 

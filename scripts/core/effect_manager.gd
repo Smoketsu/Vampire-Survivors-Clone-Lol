@@ -21,6 +21,9 @@ var created: int = 0
 ## Art-only animations without a drawn shape (bolt hits, level-up,
 ## evolution): batched in one node, outside the pool and its counts (burst()).
 var bursts: AnimBursts = null
+## True on an Act III stage (set by Game): telegraphs draw the Empire's warning
+## set (Effect.empire_look; GDD §15.0 "Act III AoE art"). Visual only.
+var empire_look: bool = false
 
 
 func _ready() -> void:
@@ -55,6 +58,7 @@ func _spawn(kind: Effect.Kind, pos: Vector2, color: Color, size: float, duration
 	else:
 		e = _pool.pop_back()
 	e.start(kind, pos, color, size, duration, vec, width)
+	e.empire_look = empire_look
 	var tier := AdaptiveQuality.tier()  # Visual tier (Reduced effects or the adaptive quality).
 	if not critical and tier > 0 and active.size() >= int(EffectsData.TIER_VISIBLE_EFFECTS[tier]):
 		e.visible = false  # Lower visual tier: lives and counts as usual, just not drawn.

@@ -1,0 +1,12 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, hovering gracefully, one hand stretched forward blowing a kiss of soul-teal light.
+
+LOW-RESOLUTION pixel art: the whole figure is only 52 pixels tall and about 36 pixels wide, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims, lacing or engravings. Details must be big enough to read at game size.
+
+Subject: a BOUND SUCCUBUS (a FEMALE demon bound to serve a necromancer: an undead-bound summon), an exaggerated hourglass figure: a very full bust, a tiny cinched waist, wide curvy hips, sultry and confident, her face readable (two glowing SOUL-TEAL eyes, lips). Pale grey-lilac skin, long pale bone-white hair, two curled horns, bat wings half-spread behind her (never covering her body), a spaded tail. A black corset-style bodysuit with a high-cut hip and a V neckline, a bare midriff strip, fully covering her chest and hips, bare shoulders, black thigh-high stockings and boots, BONE CHAINS: a bone collar with a short chain and bone shackles on her wrists, glowing soul-teal runes on the chains. FULLY CLOTHED, tasteful, never explicit.
+Signature shape: the hourglass figure, the bone collar and chains, the half-spread wings, the soul-teal glow.
+
+Colours: ONLY flat fills, at most 3 shades per material: obsidian black #0B0A10 #1E1A26 #352E40 #5A5068; pale lilac skin #6A5A78 #A898B8 #D8CCE4; bone #A79A80 #CFC7AE #EDE6D0; soul teal #1F7A5C #3FD39A #9CFFD8; charm pink #FF6FB5 only for her lips.
+Outline: a clean 1-pixel dark outline around the whole figure in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the figure), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark.
+Attached: a character of this game in the same figure style (a succubus): match its pixel size, outline weight, proportions and flat look exactly, but bound in bone chains with soul-teal eyes.

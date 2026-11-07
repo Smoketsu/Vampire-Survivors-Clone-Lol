@@ -1,0 +1,10 @@
+Pixel-art game sprite for a top-down 2D horde-survival game. Three-quarter top-down view (camera above and slightly in front), on a transparent background. TWO copies of the same object side by side with a wide transparent gap between them: (1) on the LEFT lying HORIZONTALLY, about 96 pixels long and 26 pixels deep; (2) on the RIGHT the same object turned to run VERTICALLY (top to bottom), 26 pixels wide and 96 pixels long.
+LOW-RESOLUTION pixel art, shown enlarged so every pixel is a big crisp square block. Chunky simple shapes, no detail under 2 pixels, no anti-aliasing, no gradients, no dithering, no texture noise. A clean 1-pixel dark outline.
+
+Subject: a short length of a SIEGE CAMP PALISADE: a row of sharpened upright wooden stakes lashed together with rope, leaning a little outward, a few bronze-tipped points.
+
+Colours: ONLY flat fills: wood #2A1A10 (outline) #4F3320 #8C6040 #B08458; rope #8E8A86 #CFCBC4; bronze #6B4423 #A8702E.
+Light from the top-left. Keep it a little darker and calmer than the characters (it is scenery), but clearly brighter than a near-black ground.
+
+Output: a PNG with a FULLY TRANSPARENT background, no ground, no cast shadow, no water, no text, no watermark.
+Attached: an obstacle of this game. Match its pixel size, outline weight and flat look exactly.

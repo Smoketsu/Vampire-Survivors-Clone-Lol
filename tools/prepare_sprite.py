@@ -183,6 +183,44 @@ FACTION_RAMPS = {
     # signal-amber / warning-red lights, plus the cyborgs' faces (skin) and
     # webbing (brown); never the player's violet, the undead's bone or soul teal.
     "empire": ["chrome", "signal", "skin", "brown"],
+    # --- Act IV: the Olympian Republic (assets/sprites/pantheon/) ---
+    # Bronze armour, marble linen and statues, Aegean blue cloaks and crests, gold for the
+    # heroes, plus faces (skin) and spear shafts (brown); never the player's violet, the
+    # undead's bone or soul teal, or the Covenant's crimson and warm steel.
+    "pantheon": ["bronze", "marble", "aegean", "gold", "skin", "brown"],
+    # --- Act V: the Shogunate of the Rising Sun (assets/sprites/shogunate/) ---
+    # Red lacquer armour, indigo cloth, sakura pink, steel (grey), gold for the sun and the
+    # crests, plus faces and oni skin (skin) and wooden shafts (brown); never the player's
+    # violet, the undead's bone or soul teal, or the Covenant's crimson.
+    "shogunate": ["lacquer", "indigo", "sakura", "grey", "gold", "skin", "brown"],
+    # --- Act VI: the Inferno (assets/sprites/inferno/) ---
+    # Black obsidian armour, lava and ember light, demon skin, charm pink (Temptation), plus
+    # the damned's pale skin and wooden shafts; never the player's violet, the undead's bone
+    # or soul teal, the Covenant's crimson or the Shogunate's lacquer.
+    "inferno": ["obsidian", "lava", "demon", "charm", "grey", "skin", "brown"],
+    # --- Act VII: the Sanguine Court (assets/sprites/court/) ---
+    # Blood-red plate and eyes, black velvet, moonlit silver fur and steel, candle gold trim, plus
+    # pale skin and wood; never the player's violet, the undead's bone or soul teal, or the
+    # Covenant's crimson.
+    "court": ["blood", "velvet", "moonlight", "gold", "skin", "brown"],
+    # --- Act VIII: the Last Line (assets/sprites/city/) ---
+    # Asphalt-black riot and SWAT armour, concrete grey, neon and sodium glow, army olive with hazard
+    # yellow, police blue / siren red / hero orange, plus skin, leather and wood, and bone ivory for
+    # white clothes (the medic's coat, Blitz's suit); the medic's green is the per-key moss below;
+    # never the player's violet, the undead's teal or the Covenant's crimson.
+    # Each hue has its own ramp (palette.json): one ramp across blue, red and orange would stretch
+    # lightness over three hues and turn the blue into red; "neon" and "siren" are documentation groups.
+    # The orange hues (neon_sodium, hero) are left out of the default set: skin tones sit in the same hue and
+    # would snap onto them; the keys that need them add them in KEY_RAMPS.
+    "city": ["asphalt", "concrete", "olive", "hazard", "neon_pink", "neon_cyan", "police", "siren_red",
+             "skin", "brown", "bone"],
+    # --- Act IX: the Concord of Stars (assets/sprites/concord/) ---
+    # Hull white and gunmetal, plasma green and laser magenta lights, the Brood's green-black chitin, the Vrask's teal
+    # scales, the Luminous's pale white-gold, the Star-Seer's lavender skin; the Hive Mother's purple (`hive`, `hive_bone`)
+    # is added to her key only (it sits near the player's violet). Never the player's violet, the undead's bone or teal,
+    # or the Covenant's crimson (no `violet`, `bone`, `soul`, `crimson` here). Each hue has its own ramp (palette.json),
+    # as in Act VIII. The bosses/ and structures/ keys of the act are converted with an explicit --ramps list.
+    "concord": ["hull", "gunmetal", "plasma", "laser", "chitin", "vrask", "lumen", "lavender"],
 }
 # Per-key exceptions to FACTION_RAMPS: key -> (ramps added, ramps removed). The arcane
 # blue of the Mage and Lich and the icy cyan of the frost summons never mix (GDD 15.0 art
@@ -195,6 +233,13 @@ KEY_RAMPS = {
     "summons/winter_revenant": ([], ["arcane"]),
     "summons/hellhound": (["flame"], []),
     "summons/ossuary_engine": (["flame"], []),
+    # --- Act VIII: the Last Line ---
+    "city/field_medic": (["moss"], []),  # the medic's green skirt and satchel, beside the ivory coat
+    "city/blitz": (["hero"], ["skin"]),  # the orange suit; the face is behind helmet and goggles, so no skin ramp to steal the orange
+    # --- Act IX: the Concord of Stars ---
+    "bosses/hive_mother": (["hive", "hive_bone", "gold"], ["violet", "bone", "soul", "crimson"]),  # her purple chitin, cream spines and gold eyes only (the bosses/ folder has no faction set)
+    "concord/prism": ([], ["chitin", "vrask", "plasma"]),  # the Star-Seer: hull gown, laser trim, lumen hair, lavender skin
+    "concord/grey_drone": ([], ["lavender", "lumen", "vrask", "chitin"]),  # a silver grey with a plasma probe
 }
 # Ramps holding less than this share (0-1) of the opaque pixels are dropped (re-snapped).
 RAMP_MIN_SHARE = 0.03

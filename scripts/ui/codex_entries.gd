@@ -81,6 +81,72 @@ static func section_entries(section: String) -> Array:
 				var b := _boss(id)
 				b["section"] = section
 				out.append(b)
+		# --- Act IV: the Olympian Republic ---
+		"pantheon_soldiers":
+			for id: String in CodexData.PANTHEON_SOLDIERS:
+				out.append(_covenant(id, section))
+		"pantheon_champions":
+			for id: String in CodexData.PANTHEON_CHAMPIONS:
+				out.append(_covenant(id, section))
+		"pantheon_bosses":
+			for id: String in CodexData.PANTHEON_BOSSES:
+				var b := _boss(id)
+				b["section"] = section
+				out.append(b)
+		# --- Act V: the Shogunate of the Rising Sun ---
+		"shogunate_soldiers":
+			for id: String in CodexData.SHOGUNATE_SOLDIERS:
+				out.append(_covenant(id, section))
+		"shogunate_champions":
+			for id: String in CodexData.SHOGUNATE_CHAMPIONS:
+				out.append(_covenant(id, section))
+		"shogunate_bosses":
+			for id: String in CodexData.SHOGUNATE_BOSSES:
+				var b := _boss(id)
+				b["section"] = section
+				out.append(b)
+		# --- Act VI: the Inferno ---
+		"inferno_soldiers":
+			for id: String in CodexData.INFERNO_SOLDIERS:
+				out.append(_covenant(id, section))
+		"inferno_champions":
+			for id: String in CodexData.INFERNO_CHAMPIONS:
+				out.append(_covenant(id, section))
+		"inferno_bosses":
+			for id: String in CodexData.INFERNO_BOSSES:
+				var b := _boss(id)
+				b["section"] = section
+				out.append(b)  # Act VI bosses.
+		# --- Act VII: the Sanguine Court ---
+		"court_soldiers":
+			for id: String in CodexData.COURT_SOLDIERS:
+				out.append(_covenant(id, section))
+		"court_champions":
+			for id: String in CodexData.COURT_CHAMPIONS:
+				out.append(_covenant(id, section))  # Act VII champions.
+		"court_bosses":
+			for id: String in CodexData.COURT_BOSSES:
+				var b := _boss(id)
+				b["section"] = section
+				out.append(b)  # Act VII bosses.
+		# --- Act VIII: the Last Line (grouped by tier) ---
+		"city_civilians", "city_gangs", "city_police", "city_swat", "city_army", "city_heroes":
+			for id: String in _city_list(section):
+				out.append(_covenant(id, section))  # Act VIII kinds, by tier.
+		"city_bosses":
+			for id: String in CodexData.CITY_BOSSES:
+				var b := _boss(id)
+				b["section"] = section
+				out.append(b)  # Act VIII bosses.
+		# --- Act IX: the Concord of Stars (grouped by race) ---
+		"concord_brood", "concord_harvesters", "concord_vrask", "concord_luminous":
+			for id: String in _concord_list(section):
+				out.append(_covenant(id, section))  # Act IX kinds, by race.
+		"concord_bosses":
+			for id: String in CodexData.CONCORD_BOSSES:
+				var b := _boss(id)
+				b["section"] = section
+				out.append(b)  # Act IX bosses.
 	return out
 
 
@@ -146,6 +212,36 @@ static func _evolution(id: String, section: String) -> Dictionary:
 
 
 ## A Covenant soldier, structure or champion entry.
+# --- Act VIII: the Last Line ---
+## The Last Line kinds of tier section `section` (CodexData.CITY_*).
+static func _city_list(section: String) -> Array[String]:
+	match section:
+		"city_civilians":
+			return CodexData.CITY_CIVILIANS
+		"city_gangs":
+			return CodexData.CITY_GANGS
+		"city_police":
+			return CodexData.CITY_POLICE
+		"city_swat":
+			return CodexData.CITY_SWAT
+		"city_army":
+			return CodexData.CITY_ARMY
+	return CodexData.CITY_HEROES
+
+
+# --- Act IX: the Concord of Stars ---
+## The Concord kinds of race section `section` (CodexData.CONCORD_*).
+static func _concord_list(section: String) -> Array[String]:
+	match section:
+		"concord_brood":
+			return CodexData.CONCORD_BROOD
+		"concord_harvesters":
+			return CodexData.CONCORD_HARVESTERS
+		"concord_vrask":
+			return CodexData.CONCORD_VRASK
+	return CodexData.CONCORD_LUMINOUS
+
+
 static func _covenant(id: String, section: String) -> Dictionary:
 	var d := CodexData.enemy_row(id)
 	var stats: Array = [[_t("hp"), num(float(d.get("max_hp", 0.0)))]]
@@ -160,6 +256,18 @@ static func _covenant(id: String, section: String) -> Dictionary:
 		sprite = "eye/" + id  # ...an Ancient Eye kind (Act II)...
 	elif not SpriteBank.has(sprite) and SpriteBank.has("empire/" + id):
 		sprite = "empire/" + id  # ...an Electronic Empire kind (Act III)...
+	elif not SpriteBank.has(sprite) and SpriteBank.has("pantheon/" + id):
+		sprite = "pantheon/" + id  # ...an Olympian Republic kind (Act IV)...
+	elif not SpriteBank.has(sprite) and SpriteBank.has("shogunate/" + id):
+		sprite = "shogunate/" + id  # ...a Shogunate kind (Act V)...
+	elif not SpriteBank.has(sprite) and SpriteBank.has("inferno/" + id):
+		sprite = "inferno/" + id  # ...an Inferno kind (Act VI)...
+	elif not SpriteBank.has(sprite) and SpriteBank.has("court/" + id):
+		sprite = "court/" + id  # ...a Sanguine Court kind (Act VII)...
+	elif not SpriteBank.has(sprite) and SpriteBank.has("city/" + id):
+		sprite = "city/" + id  # ...a Last Line kind (Act VIII)...
+	elif not SpriteBank.has(sprite) and SpriteBank.has("concord/" + id):
+		sprite = "concord/" + id  # ...a Concord of Stars kind (Act IX)...
 	elif not SpriteBank.has(sprite):
 		sprite = "structures/" + id  # ...or a structure.
 	var kills := Meta.codex_kill_count(id)  # Lifetime kills of this kind.

@@ -1,0 +1,9 @@
+A sheet of SIX separate pixel-art game OBSTACLE PROPS in one row, evenly spaced with wide empty gaps between them, on a FULLY TRANSPARENT background (real alpha). Three-quarter top-down view (camera above and in front, like a top-down action game), each prop standing upright on its base, chunky low-resolution pixel art (each prop about 30 pixels wide), crisp square pixels, 1-pixel dark outline, flat colours, at most 3 shades per material, light from the top-left. No ground, no cast shadow, no text.
+From left to right:
+1. A DEAD POPLAR: a short grey dead tree stump with a few bare twisted branches.
+2. A STYX ROCK: a dark wet black boulder with a pale grey highlight.
+3. A BROKEN COLUMN: a fluted marble Greek column snapped off at waist height, pale grey marble.
+4. AN OBSIDIAN SPIRE: a jagged black obsidian crystal spike with dark violet-grey facets.
+5. A SOUL BRAZIER: a dark bronze tripod brazier holding a cold pale-blue flame.
+6. A FERRY POST: a weathered wooden mooring post with a rope coil and a small hanging lantern with a pale blue light.
+Colours: greys #14161C #2A2D36 #4A4E5A #7C8290; marble #8E8A86 #CFCBC4 #F4F1EA; bronze #1E1408 #6B4423 #A8702E; cold flame #123E66 #2C77B8 #6FB6E8; wood #2A1C12 #5B3D26 #8C6040.

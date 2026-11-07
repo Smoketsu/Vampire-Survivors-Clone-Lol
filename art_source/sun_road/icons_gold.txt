@@ -1,0 +1,7 @@
+A sheet of THREE separate pixel-art game ICON SYMBOLS in one row, evenly spaced with wide empty gaps between them, on a FULLY TRANSPARENT background (real alpha). Each symbol is simple, bold and centred in its third of the image, drawn as chunky low-resolution pixel art (each symbol about 24 pixels wide on a coarse grid, shown enlarged with crisp square pixels, nearest-neighbour, 1-pixel dark outline, flat colours, at most 3 shades per colour, light from the top-left). No frame, no badge background, no text, no letters.
+From left to right:
+1. ECLIPSE OF HEAVEN: two black suns side by side, each ringed by a bright gold corona, a burst of gold rays between them.
+2. ONI LORD: a great horned oni head seen from the front with a bone crown between its tall ivory horns, glowing soul-teal eyes, a broken chain hanging below.
+3. THE SUN GOES OUT: a red torii gate in silhouette with a dark extinguished sun behind it, only a thin dying red-gold rim of light left around the black disc.
+Colours: gold #E0A92E #FFDC66 #FFF6D8; black #0B0A10 #1C1426; red #6A1418 #B3262B #E2594A; bone #A79A80 #CFC7AE #EDE6D0; oni skin #4A2A2A #7A4038; soul teal #1F7A5C #3FD39A #9CFFD8.
+Attached: an approved icon of this game: match its pixel size, outline weight and flat look (only the symbol, not its frame).

@@ -1,0 +1,13 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, neutral ready stance.
+
+LOW-RESOLUTION pixel art: the whole figure is only 44 pixels tall, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims or engravings.
+
+Subject: a MYRMIDON SHADE, a MALE undead Greek hoplite raised by the necromancer: a skeleton warrior in a battered Corinthian helmet of grey bone-coloured metal with a short ragged grey crest, a skull face in the helmet opening with two soul-teal glowing eye sockets, a grey cuirass, bony arms and legs, a big ROUND SHIELD held forward in his front (right) hand (grey metal with a bone-white rim and a soul-teal circle in the middle), a long spear held upright in his back hand.
+Signature shape that must read in silhouette: the round shield in front, the crested helmet, the upright spear.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: bone #4A3E2E (outline) #A79A80 #CFC7AE #EDE6D0; cold grey metal #1A1F26 #3A4350 #5F6B7A #8E9AA8; soul teal glow #0F2E26 #1F7A5C #3FD39A #9CFFD8; spear wood #2A1C12 #5B3D26 #8C6040.
+
+Outline: a clean 1-pixel dark outline around the whole figure in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the figure), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark.
+Attached: a sprite of this game: match its pixel size, outline weight and flat look exactly (not its subject or colours).

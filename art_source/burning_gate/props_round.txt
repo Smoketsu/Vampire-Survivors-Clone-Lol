@@ -1,0 +1,5 @@
+A single pixel-art game OBSTACLE PROP on a FULLY TRANSPARENT background (real alpha), centred. Three-quarter top-down view (camera above and in front), chunky low-resolution pixel art (about 40 pixels wide), crisp square pixels, 1-pixel dark outline, flat colours, at most 3 shades per material, light from the top-left. No ground, no cast shadow, no text.
+Subject: an EMBER ROCK: a jagged black obsidian boulder with sharp glassy facets, glowing orange lava veins cracking through it, a little smoke wisp on top.
+Colours: obsidian #0B0A10 (outline) #1E1A26 #352E40 #5A5068; lava #8A2A08 #E0601A #FFB347.
+Keep it a little darker and calmer than the characters (it is scenery), but clearly brighter than a near-black ground.
+Attached: an obstacle of this game. Match its pixel size, outline weight and flat look exactly.

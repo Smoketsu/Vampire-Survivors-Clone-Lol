@@ -161,6 +161,8 @@ static func draw_tether(ci: CanvasItem, to: Vector2, t: float) -> void:
 ## A Shield Gate's energy wall from `a` to `b` (`thick` px), powering up as
 ## `power` (0..1) rises: an amber barrier with a scrolling hex lattice and posts.
 static func draw_gate_wall(ci: CanvasItem, a: Vector2, b: Vector2, thick: float, power: float, t: float) -> void:
+	if EmpireFx.gate_wall(ci, a, b, thick, power, t):
+		return  # Pixel art (GDD §15.0 "Act III AoE art"); the code below is the fallback.
 	var ab := b - a
 	var len := ab.length()
 	if len < 1.0:
@@ -186,6 +188,8 @@ static func draw_gate_wall(ci: CanvasItem, a: Vector2, b: Vector2, thick: float,
 
 ## The light cable from a generator at `from` to its wall end `to`.
 static func draw_gate_cable(ci: CanvasItem, from: Vector2, to: Vector2, t: float) -> void:
+	if EmpireFx.gate_cable(ci, from, to, t):
+		return
 	var k := 0.5 + 0.5 * sin(t * 6.0)
 	ci.draw_line(from, to, Color(Palette.EMPIRE_SIGNAL_AMBER, 0.25 + 0.25 * k), 3.0)
 	ci.draw_line(from, to, Color(Palette.EMPIRE_SIGNAL_GLOW, 0.5), 1.0)
@@ -195,6 +199,8 @@ static func draw_gate_cable(ci: CanvasItem, from: Vector2, to: Vector2, t: float
 ## thin flickering red line growing as `tele` (0..1) rises, with emitter marks at
 ## both ends; firing, a hard white-hot beam with a red glow.
 static func draw_laser(ci: CanvasItem, a: Vector2, b: Vector2, w: float, firing: bool, tele: float, t: float) -> void:
+	if EmpireFx.laser(ci, a, b, w, firing, tele, t):
+		return
 	if firing:
 		ci.draw_line(a, b, Color(Palette.EMPIRE_SIGNAL_RED, 0.35), w * 2.6)
 		ci.draw_line(a, b, Color(Palette.EMPIRE_SIGNAL_RED, 0.85), w)
@@ -209,6 +215,8 @@ static func draw_laser(ci: CanvasItem, a: Vector2, b: Vector2, w: float, firing:
 ## The band a telegraphed beam will sweep: from its start line (`c0`, sweep
 ## normal `n`, beam direction `along`, half length `half`) `sweep` px along `n`.
 static func draw_laser_band(ci: CanvasItem, c0: Vector2, n: Vector2, along: Vector2, half: float, sweep: float, tele: float) -> void:
+	if EmpireFx.laser_band(ci, c0, n, along, half, sweep, tele):
+		return
 	var pts := PackedVector2Array([c0 - along * half, c0 + along * half, c0 + along * half + n * sweep, c0 - along * half + n * sweep])
 	ci.draw_colored_polygon(pts, Color(Palette.EMPIRE_SIGNAL_RED, 0.06 + 0.08 * tele))
 
@@ -264,6 +272,8 @@ static func draw_deus(ci: CanvasItem, o: Vector2, r: float, flash: bool, look: i
 
 ## A footfall / stomp ring at `c` (`r` px) filling as `k` (0..1) nears the landing.
 static func draw_stomp_ring(ci: CanvasItem, c: Vector2, r: float, k: float) -> void:
+	if EmpireFx.telegraph_circle(ci, c, r, k):
+		return
 	ci.draw_circle(c, r * k, Color(Palette.EMPIRE_SIGNAL_RED, 0.12 + 0.12 * k))
 	ci.draw_arc(c, r, 0.0, TAU, 36, Color(Palette.EMPIRE_SIGNAL_RED, 0.8), 2.0)
 	ci.draw_arc(c, r * 0.6, 0.0, TAU, 24, Color(Palette.EMPIRE_SIGNAL_AMBER, 0.4), 1.0)
@@ -271,6 +281,8 @@ static func draw_stomp_ring(ci: CanvasItem, c: Vector2, r: float, k: float) -> v
 
 ## The overload charge round the hull at `c` (radius `r`), as `k` (0..1) rises.
 static func draw_pulse_charge(ci: CanvasItem, c: Vector2, r: float, k: float, t: float) -> void:
+	if EmpireFx.pulse_charge(ci, c, r, k, t):
+		return
 	var flick := 0.7 + 0.3 * sin(t * 30.0)
 	ci.draw_circle(c, r * (1.0 + 0.6 * k), Color(Palette.EMPIRE_SIGNAL_RED, 0.12 * k * flick))
 	ci.draw_arc(c, r * (1.6 - 0.5 * k), 0.0, TAU, 40, Color(Palette.EMPIRE_SIGNAL_GLOW, 0.6 * k), 2.0)
@@ -281,6 +293,8 @@ static func draw_pulse_charge(ci: CanvasItem, c: Vector2, r: float, k: float, t:
 static func draw_pulse_front(ci: CanvasItem, c: Vector2, r: float, front: float, fade: float) -> void:
 	if r <= 1.0:
 		return
+	if EmpireFx.pulse_front(ci, c, r, fade):
+		return
 	ci.draw_arc(c, r, 0.0, TAU, 64, Color(Palette.EMPIRE_SIGNAL_RED, 0.35 * fade), front)
 	ci.draw_arc(c, r, 0.0, TAU, 64, Color(Palette.EMPIRE_SIGNAL_GLOW, 0.8 * fade), 2.0)
 
@@ -288,6 +302,8 @@ static func draw_pulse_front(ci: CanvasItem, c: Vector2, r: float, front: float,
 ## A telegraphed sweep: the arc from angle `a0` to `a1` (rad) out to `reach` px
 ## round `o`, filling as `k` (0..1) rises.
 static func draw_sweep_arc(ci: CanvasItem, o: Vector2, a0: float, a1: float, reach: float, k: float) -> void:
+	if EmpireFx.sweep(ci, o, a0, a1, reach, k):
+		return
 	var lo := minf(a0, a1)
 	var hi := maxf(a0, a1)
 	var pts := PackedVector2Array([o])
@@ -302,6 +318,8 @@ static func draw_sweep_arc(ci: CanvasItem, o: Vector2, a0: float, a1: float, rea
 ## The Judgment Lance along `dir` (`len` px, `w` px wide): telegraphed a thin
 ## pulsing line (`firing` false, `k` 0..1), firing a blinding amber-white beam.
 static func draw_lance(ci: CanvasItem, dir: Vector2, len: float, w: float, firing: bool, k: float, t: float) -> void:
+	if EmpireFx.lance(ci, dir, len, w, firing, k, t):
+		return
 	var b := dir * len
 	if not firing:
 		ci.draw_line(Vector2.ZERO, b, Color(Palette.EMPIRE_SIGNAL_RED, 0.3 + 0.4 * k), 1.0 + 2.0 * k)
@@ -315,6 +333,8 @@ static func draw_lance(ci: CanvasItem, dir: Vector2, len: float, w: float, firin
 
 ## A hangar door at `at` (local) glowing open as `k` (0..1) rises.
 static func draw_hangar(ci: CanvasItem, at: Vector2, k: float) -> void:
+	if EmpireFx.hangar(ci, at, k):
+		return
 	var rect := Rect2(at - Vector2(16, 10), Vector2(32, 20))
 	ci.draw_rect(rect.grow(2.0), INK)
 	ci.draw_rect(rect, Palette.EMPIRE_CHROME_DARK)
@@ -324,6 +344,8 @@ static func draw_hangar(ci: CanvasItem, at: Vector2, k: float) -> void:
 
 ## A teleport's destination glow at `at` (local), `r` the hull radius.
 static func draw_teleport_glow(ci: CanvasItem, at: Vector2, r: float, k: float, t: float) -> void:
+	if EmpireFx.teleport_glow(ci, at, r, k, t):
+		return
 	ci.draw_circle(at, r * (0.4 + 0.8 * k), Color(Palette.EMPIRE_SIGNAL_RED, 0.15 + 0.2 * k))
 	for i in 3:
 		var a := t * 3.0 + TAU * float(i) / 3.0
@@ -333,6 +355,8 @@ static func draw_teleport_glow(ci: CanvasItem, at: Vector2, r: float, k: float, 
 ## The finale's soul binding round `c`: the necromancer's green rings close on
 ## the broken engine as `k` (0..1) runs.
 static func draw_soul_binding(ci: CanvasItem, c: Vector2, big: float, k: float, t: float) -> void:
+	if EmpireFx.soul_binding(ci, c, big, k, t):
+		return
 	var fade := 1.0 - k
 	for i in 3:
 		var r := big * (1.0 - k * 0.6) * (1.0 - 0.25 * float(i))

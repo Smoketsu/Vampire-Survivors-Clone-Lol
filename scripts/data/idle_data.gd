@@ -29,5 +29,6 @@ const SUFFIX: String = "_idle"
 const FRAMES: int = 24  # TUNING (not in GDD) 24 frames: holds of 6-12 frames, 3-frame spring wobbles
 
 ## Idle frames shown per game second (1 .. 30). FRAMES / FPS is the loop length:
-## 24 / 8 = 3.0 s per breath (about 20 breaths a minute), 0.125 s per spring frame.
-const FPS: float = 8.0  # TUNING (not in GDD)
+## 24 / 6 = 4.0 s per breath (15 breaths a minute), 0.167 s per spring frame. Was 8
+## (3.0 s) until the owner found every bounce "just too fast" (Oct 2026).
+const FPS: float = 6.0  # TUNING (not in GDD)

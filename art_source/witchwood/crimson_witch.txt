@@ -1,0 +1,13 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, a confident, sultry pose, weight on one leg, one hand on her hip, the other holding a tall crooked staff
+
+LOW-RESOLUTION pixel art: the whole figure is only 52 pixels tall and about 36 wide, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims, lacing or engravings.
+
+Subject: a FEMALE CRIMSON WITCH (a support caster of the vampire Court) in the game's figure-redesign style: the most exaggerated hourglass figure (very full bust, an extremely tiny cinched waist less than half as wide as the hips, very wide curvy hips), glamorous and confident, her face clearly readable: pale skin, long flowing blood-red hair, red lips, glowing red eyes. A wide-brimmed pointed crimson witch hat with a gold buckle; a black velvet corset gown with crimson trim and a gold clasp, a deep V neckline fully covering her chest, bare shoulders, long sleeves, a long skirt with a HIGH SLIT showing one leg and a tall black boot; hips and chest fully covered, never nude, tasteful. A tall crooked wooden staff topped with a glowing blood-red gem and a gold charm.
+Signature shape that must read in silhouette: the wide pointed hat, the hourglass figure and the tall staff.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: pale skin #D9B8A8 #A8806E; black velvet #160F1C #2B1E36 #4D3A5E; blood red #5A0A14 #A3142A #E0384E; candle gold #E0A92E (a few pixels); staff wood #3A2416 #6B4A2E
+
+Outline: a clean 1-pixel dark outline around the whole figure in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the figure), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark.
+Attached: (1) a game sprite for pixel size, outline weight and flat look; (2) approved concept art of this unit for the costume only (do NOT copy its detail level or painted shading).

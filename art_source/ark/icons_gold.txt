@@ -1,0 +1,7 @@
+A sheet of THREE separate pixel-art game ICON SYMBOLS in one row, evenly spaced with wide empty gaps between them, on a FULLY TRANSPARENT background (real alpha). Each symbol is simple, bold and centred in its third of the image, drawn as chunky low-resolution pixel art (each symbol about 24 pixels wide on a coarse grid, shown enlarged with crisp square pixels, nearest-neighbour, 1-pixel dark outline, flat colours, at most 3 shades per colour, light from the top-left). No frame, no badge background, no text, no letters.
+From left to right:
+1. ABDUCTION: three small dark monster silhouettes rising in a wide golden cone of light toward a bright star above.
+2. BLACK MOTHERSHIP: a broad black flying saucer with three prongs below and a glowing soul-teal dome, gold trim on its rim.
+3. THE LAST HARVEST: a gold scythe laid across a dark planet whose light is going out, a few fading stars around it.
+Colours: black #0B0A10 #1C1426 #2A2438; gold #8A6A1E #D4A83C #FFE08A; soul teal #1F7A5C #3FD39A #9CFFD8; planet dark blue-grey #1E242C #3A424C.
+Attached: an approved icon of this game: match its pixel size, outline weight and flat look (only the symbol, not its frame).

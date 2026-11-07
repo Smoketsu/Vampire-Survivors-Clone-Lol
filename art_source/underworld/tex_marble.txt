@@ -1,0 +1,2 @@
+Seamless top-down FLOOR TEXTURE for a dark 2D pixel-art game: old cracked dark marble flagstones of an underworld hall seen straight from above, the stone with faint veins and cracks, worn and dusty, very flat even lighting, no objects, no joints needed (just the stone surface). Chunky pixel art at about 160 pixels across, crisp square pixels, flat colours, no gradients, no vignette, no text. Fully opaque, filling the whole image edge to edge.
+Colours: dark stone greys #161A1C #26272A #2D2E33 #312E2B, thin pale veins #3A3B40.

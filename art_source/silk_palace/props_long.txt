@@ -1,0 +1,8 @@
+A sheet of FOUR pixel-art game OBSTACLE PROPS in TWO rows on a FULLY TRANSPARENT background (real alpha), wide empty gaps between them. Three-quarter top-down view (camera above and in front), chunky low-resolution pixel art, crisp square pixels, 1-pixel dark outline, flat colours, at most 3 shades per material, light from the top-left. No ground, no cast shadow, no text.
+TOP ROW, two long props seen from the side, each about 48 pixels long and 20 tall:
+1. A VELVET DIVAN: a long low couch with a black curved wooden frame and gold claw feet, crimson-violet velvet cushions.
+2. A MIRROR WALL: a long low wall of three tall mirrors side by side in a black and gold frame, the glass pale violet with white highlights.
+BOTTOM ROW, the SAME two props seen END-ON (turned 90 degrees, so they look short and deep), each about 20 pixels wide and 40 tall, in the same order:
+3. The velvet divan seen from its end.
+4. The mirror wall seen from its end (a narrow black and gold frame).
+Colours: black #0B0A10 #1E1A26 #352E40 #5A5068; crimson velvet #5C1A3A #9B2D5E #D45C8A; gold #8A6A1E #D9A93A #F5D870; mirror violet #6A5A88 #A898C8 #E8E0F8.

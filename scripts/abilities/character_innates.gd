@@ -52,6 +52,54 @@
 ##                    "scrap_bolt", a minion special source) every
 ##                    risen_bolt_interval s at the nearest foe within
 ##                    ScrapSwarmData.PROPHET_RANGE px; stat prophet_scrap_bolts.
+## Act IV, Mount Olympus:
+##   Oathbreaker      Kinslayer       StolenThunder._hit(): thunder_divine_bonus
+##                    more Stolen Thunder damage on bosses, minibosses (the
+##                    gods) and Heroes (kinslayer_hits).
+## Act IV, the Asphodel Underworld:
+##   Ferrywoman       Ferry of Souls  in RiverStyx.on_enemy_killed() (a foe slain
+##                    in her river rises as a temporary Risen); stat ferry_risen.
+## Act V, the Road to the Sun:
+##   Shrine Maiden    Night Prayer    in BlackSun._fire() (each dark sun fires a
+##                    second beam at another group); stat black_sun_forks.
+## Act VI, the Burning Gate:
+##   Furnace Priest   Stoker          in Brimstone._volley() (one more stone in
+##                    every volley); stat brimstone_extra_stones.
+## Act VI, the Palace of Silk and Ash:
+##   Succubus Queen   Heartbreaker    in TemptSpell / Enthrall._return() (a foe
+##                    whose charm ends loses a share of its max HP); stat
+##                    enthrall_heartbreaks.
+## Act VI, Pandemonium:
+##   Fallen Saint     Second Fall     in FallFromGrace._cast() (every cast drops
+##                    a second star on the next-strongest foe); stat
+##                    grace_second_stars.
+## Act VII, Ravensmoor:
+##   Moon-Cursed      Hunter's Moon   in Moonfang._cast() (one more jaw in every
+##   Huntress                         cast); stat moonfang_extra_jaws.
+## Act VII, the Witchwood:
+##   Hedge Witch      Hedge Lore      in WitchCircle.step() (every hex circle of
+##                    the spell a quarter wider); stat witch_circle_hits.
+## Act VII, Castle Sanguis:
+##   Dhampir          Half-Blood      in NightSwarm.step() (two more bats in the
+##                    swarm); stats as the spell's (swarm_darts, swarm_bites).
+## Act VIII, Skid Row:
+##   Undertaker       Last Ride       in HearseRun._cast() (one more hearse in
+##                                    every cast); stat hearse_extra.
+## Act VIII, Fort Kessler:
+##   Fallen Sergeant  Sapper's Hands  in BoneMines._drop() (one more mine laid
+##                    beside every one); stat bone_mines_extra.
+## Act VIII, Liberty Heights:
+##   Revenant Heroine Back From the Dead  in HerosFist.step() (one more fist a
+##                    cast); stats as the spell's (fist_casts, fist_slams).
+## Act IX, the Crash Site:
+##   Broodbound       Swarm Bride     in BoneBeetles.on_enemy_killed() (one more
+##                    beetle in every burst); stat beetle_extra.
+## Act IX, the Proving Moon:
+##   Blooded          First Blood     in SoulCaster._lock() (one more target a
+##                    lock); stat soul_caster_extra.
+## Act IX, the Ark of the Concord:
+##   Starborn         Deserter's Signal  in TractorLift.step() (one more foe
+##                    lifted a cast); stats as the spell's (tractor_lifts).
 class_name CharacterInnates
 extends Node2D
 
@@ -361,6 +409,60 @@ func summary_line() -> String:
 		"scrap_prophecy":
 			counters = "scrap bolts %d, bolt dmg %d, kills %d (temporary summons %d)" % [int(st.get("prophet_scrap_bolts", 0.0)), int(st.get("dmg_" + ScrapSwarmData.PROPHET_SOURCE, 0.0)),
 				int(st.get("kills_by_" + ScrapSwarmData.PROPHET_SOURCE, 0.0)), game.horde.temp_spawned]
+		# --- Act IV: the Shores of Ilion ---
+		"foretold_fall":
+			counters = "champion bonus dmg %d (arrow hits %d)" % [int(st.get("prophetess_bonus_dmg", 0.0)), int(st.get("paris_hits", 0.0))]
+		# --- Act IV: Mount Olympus ---
+		"kinslayer":
+			counters = "kinslayer hits %d (thunder strikes %d)" % [int(st.get("kinslayer_hits", 0.0)), int(st.get("thunder_strikes", 0.0))]
+		# --- Act IV: the Asphodel Underworld --- (Ferry of Souls lives in RiverStyx.on_enemy_killed())
+		"ferry_of_souls":
+			counters = "ferried Risen %d (temporary summons %d)" % [int(st.get("ferry_risen", 0.0)), game.horde.temp_spawned]
+		# --- Act V: the Burning Province --- (Many Faces lives in HundredShadows._split())
+		"many_faces":
+			counters = "extra clones %d (splits %d, echoes %d)" % [int(st.get("kunoichi_extra_clones", 0.0)), int(st.get("shadow_splits", 0.0)), int(st.get("shadow_echoes", 0.0))]
+		# --- Act V: the Road to the Sun --- (Night Prayer lives in BlackSun._fire())
+		"night_prayer":
+			counters = "second beams %d (dmg as black_sun / eclipse_of_heaven)" % int(st.get("black_sun_forks", 0.0))
+		# --- Act V: Castle Kurogane --- (Unbowed Banner lives in BannerOfTheDead.step())
+		"unbowed_banner":
+			counters = "banners planted %d (haste x%.2f)" % [int(st.get("banner_planted", 0.0)), 1.0 + game.character.innate_value(BannerData.INNATE_KEY)]
+		# --- Act VI: the Burning Gate --- (Stoker lives in Brimstone._volley())
+		"stoker":
+			counters = "extra stones %d (volleys %d)" % [int(st.get("brimstone_extra_stones", 0.0)), int(st.get("brimstone_volleys", 0.0))]
+		# --- Act VI: the Palace of Silk and Ash --- (Heartbreaker lives in Enthrall._return())
+		"heartbreaker":
+			counters = "heartbreaks %d (dmg %d)" % [int(st.get("enthrall_heartbreaks", 0.0)), int(st.get("dmg_" + TemptData.HEARTBREAK_SOURCE, 0.0))]
+		# --- Act VI: Pandemonium --- (Second Fall lives in FallFromGrace._cast())
+		"second_fall":
+			counters = "second stars %d (dmg as fall_from_grace / lightbringer)" % int(st.get("grace_second_stars", 0.0))
+		# --- Act VII: Ravensmoor --- (Hunter's Moon lives in Moonfang._cast())
+		"hunters_moon":
+			counters = "extra jaws %d (casts %d)" % [int(st.get("moonfang_extra_jaws", 0.0)), int(st.get("moonfang_casts", 0.0))]
+		# --- Act VII: the Witchwood --- (Hedge Lore lives in WitchCircle.step())
+		"hedge_lore":
+			counters = "circle radius x%.2f (hits %d)" % [1.0 + game.character.innate_value(WitchCircleData.RADIUS_KEY), int(st.get("witch_circle_hits", 0.0))]
+		# --- Act VII: Castle Sanguis --- (Half-Blood lives in NightSwarm.step())
+		"half_blood":
+			counters = "extra bats %d (bites %d)" % [int(game.character.innate_value(NightSwarmData.EXTRA_KEY)), int(st.get("swarm_bites", 0.0))]
+		# --- Act VIII: Skid Row --- (Last Ride lives in HearseRun._cast())
+		"last_ride":
+			counters = "extra hearses %d (casts %d)" % [int(st.get("hearse_extra", 0.0)), int(st.get("hearse_casts", 0.0))]
+		# --- Act VIII: Fort Kessler --- (Sapper's Hands lives in BoneMines._drop())
+		"sappers_hands":
+			counters = "extra mines %d (laid %d)" % [int(st.get("bone_mines_extra", 0.0)), int(st.get("bone_mines_laid", 0.0))]
+		# --- Act VIII: Liberty Heights --- (Back From the Dead lives in HerosFist.step())
+		"back_from_the_dead":
+			counters = "extra fists %d (slams %d)" % [int(game.character.innate_value(HerosFistData.EXTRA_KEY)), int(st.get("fist_slams", 0.0))]
+		# --- Act IX: the Crash Site --- (Swarm Bride lives in BoneBeetles.on_enemy_killed())
+		"swarm_bride":
+			counters = "extra beetles %d (bursts %d)" % [int(st.get("beetle_extra", 0.0)), int(st.get("beetle_bursts", 0.0))]
+		# --- Act IX: the Proving Moon --- (First Blood lives in SoulCaster._lock())
+		"first_blood":
+			counters = "extra targets %d (shots %d)" % [int(st.get("soul_caster_extra", 0.0)), int(st.get("soul_caster_shots", 0.0))]
+		# --- Act IX: the Ark --- (Deserter's Signal lives in TractorLift.step())
+		"deserters_signal":
+			counters = "extra lifts %d (lifts %d)" % [int(game.character.innate_value(TractorLiftData.EXTRA_KEY)), int(st.get("tractor_lifts", 0.0))]
 	out += " | innate: %s" % ("none" if _innate == "" else "%s: %s" % [ch.innate_name(), counters])
 	out += " | characters unlocked this run: %s" % (", ".join(ch.unlocked_this_run) if not ch.unlocked_this_run.is_empty() else "none")
 	var open := PackedStringArray()  # Characters unlocked in the Meta profile now.

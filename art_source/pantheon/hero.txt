@@ -1,0 +1,12 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, neutral ready stance.
+
+LOW-RESOLUTION pixel art: the whole figure is only 58 pixels tall, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims or engravings, no muscle lines.
+
+Subject: a MALE Greek DEMIGOD champion, a Hector-like hero, grander and taller than a common soldier, broad-shouldered and proud: an open-faced gold-and-bronze helmet with cheek guards and a TALL white horsehair plume sweeping back over it, his face clearly visible (strong jaw, short dark beard, two clear eyes, skin-coloured), a shining GOLD muscled cuirass, a short bronze war skirt of big flat strips, bronze greaves, bare skin-coloured arms with gold armbands, a long flowing AEGEAN-BLUE CLOAK hanging from both shoulders and billowing out behind him to the left down to his knees, a short broad bronze sword held forward and slightly raised in his front (right) hand.
+Signature shape that must read in silhouette: the tall sweeping plume, the wide blue cloak billowing behind, the sword held forward.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: gold #8C6040 #E0A92E #FFDC66; bronze #1E1408 (outline) #6B4423 #A8702E #E0A955; Aegean blue #123E66 #2C77B8 #6FB6E8; marble white #8E8A86 #CFCBC4 #F4F1EA; skin #8C6040 #E0A882.
+Outline: a clean 1-pixel dark outline around the whole figure in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the figure), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark.
+Attached: (1) a sprite of this game: match its pixel size, outline weight and flat look exactly; (2) concept art of this army for the costume only (do NOT copy its detail level, its painted shading or its colours where they differ from the list above).

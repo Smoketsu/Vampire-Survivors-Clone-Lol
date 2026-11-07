@@ -1,0 +1,8 @@
+A sheet of FOUR separate pixel-art game ICON SYMBOLS in one row, evenly spaced with wide empty gaps between them, on a FULLY TRANSPARENT background (real alpha). Each symbol is simple, bold and centred in its quarter of the image, drawn as chunky low-resolution pixel art (each symbol about 24 pixels wide on a coarse grid, shown enlarged with crisp square pixels, nearest-neighbour, 1-pixel dark outline, flat colours, at most 3 shades per colour, light from the top-left). No frame, no badge background, no text, no letters.
+From left to right:
+1. FALL FROM GRACE: a burning golden five-pointed star falling diagonally down to the lower left, a long violet-and-gold fire trail behind it toward the upper right.
+2. PRIDE: a black iron crown with three tall spikes, a single violet gem in its middle and a small gold halo hovering above it.
+3. ARCHFIEND: the head of a horned grey-violet demon seen from the front, two big curled black horns, glowing soul-teal eyes, a bat wing on each side of the head.
+4. CROWN OF HORNS: a ring crown made of curled black horns, a small soul-teal flame rising from its middle.
+Colours: black #0B0A10 #1C1426; violet #3B1F5C #6B39A6 #A35CFA; gold #E0A92E #FFDC66; grey-violet skin #6E6B7B #8A8796 #A5A2B3; iron #2A2D36 #4A4E5A; soul teal #1F7A5C #3FD39A #9CFFD8; flame #E0601A #FFB347.
+Attached: an approved icon of this game: match its pixel size, outline weight and flat look (only the symbol, not its frame).

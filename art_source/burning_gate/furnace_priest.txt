@@ -1,0 +1,13 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, walking calmly, swinging a censer of live coals on a chain
+
+LOW-RESOLUTION pixel art: the whole figure is only 56 pixels tall, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims, lacing or engravings.
+
+Subject: THE FURNACE PRIEST (a MALE undead necromancer priest, a playable hero): a tall gaunt dead priest of a fire god, a long soot-black cassock with a violet stole hanging down the front, a tall horned iron mitre on his head, a pale grey skull-like face with glowing orange ember eyes, a black iron censer full of glowing coals swinging on a chain from his right hand, smoke curling from it, his left hand holding a short iron staff. Solemn and terrible.
+Signature shape that must read in silhouette: the tall horned mitre, the long cassock and the swinging censer.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: cassock soot black #0B0A10 #1E1A26 #352E40; stole violet #160A21 #4A2569 #7A42AD; mitre and censer iron #4A5566 #8793A6 #C4CCD8; skull face #8C7B5E #D9CCAA; embers and eyes #8A2A08 #E0601A #FFB347
+
+Outline: a clean 1-pixel dark outline around the whole figure in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the figure), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark.
+Attached: (1) a character of this game for pixel size, outline weight, proportions and flat look; (2) concept art of a robed cultist for the robe only (do NOT copy its detail level or colours).

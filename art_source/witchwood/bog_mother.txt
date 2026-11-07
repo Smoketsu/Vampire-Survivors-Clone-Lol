@@ -1,0 +1,13 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, rising tall out of black fen water up to her knees, both long arms reaching forward with clawed fingers, as if to drag something down
+
+LOW-RESOLUTION pixel art: the whole figure is only 110 pixels tall, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims, lacing or engravings.
+
+Subject: THE BOG MOTHER (a FEMALE miniboss): a vast drowned witch, twice a man's height, in the game's figure-redesign style: the most exaggerated hourglass figure (very full bust, an extremely tiny cinched waist less than half as wide as the hips, very wide curvy hips), glamorous and confident, her face clearly readable but huge: grey-green drowned skin, long black hair hanging wet with pondweed and moss, hollow pale glowing eyes, a crown of twisted roots and small bone charms, a rotted black velvet gown soaked and dripping with weed, a deep neckline fully covering her chest, chest and hips fully covered, never nude. Long thin arms with black clawed fingers trailing roots. Black water and reeds around her legs.
+Signature shape that must read in silhouette: the huge tall figure, the dripping hair and the long reaching arms.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: drowned skin #3E5A4E #6E8C7A #A8BFB0; black velvet and hair #160F1C #2B1E36 #4D3A5E; pondweed moss #2E4A22 #4F7A36; root wood #3A2416 #6B4A2E; eyes #E6EEF7; blood red accents #A3142A #E0384E (a few pixels)
+
+Outline: a clean 1-pixel dark outline around the whole figure in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the figure), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark.
+Attached: a game sprite for pixel size, outline weight and flat look (do NOT copy its subject).

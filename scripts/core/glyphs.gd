@@ -56,8 +56,8 @@ static func hp_bar(ci: CanvasItem, c: Vector2, w: float, frac: float, fill: Colo
 
 ## The player: hooded purple robe (triangle), bone face, green eyes, staff
 ## with a necrotic green orb (GDD §17 "purple/green/black/bone").
-static func draw_necromancer(ci: CanvasItem, o: Vector2, r: float, flash: bool) -> void:
-	if SpriteBank.draw(ci, "player/necromancer", o, flash):
+static func draw_necromancer(ci: CanvasItem, o: Vector2, r: float, flash: bool, recolour: String = "") -> void:
+	if SpriteBank.draw(ci, "player/necromancer", o, flash, Color.WHITE, recolour):
 		return  # Sprite art exists (assets/sprites/player/necromancer.png).
 	ci.draw_circle(o + Vector2(0, r * 0.9), r * 0.9, Color(0, 0, 0, 0.35))
 	var robe := PackedVector2Array([o + Vector2(0, -r * 1.25), o + Vector2(-r, r * 1.05), o + Vector2(r, r * 1.05)])
@@ -79,6 +79,9 @@ static func draw_summon(ci: CanvasItem, cls: String, o: Vector2, r: float, flash
 	if cls.begins_with(PuppetData.GLYPH_PREFIX):
 		AssemblyGlyphs.draw_puppet(ci, cls.substr(PuppetData.GLYPH_PREFIX.length()), o, r, flash)
 		return  # Act III: a Hollow Puppet (the foe's own art on soul strings).
+	if cls.begins_with(TemptData.GLYPH_PREFIX):
+		SilkPalaceGlyphs.draw_enthralled(ci, cls.substr(TemptData.GLYPH_PREFIX.length()), o, r, flash)
+		return  # Act VI: a thrall (Enthrall: the foe's own art, charmed pink, a heart over it).
 	if SpriteBank.draw(ci, "summons/" + cls, o, flash):
 		return  # Sprite art exists (assets/sprites/summons/<cls>.png).
 	match cls:
@@ -143,9 +146,18 @@ static func draw_enemy(ci: CanvasItem, kind: String, o: Vector2, r: float, flash
 		ci.draw_arc(o, r * 1.4, 0.0, TAU, 24, Palette.GOLD, 2.0)
 	# Sprite art, if any: soldiers in enemies/, buildings and carts in
 	# structures/, the Ancient Eye's kinds (Act II) in eye/, the Electronic
-	# Empire's (Act III) in empire/.
+	# Empire's (Act III) in empire/, the Olympian Republic's (Act IV) in pantheon/,
+	# the Shogunate's (Act V) in shogunate/, the Inferno's (Act VI) in inferno/,
+	# the Sanguine Court's (Act VII) in court/, the Last Line's (Act VIII) in city/,
+	# the Concord of Stars' (Act IX) in concord/.
 	if SpriteBank.draw(ci, "enemies/" + kind, o, flash) or SpriteBank.draw(ci, "structures/" + kind, o, flash) \
-			or SpriteBank.draw(ci, "eye/" + kind, o, flash) or SpriteBank.draw(ci, "empire/" + kind, o, flash):
+			or SpriteBank.draw(ci, "eye/" + kind, o, flash) or SpriteBank.draw(ci, "empire/" + kind, o, flash) \
+			or SpriteBank.draw(ci, "pantheon/" + kind, o, flash) \
+			or SpriteBank.draw(ci, "shogunate/" + kind, o, flash) \
+			or SpriteBank.draw(ci, "inferno/" + kind, o, flash) \
+			or SpriteBank.draw(ci, "court/" + kind, o, flash) \
+			or SpriteBank.draw(ci, "city/" + kind, o, flash) \
+			or SpriteBank.draw(ci, "concord/" + kind, o, flash):
 		return
 	match kind:
 		"recruit":
@@ -166,7 +178,13 @@ static func draw_enemy(ci: CanvasItem, kind: String, o: Vector2, r: float, flash
 			if not MarchGlyphs.draw_enemy(ci, kind, o, r, flash):  # Crimson March kinds ...
 				if not SanctumGlyphs.draw_enemy(ci, kind, o, r, flash):  # ... else the Sanctum's ...
 					if not EmpireGlyphs.draw_enemy(ci, kind, o, r, flash):  # ... else the Electronic Empire's (Act III) ...
-						EyeGlyphs.draw_enemy(ci, kind, o, r, flash)  # ... else the Ancient Eye's (Act II).
+						if not PantheonGlyphs.draw_enemy(ci, kind, o, r, flash):  # ... else the Olympian Republic's (Act IV) ...
+							if not ShogunateGlyphs.draw_enemy(ci, kind, o, r, flash):  # ... else the Shogunate's (Act V) ...
+								if not InfernoGlyphs.draw_enemy(ci, kind, o, r, flash):  # ... else the Inferno's (Act VI) ...
+									if not CourtGlyphs.draw_enemy(ci, kind, o, r, flash):  # ... else the Sanguine Court's (Act VII) ...
+										if not CityGlyphs.draw_enemy(ci, kind, o, r, flash):  # ... else the Last Line's (Act VIII) ...
+											if not ConcordGlyphs.draw_enemy(ci, kind, o, r, flash):  # ... else the Concord of Stars' (Act IX) ...
+												EyeGlyphs.draw_enemy(ci, kind, o, r, flash)  # ... else the Ancient Eye's (Act II).
 
 
 ## Covenant Recruit: small crimson round body, ivory tabard, silver helm, spear.

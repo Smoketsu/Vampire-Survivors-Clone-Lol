@@ -1,0 +1,8 @@
+A SEAMLESS, tileable ground texture for a top-down 2D pixel-art game, seen straight from above. LOW-RESOLUTION pixel art: exactly 128 x 128 pixels, shown enlarged so every pixel is a big square block. The left edge must continue the right edge and the top edge the bottom edge.
+
+Subject: the SCORCHED BANK of the river of fire: cracked dark red-brown baked earth in irregular plates, thin dark cracks with a faint dull red glow deep inside a few of them. Very DARK and LOW CONTRAST: it is a background that every character must stand out from. No objects that look solid, no characters.
+
+Colours: ONLY flat fills from this list: earth #241614 (most), #2C1A16, cracks #120A08, dull glow #4A160C (inside a few cracks only). No gradients, no dithering, no noise.
+
+Output: a square PNG, the tile filling the whole image edge to edge. No border, no text, no watermark.
+Attached: an approved floor tile of this game, for the pixel size and darkness.

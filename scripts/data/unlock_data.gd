@@ -109,6 +109,178 @@ const UNLOCKS := {
 	"recoil_frame": {"type": "passive", "boss": "deus_ex_machina", "text": "Defeat Deus Ex Machina in the Iron Citadel to unlock."},  # Its paired passive, unlocked with it
 	"breaker_of_engines": {"type": "title", "achievement": "nothing_is_deathless",
 		"text": "Earn Nothing Is Deathless: defeat Deus Ex Machina in the Iron Citadel."},  # Owner-approved proposal
+	# --- Act IV: the Shores of Ilion ---
+	# Achilles' fall (owner-approved Act IV proposal "Rewards": Paris's Arrow is
+	# unlocked by Achilles) with its paired passive, offered on every stage; the
+	# stage's achievement Heel Found earns the counter-passive Bronze Breaker
+	# (offered only in Act IV through its card row's "act").
+	"paris_arrow": {"type": "spell", "boss": "achilles", "text": "Slay Achilles on the Shores of Ilion to unlock."},  # Owner-approved Act IV proposal
+	"mortal_heel": {"type": "passive", "boss": "achilles", "text": "Slay Achilles on the Shores of Ilion to unlock."},  # Paris's Arrow's paired passive, unlocked with it
+	"bronze_breaker": {"type": "passive", "achievement": "heel_found", "text": "Earn Heel Found: slay Achilles with a blow to his back or heel."},  # Owner-approved Act IV proposal
+	# --- Act IV: Mount Olympus ---
+	# Zeus's fall (owner-approved Act IV proposal "Rewards": Stolen Thunder is
+	# unlocked by Zeus) with its paired passive, offered on every stage; the
+	# stage's achievement Twilight of the Gods earns Act IV's counter-passive
+	# Grounded Bones (offered only in Act IV through its card row's "act").
+	"stolen_thunder": {"type": "spell", "boss": "zeus", "text": "Slay Zeus on Mount Olympus to unlock."},  # Owner-approved Act IV proposal
+	"titans_blood": {"type": "passive", "boss": "zeus", "text": "Slay Zeus on Mount Olympus to unlock."},  # Stolen Thunder's paired passive, unlocked with it
+	"grounded_bones": {"type": "passive", "achievement": "twilight_of_the_gods", "text": "Earn Twilight of the Gods: clear the Pantheon Trial on Mount Olympus."},  # Owner-approved Act IV proposal
+	# --- Act IV: the Asphodel Underworld ---
+	# Hades' fall (owner-approved Act IV proposal "Rewards": River Styx is
+	# unlocked by Hades; the finale grants the Myrmidon Shades): the spell with its
+	# paired passive, and the summon class with its paired passive, offered on
+	# every stage (no card-row "act" key). The Empty Throne achievement opens the
+	# Act IV epilogue part (EpilogueData.ACT4_PART), not an unlock row.
+	"river_styx": {"type": "spell", "boss": "hades", "text": "Make Hades kneel in the Asphodel Underworld to unlock."},  # Owner-approved proposal
+	"ferrymans_toll": {"type": "passive", "boss": "hades", "text": "Make Hades kneel in the Asphodel Underworld to unlock."},  # River Styx's paired passive, unlocked with it
+	"myrmidon_shade": {"type": "class", "boss": "hades", "text": "Make Hades kneel in the Asphodel Underworld to unlock."},  # Owner-approved proposal: the finale's reward
+	"myrmidon_oath": {"type": "passive", "boss": "hades", "text": "Make Hades kneel in the Asphodel Underworld to unlock."},  # Its paired passive (own decision), unlocked with it
+	# --- Act V: the Burning Province ---
+	# Kage's fall (owner-approved Act V proposal "Rewards": Hundred Shadows is
+	# unlocked by Kage) with its paired passive, offered on every stage; the
+	# stage's achievement No Shadow Unlit earns Act V's counter-passive Paper
+	# Lanterns (offered only in Act V through its card row's "act").
+	"hundred_shadows": {"type": "spell", "boss": "kage", "text": "Slay Kage in the Burning Province to unlock."},  # Owner-approved Act V proposal
+	"hidden_hand": {"type": "passive", "boss": "kage", "text": "Slay Kage in the Burning Province to unlock."},  # Hundred Shadows' paired passive, unlocked with it
+	"paper_lanterns": {"type": "passive", "achievement": "no_shadow_unlit", "text": "Earn No Shadow Unlit: light 20 stone lanterns in one Burning Province run and slay Kage."},  # Owner-approved Act V proposal
+	# --- Act V: the Road to the Sun ---
+	# Amaterasu's fall (owner-approved Act V proposal "Rewards": Black Sun is
+	# unlocked by Amaterasu; the finale grants the Oni): the spell with its paired
+	# passive, and the summon class with its paired passive, offered on every
+	# stage (no card-row "act" key). The Sun Goes Out achievement opens the Act V
+	# epilogue part (EpilogueData.ACT5_PART), not an unlock row.
+	"black_sun": {"type": "spell", "boss": "amaterasu", "text": "Put out the sun: defeat Amaterasu on the Road to the Sun to unlock."},  # Owner-approved proposal
+	"stolen_dawn": {"type": "passive", "boss": "amaterasu", "text": "Put out the sun: defeat Amaterasu on the Road to the Sun to unlock."},  # Black Sun's paired passive, unlocked with it
+	"bound_oni": {"type": "class", "boss": "amaterasu", "text": "Put out the sun: defeat Amaterasu on the Road to the Sun to unlock."},  # Owner-approved proposal: the finale's reward
+	"onis_resolve": {"type": "passive", "boss": "amaterasu", "text": "Put out the sun: defeat Amaterasu on the Road to the Sun to unlock."},  # Its paired passive (own decision), unlocked with it
+	# --- Act V: Castle Kurogane ---
+	# Shogun Kurogane's fall (owner-approved Act V proposal "Rewards": Banner of
+	# the Dead is unlocked by the Shogun) with its paired passive, offered on
+	# every stage; the stage's achievement Regiments Broken earns Act V's
+	# counter-passive Unbending (offered only in Act V through its card row's "act").
+	"banner_of_the_dead": {"type": "spell", "boss": "shogun", "text": "Slay Shogun Kurogane in Castle Kurogane to unlock."},  # Owner-approved Act V proposal
+	"warlords_seal": {"type": "passive", "boss": "shogun", "text": "Slay Shogun Kurogane in Castle Kurogane to unlock."},  # Banner of the Dead's paired passive, unlocked with it
+	"unbending": {"type": "passive", "achievement": "regiments_broken", "text": "Earn Regiments Broken: slay the Shogun after breaking all six of his banners."},  # Owner-approved Act V proposal
+	# --- Act VI: the Burning Gate ---
+	# Moloch's fall (owner-approved Act VI proposal "Rewards": Brimstone is
+	# unlocked by Moloch) with its paired passive, offered on every stage; the
+	# stage's achievement Gate Crashed earns Act VI's counter-passive Salt
+	# Circle (offered only in Act VI through its card row's "act").
+	"brimstone": {"type": "spell", "boss": "moloch", "text": "Slay Moloch at the Burning Gate to unlock."},  # Owner-approved Act VI proposal
+	"furnace_heart": {"type": "passive", "boss": "moloch", "text": "Slay Moloch at the Burning Gate to unlock."},  # Brimstone's paired passive, unlocked with it
+	"salt_circle": {"type": "passive", "achievement": "gate_crashed", "text": "Earn Gate Crashed: seal 5 portals in one Burning Gate run and slay Moloch."},  # Owner-approved Act VI proposal
+	# --- Act VI: the Palace of Silk and Ash ---
+	# Lilith's fall (owner-approved Act VI proposal "Rewards": Temptation is
+	# unlocked by Lilith; "the Succubus (unlocked by Lilith, like the Fallen Seraph
+	# by Seraphine)"): the spell with its paired passive and the summon class
+	# with its paired passive, offered on every stage (no card-row "act" key).
+	# The stage's achievement Unmoved earns Act VI's counter-passive Faithless
+	# (offered only in Act VI through its card row's "act").
+	"tempt": {"type": "spell", "boss": "lilith", "text": "Slay Lilith in the Palace of Silk and Ash to unlock."},  # Owner-approved proposal
+	"velvet_chains": {"type": "passive", "boss": "lilith", "text": "Slay Lilith in the Palace of Silk and Ash to unlock."},  # Temptation's paired passive, unlocked with it
+	"bound_succubus": {"type": "class", "boss": "lilith", "text": "Slay Lilith in the Palace of Silk and Ash to unlock."},  # Owner-approved proposal
+	"sweet_surrender": {"type": "passive", "boss": "lilith", "text": "Slay Lilith in the Palace of Silk and Ash to unlock."},  # Its paired passive (own decision), unlocked with it
+	"faithless": {"type": "passive", "achievement": "unmoved", "text": "Earn Unmoved: slay Lilith without a single summon charmed during her fight."},  # Owner-approved Act VI proposal
+	# --- Act VI: Pandemonium ---
+	# The Morning Star's fall (owner-approved Act VI proposal "Rewards": Fall from
+	# Grace is unlocked by the Morning Star; the finale grants the Archfiend): the
+	# spell with its paired passive, and the summon class with its paired
+	# passive, offered on every stage (no card-row "act" key). The title
+	# Sovereign of Pandemonium is the Morning Star Falls achievement's reward.
+	"fall_from_grace": {"type": "spell", "boss": "morning_star", "text": "Cast down the Morning Star in Pandemonium to unlock."},  # Owner-approved Act VI proposal
+	"pride": {"type": "passive", "boss": "morning_star", "text": "Cast down the Morning Star in Pandemonium to unlock."},  # Fall from Grace's paired passive (owner-approved proposal), unlocked with it
+	"archfiend": {"type": "class", "boss": "morning_star", "text": "Cast down the Morning Star in Pandemonium to unlock."},  # Owner-approved proposal: the finale's reward
+	"crown_of_horns": {"type": "passive", "boss": "morning_star", "text": "Cast down the Morning Star in Pandemonium to unlock."},  # Its paired passive (own decision), unlocked with it
+	"sovereign_of_pandemonium": {"type": "title", "achievement": "morning_star_falls",
+		"text": "Earn Morning Star Falls: cast down the Morning Star in Pandemonium."},  # Own decision (the clear is recorded as a title, as Act III's Breaker of Engines)
+	# --- Act VII: Ravensmoor ---
+	# Vargr's fall (owner-approved Act VII proposal "Rewards": Moonfang is
+	# unlocked by Vargr) with its paired passive, offered on every stage; the
+	# stage's achievement Coffin Nails earns Act VII's counter-passive Silver
+	# Bones (offered only in Act VII through its card row's "act").
+	"moonfang": {"type": "spell", "boss": "vargr", "text": "Slay Vargr on Ravensmoor to unlock."},  # Owner-approved Act VII proposal
+	"pack_blood": {"type": "passive", "boss": "vargr", "text": "Slay Vargr on Ravensmoor to unlock."},  # Moonfang's paired passive (owner-approved proposal), unlocked with it
+	"silver_bones": {"type": "passive", "achievement": "coffin_nails", "text": "Earn Coffin Nails: break every sleeping coffin on Ravensmoor before it opens."},  # Owner-approved Act VII proposal
+	# --- Act VII: the Witchwood ---
+	# Isolde's fall (owner-approved Act VII proposal "Rewards": Hex Circle is
+	# unlocked by Isolde Vane) with its paired passive, offered on every stage;
+	# the stage's achievement The Coven Breaks earns Act VII's counter-passive
+	# Embalmed (offered only in Act VII through its card row's "act").
+	"witch_circle": {"type": "spell", "boss": "isolde", "text": "Slay Isolde Vane in the Witchwood to unlock."},  # Owner-approved Act VII proposal
+	"moonlit_rite": {"type": "passive", "boss": "isolde", "text": "Slay Isolde Vane in the Witchwood to unlock."},  # Hex Circle's paired passive (owner-approved proposal), unlocked with it
+	"embalmed": {"type": "passive", "achievement": "the_coven_breaks", "text": "Earn The Coven Breaks: kill Isolde's three sisters within 1 second of each other."},  # Owner-approved Act VII proposal (the brief: The Coven Breaks unlocks Embalmed)
+	# --- Act VII: Castle Sanguis ---
+	# Queen Carmilla and the Elder's fall (owner-approved Act VII proposal
+	# "Rewards": Night Swarm is unlocked by Carmilla and the Elder; the finale
+	# grants the Blood Spawn): the spell with its paired passive, and the summon
+	# class with its paired passive, offered on every stage (no card-row "act"
+	# key). The title Ender of the Feast is the Last Supper achievement's reward.
+	"night_swarm": {"type": "spell", "boss": "carmilla", "text": "Slay Queen Carmilla and the Elder in Castle Sanguis to unlock."},  # Owner-approved Act VII proposal
+	"old_blood": {"type": "passive", "boss": "carmilla", "text": "Slay Queen Carmilla and the Elder in Castle Sanguis to unlock."},  # Night Swarm's paired passive (owner-approved proposal), unlocked with it
+	"blood_spawn": {"type": "class", "boss": "carmilla", "text": "Slay Queen Carmilla and the Elder in Castle Sanguis to unlock."},  # Owner-approved proposal: the finale's reward
+	"thirst_eternal": {"type": "passive", "boss": "carmilla", "text": "Slay Queen Carmilla and the Elder in Castle Sanguis to unlock."},  # Its paired passive (own decision), unlocked with it
+	"ender_of_the_feast": {"type": "title", "achievement": "last_supper",
+		"text": "Earn Last Supper: beat the Elder in Castle Sanguis."},  # Own decision (the clear is recorded as a title, as Act VI's Sovereign of Pandemonium)
+	# --- Act VIII: Skid Row ---
+	# Don Marrow's fall (owner-approved Act VIII proposal "Rewards": Hearse Run
+	# is unlocked by Don Marrow) with its paired passive, offered on every stage;
+	# the stage's achievement No Witnesses earns Act VIII's counter-passive
+	# Kevlar Bones (offered only in Act VIII through its card row's "act"; the
+	# lead's pairing, GDD §15.0 "Act VIII phase 2: owner answers").
+	"hearse_run": {"type": "spell", "boss": "don_marrow", "text": "Slay Don Marrow on Skid Row to unlock."},  # Owner-approved Act VIII proposal
+	"black_car": {"type": "passive", "boss": "don_marrow", "text": "Slay Don Marrow on Skid Row to unlock."},  # Hearse Run's paired passive (owner-approved proposal), unlocked with it
+	"kevlar_bones": {"type": "passive", "achievement": "no_witnesses", "text": "Earn No Witnesses: kill every civilian of Skid Row's opening crowd before one flees."},  # Owner (Nov 2, 2026): No Witnesses unlocks Kevlar Bones
+	# --- Act VIII: Fort Kessler ---
+	# General Harrow's fall (owner-approved Act VIII proposal "Rewards": Bone
+	# Mines is unlocked by General Harrow) with its paired passive, offered on
+	# every stage; the stage's achievement Broken Arrow earns Act VIII's
+	# counter-passive Armour-Piercing Bones (owner answer of Nov 2, 2026; the
+	# lead's pairing; offered only in Act VIII through its card row's "act").
+	"bone_mines": {"type": "spell", "boss": "harrow", "text": "Slay General Harrow at Fort Kessler to unlock."},  # Owner-approved Act VIII proposal
+	"tripwire": {"type": "passive", "boss": "harrow", "text": "Slay General Harrow at Fort Kessler to unlock."},  # Bone Mines' paired passive (owner-approved proposal), unlocked with it
+	"armour_piercing_bones": {"type": "passive", "achievement": "broken_arrow", "text": "Earn Broken Arrow: kill General Harrow before his strike lands."},  # Owner answer (Nov 2, 2026)
+	# --- Act VIII: Liberty Heights ---
+	# Paragon's fall (owner-approved Act VIII proposal "Rewards": Hero's Fist is
+	# unlocked by Paragon; the finale grants the Fallen Hero): the spell with
+	# its paired passive, and the summon class with its paired passive, offered
+	# on every stage (no card-row "act" key). The title Bane of Heroes is the
+	# No More Heroes achievement's reward.
+	"heros_fist": {"type": "spell", "boss": "paragon", "text": "Defeat Paragon at Liberty Heights to unlock."},  # Owner-approved Act VIII proposal
+	"secret_identity": {"type": "passive", "boss": "paragon", "text": "Defeat Paragon at Liberty Heights to unlock."},  # Hero's Fist's paired passive (owner-approved proposal), unlocked with it
+	"fallen_hero": {"type": "class", "boss": "paragon", "text": "Defeat Paragon at Liberty Heights to unlock."},  # Owner-approved proposal: the finale's reward
+	"origin_story": {"type": "passive", "boss": "paragon", "text": "Defeat Paragon at Liberty Heights to unlock."},  # Its paired passive (own decision), unlocked with it
+	"bane_of_heroes": {"type": "title", "achievement": "no_more_heroes",
+		"text": "Earn No More Heroes: beat Paragon with no Super at his side."},  # Own decision (the clear is recorded as a title, as Act VII's Ender of the Feast)
+	# --- Act IX: the Crash Site ---
+	# The Hive Mother's fall (owner-approved Act IX proposal "Rewards": Bone
+	# Beetles is unlocked by the Hive Mother) with its paired passive, offered on
+	# every stage; the stage's achievement Nothing Hatched earns Act IX's
+	# counter-passive Anchored (offered only in Act IX through its card row's
+	# "act"; the brief's pairing, GDD §15.0 "Act IX phase 2: owner answers").
+	"bone_beetles": {"type": "spell", "boss": "hive_mother", "text": "Slay the Hive Mother at the Crash Site to unlock."},  # Owner-approved Act IX proposal
+	"chitin": {"type": "passive", "boss": "hive_mother", "text": "Slay the Hive Mother at the Crash Site to unlock."},  # Bone Beetles' paired passive (owner-approved proposal), unlocked with it
+	"anchored": {"type": "passive", "achievement": "nothing_hatched", "text": "Earn Nothing Hatched: let at most 10 eggs hatch on the Crash Site before the Hive Mother falls."},  # Brief (Nov 3, 2026): Nothing Hatched unlocks Anchored
+	# --- Act IX: the Proving Moon ---
+	# Vrask'Tal's fall (owner-approved Act IX proposal "Rewards": Soul Caster is
+	# unlocked by Vrask'Tal) with its paired passive, offered on every stage; the
+	# stage's achievement The Hunter Hunted earns Act IX's counter-passive Mirror
+	# Bones (brief: the lead's pairing, GDD §15.0 "Act IX phase 2: owner
+	# answers"; offered only in Act IX through its card row's "act").
+	"soul_caster": {"type": "spell", "boss": "vrask_tal", "text": "Slay Vrask'Tal on the Proving Moon to unlock."},  # Owner-approved Act IX proposal
+	"trophy_rack": {"type": "passive", "boss": "vrask_tal", "text": "Slay Vrask'Tal on the Proving Moon to unlock."},  # Soul Caster's paired passive (owner-approved proposal), unlocked with it
+	"mirror_bones": {"type": "passive", "achievement": "the_hunter_hunted", "text": "Earn The Hunter Hunted: kill Vrask'Tal before his Last Trophy goes off."},  # Brief (Nov 3, 2026): The Hunter Hunted unlocks Mirror Bones
+	# --- Act IX: the Ark ---
+	# The Harvester's fall (owner-approved Act IX proposal "Rewards": Tractor
+	# Beam is unlocked by the Harvester; the finale grants the Ghost Saucer):
+	# the spell with its paired passive, and the summon class with its paired
+	# passive, offered on every stage (no card-row "act" key). The title The
+	# Unharvested is The Last Harvest's reward (it only records the clear).
+	"tractor_lift": {"type": "spell", "boss": "harvester", "text": "Defeat the Harvester on the Ark of the Concord to unlock."},  # Owner-approved Act IX proposal
+	"starseed": {"type": "passive", "boss": "harvester", "text": "Defeat the Harvester on the Ark of the Concord to unlock."},  # Tractor Beam's paired passive (owner-approved proposal), unlocked with it
+	"ghost_saucer": {"type": "class", "boss": "harvester", "text": "Defeat the Harvester on the Ark of the Concord to unlock."},  # Owner-approved proposal: the finale's reward
+	"crop_circles": {"type": "passive", "boss": "harvester", "text": "Defeat the Harvester on the Ark of the Concord to unlock."},  # Its paired passive (own decision), unlocked with it
+	"the_unharvested": {"type": "title", "achievement": "last_harvest",
+		"text": "Earn The Last Harvest: beat the Harvester on the Ark of the Concord."},  # Own decision (the clear is recorded as a title, as Acts VI-VIII did)
 }
 
 ## End-screen plate heading of a newly unlocked item, by type.

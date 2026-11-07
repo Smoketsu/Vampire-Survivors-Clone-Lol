@@ -152,6 +152,8 @@ class Portrait:
 	var character_id: String = ""
 	## Worn skin id ("" = the character's own look).
 	var skin_id: String = ""
+	## Worn recolour id (RecolourData; "" = the skin's own colours).
+	var recolour_id: String = ""
 	## Floor tile drawn behind (null = a flat dark fill).
 	var tile: Texture2D = null
 
@@ -193,8 +195,8 @@ class Portrait:
 		draw_set_transform(Vector2(c.x, feet), 0.0, Vector2(1.0, 0.3))
 		draw_circle(Vector2.ZERO, h * 0.32, Color(0, 0, 0, 0.45))  # Shadow at the feet.
 		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
-		if skin_id == "" or not SkinGlyphs.draw_skin(self, skin_id, c, h * 0.3, false):
-			CharacterGlyphs.draw_player(self, character_id, c, h * 0.3, false)
+		if skin_id == "" or not SkinGlyphs.draw_skin(self, skin_id, c, h * 0.3, false, recolour_id):
+			CharacterGlyphs.draw_player(self, character_id, c, h * 0.3, false, Color.WHITE, recolour_id)
 		SpriteBank.icon_cap = 0.0
 
 
@@ -559,6 +561,7 @@ func open(summary: Dictionary) -> void:
 	var stage_id := String(summary.get("stage_id", "graveyard"))
 	_portrait.character_id = String(summary.get("character_id", CharacterData.DEFAULT_ID))
 	_portrait.skin_id = String(summary.get("skin_id", ""))
+	_portrait.recolour_id = String(summary.get("recolour_id", ""))
 	_portrait.tile = UiFx.sharp_texture("res://assets/sprites/%s.png" % String(InRunUiData.STAGE_TILES.get(stage_id, "tiles/graveyard")))
 	_portrait.queue_redraw()
 	_char_name.text = String(summary.get("character_name", "The Gravecaller"))

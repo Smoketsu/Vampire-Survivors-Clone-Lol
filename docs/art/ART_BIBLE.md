@@ -108,6 +108,9 @@ marked * are borrowed from another ramp. Numbers are OKLab lightness (0-1). A la
 | **flame** | ink_red* `#26070C` 0.19 · crimson* `#C71A29` 0.53 · flame `#FF8C26` 0.75 · gold_light* `#FFDC66` 0.90 | fire and embers |
 | **chrome** (Act III) | ink_chrome `#0B1220` 0.18 · chrome_dark `#2C3A50` 0.35 · chrome `#5B7397` 0.55 · chrome_light `#9DB6D6` 0.77 · chrome_glint `#E2EEFF` 0.95 | the Electronic Empire's machines and cyborg plating (bluer, more polished than the undead grey) |
 | **signal** (Act III) | ink_signal `#240A04` 0.19 · signal_dark `#962410` 0.44 · signal_red `#E0391E` 0.60 · signal_amber `#FFAE1A` 0.81 · signal_glow `#FFEBA8` 0.94 | the Empire's lights, lasers, visors, screens and tracers (more orange than the Covenant crimson) |
+| **bronze** (Act IV) | bronze_ink `#1E1408` 0.20 · bronze_dark `#6B4423` 0.42 · bronze `#A8702E` 0.59 · bronze_light `#E0A955` 0.77 | the Olympian Republic's bronze: helmets, cuirasses, round shields, the Titans (warmer and duller than the gold, which keeps its meaning) |
+| **marble** (Act IV) | bronze_ink* `#1E1408` 0.20 · marble_dark `#8E8A86` 0.64 · marble `#CFCBC4` 0.84 · marble_light `#F4F1EA` 0.96 | the Republic's marble white: linen, crests, statues, the pale shades of the dead (cooler and greyer than the bone ivory) |
+| **aegean** (Act IV) | ink_cold* `#0F141C` 0.19 · aegean_dark `#123E66` 0.36 · aegean `#2C77B8` 0.56 · aegean_light `#6FB6E8` 0.75 | the Republic's Aegean blue: cloaks, crests, emblems, the gods' pale glow (eyes); apart from the arcane blue and the ice |
 | **floor** | floor_soil `#161A1C` 0.21 · floor_earth `#221C17` 0.23 · floor_grass `#1A2218` 0.24 · floor_ochre `#2E2615` 0.27 · floor_slate `#26272A` 0.27 · floor_ash `#2A2724` 0.28 · floor_dirt `#30261B` 0.28 · floor_moss `#26301F` 0.29 · floor_marble `#2D2E33` 0.30 · floor_stone `#312E2B` 0.30 | ground colours of the three stages (tiles only, never sprites); the seven middle shades came with the zone floor tiles |
 
 `prepare_sprite.py` limits each folder to its faction's ramps (player: everything but skin and warm
@@ -436,6 +439,21 @@ pixels of its `colors` (a bone rotor lifted off the flame behind it); lone pixel
 box are dropped. Pixels are only moved, never recoloured. Used by the Scout Drone (bob only), the
 Grave Drone (wingbeat) and the Wraith Drone (three spinning rotors).
 
+**Stride rigs (Act IV art review, round 1).** The Bronze Titan's still stands with crossed legs, which the legs mode
+can only close and open ("mirror his legs so it looks like he's walking"). A rig with `mode="stride"` cuts the legs
+off at `hip` (low fists in `keep` ride with the body), takes the near leg (the largest blob right of `near_x0`) as
+the forward pose and its mirror image about its own hip as the backward pose, swings it between the two on a cosine
+(`STRIDE_SWING`, each frame the nearer pose sheared at most half the way, so the shear stays small), and draws a
+one-shade-darker copy (`STRIDE_FAR_SHADE`) half a cycle behind it as the far leg (`far_dx` px aside); the leg swinging
+forward lifts (`STRIDE_LIFT_*`). Only colours of the still; frame 0 is the stride, not the still (the approved still
+stays as it is and shows when he stands). Round 2 rejected the result ("not even close"); since round 3 no rig uses the
+mode (the Titan got a new still with his legs apart and the normal legs rig), it stays in the tool for a later figure.
+
+**Sideways bounce (Act IV art review, round 2).** A rig with `bust_axis="x"` moves its bounce box sideways instead of up
+and down: the same field (the bell across the columns, the ramp down the rows, the tail below), but each pixel takes the
+pixel |d| columns aside in its own row (+ = right). The walk times it by `BUST_SWAY` (the step's spring, its kick on the
+other side every step, as the weight changes feet), the idle by `IDLE_BUST` (one way on the exhale, the other on the
+inhale). Used by the Amazon's hip box (one bell: two lobes swaying the same way tore her skirt at the centre column).
 **Act I walk strips (Oct 2026, art audit follow-up; GDD §15.0 "Act I walk strips").** The audit's
 "walk strips" findings (U01 - U03) were a `walk_cycle.py` job, no generation: 18 rigs added to `RIGS`,
 strips built with `python3 tools/walk_cycle.py build <key>`, no code or data changed (a strip is found
@@ -519,6 +537,30 @@ style) the Voidcaller.
 (a GIF walking in place at 4x and a frame sheet) and `sheet <keys> --out PNG` (a review sheet), and
 `godot --headless --import` for the `.import` file. Tune `hip` (higher = more of the legs move),
 `spread` and `lift`; put anything that must not bend below the hip in `rigid`.
+
+**Pendulums and held props (Act VI art review, round 1, rig group).** Two additive rig keys in `tools/walk_cycle.py`, for the
+owner's notes on swinging chains and a fixed cleaver. `pendulums` is a list of `{box, pivot, degrees, colors?, back?}`: each
+part's opaque pixels in the box (only the listed palette `colors`, if set) are lifted out and turned about the pivot (where the
+part is held) by `degrees` x `SWING[f]`, nearest inverse mapping, laid back on top (`_pendulum()`); one forward-and-back swing
+over the 8 walk frames, frame 0 stays the still, pixels only move. `back` scales the swing in the other direction for a part near
+the sprite's edge. Used by the Gatekeeper's two chains (7 degrees), the Morning Star's Beast's two gold chains (4, gold pixels
+only, gentler) and the Furnace Priest's censer (10, each of his three skins with its own entry in `SKIN_FIX`). `hold` is a list of
+still boxes kept fixed to the body: after the legs are laid each box is cleared and the still's pixels put back, lowered by the
+dip (`_hold()`), so the Archfiend's and the Prince of Hell's cleavers (held across the front leg's columns) no longer shear with
+the leg; a staircase of boxes along the blade lets the boot beside it keep walking. The older tuple `swing` (the Harbourmaster's
+anchor) is unchanged. Bust boxes of the round are listed in the GDD row.
+
+**Bust exclusion and wings on walkers (Act VI art review, round 2).** `bust_exclude` (rig key, also derived by skins) lists boxes
+`(x0, x1, y0, y1[, max_sum[, max_chroma]])` of the still: pixels inside them (opaque; with the colour fields only the dark ones,
+R+G+B <= max_sum, or the grey / white / black ones, max-min channel <= max_chroma) never move with the bust box and are never taken
+as a moved pixel's source, so an arm or glove next to the bust stays still (`_exclude_mask()`, applied to walk and idle). Fit it
+by viewing the strip at 4x with the bust-only changes marked. `wings` (rig key for legs / robe rigs) holds `flap`-style wing
+entries (box, pivot, degrees, exclude, colors, soft_*) plus `seam` (px kept in the body too beside the body-side box edge, so the
+turning wing opens no gap): the wings are cut out, turned about their shoulder by `FLAP_WAVE` (idle: `IDLE_WING_WAVE`) and laid behind the
+frame, so a walker keeps its stride, `hold` props, bust and swish. Avoid `exclude` boxes through the wing membrane: their edges
+leave ink seams.
+
+**Flapping wings and orbiting bats (Act VII art review, round 1, rig group).** Two more additive rig keys. Mode `flap` (`flap=dict(bob, wings=[...])`, `_flap_frames()`): each wing entry (`box`, shoulder `pivot`, `degrees`, optional `colors`, `exclude` boxes whose pixels stay put, `soft_exclude` + `soft_colors` boxes where only the body stays and the membrane and loose outlines go with the wing) is turned by `FLAP_WAVE[f] x degrees` (one sine, frame 0 = the still), drawn behind the body, which sags `FLAP_BODY[f] x bob` px; left wings take positive degrees. Used by the Chiropteran, its King and the Elder's bat form. `orbit` (list of `{box, radius, phase, colors?}`, `_orbit_cut()` / `_orbit_lay()`): small flyers move by whole px on an ellipse (`ORBIT_PATH`), behind the body; the Dhampir's spirit bats.
 
 ## Effects (smooth by design)
 
@@ -995,6 +1037,18 @@ stone wing, ice, wail) meeting its finisher's (sword, boulder, dagger, hound sku
 | `syn_baying.png` | Synergy Baying of the Damned: a howling hound skull with pale wail ripples |
 | `syn_charnel_menagerie.png` | Synergy The Charnel Menagerie: a skull-topped rib cage holding a teal soul flame |
 | `profane_oath.png` | Ossuary Profane Oath: a skeletal hand raised in an oath under a crimson flame (the Oath is the one crimson Ossuary icon, like the Pact) |
+| `bone_reserve.png` | Ossuary Bone Reserve (expansion step 3): a bone skull rising from the ground behind a soul-teal barrier arc |
+| `commanders_presence.png` | Ossuary Commander's Presence: a bone war banner with a teal pennant over three small skulls of different classes |
+| `echo_weaving.png` | Ossuary Echo Weaving: a violet shadow orb in two echo rings, wrapped by a bone spindle thread |
+| `dark_tithe.png` | Ossuary Dark Tithe: violet soul drops falling into an upturned skull-cap bowl |
+| `last_rites.png` | Ossuary Last Rites: a cold-blue candle with an ice-white flame and a small skull at its foot |
+| `grave_ward.png` | Ossuary Grave Ward: a round cold-blue rune shield with a tombstone in its centre, cracked by a blow it stopped |
+| `gilded_chests.png` | Ossuary Gilded Chests: an open gold chest with two teal crystals rising, the right one brighter |
+| `elite_bounty.png` | Ossuary Elite Bounty: a gold ring-crowned skull on a heap of coins under a teal ember |
+| `head_start.png` | Ossuary Head Start (Dominion): a bone stair of three steps under a violet upward chevron |
+| `chosen_vanguard.png` | Ossuary Chosen Vanguard (Dominion): a bone skeleton helm with a violet plume over a bone laurel |
+| `patient_grave.png` | Ossuary Patient Grave (Dominion): a bone hourglass of violet sand with a violet return arrow |
+| `tree_dominion.png` | Ossuary tree emblem Dominion: a crown of five finger-bone spikes with a violet gem (made by `art_source/ossuary_options/`, 12 images, about $0.18) |
 | `warrior.png` | Summon class badge (hotbar and army list): a skeleton warrior's helmed skull behind a round shield |
 | `archer.png` | Summon class badge: a moss-hooded skeleton drawing a bone bow with a teal arrow |
 | `mage.png` | Summon class badge: a skull in an arcane-blue hood beside an orb staff |
@@ -1734,6 +1788,17 @@ slowly in a 944×424 window. Panels are whole opaque scenes, **1024×576 art px*
 | `act3_3` | Act III ¶3: the machines go dark, Varn rises to serve | AI source (second try: the first was too murky to read), converted | a steel parade ground in soul-teal light; ranks of switched-off troopers with black visors and bowed heads, some fallen; Varn (grey hair, chrome coat, cables, teal soul in his chest) kneeling to the necromancer's raised hand, two skeleton archers behind. The mech in the background and a few city windows still glow (open for the owner's review) |
 | `act3_4` | Act III ¶4: the dead are the only empire left | AI source, converted. **Round 4 redo** (owner: "the main character's head looks weird"; then: "in game his face is just the two glowing purple dots in the darkness, make it closer to the game sprite"): `tools/epilogue_face.py` paints the hood opening of the AI source (kept unpainted in `art_source/epilogue/raw/act3_4.png`) black and puts in two violet eyes (#A35CFA, #DDBDFF core) by hand, like `player/necromancer.png`; every other pixel is the approved source. A first try (an AI edit giving him a skull face, about $0.03 in the ledger) was dropped as too far from the sprite | under a violet dusk and a red sun: the burnt ivory-and-gold cathedral, the Eye's toppled spire with its stone eye, a fallen chrome tower and mech; the army of the dead (warriors, archers, a bone golem, a raised drone, sun-banners taken as trophies) marching toward the viewer around the necromancer |
 | `close` | Closing card: "The Beacons Burn": the holy orders' knights marching out of the gate under the beacon fires | AI source, converted. **Act III art review round 4** (owner): the old knights card is kept (the Empire redo is only a spare source, `art_source/epilogue/close_empire.png`), and the right knight's blue star is repainted gold by hand on the converted PNG (527 px, then 37 blue edge specks in round 5; redo it after any rebuild from the source). |
+| `close_act3` | Closing card after Act III: "The River Runs Dry": a dried river of the dead far below, an empty ferry and a lone lantern, the gods watching from a marble mountain | AI source (Act IV audio / story phase, Oct 2026; one generation, 1536x1024, one reference panel for the pixel style), converted with `epilogue_panel.py` (`PANEL_OPTS`: `y_bias` 0.12 keeps the gods on the peak, skin and ice dropped) | the cavern mouth frames a golden sky over a white marble mountain and temple with the dark silhouettes of crowned gods (a bolt, a trident); below, grey cracked mud, the beached ferry, a lantern on a pole, a trail of footprints leading away, bones and a mooring post. No necromancer, no living figures: it names Act IV's gods without showing one. The converter turns the silhouettes brown (the palette's nearest) |
+| `act4_1` | Act IV ¶1: the army fills the emptied Underworld | AI source (Act IV epilogue, Oct 2026; one generation, 1536x1024, refs: the `act3_3` panel and the necromancer sprite), converted (default drops) | grey asphodel fields under an ash sky, the dry cracked bed of the Styx winding through, ranks of skeletons with teal eyes shrinking to the horizon, the necromancer from behind at the left, empty marble gate pillars far away |
+| `act4_2` | Act IV ¶2: the gods descend against the undead | AI source, converted | Olympian gods (a bolt, a trident, a bow) falling from a golden break in the clouds over a sea horizon; the skeleton line below with the necromancer at its centre, broken legion shields |
+| `act4_3` | Act IV ¶3: Hades kneels with his crown | AI source, converted | the Underworld hall with a black throne and teal braziers; Hades in violet robes kneeling with his bident, offering the gold crown to the necromancer, two skeletons behind him |
+| `act4_4` | Act IV ¶4: Olympus silent, the dead below | AI source, converted | the dusk marble palace with empty thrones, a toppled statue and cold braziers; a teal river from the Underworld and the army gathered at the foot of the stairs, the necromancer looking up |
+| `close_act4` | Closing card after Act IV: "The Sun Still Rises" | AI source (one generation, ref: `close_act3`), converted (default drops) | a huge red sun rising over a dark sea behind a red torii in the water, a goddess's two gold eyes opening in the clouds above it; in the dim foreground the fallen marble of Olympus and an empty throne with a crown on its steps. No necromancer, nothing of the Shogunate shown clearly |
+| `act5_1` | Act V ¶1: the dead march up the Road to the Sun | AI source (Act V epilogue, Oct 2026; refs: `act4_1` and the necromancer sprite), converted (default drops) | a winding road through dark pine mountains to a red torii and a low gold-and-red sun over a far sea, ranks of skeletons climbing it, the necromancer from behind at the left, sakura petals |
+| `act5_2` | Act V ¶2: the burning rice fields | AI source, converted | flooded terraces on fire, skeleton spearmen against red lacquer samurai and straw-hatted ashigaru with banners, fallen indigo ninja caught on the lit ground |
+| `act5_3` | Act V ¶3: the Shogun falls | AI source, converted | Castle Kurogane's burning courtyard, the horned red-armoured Shogun kneeling with his broken katana, the necromancer and skeletons facing him |
+| `act5_4` | Act V ¶4: the sun goes out | AI source, converted. **Round 3 redo from scratch** (owner rejected the falling-goddess composition three times: "Looks like mess", "Not looking good, start from scratch"; GDD §15.0 "Act V art review, round 3 (the epilogue panel)"): a calm, painterly scene like `act5_1` to `act5_3`; refs `act5_3`, `act5_1` and the necromancer sprite; `y_bias` 0.26 | the necromancer from behind on the shrine steps at the top of the Road to the Sun, a black disc with a thin gold ring (the eclipsed sun) in the sky, a red torii and stone lanterns in shadow, night over a sea of clouds, and at his feet the goddess's cracked bronze mirror, her broken rayed gold crown, gold shards and a red sash. No Amaterasu figure, no army |
+| `close_act5` | Closing card after Act V: "The Pit Keeps Count" | AI source (one generation, ref: `close_act3`), converted (default drops) | a terraced red-rock pit with grey tally-marked ledger slabs on the rim, chains, teal soul wisps, two big red embers far down in the dark; no demon shown (a tiny necromancer figure stands on the rim) |
 
 **How they are made.** `art_source/epilogue/<id>.png` (1536×1024, `tools/gen_image.py`, prompt in
 `<id>.txt`: a shared style block plus the scene; references were sheets of the game's sprites ×5,
@@ -1860,7 +1925,7 @@ the Trooper's interior `chrome_dark` lifted to `chrome` and the Spotter's chrome
 
 Code-drawn on purpose: the Empire's shots (amber tracers, the warning-red rail slug, arcing shells),
 the Lock-On lines and reticles, the orbital strike circles, the Spotter's red glow, the Kill-Drone
-(`EmpireGlyphs`, red-eyed) and the stubs' placeholder floors and obstacles; phase 2 brings the
+(`EmpireGlyphs`, red-eyed; it has its own sprite since "Act III missing sprites" below) and the stubs' placeholder floors and obstacles; phase 2 brings the
 stages' own art.
 
 ### Act III: the Assembly Halls (Stage 8; Oct 2026)
@@ -2052,3 +2117,1036 @@ blades poses without the crease between rear and thigh and with thicker thighs, 
 fixed so the feet stay whole, the Deathlord Abbess's bounce box 1 px right. All by hand on the existing
 PNGs (deterministic scripts, no image generation, $0); strips rebuilt with `walk_cycle.py`. Each key's
 row above carries a "Round 2 redo" note. **For the owner's review.**
+
+### Act IV: the Olympian Republic, the shared kinds (foundation, Oct 2026)
+
+<!-- --- Act IV: the Olympian Republic --- -->
+The Republic's style for the stage agents (GDD §15.0 "Act IV art: the shared kinds"; `docs/act4/PROPOSAL.md`):
+**bronze** armour (the new `bronze` ramp, warm and dull, so the existing `gold` keeps its meaning: evolution, chest,
+victory and Glory, worn only by heroes and gods), **marble** white for linen, crests, statues and the dead (the new
+`marble` ramp, cooler and greyer than the undead's bone ivory), **Aegean blue** for cloaks, crests and emblems and as
+the gods' pale glow (the new `aegean` ramp; eyes and cracks of light, never the undead's soul teal or arcane blue),
+skin on faces and arms, brown wood for spear shafts. Hard, clean silhouettes with one big signature shape each (the
+hoplite's round aspis, the hero's plume and cloak, the Titan's shoulders and fists, the shade's hood and tail). Never
+the player's violet, the undead's bone or teal, or the Covenant's crimson and warm steel. `prepare_sprite.py` folder
+`pantheon/`: ramps bronze, marble, aegean, gold, skin, brown. Concept references: `art_source/concepts/act4_lineup.png`
+(costumes), prompts beside each source in `art_source/pantheon/<id>.txt` (the template above, the sex named).
+
+Generated with `tools/gen_image.py` (`--ref` the Line Trooper's source for the pixel look, plus a crop of the concept
+lineup for the hoplite and the hero, the hoplite's own source for the shade and the Titan). The sources come back on
+the grid at ~12 source px per art px (~78 art px figures) with a dark glow. Pipeline that worked (better than
+`pixelate_source.py` here, which blurred the bronze into mud): a **pre-snap** (alpha cut 230; skin found by
+`skin_cap.skin_mask()` set to exactly `skin` / `brown_light`; near-white, low-saturation pixels set to the nearest
+marble shade, so plumes, linen and the shade never snap to the bone ivory), then `prepare_sprite.py` straight on the
+source with `--ink-l 0.15` and an explicit `--ramps` (levels on for the hoplite, shade and Titan; `--no-levels` for
+the hero, whose gold sank to bronze with levels). Scripted hand touch-ups (palette colours only): the hoplite's aspis
+repainted as a clean disc (ink ring, dark rim, bronze face lit top-left, a big Aegean boss: the Phalanx's front must
+read) and a face in his helmet (eye slit, cheek, beard); the shade's fold noise flattened by a 3x3 majority filter, a
+dark hood opening with two Aegean eyes painted, two empty rows added on top for the hover bob. Walk / hover strips by
+`walk_cycle.py` (rigs under `# --- Act IV ---`). 4 API images, about $0.12. All four pass `art_check.py` (0 fail, 0
+warning). **For the owner's review.**
+
+| Key | What it is | Art px | Notes |
+|---|---|---|---|
+| `pantheon/shade_of_dead` | Shade of the Dead (fodder, male): a pale ghost in a marble-grey burial shroud pulled up as a hood, a dark face opening with two pale Aegean eyes, both arms reaching forward, no legs: the shroud tapers into a curling wisp tail | 40x36 | hover (`_walk`: the whole ghost bobs 2 px; the still keeps two empty rows on top, body 34) |
+| `pantheon/hoplite` | Hoplite (soldier, male): bronze Corinthian helmet with a tall Aegean crest, the face in its opening, bronze cuirass over a marble linen tunic, a big round bronze aspis held forward (Aegean boss), an upright spear | 30x56 | legs walk (`_walk`, hip 42; the spear rigid). Body ~50 under the spear head |
+| `pantheon/hero` | Hero (elite, male demigod, Hector-like): a gold open-faced helmet with a tall white plume, face and arms in skin, a gold cuirass, bronze greaves, a billowing Aegean-blue cloak, a bronze sword held forward | 58x58 | legs walk (`_walk`, hip 41; the cloak's low hem rigid). Grander than the hoplite: the gold is the hero's (Glory) |
+| `pantheon/bronze_titan` | Bronze Titan (the Reckoning's heavy, male colossus): a walking bronze statue, huge shoulders and low fists, a small crested head with glowing Aegean eyes, Aegean cracks of light on the chest, a marble kilt and marble plinth chunks on his shins and feet | 74x96 | legs walk (hip 64, spread 3, lift 4; both low fists rigid). Round 3 (round 2: the mirrored-leg stride "not even close"): a new source of the same titan, legs apart in a square front stance (`art_source/pantheon/bronze_titan_r3.txt`, the approved source and still as references; the crossed-leg source kept as `bronze_titan_crossed.png`), `--ramps bronze,marble,aegean --ink-l 0.12` (fewer inner ink lines, like the approved still); the still replaced so still and walk match. Stepping out of the ground is drawn by code |
+
+Code-drawn on purpose (phase 1): the wrath telegraphs and strikes, the phalanx's locked shield line, the Glory aura
+and the stubs' placeholder floors and obstacles (`PantheonGlyphs`, `PantheonGround`); phase 2 brings the stages' own
+art (the legionary, wolf, centaur, Amazon, Gorgon and Cyclops from the concept lineup, the female kinds in the
+figure-redesign style with a `bust` box and idle strip).
+
+### Act IV: the Shores of Ilion (Stage 10; Act IV phase 2, Oct 2026)
+
+<!-- --- Act IV: the Shores of Ilion --- -->
+Generated with `tools/gen_image.py` (prompts beside each source, `art_source/<key>.txt`, the sex named in every
+figure prompt; `--ref` the Hoplite's source for the pixel look plus a crop of `act4_lineup.png` for the legionary,
+wolf, cyclops and Achilles; Achilles' own source for his two poses; the Tide Widow's and the necromancer's sources
+for the Doomed Prophetess, then her source for her three skins; the Scrap Wastes' obstacle sources and `wastes_slag`
+for the obstacles and tiles; `death_ray` for the icon symbols). The Republic's pipeline (foundation section above):
+a **pre-snap** (alpha cut 230; skin by `skin_cap.skin_mask()` set to exactly `skin` / `brown_light`; near-white,
+low-saturation pixels to the nearest marble shade), then `prepare_sprite.py` straight on the source with
+`--ink-l 0.15` and explicit ramps (`bronze,marble,aegean,gold,skin,brown`, `+grey` for the boulders); Achilles and his
+poses `--no-levels` (his gold, like the Hero's). The wolf went through `pixelate_source.py` (36 rows, `--ink-l 0.22`).
+The Doomed Prophetess and her skins: `prepare_sprite.py` straight on the source, `--ink-l 0.20` (levels on for the base
+and the ghost and Deathlord skins, `--no-levels` for the gold Hyper skin): the `pixelate_source.py` route came out
+noisier on her. Scripted hand touch-ups (palette colours only): the wolf's Aegean eye and two marble fangs, a single
+cyclopean eye (marble white, an Aegean iris) painted on the Cyclops and on Polyphemus (the conversion lost both).
+Obstacles: one source per kind, the rect kinds as an H + V pair (split at the widest transparent gap), each size
+converted to its footprint width with `--no-center` (V: the long side x 1.12 tall). Tiles: `make_tile.py` quilt
+recipes `ilion_*` (the API returned them nearly transparent; stored opaque). Icons: the symbol at 26 px on a
+cut-corner badge cleared from an approved one (violet border; gold for the evolution and the achievement). Walk /
+idle strips by `walk_cycle.py` (rigs under `# --- Act IV: the Shores of Ilion ---`; the Prophetess and her skins
+have bust boxes and idle breathing strips; the siege tower has no strip: it rolls). 28 API images (one icon redone: Paris's Arrow's first symbol read as a ghost), about $0.62
+(ledger estimate). `art_check.py`: every unit passes on every floor except the siege tower, Achilles' rage form and
+the Prophetess's Hyper skin (lightness fails on the March road and the Sanctum floors, where they never or rarely
+stand; the violet characters fail the same floors), Achilles' strike pose and the Deathlord skin on Sanctum IV only.
+**For the owner's review.**
+
+| Key | What it is | Art px | Notes |
+|---|---|---|---|
+| `pantheon/legionary` | Legionary (soldier, male): bronze helmet with a white transverse crest, bronze bands, a tall Aegean scutum with a bronze boss and wings, a gladius | 32x56 | legs walk (hip 41); the testudo's raised roof and the shield line are code-drawn (LegionaryKit, Phalanx) |
+| `pantheon/wolf_of_rome` | Wolf of Rome (fodder pack): a bronze statue wolf loping, Aegean eye, marble fangs | 68x36 | legs walk (hind / fore split at col 30) Round 1 redo (owner: "not clear that it's a statue"): regenerated (one API image, ~$0.03; `art_source/pantheon/wolf_of_rome.txt`), converted by `prepare_sprite.py` (levels on, ramps bronze, marble, aegean, drowned), then hand touch-ups (palette colours): verdigris seams (drowned ramp) between the sculpted plates and under the belly, curled ruff locks, a glowing Aegean eye, marble fangs, broken marble plinth stumps on a fore and a hind paw. |
+| `pantheon/cyclops` | Cyclops (heavy, male): a hulking marble-pale giant, a single eye, a boulder held up beside his head, leather loincloth | 56x70 | legs walk; the thrown boulders are code-drawn (IlionGlyphs) |
+| `pantheon/polyphemus` | Polyphemus the Cyclops (miniboss, male): a bigger giant in a ram fleece, a huge boulder over his head, one eye with an Aegean iris | 60x112 | legs walk Round 1 redo (owner: fleece too close to the skin): the fleece (chest, shoulders and hip, a hand-drawn polygon) remapped from marble greys to the bone ramp's olive shades (bone_mid / bone_shade) and steel_dark, so wool and skin separate; the walk strip re-derived. |
+| `pantheon/siege_tower` | Siege Tower (structure): a timber tower on four wheels, bronze-plated front, folded drawbridge, an Aegean banner | 50x104 | no strip (it rolls; the dust and ruts are code-drawn, SiegeTowerKit) |
+| `bosses/achilles` | Achilles, the Unkillable (male): a gold lion helmet with a tall Aegean crest, gold cuirass, white skirt, bronze greaves, bare heels, a round gold shield, a long spear | 64x120 | legs walk (the spear rigid); the gold heel mark, the front arc, the rage's gold fire are code-drawn |
+| `bosses/achilles_strike` | His lunge: low, the spear thrust far ahead, the shield slung | 80 tall | pose 3 (BossPoseData), converted at 80 art px so his scale matches the still |
+| `bosses/achilles_rage` | His rage: helmet and shield gone, long wild hair, war cry, the spear raised high, torn cloak | 92x120 | its own still (motion key in the rage), legs walk |
+| `player/doomed_prophetess` | The Doomed Prophetess (female, figure redesign, fully clothed): long violet hair, a bone laurel circlet, a deep violet peplos with a slit, a tall bone bow with a violet string | 36x56 | robe glide (bow rigid) + bust (cols 16-25, rows 15-21), idle breathing |
+| `player/doomed_prophetess_hyper` | Gilded Sibyl (Hyper): plain violet gown, gold laurel crown, gold sash, gold bow | 34x58 | through `SKINS` (derived rig) Round 1 redo: bust box extended 2 px left (`SKIN_FIX`, cols 12-24). |
+| `player/doomed_prophetess_untouchable` | Untouchable: a ghost-white phantom, wisp hem, soul-teal bow | 32x56 | through `SKINS` |
+| `player/doomed_prophetess_deathlord` | Deathlord: a gold crown, iron pauldrons, crimson mantle, mid-violet gown, an iron bow with a crimson string | 36x58 | through `SKINS` Round 1 redo: bust box extended 2 px left (`SKIN_FIX`, cols 15-27). |
+| `tiles/ilion_beach`, `ilion_camp`, `ilion_gate`, `ilion_walls` | The four zone floors: wet sand, trampled camp earth, worn flagstones, limestone slabs | 128 | quilt; mean L 0.23 / 0.23 / 0.24 / 0.24 |
+| `obstacles/beached_warship_{s,l}` (+ `_v`) | A beached trireme: a dark hull with oar ports, a bronze ram, a painted eye, the furled sail | 80 / 96; `_v` 32 / 38 wide | H + V pair |
+| `obstacles/sea_rock_{s,l}` | A wet sea rock with weed and a bronze anchor | 30 / 36 wide | circle |
+| `obstacles/siege_tent_{s,l}` | A round white army tent with blue stripes | 38 / 44 wide | circle |
+| `obstacles/palisade_{s,l}` (+ `_v`) | A row of sharpened stakes lashed with rope | 56 / 76; `_v` 22 / 30 | H + V pair Round 1 redo (owner: "just looks like a blob"): all four redrawn by script as upright logs with pointed tops, an ink outline per log, a lit left side, a shaded right side, two rope bands and a few bronze tips (the `_v` pair as a receding line of stakes). |
+| `obstacles/troy_wall_{s,l}` (+ `_v`) | A broken length of the walls of Troy, limestone courses with a blue band | 76 / 92; `_v` 30 / 36 | H + V pair |
+| `obstacles/fallen_column_{s,l}` | A fallen fluted column on cut blocks | 28 / 36 wide | circle Round 1 redo (same note): redrawn by script as a fluted drum on two cut blocks, a continuous `bronze_ink` outline, lit top, four shade bands, flute lines, an end face with rings and cracks on the blocks. |
+| `icons/paris_arrow`, `mortal_heel`, `bronze_breaker` | Badges (violet border): a violet arrow with a bone head and a looping trail; a bare heel struck by a ghost arrow; a bronze shield cracked by a bone club | 32 | |
+| `icons/arrow_of_fate`, `ach_heel_found` | Gold-border badges: three ghost arrows around a skull; a gold lion helmet knocked over, pierced by a ghost arrow | 32 | |
+
+Code-drawn on purpose: the boulders (held and in flight), the landing circles and stomps, the testudo's raised
+roof, the siege tower's dust and ruts, Achilles' heel mark and front arc, Paris's Arrow's ghost arrows and trails.
+### Act IV: Mount Olympus (Stage 11; Act IV phase 2, Oct 2026)
+
+<!-- --- Act IV: Mount Olympus --- -->
+The Pantheon Trial's art (GDD §15.0 "Mount Olympus art (Act IV phase 2)"), in the Republic's style above. The
+gods and Zeus are bigger than any soldier (92–124 px; the colossal form 176) and wear the act's gold; Artemis, the
+Amazon and the Gorgon are in the **figure-redesign style** (bust bounce in the walk, a 24-frame idle breathing
+strip). Units and characters: `tools/gen_image.py` with `--ref art_source/pantheon/hero.png` (the pixel look) and a
+crop of the concept lineup or the concept boss scene for the costume (prompts beside each source); Zeus's cast pose
+and colossal form and the Oathbreaker's three skins are edits with the approved source attached. Conversion: a
+pre-snap (alpha cut 230; lit skin to `skin` / `brown_light`; near-white, low-saturation pixels to the nearest marble
+shade), then `prepare_sprite.py --ink-l 0.15` with explicit `--ramps`, `--no-levels` for Artemis, Poseidon, Zeus, the
+Amazon and the Gorgon (their gold and skin). Fixes: Ares's dark red cloak re-snapped to the `grey` ramp before
+conversion (never the Covenant's crimson; it also parts him from his bronze); the AI's navy rim around Zeus's three
+sprites stripped and re-outlined in bronze ink, the stills dropped onto the bottom row. Obstacles are drawn on the
+grid by `tools/olympus_props.py` (deterministic, no API image). 19 API images, about **$0.53**. **For the owner's
+review.**
+
+| Key | What it is | Art px | Notes |
+|---|---|---|---|
+| `pantheon/ares` | Ares, God of War (god, male): crested bronze Corinthian helmet with gold crest and eye slits, bronze armour, iron-grey cloak, a long spear held low for the charge, a round shield | 94x96 | legs walk (the spear tip rigid). Round 1 redo ("too dark, muddy, not bronze"): re-converted from the same source, no new image: warm pixels brightened (HSV value ^0.6), no skin pre-snap (it had caught the dark cuirass), `--ramps bronze,gold,grey,skin` with levels (no `brown`, which had made the armour mud), the cloak moved one shade down (grey_light -> grey, grey -> grey_dark); now mostly bronze / bronze_light |
+| `pantheon/artemis` | Artemis, the Huntress (goddess, female, figure redesign, slim-thick and muscular since round 1): ponytail, silver crescent circlet, short white chiton with a gold belt, laced sandals, drawing a tall silver bow held far forward | 62x92 | legs walk (the bow's lower limb rigid) + bust (cols 23-37, rows 31-39, two lobes; round 1: the old box sat on her bow), idle breathing. Round 1 redo: new image (old source as reference), skin pre-snapped by hue (skin below hue 0.08, value >= 0.6; lit -> `skin`, shade -> `brown_light`, the muscle shading), `--no-levels --no-prune --ramps marble,skin,brown,gold`, the quiver's bone fletching -> marble_light |
+| `pantheon/poseidon` | Poseidon, Lord of the Sea (god, male): sea-green hair and beard, gold crown, Aegean and sea-green robe, a gold trident | 68x100 | robe walk (the trident rigid) |
+| `bosses/zeus` (+ `_cast`) | Zeus, King of the Gods: white hair and beard, gold laurel crown, glowing blue eyes, white toga with gold belt and hem, a thunderbolt at his side; `_cast` the bolt raised above his head (BossPoseData 1) | 88x124 / 100x128 | robe walk (the bolt rigid) |
+| `bosses/zeus_colossus` | Zeus's true form: a marble giant veined with blue lightning, a cloud beard, gold crown and bands, lightning around one fist | 164x176 | legs walk |
+| `pantheon/centaur_archer` | Centaur Archer (male): bronze cuirass and crested helmet, a bow drawn forward, a brown horse body mid-gallop | 54x60 | legs walk (front and back leg pairs) |
+| `pantheon/amazon` | Amazon (female, figure redesign, a tall "muscle mommy" since round 1: broad shoulders, big arms, abs, thick thighs): Aegean-crested bronze helmet over long hair, bronze breastplate, Aegean war skirt, a double axe and a crescent shield | 64x70 | legs walk (the skirt's front flap rigid) + a **hip** bounce box (cols 18-37, rows 27-37: the owner liked her old idle jiggling the hips, kept on purpose), idle breathing. Round 3 ("jiggling side to side rather than up and down"): the box sways sideways (`bust_axis="x"`, one bell), the still unchanged. Round 1 redo: new image, 58 tall (was 54), skin pre-snapped by hue (below 0.068, sat 0.4-0.8: her tan skin sat next to the bronze and converted to it), `--no-levels --no-prune --ramps bronze,marble,aegean,skin,brown,gold` **Round 4** (owner: the narrow front flap hanging between her bare thighs read as a crotch): the still's war skirt now covers both thighs in clean pleats (`aegean` strips, `aegean_dark` every fourth column and on the shadow side) down to a flat `aegean_dark` hem at row 40, with an ink edge under it and open air between the legs below; the flap is gone. The idle and walk strips re-derived (the hip box still sways; the rigid part is only the hem's ink row 41). **Round 5** (owner: "skirt is way too long now; regenerate the figure: a muscle mommy with huge tits and hips and abs; bigger, just smaller than a boss"): a new image (`art_source/pantheon/amazon_r5.txt`, refs the Hero and the old source) at **70 px** (was 58; `SpriteData.HEIGHTS`), now 66x70: `pixelate_source.py` 70, the skin pre-snap (`amazon_presnap.py`), `prepare_sprite.py --ink-l 0.15 --no-levels --no-prune --no-cleanup --ramps bronze,marble,aegean,skin,brown,gold`, one despeck pass (`amazon_despeck.py`), then on the grid (`amazon_r5_fix.py`): the war skirt as one closed band from a bronze belt (rows 33-34) to mid-thigh, Aegean pleats flaring over the hips, a straight bronze hem across both thighs (row 42) with ink under it (row 43): no slit, flap or notch, checked in every walk and idle frame; a face (brow, one clear eye, mouth) and a six-pack. Rig: legs split at col 34, hip 44, the shield's foot rigid, the box sways sideways on the skirt over her hips (cols 21-45, rows 35-40, `bust_axis="x"`). 2 images, ~$0.066. **Round 6** (owner: "the skirt is too boxy... it should swish in front of her, and show off her thighs"): only the skirt of the round 5 still repainted on the grid (`art_source/pantheon/amazon_r6_skirt.py`; the shape after one image-tool edit of the round 5 source, `amazon_r6_skirt.txt`, used only as a guide, ~$0.023): two short side flaps flaring out from the belt, cut high (hems rows 39-41, rising toward their tips) so the thighs show, and a wide front panel (cols 26-41) hanging over the crotch to one rounded hem (row 46, below where the thighs part), ink under its six middle columns: no slit, gap, notch or point; pleats straight on the panel, fanning on the flaps. Rig: hip 42 (the thighs walk), the panel below the hip on per-column rigid rects, the hip box at 1 px (rows 35-38) and a new `swish` box (`walk_cycle.py`: a second sideways box, one frame behind the hips, walk and idle; cols 21-46, rows 35-45) so the skirt follows the hips and the hem flutters. Every walk and idle frame checked by script: under the drape where the thighs meet there is only ink, then the gap. **Round 7** (owner, round 6: "start again with fresh generation, go back to the first prompt... you're focusing too much on the skirt; the original style, just a bit stronger and more voluptuous; a bit scandalous"): rounds 3-6 dropped; a fresh image from her round 1 prompt (`art_source/pantheon/amazon_r7.txt`, the sex named; refs the round 1 source and Artemis): a little more muscle (shoulders, arms, abs), more curves (bust, hips, thighs), a daring but fully clothed outfit (a small bronze breastplate with cleavage, bare midriff, a short war skirt cut high on the thighs with a solid front), a smirk. 2 candidates, the stronger one kept (~$0.067). Converted by material, not through `pixelate_source.py` / `prepare_sprite.py` (both muddied her skin into the bronze again): `art_source/pantheon/amazon_r7_build.py` labels every source pixel with a palette colour by hue / saturation / value, takes each 70-row cell's majority (ink at 38% so the lines survive), then on the grid repaints the face (eye, nose, smirk), the belt and the skirt (pleats to a curved hem: the side tips high over the hips at row 39, one straight solid front across both thighs at row 44, ink under it, open air between the thighs below; the back drape that hung between them removed), and places her like `prepare_sprite` (64x70). `art_check.py` 0 fail, 0 warning. Rig: hip 46 (under the skirt's hem, so the skirt rides with the body and never tears), legs split at col 33, the shield's foot rigid, the hip box swaying sideways on the skirt (cols 22-42, rows 36-42, `bust_axis="x"`, the owner-liked sway) and a 1 px `swish` box (rows 37-45) one frame behind; no separate bust bounce (one box per rig, the hips kept). Walk and idle frames checked at 12x: the skirt stays closed. |
+| `pantheon/gorgon` | Gorgon (female, figure redesign, slim-thick and a bit chubby since round 1: round tummy, soft arms, very wide hips): living snakes for hair, pale green skin, gold eyes, white chiton with gold, a coiled serpent tail | 42x54 | robe (tail) sway + bust (cols 21-31, rows 17-21, two lobes; round 1: the old box sat too low), idle breathing. Round 1 redo: two new images (the first came back slim; the second asked for chubby with the first as reference), `--no-levels --ramps moss,marble,gold`; her face painted by hand (the conversion loses it in the snakes). Round 3 ("her face is so silly"): the face repainted by hand after a face-only regeneration (`art_source/pantheon/gorgon_r3.txt` -> `gorgon_r3_face_ref.png`, not converted: at 54 px it lost the face again, used as the painting reference): a tapering jaw and pointed chin over a neck, heavy-lidded gold_light eyes with ink pupils under dark brows raised at the outer ends, a nose bump on the right edge, brown_light lips with an ink smirk corner; body unchanged, strips rebuilt |
+| `pantheon/moon_hound` | Hound of Artemis: a lean silver greyhound / saluki seen from the side, a long muzzle, folded ears, an Aegean collar | 56x30 | legs walk (hind legs left, forelegs right, the chin rigid). Round 1 redo ("looks strange"): a new image in side view (the Wolf of Rome's source as the pixel reference), `--no-levels --no-prune --ramps marble,grey,aegean`, the eye (aegean_light) painted by hand |
+| `pantheon/sea_serpent` | Sea Serpent: Aegean scales, a pale belly, a finned head, reared over its coil | 46x64 | robe sway |
+| `player/oathbreaker` | The Oathbreaker (male, a fallen demigod): cracked bronze laurel, violet hooded cloak over tarnished bronze, a staff with a stolen thunderbolt bound in violet cords | 52x58 | robe walk |
+| `player/oathbreaker_hyper` / `_untouchable` / `_deathlord` | Gilded Oathbreaker (gold armour and laurel, sun emblem), Untouchable (white phantom with pale-blue trims), Deathlord (black iron and crimson, spiked crown) | 58 / 58 / 60 | walk through `SKINS` |
+| `tiles/olympus_field`, `_grove`, `_terrace`, `_summit` | The four zone floors: trampled earth and dry grass; moss and cypress needles; marble courses; square marble slabs with dark gold joints | 128 | `make_tile.py` (`# --- Act IV: Mount Olympus ---`); the decals stay code-drawn |
+| `obstacles/war_trophy_{s,m,l}` (round 1: bronze leaf heads on the crossed spears), `cypress_{s,m,l}`, `moon_shrine_{s,l}` (round 1: the crescent a shade lighter, `ice_light`), `fountain_{s,l}`, `broken_column_{s,m,l}`, `bronze_brazier_{s,l}` | A trophy post with a shield, crossed spears and a crested helmet; a dark cypress; a marble shrine with a silver crescent; a marble fountain basin; a broken fluted column; a bronze brazier with fire | footprint + 2 wide | circles, `tools/olympus_props.py` |
+| `obstacles/chariot_wreck_{s,l}`, `balustrade_{s,m,l}`, `marble_block_{s,m,l}` (+ `_v`) | A bronze war chariot on its side with a broken wheel; a marble terrace balustrade; a fallen marble block with a gold band and a crack | long side + 4 x short; `_v` short + 2 wide | rects, `tools/olympus_props.py` |
+| `icons/stolen_thunder`, `titans_blood`, `grounded_bones` | Violet badges: a bolt in a violet hand; a violet drop of blood with a spark; a ribcage under a lightning rod | 32 | symbol sheet split, each pixelated to 24 px on the frame of `machine_soul` |
+| `icons/gigantomachy`, `ach_twilight_of_the_gods` | Gold badges: a titan's fist among bolts; a cracked laurel over a setting sun | 32 | on the frame of `ach_nothing_is_deathless` |
+
+**Art review, round 1 redo (Oct 2026).** The owner's eight Olympus notes (GDD §15.0 "Act IV art review, round 1"):
+the Amazon, Artemis and the Gorgon redrawn in the figure-redesign style with the requested builds and their bounce
+boxes checked against the new pixels (the Amazon's on her hips, as the owner liked; Artemis's and the Gorgon's on the
+bust), Ares re-converted bright (no new image), the Hound of Artemis regenerated, the Bronze Titan's walk rebuilt as a
+stride (`walk_cycle.py` mode `stride`, under the Act IV foundation table), spear heads on the war trophies and a lighter
+moon on the shrines (`tools/olympus_props.py`). 5 API images, about $0.16 (ledger). `art_check.py`: the Amazon,
+Artemis and the hound pass every floor; Ares fails only Sanctum IV (+0.13), the Gorgon the March roads and the
+Sanctum floors (as before; she only stands on Olympus).
+
+Code-drawn on purpose: the lightning storms' circles (the wrath's), the thunderbolt beam and its lanes, the
+trident in flight, the war-cry ring, the volley's aim fan, the gaze cone, the leap arc and landing circle, the
+moonlit groves, Stolen Thunder's charging orb and its arcs.
+### Act IV: the Asphodel Underworld (Stage 12; Act IV phase 2, Oct 2026)
+
+<!-- --- Act IV: the Asphodel Underworld --- -->
+The Act IV finale's art (GDD §15.0 "The Asphodel Underworld (Act IV phase 2)" and the rows after it), in the
+Republic's style above: grey ash, marble shades, cold Aegean light and dark bronze, with Hades' black. Prompts
+in `art_source/underworld/<id>.txt` (the unit template, the sex named), sources archived by `prepare_sprite.py`
+under `art_source/<key>.png`, the raw sheets in `art_source/underworld/`. Pipeline: `tools/gen_image.py`
+(`--ref` an approved sprite of the same tier: the Hero and the stage concept for Hades, the Hoplite for
+Cerberus, the Lightning Abbess for the Ferrywoman, the Warrior and the Hoplite for the Myrmidon; each pose and
+skin with its own approved base as the reference), then `prepare_sprite.py --ink-l 0.15` with explicit
+`--ramps` (Hades `grey,marble,aegean,bronze`; Cerberus `grey,flame,crimson,marble,bronze`). With `--no-levels`
+Hades' robe and Cerberus' fur went flat (every detail lost), with levels they came out mid-grey, so the levels
+version was kept and its grey shifted one step darker by script (`grey_light` -> `grey`, `grey` ->
+`grey_dark`; Cerberus only the light step). The Ferrywoman and her skins (figure-redesign style: hourglass
+figure, fully clothed, bust bounce, idle breathing) went through `pixelate_source.py` first, then
+`--ink-l 0.15 --no-cleanup`; the Deathlord skin's grey darkened one step the same way. Badges: two symbol
+sheets split by empty columns, each symbol through `prepare_sprite.py --art-height 24` and set on the frame
+of an approved badge (violet `abyssal_pact`, gold `tidecallers_host`; its inner 26 px cleared to the fill).
+Floors: two textures through `make_tile.py` recipes (`# --- Act IV: the Asphodel Underworld ---`). Obstacles:
+two prop sheets split by empty gaps, each prop converted at each size (circles: footprint + 4 wide; rects:
+length + 2 wide, the end-on `_v` stretched to length + 14 tall). 16 API images, about **$0.35** (ledger).
+art_check: every unit sprite passes height, alpha, palette and feet (the badges warn only that icons are not
+in `SpriteData.HEIGHTS`, like every badge). **For the owner's review.**
+
+| Key | What it is | Art px | Notes |
+|---|---|---|---|
+| `bosses/hades` | Hades (male): a tall gaunt god in a black robe and cloak, ashen face, cold blue flames over a dark bronze spiked crown, an upright bronze bident | 76x116 | robe walk (the bident rigid). The fork came out with three prongs: for review Round 1 redo (owner: cloak blends with the cloak behind): the inner robe (a hand-drawn polygon per pose) recoloured aegean_dark with aegean folds, an ink seam and a bronze_dark trim along its edge, the outer cape left grey; same on `hades_bident` and `hades_kneel`, the walk strip re-derived. **Round 3 redo** (owner: "just regenerate this"): regenerated as a new set (`art_source/underworld/r3/`, ref the Achilles sprite; the two poses with the new standing source as their reference): a dark Aegean-blue robe with bronze trim and belt in front of a deep violet cloak (owner's colour suggestion; only the cloak, so it reads against the blue robe), a crown of cold blue flame, a two-pronged bident. Converted with `--ramps aegean,violet,marble,bronze,ice --ink-l 0.15`, then the cloak one step darker at the top (`violet_glow` -> `violet`) and its inner `ink_violet` raised to `violet_deep` (so it does not vanish on the dark floors); the head (crown band and spikes, pale face, glowing eye, black hair and beard) hand-painted on the grid, as the converter merged the beard into the crown. Now 64x116; the walk strip re-derived (rigid bident cols 12-18). **Round 4 redo** (owner: "closer to the original, just with different colors that actually work together and show differences... the original head was better"): back to the round 1 sprites (76x116; poses, head, crown, face, hair and bident pixel for pixel) with only the cloth greys remapped by `art_source/underworld/r4/hades_recolour.py` (scheme C): a **bone-grey robe** (`bone_shade`, `bone_mid` folds) edged in `bronze` where it meets the cloak, under a **midnight Aegean cloak** (`aegean_dark`, `aegean` folds); the robe region per pose is round 2's, the hair round the face and the bident's iron shaft keep their greys. Chosen over scheme E (the round 1 charcoal robe under the same cloak: closer to the original but no value step between robe and cloak) for the warm/cool and light/dark split. The walk strip re-derived with the round 1 rig (bident cols 56-70); sources back to the round 1 ones. **Round 5 redo** (owner: "not very precise... just regenerate the same image with different colors... you're getting his beard"; scheme E's colours chosen): each round 1 source regenerated through the image tool as an EDIT of itself (`--ref` the round 1 source, prompts `art_source/underworld/r5/<key>.txt`: the identical figure, head, beard, crown and bident, only a charcoal-grey robe with a bronze trim and a midnight-blue cloak), converted with round 1's settings (`--ink-l 0.15 --ramps grey,marble,aegean,bronze`, levels on), then `art_source/underworld/r5/hades_shift.py`: whole-sprite colour steps only (round 1's grey one step darker, `aegean_light` -> `aegean`, so the cloak is `aegean_dark` with `aegean` folds) and the approved round 1 head pasted back pixel for pixel in fixed rectangles (flames, crown, hair, face, beard; the converter had redrawn the face and greyed the beard); no cloth masks. 76x116; the walk strip rebuilt with the same rig. art_check: like round 1 and scheme E it is darker than the Act I march / Sanctum floors (lightness FAIL there; it only appears on the Underworld, where it passes). ~$0.023 an edit. |
+| `bosses/hades_bident` | His attack pose (BossPoseData 1): leaning into a sweep of the bident | 116x108 | the bident sweep's windup and the phase changes Round 3: regenerated with the new still (120x108): the same recolour steps and a hand-painted head; the fork has two prongs. Round 4: the round 1 pose recoloured the same way (scheme C). Round 5: an edit of the round 1 source the same way (116x108), the round 1 head pasted back. |
+| `bosses/hades_kneel` | The ending: kneeling, head bowed, holding out his crown, the bident on the ground | 82x84 | drawn by `HadesHazards` for 14 s after his defeat Round 3: regenerated with the new still (92x84): head bowed with bare black hair and the crown held out in both hands; the same recolour steps, a hand-painted head, the fallen bident redrawn on the grid with two prongs (the AI drew three and a dark halo), and an aegean mid-tone between the robe's dark and light shades (reads on the dark floors). Round 4: the round 1 pose recoloured the same way (scheme C; the fallen bident keeps its greys). Round 5: an edit of the round 1 source the same way (80x84, 2 px narrower: the head and the held crown pasted from round 1 at a -2 px offset, the fallen bident's doubled `bronze_ink` outline thinned to one pixel). |
+| `pantheon/cerberus` | Cerberus (male): a huge black hound with three heads in a fan, ember eyes, a mane of fire, spiked bronze collars, a flame tail | 94x92 | legs walk (hind / fore halves). The heads' hit bodies sit on its three heads (`head_offsets`); a dead head is a smoking stump drawn over it |
+| `player/ferrywoman` | The Ferrywoman (female, figure-redesign style): hooded violet cloak, fitted grey corset dress, silver hair, violet eyes, a gold obol, a tall oar with a violet soul lantern | 44x56 | robe walk (oar rigid) + bust (cols 19-29, rows 18-25), idle breathing Round 1 redo: bust box moved 2 px right (cols 21-31). Round 2 redo: box widened 2 px left (cols 19-31), right edge kept. |
+| `player/ferrywoman_hyper` / `_untouchable` / `_deathlord` | Golden Ferrywoman (gold trim and circlet), Untouchable (white phantom, soul-teal lantern), Deathlord (black iron, spiked crown, crimson lantern) | 40x56 / 40x56 / 42x58 | walk + idle through `SKINS` with their own oar and bust boxes (`SKIN_FIX`) Round 1 redo: the Deathlord skin's bust box moved 2 px right (cols 20-29). Round 2 redo: the Deathlord box widened 4 px left (cols 16-29). |
+| `summons/myrmidon_shade` | Myrmidon Shade: a skeleton hoplite, grey crested helmet, skull face with soul-teal eyes, a round grey shield with a soul-teal boss, an upright spear | 26x46 | legs walk (spear and shield rigid) Round 1 redo (owner: body too detailed): torso, arm, tunic and legs repainted as big flat shapes (lit left, shadow right, one ink outline); the head, spear head and shield are the approved pixels. **Round 3 redo** (owner rejected the flat round 2 body: "more like the original"): restarted from the round 1 pixels (commit 16ea7aa) and only cleaned gently: colour islands of 1-2 px in the body took their neighbours' majority colour (7 islands; head, spear and shield untouched), the original shading and outline kept; the walk strip re-derived. **Round 4 redo** (owner: "regenerate from the start... from the original prompt again"): regenerated from the round 1 prompt (`art_source/underworld/r4/myrmidon_shade.txt`, the owner's first note added: a simple body, the detail on the head and the shield; refs the Warrior and the Hoplite), through `pixelate_source.py` and `prepare_sprite.py --ink-l 0.15 --ramps bone,grey,soul,brown --no-prune`; the crest and the Corinthian bone face plate with two soul-glow eyes hand-painted on the grid (`myrmidon_shade_head.txt`), as the converter blurred the face. Now 24x46; rig: spear (cols 0-4, to row 37) and shield rigid. **Round 5** (owner: "face looks a bit silly but the rest is fine"): only the face repainted on the grid (`art_source/underworld/r5/myrmidon_shade_face.py`, 36 px in cols 8-14, rows 11-17): the helmet's cheek guards close round a short skull plate (bone brow, two `ink_green` sockets with `soul_glow` eyes, a nose hole, teeth, the chin rim), the Legion of Tartarus's treatment; every other pixel is round 4's. The walk strip rebuilt (only those columns differ). |
+| `summons/legion_of_tartarus` | Legion of Tartarus: bigger, darker, a glowing soul-teal spear head and a skull on the shield | 32x54 | legs walk Round 1 redo (same note): body repainted as flat shapes; the head, spear head and shield kept. **Round 3 redo** (same note): restarted from the round 1 pixels and cleaned the same gentle way (13 islands of 1-2 px; head, spear and shield untouched); the walk strip re-derived. **Round 4 redo** (same note): regenerated from its round 1 prompt (`r4/legion_of_tartarus.txt`, "grander" added) with the new Shade source as the reference: a bigger, darker hoplite with a bone-striped crest, a glowing soul-teal spear head and a skull on a larger shield. Converted like the Shade; the face plate and the shield skull hand-painted (`legion_of_tartarus_head.txt`, `_emblem.txt`), the body's `grey_light` one step darker (the shield and rim light kept; two steps failed the +0.15 floor check on Sanctum IV). Now 36x54; rig: spear (cols 2-5, to the ground) and shield rigid. |
+| `icons/river_styx`, `ferrymans_toll`, `myrmidon_shade`, `myrmidon_oath` | Violet badges: the black river with a violet current; an obol on its cord over an oar; the shield and the skull helmet; spear, shield and bone hand | 32 | |
+| `icons/lethes_flood`, `legion_of_tartarus`, `ach_empty_throne` | Gold badges: two crossing rivers; the skull shield with a gold rim; the empty black throne with the crown at its foot | 32 | |
+| `tiles/underworld_asphodel`, `_styx`, `_hall`, `_throne` | Grey ash; dark wet banks; cracked marble flags (32 px staggered); obsidian slabs (64 px) with dark bronze joints | 128 | `make_tile.py`; the asphodel flowers, the Styx and the floor details are code-drawn (`UnderworldGround`, `UnderworldGlyphs`) |
+| `obstacles/dead_poplar_{s,m,l}`, `styx_rock_{s,m,l}`, `judges_column_{s,m,l}`, `obsidian_spire_{s,l}`, `soul_brazier_{s,l}`, `ferry_post_{s,l}` | A dead grey tree; a black wet boulder; a broken marble column; an obsidian spike; a bronze brazier with a cold flame; a mooring post with a lantern | footprint + 4 wide | circles |
+| `obstacles/grave_stele_{s,m,l}` (+ `_v`), `judgement_bench_{s,m,l}` (+ `_v`) | A low marble grave slab with asphodels; the judges' marble bench with bronze trim | length + 2 wide; `_v` 26 / 28 wide | rects |
+
+Code-drawn on purpose: the River Styx (bands of black water, banks and drifting glints), the River Styx spell's
+rivers, Hades' footprints, the Helm's shimmer, his sigils over marked summons, the gods' shades (the god's own
+art tinted pale when it exists, else the shade glyph scaled up), the crown at the finale, Cerberus's fire breath
+glow and smoking stumps, the Myrmidon wall's ring. The Shade Hoplite and the Tartarus Warden wear the Hoplite's
+art tinted pale / dark (no art of their own).
+### Act III AoE art (the Empire's warnings, beams and zones; Oct 2026)
+
+GDD §15.0 "Act III AoE art" (audit `docs/art/audit/act3.md` section A, branch `audit/act3-art`). Every
+piece is **procedural pixel art** in the locked palette, made by `python3 tools/empire_aoe_art.py`
+(deterministic; `--review DIR` writes the 1× / ×4 / GIF review images) and drawn by `EmpireFx`
+(`scripts/fx/empire_fx.gd`; keys and numbers in `scripts/data/empire_fx_data.gd`), always with the code
+shape as the fallback. It follows the Act I rules above (band pieces at 1:1 on the exact hit edge, fills
+as clipped 2 px rows, beam bodies scrolled at the beam's real width, no stretched big images, textured
+rects only) and adds the **Empire's own visual language**, so an Act III warning never reads as the
+Covenant's:
+
+- **Colour:** chrome and signal ramps; warning red and hard amber for danger, **cyan-white**
+  (`chrome_glint`) for targeting (ticks, scan line, brackets, crosshair, uplink); white-hot `signal_glow`
+  cores. The Death Ray stays the necromancer's violet; the finale's binding his soul green.
+- **Motifs:** hazard stripes in the band (period 5, seamless), a **hex grid** fill (14 × 24 seamless),
+  a scan-line timing front, **targeting brackets** closing from 1.45 × to the area's bounding box with
+  the timing, hex-segmented shock rings, sparks and chrome shards.
+- **Where:** every Act III circle / lane / cone warning, including the shared Effect telegraphs on an
+  Act III stage (`EffectManager.empire_look`).
+- **Alpha:** warning pieces, stills and strips are binary; glows, the gate field, the furnace haze and
+  the pulse wake use 2-4 stepped alphas; `storm_veil` / `storm_grit` are smooth grey masks tinted with
+  the dust colour (not pixel art, like `holy/soft_disc`).
+
+| Key | Subject | Art px | Drawn by |
+|---|---|---|---|
+| `empire_fx/edge`, `edge_tick` | Warning band piece (signal ink, red, two rows of amber hazard stripes, red, dark), and with a cyan-white tick into the danger (every other piece) | 10 × 6 / 10 × 10 | every Empire circle, lane, cone, square, sector |
+| `empire_fx/front`, `hex`, `chevron`, `target`, `bracket` | Scan-line front; seamless red hex grid with amber nodes; double chevron; crosshair; targeting box corner | 8 × 3, 14 × 24, 13 × 13, 15 × 15, 9 × 9 | `EmpireFx.telegraph_circle()` / `_line()` / `_cone()`, `square()`, `sweep()`, `build_frame()` |
+| `empire_fx/uplink` | Orbital uplink column (stepped alphas, base on the bottom row) | 16 × 96 | `EmpireFx.orbital()`: the last 28 % of a strike |
+| `effects/empire_blast`, `_red`, `_chrome` | Strike / slam landing: flash and lens glint, hex-segmented shock ring (ends at 0.84 of the half: fill 1.2), sparks, shards, smoke ring | 8 × 128 | `EffectManager.impact(..., anim)` at the Act III sites |
+| `effects/empire_boss_death` | An Empire boss falls: red blast, four amber secondary blasts, cyan-white shock (0.91 of the half: fill 1.1) | 10 × 256 | `EnemyDirector.on_enemy_killed()` on Act III stages |
+| `empire_fx/ray_body`, `ray_glow`, `ray_tip` | Death Ray soul laser body (scrolled, at the beam width), stepped glow and afterglow, tip burst | 16 × 10, 8 × 12, 4 × 24 | `EmpireFx.death_ray()` |
+| `empire_fx/laser_body`, `laser_glow`, `laser_warn`, `laser_cap` | Laser grid body (= its 10 px width), red glow, armed sight dash, emitter (armed / firing) | 16 × 10, 8 × 12, 8 × 3, 2 × 16 | `EmpireFx.laser()`, `laser_band()` |
+| `empire_fx/lance_body`, `lance_glow`, `lance_tip` | Judgment Lance body (= its 30 px width), amber glow, head | 16 × 30, 8 × 16, 4 × 32 | `EmpireFx.lance()` |
+| `empire_fx/gate_wall`, `gate_glow`, `gate_post`, `gate_cable` | Shield Gate hex energy wall (= its 18 px), outer glow, chrome end emitter, power cable | 22 × 18, 8 × 28, 22, 8 × 5 | `EmpireFx.gate_wall()`, `gate_cable()` |
+| `empire_fx/belt_68`, `_72`, `_80` | Conveyor belt repeat per belt width: rails and rollers, rubber, slats, dim amber chevrons (112 px holds 4 chevrons and 7 rollers) | 112 × W | `EmpireFx.belt()`: one scrolled rect per belt |
+| `empire_fx/furnace_slag`, `furnace_embers`, `furnace_molten_0..2`, `furnace_rim`, `furnace_warn`, `furnace_haze`, `furnace_flame` | Channel slag, glowing seams, molten metal (3 flicker frames), iron rim, hazard stripes, heat haze, flame tongue | 64 seamless; 12 × 3, 10 × 2, 8 × 6, 4 × 9 × 14 | `EmpireFx.channel()` (world-anchored) |
+| `empire_fx/storm_veil`, `storm_grit` | Scrap storm veil (hole at 0.2393 of the half = the 230 px clear radius) and drifting grit | 256, 256 | `EmpireFx.storm()` |
+| `empire_fx/jug_flame_0..2` | Juggernaut flame billows | 4 × 10 / 16 / 22 | `EmpireFx.jug_flame()` |
+| `empire_fx/static_edge`, `spark` | Arc Engineer field rim; static spark | 10 × 5, 2 × 7 | `EmpireFx.jam_field()` (arming), `static_field()` (its armed suppression zone, `SuppressionField`) |
+| `empire_fx/mortar_shell`, `lock_open`, `lock_locked`, `pylon_stump` | Mortar shell; Lock-On reticles (red / white-hot blink); fallen pylon decal | 2 × 10, 2 × 35, 2 × 29, 30 × 14 | `EmpireShots`, `LockOn`, `WastesDirector` |
+| `empire_fx/shock_edge`, `pulse_front`, `pulse_charge`, `binding_edge`, `hangar_door` | Deus footfall shock; overload pulse front (= its 26 px, middle row on the radius); charge ring; soul-binding chain; hangar door (shut / opening / open) | 10 × 4, 12 × 26, 8 × 3, 10 × 5, 3 × 36 × 24 | `DeusHazards`, `CitadelGlyphs` hooks |
+| `empire_fx/magnet_edge`, `claw` | Motherboard magnet ring piece; crane claw (open / clamped) | 10 × 3, 2 × 16 | `AssemblyGlyphs` hooks |
+
+Left as code (low in the audit, or the intended look): Lock-On laser lines, pylon reach ring, repair
+arcs, Aegis shield arc, Spotter glow, Valkyrie's jets and blade storm, pop / slash / spawn rings, shot
+tracers. Review folder for the owner: `docs/art/act3_aoe_review/` (`manifest.json`).
+### Act III missing sprites (owner report, Oct 2026)
+
+The Act III art audit (`docs/art/audit/act3.md`, branch `audit/act3-art`) found two kinds and four projectile
+keys without a PNG (`[art-miss]` totals in the audit), the Scrap Wastes' stage card on a borrowed floor, and
+a few optional shot looks. Everything below is wired through the keys the code already asked for
+(`SpriteBank` / `EnvironmentArt`); the code drawings stay as fallbacks. Visual only. **The Kill-Drone** is the one
+AI image (`tools/gen_image.py`, the template above, `--ref` the Scout Drone's source; one image, $0.024, ledger
+`empire/kill_drone`; prompt `art_source/empire/kill_drone_prompt.txt`, source `art_source/empire/kill_drone.png`):
+`pixelate_source.py` to 30 rows, `prepare_sprite.py --no-levels --no-prune --ink-l 0.15` (cleanup on), then by
+hand: the bone / skin / brown / amber specks the AI's red plate and arms left snapped to the `signal` ramp,
+a clean 7 x 7 lens ring (ink, dark red, red, a 2 x 2 hot core) drawn on the grid, two empty rows on top for the hover
+bob. Every other sprite is **hand-built on the grid** by `tools/act3_projectiles.py` (letter maps and small
+procedural shapes, exact palette colours, one-pixel ink outline in the part's own ramp; rebuild with
+`python3 tools/act3_projectiles.py [id]`): no generation, so each pixel is intentional. Flat sprites face +x;
+`SpriteBank.draw_flat_frame()` draws one frame of a strip. **For the owner's review**
+(`docs/art/act3_sprites_review/`).
+
+| Key | What it is | Art px | Notes |
+|---|---|---|---|
+| `empire/kill_drone` | Kill-Drone (the Purge Protocol Reckoning kind, a machine): the Scout Drone's chrome disc and two flat rotors made heavy: a broad warning-red armour plate across the top, one big red lens with a hot core, two gun barrels under the body | 70x32 | hover (`_walk`, rig `hover` bob 2); `HEIGHTS` 32 |
+| `projectiles/trojan_rocket` | Swarm Rocket: a chrome missile with swept warning-red fins and band, an amber warhead light | 24x12 | `FLAT_SIZES` 24; drawn turned along its heading by `RocketKit` |
+| `projectiles/trojan_rocket_flame` | its exhaust: a tapering amber / red flame, glow core | 3 x 12x8 | strip, `RocketKit` picks the frame from its age (50 ms) |
+| `projectiles/scrap_drone` | Scrap Swarm drone (also the Rust Prophet's): a bone skull-body with one violet eye and a scrap jaw, two grey rotor discs | 2 x 22x14 | rotor strip, `ScrapSwarm.ROTOR_FPS` 14 Hz from game time; the player's violet and bone, no Empire colour |
+| `projectiles/scrap_drone_bright` | the Deathless Swarm kill drone: the same with violet rotors and a flare eye | 2 x 22x14 | replaces the old violet ring |
+| `projectiles/scrap_bolt` | a bone shard wrapped in violet with a violet trail | 14x6 | `Projectile.Kind.SCRAP_BOLT` |
+| `projectiles/iron_shell` | an Iron Revenant cannon shell: an iron ogive shell with a driving band, a soul-teal fire trail | 20x8 | `Projectile.Kind.IRON_SHELL` |
+| `projectiles/soul_round` | a Grave Gunner's rifle round: a soul-teal fire slug with a bright core | 12x5 | `Projectile.Kind.SOUL_ROUND` |
+| `projectiles/empire_rail` | the Lock-On rail slug: a warning-red needle, amber sleeve, white-hot core | 46x7 | `SHOT_STYLES` rail `art`; its head on the shot |
+| `projectiles/empire_missile` | Deus Ex Machina's missile: chrome body, red fins and band, amber nose, a static exhaust | 26x10 | `SHOT_STYLES` missile `art` |
+| `projectiles/mortar_shell` | the Mortar Walker's lobbed shell: a chrome bomb, red band, amber fuse light | 12x12 | `SHOT_STYLES` mortar `art`, drawn at the lob's height |
+| `projectiles/deus_missile` | the Deus Revenant's missile (the undead's): iron body, bone nose, soul-teal exhaust | 26x10 | `HordeHazards` draws a boulder with source `deus_revenant_missile` as it, nose along its arc |
+
+The Scrap Wastes' stage-select card is data only (`FrontDoorData.VIGNETTES["wastes"]`, no new PNG): `tiles/wastes_slag`,
+`obstacles/titan_hull_s`, `wreck_plate_s`, `slag_mound_m`, `tank_trap_s`, `empire/signal_pylon`, `empire/aegis_bot`,
+`empire/scout_drone`, `summons/warrior` + `archer`, and `bosses/kestrel_aim` facing them. The small tracers (zap, round,
+arc bolt, rivet, turret bolt, chaingun), Kestrel's decoy projectors and the sentry / turret barrels stay code
+(audit: acceptable / low).
+
+### Act V: the Shogunate of the Rising Sun, the shared kinds (foundation, Oct 2026)
+
+<!-- --- Act V: the Shogunate of the Rising Sun --- -->
+The Shogunate's style for the stage agents (GDD §15.0 "Act V art: the shared kinds"; `docs/act5/PROPOSAL.md`): **red lacquer**
+armour (the new `lacquer` ramp: harder and warmer than the Covenant crimson), **steel** (the existing `grey` ramp), **indigo**
+cloth (the new `indigo` ramp; its light shade is the rim that keeps a ninja readable on a dark ground), **sakura pink** (the new
+`sakura` ramp: petals, trims; the oni's ivory horns use `sakura_light`), and **gold** for the sun and crests (the existing
+gold keeps its meaning). Hard, clean silhouettes with one big shape each (the ashigaru's conical hat and long yari, the samurai's
+crescent crest and broad shoulder plates with the hand on the hilt, the gunner's level arquebus, the ninja's masked crouch, the
+onryo's curtain of black hair, the oni's horns and spiked kanabo). Never the player's violet, the undead's bone or teal or the
+Covenant's crimson. `prepare_sprite.py` folder `shogunate/`: ramps lacquer, indigo, sakura, grey, gold, skin, brown. Concept
+references: `art_source/concepts/act5_lineup.png` (costumes); prompts beside each source in `art_source/shogunate/<id>.txt`
+(the Act IV template, the sex named).
+
+Generated with `tools/gen_image.py` (`--ref` the Hoplite's source for the pixel look plus a crop of the concept lineup for the
+costume; the Shade of the Dead's source for the onryo). Pipeline: `prepare_sprite.py` straight on the source with explicit
+`--ramps` and `--ink-l 0.22` (0.15 for the ninja, whose indigo cloth must stay cloth; 0.3 and `--ramps marble,indigo` for the
+onryo, the Republic's marble giving the ghost a pale white; the lantern `--ramps grey,gold`), then scripted palette-colour
+touch-ups (`art_source/shogunate/touchups.py`, run by `build.sh` right after a fresh conversion: it is not idempotent):
+holy_white / bone remapped to grey_light (sakura_light for the oni's horns), the samurai's two crest prongs joined into a
+crescent, the gunner's helmet one indigo shade down, the onryo's hair filled with indigo_dark inside its ink edge and two empty
+rows added on top for the hover bob, the lantern's window recoloured gold for the lit state. Walk strips by `walk_cycle.py`
+(rigs under `# --- Act V: the Shogunate of the Rising Sun (the shared kinds) ---`). 7 API images, about $0.20. `art_check.py`: 0
+warnings; the only failure is lightness on Sanctum IV's light floor (the dark indigo ninja and gunner, the red kinds nearly),
+where Act V units never stand. **For the owner's review.**
+
+| Key | What it is | Art px | Notes |
+|---|---|---|---|
+| `shogunate/ashigaru` | Ashigaru (fodder, male): jingasa hat, red do over an indigo jacket, a very long yari | 22x46 | legs walk (hip 39; the yari, cols 3-5, rigid). Body ~32 |
+| `shogunate/samurai` | Samurai (soldier, male): black-and-red lacquered o-yoroi, kabuto with a gold crescent crest, iai stance (crouched forward, right hand gripping the hilt, scabbard angled; art review round 1) | 52x56 | legs walk (hip 40, back 0-23, front 23-52). The Draw telegraph is code |
+| `shogunate/teppo_gunner` | Teppo Gunner (ranged, male): indigo jacket, red lacquer chest plate, a level arquebus, a smouldering match cord | 62x46 | legs walk (hip 33; the gun rides with the body) |
+| `shogunate/ninja` | Ninja (soldier, male): indigo-black hood and face wrap, a crouch, a steel shuriken | 36x40 | legs walk (hip 28) |
+| `shogunate/onryo` | Onryo (night fodder, female ghost): pale white burial kimono, long black hair over the face, reaching arms, a wisp tail | 38x36 | hover (the whole ghost bobs 2 px; two empty rows on top). No bust rig |
+| `shogunate/oni` | Oni (night heavy, male): red-skinned ogre, ivory horns, tiger-skin loincloth, an iron kanabo resting over his shoulder (art review round 1) | 70x80 | legs walk (hip 61, spread 3, lift 3; the club rides with the upper body) |
+| `obstacles/stone_lantern` (+ `_lit`) | A stone toro: base, post, lantern box with a window, wide roof, finial; `_lit` has a warm gold window | 28x40 | no strip; the glow pool is code |
+
+### Act V: the Burning Province (Stage 13; Act V phase 2, Oct 2026)
+
+<!-- --- Act V: the Burning Province --- -->
+Generated with `tools/gen_image.py` (prompts beside each source, `art_source/<key>.txt`, the sex named in every figure
+prompt; `--ref` the Ferrywoman's source for the figure-redesign women plus a crop of `act5_lineup.png` (the kunoichi)
+for the Kunoichi and Kage; the Hoplite's source plus a lineup crop of the oni for Shuten-dōji; the Hoplite's source for
+the Kappa; the Ferrywoman's and the necromancer's sources for the Grave Kunoichi, then her source for her three skins;
+the March's `burned_house_l` / Gullhaven's `barrel_stack_l` sources for the obstacles, `underworld_ash` for the tiles,
+`paris_arrow` for the icon symbols). Pipeline: `prepare_sprite.py` straight on the source (every command in
+`art_source/shogunate/province_build.sh`): the Kunoichi `--ink-l 0.15` (a `--no-levels` copy read more like a
+ninja but failed the lightness check on every Act I floor), Kage `--ink-l 0.12 --no-levels` (her black suit stays
+black; she only fails the light March roads and the Sanctum, where she never stands), Shuten-dōji's source stored
+mirrored (the API drew him facing left), the Grave Kunoichi `--ink-l 0.20` with violet, bone, soul and grey, her
+Hyper skin `--no-levels` (gold). Walk / idle strips by `walk_cycle.py` (rigs under `# --- Act V: the Burning
+Province ---`; the Kunoichi, Kage and the Grave Kunoichi with her skins have bust boxes and idle breathing strips).
+Obstacles and icons by `art_source/shogunate/province_build.py` (pairs split at the widest gap; each size at its
+footprint width with `--no-center`; the 26 px symbol on a badge cleared from an approved icon, gold for the
+evolution and the achievement). Tiles: `make_tile.py` quilt recipes `province_*`. 21 API images, about $0.53 (ledger
+estimate). **For the owner's review.**
+
+| Key | What it is | Art px | Notes |
+|---|---|---|---|
+| `shogunate/kunoichi` | Kunoichi (elite, female, figure redesign, fully clothed): indigo-black bodysuit, red armour plates and sash, a long red scarf, a mask, high ponytail, a tanto in each hand | 40x52 | legs walk (blades rigid), bust box, idle breathing |
+| `shogunate/kappa` | Kappa (night fodder): green river imp, turtle shell, yellow beak, the water dish on its head | 32x34 | legs walk (the reaching claw rigid) |
+| Round 2 redo (Group A) | Kage's net covers both leg skin shades (`fishk.py`); the Hyper and Deathlord Grave Kunoichi skins have their own bust box (1 px shorter at the bottom); the Untouchable skin is a regenerated ghost-white phantom (`marble,soul,grey`, net inside leg polygons only, `fishp.py`) | | |
+| Round 1 redo (Group A) | Fishnets on `shogunate/kunoichi`, `bosses/kage` and `player/grave_kunoichi` (+ skins): painted after conversion as a period-4 diagonal lattice (`art_source/shogunate/fishnet/`); the Kappa is redrawn with a bigger shell, beak and dish; `icons/hundred_shadows` and `icons/ach_no_shadow_unlit` are redrawn; bust boxes moved (Kage up/left, Kunoichi +2 px right, Grave Kunoichi +1 px right) | | |
+| `shogunate/shuten_doji` | Shuten-dōji, the Oni King (miniboss, male): crimson giant, white mane, horns, open red-and-gold kimono, sake gourd, a barrel on his shoulder, a spiked kanabō | 94x112 | legs walk (the club rigid); the thrown barrels and the sake fires are code / AoeArt |
+| `bosses/kage` | Kage, Mistress of the Hidden Hand (boss, female, figure redesign, fully clothed): white ponytail, half mask, black-and-indigo bodysuit, short black jacket lined red, red obi, a ninjato on her back, a chained kunai in hand | 66x64 | legs walk, bust box, idle breathing; her clones wear the same art tinted |
+| `player/grave_kunoichi` | The Grave Kunoichi (female, figure redesign, fully clothed): pale grey skin, violet eyes, violet shinobi garb, bone plates and sash, a long soul-teal scarf, a kunai | 44x56 | legs walk (the scarf rigid), bust box, idle breathing |
+| `player/grave_kunoichi_hyper` | Gilded Kunoichi (Hyper): deep violet garb, a gold hair crest, gold sash and scarf, a gold kunai | 48x58 | through `SKINS` |
+| `player/grave_kunoichi_untouchable` | Untouchable: a bone-white phantom, a teal scarf and kunai | 46x56 | through `SKINS` |
+| `player/grave_kunoichi_deathlord` | Deathlord: a spiked iron crown, iron pauldrons, a crimson mantle and scarf | 48x58 | through `SKINS` |
+| `obstacles/rice_sheaves_{s,l}` | Rice sheaves hung on a wooden drying frame | 26 / 34 wide | circle |
+| `obstacles/bamboo_stand_{s,m,l}` | A dense stand of tall bamboo | 26 / 34 / 42 wide | circle |
+| `obstacles/burning_house_{s,l}` (+ `_v`) | A thatched farmhouse in flames | 56 / 72; `_v` 40 | H + V pair; the flares beside it are code (ProvinceHazards) |
+| `obstacles/shrine_hall_{s,l}` (+ `_v`) | A small mountain shrine hall: red pillars, a curved grey roof, a shimenawa | 52 / 64; `_v` 40 | H + V pair |
+| `tiles/province_paddies`, `province_bamboo`, `province_village`, `province_shrine` | The four zone floors: dike mud, leaf litter, ash and cinders, raked gravel | 128 | quilt; the paddy water is code-drawn over them (ProvinceGround) |
+| `icons/hundred_shadows`, `hidden_hand`, `paper_lanterns` | Badges (violet border): three ninja shadows with kunai; a hand with a kunai out of smoke; a glowing paper lantern | 32 | |
+| `icons/thousand_shadows`, `ach_no_shadow_unlit` | Gold-border badges: a ring of shadows around crossed kunai; a lit stone lantern and a fleeing shadow | 32 | |
+
+Code-drawn on purpose: the paddy water, the sake barrels (held and in flight), the landing circles, the fire patches
+(the Hellhound fire textures), the smoke clouds and the blinded summons' smoke, Kage's kunai chains, the Hundred
+Shadows clones (the caster's own sprite in shadow) and their kunai.
+
+### Act V: the Road to the Sun (Stage 15; Act V phase 2, Oct 2026)
+
+<!-- --- Act V: the Road to the Sun --- -->
+The Act V finale's art (GDD §15.0 "The Road to the Sun (Act V phase 2)" and the rows after it), in the Shogunate's
+style above, with the sun's gold and white for Amaterasu and the Kirin and the necromancer's violet for his rewards.
+Prompts (the unit template, the sex named) and the rebuild script `make_art.py` in `art_source/sun_road/`; the unit
+sources archived under `art_source/<key>.png`, the sheets in `art_source/sun_road/`, the textures in
+`art_source/tiles/sun_road_earth.png` / `_stone.png`. References: the Samurai's source (the Sōhei), Cerberus's (the
+Kirin), the Ferrywoman's plus crops of `act5_lineup.png` / `act5_boss.png` (the Kitsune, Amaterasu, the Shrine
+Maiden), the Oni's and the Myrmidon Shade's (the Bound Oni); each pose and skin with its own new base as the
+reference. Pipeline: `prepare_sprite.py --ink-l 0.22` with explicit ramps for the units; the figure-redesign figures
+through `pixelate_source.py` first, then `--ink-l 0.15 --no-cleanup` (`--no-levels` for the maiden and her gilded and
+Deathlord skins: with levels the black hair turned a bright indigo). Badges: two symbol sheets split by empty
+columns, each symbol at `--art-height 24` on the frame of an approved badge (violet `abyssal_pact`, gold
+`tidecallers_host`), the inner 26 px cleared to the frame's fill (the gold sheet came with a fourth, unused symbol).
+Obstacles: two prop sheets split by empty gaps (circles: footprint + 4 wide, at most 2.6 x as tall; rects: length +
+2 wide, the end-on `_v` stretched to length + 14 tall). Floors: two textures through `make_tile.py` recipes. 17 API
+images, about **$0.36** (ledger). `art_check.py`: every unit passes height, alpha, palette and feet; the base Shrine
+Maiden and her Deathlord skin are +0.14 over the darkest floors (0.01 under the rule). **For the owner's review.**
+
+| Key | What it is | Art px | Notes |
+|---|---|---|---|
+| `shogunate/kitsune` | Kitsune (night support, female, figure-redesign style): white hair and fox ears, three pale tails, a white miko kimono with a red skirt and sash, blue fox-fire in her palm | 32x52 | robe walk + bust (cols 13-22, rows 15-21), idle breathing; her fox-fire illusions are this sprite tinted (FoxFireKit) |
+| `shogunate/sohei` | Sōhei (soldier, male): white hood, indigo robes over a red chest plate, a gold kesa, a naginata across the body | 64x56 | legs walk (hip 41; the naginata above it) |
+| `shogunate/kirin` | The Kirin (miniboss): a golden-scaled deer-dragon, a single horn, a white cloud mane and tail, sakura wisps | 104x96 | four-legged walk (hind pair / forelegs, like Cerberus) |
+| `bosses/amaterasu` | Amaterasu (female, figure-redesign style): a rayed gold sun crown, long black hair, white, gold and red-orange robes with long sashes, a gold mirror | 84x116 | robe walk (her glide) + bust (cols 36-51, rows 34-44), idle breathing; the sun disc behind her is code |
+| `bosses/amaterasu_mirror` | Her attack pose (BossPoseData 1): the mirror raised high | 88x112 | the beams' windups and her crossings |
+| `player/shrine_maiden` | The Shrine Maiden of Night (female, figure-redesign style): black hair with a moon ornament, a black and violet miko, a gohei, a tiny black sun above her hand | 42x56 | robe walk + bust (cols 17-26, rows 17-24), idle breathing |
+| `player/shrine_maiden_hyper` / `_untouchable` / `_deathlord` | Maiden of the Golden Dawn (white and gold), Untouchable (white phantom, soul-teal), Deathlord (black iron, spiked crown, crimson) | 44x56 / 42x56 / 36x58 | walk + idle through `SKINS` (`SKIN_FIX` bust boxes for the gilded and Deathlord skins) |
+| `summons/bound_oni` | Bound Oni: an ashen oni with ivory horns, soul-teal eyes, bone chains and collar, the kanabo resting over his shoulder, bold bone-and-iron collar, wrist shackles and big dangling chain links (art review round 1) | 54x60 | legs walk (the club rides with the upper body) |
+| `summons/oni_lord` | Oni Lord: bigger, a bone crown between tall horns, broken chains, a kanabo studded with soul-teal iron resting over his shoulder, a tattered cape | 68x70 | legs walk (the club rides with the upper body) |
+| `icons/black_sun`, `stolen_dawn`, `bound_oni`, `onis_resolve` | Violet badges: a black sun in a violet corona; a gold dawn swallowed by a black crescent, drawn into a bone hand; the bound oni's head; a broken bone chain over a kanabo | 32 | |
+| `icons/eclipse_of_heaven`, `oni_lord`, `ach_the_sun_goes_out` | Gold badges: two black suns in gold coronas; the Oni Lord's crowned head; a red torii before an extinguished sun | 32 | |
+| `tiles/sun_road_torii`, `_forest`, `_steps`, `_heaven` | Packed earth and gravel; dark moss; grey granite step courses (32 px, staggered); pale paving | 128 | `make_tile.py`; petals, ferns, cloud wisps and sunlight specks are code-drawn (`SunRoadGround`) |
+| `obstacles/torii_post_{s,l}`, `sacred_cedar_{s,m,l}`, `moss_rock_{s,l}`, `komainu_{s,l}`, `cloud_rock_{s,m,l}`, `sun_mirror_{s,l}` | A vermilion torii pillar; a roped sacred cedar; a mossy boulder; a stone lion-dog on its plinth; a rock peak in a cloud; a bronze sun mirror on a black stand | footprint + 4 wide | circles |
+| `obstacles/stone_marker_{s,l}` (+ `_v`), `step_wall_{s,l}` (+ `_v`) | A long carved pilgrim-road stone with sakura petals; a mossy stone retaining wall of the steps | length + 2 wide; `_v` 26 wide | rects |
+
+Code-drawn on purpose: Amaterasu's sun disc, beams (a soft strip texture stretched and rotated), sun-disc mines,
+zenith columns, the noon glare and the noon shade, the dark sun of her fall; the Black Sun's suns and beams; the
+Kirin's halo; the fox-fire flicker and wisp over an illusion.
+
+**Round 1 redo (Group B, Oct 2026).** Amaterasu is a fuller, more mature figure (bigger bust, wider hips and thighs, closed neckline) redrawn from her old source; prepare her with `--no-levels` or the black hair turns bright indigo. Her bust box is cols 43-60, rows 32-43 (two lobes, px 2). The mirror pose, the walk and the idle follow the new still. `epilogue/act5_4` takes the new still as the figure reference (`y_bias` 0.15). The Shrine Maiden boxes: base cols 17-29 rows 15-23, Hyper cols 18-30 rows 12-20, Untouchable cols 17-29 rows 12-20; the Deathlord skin is redrawn with few big shapes (the round 1 version was "very busy"; the second prompt names the hourglass figure so a bust exists to bounce) and its box is cols 15-26, rows 18-23. The Kitsune is bustier (covered by the kimono, narrow slit), box cols 13-24 rows 15-20. Keep any "bigger" note inside the covering rules: closed neckline, covered shoulders, a slit that shows the leg only from the knee down.
+
+### Act V: Castle Kurogane (Stage 14; Act V phase 2, Oct 2026)
+
+<!-- --- Act V: Castle Kurogane --- -->
+Castle Kurogane's art (GDD §15.0 "Castle Kurogane (Act V phase 2)" and the rows after it), in the Shogunate's style
+above: black and red lacquer, steel, indigo and gold, with the castle's grey stone, white plaster and dark timber.
+Prompts in `art_source/kurogane/<id>.txt` (the Act V unit template, the sex named in every figure prompt: all male
+here), raw API images in `art_source/kurogane/raw/`, converted sources archived by `prepare_sprite.py` under
+`art_source/<key>.png`. Generated with `tools/gen_image.py`: `--ref` the Samurai's source for the pixel look plus a crop
+of `act5_lineup.png` (the banner bearer, for the Hatamoto) or of `act5_boss.png` (the cavalry for the Kiba-musha and the
+General; the Shogun on his platform for the Shogun); the Shogun's source for his duel pose; the Oathbreaker's and the
+Samurai's sources for the Ronin Revenant, then his source for his three skins; the stone lantern for the props and
+the platform; `ilion_gate` for the floors; `river_styx` / `lethes_flood` for the badges. Pipeline:
+`prepare_sprite.py` straight on the source with `--ramps lacquer,grey,gold,skin,brown,sakura` (no indigo: with it
+the black lacquer came out navy blue) and `--ink-l 0.15`; `--no-levels` for the Hatamoto and the Shogun's two poses
+(levels turned the black armour grey-blue), levels on for the two horsemen (their dark horses failed the lightness
+check without); the Ronin `--ramps violet,lacquer,grey,gold,skin,brown --ink-l 0.2`, his Hyper skin `--no-levels`, the
+Untouchable `--ramps marble,soul,grey,skin`, the Deathlord `--ramps crimson,grey,lacquer,gold,skin`. Prop and badge
+sheets split by `art_source/kurogane/split_sheet.py` (connected pieces), the props converted at each size by
+`make_props.py` (circles: footprint x 2 + 4 wide; rects: length + 2 wide, the end-on `_v` length + 14 tall; the
+command platform's stray palisade cut away by hand), the badges by `make_badges.py` (each symbol at 24 art px on the
+frame of an approved badge: violet `abyssal_pact`, gold `tidecallers_host`). Floors: `make_tile.py` recipes
+`kurogane_*` (the bailey and courtyard sources came back nearly transparent and are stored opaque; the keep as a
+staggered-plank layout). Walk strips by `walk_cycle.py` (rigs under `# --- Act V: Castle Kurogane ---`; the Ronin's
+skins through `SKINS`; no bust rigs: every figure here is male). The Hatamoto's banner is white on purpose: the game
+multiplies his sprite by his regiment's banner colour (HatamotoKit). 18 API images (2 prop sheets, 2 badge sheets),
+about **$0.37** (ledger). `art_check.py`: every sprite passes height, alpha, palette and feet; lightness passes on the
+dark floors and fails only on the light Act I March road / Sanctum floors (the Shogun, his duel pose, the General,
+the Kiba-musha), where Act V units never stand. **For the owner's review.**
+
+| Key | What it is | Art px | Notes |
+|---|---|---|---|
+| `shogunate/hatamoto` | Hatamoto (elite banner guard, male): black lacquer laced red, a low kabuto with a gold crest, a red sash, a short yari, a tall plain white sashimono banner on his back | 32x72 | legs walk (hip 61; the yari, cols 22-28, rigid); the banner takes the regiment's colour by tint |
+| `shogunate/kiba_musha` | Kiba-musha (mounted samurai cavalry, male): crescent kabuto, black-and-red lacquer, a levelled yari, a brown war horse with a red lacquer saddle cloth | 74x60 | legs walk (hip 46; hind legs left, forelegs right); the charge lane is code (EffectManager.telegraph_line) |
+| `shogunate/general_left` | The General of the Left (miniboss, male): antler crests, a red menpo, gold-trimmed black lacquer, a red war cloak, a levelled naginata, an indigo sashimono, a huge black war horse in red barding | 110x100 | legs walk (hip 77) |
+| `shogunate/command_platform` | The Shogun's command platform: a timber war platform with a red lacquered railing, gold post caps, a stair and four nobori (black and white, gold circles) | 106x124 | drawn by BossShogun under his feet (ShogunData.PLATFORM_DECK_RISE) and left where it stood |
+| `bosses/shogun` | Shogun Kurogane (male): black-and-gold o-yoroi, a huge gold crescent crest, black beard, crimson cloak, an open black-and-gold war fan raised high | 116x116 | legs walk (hip 94) |
+| `bosses/shogun_duel` | His duel pose (BossPoseData 3): a low iai stance, the long blade drawn level, the cloak flaring | 120x100 | the leap down and every cut he stands to draw; the white lines are DrawCuts' |
+| `player/ronin_revenant` | The Ronin Revenant (male): a battered straw sandogasa, a pale face with violet eyes, a tattered violet kimono and dark hakama over cracked black lacquer plates, a red sash, a katana, a small black banner with a violet skull on his back | 32x58 | robe walk (hip 50, hem sway) |
+| `player/ronin_revenant_hyper` / `_untouchable` / `_deathlord` | Gilded Ronin (gold kimono, gilded hat and banner), Untouchable (white phantom with soul-teal trims), Deathlord (black iron kabuto with a spiked crest, crimson) | 32x58 each | walk through `SKINS` (derived rig) |
+| `tiles/kurogane_bailey`, `_gatehouse`, `_courtyard`, `_keep` | Trampled earth; fitted granite paving; raked gravel; dark floorboards (staggered planks) | 128 | mean L 0.22 / 0.26 / 0.26 / 0.25 |
+| `obstacles/castle_wall_{s,l}` (+ `_v`), `palisade_gate_{s,l}` (+ `_v`) | A length of castle wall (fitted grey stone, white plaster band, dark tiled cap); a timber gate fence with iron studs and a red beam | 64 / 86; `_v` 22 / 30 wide | rects, H + V |
+| `obstacles/black_pine_{s,l}`, `garden_rock_{s,l}`, `sake_barrels_m`, `taiko_drum_m` | A twisted garden pine; a mossy boulder; three straw-wrapped sake barrels; a red war drum on its stand | footprint x 2 + 4 wide | circles; the stone lanterns are the shared Act V toro |
+| `icons/banner_of_the_dead`, `warlord_seal`, `unbending` | Violet badges: a black war banner with a violet skull on a bone pole; a red lacquer seal with a violet skull; a bone forearm breaking a katana blade | 32 | |
+| `icons/hundred_banners`, `ach_regiments_broken` | Gold badges: three banners in a fan; a snapped banner over a gold war fan | 32 | |
+
+Code-drawn on purpose: the Banner of the Dead's planted banners and aura (rects and a texture disc), the regiments'
+banner colours (a tint), the charge lanes, the Draw lines of the Shogun's iai and triple cuts (DrawCuts), the war fan's
+flourish, the fallbacks (KuroganeGlyphs).
+
+**Act V round 2 (Road to the Sun).** Epilogue `act5_4` is deliberately sparse: one big figure, one flat ring, flat cloud bands; a first "everything" composition read as a mess. Amaterasu's bust box is now cols 42-60, rows 30-43; Kitsune's cols 9-24, rows 13-20.
+
+### Act VI: the Inferno, the shared kinds (foundation, Oct 2026)
+
+<!-- --- Act VI: the Inferno --- -->
+The Inferno's style for the stage agents (GDD §15.0 "Act VI art: the shared kinds"; `docs/act6/PROPOSAL.md`): **black obsidian**
+(the new `obsidian` ramp: armour, chains, the portal ring; its light shade is the rim that keeps black armour readable on a dark
+floor), **lava** (`lava`: ember cracks, burning blades, pit fire, eyes), **demon skin** (`demon`: a magenta-red apart from the
+Covenant crimson and the Shogunate lacquer) and **charm pink** (`charm`: Temptation, the act's signature colour; `charm_light` is
+a glow colour), with steel grey for horns and spikes, skin and brown. Gold keeps its meaning (evolution, chest, victory). Never the
+player's violet, the undead's bone or teal, the Covenant's crimson or the Shogunate's lacquer. Concept references (the approved target,
+owner "perfect"): `art_source/concepts/act6_units.png`, `act6_lineup.png`; prompts beside each source in `art_source/inferno/<id>.txt`
+(the Act V template, the sex named). `prepare_sprite.py` folder `inferno/`: ramps obsidian, lava, demon, charm, grey, skin, brown.
+
+Generated with `tools/gen_image.py` (`--ref` a Shogunate sprite for the pixel look plus a 2x crop of the concept lineup for the
+costume). Pipeline: `prepare_sprite.py --ink-l 0.15` straight on the source (`--no-levels` for the knight, the brute and the
+portal, whose levels stretch turned the demon skin pink-white); the **succubus** through `pixelate_source.py` at 56 first, then
+`--ink-l 0.15 --no-cleanup --no-prune` (the usual figure route: direct conversion lost her face); `touchups.py` pads the imp with
+two empty rows for the hover bob (not idempotent; `build.sh` runs it right after the conversions). Walk strips by `walk_cycle.py`
+(rigs under `# --- Act VI: the Inferno (the shared kinds) ---`), the succubus idle by `walk_cycle.py idle`.
+
+**Moderation note:** the image API refused the succubus prompt twice ("sexual") with the concept's wording ("sultry pin-up",
+"lingerie-styled corset", "bare back, midriff and thighs", "stockings"). It accepted a confident pose, "a sleek black leather
+corset-style bodysuit with a high-cut hip and a V neckline, a bare midriff strip at the waist, bare shoulders and back, black
+thigh-high stockings and boots, fully clothed, tasteful", and an explicit hourglass line; the result is close to the concept
+but a touch less revealing (no garter straps). The sprite is 56, not the briefed ~48: at 48 (24 px wide) her face and figure
+were lost, as with the Kunoichi (52).
+
+| Key | What it is | Art px | Notes |
+|---|---|---|---|
+| `inferno/damned` | Damned soul (fodder, male): gaunt grey, open mouth, ragged robe, shackles with a chain | 20x30 | legs walk (hip 25) |
+| `inferno/imp` | Imp (fodder flier, male): red, wings, horns, grin, a trident | 28x32 | hover (bob 2, left wing flaps from col 11; two empty rows on top) |
+| `inferno/hell_knight` | Hell Knight (soldier, male): obsidian plate, spiked pauldrons, horned helm, ember cracks, a burning greatsword | 52x54 | legs walk (hip 38; the sword, cols 36+, rigid) |
+| `inferno/succubus` | Succubus (elite, female, figure redesign): horns, wings, spaded tail, corset bodysuit, thigh-high boots, a charm heart | 36x56 | glide (robe rig, hip 32): bust box (cols 12-26, rows 13-19, two lobes) and `swish` hip box (cols 11-27, rows 23-32); idle strip |
+| `inferno/demon_brute` | Demon Brute (heavy, male): four arms, bull horns, spiked chest plate, skull belt | 72x84 | legs walk (hip 70, spread 3) |
+| `structures/demon_portal` | Demon portal: obsidian ring, lava cracks, horned skull, a charm-pink swirl | 56x64 | still only; the loop glow is code |
+
+### Act VI: the Burning Gate (Stage 16; Act VI phase 2, Oct 2026)
+
+<!-- --- Act VI: the Burning Gate --- -->
+The Burning Gate's art (GDD §15.0 "The Burning Gate (Act VI phase 2)" and the rows after it), in the Inferno's style above:
+obsidian, lava, demon skin, with rusted iron, bone and ash grey; the Furnace Priest in the player's violet. Every figure here is
+**male** (named in each prompt), so no bust rigs or idle strips. Prompts in `art_source/burning_gate/<id>.txt` (the Act VI unit
+template), raw API images in `art_source/burning_gate/raw/`, references in `refs/` (2× crops of `act6_lineup.png`: the
+hellhound, the robed cultist, the brute). Generated with `tools/gen_image.py`: `--ref` the shared kinds' sources
+(`inferno/hell_knight`, `damned`, `demon_brute`) for the pixel look plus a lineup crop; the Ronin Revenant's source for the
+Furnace Priest, then his source and the Ronin's matching skin for his three skins; `castle_wall_l` / `garden_rock_l` for the
+props, `kurogane_keep` for the floors, `unbending` / `hundred_banners` for the badge sheets. Rebuild: `art_source/burning_gate/build.sh`.
+
+Pipeline notes: `prepare_sprite.py --ink-l 0.15` with the Inferno ramps; the dark figures are lifted first by `brighten.py`
+(×1.15–1.5) to pass the lightness rule, and the **Pit Cultist and the Furnace Priest snap without the `obsidian` ramp** (their
+black robes snapped to its two darkest shades, main-shape L 0.32 on any ramp setting; with `grey` / `violet` instead L 0.38,
+a pass). The Furnace Priest's source is stored mirrored (the API drew him facing left). Both icon sheets came back with one
+extra symbol copied from the reference badge; `make_art.py` skips those pieces. All four floor sources came back nearly
+transparent and are stored opaque (`art_source/tiles/burning_gate_*.png`, `make_tile.py` recipes `burning_gate_*`; the Cages
+with fixed colour shares: free snapping came out blotchy). 16 API images, about **$0.40** (ledger). `art_check.py`: every
+figure passes height, alpha, palette, feet and lightness on the dark floors; lightness fails only on the light Act I March road
+and Sanctum floors (as every Act V / VI kind), and the props are scenery (a little darker on purpose, as Kurogane's).
+**For the owner's review.**
+
+| Key | What it is | Art px | Notes |
+|---|---|---|---|
+| `inferno/lava_hound` | Hellhound (pack, male beast): black crust cracked with lava, bone skull head, flaming spines | 40x30 | legs walk (hip 19; hind left, fore right) |
+| `inferno/pit_cultist` | Pit Cultist (support, a living man): black-and-red hooded robe, goat-skull mask with horns, a dagger raised, a censer | 30x46 | robe walk (hip 38) |
+| `inferno/gatekeeper` | The Gatekeeper (miniboss, male): hunched ash-grey giant, iron collar, manacles with long chains to the ground, loincloth, lava cracks | 116x108 | legs walk (hip 80); the flying chains are code |
+| `bosses/moloch` | Moloch, the Furnace King (male): black bull head with huge horns and a nose ring, red demon body, spiked iron shoulders, a barred furnace door glowing in his belly, coal chains, a tail | 124x124 | legs walk (hip 96); no attack pose (the furnace glow, the inhale and the waves are code) |
+| `player/furnace_priest` | The Furnace Priest (male): soot cassock, violet stole, horned iron mitre, skull face with ember eyes, a censer of coals, an iron staff | 38x56 | robe walk (hip 46) |
+| `player/furnace_priest_hyper` / `_untouchable` / `_deathlord` | Gilded (gold stole and mitre, a sun halo), Untouchable (white phantom, soul-teal stole), Deathlord (black spiked crown, crimson) | 34x56 each | walk through `SKINS` (derived rig) |
+| `tiles/burning_gate_ash_plain`, `_cages`, `_river`, `_gate` | Grey-black ash; black cinders and soot; the scorched red-brown bank; black flagstones | 128 | mean L 0.24 / 0.23 / 0.21 / 0.26 |
+| `obstacles/damned_cage_{s,l}` (+ `_v`), `gate_pillar_{s,l}` (+ `_v`) | A rusted iron cage of the damned on a bone-and-chain frame; a black obsidian gate block with a horned skull and chains | 46 / 56, 56 / 72; `_v` 58–86 tall | rects, H + V |
+| `obstacles/ember_rock_{s,m,l}` | An obsidian boulder veined with lava | 22 / 28 / 36 wide | circle |
+| `icons/brimstone`, `furnace_heart`, `salt_circle` | Violet badges: a falling burning stone; an iron heart-shaped furnace; a ring of salt around a violet skull | 32 | |
+| `icons/rain_of_fire`, `ach_gate_crashed` | Gold badges: burning stones raining from a cloud; a broken portal ring over a broken bull skull | 32 | |
+
+Code-drawn on purpose: the River of Fire (the Hell Pits' lava texture along its bands), the Brimstone stones and their pits,
+Moloch's furnace glow and fire waves (texture discs), the Gatekeeper's chains, the cultist's rite sparks, the fallbacks
+(`BurningGateGlyphs`).
+
+### Act VI: the Palace of Silk and Ash (Stage 17, phase 2)
+
+<!-- --- Act VI: the Palace of Silk and Ash --- -->
+Stage 17's art (GDD §15.0 "Palace of Silk and Ash art (Act VI phase 2)"): the court of desire, the Inferno's look
+(obsidian, demon skin, charm pink) with rose marble, velvet and mirror glass; the female figures at the approved
+`act6_units.png` level (the Lilim Witch from its concept, Lilith from `act6_boss.png`), chest and hips covered.
+Prompts beside the sources in `art_source/silk_palace/<id>.txt`, every figure's sex named; the rebuild script
+`art_source/silk_palace/make_art.py` (units, figures, badges, props, floors, strips). Pipeline: the bosses through
+`prepare_sprite.py --ink-l 0.18` with explicit ramps; every other figure through `pixelate_source.py` at its height,
+then `--ink-l 0.15 --no-cleanup --no-prune` (the succubus's route). Walk (robe glide, bust and `swish` boxes taken
+from each sprite's torso, for review) and 24-frame idle strips for every figure. Moderation: one refusal (Naamah,
+"hips cocked ... blowing a kiss"); the succubus wording passed again with a plain pose.
+
+| Key | What it is | Art px | Notes |
+|---|---|---|---|
+| `inferno/lilim_witch` | Lilim Witch (support, female): white hair, small horns, crimson slit gown, burning eye-staff | 28x56 | glide + idle |
+| `inferno/twin_naamah` | Naamah, the elder twin (miniboss, female): black ponytail, tall horns, violet trim, wide wings, crown | 48x62 | glide + idle; main shape +0.14 on the darkest floors (wings) |
+| `inferno/twin_agrat` | Agrat, the younger twin (miniboss, female): silver hair, crimson bodysuit, gold crown, wide wings | 48x62 | glide + idle |
+| `bosses/lilith` | Lilith (boss, female): black hair, ram horns, gold crown, huge black feathered wings, crimson gown with a high slit, charm swirl | 100x112 | glide + idle; the black wings keep her +0.12 over the darkest floors |
+| `bosses/lilith_demon` | Lilith's true demon form: four horns, four torn wings, lava cracks, an obsidian corset, pink flames | still | +0.12 over the darkest floors (wings) |
+| `player/succubus_queen` | The Succubus Queen (character, female): violet hair, tiara, lilac skin, violet bodysuit and short cape | 36x56 | glide + idle |
+| `player/succubus_queen_hyper` / `_untouchable` / `_deathlord` | Gilded / white phantom / black iron and crimson with a spiked crown | 36-38x56-58 | glide + idle; Deathlord fails only on the light March road |
+| `summons/bound_succubus` | The Succubus (summon, female): pale lilac, bone collar and shackles, soul-teal eyes | 44x52 | glide + idle; fails only on the light March road |
+| `summons/lilim_matriarch` | The Lilim Matriarch: four horns, bone crown, wide wings, black gown, broken bone chains | 56x62 | glide + idle; +0.10 on the darkest floors (black gown and wings) |
+| `icons/tempt`, `velvet_chains`, `bound_succubus`, `sweet_surrender`, `faithless` | Violet badges: red lips, a velvet chain with a heart padlock, a bound succubus head, a heart flag, a cracked holy sun | 32x32 | the violet frame of `icons/abyssal_pact` |
+| `icons/unholy_desire`, `lilim_matriarch`, `ach_unmoved` | Gold badges: a burning thorned heart, the matriarch's head, a black heart a kiss slides off | 32x32 | the gold frame of `icons/tidecallers_host` |
+| `obstacles/black_rosebush`, `rose_column`, `palace_mirror`, `candelabra` (`_s` / `_l`) | Round props | footprint + 4 wide | height capped at 2.1 x width |
+| `obstacles/velvet_divan`, `mirror_wall` (`_s` / `_l`, `_v`) | Long props, both orientations | length + 2 | end-on `_v` from the sheet's second row |
+| `tiles/silk_palace_roses` / `_mirrors` / `_ballroom` / `_chamber` | Zone floors from two textures (soil, rose marble) | 128 | `make_tile.py` recipes under `# --- Act VI: the Palace of Silk and Ash ---` |
+
+### Act VI: Pandemonium (phase 2, Oct 2026)
+
+<!-- --- Act VI: Pandemonium --- -->
+Stage 18's art (GDD §15.0 "Pandemonium (Act VI phase 2)" and the rows after it), built by `art_source/pandemonium/make_art.py`
+(steps units, figures, badges, props, floors, strips; prompts beside it in `art_source/pandemonium/<id>.txt`, the sex named
+in each). References: the Fallen Angel from a 2x crop of the approved `act6_units.png` (the rightmost figure) plus the
+succubus sprite; the Morning Star from `act6_boss.png` (his face, hair, halo, armour and wings; the Beast from its horned skull
+and wings); the Fallen Saint from the Shrine Maiden sprite (her skins from the Saint's own source); the Archfiend from the
+Bound Oni. Pipeline: `prepare_sprite.py --ink-l 0.15` (the Act VI ink) with explicit ramps; `--no-levels` for the Morning Star
+and the Beast (their black stays black); the Fallen Seraph General WITH the levels stretch (without it his wings sat at main L
+0.23, below the hell knight's 0.32); the Fallen Angel and the Fallen Saint (and her skins) through `pixelate_source.py` first
+(60 / 56 art px), then `--no-cleanup`. The Saint's source faced left and was mirrored before conversion (all four sources).
+The art_check lightness "FAIL" lines against the Act I floors are the same as the approved hell knight's (black obsidian
+units); on Pandemonium's own floors (main L 0.17-0.24) they read. The Prince of Hell's violet cape is the player's colour on
+the player's summon (art_check WARN, accepted). Badges: two 5-symbol sheets split with a 4 px gap (the symbols sit close),
+set on the abyssal_pact (violet) and tidecallers_host (gold) frames. Floors: two API textures through `make_tile.py`
+recipes `pandemonium_*`.
+
+| Key | What it is | Art px | Notes |
+|---|---|---|---|
+| `inferno/fallen_angel` | Fallen Angel (elite, female, the approved act6_units level): silver hair, cracked gold halo, black wings, black corset bodysuit with gold, thigh-high armoured boots, a burning spear | 38x60 | glide (robe, hip 36): bust box (cols 13-24, rows 15-22, two lobes) and hip `swish` (cols 12-25, rows 25-34); idle strip |
+| `inferno/seraph_general` | The Fallen Seraph General (miniboss, male): four burnt wings, broken halo crown, black and gold plate, a burning greatsword | 96x92 | legs walk (hip 62) |
+| `bosses/morning_star` | The Morning Star, the Angel (male): six burnt wings, gold halo, silver hair, black armour, a burning sword of light | 114x116 | glide in his cloak (hip 80); no attack pose (BossPoseData) yet |
+| `bosses/morning_star_beast` | The Morning Star, the Beast: a giant horned skull with a tilted halo, obsidian and charred bone body, torn wings, chained claws | 142x140 | legs walk (hip 104, spread 3) |
+| `player/fallen_saint` (+ `_hyper`, `_untouchable`, `_deathlord`) | The Fallen Saint (female, figure style): black and violet gown with gold, a high slit, a torn white veil, ash-blonde hair, a tilted halo, a staff, a falling star | 36x56 | glide (hip 34), bust box (cols 13-25, rows 16-22); idle strips; the skins derived (walk_cycle SKINS) |
+| `summons/archfiend` | Archfiend (male, the bound undead style): ashen grey-violet skin, curled horns, bat wings, bone collar, a black cleaver with soul-teal runes | 68x62 | legs walk (hip 44) |
+| `summons/prince_of_hell` | Prince of Hell: four wings, a spiked crown, violet cape, runed armour, a soul-fire cleaver | 76x72 | legs walk (hip 52) |
+| `icons/fall_from_grace`, `pride`, `archfiend`, `crown_of_horns` | Violet badges | 32x32 | from `icons_violet.png` |
+| `icons/lightbringer`, `prince_of_hell`, `ach_morning_star_falls` | Gold badges | 32x32 | from `icons_gold.png` |
+| `obstacles/iron_brazier`, `chain_post`, `ash_column`, `burning_censer`, `skull_pillar`, `obsidian_shard` (`_s/_m/_l`) | Round props | footprint + 4 wide | from `props_round.png` |
+| `obstacles/iron_wall`, `bridge_rail`, `ash_pew` (`_s/_l`, `_v`) | Long props, horizontal and end-on | length + 2 | from `props_long.png` |
+| `tiles/pandemonium_iron`, `_bridges`, `_cathedral`, `_throne` | Zone floors | 128x128 | `art_source/tiles/pandemonium_obsidian.png` / `_ash.png` |
+
+
+### Act VII: the Sanguine Court, the shared kinds (foundation, Nov 2026)
+
+<!-- --- Act VII: the Sanguine Court --- -->
+The Court's style for the stage agents (GDD §15.0 "Act VII art: the shared kinds"; `docs/act7/PROPOSAL.md`): **blood red** (`blood`: plate, drain beams, eyes; ink `#12060A` outlines the whole act), **black velvet** (`velvet`: capes, gowns, hair; its light shade is the rim that keeps black cloth readable), **moonlit silver** (`moonlight`: werewolf fur, bat wings, silver weapons, mist; `moon_light` is a glow colour), candle gold for trim (the existing gold), plus skin and brown. Velvet and moonlight borrow the blood ink for their outline. Never the player's violet, the undead's bone or teal, or the Covenant's crimson. Concept references (approved): `art_source/concepts/act7_lineup.png`, `act7_boss.png`, `act7_stage.png`. `prepare_sprite.py` folder `court/`: ramps blood, velvet, moonlight, gold, skin, brown. Prompts in `art_source/court/<id>.txt` (the Act VI template, the sex named).
+
+Generated with `tools/gen_image.py` (`--ref` an Inferno sprite for the pixel look plus a 2x crop of the concept lineup for the costume), one image each, no redos. Pipeline: `prepare_sprite.py --ink-l 0.15` straight on the source (`--no-levels` for the knight and the coffins; the bat `--art-height 20`, then two empty rows added on top for the hover bob by a one-off paste: not scripted, redo it by hand after a reconversion); the **Countess** through `pixelate_source.py` at 56, then `--ink-l 0.15 --no-cleanup --no-prune` (the usual figure route). Her `art_source/court/vampire_noble.png` is that pixelated grid, not the raw AI image (prepare_sprite archived over it). Walk strips by `walk_cycle.py` (rigs under `# --- Act VII: the Sanguine Court (the shared kinds) ---`), the Countess idle by `walk_cycle.py idle`. Pale skin snaps to the `skin` ramp, so faces read tan beside the concept's pallor; accepted.
+
+| Key | What it is | Art px | Notes |
+|---|---|---|---|
+| `court/blood_thrall` | Blood Thrall (fodder, male): bitten, hunched, torn peasant clothes | 20x30 | legs walk (hip 19) |
+| `court/vampire_bat` | Vampire Bat (fodder flier): spread wings, red eyes | 32x22 | hover (bob 2, both wings flap; two empty rows on top) |
+| `court/blood_knight` | Blood Knight (soldier, male): blood-red plate, black cape, a halberd | 32x54 | legs walk (hip 36; the halberd, cols 24+, rigid) |
+| `court/werewolf` | Werewolf, hunter form (heavy, male): fur-collared coat, silver crossbow | 48x52 | legs walk (hip 36) |
+| `court/werewolf_beast` | Werewolf, beast form (heavy, male): grey fur, claws, snarl | 66x84 | legs walk (hip 60, spread 3) |
+| `court/vampire_noble` | The Countess (elite, female, figure redesign): velvet gown with a high slit, corset, high collar, a red drain beam | 32x56 | glide (robe rig, hip 34): bust box (cols 9-24, rows 11-18, two lobes) and `swish` hip box (cols 8-25, rows 26-36); idle strip |
+| `structures/court_coffin` | Closed coffin: black wood, iron bands, a bat emblem | 30x40 | still only; the glow is code |
+| `structures/court_coffin_open` | The same coffin opened: lid slid aside, a red glow and a pale hand inside | 36x40 | still only |
+
+### Act VII: Ravensmoor (Stage 19; Act VII phase 2, Nov 2026)
+
+<!-- --- Act VII: Ravensmoor --- -->
+Ravensmoor's art (GDD §15.0 "Ravensmoor (Act VII phase 2)" and the rows after it), in the Court's style above: moonlit
+silver, black velvet and blood, with grey-brown fur (never purple), peat brown and grey moor stone. The **Ghoul**, **Old
+Greymane** and **Vargr** are **male**; **the Moon-Cursed Huntress** is **female**, in the figure-redesign style (hourglass,
+fully clothed: a dark leather hunter's coat over a corset with a covered V neckline, thigh-high boots, a wolf-pelt mantle,
+wolf ears and tail). Prompts in `art_source/ravensmoor/<id>.txt` (the Act VII unit template, the sex named), raw API images in
+`art_source/ravensmoor/raw/`, references in `refs/` (a 2× crop of the ghoul from `act7_lineup.png`, the lineup's werewolf,
+Vargr cropped from `act7_boss.png`, enlarged game sprites: `court/blood_thrall`, `werewolf_beast`, `vampire_noble`; an
+approved tile, obstacle and badge). The skins are made from the Huntress's raw image. Rebuild:
+`python3 art_source/ravensmoor/make_art.py` (steps units, figures, badges, props, floors, strips).
+
+| Sprite | Size (art px) | Notes |
+|---|---|---|
+| `court/ghoul` | 34 × 30 | a gaunt grey corpse-eater hunched low, red eyes and a bloody maw (the concept's teal eyes dropped: teal is the undead's) |
+| `court/old_greymane` | 86 × 96 | the old alpha: grey-brown fur, a pale silver mane, scars, a broken iron collar |
+| `bosses/vargr` | 126 × 120 | the wolf king: charcoal fur lit grey (the concept's black fur would sink into the floor), iron crown, white fur collar, ragged red cloak |
+| `player/moon_huntress` (+ `_hyper`, `_untouchable`, `_deathlord`) | 42 × 56 | figure redesign; bust rig (19-27, rows 12-18) and idle strip; Golden Moon (gilded), white phantom with soul-teal, black iron and crimson |
+| obstacles `moor_cairn` (s/m/l), `grave_cross`, `moor_pine` (s/l); `village_fence`, `thatch_cottage`, `church_ruin` (s/l, H and `_v`) | per size | `moor_pine`, not `black_pine` (Castle Kurogane's kind) |
+| tiles `ravensmoor_moor` / `_village` / `_old_church` / `_wolfwood` | 128 | two API textures (night heath, churchyard flags), recoloured by `make_tile.py` recipes |
+| icons `moonfang`, `pack_blood`, `silver_bones` (violet), `wolf_of_the_red_moon`, `ach_coffin_nails` (gold) | 32 | symbols on the frames of `abyssal_pact` / `tidecallers_host` |
+
+Pipeline notes: `prepare_sprite.py --ink-l 0.15` with explicit ramps (`make_art.py` UNITS / FIGURES). The Huntress goes through
+`pixelate_source.py` and is lifted ×1.35 first by `brighten.py` (her dark coat failed the lightness rule), without the gold
+ramp (her pale face snapped to it) and so without the skin ramp in the result: her face reads moon-pale, as a vampire-touched
+huntress should. Walk strips by `walk_cycle.py` (rigs under `# --- Act VII: Ravensmoor ---`). `art_check.py`: every figure
+passes on the dark floors; Vargr, the Huntress, her Deathlord skin and the props fail only on the March and Sanctum road
+floors (lighter than any Act VII floor). Each prop and badge sheet came back with one extra piece (a barrel; a copy of the
+reference badge), skipped. 13 API images, about $0.30 (ledger), no redos, no refusals. **For the owner's review.**
+
+### Act VII: the Witchwood (Stage 20; Act VII phase 2, Nov 2026)
+
+<!-- --- Act VII: the Witchwood --- -->
+The Witchwood's art (GDD §15.0 "The Witchwood (Act VII phase 2)" and the rows after it), in the Court's style above
+(blood, velvet, moonlight, candle gold) with the fen's black water and pondweed green. The Crimson Witch matches the
+approved lineup (`act7_lineup.png`: red hair, crimson pointed hat, velvet gown with a high slit, a staff) and the
+Bloated Thrall its pale swollen thrall; Isolde is the Crimson Witch made grander (a tall black hat with a gold crescent,
+a raven capelet, a cauldron-staff). Every prompt names the figure's sex; the women are in the figure-redesign style,
+chest and hips covered. Prompts and raw API images in `art_source/witchwood/` (`<id>.txt`, `raw/`, `refs/`: a Court
+sprite blown up 8-10x for the pixel look and 2x crops of the lineup for the costume); `art_source/witchwood/build.sh`
+rebuilds everything. 16 API images (8 figures, 2 prop sheets, 4 floors, 2 icon sheets), about $0.40 (ledger), no
+redos, no moderation refusals. Contact sheet `docs/act7/witchwood_art_contact_sheet.png`.
+
+Pipeline: the women through `pixelate_source.py` at their height, then `prepare_sprite.py --ink-l 0.15 --no-cleanup
+--no-prune` (the figure route); the Bloated Thrall and the Bog Mother straight (the Bog Mother lifted x1.5 by
+`art_source/burning_gate/brighten.py` first and converted `--no-levels`: she read too dark). Props, the hex stones and the badges from split sheets by `art_source/witchwood/make_art.py` (tall
+circle props capped at 2.8 x their footprint radius, else a standing stone stood twice the necromancer's height; the
+violet icon sheet's piece 3 and the gold sheet's piece 2 are copies of the reference badge, unused). Floors by
+`make_tile.py` (recipes `witchwood_<style>`, sources stored opaque). Walk / glide strips and the idle breathing strips
+by `walk_cycle.py` (rigs under `# --- Act VII: the Witchwood ---`).
+
+| Key | What it is | Art px | Notes |
+|---|---|---|---|
+| `court/crimson_witch` | Crimson Witch (support, female, figure redesign): crimson pointed hat, red hair, velvet slit gown, a staff | 28x52 | robe glide (hip 28, staff rigid), bust, swish, idle strip |
+| `court/bloated_thrall` | Bloated Thrall (heavy, male): a vast pale belly with bite wounds, blood on the chin | 36x60 | legs walk (hip 44) |
+| `court/bog_mother` | The Bog Mother (miniboss, female): a vast drowned witch, grey-green skin, weed-hung hair, root crown, rotted gown, wading | 96x110 | robe glide (hip 70, sway 2); her black water is code (texture discs) |
+| `bosses/isolde` | Isolde Vane (boss, female, figure redesign): tall black hat with a gold crescent, red hair, crimson corset, raven capelet, a cauldron-staff, a red hex rune over her raised hand | 72x104 | robe glide (hip 54, staff rigid), bust, swish, idle strip; her three sisters draw it tinted (`IsoldeData.SISTER_TINTS`) |
+| `structures/hex_stone` / `_broken` | A black standing stone with glowing red runes and bone charms; snapped in two | 24x44 / 18x28 | still; the rune pulse is code |
+| `player/hedge_witch` | The Hedge Witch (character, female, figure redesign): floppy violet hat with herbs, moss-green shawl, violet bodice, patched slit skirt, striped stockings, a crimson rune in her hand | 32x56 | robe glide (hip 30), bust, swish, idle strip |
+| `player/hedge_witch_hyper` / `_untouchable` / `_deathlord` | Her skins: gilded black and gold; the white phantom with soul-teal trims; a spiked iron crown and crimson | 34-36x56 | the character's rig (`SKINS`) |
+| `obstacles/fen_snag_*`, `standing_stone_*`, `witch_cauldron_*` | A drowned tree's stump; a mossy standing stone; a cauldron of red brew (circles) | s / m / l | scenery, calmer than the units |
+| `obstacles/charm_fence_*` (+ `_v`) | A crooked fence of stakes hung with charms and red threads (rect, both orientations) | s / l | |
+| `tiles/witchwood_fen` / `_hanging_wood` / `_standing_stones` / `_cauldron` | Black peat; leaf litter and roots; a dark heath; scorched ash soil | 128 | the Fen's pools are drawn on top by code |
+| `icons/witch_circle`, `moonlit_rite`, `embalmed` (violet); `witches_sabbath`, `ach_the_coven_breaks` (gold) | A rune circle with a crescent; a crescent over a rune circle and candles; a bandaged canopic jar; a hat in a circle with three orbiting circles; three broken hats | 32 | badge frames `abyssal_pact` / `tidecallers_host` |
+
+**For the owner's review.** Known weak spots: the pale skins snap to the `skin` ramp and read warmer than the concept;
+the Hedge Witch's Deathlord skin reads more "crimson witch" than armoured; the Bog Mother has no bust rig (she wades).
+
+### Act VII: Castle Sanguis (phase 2, Nov 2026)
+
+<!-- --- Act VII: Castle Sanguis --- -->
+Castle Sanguis's art (GDD §15.0 "Castle Sanguis (Act VII phase 2)" and the rows after it), in the Court's style above
+(blood, velvet, moonlight, candle gold). Prompts in `art_source/castle_sanguis/<id>.txt` (every figure's sex named), the
+whole rebuild in `art_source/castle_sanguis/make_art.py` (units, figures, badges, props, floors, strips). Generated with
+`tools/gen_image.py`, `--ref` an existing sprite upscaled 8x for the pixel look plus a crop of the approved concepts
+(`act7_lineup.png` for the Chiropteran, `act7_boss.png` for Carmilla, the Elder and his coffin); the skins, Nosferatu and
+the open coffin with their base source as the reference. 19 API images, about $0.42 (ledger), no redos, no refusals.
+Contact sheet `docs/act7/castle_sanguis_contact_sheet.png`.
+
+| Key | What it is | Art px | Notes |
+|---|---|---|---|
+| `court/chiropteran` | Chiropteran (elite, male bat-man): grey fur, violet wings, brown loincloth | 48x50 | robe (glides) |
+| `court/chiropteran_king` | The Chiropteran King (miniboss, male): bone crown, blood-red mantle, huge wings | 100x96 | robe (flies) |
+| `bosses/carmilla` | Queen Carmilla (female, the figure style at its limit): gold crown, towering red collar, slit velvet gown, the drain beam from her hand | 66x64 | through `pixelate_source.py` at 64; robe with `bust` and `swish`, idle strip |
+| `bosses/elder` | The Elder (male, the first vampire): ash-grey, bat ears, red-membraned wings, long claws | 122x120 | legs (spread 3) |
+| `player/dhampir` | The Dhampir (male): white hair, red and teal eyes, black coat with red lining, sabre, two teal bats | 46x56 | legs; skins `_hyper` (gold), `_untouchable` (white phantom), `_deathlord` (iron crown, crimson) |
+| `summons/blood_spawn` | Blood Spawn (male): gaunt pale crouching brawler, teal eyes, bloody claws | 50x40 | legs |
+| `summons/nosferatu` | Nosferatu (male): tall bald rat-fanged vampire in a tattered black coat | 54x52 | legs |
+| `structures/blood_fountain` | The Banquet's blood fountain: stone basin, a bat statue spouting blood | 30x40 | drawn by CastleSanguisDirector |
+| `structures/elder_coffin`, `_open` | The Elder's great coffin, closed / open | 52x48, 56x48 | drawn by BossCarmilla from the Waking on |
+| `icons/night_swarm`, `old_blood`, `blood_spawn`, `thirst_eternal` | badges on the violet frame | 32x32 | the violet sheet drew a fifth spare symbol (skipped) |
+| `icons/nocturne`, `nosferatu`, `ach_last_supper` | badges on the gold frame | 32x32 | |
+| `obstacles/castle_well`, `gargoyle_statue`, `wine_barrel`, `crypt_pillar`, `blood_urn` | round props per zone size | | one sheet; `candelabra` is the Palace of Silk and Ash's existing art (same kind id, found at the Act VII integration; it fits the Banquet Hall, kept shared) |
+| `obstacles/feast_table`, `sarcophagus` (+ `_v`) | long props, both orientations | | one sheet; `castle_wall` is Castle Kurogane's existing art (same kind id, found at the Act VII integration; kept shared for now, a Sanguis wall of its own is an art-review item) |
+| `tiles/castle_sanguis_courtyard/_banquet/_crypt/_throne` | zone floors | 128x128 | `make_tile.py` from two textures (grey flagstone, black marble veined red) |
+
+`art_check.py`: height, alpha and palette pass on every sprite; the lightness check fails only against the Act I floors
+(the Graveyard soil, the March road), as the approved Countess does: the dark Court figures read against Castle
+Sanguis's own floors (mean L 0.16-0.28). Pale skin snaps to the `skin` ramp, so Carmilla's face reads tan (the known
+foundation weak spot, for the art review).
+
+### Act VI art review, round 1 (Group B: figures and the throne)
+- Regenerated with the old source as the first reference (plus the approved Succubus Queen / Naamah for the figure level). **Name the sex, and ask for ONE figure**: with a second character image attached the API copied it into the picture twice (Agrat, Lilith's demon form); the prompt now ends "Draw ONLY ONE figure" and the extra reference is a different pose.
+- Lilith's neckline is a plunging V filled by a gold panel and gem; the chest and hips stay covered.
+- The Hyper Succubus Queen converts with `obsidian` in the ramps (without it the dark feathers snap to brown).
+- `art_source/pandemonium/throne_cracks.py` draws the Throne's lava cracks after the tile build (not idempotent: always run it right after `make_tile.py build pandemonium_throne`).
+
+### Act VIII: the Last Line, the shared kinds and the city blocks (foundation, Nov 2026)
+
+<!-- --- Act VIII: the Last Line --- -->
+The Last Line's look (GDD §15.0 "Act VIII art: the shared kinds and the city blocks"; `docs/act8/PROPOSAL.md`; approved
+concepts `art_source/concepts/act8_lineup.png`, `act8_boss.png`, `act8_stage.png` with their prompts): a living city at night,
+**asphalt black and concrete grey** with **sodium-orange** streetlight pools and **pink / cyan neon**, **olive drab** for the
+army (hazard yellow for road paint), **police blue / siren red** and **hero orange** for the Supers. Ink `#101114` (`city_ink`)
+outlines the whole act. No real badges, flags, letters or place names, and no Super emblem, logo, letter, bat shape or lightning
+bolt. Every prompt names the sex; the two female kinds are in the figure-redesign style (hourglass, clothed, chest and hips
+covered). Never the player's violet, the undead's bone or teal, or the Covenant's crimson.
+
+**Palette.** The brief's five ramps are documentation groups; the converter needs one hue per ramp (a ramp that stretches
+lightness over blue, red and orange turned the cop's blue into red), so each hue shades in its own ramp: `asphalt` (ink,
+`#1E2024`, `#3A3D44`), `concrete` (`#55595F`, `#7A7F87`), `olive` (`#4B5330`, `#6B7545`), `hazard` (`#F2C418`), `neon_sodium`
+(`#E8A43A`), `neon_pink` (`#FF4FA8`), `neon_cyan` (`#3FE0E8`), `police` (`#2E5FD0` + added `city_police_dark` `#1F3F94` and
+`city_police_light` `#5C8CEA`), `siren_red` (`#D82A2A`), `hero` (`#F07A1E` + added `city_hero_dark` `#B0500F` and
+`city_hero_light` `#FFA64D`). `neon` and `siren` stay as documentation groups listing the fixed colours. `prepare_sprite.py`
+folder `city/`: asphalt, concrete, olive, hazard, neon_pink, neon_cyan, police, siren_red, skin, brown, bone. The orange hues
+(`neon_sodium`, `hero`) are NOT in the default set: skin tones snap onto them; `KEY_RAMPS` adds `hero` (and drops skin) for
+`city/blitz` and `moss` for `city/field_medic`.
+
+**Sprites** (`assets/sprites/city/`, heights in `SpriteData.HEIGHTS`; prompts and archived sources in `art_source/city/`).
+Generated with `tools/gen_image.py` (`--ref` the Court Blood Knight sprite for the pixel look plus a 2x crop of the concept
+lineup / stage for the costume), one image each (the medic redone once: the first had green hair that swallowed the face).
+Pipeline: `prepare_sprite.py --ink-l 0.15 --no-prune` (`--no-levels` for the car and Blitz; Blitz also `--ramps
+hero,bone,concrete,neon_cyan,asphalt,brown`); the two women through `pixelate_source.py` (the medic at 44, the civilian at 28)
+and then `--no-cleanup --no-prune --no-levels` (medic ramps bone, moss, skin, asphalt, brown, neon_cyan, gold; civilian skin,
+bone, neon_pink, asphalt, concrete, brown); their raw API images are `art_source/city/<id>_source.png`. Walk strips by
+`walk_cycle.py` (rigs under `# --- Act VIII: the Last Line (the shared kinds) ---`), idle strips for the two women.
+
+| Key | What it is | Art px | Notes |
+|---|---|---|---|
+| `city/civilian` | male bystander, running in panic | 24x28 | legs walk (hip 20) |
+| `city/civilian_woman` | **female**, figure style: pink top, short skirt, ponytail | 20x28 | legs walk (hip 19); bust box (5-17, rows 8-13) + `swish` (3-18, rows 14-19); idle strip |
+| `city/street_thug` | hooded fodder, raised bat | 22x30 | legs walk (hip 22) |
+| `city/gang_gunner` | bandana, two pistols out sideways with muzzle flashes | 32x30 | legs walk (hip 20) |
+| `city/riot_cop` | black riot armour, blue fatigues, tall clear shield | 32x44 | legs walk (hip 29); the shield foot rigid |
+| `city/squad_car` | police car, unlit light bar, no markings | 64x32 | drive strip: the siege-cart rock (legs, spread 0) |
+| `city/swat_breacher` | black helmet, cyan visor, vest, shotgun | 32x44 | legs walk (hip 29) |
+| `city/field_medic` | **female**, figure style: white jacket, green skirt and satchel, blonde ponytail, healing sparkle | 26x44 | legs walk (hip 27); bust box (7-21, rows 13-19) + `swish` (3-23, rows 19-27); idle strip |
+| `city/rifleman` | olive drab, helmet, rifle | 30x40 | legs walk (hip 28) |
+| `city/tank` | olive tank, turret and long cannon, antenna | 78x52 | drive strip: the cart rock (legs, spread 0, hip 40) |
+| `city/blitz` | male speedster: orange-and-white suit, winged silver helmet, goggles, speed rings | 48x44 | dash strip (legs, hip 36, rings ride with the back leg) |
+| `structures/city_wreck` / `_burnt` | a burning car wreck / the same burnt out | ~40x34 | stills; the smoke and glow are code |
+
+**The city blocks** are drawn by `tools/city_tiles.py` (deterministic, straight onto the grid; the AI loses parapets, lane lines
+and joints). `tiles/city_roof_<style>.png` (`tenement` tar-paper seams, `warehouse` ribs, `bunker` slabs, `tower` paving
+grid): a 96x96 atlas of 3x3 cells of 32 px (corners at the four corners, edge cells in the middle of each side, the seamless
+centre in the middle; a 6 px parapet band: ink, lit top, shaded lip, the same along every edge so the cells repeat). Code
+draws a building (256x192) as the corners, the edges repeated along the sides and the centre repeated inside. Roof decals
+`decals/city_vent|ac_unit|water_tank|hatch|antenna.png` (the antenna's red lamp is unlit; code pulses it) break the
+repetition. Street pieces tile along their length and rotate 90 degrees for the other axis: `tiles/city_street` 64x192
+(dark asphalt base so the black armour reads, a dashed lane line down the middle), `city_crosswalk` 64x192 (zebra bars),
+`city_sidewalk` 64x32 (kerb on the bottom edge), `city_alley` 64x80, `city_plaza` 64x64 (slabs, tiles both ways). Seams
+checked on a 1280x720 mock of the grid (`docs/act8/art_mock_city.png`: buildings 256x192, streets 192, alleys 80); contact
+sheet `docs/act8/art_contact_sheet.png`. `art_check.py` rows against the older stages' floors fail the lightness gap for
+the dark armour (those floors are other acts'); on the city's own street (L 0.24) riot, SWAT and rifle armour read.
+
+### Act VIII: Skid Row (phase 2, Nov 2026)
+
+<!-- --- Act VIII: Skid Row --- -->
+Skid Row's own art (GDD §15.0 "Skid Row art (Act VIII phase 2)"; prompts and API sources in `art_source/skid_row/`,
+rebuilt by `art_source/skid_row/make_art.py`). Matched to the approved `act8_boss.png` (Don Marrow in a white suit and
+fedora with a cigar, his black limousine with gold trim and the gold minigun). Every prompt names the sex (all male here;
+no female figure on this stage). No letters, badges or real insignia anywhere. Generated with `tools/gen_image.py`
+(`--ref` an upscaled City sprite for the pixel look, plus a crop of the boss concept for Don Marrow and the limo), one
+image each, 12 API images in all (about $0.24, ledger). Converted with `prepare_sprite.py --ink-l 0.15` (0.12 for the dark limo,
+Big Sal and the Undertaker, with the levels stretch on: with `--no-levels` their black suits and the black car read as a
+blob); the skins with the ramps of the Act VII skins (Hyper gold, Untouchable marble / soul, Deathlord velvet / crimson).
+
+| Key | What it is | Art px | Notes |
+|---|---|---|---|
+| `bosses/don_marrow` | **male** Kingpin: white suit and fedora, red tie, cigar, a gold six-barrel minigun at the hip | 68x72 | legs walk (hip 54); body radius 18, drawn larger |
+| `city/armoured_limo` | Big Sal's black stretch limo, gold trim, steel-plated grille, gun ports | 84x36 | drive strip: the cart rock (legs, spread 0, hip 24); BossDonMarrow also draws it in front of him in the Last Stand |
+| `city/big_sal` | **male** enforcer: grey pinstripe suit, flat cap, moustache, sledgehammer on the shoulder | 48x52 | legs walk (hip 37) |
+| `structures/bounty_board` | a wooden billboard on two posts, five wanted posters with a hooded-skull mark (no letters), gold frame and coin bags | 46x44 | still; a slow gold glow under it is code |
+| `projectiles/spectral_hearse` | Hearse Run's ghost hearse, soul green, a coffin through the rear glass | 48x30 | drawn faded by code, mirrored when it drives left |
+| `player/undertaker` (+ `_hyper`, `_untouchable`, `_deathlord`) | **male** mortician: top hat, long black frock coat, grey waistcoat, gold watch chain, white gloves, skull-knob cane | 32x56 | legs walk (hip 42); the skins derive the rig |
+| `structures/city_wreck` / `_burnt` | **redrawn**: a whole crumpled sedan, burning / burnt out | 60x38 | the 52 x 36 wreck rect is covered (the old 32 x 34 art left bodies stopping on air); cut from one sheet and stretched to the footprint |
+| `icons/hearse_run`, `black_car`, `kevlar_bones` (violet), `funeral_procession`, `ach_no_witnesses` (gold) | badges | 32x32 | two sheets on the approved frames (the gold sheet's extra copy of the reference badge skipped) |
+
+**Drawn on the grid** (`art_source/skid_row/skid_row_tiles.py`, deterministic, built on `tools/city_tiles.py`):
+`tiles/city_roof_precinct` (the Precinct's station roof: dark concrete slabs with a police-blue stripe inside the
+parapet; roof style `precinct`), `decals/skid_row_stall` (34x26, a Night Market stall from above, its awning in light
+grey so code tints it neon pink or cyan) and `decals/skid_row_footing` (18x18, an overpass pillar's flat footing plate
+with a hazard ring: flat paint, since nothing on the floor may look solid). The Overpass's deck shadow and the zones'
+paint are code (`SkidRowGround`). Contact sheet `docs/act8/skid_row_contact_sheet.png`. **For the owner's review.**
+
+### Act VIII: Fort Kessler (Stage 23; Act VIII phase 2, Nov 2026)
+
+<!-- --- Act VIII: Fort Kessler --- -->
+Fort Kessler's art (GDD §15.0 "Fort Kessler art (Act VIII phase 2)"), in the Last Line's style above: army olive drab,
+asphalt and concrete, hazard yellow, no insignia, flags, letters or real markings. **The Machine Gunner** and **General
+Harrow** are **male**; **the Fallen Sergeant** is **female**, in the figure-redesign style (hourglass, fully clothed: an
+olive field jacket over a dark tank top, a webbing belt, cargo trousers, boots, a dented helmet; raised: grey-pale skin,
+soul-teal eyes). Prompts in `art_source/fort_kessler/<id>.txt` (the Act VIII unit template, the sex named), raw API images
+in `art_source/fort_kessler/raw/`, references in `refs/` (the lineup's machine gunner and tank, Harrow and his command car
+cropped from `act8_boss.png`, enlarged game sprites: `city/rifleman`, `city/tank`, `city/field_medic`,
+`player/moon_huntress`; two approved badges). The skins are made from the Sergeant's raw image. Rebuild:
+`python3 art_source/fort_kessler/make_art.py` (steps units, figures, badges, props, strips).
+
+| Sprite | Size (art px) | Notes |
+|---|---|---|
+| `city/machine_gunner` | 46 × 40 | kneeling behind a belt-fed gun on a bipod, brass belt; legs strip |
+| `city/attack_helicopter` | 84 × 44 | olive gunship facing right, rocket pods on stub wings, the rotor a grey disc; 2 empty rows above and below for the hover strip (art_check's "feet" rule fails by design, as the other hover kinds) |
+| `city/mammoth` | 108 × 60 | the super-heavy tank: two turrets, hazard-striped front plates, sandbags; drive strip (the cart rock) |
+| `bosses/harrow` | 72 × 72 | power armour, a badge-less peaked cap, a hazard-striped war hammer on his shoulder; legs strip |
+| `bosses/harrow_command` | 68 × 60 | his six-wheeled command car with a rocket box and the General in the roof hatch (phase 1); drive strip |
+| `player/fallen_sergeant` (+ `_hyper`, `_untouchable`, `_deathlord`) | 32 × 56 (skins 30 × 56) | figure redesign; bust rig (8-22, rows 13-19; skins 7-21) and idle strip; Golden Sergeant (white and gold), white phantom with soul-teal, black iron and crimson with a spiked crown |
+| `structures/kessler_mine` / `spells/bone_mine` | 10 × 9 | the minefield's olive mine / the spell's bone mine (their lamps are code, a slow blink at most 1 Hz) |
+| `decals/fk_sandbags` | 44 × 16 | a sandbag wall (FortKesslerGround) |
+| icons `bone_mines`, `tripwire`, `armour_piercing_bones` (violet), `killing_ground`, `ach_broken_arrow` (gold) | 32 | symbols on the frames of `abyssal_pact` / `tidecallers_host` |
+
+Pipeline notes: `prepare_sprite.py --ink-l 0.15 --no-prune --art-height N` with the army ramps (`make_art.py` UNITS);
+the Sergeant through `pixelate_source.py`, then `--no-cleanup`. The zone looks (barrier booms, minefield tape and warning
+signs, apron taxi lines and helipads) are code on the ground layer, drawn only when the camera crosses a redraw cell. The
+gold icon sheet came back with an extra copy of the reference badge, skipped. 12 API images, about $0.27 (ledger), no
+redos, no refusals. Contact sheet `docs/act8/fort_kessler_contact_sheet.png`. **For the owner's review.**
+
+### Act VIII: Liberty Heights (phase 2, Nov 2026)
+
+<!-- --- Act VIII: Liberty Heights --- -->
+Stage 24's kinds, boss and rewards (GDD §15.0 "Liberty Heights (Act VIII phase 2)" and the rows after it), matched to the
+approved concepts `act8_lineup.png` (the Supers) and `act8_boss.png` (Paragon). The Supers are open nods with no emblem, logo,
+letter, bat shape or lightning bolt; every prompt names the sex; the women are in the figure-redesign style (clothed, chest
+and hips covered). Prompts, the rebuild script and the badge sheets are in `art_source/liberty_heights/` (`make_art.py`:
+units through `prepare_sprite.py --ink-l 0.15` with explicit ramps, the women through `pixelate_source.py` first, badges set on
+the approved violet / gold frames, `walk_cycle.py` strips and idle strips under `# --- Act VIII: Liberty Heights ---`).
+`--ref` the foundation's Blitz / field medic / rifleman sprite plus a crop of the concept for the Supers, the Conscript and
+Paragon; the Wither Witch for the heroine; the Blood Spawn for the Fallen Hero; the base sprite for the skins and Black Paragon.
+14 API images, about $0.28 (ledger). Contact sheet `docs/act8/liberty_heights_contact_sheet.png`.
+
+| Key | What it is | Art px | Notes |
+|---|---|---|---|
+| `city/atlas` | male strongman: bald, bearded, green-and-gold sleeveless suit, gold arm bands and boots | 40x54 | legs (hip 34); ramps moss, gold, skin, brown |
+| `city/aurora` | **female**, figure style: blonde flier, white-and-gold suit, flowing cape, glowing hands | 38x48 | robe glide (hip 30), bust box (19-30, rows 9-16), idle strip |
+| `city/nightjar` | male vigilante: charcoal-and-purple armour, hood, round cyan goggles, scarf, grapple gun | 66x48 | legs (hip 29); concrete ramp for the charcoal (asphalt sank on the street) |
+| `city/conscript` | male army fodder: olive fatigues, helmet, bayoneted rifle | 32x32 | legs (hip 19) |
+| `bosses/paragon` | male: blond, white-and-silver suit, gold trim, royal-blue cape, red eyes | 76x64 | robe (hip 40); first source had the heat-vision beams drawn in, redone with "NO beams" (the beams are code) |
+| `player/revenant_heroine` | **female**, figure style: grey-pale raised heroine, dark-blue and silver suit, tattered cape, soul-teal fist | 38x56 | legs (hip 33), bust (15-30, rows 13-21) + `swish` (12-32, rows 24-32), idle strip |
+| `player/revenant_heroine_hyper` / `_untouchable` / `_deathlord` | Golden Age Heroine (gold and white), the white phantom, the Deathlord (black iron, crown, crimson sash) | 38 / 36 / 40 x56 | rigs derived (`SKINS`); the Deathlord `velvet` first and `--no-levels` |
+| `summons/fallen_hero` | male raised hero: grey skin, torn charcoal-and-silver suit, tattered cape, flying pose | 54x46 | robe (hip 30); the source faced left and was mirrored |
+| `summons/black_paragon` | the same in black and silver, soul-fire fists | 62x54 | robe (hip 34); mirrored source |
+| `icons/heros_fist`, `secret_identity`, `fallen_hero`, `origin_story` | violet badges | 32x32 | |
+| `icons/doomsday`, `black_paragon`, `ach_no_more_heroes` | gold badges | 32x32 | |
+
+Code-drawn (no PNG): the heat-vision beams (the headlight gradient in siren red), the thrown car (the wreck sprite), the crack
+decal (a made texture), Hero's Fist (discs), the white sky (an additive rect). Known for the art review: the heroine, the Fallen
+Hero and Black Paragon are dark (the `art_check.py` lightness rows against the older acts' floors fail; on the city's asphalt
+they read), and the Deathlord skin's face is small.
+### Act VII art review, round 1 (Group B: figures)
+- Redone from the old source as the reference with "ONLY ONE figure" in the prompt; prompts updated in `art_source/ravensmoor/*.txt`, `art_source/court/blood_knight.txt`, `art_source/castle_sanguis/{nosferatu,dhampir_deathlord}.txt`.
+- Black coats (Nosferatu, both Deathlord skins) need the `velvet` ramp first and `--no-levels`; with `grey` alone they snap to mid grey.
+- `bosses/elder_vampire` (90x120, `art_source/castle_sanguis/elder_vampire.txt`) is the Elder's first form; `bosses/elder` is the second. Its walk is the robe glide (hip 84).
+
+### Act VIII art review, round 1: animation rigs (Group A, Nov 2026)
+
+Strips only (`tools/walk_cycle.py`; its header documents every key). Effect rigs are drawn by `_fx()` after the body is composed;
+frame 0 is always the still, and the only colours they add are city ramps (`FX_RGB`, allowed per key by `FX_KEY_COLOURS`).
+
+| Key | What it does |
+|---|---|
+| `smoke` `dict(tip, births)` | Puffs rise 2 px and drift right 2 px a frame over five stages (`SMOKE_STAGES`: dot, 2x2, blob, grey 2x2, dither); city concrete greys. Don Marrow's cigar. |
+| `wheels` `[dict(c, r, deg, hold, colors)]` | A disc (ellipse, centre and radii in art px) whose pixels turn `deg` * frame degrees clockwise (`_spin_disc`; default `WHEEL_DEG` 45 = one turn a cycle). Silhouette and palette never change; `colors` limits it to tyre greys (`TYRE`). Cars use legs mode with spread / lift / dip 0 (no bob). |
+| `rotor` `[dict(...)]` | The same discs on a hover rig: the helicopter's main rotor (`hold` keeps the mast) and tail rotor; the body keeps `bob`. |
+| `recoil` `dict(box, px, clip, free, colors)` | A barrel (the box's pixels of `colors`) slides back along x by `RECOIL_SHARE` * `px` (shot, full, full, return); pixels past `clip` vanish into the mantlet, the open-air pixels from `free` on are cleared. Only the barrel moves. The tank's firing cycle replaces its drive rock (the engine still plays the strip while it moves). |
+| `muzzle` `[dict(tip, face, frames)]` | Flashes at gun tips: `frames` = `((frame, shape), ...)`, shapes `spark`, `small`, `big`, `heavy` in `MUZZLE_SHAPES` (H hazard core, S sodium rim, drawn pointing right, mirrored for `face` -1, clipped to the canvas). Each flash lasts at least 2 frames, never frame 0, never fills the sprite. **The Mammoth reuses `recoil` + `muzzle`**: give it a `recoil` entry for the main gun (`px` 3-4) and a `muzzle` with `heavy` on frame 1 and `big` on frame 2 at its muzzle (stills fill their canvas, so the flash overlaps the gun end), with spread / lift / dip 0 as the tank. |
+| `breath` `True` | A rig with no bust box that keeps an idle strip: the breathing sink alone (the civilian woman). |
+
+The limo's still has only faint wheels (an AI-blotched body), so its spin is subtle; the tyre greys that exist do turn.
+<!-- --- Act VIII art review, round 1 (figures) --- -->
+Paragon is red / white / blue with red eyes (no emblem; ramps `marble,police,siren_red,skin,steel`); Mammoth has the long main gun and a bigger
+machine-gun turret (118 x 60) and a firing-cycle walk strip (the shared tank rig: `recoil` on the main gun + `muzzle` `heavy` / `big` at the barrel tip on frames 1-2);
+the Revenant Heroine Deathlord is bolder (bare midriff / shoulders / thighs, chest and hips covered) with her own bust / swish rig.
+
+### Act IX: the Concord of Stars, the shared kinds and the turf (foundation, Nov 2026)
+
+<!-- --- Act IX: the Concord of Stars --- -->
+The Concord's look (GDD §15.0 "Act IX art: the shared kinds and the turf"; `docs/act9/PROPOSAL.md`; approved concepts
+`art_source/concepts/act9_lineup.png`, `act9_boss.png`, `act9_stage.png` with their prompts): a coalition of aliens seen against
+the starfield. **Hull white and gunmetal** (the Harvesters' saucers and greys), **plasma green** lights, **laser magenta** beams,
+the Brood's **green-black chitin**, the Vrask's **teal scales**, the Luminous's **pale white-gold**, alien flesh **turf purple**.
+Ink `#07080F` (`concord_ink`) outlines the whole act. Every prompt names the sex (or says creature / machine); the Prism and the
+Hive Mother are figure-redesign females whose gowns / chitin fully cover chest and hips; the greys' sex is left unmarked.
+**Insects and machines keep their own colours: never the player's violet and bone on any Concord unit** (the concept's round 3 fix;
+the Hive Mother's purple is her own `hive` ramp, with cream `hive_bone`, added to her key only).
+
+**Palette.** One hue per ramp (the Act VIII lesson): `hull` (ink, `#AEB8C4`, `#E8ECF0`), `gunmetal` (`#1E242C`, `#3A424C`), `plasma`
+(`#1FA84A`, `#3CFF6A`), `laser` (+ added `#A01C7A`, `#FF2FB8`), `chitin` (`#1B3A2A`, `#2E6B45`), `hive` (`#6A3FA0` + added dark `#43266A`
+and light `#8F63C4`), `hive_bone` (`#E0D2B0`), `vrask` (`#2A8F7A` + added `#1B5C4E`, `#5CC2AA`), `lumen` (`#FFE9A0` + added `#C9A95C`),
+`lavender` (added: the Star-Seer's skin `#8D7DB2`, `#C8BAE6`), `turf` (`#1A1C22`, `#5A2A6A` + added light `#7E4A90`). `prepare_sprite.py`
+folder `concord/`: hull, gunmetal, plasma, laser, chitin, vrask, lumen, lavender (no skin, bone, violet or crimson); KEY_RAMPS: the
+Prism drops chitin / vrask / plasma, the Grey Drone drops lavender / lumen / vrask / chitin, `bosses/hive_mother` adds hive, hive_bone, gold.
+The bosses/ and structures/ keys are converted with an explicit `--ramps`.
+
+**Sprites** (`assets/sprites/concord/`, `bosses/`, `structures/`; heights in `SpriteData.HEIGHTS`; prompts and API sources in
+`art_source/concord/`). One image each from `tools/gen_image.py` (`--ref` a game sprite for the pixel look plus a crop of the lineup).
+Figures went through `prepare_sprite.py --ink-l 0.15 --no-prune`; the small ones and the women through `pixelate_source.py` first
+(`--no-cleanup --no-prune --no-levels`; the Hive Mother kept the pixelated conversion: the cleaned one lost her bust and face).
+
+| Key | What it is | Art px | Notes |
+|---|---|---|---|
+| `concord/broodling` | creature: hunched green-black insect, acid-green eye | 20x22 | legs walk (hip 15) |
+| `concord/grey_drone` | sex unmarked: small grey, black eyes, silver jumpsuit, green probe | 22x28 | legs walk (hip 18) |
+| `concord/saucer` | white saucer, green lamps, no beam (code) | 60x36 (32 + 2 empty rows each side) | hover strip (bob 2, rim lamps chase); art_check "feet" fails by design |
+| `concord/vrask_hunter` | male: teal lizard-man, shoulder caster, glaive | 54x46 | legs walk (hip 33) |
+| `concord/lumen_sentinel` | male: white-gold crystal armour, beam staff | 20x46 | glide strip (robe, staff rigid) |
+| `concord/prism` | **female**, figure style: lavender skin, opaque white-and-magenta gown, prism | 24x44 | glide strip, bust box (7-15, rows 10-16), `swish`, idle strip |
+| `bosses/hive_mother` | **female**, figure style: purple chitin queen, wings, egg sac | 72x96 | glide strip, bust box (33-50, rows 32-44, two lobes), idle strip; phase 2 adds attack poses |
+| `structures/concord_terraformer` / `_dead` | landing pod rooted in turf, vents / cracked, charred | 38x40 / 44x40 | stills; the steam is code |
+
+**The turf and effects** are drawn by `tools/concord_tiles.py` (deterministic, straight onto the grid): `tiles/concord_turf.png`, a 192x192
+atlas of 3x3 cells of 64 px (corners, edges, seamless centre, as the city roofs; veins are a wrapped Voronoi map; ragged dark outline
+toward the outside), `tiles/concord_scorch.png` (64x64 burnt), `effects/beam_line.png` (4 frames of 64x16, grey tint mask, bands flow 16 px
+a frame, tiles along +x) and `effects/beam_hit.png` (6 frames of 64x64 grey burst), both tinted magenta by the code, and
+`concord/mothership_eye.png` (192x192, the API source snapped to the Concord colours, round with transparent corners; the code fades it in).
+Seams checked on a 1280x720 mock (`docs/act9/art_mock_turf.png`); contact sheet `docs/act9/art_contact_sheet.png`. `art_check.py` rows against
+older stages' light floors fail the lightness gap for the dark Brood and Vrask (those floors are other acts').
+
+### Act IX: the Crash Site (phase 2, Nov 2026)
+
+<!-- --- Act IX: the Crash Site --- -->
+The Crash Site's own art (GDD §15.0 "Crash Site art (Act IX phase 2)"), rebuilt by `art_source/crash_site/make_art.py` from the API
+sources in `art_source/crash_site/raw/` (prompts beside the script, reference crops of the approved concepts in `refs/`; each prompt
+names the sex or says creature). Insects keep the Brood's own colours (green-black chitin, acid green, cream claws, a slate armour);
+the Hive Mother keeps her own `hive` ramp; never the player's violet and bone on a Concord unit.
+
+| Key | What it is | Art px | Notes |
+|---|---|---|---|
+| `concord/burrower` | creature: a slate-dark armoured digger, cream digging claws, one magenta eye, a little dirt | 32x34 | legs walk (hip 26) |
+| `concord/acid_spitter` | creature: a lean green-black insect with a glowing acid sac | 32x32 | legs walk (hip 21) |
+| `concord/brood_matriarch` | insect creature (female by name, not in the figure style): green-black chitin, four wings, cream claws, a pale-green egg sac | 60x60 + 2 empty rows each side | hover strip (bob 2); the concept's queen-guard of `act9_boss.png` with wings |
+| `bosses/hive_mother_cast` / `_strike` | her poses (BossPoseData 1 / 3): claws raised over the egg sac / bursting out of the ground | 96x96 / 84x96 | pixelated conversion, `hive`, `hive_bone`, gold (+ brown dirt on the strike) |
+| `bosses/hive_mother_flight` | her Flight form: wings fully spread, the sac tucked | 100x96 + 2 empty rows each side | hover strip (bob 2), drawn lifted by BossHiveMother |
+| `player/broodbound` | **female**, figure style: a green-black chitin gown (chest and hips covered), pale skin, acid-green eyes, a wing crown, bone beetles on her hand | 30x56 | straight conversion (the pixelated one lost her face); robe glide, bust box (9-21, rows 14-21), idle strip |
+| `player/broodbound_hyper` / `_untouchable` / `_deathlord` | her skins: gold and black chitin / the white phantom / black iron and crimson with a spiked crown | 30x56 / 30x56 / 38x56 | skin rigs from hers (`SKINS`) |
+| `projectiles/bone_beetle` | Bone Beetles' beetle, head to the right | 12x10 | the extra beetle the gold icon sheet came back with, turned 90 degrees |
+| `obstacles/crash_rubble_s/m/l`, `crash_hull_shard_s/l` (+ `_v` turned 90 degrees), `glass_spire_s/l` | the capital's rubble, the scout ship's torn hull plating, spires of fused glass | 26-42 wide | one API sheet cut apart |
+| `icons/bone_beetles`, `chitin`, `anchored` (violet), `hive_of_bone`, `ach_nothing_hatched` (gold) | badges on the approved frames | 32x32 | the violet sheet came back with a fourth symbol, skipped |
+
+**Drawn in code** (`art_source/crash_site/crash_site_tiles.py`, deterministic): the zone floors `tiles/crash_site_crater` (glassed black
+rock in Voronoi plates), `_hatchery` (green-black resin lumps), `_wreck` (32 px hull plates) and `_ruins` (offset paving slabs), each 128x128
+and seamless, dark and flat (the floor rule); `concord/brood_egg` (14x14, a green-black egg with an acid vein on a resin smear) and its
+hatch strip `concord/brood_egg_hatch` (4 frames of 16x16, played over the egg's last 1.2 s; the egg's slow pulse is a tint on game time, no
+flashing); `concord/burrow_mound` (28x16, scaled by `BurrowerKit.draw_mound()` for the Burrower and, larger, the Hive Mother's mound);
+`effects/acid_pool` (32x26 grey tint mask, tinted acid green by `AcidPools`). `art_check.py`: the hover stills fail "feet" by design (as the
+saucer); the dark Brood and the Broodbound fail the lightness gap on older acts' light floors (the Crash Site's floors are near-black).
+
+### Act IX: the Proving Moon (Stage 26; Act IX phase 2, Nov 2026)
+
+<!-- --- Act IX: the Proving Moon --- -->
+The Proving Moon's art (GDD §15.0 "The Proving Moon art (Act IX phase 2)"), in the Concord's style above: Vrask teal and
+dark gunmetal, hull-white blades, magenta lamps, grey regolith; never the player's violet and bone on a Concord unit (the
+trophy skulls are a weathered yellow-grey, `concord_hive_bone`). **The Warbeast** is a **creature**; **Vrask'Tal** is
+**male**; **the Blooded** is **female**, in the figure-redesign style (hourglass, fully clothed: a brown leather hunting coat
+buttoned to a high collar, a belt, trousers and boots; raised: grey-pale skin, soul-teal eyes, a dark-red braid, claw
+scars, a teal Vrask scale on a cord, a bone-and-iron shoulder cannon). Prompts in `art_source/proving_moon/<id>.txt` (the
+unit template, the sex or "a creature" named), raw API images in `art_source/proving_moon/raw/` (`blooded_a_unused.png`
+is the first Blooded try: the figure was too plain), references in `refs/` (the lineup's Vrask hunter, enlarged game
+sprites `concord/vrask_hunter`, `player/fallen_sergeant`, `bosses/vargr`, `concord/broodling`, two obstacles, a floor tile,
+two approved badges). The skins are made from the Blooded's raw image. Rebuild: `python3 art_source/proving_moon/make_art.py`
+(steps units, figures, badges, props, decals, floors, strips).
+
+| Sprite | Size (art px) | Notes |
+|---|---|---|
+| `concord/warbeast` | 92 × 44 | a creature: a long, low armoured war-hound, teal hide, gunmetal plates with teal trim, a magenta collar lamp; legs strip (hind / fore halves, hip 28) |
+| `bosses/vrask_tal` | 106 × 84 | male: the horned Hunt-Lord, shoulder caster, wrist bomb, skull belt, scale cloak, glaive; legs strip (hip 64). No attack poses yet (the still shows; the code lifts him on his leap and fades him while cloaked); his skull belt's kill count is drawn by code over it |
+| `player/blooded` (+ `_hyper`, `_untouchable`, `_deathlord`) | 30 × 56 (skins 32 / 32 / 28 × 56) | figure redesign; bust rig (12-22, rows 13-20) and idle strip; the Gilded Quarry (white and gold), white phantom with soul-teal, black iron and crimson with a small spiked crown. `art_check` lightness on the Graveyard soil +0.14 (need +0.15): the `brown` ramp has two shades and a brighter source does not move it; the Deathlord skin is dark by design, as every Deathlord skin |
+| `icons/soul_caster`, `trophy_rack`, `mirror_bones` | 32 × 32 | violet badges (the `abyssal_pact` frame) |
+| `icons/apex_predator`, `ach_the_hunter_hunted` | 32 × 32 | gold badges (the `tidecallers_host` frame) |
+| `obstacles/moon_boulder_s/m/l` | 28 / 40 / 54 wide | grey lunar boulders (circles of 12 / 18 / 24 px) |
+| `obstacles/crater_rim_s/m/l` | 48 / 64 / 82 wide | a raised regolith rim round a dark bowl (circles of 22 / 30 / 38 px) |
+| `obstacles/trophy_pillar_s/l` (+ `_v`) | 42 × 13 / 62 × 18 (end-on 28 × 54 / 70) | a dark cut-stone trophy wall, a teal-trimmed rail, yellow-grey alien skulls |
+| `decals/proving_moon_landing_crater`, `_craters_crater` | 24 × 20 | a small moon crater (the same decal in both zones) |
+| `decals/proving_moon_trophy_hall_skulls` | 28 × 24 | fallen trophy skulls and a broken cord |
+| `decals/proving_moon_duelling_ring_ring` | 40 × 39 | a faded teal duelling mark (a ring with four ticks) |
+| `tiles/proving_moon_landing`, `_craters`, `_trophy_hall`, `_duelling_ring` | 128 × 128 | `make_tile.py` quilts: one regolith texture (the Landing; darker for the Craters, paler for the Duelling Ring) and one of dark cut slabs (the Trophy Hall) |
+
+### Act IX: the Ark of the Concord (phase 2, Nov 2026)
+
+<!-- --- Act IX: the Ark --- -->
+Stage 27's kinds, boss and rewards (GDD §15.0 "The Ark of the Concord (Act IX phase 2)" and the rows after it), matched to the
+approved concepts `act9_lineup.png` (the Grey Overseer; the Lumen Sentinel for the Archon) and `act9_boss.png` (the Harvester and its
+rings). Every prompt names the sex (or says creature / machine): the greys' sex is unmarked (the Overseer, the Harvester), the Archon is
+male, the freed beast a creature, the saucers machines; the Starborn is a **female** grey in the figure-redesign style (a fully covering
+suit). No Concord unit is in violet and bone; the Ghost Saucer and Black Mothership are the necromancer's (raised), so they are bone and
+soul-teal. Prompts and the rebuild script are in `art_source/ark/` (`make_art.py`: units through `prepare_sprite.py --ink-l 0.15` with
+explicit ramps, the saucers padded 2 empty rows each side for the hover bob, the Starborn through `pixelate_source.py` first, the
+Deathlord skin straight with `grey` first and `--no-levels`, badges set on the approved violet / gold frames (the generator copied the
+reference badge in as a last symbol: skipped), `walk_cycle.py` strips and idle strips under `# --- Act IX: the Ark ---`). `--ref` the
+act's own sprites enlarged x4-12 nearest (the Grey Drone, the Lumen Sentinel, the Broodling, the Hive Mother, the Saucer) plus a crop of
+the concept; the Revenant Heroine for the Starborn's figure; the base sprite for the skins, the true form and Black Mothership.
+13 API images, about $0.30 (ledger). Contact sheet `docs/act9/ark_contact_sheet.png`.
+
+| Key | What it is | Art px | Notes |
+|---|---|---|---|
+| `concord/grey_overseer` | sex unmarked: tall grey, white robe, gunmetal collar, green brow mark | 16x38 | robe glide (hip 24) |
+| `concord/luminous_archon` | male: a being of white-gold light, crystal plates, a halo of shards | 38x64 | robe glide (hip 40) |
+| `concord/vault_beast` | creature: six-legged rust-red grazer-predator, brown crest, gold eyes | 48x30 | legs (hip 19); ramps crimson, brown, gold, lumen |
+| `bosses/harvester` | sex unmarked: the oldest grey, tattered white robes, spread arms | 72x96 | robe glide (hip 60); its throne of rings is code (`effects/ark_ring`) |
+| `bosses/harvester_true` | its true form: white-gold light inside four concentric gold rings | 72x112 | still (the Gardener) |
+| `player/starborn` | **female**, figure style: a grey deserter, hull-white suit, gunmetal coat, plasma seams | 30x56 | legs (hip 36), bust (12-24, rows 14-22) + `swish` (4-26, rows 26-35), idle strip |
+| `player/starborn_hyper` / `_untouchable` / `_deathlord` | the Gilded Deserter (gold and white), the white phantom, the Deathlord (black iron, crown, crimson sash) | 30 / 30 / 28 x56 | rigs derived (`SKINS`) |
+| `summons/ghost_saucer` | machine: a raised saucer, bone plates, soul-teal dome and lamps | 52x34 (30 + 2 empty rows each side) | hover strip (bob 2) |
+| `summons/black_mothership` | machine: a black saucer, bone trim, three prongs, soul-teal lenses | 54x40 (36 + 2 + 2) | hover strip (bob 2) |
+| `icons/tractor_lift`, `starseed`, `ghost_saucer`, `crop_circles` | violet badges | 32x32 | |
+| `icons/star_abduction`, `black_mothership`, `ach_last_harvest` | gold badges | 32x32 | |
+
+**Drawn on the grid** by `tools/ark_tiles.py` (deterministic, no API): the zone floors `tiles/ark_hangar` (gunmetal deck plates,
+rivets, a dim plasma guide stripe), `ark_vaults` (a dark grating between sunken specimen-tank lids, dim glass so the units read),
+`ark_reactor` (a grating with a dim plasma glow in its slots, brighter at seeded hot spots), `ark_bridge` (starfield glass under
+gunmetal ribs), 128x128 seamless; the obstacles `obstacles/ark_crate_s/_l` (+ `_v`), `ark_console_s/_l` (+ `_v`), `ark_pillar_s/_l`; the
+structures `structures/specimen_tank` (+ `_dead`), `reactor_vent` (+ `_dead`), `reap_emitter`; and `effects/ark_ring` (64x64, a grey tint
+mask squashed into the throne's tilted rings by the code).
+
+Code-drawn (no PNG): the Grey Overseer's widening pulse ring, the Archon's glow, Tractor Beam's column of soul light and the lifted
+foe's mark (the enemy's body stays on the ground: an Enemy has no draw offset), the Ghost Saucer's short beams, the Reaping's glow over
+the ring, the true form's glow over the base sprite when its art is missing.
+
+### Act IX art review, round 1 (figures)
+The Hive Mother (all poses) was redrawn with wider hips and a bigger bust; the Broodbound is an alien insect woman in bright green and gold (base converted from `art_source/crash_site/raw/broodbound_flat.png`, thin trim lines removed before conversion; skins Hyper / Untouchable / Deathlord regenerated from her); the Starborn Deathlord wears a black half-mask visor. Rebuilt by `art_source/crash_site/make_art.py` (figures step) and `art_source/ark/make_art.py`. Rig lines in `tools/walk_cycle.py`.

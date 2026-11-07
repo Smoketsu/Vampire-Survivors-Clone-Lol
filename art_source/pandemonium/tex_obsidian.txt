@@ -1,0 +1,2 @@
+Seamless top-down FLOOR TEXTURE for a dark 2D pixel-art game: polished black obsidian paving of hell's capital seen straight from above, the volcanic glass with faint violet-grey sheens and small chips, very flat even lighting, no objects, no joints needed (just the stone surface). Chunky pixel art at about 160 pixels across, crisp square pixels, flat colours, no gradients, no vignette, no text. Fully opaque, filling the whole image edge to edge.
+Colours: obsidian #0E0C12 #141119 #1A1620 #201B28, a few paler sheens #2C2636.

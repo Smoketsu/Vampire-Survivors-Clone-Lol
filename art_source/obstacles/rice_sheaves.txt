@@ -1,0 +1,10 @@
+Pixel-art game sprite for a top-down 2D horde-survival game. Three-quarter top-down view (camera above and slightly in front), on a transparent background. ONE object, centred, about 36 pixels wide and 40 pixels tall.
+LOW-RESOLUTION pixel art, shown enlarged so every pixel is a big crisp square block. Chunky simple shapes, no detail under 2 pixels, no anti-aliasing, no gradients, no dithering, no texture noise. A clean 1-pixel dark outline.
+
+Subject: RICE SHEAVES drying in a paddy: a low wooden drying frame with bundles of golden harvested rice straw hung over it in a thick row, a few bundles stacked at its foot, tied with rope.
+
+Colours: ONLY flat fills: straw gold #4F3A14 (outline) #8A6A1E #D9A93A #F5D870; wood #2A1A0E #4F3320 #8C6040; rope #8E8A86.
+Light from the top-left. Keep it a little darker and calmer than the characters (it is scenery), but clearly brighter than a near-black ground.
+
+Output: a PNG with a FULLY TRANSPARENT background, no ground, no cast shadow, no water, no text, no watermark.
+Attached: an obstacle of this game. Match its pixel size, outline weight and flat look exactly.

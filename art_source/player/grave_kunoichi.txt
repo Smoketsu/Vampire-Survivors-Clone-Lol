@@ -1,0 +1,12 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, a poised, confident stance, a kunai in her front hand.
+
+LOW-RESOLUTION pixel art: the whole figure is only 52 pixels tall, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims, lacing or engravings.
+
+Subject: a FEMALE GRAVE KUNOICHI, an undead ninja risen as a necromancer: pale grey deathly skin, two glowing violet eyes, long black hair in a high ponytail, a BONE-WHITE half-mask (a skull's jaw) pushed down under her chin; a fitted dark VIOLET shinobi garb with bone-white armour plates on the shoulders and shins, a wide bone-white sash at the waist, a LONG SOUL-TEAL SCARF flowing behind her, a violet-black kunai in her front hand. She is drawn in the game's FIGURE-REDESIGN style: an exaggerated hourglass figure (a big full bust, a very narrow waist, very wide hips and thick thighs), clearly attractive and confident, FULLY CLOTHED, never explicit, no bare skin gap or notch that could read as anatomy; her face clearly readable (two clear eyes, a small nose, lips). 
+Signature shape: the hourglass figure, the high ponytail, the long glowing teal scarf.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: violet #160A21 (outline) #4A2569 #7A42AD #A35CFA #DDBDFF; bone #2A2219 #8C7B5E #D9CCAA #F2EBD3; soul teal #0E3A3A #2E8C84 #6FE0CF; skin pale grey #8E8A86 #CFCBC4; hair #1A0B0C #2A1438.
+Outline: a clean 1-pixel dark outline around the whole figure in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the figure), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark.
+Attached: (1) a character of this game in the same figure-redesign style: match its pixel size, outline weight, proportions and flat look exactly; (2) the game's necromancer for the palette.

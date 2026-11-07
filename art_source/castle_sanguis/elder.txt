@@ -1,0 +1,13 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, hunched forward, rising, both long clawed hands reaching out, huge bat wings spread wide
+
+LOW-RESOLUTION pixel art: the whole figure is only 120 pixels tall, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims, lacing or engravings. Details must be big enough to read at game size.
+
+Subject: THE ELDER, the FIRST VAMPIRE (a MALE ancient horror, the final boss's last phase): a towering, gaunt, bald, ASH-GREY monster with leathery skin over a skeletal muscular body, a bat-like face with POINTED EARS, a wide mouth of long FANGS, deep-set glowing RED eyes, impossibly long arms ending in long hooked CLAWS, two ENORMOUS BAT WINGS spread wide behind him (grey bone fingers, torn blood-red membranes), a few rags of an ancient black burial shroud at the waist, dried blood on the claws. Terrifying, the biggest figure of the act.
+Signature shape that must read in silhouette: the enormous spread bat wings, the bald pointed-eared head and the long reaching claws.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: ash-grey skin #4F5866 #6E7A8C #9AA4B4 (the lightest as a top-left rim); wing membranes blood #5A0A14 #A3142A #E0384E; shroud velvet #160F1C #2B1E36 #4D3A5E; eyes #E0384E; fangs and claws #CFC7AE #EDE6D0.
+
+Outline: a clean 1-pixel dark outline around the whole figure in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the figure), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark.
+Attached: (1) a boss sprite of this game for the pixel size, outline weight and flat look; (2) concept art of the Elder rising from his coffin for the body, face and wings only (do NOT copy its detail level or painted shading).

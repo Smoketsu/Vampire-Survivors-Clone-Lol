@@ -118,6 +118,85 @@
 ## tagged with its kind id, or WastesEnemyData.RANGED_EXTRA_SOURCES) is cut by
 ## ranged_reduction (stat lead_lined_dmg_prevented); exactly 1 while the
 ## passive is not owned.
+## Act VII (the Sanguine Court; GDD §15.0 "Bloodfeast"): BLOODFEAST is heard
+## once in damage_unit() (the HP a summon lost) and once in damage_player()
+## (the HP the necromancer lost) when the hit names its attacker (`by`) and
+## Game.court exists (Bloodfeast.on_hit(), the one path: a Court feeder heals
+## through heal_enemy() and banks the rest as Enemy.blood_shield);
+## damage_enemy() spends a blood shield before HP (Bloodfeast.absorb(); the
+## shield is always 0 on Acts I to VI). Night Wings and Silver Bones act
+## through the kits' taken_mult() (Enemy.damage_taken_mult(), the one read).
+## Ossuary new options (expansion step 3, game.meta): damage_player() spends a
+## Grave Ward hit before any reduction and starts Last Rites after a hit that
+## leaves the necromancer under a quarter of his HP; damage_enemy() tells the
+## Dread Rally meter whether a kill was a summon's (Dark Tithe).
+## Act IV (the Olympian Republic; Game.pantheon is null on every other act, so
+## none of this runs there):
+##   Phalanx — damage_enemy() takes the hit's ORIGIN (`origin`, the world point
+##             it came from: a projectile's point of departure along its path,
+##             a melee attacker's position; NO_ORIGIN = no direction, every
+##             area / stomp / arcing / damage-over-time hit) and `shot` (true
+##             for a projectile). A directed hit is multiplied once by
+##             PantheonRules.directed_hit_mult(), right after the synergies: a
+##             locked shield's front stops most of a shot and all knockback; a
+##             hit from the side or behind breaks the wall.
+##   Glory   — damage_unit() takes the enemy whose blow it is (`by`, null when
+##             none); a summon it kills reports to PantheonRules
+##             .on_summon_killed() (a hero's Glory stack).
+##   kills   — _kill_enemy() reports to PantheonRules.on_enemy_killed() (a
+##             corpse swallowed by a fissure, a hero's Glory payout).
+## Act IV, the Shores of Ilion: FROM_ABOVE is the origin of an arcing hit (a
+## catapult boulder): it reaches PantheonRules.directed_hit_mult() (the
+## Legionary's testudo cuts it; nothing else does) but never Mortal Heel.
+## Mortal Heel — damage_enemy(): a directed hit from behind its target deals
+## more (stat mortal_heel_bonus_dmg); exactly 1 while the passive is not owned.
+##   Mount Olympus (Act IV phase 2) — stun_unit(): THE one stun path for
+##             summons (a Gorgon's petrifying gaze): SummonedUnit.stun()
+##             holds the unit (no thinking, moving, attacking or casting,
+##             drawn stone-grey); stats summon_stuns, summon_stunned_seconds,
+##             summon_stuns_<source>.
+##   the Burning Province (Act V phase 2) — blind_unit(): THE one blind path
+##             for summons (a Kunoichi's smoke bomb, Kage's smoke fields):
+##             SummonedUnit.blind() keeps the unit to the ring without a foe;
+##             stats summon_blinds, summon_blinded_seconds,
+##             summon_blinds_<source>. Hidden Hand — damage_enemy(): a SPELL
+##             hit (HundredShadowsData.is_spell_source()) on a foe busy
+##             fighting a summon deals more (stat hidden_hand_bonus_dmg);
+##             exactly 1 while the passive is not owned. Hundred Shadows hears
+##             each spell hit there too (NecroSpellBook.on_spell_hit(): its
+##             clones echo the next spell; only while the spell is learned).
+##   the Burning Gate (Act VI phase 2) — Furnace Heart in damage_enemy():
+##             a SPELL hit on a foe standing in fire (Brimstone.in_fire(): a
+##             burning Brimstone pit or Hell Pit) deals more (stat
+##             furnace_heart_bonus_dmg); exactly 1 while the passive is not owned.
+##   Ravensmoor (Act VII phase 2) — Pack Blood in damage_enemy(): every hit
+##             on a foe bleeding from Moonfang (Moonfang.bleeding()) deals more
+##             (stat pack_blood_bonus_dmg); exactly 1 while the passive is not
+##             owned. The kill path lets a Ghoul claim the corpse first
+##             (GhoulKit.claim_corpse(), only while Game.court exists).
+##   the Witchwood (Act VII phase 2) — Moonlit Rite in damage_enemy(): a
+##             SPELL hit on a foe standing inside one of the necromancer's hex
+##             circles (WitchCircle.in_circle()) deals more (stat
+##             moonlit_rite_bonus_dmg); exactly 1 while the passive is not owned.
+## Act VIII (the Last Line; GDD §15.0 "Armour"; Game.city is null on every
+## other act, so none of this runs there): ARMOUR's front — damage_enemy()
+## multiplies a directed hit (an origin, not from above) once by
+## CityRules.armour_mult() right after the Phalanx block (a City kind's
+## "armour_front" share is cut from a hit inside its front arc; stats
+## armour_front_hits, armour_front_dmg_prevented); flat armour is the existing
+## path. damage_unit() reads the Kevlar Bones hook (Armour.kevlar_mult(): less
+## RANGED City damage to summons; exactly 1 while the passive is not built).
+## Act IX (the Concord of Stars; GDD §15.0 "Terraforming"; Game.concord is null
+## on every other act, so none of this runs there): THE ONE BURN CHECK — at the
+## very end of damage_enemy(), a hit that dealt damage tells
+## ConcordRules.on_enemy_hit(), which burns the alien ground around the enemy
+## when the source is a SPELL (ConcordRules.burns_ground(), the one test).
+##   the Crash Site (Act IX phase 2) — INFESTATION in damage_enemy(): an egg
+##             (CrashSiteEnemyData "brood_egg") brought to 0 HP is cleared
+##             without a kill (CrashSiteDirector.clear_egg(), before the kill
+##             path), and the kill path records a Concord enemy's death spot
+##             beside the Ghoul's claim (CrashSiteDirector.on_concord_death():
+##             an egg is laid there on the Crash Site only).
 ## Online co-op (CoopSession): every rule above reads the BOUND player's
 ## passives, synergies, meter and innate, so each entry point first binds the
 ## player the hit belongs to (the one path for "whose hit"), then restores the
@@ -128,6 +207,15 @@
 ## credited to the bound slot (CoopSession.on_kill()). In solo nothing is rebound.
 class_name CombatResolver
 extends RefCounted
+
+# --- Act IV: the Olympian Republic ---
+## damage_enemy() origin meaning "no direction" (full damage, the front ignored).
+const NO_ORIGIN: Vector2 = Vector2.INF
+# --- Act IV: the Shores of Ilion ---
+## damage_enemy() origin of an ARCING hit that falls from above (a catapult
+## boulder): no front, no flank, no back (a shield wall is not broken by it),
+## but a locked Legionary's testudo roofs against it (Phalanx.directed_hit_mult()).
+const FROM_ABOVE: Vector2 = Vector2(INF, -INF)
 
 ## Owning run.
 var game: Game
@@ -140,6 +228,12 @@ var _crit_rng: RandomNumberGenerator = RandomNumberGenerator.new()
 ## Damage-source tag -> true / false: is it a ranged hit (is_ranged_source(),
 ## filled lazily, only while Lead-Lined Bones is owned).
 var _ranged_sources: Dictionary = {}
+# --- Act IV: the Asphodel Underworld ---
+## Ferryman's Toll: game time its current one-second heal window started.
+var _toll_window_t: float = -1.0
+## Ferryman's Toll: HP healed in the current one-second window (capped at
+## RiverStyxData.TOLL_HEAL_CAP_PER_S).
+var _toll_window: float = 0.0
 
 
 func _init(p_game: Game) -> void:
@@ -174,11 +268,13 @@ func is_minion_source(source: String) -> bool:
 ## A cursed enemy (Gravebow curse, Enemy.curse_until, curse_enemy()) takes
 ## curse_amp more from every undead source; the extra is counted in the
 ## curse_bonus_dmg stat.
-func damage_enemy(e: Enemy, amount: float, source: String, as_slot: int = -1) -> float:
+## Act IV: `origin` (the world point the hit came from; NO_ORIGIN = none) and
+## `shot` (a projectile) feed the Phalanx's front test (see the header).
+func damage_enemy(e: Enemy, amount: float, source: String, as_slot: int = -1, origin: Vector2 = NO_ORIGIN, shot: bool = false) -> float:
 	if as_slot >= 0 and game.coop != null and as_slot != game.coop.bound:
 		var prev := game.coop.bound  # Co-op: resolve the hit as its owner slot's (see the header).
 		game.coop.bind(as_slot)
-		var dealt_as := damage_enemy(e, amount, source)
+		var dealt_as := damage_enemy(e, amount, source, -1, origin, shot)
 		game.coop.bind(prev)
 		return dealt_as
 	if not e.active or amount <= 0.0:
@@ -205,6 +301,74 @@ func damage_enemy(e: Enemy, amount: float, source: String, as_slot: int = -1) ->
 	var syn := game.horde.synergies  # Army synergies.
 	var syn_mult := syn.hit_mult(source, e)  # Synergy multiplier of this hit.
 	amount *= syn_mult
+	# Act IV, the Phalanx (the one front test): a directed hit on a Pantheon
+	# enemy. Skipped entirely off Act IV (Game.pantheon null) and for hits with
+	# no direction.
+	if game.pantheon != null and origin != NO_ORIGIN:
+		var front := game.pantheon.directed_hit_mult(e, origin, shot, source)  # 1 = the front did nothing.
+		if front != 1.0:
+			if front < 1.0:
+				game.stat_add("phalanx_front_dmg_prevented", amount * (1.0 - front) * (1.0 - e.armor))
+			amount *= front
+	# --- Act VIII: the Last Line --- Armour's front (the one front test of the
+	# act): a directed hit on a City kind with an "armour_front". Skipped
+	# entirely off Act VIII (Game.city null) and for hits with no direction.
+	if game.city != null and origin != NO_ORIGIN:
+		var am := game.city.armour_mult(e, origin, shot, source)  # 1 = the front did nothing.
+		if am < 1.0:
+			game.stat_add("armour_front_dmg_prevented", amount * (1.0 - am) * (1.0 - e.armor))
+			if game.city.armour.last_pierce > 0.0:
+				game.stat_add("armour_pierced_dmg", amount * game.city.armour.last_pierce * (1.0 - e.armor))  # Act VIII, Fort Kessler: Armour-Piercing Bones let this through.
+			amount *= am
+	# --- Act IV: the Shores of Ilion --- Mortal Heel (the paired passive of
+	# Paris's Arrow, offered on every stage once Achilles fell): a directed hit
+	# from BEHIND its target (PantheonRules.hit_from_behind(), the one direction
+	# test, which reads any enemy's facing) deals back_damage more. Exactly 1
+	# while the passive is not owned; never for an undirected or arcing hit.
+	if origin != NO_ORIGIN and origin != FROM_ABOVE:
+		var heel := game.abilities.passive_value("mortal_heel", "back_damage")  # 0 when not owned.
+		if heel > 0.0 and PantheonRules.hit_from_behind(e, origin):
+			game.stat_add("mortal_heel_bonus_dmg", amount * heel)
+			amount *= 1.0 + heel
+	# --- Act V: the Burning Province --- Hidden Hand (the paired passive of
+	# Hundred Shadows, offered on every stage once Kage fell): a SPELL hit on a
+	# foe busy fighting a summon (Enemy.targeting_summon) deals hand_damage
+	# more; exactly 1 while the passive is not owned. Then Hundred Shadows hears
+	# the spell hit (its clones echo the next spell cast).
+	if HundredShadowsData.is_spell_source(source):
+		var hand := game.abilities.passive_value("hidden_hand", "hand_damage")  # 0 when not owned.
+		if hand > 0.0 and e.targeting_summon:
+			game.stat_add("hidden_hand_bonus_dmg", amount * hand)
+			amount *= 1.0 + hand
+		if game.abilities.spell_level(HundredShadowsData.ID) > 0:
+			game.abilities.spells.on_spell_hit(e, amount, source)
+	# --- Act VI: the Burning Gate --- Furnace Heart (the paired passive of
+	# Brimstone, offered on every stage once Moloch fell): a SPELL hit on a foe
+	# standing in fire (a burning Brimstone pit, or a burning Hell Pit on an Act
+	# VI stage: Brimstone.in_fire()) deals heart_damage more; exactly 1 while
+	# the passive is not owned (the fire test only runs when it is).
+	var heart := game.abilities.passive_value(BrimstoneData.FURNACE_HEART, BrimstoneData.HEART_KEY)  # 0 when not owned.
+	if heart > 0.0 and HundredShadowsData.is_spell_source(source) and Brimstone.in_fire(game, e):
+		game.stat_add("furnace_heart_bonus_dmg", amount * heart)
+		amount *= 1.0 + heart
+	# --- Act VII: Ravensmoor --- Pack Blood (the paired passive of Moonfang,
+	# offered on every stage once Vargr fell): every hit on a foe BLEEDING from
+	# the bound necromancer's Moonfang (Moonfang.bleeding()) deals
+	# bleed_vulnerability more; exactly 1 while the passive is not owned (the
+	# bleed test only runs when it is).
+	var pack := game.abilities.passive_value(MoonfangData.PACK_BLOOD, MoonfangData.PACK_KEY)  # 0 when not owned.
+	if pack > 0.0 and Moonfang.bleeding(game, e):
+		game.stat_add("pack_blood_bonus_dmg", amount * pack)
+		amount *= 1.0 + pack
+	# --- Act VII: the Witchwood --- Moonlit Rite (the paired passive of Hex
+	# Circle, offered on every stage once Isolde fell): a SPELL hit on a foe
+	# standing inside one of the necromancer's hex circles (WitchCircle
+	# .in_circle()) deals rite_damage more; exactly 1 while the passive is not
+	# owned (the circle test only runs when it is).
+	var rite := game.abilities.passive_value(WitchCircleData.MOONLIT_RITE, WitchCircleData.RITE_KEY)  # 0 when not owned.
+	if rite > 0.0 and HundredShadowsData.is_spell_source(source) and WitchCircle.in_circle(game, e):
+		game.stat_add("moonlit_rite_bonus_dmg", amount * rite)
+		amount *= 1.0 + rite
 	# Holy ground of a sanctified chamber (Sanctum only; null elsewhere): the
 	# undead fighting on it hit weaker.
 	var sanctum := game.enemies.sanctum  # Sanctum objectives (null on other stages).
@@ -283,6 +447,13 @@ func damage_enemy(e: Enemy, amount: float, source: String, as_slot: int = -1) ->
 		if raw <= 0.0:
 			e.on_hit()  # Fully absorbed by a holy shield.
 			return 0.0
+	# --- Act VII: the Sanguine Court --- Bloodfeast's blood shield (0 on every
+	# other act, so the check never passes there).
+	if e.blood_shield > 0.0 and game.court != null:
+		raw = game.court.feast.absorb(e, raw)
+		if raw <= 0.0:
+			e.on_hit()  # Fully absorbed by the blood shield.
+			return 0.0
 	var dealt := minf(raw, e.hp)
 	if rot > 0.0:
 		game.stat_add("rot_bonus_dmg", dealt * rot / (1.0 + rot))
@@ -310,13 +481,35 @@ func damage_enemy(e: Enemy, amount: float, source: String, as_slot: int = -1) ->
 	if e.is_structure:
 		game.stat_add("structdmg_" + source, dealt)  # Outposts, generators, crystals, altars, carts (autotest).
 	Juice.enemy_hit(e, dealt, source)
+	# --- Act IX: the Crash Site --- an Infestation egg this hit reached is
+	# cleared and leaves the field WITHOUT a kill (no XP, drop, corpse or kill
+	# count: CrashSiteDirector.clear_egg(); false for anything but an egg, and
+	# only asked while Game.concord exists).
+	if e.hp <= 0.0 and game.concord != null and CrashSiteDirector.clear_egg(game, e, source):
+		return dealt
 	if e.hp <= 0.0:
 		game.stat_add("kills_by_" + source, 1.0)  # Killing blow per damage source (autotest spell summaries).
 		if source in MetaData.WARRIOR_KILL_SOURCES:
 			game.stat_add("warrior_kills", 1.0)  # Bone Legion achievement (MetaData)
+		# --- Act VII: Ravensmoor --- a free Ghoul near the corpse claims it
+		# first, so every corpse and raise path below finds no body there
+		# (GhoulKit.claim_corpse() -> Enemy.leaves_corpse(); only while the
+		# Court's rules exist, so nothing changes on Acts I to VI).
+		if game.court != null:
+			GhoulKit.claim_corpse(game, e)
+		# --- Act IX: the Crash Site --- Infestation: a Concord enemy's death
+		# spot is recorded, and an egg sits there (CrashSiteDirector
+		# .on_concord_death(), the one call; it returns at once off the Crash
+		# Site, and nothing runs while the Concord's rules do not exist).
+		if game.concord != null:
+			CrashSiteDirector.on_concord_death(game, e)
 		game.horde.evolutions.on_enemy_killed(e, source)  # Lich raise-the-dead.
 		game.innates.on_enemy_killed(e, source)  # Character innates (no-op without one).
-		_kill_enemy(e)
+		_kill_enemy(e, is_minion_source(source))
+	# --- Act IX: the Concord of Stars --- the one burn check: a spell hit burns
+	# the alien ground around the enemy it hit (only while Game.concord exists).
+	if game.concord != null and dealt > 0.0:
+		game.concord.on_enemy_hit(e, source)
 	return dealt
 
 
@@ -353,17 +546,21 @@ func _sanctum_mitigation(e: Enemy, raw: float, source: String, shred: float = 0.
 ## barrier) absorbs what it can before HP is lost. Stats:
 ## host_dmg_prevented, resilience_dmg_prevented (+ _area / _holy),
 ## plating_dmg_prevented.
-func damage_unit(u: SummonedUnit, amount: float, source: String) -> void:
+## Act IV: `by` is the enemy whose own blow this is (Enemy._melee_hit() and
+## its cleave; null for every other hit): a summon it kills is Glory for a hero.
+func damage_unit(u: SummonedUnit, amount: float, source: String, by: Enemy = null) -> void:
 	if not u.active or u.state == SummonedUnit.State.DEAD or amount <= 0.0:
 		return
 	if game.coop != null and u.director != null and u.director.slot != game.coop.bound:
 		var prev := game.coop.bound  # Co-op: the summon's own army's rules (see the header).
 		game.coop.bind(u.director.slot)
-		damage_unit(u, amount, source)
+		damage_unit(u, amount, source, by)
 		game.coop.bind(prev)
 		return
 	if u.airborne:
 		return  # A flying Gargoyle cannot be hit (GargoyleBehavior).
+	if u.charmed:
+		return  # Act VI: parked by Temptation (its hostile body takes the hits).
 	if u.stone_form:
 		game.stat_add("horror_stone_dmg_prevented", amount)
 		return  # A Cathedral Horror in stone form takes no damage (GargoyleBehavior).
@@ -402,11 +599,26 @@ func damage_unit(u: SummonedUnit, amount: float, source: String) -> void:
 		if bastion > 0.0:
 			game.stat_add("syn_bastion_prevented", prevented - by_mason)
 		amount *= mult
+	# --- Act IV: the Asphodel Underworld --- a summon behaviour's own cut (the
+	# Myrmidon Shades' locked shield wall; exactly 1 for every other class).
+	if u.behavior != null:
+		var bm := u.behavior.damage_taken_mult(u, source)  # Share of the hit kept.
+		if bm < 1.0:
+			game.stat_add("behavior_dmg_prevented_" + u.unit_class, amount * (1.0 - bm))
+			amount *= bm
 	# --- Act III: the Scrap Wastes --- Lead-Lined Bones: ranged hits deal less.
 	var lead := ab.passive_value("lead_lined_bones", "ranged_reduction")  # 0..1, 0 when not owned.
 	if lead > 0.0 and is_ranged_source(source):
 		game.stat_add("lead_lined_dmg_prevented", amount * lead)
 		amount *= 1.0 - lead
+	# --- Act VIII: the Last Line --- Kevlar Bones (hook, not built): ranged City
+	# hits deal less (Armour.kevlar_mult(); exactly 1 while the passive is not
+	# owned, and off Act VIII).
+	if game.city != null:
+		var kev := game.city.armour.kevlar_mult(source)  # Share of the hit kept.
+		if kev < 1.0:
+			game.stat_add("kevlar_dmg_prevented", amount * (1.0 - kev))
+			amount *= kev
 	var plate := ab.passive_value("bone_plating", "flat_reduction")  # Flat damage off this hit.
 	if plate > 0.0 and not source in PassiveData.PLATING_EXEMPT_SOURCES:
 		var cut := minf(plate, amount * (1.0 - PassiveData.PLATING_MIN_FRACTION))  # Damage actually removed.
@@ -425,9 +637,13 @@ func damage_unit(u: SummonedUnit, amount: float, source: String) -> void:
 	u.on_hit()
 	game.stat_add("damage_to_summons", dealt)
 	game.stat_add("summon_dmg_from_" + source, dealt)
+	if by != null and game.court != null:
+		game.court.feast.on_hit(by, dealt, u.position, true)  # Act VII: Bloodfeast (the one call on summons).
 	if u.hp <= 0.0:
 		game.stat_add("death_" + u.unit_class + "_by_" + source, 1.0)
 		game.horde.colossi.on_unit_killed(u)  # Bone Colossus shrapnel burst.
+		if by != null and game.pantheon != null:
+			game.pantheon.on_summon_killed(u, by)  # Act IV: a hero's Glory stack.
 		game.horde.on_unit_died(u)
 
 
@@ -452,11 +668,14 @@ func is_ranged_source(source: String) -> bool:
 ## (evolution passive) and the meta Bone Mail armor (own category) reduce the
 ## damage first. While Sovereign's Decree runs (UltimateSystem
 ## .player_untargetable()) every hit is ignored before anything else.
-func damage_player(amount: float, source: String, target: Necromancer = null) -> void:
+## Act VII: `by` is the enemy whose own blow this is (Enemy._melee_hit(), the
+## Court kits' feeding blows; null for every other hit): Bloodfeast feeds it on
+## the HP lost.
+func damage_player(amount: float, source: String, target: Necromancer = null, by: Enemy = null) -> void:
 	if target != null and game.coop != null and target != game.player:
 		var prev := game.coop.bound  # Co-op: that necromancer's own rules (see the header).
 		game.coop.bind(game.coop.slot_of(target))
-		damage_player(amount, source)
+		damage_player(amount, source, null, by)
 		game.coop.bind(prev)
 		return
 	if game.ultimates.player_untargetable():
@@ -464,6 +683,8 @@ func damage_player(amount: float, source: String, target: Necromancer = null) ->
 		return  # Sovereign's Decree: the necromancer cannot be targeted (every hit ignored).
 	if game.innates.try_block_hit():
 		return  # Ossuary Ward shard (Bone Oracle) absorbed the whole hit.
+	if _grave_ward_blocks():
+		return  # Grave Ward (Ossuary) swallowed the whole hit.
 	amount *= 1.0 - game.abilities.passive_value("warding_ritual", "damage_reduction")
 	amount *= 1.0 - game.meta.value("damage_reduction")
 	if game.dread != null:
@@ -474,13 +695,53 @@ func damage_player(amount: float, source: String, target: Necromancer = null) ->
 		game.rewards.note_player_hit(hp_before, lost, game.player.max_hp)  # Content wave 2: reads only.
 		game.stat_add("damage_to_player", lost)
 		game.stat_add("player_dmg_from_" + source, lost)
+		if by != null and game.court != null:
+			game.court.feast.on_hit(by, lost, game.player.position, false)  # Act VII: Bloodfeast (the one call on the necromancer).
 		game.shake(4.0)
+		_check_last_rites()
+
+
+## Grave Ward (Ossuary expansion step 3, MetaModifiers "ward_hits"): spends one of
+## the run's warded hits on a hit that would land (not during i-frames) and grants
+## the normal post-hit i-frames, so one burst never eats two. False (no-op) when no
+## ward is left: always the case without the upgrade.
+func _grave_ward_blocks() -> bool:
+	var p := game.player
+	if p.ward_hits_left <= 0 or p.dead or p.iframes > 0.0:
+		return false
+	p.ward_hits_left -= 1
+	p.iframes = PlayerData.IFRAMES
+	game.stat_add("grave_ward_blocks", 1.0)
+	game.effects.ring(p.position, p.radius * 3.0, Palette.BONE, 0.35)  # The ward breaks (visual only).
+	return true
+
+
+## Last Rites (Ossuary expansion step 3, MetaModifiers "last_rites"): the first
+## time in a run a hit leaves the necromancer alive under
+## MetaData.LAST_RITES_HP_FRACTION of his max HP, he gets that many seconds of
+## invulnerability (his i-frames). No-op without the upgrade.
+func _check_last_rites() -> void:
+	var p := game.player
+	var secs := game.meta.value("last_rites")  # Seconds of invulnerability (0 = not owned).
+	if secs <= 0.0 or p.last_rites_used or p.dead or p.hp >= p.max_hp * MetaData.LAST_RITES_HP_FRACTION:
+		return
+	p.last_rites_used = true
+	p.iframes = maxf(p.iframes, secs)
+	game.stat_add("last_rites_fired", 1.0)
+	game.effects.ring(p.position, p.radius * 4.0, Palette.NECRO_GREEN, 0.5)  # Visual only.
 
 
 ## Heals a summon, capped at max HP. Returns HP actually restored.
+## Act VII (Castle Sanguis): Thirst Eternal makes every heal on a summon larger
+## (_thirst_eternal(), THE one check; 0 while not owned, so nothing changes
+## on any other run).
 func heal_unit(u: SummonedUnit, amount: float) -> float:
 	if not u.active:
 		return 0.0
+	# --- Act VII: Castle Sanguis --- Thirst Eternal (0 while not owned).
+	var thirst := _thirst_eternal(u)  # Extra share of the heal (0..).
+	if thirst > 0.0:
+		amount *= 1.0 + thirst
 	var healed := minf(amount, u.max_hp - u.hp)
 	if healed <= 0.0:
 		return 0.0
@@ -490,7 +751,9 @@ func heal_unit(u: SummonedUnit, amount: float) -> float:
 	return healed
 
 
-## Heals the necromancer, capped at max HP. Returns HP restored.
+## Heals the necromancer, capped at max HP. Returns HP restored. While Lilith's
+## kiss marks him (Act VI, Necromancer.kiss_marked_until) the heal is dealt to
+## him as damage instead (source LilithData.KISS_SOURCE) and 0 is returned.
 func heal_player(amount: float, target: Necromancer = null) -> float:
 	if target != null and game.coop != null and target != game.player:
 		var prev := game.coop.bound  # Co-op: heal that necromancer (his own innate hears it).
@@ -498,6 +761,13 @@ func heal_player(amount: float, target: Necromancer = null) -> float:
 		var healed_as := heal_player(amount)
 		game.coop.bind(prev)
 		return healed_as
+	# --- Act VI: the Palace of Silk and Ash --- Lilith's kiss (LilithHazards): while
+	# the necromancer is marked, every heal on him is turned into damage (THE one
+	# check; kiss_marked_until stays 0 on every other run, so nothing changes there).
+	if game.player.kiss_marked_until > game.elapsed and amount > 0.0:
+		game.stat_add("kiss_heals_turned", 1.0)
+		damage_player(amount * LilithData.HEAL_TO_DAMAGE, LilithData.KISS_SOURCE)
+		return 0.0
 	var healed := game.player.heal(amount)
 	game.stat_add("player_healing", healed)
 	if healed > 0.0:
@@ -712,10 +982,64 @@ func stun_enemy(e: Enemy, duration: float, boss_mult: float, elite_mult: float) 
 	return d
 
 
+# --- Act IV: Mount Olympus ---
+## THE one stun path for summons (Act IV: a Gorgon's gaze turns them to
+## stone): holds summon `u` for `duration` s (SummonedUnit.stun(): no
+## thinking, moving, attacking or casting; drawn stone-grey). A longer stun
+## already running is kept; airborne, spawning and dead units are immune.
+## `source` tags the stats. Returns the seconds applied (0 = immune). Stats:
+## summon_stuns, summon_stunned_seconds, summon_stuns_<source>.
+func stun_unit(u: SummonedUnit, duration: float, source: String) -> float:
+	# --- Act V: the Road to the Sun --- Oni's Resolve: the summon's own necromancer's
+	# passive shortens every stun on it (0 while not owned: nothing changes).
+	var resolve := _onis_resolve(u)  # Share of the stun shrugged off (0..1).
+	if resolve > 0.0 and duration > 0.0:
+		game.stat_add("onis_resolve_seconds", duration * resolve)
+		duration *= 1.0 - resolve
+	if duration <= 0.0 or not u.stun(game.elapsed + duration):
+		return 0.0
+	game.stat_add("summon_stuns", 1.0)
+	game.stat_add("summon_stunned_seconds", duration)
+	game.stat_add("summon_stuns_" + source, 1.0)
+	return duration
+
+
+# --- Act V: the Burning Province ---
+## THE one blind path for summons (Act V: a Kunoichi's smoke bomb, Kage's
+## smoke fields): blinds summon `u` for `duration` s (SummonedUnit.blind(): it
+## keeps to the ring but cannot find or fight a foe; drawn with smoke over its
+## eyes). A longer blind already running is kept; airborne, spawning and dead
+## units are immune. An enemy effect on a unit: summons have no act rule of
+## their own. `source` tags the stats. Returns the seconds applied (0 =
+## immune). Stats: summon_blinds, summon_blinded_seconds, summon_blinds_<source>.
+func blind_unit(u: SummonedUnit, duration: float, source: String) -> float:
+	if duration <= 0.0 or not u.blind(game.elapsed + duration):
+		return 0.0
+	game.stat_add("summon_blinds", 1.0)
+	game.stat_add("summon_blinded_seconds", duration)
+	game.stat_add("summon_blinds_" + source, 1.0)
+	return duration
+
+
+## Oni's Resolve (PassiveData "onis_resolve"): the share (0..1) of a stun summon
+## `u` shrugs off, read from its own necromancer's build (co-op: the slot whose
+## army it is, like DrawCuts.unbending_mult()); 0 while not owned.
+func _onis_resolve(u: SummonedUnit) -> float:
+	var ab := game.abilities  # The bound player's passives.
+	if game.coop != null and u != null:
+		for s in game.coop.slots:
+			if s.horde == u.director:
+				ab = s.abilities
+				break
+	return clampf(ab.passive_value(OniBehavior.RESOLVE, OniBehavior.RESOLVE_KEY), 0.0, 0.9)
+
+
 ## Death of an enemy: cosmetic pop, XP crystal, kill counter, power-up drop
 ## and chest rolls, then the EnemyDirector deactivates/pools it (or ends the run for the
 ## boss).
-func _kill_enemy(e: Enemy) -> void:
+## `by_summon` is true when the killing blow was a summon's (is_minion_source()):
+## Dark Tithe (Ossuary) charges the ultimate meter more for the other kills.
+func _kill_enemy(e: Enemy, by_summon: bool = true) -> void:
 	game.effects.pop(e.position, Palette.CRIMSON if not e.is_boss else Palette.GOLD, e.radius * 1.2, "enemy_death")  # Animation when its art exists (visual only).
 	game.motion.on_enemy_killed(e)  # Collapses into holy ash (visual only; not bosses or structures).
 	Juice.enemy_killed(e)
@@ -736,13 +1060,36 @@ func _kill_enemy(e: Enemy) -> void:
 	game.abilities.on_enemy_killed(e)  # Corpse Explosion corpses, Soul Rapture bursts.
 	game.powerups.on_enemy_killed(e)  # Power-up drop roll (PowerupData rules).
 	game.chests.on_enemy_killed(e)  # Treasure chest roll (ChestData rules).
-	game.dread_rally.on_enemy_killed(e)  # Dread Rally soul meter.
+	game.dread_rally.on_enemy_killed(e, not by_summon)  # Dread Rally soul meter (Dark Tithe on the necromancer's own kills).
+	_ferrymans_toll(e)  # Act IV, the Asphodel Underworld: a slowed foe pays the ferryman (no-op unless owned).
 	game.ultimates.on_enemy_killed(e)  # Grave Tide raises (no-op unless it runs).
 	if game.dread != null:
 		game.dread.on_kill()  # Act II: a kill steadies the mind.
 	if e.is_elite and not e.is_boss and not e.is_structure:
 		_holy_retribution(e)
+	if game.pantheon != null:
+		game.pantheon.on_enemy_killed(e)  # Act IV: a swallowed corpse, a hero's Glory payout.
 	game.enemies.on_enemy_killed(e)
+
+
+# --- Act IV: the Asphodel Underworld ---
+## Ferryman's Toll (PassiveData "ferrymans_toll", RiverStyxData): foe `e`, slain
+## while slowed, pays the ferryman: the necromancer heals toll_heal HP (at most
+## TOLL_HEAL_CAP_PER_S a second) and the Dread Rally gains toll_rally soul
+## points. Its value is 0 while the passive is not owned: nothing happens then.
+func _ferrymans_toll(e: Enemy) -> void:
+	var heal := game.abilities.passive_value(RiverStyxData.TOLL, RiverStyxData.TOLL_HEAL_KEY)  # HP per slowed kill.
+	if heal <= 0.0 or e.slow_timer <= 0.0:
+		return
+	game.stat_add("toll_kills", 1.0)
+	game.dread_rally.add_points(game.abilities.passive_value(RiverStyxData.TOLL, RiverStyxData.TOLL_RALLY_KEY))
+	if game.elapsed - _toll_window_t >= 1.0:
+		_toll_window_t = game.elapsed
+		_toll_window = 0.0
+	var h := minf(heal, RiverStyxData.TOLL_HEAL_CAP_PER_S - _toll_window)
+	if h > 0.0:
+		_toll_window += h
+		game.stat_add("toll_healed", heal_player(h))
 
 
 ## Holy Retribution (GDD §8.5 run modifier, game.difficulty): a slain elite
@@ -763,3 +1110,18 @@ func _holy_retribution(e: Enemy) -> void:
 				Projectile.Kind.RADIANT_BOLT, "holy_retribution")
 	game.effects.ring(e.position, 34.0, Palette.GOLD, 0.35)
 	game.stat_add("holy_retribution_bursts", 1.0)
+
+
+# --- Act VII: Castle Sanguis ---
+## Thirst Eternal (PassiveData "thirst_eternal", Nosferatu's paired passive):
+## the extra share (0..) of every heal summon `u` receives, read from its own
+## necromancer's build (co-op: the slot whose army it is, like
+## _onis_resolve()); 0 while not owned.
+func _thirst_eternal(u: SummonedUnit) -> float:
+	var ab := game.abilities  # The bound player's passives.
+	if game.coop != null and u != null:
+		for s in game.coop.slots:
+			if s.horde == u.director:
+				ab = s.abilities
+				break
+	return maxf(0.0, ab.passive_value(BloodSpawnBehavior.THIRST, BloodSpawnBehavior.THIRST_KEY))

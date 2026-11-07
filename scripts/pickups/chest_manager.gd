@@ -12,6 +12,10 @@
 ## Counters (Game.stats): chests_spawned, chests_opened, chest_items,
 ## chest_count_<n>, chests_lost_at_cap, chests_pity; `open_log` lists every
 ## opened chest for the autotest summary.
+## Relics and Grave Offerings (GDD §15.0 "Relics and Grave Offerings", read
+## through each player's game.meta): the Grave Lantern relic adds upgrades to every
+## chest (roll_count(), the opener's relics), and the Gilded Coffer offering places
+## one chest beside its player at OfferingData.COFFER_TIME (_offering_chests()).
 class_name ChestManager
 extends Node2D
 
@@ -29,6 +33,8 @@ var since_chest: float = 0.0
 var open_log: PackedStringArray = PackedStringArray()
 ## Chest drop / content-size RNG, separate from the gameplay RNG.
 var _rng: RandomNumberGenerator = RandomNumberGenerator.new()
+## Gilded Coffer: player slot index (0 in solo) -> true once checked at COFFER_TIME.
+var _coffers_checked: Dictionary = {}
 
 
 func _ready() -> void:
@@ -42,6 +48,7 @@ func _ready() -> void:
 ## Ages the pity timer, animates chests and opens the first one the
 ## necromancer walks over (only while the run is playing).
 func step(delta: float) -> void:
+	_offering_chests()
 	if game.coop != null:
 		_step_coop(delta)
 		return
@@ -146,10 +153,34 @@ func spawn_chest(pos: Vector2, force: bool) -> bool:
 
 ## Weighted number of upgrades in the next chest (ChestData.COUNT_WEIGHTS);
 ## always 1 before ChestData.LARGE_CHEST_TIME. The roll is made either way,
-## so the chest RNG stream does not depend on the time gate.
+## so the chest RNG stream does not depend on the time gate. The opener's relics
+## add their chest_bonus (Grave Lantern; game.meta is the opener's slot).
 func roll_count() -> int:
 	var n_rolled := _roll_weights()  # 1, 3 or 5 from the weights.
-	return n_rolled if game.elapsed >= ChestData.LARGE_CHEST_TIME else 1
+	return (n_rolled if game.elapsed >= ChestData.LARGE_CHEST_TIME else 1) + maxi(0, game.meta.relic_int("chest_bonus"))
+
+
+## Gilded Coffer (OfferingData): once the run reaches COFFER_TIME, every player
+## whose offering has extra_chest gets that many chests beside him (force-placed,
+## never lost at the cap). Checked once per player.
+func _offering_chests() -> void:
+	if game.elapsed < OfferingData.COFFER_TIME or _coffers_checked.size() >= (1 if game.coop == null else game.coop.slots.size()):
+		return
+	if game.coop == null:
+		_place_coffers(0, game.meta, game.player)
+		return
+	for s in game.coop.slots:
+		_place_coffers(s.index, s.meta, s.player)
+
+
+## Places player `idx`'s Gilded Coffer chests (modifiers `m`, necromancer `p`).
+func _place_coffers(idx: int, m: MetaModifiers, p: Necromancer) -> void:
+	if _coffers_checked.has(idx) or m == null or p == null:
+		return
+	_coffers_checked[idx] = true
+	for k in maxi(0, m.relic_int("extra_chest")):
+		spawn_chest(p.position + OfferingData.COFFER_OFFSET + Vector2(float(k) * ChestData.SIZE * 3.0, 0.0), true)
+		game.stat_add("offering_chests", 1.0)
 
 
 ## Weighted 1 / 3 / 5 draw over ChestData.COUNT_WEIGHTS.

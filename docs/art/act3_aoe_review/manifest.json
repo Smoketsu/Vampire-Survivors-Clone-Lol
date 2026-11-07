@@ -1,0 +1,780 @@
+{
+ "title": "Act III AoE art (the Empire's warnings, beams and zones)",
+ "note": "All pieces are procedural pixel art made by tools/empire_aoe_art.py (no image generation, $0) and drawn by scripts/fx/empire_fx.gd on the approved Act I families (band pieces at 1:1 on the exact hit edge, fills as clipped 2 px rows, beam bodies scrolled at the real width), in the Empire's own look: a hazard-striped red / amber band with cyan-white ticks, a red hex-grid fill, a cyan-white scan-line timing front, targeting brackets closing on the area, white-hot cores. On an Act III stage the shared Effect telegraphs (Kestrel, the Trojan Horse, the Beta Build, Valkyrie 2.0, the Motherboard's grab) use this set too. Images are at 1x and x4 (x2 for the big masks) nearest-neighbour on a dark chrome floor colour (the storm masks shown tinted rust-ochre); strips also as GIFs. Before / after crops are 1:1 game-size (1280x720 layout) frames of the same seeded autotest moments under xvfb: before = integration 65be67b (runs B*) or this branch with the new PNGs moved away, which draws exactly the code fallbacks (runs H*, checked pixel-equal to B* at 4:10 / 3:30 within a few stray pixels); after = this branch. Not caught in a shot window and left for the owner's playtest: the Juggernaut's flame billows, the Lock-On locked blink, Deus's hangar doors, footfall shocks, overload pulse and teleport glow, the finale's soul binding, the Motherboard's magnets and claws, the Empire boss death strip, the pylon stump decal.",
+ "runs": {
+  "W": "--seed=1337 --stage=wastes --policy=army --spells=death_ray --spawn=mortar_walker@40x4,trojan_horse@60",
+  "A": "--seed=1337 --stage=assembly --policy=army --spawn=juggernaut@30x3,arc_engineer@32x4",
+  "C": "--seed=1337 --stage=citadel --policy=army",
+  "all": "xvfb-run ... --rendering-driver opengl3 --resolution 1280x720 --fixed-fps 60 -- --autotest --speed=16 --art-shots=T,... --shot-dir=DIR (B = before on integration, H = before with the new art hidden, after on this branch)"
+ },
+ "images": [
+  {
+   "id": "empire_fx_edge",
+   "key": "empire_fx/edge",
+   "path": "docs/art/act3_aoe_review/images/empire_fx_edge.png",
+   "path_x4": "docs/art/act3_aoe_review/images/empire_fx_edge_x4.png",
+   "size": [
+    10,
+    6
+   ],
+   "description": "Empire warning band piece (10 x 6, row 0 outside): signal ink, warning red, two rows of amber hazard stripes, red, a dark inner row; tiled at 1:1 along every Act III warning circle, lane, cone and stamp square, the hit edge through its middle"
+  },
+  {
+   "id": "empire_fx_edge_tick",
+   "key": "empire_fx/edge_tick",
+   "path": "docs/art/act3_aoe_review/images/empire_fx_edge_tick.png",
+   "path_x4": "docs/art/act3_aoe_review/images/empire_fx_edge_tick_x4.png",
+   "size": [
+    10,
+    10
+   ],
+   "description": "The band piece with a cyan-white targeting tick pointing into the danger (every other piece): measured, machine-like, never the Covenant's crimson teeth"
+  },
+  {
+   "id": "empire_fx_front",
+   "key": "empire_fx/front",
+   "path": "docs/art/act3_aoe_review/images/empire_fx_front.png",
+   "path_x4": "docs/art/act3_aoe_review/images/empire_fx_front_x4.png",
+   "size": [
+    8,
+    3
+   ],
+   "description": "Timing front (8 x 3): a cyan-white scan line at radius x progress (circle, cone), across a lane and round a stamp square"
+  },
+  {
+   "id": "empire_fx_hex",
+   "key": "empire_fx/hex",
+   "path": "docs/art/act3_aoe_review/images/empire_fx_hex.png",
+   "path_x4": "docs/art/act3_aoe_review/images/empire_fx_hex_x4.png",
+   "size": [
+    14,
+    24
+   ],
+   "description": "Empire fill (14 x 24 seamless): a warning-red hex grid with amber nodes, laid as 2 px rows clipped to the exact danger shape; denser where the timing has filled"
+  },
+  {
+   "id": "empire_fx_chevron",
+   "key": "empire_fx/chevron",
+   "path": "docs/art/act3_aoe_review/images/empire_fx_chevron.png",
+   "path_x4": "docs/art/act3_aoe_review/images/empire_fx_chevron_x4.png",
+   "size": [
+    13,
+    13
+   ],
+   "description": "Double chevron (13 x 13, pointing +x): amber with a white-hot edge; Empire lanes (lit as the timing passes) and the laser grid's sweep band"
+  },
+  {
+   "id": "empire_fx_target",
+   "key": "empire_fx/target",
+   "path": "docs/art/act3_aoe_review/images/empire_fx_target.png",
+   "path_x4": "docs/art/act3_aoe_review/images/empire_fx_target_x4.png",
+   "size": [
+    15,
+    15
+   ],
+   "description": "Impact point (15 x 15): a cyan-white crosshair with a red centre pip"
+  },
+  {
+   "id": "empire_fx_bracket",
+   "key": "empire_fx/bracket",
+   "path": "docs/art/act3_aoe_review/images/empire_fx_bracket.png",
+   "path_x4": "docs/art/act3_aoe_review/images/empire_fx_bracket_x4.png",
+   "size": [
+    9,
+    9
+   ],
+   "description": "Targeting box corner (9 x 9): four close in on a strike circle or a stamp square as it nears, ending on its bounding box"
+  },
+  {
+   "id": "empire_fx_uplink",
+   "key": "empire_fx/uplink",
+   "path": "docs/art/act3_aoe_review/images/empire_fx_uplink.png",
+   "path_x4": "docs/art/act3_aoe_review/images/empire_fx_uplink_x4.png",
+   "size": [
+    16,
+    96
+   ],
+   "description": "Orbital uplink column (16 x 96, base at the bottom): a cyan-white targeting beam from the sky over a strike's last 0.3 s (Purge Protocol, Citadel guns)"
+  },
+  {
+   "id": "effects_empire_blast",
+   "key": "effects/empire_blast",
+   "path": "docs/art/act3_aoe_review/images/effects_empire_blast.png",
+   "path_x4": "docs/art/act3_aoe_review/images/effects_empire_blast_x4.png",
+   "size": [
+    1024,
+    128
+   ],
+   "description": "Empire strike / slam landing, amber (8 frames of 128 px): white-hot flash and lens glint, a hex-segmented shock ring rolling out to the gameplay radius, sparks, chrome shards, a smoke ring",
+   "gif": "docs/art/act3_aoe_review/images/effects_empire_blast.gif"
+  },
+  {
+   "id": "effects_empire_blast_red",
+   "key": "effects/empire_blast_red",
+   "path": "docs/art/act3_aoe_review/images/effects_empire_blast_red.png",
+   "path_x4": "docs/art/act3_aoe_review/images/effects_empire_blast_red_x4.png",
+   "size": [
+    1024,
+    128
+   ],
+   "description": "The same landing in warning red (overloads, heavy hits: Kestrel's charge, Deus's phase breaks, the Motherboard's fall, the Trojan's split)",
+   "gif": "docs/art/act3_aoe_review/images/effects_empire_blast_red.gif"
+  },
+  {
+   "id": "effects_empire_boss_death",
+   "key": "effects/empire_boss_death",
+   "path": "docs/art/act3_aoe_review/images/effects_empire_boss_death.png",
+   "path_x4": "docs/art/act3_aoe_review/images/effects_empire_boss_death_x4.png",
+   "size": [
+    2560,
+    256
+   ],
+   "description": "An Empire stage boss falls (10 frames of 256 px): a red blast at the heart, four amber secondary blasts popping round the hull, a cyan-white shock ring racing out (Kestrel, the Motherboard, Deus Ex Machina; the Covenant's holy boss_death elsewhere)",
+   "gif": "docs/art/act3_aoe_review/images/effects_empire_boss_death.gif"
+  },
+  {
+   "id": "effects_empire_blast_chrome",
+   "key": "effects/empire_blast_chrome",
+   "path": "docs/art/act3_aoe_review/images/effects_empire_blast_chrome.png",
+   "path_x4": "docs/art/act3_aoe_review/images/effects_empire_blast_chrome_x4.png",
+   "size": [
+    1024,
+    128
+   ],
+   "description": "The same in chrome and cyan-white (energy pops: Kestrel's leap, Deus's shield drones, the Trojan's stomp, Valkyrie's blade arc)",
+   "gif": "docs/art/act3_aoe_review/images/effects_empire_blast_chrome.gif"
+  },
+  {
+   "id": "empire_fx_ray_body",
+   "key": "empire_fx/ray_body",
+   "path": "docs/art/act3_aoe_review/images/empire_fx_ray_body.png",
+   "path_x4": "docs/art/act3_aoe_review/images/empire_fx_ray_body_x4.png",
+   "size": [
+    16,
+    10
+   ],
+   "description": "Death Ray body (16 x 10 seamless, scrolled outward, drawn at the beam's exact width): the necromancer's violet soul laser with flare flow streaks"
+  },
+  {
+   "id": "empire_fx_ray_glow",
+   "key": "empire_fx/ray_glow",
+   "path": "docs/art/act3_aoe_review/images/empire_fx_ray_glow.png",
+   "path_x4": "docs/art/act3_aoe_review/images/empire_fx_ray_glow_x4.png",
+   "size": [
+    8,
+    12
+   ],
+   "description": "Death Ray glow (8 x 12, stepped alphas): under the beam and as its fading afterglow"
+  },
+  {
+   "id": "empire_fx_ray_tip",
+   "key": "empire_fx/ray_tip",
+   "path": "docs/art/act3_aoe_review/images/empire_fx_ray_tip.png",
+   "path_x4": "docs/art/act3_aoe_review/images/empire_fx_ray_tip_x4.png",
+   "size": [
+    96,
+    24
+   ],
+   "description": "Death Ray tip burst (4 frames of 24 px): flare core, glow ring, turning spokes; also its origin flare",
+   "gif": "docs/art/act3_aoe_review/images/empire_fx_ray_tip.gif"
+  },
+  {
+   "id": "empire_fx_laser_body",
+   "key": "empire_fx/laser_body",
+   "path": "docs/art/act3_aoe_review/images/empire_fx_laser_body.png",
+   "path_x4": "docs/art/act3_aoe_review/images/empire_fx_laser_body_x4.png",
+   "size": [
+    16,
+    10
+   ],
+   "description": "Laser grid beam body (16 x 10 seamless = its 10 px width): warning red, amber, white-hot core and flow streaks"
+  },
+  {
+   "id": "empire_fx_laser_glow",
+   "key": "empire_fx/laser_glow",
+   "path": "docs/art/act3_aoe_review/images/empire_fx_laser_glow.png",
+   "path_x4": "docs/art/act3_aoe_review/images/empire_fx_laser_glow_x4.png",
+   "size": [
+    8,
+    12
+   ],
+   "description": "Laser glow (8 x 12, stepped red alphas), at 2.6 x the beam width"
+  },
+  {
+   "id": "empire_fx_laser_warn",
+   "key": "empire_fx/laser_warn",
+   "path": "docs/art/act3_aoe_review/images/empire_fx_laser_warn.png",
+   "path_x4": "docs/art/act3_aoe_review/images/empire_fx_laser_warn_x4.png",
+   "size": [
+    8,
+    3
+   ],
+   "description": "Telegraphed beam sight line (8 x 3 dash): blinks and thickens as the grid arms"
+  },
+  {
+   "id": "empire_fx_laser_cap",
+   "key": "empire_fx/laser_cap",
+   "path": "docs/art/act3_aoe_review/images/empire_fx_laser_cap.png",
+   "path_x4": "docs/art/act3_aoe_review/images/empire_fx_laser_cap_x4.png",
+   "size": [
+    32,
+    16
+   ],
+   "description": "Laser emitter (2 frames of 16 px: armed red lens, firing white-hot) at both ends of a beam",
+   "gif": "docs/art/act3_aoe_review/images/empire_fx_laser_cap.gif"
+  },
+  {
+   "id": "empire_fx_lance_body",
+   "key": "empire_fx/lance_body",
+   "path": "docs/art/act3_aoe_review/images/empire_fx_lance_body.png",
+   "path_x4": "docs/art/act3_aoe_review/images/empire_fx_lance_body_x4.png",
+   "size": [
+    16,
+    30
+   ],
+   "description": "Judgment Lance body (16 x 30 seamless = its 30 px width): amber edges, white-hot glow and core"
+  },
+  {
+   "id": "empire_fx_lance_glow",
+   "key": "empire_fx/lance_glow",
+   "path": "docs/art/act3_aoe_review/images/empire_fx_lance_glow.png",
+   "path_x4": "docs/art/act3_aoe_review/images/empire_fx_lance_glow_x4.png",
+   "size": [
+    8,
+    16
+   ],
+   "description": "Judgment Lance glow (8 x 16, stepped amber alphas), at 1.8 x its width"
+  },
+  {
+   "id": "empire_fx_lance_tip",
+   "key": "empire_fx/lance_tip",
+   "path": "docs/art/act3_aoe_review/images/empire_fx_lance_tip.png",
+   "path_x4": "docs/art/act3_aoe_review/images/empire_fx_lance_tip_x4.png",
+   "size": [
+    128,
+    32
+   ],
+   "description": "Judgment Lance head (4 frames of 32 px), amber and white-hot",
+   "gif": "docs/art/act3_aoe_review/images/empire_fx_lance_tip.gif"
+  },
+  {
+   "id": "empire_fx_gate_wall",
+   "key": "empire_fx/gate_wall",
+   "path": "docs/art/act3_aoe_review/images/empire_fx_gate_wall.png",
+   "path_x4": "docs/art/act3_aoe_review/images/empire_fx_gate_wall_x4.png",
+   "size": [
+    22,
+    18
+   ],
+   "description": "Shield Gate wall (22 x 18 seamless = its 18 px thickness, scrolled along it): white-hot edges, a translucent amber field crossed by a hex lattice"
+  },
+  {
+   "id": "empire_fx_gate_glow",
+   "key": "empire_fx/gate_glow",
+   "path": "docs/art/act3_aoe_review/images/empire_fx_gate_glow.png",
+   "path_x4": "docs/art/act3_aoe_review/images/empire_fx_gate_glow_x4.png",
+   "size": [
+    8,
+    28
+   ],
+   "description": "Shield Gate outer glow (8 x 28 = thickness + 10, stepped amber alphas)"
+  },
+  {
+   "id": "empire_fx_gate_post",
+   "key": "empire_fx/gate_post",
+   "path": "docs/art/act3_aoe_review/images/empire_fx_gate_post.png",
+   "path_x4": "docs/art/act3_aoe_review/images/empire_fx_gate_post_x4.png",
+   "size": [
+    22,
+    22
+   ],
+   "description": "Shield Gate end emitter (22 x 22): chrome housing, amber lens, white-hot heart"
+  },
+  {
+   "id": "empire_fx_gate_cable",
+   "key": "empire_fx/gate_cable",
+   "path": "docs/art/act3_aoe_review/images/empire_fx_gate_cable.png",
+   "path_x4": "docs/art/act3_aoe_review/images/empire_fx_gate_cable_x4.png",
+   "size": [
+    8,
+    5
+   ],
+   "description": "Generator power cable (8 x 5, scrolled toward the wall): amber with a white-hot heart"
+  },
+  {
+   "id": "empire_fx_storm_veil",
+   "key": "empire_fx/storm_veil",
+   "path": "docs/art/act3_aoe_review/images/empire_fx_storm_veil.png",
+   "path_x4": "docs/art/act3_aoe_review/images/empire_fx_storm_veil_x4.png",
+   "size": [
+    256,
+    256
+   ],
+   "description": "Scrap storm veil (256 px grey mask, smooth alpha, tinted rust-ochre): clear round the necromancer, thickening outward, mottled with dust clumps; one textured rect instead of 12-20 wide arcs a frame"
+  },
+  {
+   "id": "empire_fx_storm_grit",
+   "key": "empire_fx/storm_grit",
+   "path": "docs/art/act3_aoe_review/images/empire_fx_storm_grit.png",
+   "path_x4": "docs/art/act3_aoe_review/images/empire_fx_storm_grit_x4.png",
+   "size": [
+    256,
+    256
+   ],
+   "description": "Scrap storm grit (256 px seamless grey mask): streaks and specks leaning with the wind, scrolled with it (one tiled rect instead of 46 lines)"
+  },
+  {
+   "id": "empire_fx_pylon_stump",
+   "key": "empire_fx/pylon_stump",
+   "path": "docs/art/act3_aoe_review/images/empire_fx_pylon_stump.png",
+   "path_x4": "docs/art/act3_aoe_review/images/empire_fx_pylon_stump_x4.png",
+   "size": [
+    30,
+    14
+   ],
+   "description": "Fallen Signal Pylon (30 x 14 decal): the toppled chrome mast on its scorched plate, the lens dark"
+  },
+  {
+   "id": "empire_fx_furnace_slag",
+   "key": "empire_fx/furnace_slag",
+   "path": "docs/art/act3_aoe_review/images/empire_fx_furnace_slag.png",
+   "path_x4": "docs/art/act3_aoe_review/images/empire_fx_furnace_slag_x4.png",
+   "size": [
+    64,
+    64
+   ],
+   "description": "Furnace channel, cold (64 x 64 seamless): slag crust of warm ink and brown clinker plates"
+  },
+  {
+   "id": "empire_fx_furnace_embers",
+   "key": "empire_fx/furnace_embers",
+   "path": "docs/art/act3_aoe_review/images/empire_fx_furnace_embers.png",
+   "path_x4": "docs/art/act3_aoe_review/images/empire_fx_furnace_embers_x4.png",
+   "size": [
+    64,
+    64
+   ],
+   "description": "Furnace channel seams (64 x 64 seamless overlay): signal-dark cracks with molten specks, faded in as it warms"
+  },
+  {
+   "id": "empire_fx_furnace_molten_0",
+   "key": "empire_fx/furnace_molten_0",
+   "path": "docs/art/act3_aoe_review/images/empire_fx_furnace_molten_0.png",
+   "path_x4": "docs/art/act3_aoe_review/images/empire_fx_furnace_molten_0_x4.png",
+   "size": [
+    64,
+    64
+   ],
+   "description": "Furnace channel, burning (64 x 64 seamless, frame 1 of 3): flame orange, amber flows, white-hot veins; scrolled along the channel"
+  },
+  {
+   "id": "empire_fx_furnace_molten_1",
+   "key": "empire_fx/furnace_molten_1",
+   "path": "docs/art/act3_aoe_review/images/empire_fx_furnace_molten_1.png",
+   "path_x4": "docs/art/act3_aoe_review/images/empire_fx_furnace_molten_1_x4.png",
+   "size": [
+    64,
+    64
+   ],
+   "description": "Molten metal, frame 2 of 3 (the flicker)"
+  },
+  {
+   "id": "empire_fx_furnace_molten_2",
+   "key": "empire_fx/furnace_molten_2",
+   "path": "docs/art/act3_aoe_review/images/empire_fx_furnace_molten_2.png",
+   "path_x4": "docs/art/act3_aoe_review/images/empire_fx_furnace_molten_2_x4.png",
+   "size": [
+    64,
+    64
+   ],
+   "description": "Molten metal, frame 3 of 3"
+  },
+  {
+   "id": "empire_fx_furnace_rim",
+   "key": "empire_fx/furnace_rim",
+   "path": "docs/art/act3_aoe_review/images/empire_fx_furnace_rim.png",
+   "path_x4": "docs/art/act3_aoe_review/images/empire_fx_furnace_rim_x4.png",
+   "size": [
+    12,
+    3
+   ],
+   "description": "Furnace channel iron rim (12 x 3) with rivets, along both long sides"
+  },
+  {
+   "id": "empire_fx_furnace_warn",
+   "key": "empire_fx/furnace_warn",
+   "path": "docs/art/act3_aoe_review/images/empire_fx_furnace_warn.png",
+   "path_x4": "docs/art/act3_aoe_review/images/empire_fx_furnace_warn_x4.png",
+   "size": [
+    10,
+    2
+   ],
+   "description": "Furnace warning edge (10 x 2 red hazard stripes), blinking on both edges before a flare"
+  },
+  {
+   "id": "empire_fx_furnace_haze",
+   "key": "empire_fx/furnace_haze",
+   "path": "docs/art/act3_aoe_review/images/empire_fx_furnace_haze.png",
+   "path_x4": "docs/art/act3_aoe_review/images/empire_fx_furnace_haze_x4.png",
+   "size": [
+    8,
+    6
+   ],
+   "description": "Heat haze beside a burning channel (8 x 6, stepped flame alphas falling off outward)"
+  },
+  {
+   "id": "empire_fx_furnace_flame",
+   "key": "empire_fx/furnace_flame",
+   "path": "docs/art/act3_aoe_review/images/empire_fx_furnace_flame.png",
+   "path_x4": "docs/art/act3_aoe_review/images/empire_fx_furnace_flame_x4.png",
+   "size": [
+    36,
+    14
+   ],
+   "description": "Flame tongue from molten metal (4 frames of 9 x 14, base at the bottom)",
+   "gif": "docs/art/act3_aoe_review/images/empire_fx_furnace_flame.gif"
+  },
+  {
+   "id": "empire_fx_belt_68",
+   "key": "empire_fx/belt_68",
+   "path": "docs/art/act3_aoe_review/images/empire_fx_belt_68.png",
+   "path_x4": "docs/art/act3_aoe_review/images/empire_fx_belt_68_x4.png",
+   "size": [
+    112,
+    68
+   ],
+   "description": "Conveyor belt repeat, 68 px wide (the Loading Docks): chrome rails with rollers, dark rubber, grey slats, dim amber chevrons; one scrolled textured rect per belt"
+  },
+  {
+   "id": "empire_fx_belt_72",
+   "key": "empire_fx/belt_72",
+   "path": "docs/art/act3_aoe_review/images/empire_fx_belt_72.png",
+   "path_x4": "docs/art/act3_aoe_review/images/empire_fx_belt_72_x4.png",
+   "size": [
+    112,
+    72
+   ],
+   "description": "Conveyor belt repeat, 72 px wide (the Assembly Hall)"
+  },
+  {
+   "id": "empire_fx_belt_80",
+   "key": "empire_fx/belt_80",
+   "path": "docs/art/act3_aoe_review/images/empire_fx_belt_80.png",
+   "path_x4": "docs/art/act3_aoe_review/images/empire_fx_belt_80_x4.png",
+   "size": [
+    112,
+    80
+   ],
+   "description": "Conveyor belt repeat, 80 px wide (the Conveyor Floor)"
+  },
+  {
+   "id": "empire_fx_jug_flame_0",
+   "key": "empire_fx/jug_flame_0",
+   "path": "docs/art/act3_aoe_review/images/empire_fx_jug_flame_0.png",
+   "path_x4": "docs/art/act3_aoe_review/images/empire_fx_jug_flame_0_x4.png",
+   "size": [
+    40,
+    10
+   ],
+   "description": "Juggernaut flame billow, small (4 frames of 10 px), near the nozzle",
+   "gif": "docs/art/act3_aoe_review/images/empire_fx_jug_flame_0.gif"
+  },
+  {
+   "id": "empire_fx_jug_flame_1",
+   "key": "empire_fx/jug_flame_1",
+   "path": "docs/art/act3_aoe_review/images/empire_fx_jug_flame_1.png",
+   "path_x4": "docs/art/act3_aoe_review/images/empire_fx_jug_flame_1_x4.png",
+   "size": [
+    64,
+    16
+   ],
+   "description": "Juggernaut flame billow, medium (4 frames of 16 px)",
+   "gif": "docs/art/act3_aoe_review/images/empire_fx_jug_flame_1.gif"
+  },
+  {
+   "id": "empire_fx_jug_flame_2",
+   "key": "empire_fx/jug_flame_2",
+   "path": "docs/art/act3_aoe_review/images/empire_fx_jug_flame_2.png",
+   "path_x4": "docs/art/act3_aoe_review/images/empire_fx_jug_flame_2_x4.png",
+   "size": [
+    88,
+    22
+   ],
+   "description": "Juggernaut flame billow, large (4 frames of 22 px), at the stream's reach",
+   "gif": "docs/art/act3_aoe_review/images/empire_fx_jug_flame_2.gif"
+  },
+  {
+   "id": "empire_fx_static_edge",
+   "key": "empire_fx/static_edge",
+   "path": "docs/art/act3_aoe_review/images/empire_fx_static_edge.png",
+   "path_x4": "docs/art/act3_aoe_review/images/empire_fx_static_edge_x4.png",
+   "size": [
+    10,
+    5
+   ],
+   "description": "Arc Engineer static field rim (10 x 5): a broken red line with an amber crackle inside it"
+  },
+  {
+   "id": "empire_fx_spark",
+   "key": "empire_fx/spark",
+   "path": "docs/art/act3_aoe_review/images/empire_fx_spark.png",
+   "path_x4": "docs/art/act3_aoe_review/images/empire_fx_spark_x4.png",
+   "size": [
+    14,
+    7
+   ],
+   "description": "Static spark (2 frames of 7 px): closing in on the field as it arms",
+   "gif": "docs/art/act3_aoe_review/images/empire_fx_spark.gif"
+  },
+  {
+   "id": "empire_fx_mortar_shell",
+   "key": "empire_fx/mortar_shell",
+   "path": "docs/art/act3_aoe_review/images/empire_fx_mortar_shell.png",
+   "path_x4": "docs/art/act3_aoe_review/images/empire_fx_mortar_shell_x4.png",
+   "size": [
+    20,
+    10
+   ],
+   "description": "Mortar shell in flight (2 frames of 10 px, turning): chrome casing, amber fuse light",
+   "gif": "docs/art/act3_aoe_review/images/empire_fx_mortar_shell.gif"
+  },
+  {
+   "id": "empire_fx_lock_open",
+   "key": "empire_fx/lock_open",
+   "path": "docs/art/act3_aoe_review/images/empire_fx_lock_open.png",
+   "path_x4": "docs/art/act3_aoe_review/images/empire_fx_lock_open_x4.png",
+   "size": [
+    70,
+    35
+   ],
+   "description": "Lock-On reticle while painting (2 frames of 35 px: red, white-hot blink), scaled from r 12 to 9 as it tightens",
+   "gif": "docs/art/act3_aoe_review/images/empire_fx_lock_open.gif"
+  },
+  {
+   "id": "empire_fx_lock_locked",
+   "key": "empire_fx/lock_locked",
+   "path": "docs/art/act3_aoe_review/images/empire_fx_lock_locked.png",
+   "path_x4": "docs/art/act3_aoe_review/images/empire_fx_lock_locked_x4.png",
+   "size": [
+    58,
+    29
+   ],
+   "description": "Lock-On reticle locked (2 frames of 29 px, r 9): blinks red / white-hot",
+   "gif": "docs/art/act3_aoe_review/images/empire_fx_lock_locked.gif"
+  },
+  {
+   "id": "empire_fx_shock_edge",
+   "key": "empire_fx/shock_edge",
+   "path": "docs/art/act3_aoe_review/images/empire_fx_shock_edge.png",
+   "path_x4": "docs/art/act3_aoe_review/images/empire_fx_shock_edge_x4.png",
+   "size": [
+    10,
+    4
+   ],
+   "description": "Deus footfall shock ring piece (10 x 4): lit chrome and glint, segmented"
+  },
+  {
+   "id": "empire_fx_pulse_front",
+   "key": "empire_fx/pulse_front",
+   "path": "docs/art/act3_aoe_review/images/empire_fx_pulse_front.png",
+   "path_x4": "docs/art/act3_aoe_review/images/empire_fx_pulse_front_x4.png",
+   "size": [
+    12,
+    26
+   ],
+   "description": "Deus overload pulse front (12 x 26 = the 26 px front): white-hot leading edge, amber, a dithered red wake"
+  },
+  {
+   "id": "empire_fx_pulse_charge",
+   "key": "empire_fx/pulse_charge",
+   "path": "docs/art/act3_aoe_review/images/empire_fx_pulse_charge.png",
+   "path_x4": "docs/art/act3_aoe_review/images/empire_fx_pulse_charge_x4.png",
+   "size": [
+    8,
+    3
+   ],
+   "description": "Deus overload charge ring piece (8 x 3): amber and white-hot, closing on the hull"
+  },
+  {
+   "id": "empire_fx_binding_edge",
+   "key": "empire_fx/binding_edge",
+   "path": "docs/art/act3_aoe_review/images/empire_fx_binding_edge.png",
+   "path_x4": "docs/art/act3_aoe_review/images/empire_fx_binding_edge_x4.png",
+   "size": [
+    10,
+    5
+   ],
+   "description": "The finale's soul binding (10 x 5): soul-green chain links closing on the broken engine"
+  },
+  {
+   "id": "empire_fx_magnet_edge",
+   "key": "empire_fx/magnet_edge",
+   "path": "docs/art/act3_aoe_review/images/empire_fx_magnet_edge.png",
+   "path_x4": "docs/art/act3_aoe_review/images/empire_fx_magnet_edge_x4.png",
+   "size": [
+    10,
+    3
+   ],
+   "description": "Motherboard magnet ring piece (10 x 3): a red coil wave with amber crests"
+  },
+  {
+   "id": "empire_fx_hangar_door",
+   "key": "empire_fx/hangar_door",
+   "path": "docs/art/act3_aoe_review/images/empire_fx_hangar_door.png",
+   "path_x4": "docs/art/act3_aoe_review/images/empire_fx_hangar_door_x4.png",
+   "size": [
+    108,
+    24
+   ],
+   "description": "Deus hangar door (3 frames of 36 x 24: shut, opening, open): chrome plates with hazard stripes, the red-lit bay",
+   "gif": "docs/art/act3_aoe_review/images/empire_fx_hangar_door.gif"
+  },
+  {
+   "id": "empire_fx_claw",
+   "key": "empire_fx/claw",
+   "path": "docs/art/act3_aoe_review/images/empire_fx_claw.png",
+   "path_x4": "docs/art/act3_aoe_review/images/empire_fx_claw_x4.png",
+   "size": [
+    32,
+    16
+   ],
+   "description": "Motherboard crane claw (2 frames of 16 px: open, clamped)",
+   "gif": "docs/art/act3_aoe_review/images/empire_fx_claw.gif"
+  }
+ ],
+ "shots": [
+  {
+   "id": "orbital_strike_citadel",
+   "before": "docs/art/act3_aoe_review/shots/orbital_strike_citadel_before.png",
+   "after": "docs/art/act3_aoe_review/shots/orbital_strike_citadel_after.png",
+   "source": "C (H / after) (art_1201)",
+   "description": "The Purge Protocol's orbital strikes on the Iron Citadel: the Empire warning circle on the exact 54 px radius (hex fill denser inside radius x progress, scan-line front, hazard band with cyan-white ticks, crosshair) and the targeting brackets closing on its box, instead of a flat red disc with two rings"
+  },
+  {
+   "id": "orbital_strike_wastes",
+   "before": "docs/art/act3_aoe_review/shots/orbital_strike_wastes_before.png",
+   "after": "docs/art/act3_aoe_review/shots/orbital_strike_wastes_after.png",
+   "source": "W (H / after) (art_1201)",
+   "description": "Purge Protocol strikes round the army in the Scrap Wastes; the lowest one in its last moment with the cyan-white uplink column striking down"
+  },
+  {
+   "id": "strike_impacts",
+   "before": "docs/art/act3_aoe_review/shots/strike_impacts_before.png",
+   "after": "docs/art/act3_aoe_review/shots/strike_impacts_after.png",
+   "source": "W (H / after) (art_1201.5)",
+   "description": "Strikes landing: the empire_blast strip (white-hot flash, hex-segmented shock ring at the radius, sparks, shards) instead of the flat tan disc and ivory ring"
+  },
+  {
+   "id": "mortar_landings",
+   "before": "docs/art/act3_aoe_review/shots/mortar_landings_before.png",
+   "after": "docs/art/act3_aoe_review/shots/mortar_landings_after.png",
+   "source": "W (B / after) (art_0066)",
+   "description": "Mortar Walker shells about to land: the Empire warning circle on the exact 48 px splash, timed to the landing (no brackets: mortars are many), and the shell sprite, instead of a thin red ring"
+  },
+  {
+   "id": "death_ray",
+   "before": "docs/art/act3_aoe_review/shots/death_ray_before.png",
+   "after": "docs/art/act3_aoe_review/shots/death_ray_after.png",
+   "source": "W (B / after) (art_0070)",
+   "description": "Death Ray: the violet soul-laser body at the beam's exact width with flare flow streaks, glow, four afterglow copies and the tip burst; the mortar blast above it is the new impact strip"
+  },
+  {
+   "id": "event_horizon",
+   "before": "docs/art/act3_aoe_review/shots/event_horizon_before.png",
+   "after": "docs/art/act3_aoe_review/shots/event_horizon_after.png",
+   "source": "W (B / after) (art_0900)",
+   "description": "Event Horizon (two opposite beams) at its 16 px width"
+  },
+  {
+   "id": "lock_on_and_ray",
+   "before": "docs/art/act3_aoe_review/shots/lock_on_and_ray_before.png",
+   "after": "docs/art/act3_aoe_review/shots/lock_on_and_ray_after.png",
+   "source": "W (B / after) (art_1060)",
+   "description": "Kestrel's fight: Lock-On reticles as pixel art (the laser lines stay code), the Event Horizon beam"
+  },
+  {
+   "id": "scrap_storm",
+   "before": "docs/art/act3_aoe_review/shots/scrap_storm_before.png",
+   "after": "docs/art/act3_aoe_review/shots/scrap_storm_after.png",
+   "source": "W (B / after) (art_0250)",
+   "description": "Scrap storm veil: one smooth radial mask (clear round the necromancer, thickening outward, dust clumps) and one drifting grit tile, instead of 12-20 banded 46 px arcs and 46 lines every frame"
+  },
+  {
+   "id": "shield_gate",
+   "before": "docs/art/act3_aoe_review/shots/shield_gate_before.png",
+   "after": "docs/art/act3_aoe_review/shots/shield_gate_after.png",
+   "source": "C (B / after) (art_0210)",
+   "description": "Shield Gate: the hex energy wall at its exact 18 px thickness scrolling along it, the chrome end emitter, the pulsing cable"
+  },
+  {
+   "id": "laser_band_armed",
+   "before": "docs/art/act3_aoe_review/shots/laser_band_armed_before.png",
+   "after": "docs/art/act3_aoe_review/shots/laser_band_armed_after.png",
+   "source": "C (B / after) (art_0308.5)",
+   "description": "Laser Courts arming: each beam's exact 60 px sweep band as a hex grid with double chevrons pointing the way it sweeps, and the blinking sight line"
+  },
+  {
+   "id": "laser_firing",
+   "before": "docs/art/act3_aoe_review/shots/laser_firing_before.png",
+   "after": "docs/art/act3_aoe_review/shots/laser_firing_after.png",
+   "source": "C (B / after) (art_0317)",
+   "description": "Laser grid firing: the white-hot body at its exact 10 px width scrolling, the red glow"
+  },
+  {
+   "id": "laser_band_core",
+   "before": "docs/art/act3_aoe_review/shots/laser_band_core_before.png",
+   "after": "docs/art/act3_aoe_review/shots/laser_band_core_after.png",
+   "source": "C (H / after) (art_1074.5)",
+   "description": "The Core's laser bands (two beams, 45 degrees elsewhere: the band follows any angle)"
+  },
+  {
+   "id": "deus_sweep",
+   "before": "docs/art/act3_aoe_review/shots/deus_sweep_before.png",
+   "after": "docs/art/act3_aoe_review/shots/deus_sweep_after.png",
+   "source": "C (B / after) (art_1045)",
+   "description": "Deus Ex Machina's Judgment Lance wind-up: the swept sector as a hex grid with the hazard band on both sides and the arc, the lance sight line, the firing lasers"
+  },
+  {
+   "id": "deus_core_lasers",
+   "before": "docs/art/act3_aoe_review/shots/deus_core_lasers_before.png",
+   "after": "docs/art/act3_aoe_review/shots/deus_core_lasers_after.png",
+   "source": "C (B / after) (art_1060)",
+   "description": "Deus in the Core with a laser band arming behind him"
+  },
+  {
+   "id": "furnace_channels",
+   "before": "docs/art/act3_aoe_review/shots/furnace_channels_before.png",
+   "after": "docs/art/act3_aoe_review/shots/furnace_channels_after.png",
+   "source": "A (B / after) (art_0925)",
+   "description": "Furnace channels: warning (molten metal seeping into the slag, blinking hazard stripes on the rims) and burning (molten metal flowing and flickering, iron rims, haze), world-anchored, instead of flat orange stripes"
+  },
+  {
+   "id": "furnace_cold",
+   "before": "docs/art/act3_aoe_review/shots/furnace_cold_before.png",
+   "after": "docs/art/act3_aoe_review/shots/furnace_cold_after.png",
+   "source": "A (B / after) (art_0950)",
+   "description": "A cold channel: slag crust with glowing seams brightening as it nears its warning"
+  },
+  {
+   "id": "conveyor_belts",
+   "before": "docs/art/act3_aoe_review/shots/conveyor_belts_before.png",
+   "after": "docs/art/act3_aoe_review/shots/conveyor_belts_after.png",
+   "source": "A (B / after) (art_0320)",
+   "description": "Conveyor belts: one baked 112 px repeat per belt width scrolled with the belt (rails and rollers, rubber with slats, dull amber chevrons): one textured rect per belt instead of ~60 rects and lines"
+  },
+  {
+   "id": "motherboard_hazards",
+   "before": "docs/art/act3_aoe_review/shots/motherboard_hazards_before.png",
+   "after": "docs/art/act3_aoe_review/shots/motherboard_hazards_after.png",
+   "source": "A (B / after) (art_1060)",
+   "description": "The Motherboard: a hurl landing circle and a grab lane (the shared lane telegraph in the Empire set on an Act III stage)"
+  },
+  {
+   "id": "arc_engineer_fields",
+   "before": "docs/art/act3_aoe_review/shots/arc_engineer_fields_before.png",
+   "after": "docs/art/act3_aoe_review/shots/arc_engineer_fields_after.png",
+   "source": "A (B / after) (art_0935)",
+   "description": "Arc Engineer static fields arming (their suppression zones: the Empire warning circle on the exact radius instead of the Covenant's gold suppression ring) and a fabricator's impact strip"
+  }
+ ]
+}

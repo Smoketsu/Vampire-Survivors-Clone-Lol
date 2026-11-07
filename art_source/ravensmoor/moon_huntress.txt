@@ -1,0 +1,13 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, a confident hunter's pose, weight on one leg, a silver crossbow held low in one hand
+
+LOW-RESOLUTION pixel art: the whole figure is only 56 pixels tall, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims, lacing or engravings.
+
+Subject: THE MOON-CURSED HUNTRESS, a FEMALE werewolf hunter who turned (a playable character), in the game's figure-redesign style: the most exaggerated hourglass figure (very full bust, an extremely tiny cinched waist, very wide curvy hips), confident and wild, her face clearly readable: pale skin, long silver-grey hair, grey wolf ears on top of her head, glowing amber eyes, a small fang showing. A fitted dark leather hunter's coat open over a black corset with silver buckles, a deep V neckline fully covering her chest, a short torn grey wolf-pelt mantle over her shoulders, a wide belt, tight dark trousers and thigh-high leather boots, a bushy grey wolf tail behind her. Hips and chest fully covered, never nude, tasteful.
+Signature shape that must read in silhouette: the hourglass figure, the wolf ears and the tail, the crossbow.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: pale skin #D9B8A8 #A8806E; silver hair, ears, tail and pelt #6E7A8C #B4C0D0 #E6EEF7; dark leather #160F1C #2B1E36 #4D3A5E; brown belt and boots #4F3320 #7A5236; silver crossbow and buckles #6E7A8C #E6EEF7; amber eyes #FFDC66; a touch of blood red #A3142A (a ribbon on the crossbow)
+
+Outline: a clean 1-pixel dark outline around the whole figure in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the figure), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark.
+Attached: (1) a game sprite (a female figure of this game) for pixel size, outline weight, the hourglass figure-redesign style and the flat look; (2) a game sprite (the werewolf of this game) for the grey fur.

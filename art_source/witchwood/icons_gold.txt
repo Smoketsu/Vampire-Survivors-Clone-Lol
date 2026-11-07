@@ -1,0 +1,6 @@
+A sheet of TWO separate pixel-art game ICON SYMBOLS in one row, evenly spaced with a wide empty gap between them, on a FULLY TRANSPARENT background (real alpha). Each symbol is simple, bold and centred in its part of the image, drawn as chunky low-resolution pixel art (each symbol about 24 pixels wide on a coarse grid, shown enlarged with crisp square pixels, nearest-neighbour, 1-pixel dark outline, flat colours, at most 3 shades per colour, light from the top-left). No frame, no badge background, no text, no letters.
+From left to right:
+1. WITCHES' SABBATH: a big red rune circle with three smaller red circles orbiting it, a pointed witch hat in the centre.
+2. THE COVEN BREAKS: three crossed witch hats broken by a gold crack, a red moon behind them.
+Colours: gold #8C6A1E #E0B848 #F7E08A; blood red #5A0A14 #A3142A #E0384E; velvet #160F1C #2B1E36 #4D3A5E; moonlight #6E7A8C #B4C0D0 #E6EEF7; bone #8C7B5E #D9CCAA.
+Attached: an approved icon of this game: match its pixel size, outline weight and flat look (only the symbol, not its frame).

@@ -58,6 +58,36 @@
 ## runs the Electronic Empire's shared rules (Line of Fire, Lock-On, Steel has
 ## no soul, the Purge Protocol), stepped right after the projectiles; null on
 ## Acts I and II unless an Empire kind forced there asks for it (empire_rules()).
+## Act IV (GDD §15.0 "Act IV foundation (phase 1)"): `pantheon` (PantheonRules)
+## runs the Olympian Republic's shared rules (Wrath of the Gods, Phalanx, Glory,
+## the Twilight of the Gods), stepped after the enemies and before the obstacle
+## push-out; null on Acts I to III unless a Pantheon kind forced there asks for
+## it (pantheon_rules()).
+## Act V (GDD §15.0 "Act V foundation (phase 1)"): `shogunate` (ShogunateRules)
+## runs the Shogunate of the Rising Sun's shared rules (the Sun's Course, the
+## Draw, From the Shadows, the Endless Night), stepped after the Pantheon's and
+## before the obstacle push-out; null on Acts I to IV unless a Shogunate kind
+## forced there asks for it (shogunate_rules()).
+## Act VI (GDD §15.0 "Act VI foundation (phase 1)"): `inferno` (InfernoRules)
+## runs the Inferno's shared rules (the Hell Pits, the demon portals,
+## Temptation, the Last Judgment), stepped after the Shogunate's and before the
+## obstacle push-out; null on Acts I to V unless an Inferno kind forced there
+## asks for it (inferno_rules()).
+## Act VII (GDD §15.0 "Act VII foundation (phase 1)"): `court` (CourtRules)
+## runs the Sanguine Court's shared rules (Bloodfeast, Night Wings, the Blood
+## Moon, the Endless Feast), stepped after the Inferno's and before the
+## obstacle push-out; null on Acts I to VI unless a Court kind forced there
+## asks for it (court_rules()).
+## Act VIII (GDD §15.0 "Act VIII foundation (phase 1)"): `city` (CityRules)
+## runs the Last Line's shared rules (the escalation, Armour, Supers,
+## Civilians, Martial Law), stepped after the Court's and before the obstacle
+## push-out; null on Acts I to VII unless a City kind forced there asks for it
+## (city_rules()). Its city-block layout is the arena's (Arena.city_blocks).
+## Act IX (GDD §15.0 "Act IX foundation (phase 1)"): `concord` (ConcordRules)
+## runs the Concord of Stars' shared rules (Beams, Abduction, Terraforming, the
+## Final Harvest), stepped after the City's and before the obstacle push-out;
+## null on Acts I to VIII unless a Concord kind forced there asks for it
+## (concord_rules()).
 ## Online co-op (docs/coop/DESIGN.md): `coop` (CoopSession) holds two player
 ## slots in this one simulation; the per-player fields below (player, horde,
 ## abilities, grave_step, dread_rally, ultimates, stance, character, innates,
@@ -202,6 +232,37 @@ var claims: EyeClaims = null
 ## stage's STAGE has "empire": true, or an Empire kind spawned on another stage
 ## asked for it through empire_rules(); Acts I and II never create it).
 var empire: EmpireRules = null
+# --- Act IV: the Olympian Republic ---
+## Act IV, the Olympian Republic's shared rules (PantheonRules; null unless the
+## stage's STAGE has "pantheon": true, or a Pantheon kind spawned on another
+## stage asked for it through pantheon_rules(); Acts I to III never create it).
+var pantheon: PantheonRules = null
+# --- Act V: the Shogunate of the Rising Sun ---
+## Act V, the Shogunate of the Rising Sun's shared rules (ShogunateRules; null
+## unless the stage's STAGE has "shogunate": true, or a Shogunate kind spawned
+## on another stage asked for it through shogunate_rules(); Acts I to IV never
+## create it).
+var shogunate: ShogunateRules = null
+# --- Act VI: the Inferno ---
+## Act VI, the Inferno's shared rules (InfernoRules; null unless the stage's
+## STAGE has "inferno": true, or an Inferno kind spawned on another stage asked
+## for it through inferno_rules(); Acts I to V never create it).
+var inferno: InfernoRules = null
+# --- Act VII: the Sanguine Court ---
+## Act VII, the Sanguine Court's shared rules (CourtRules; null unless the
+## stage's STAGE has "court": true, or a Court kind spawned on another stage
+## asked for it through court_rules(); Acts I to VI never create it).
+var court: CourtRules = null
+# --- Act VIII: the Last Line ---
+## Act VIII, the Last Line's shared rules (CityRules; null unless the stage's
+## STAGE has "city": true, or a City kind spawned on another stage asked for it
+## through city_rules(); Acts I to VII never create it).
+var city: CityRules = null
+# --- Act IX: the Concord of Stars ---
+## Act IX, the Concord of Stars' shared rules (ConcordRules; null unless the
+## stage's STAGE has "concord": true, or a Concord kind spawned on another stage
+## asked for it through concord_rules(); Acts I to VIII never create it).
+var concord: ConcordRules = null
 ## Content wave 2: the run counters of the one-run achievements (RunRewards;
 ## never null once _ready ran; reads the run only, never changes gameplay).
 var rewards: RunRewards
@@ -268,7 +329,8 @@ func _ready() -> void:
 	if GameState.autotest and GameState.autotest_monitor > 0.0:
 		monitor = MonitorProbe.new(self, GameState.autotest_monitor)  # --monitor=N: memory / draw sampling (reads only).
 	ArtMissLog.on = GameState.autotest and GameState.autotest_art_misses  # --art-misses: the art audit (drawing only).
-	meta = Meta.run_modifiers() if coop == null else coop.meta_for(0)
+	_pay_offering()  # Relics and Grave Offerings: this machine's offering is paid as the run starts.
+	meta = Meta.run_modifiers(run_config) if coop == null else coop.meta_for(0)  # Upgrades + the relics / offering (RelicEffects).
 	character = CharacterModifiers.for_id(run_config.character_id) if coop == null else coop.character_for(0)
 	enemy_grid = SpatialHash.new(GRID_CELL)
 	ally_grid = SpatialHash.new(GRID_CELL)
@@ -310,6 +372,93 @@ func _ready() -> void:
 		# --- Act III: the Scrap Wastes ---
 		"wastes":
 			ground = WastesGround.new()  # Act III: the Scrap Wastes' four zone floors.
+		# --- Act IV: the Olympian Republic ---
+		"pantheon":
+			var pg := PantheonGround.new()  # Act IV placeholder floor (the STAGE's "floor").
+			pg.look = stage_def.get("floor", {})
+			ground = pg
+		# --- Act IV: the Shores of Ilion ---
+		"ilion":
+			ground = IlionGround.new()  # Act IV: the Shores of Ilion's four zone floors (IlionStage.ZONES).
+		# --- Act IV: Mount Olympus ---
+		"olympus":
+			ground = OlympusGround.new()  # Act IV: Mount Olympus's four zone floors.
+		# --- Act IV: the Asphodel Underworld ---
+		"underworld":
+			ground = UnderworldGround.new()  # The four zone floors and the River Styx (UnderworldStage.ZONES).
+		# --- Act V: the Shogunate of the Rising Sun ---
+		"shogunate":
+			var sg := ShogunateGround.new()  # Act V placeholder floor (the STAGE's "floor").
+			sg.look = stage_def.get("floor", {})
+			ground = sg
+		# --- Act V: the Burning Province ---
+		"province":
+			ground = ProvinceGround.new()  # Act V: the Burning Province's four zone floors and the paddy water (ProvinceStage.ZONES).
+		# --- Act V: the Road to the Sun ---
+		"sun_road":
+			ground = SunRoadGround.new()  # Act V: the Road to the Sun's four zone floors (SunRoadStage.ZONES).
+		# --- Act VI: the Palace of Silk and Ash ---
+		"silk_palace":
+			ground = SilkPalaceGround.new()  # Act VI: the Palace's four zone floors (SilkPalaceStage.ZONES).
+		# --- Act V: Castle Kurogane ---
+		"kurogane":
+			ground = KuroganeGround.new()  # Act V: Castle Kurogane's four zone floors (KuroganeStage.ZONES).
+		# --- Act VI: the Inferno ---
+		"inferno":
+			var ig := InfernoGround.new()  # Act VI placeholder floor (the STAGE's "floor").
+			ig.look = stage_def.get("floor", {})
+			ground = ig
+		# --- Act VI: the Burning Gate ---
+		"burning_gate":
+			ground = BurningGateGround.new()  # Act VI: the Burning Gate's four zone floors (BurningGateStage.ZONES).
+		# --- Act VI: Pandemonium ---
+		"pandemonium":
+			ground = PandemoniumGround.new()  # Act VI: Pandemonium's four zone floors (PandemoniumStage.ZONES).
+		# --- Act VII: Castle Sanguis ---
+		"castle_sanguis":
+			ground = CastleSanguisGround.new()  # Act VII: Castle Sanguis's four zone floors (CastleSanguisStage.ZONES).
+		# --- Act VII: the Sanguine Court ---
+		"court":
+			var cg := CourtGround.new()  # Act VII placeholder floor (the STAGE's "floor").
+			cg.look = stage_def.get("floor", {})
+			ground = cg
+		# --- Act VII: Ravensmoor ---
+		"ravensmoor":
+			ground = RavensmoorGround.new()  # Act VII: Ravensmoor's four zone floors (RavensmoorStage.ZONES).
+		# --- Act VII: the Witchwood ---
+		"witchwood":
+			ground = WitchwoodGround.new()  # Act VII: the Witchwood's four zone floors and the Fen's water (WitchwoodStage.ZONES).
+		# --- Act VIII: the Last Line ---
+		"city":
+			var cyg := CityGround.new()  # Act VIII placeholder floor, drawn from the arena's CityBlocks.
+			cyg.look = stage_def.get("floor", {})
+			cyg.game = self
+			ground = cyg
+		# --- Act VIII: Skid Row ---
+		"skid_row":
+			var srg := SkidRowGround.new()  # Act VIII: Skid Row's four zone looks over the city blocks (SkidRowStage.ZONES).
+			srg.game = self
+			ground = srg
+		# --- Act VIII: Fort Kessler ---
+		"fort_kessler":
+			var fkg := FortKesslerGround.new()  # Act VIII: Fort Kessler's zone looks over CityGround (FortKesslerStage.ZONES).
+			fkg.look = stage_def.get("floor", {})
+			fkg.game = self
+			ground = fkg
+		# --- Act IX: the Concord of Stars ---
+		"concord":
+			var cog := ConcordGround.new()  # Act IX placeholder floor (the STAGE's "floor").
+			cog.look = stage_def.get("floor", {})
+			ground = cog
+		# --- Act IX: the Crash Site ---
+		"crash_site":
+			ground = CrashSiteGround.new()  # Act IX: the Crash Site's four zone floors (CrashSiteStage.ZONES).
+		# --- Act IX: the Proving Moon ---
+		"proving_moon":
+			ground = ProvingMoonGround.new()  # Act IX: the Proving Moon's four zone floors (ProvingMoonStage.ZONES).
+		# --- Act IX: the Ark ---
+		"ark":
+			ground = ArkGround.new()  # Act IX: the Ark of the Concord's four zone floors (ArkStage.ZONES).
 		_:
 			ground = Ground.new()
 	add_child(ground)
@@ -359,6 +508,8 @@ func _ready() -> void:
 	innates.game = self
 	add_child(innates)
 	player.skin_id = _resolve_skin()  # Cosmetic only (SkinData); "" = the default look.
+	player.recolour_id = _resolve_recolour(player.skin_id)  # Cosmetic only (RecolourData); "" = the skin's own colours.
+	SkinGlyphs.warm(player.skin_id, run_config.character_key(), player.recolour_id)  # Remap its art now, not mid-run.
 	abilities = AbilityManager.new()
 	add_child(abilities)
 	abilities.setup(self)
@@ -387,6 +538,19 @@ func _ready() -> void:
 		add_child(UltimateOverlay.new(self))  # The new ultimates' screen overlays (visual only).
 	if bool(stage_def.get("empire", false)):
 		empire_rules()  # Act III: the Electronic Empire's shared rules.
+		effects.empire_look = true  # Its telegraphs in the Empire's warning set (visual only).
+	if bool(stage_def.get("pantheon", false)):
+		pantheon_rules()  # Act IV: the Olympian Republic's shared rules.
+	if bool(stage_def.get("shogunate", false)):
+		shogunate_rules()  # Act V: the Shogunate of the Rising Sun's shared rules.
+	if bool(stage_def.get("inferno", false)):
+		inferno_rules()  # Act VI: the Inferno's shared rules.
+	if bool(stage_def.get("court", false)):
+		court_rules()  # Act VII: the Sanguine Court's shared rules.
+	if bool(stage_def.get("city", false)):
+		city_rules()  # Act VIII: the Last Line's shared rules.
+	if bool(stage_def.get("concord", false)):
+		concord_rules()  # Act IX: the Concord of Stars' shared rules.
 
 	if autotest != null:
 		player.invulnerable = not GameState.autotest_mortal
@@ -402,6 +566,7 @@ func _ready() -> void:
 	horde.set_class_level("warrior", 1)
 	if coop != null:
 		_build_coop_slots()
+	_head_start()  # Dominion (Ossuary): levels gained at 0:00; no-op without the upgrade.
 	if GameState.victory_preview:
 		VictoryPreview.setup(self)  # Debug: a small army for the scripted victory.
 	_build_ui()
@@ -456,6 +621,20 @@ func _resolve_skin() -> String:
 	elif not SkinData.skins_for(run_config.character_key()).has(id) or not Meta.is_skin_unlocked(id):
 		return ""
 	return "" if String(SkinData.skin(id).get("kind", "default")) == "default" else id
+
+
+## The recolour the necromancer wears this run (purely cosmetic, RecolourData):
+## the autotest's --recolour= (forced, for screenshots), else run_config.recolour_id
+## when the worn skin `skin` ("" = the character's default skin) offers it and
+## the save owns it (online co-op: the loadout's pick is trusted, it is cosmetic).
+## "" = the skin's own colours.
+func _resolve_recolour(skin: String) -> String:
+	if (GameState.autotest or GameState.victory_preview) and GameState.autotest_recolour != "":
+		return GameState.autotest_recolour
+	var key := skin if skin != "" else SkinData.default_skin(run_config.character_key())  # Skin that owns the recolour.
+	var id := run_config.recolour_id  # Requested recolour.
+	var owned := Meta.owns_recolour(key, id) or not coop_start.is_empty()  # Online co-op: slot 0 may be the partner's pick (their save owns it, cosmetic).
+	return id if id != "" and RecolourData.offered(key, id) and owned else ""
 
 
 ## The ultimate this run casts (UltimateData id): run_config.ultimate_id when
@@ -667,6 +846,18 @@ func _physics_process(delta: float) -> void:
 	if pf != null:
 		tl = pf.lap(PerfProbe.SEC_ARMY, tl)
 	enemies.step(delta)
+	if pantheon != null:
+		pantheon.step(delta)  # Act IV: the gods' wrath (its waves carry bodies before the push-out), shield walls.
+	if shogunate != null:
+		shogunate.step(delta)  # Act V: the Sun's Course, ambushes (pushed out of obstacles next), the Draw.
+	if inferno != null:
+		inferno.step(delta)  # Act VI: the Hell Pits, the portals (their squads pushed out of obstacles next), Temptation.
+	if court != null:
+		court.step(delta)  # Act VII: the Endless Feast, the Blood Moon, Bloodfeast's threads (coffin nobles pushed out next).
+	if city != null:
+		city.step(delta)  # Act VIII: the escalation, the civilians, wrecks and shells, Martial Law (pushed out of buildings next).
+	if concord != null:
+		concord.step(delta)  # Act IX: the Final Harvest, the beams, the lifted summons, the alien ground (pods pushed out next).
 	if pf != null:
 		tl = pf.lap(PerfProbe.SEC_ENEMIES, tl)
 	arena.resolve_all(delta)
@@ -776,6 +967,93 @@ func empire_rules() -> EmpireRules:
 	return empire
 
 
+# --- Act IV: the Olympian Republic ---
+## The Olympian Republic's shared rules (Act IV), created on first use: at the
+## start of an Act IV run, or when a Pantheon kind forced onto another stage is
+## activated (PantheonKit.reset()), so its shield walls and Glory work there.
+func pantheon_rules() -> PantheonRules:
+	if pantheon == null:
+		pantheon = PantheonRules.new(self)
+		add_child(pantheon)
+	return pantheon
+
+
+# --- Act V: the Shogunate of the Rising Sun ---
+## The Shogunate's shared rules (Act V), created on first use: at the start of
+## an Act V run, or when a Shogunate kind forced onto another stage is activated
+## (ShogunateKit.reset()), so its Draw works there (the Sun's Course stays day
+## off Act V).
+func shogunate_rules() -> ShogunateRules:
+	if shogunate == null:
+		shogunate = ShogunateRules.new(self)
+		add_child(shogunate)
+	return shogunate
+
+
+# --- Act VI: the Inferno ---
+## The Inferno's shared rules (Act VI), created on first use: at the start of
+## an Act VI run, or when an Inferno kind forced onto another stage is activated
+## (InfernoKit.reset()), so its Temptation works there (the Hell Pits and the
+## Last Judgment stay off off Act VI).
+func inferno_rules() -> InfernoRules:
+	if inferno == null:
+		inferno = InfernoRules.new(self)
+		add_child(inferno)
+	return inferno
+
+
+# --- Act VII: the Sanguine Court ---
+## The Sanguine Court's shared rules (Act VII), created on first use: at the
+## start of an Act VII run, or when a Court kind forced onto another stage is
+## activated (CourtKit.reset()), so its Bloodfeast and Night Wings work there
+## (the Blood Moon and the Endless Feast stay off off Act VII).
+func court_rules() -> CourtRules:
+	if court == null:
+		court = CourtRules.new(self)
+		add_child(court)
+	return court
+
+
+# --- Act VIII: the Last Line ---
+## The Last Line's shared rules (Act VIII), created on first use: at the start
+## of an Act VIII run, or when a City kind forced onto another stage is
+## activated (CityKit.reset()), so its front, its vehicle and its Super kit
+## work there (the escalation, the civilians and Martial Law stay off off Act
+## VIII).
+func city_rules() -> CityRules:
+	if city == null:
+		city = CityRules.new(self)
+		add_child(city)
+	return city
+
+
+# --- Act IX: the Concord of Stars ---
+## The Concord of Stars' shared rules (Act IX), created on first use: at the
+## start of an Act IX run, or when a Concord kind forced onto another stage is
+## activated (ConcordKit.reset()), so its beams, its abduction and its heal on
+## turf work there (the terraformer pods and the Final Harvest stay off off Act
+## IX).
+func concord_rules() -> ConcordRules:
+	if concord == null:
+		concord = ConcordRules.new(self)
+		add_child(concord)
+	return concord
+
+
+# --- Act IV: the Asphodel Underworld ---
+## THE ONE SWITCH that creates the Claims path (EyeClaims, Act II's "the fight
+## over the dead") outside Act II: Hades, Lord of the Dead (BossHades), calls it
+## when he arrives, so his Reclaiming turns the summons he marks into his shades
+## through the same HordeDirector.claim_fallen() path (GDD §15.0 "The Asphodel
+## Underworld (Act IV phase 2)"). An Act II stage still creates `claims` from
+## its STAGE key in _ready() exactly as before (this returns that one); no other
+## caller exists, so Acts I and III never create it.
+func claims_rules() -> EyeClaims:
+	if claims == null:
+		claims = EyeClaims.new(self)
+	return claims
+
+
 ## Re-inserts every living enemy and summon into the spatial hashes.
 func _rebuild_grids() -> void:
 	enemy_grid.clear()
@@ -785,7 +1063,7 @@ func _rebuild_grids() -> void:
 			enemy_grid.insert(e, e.position)
 	ally_grid.clear()
 	for u in horde.units:
-		if not u.airborne:  # Flying Gargoyles cannot be targeted, blocked or hit.
+		if not u.airborne and not u.charmed:  # Flying Gargoyles cannot be targeted, blocked or hit; Act VI: a charmed summon is parked.
 			ally_grid.insert(u, u.position)
 
 
@@ -870,9 +1148,56 @@ func add_xp(amount: int) -> void:
 		level += 1
 		xp_to_next = PlayerData.xp_to_next(level)
 		pending_level_ups += 1
+		_on_level_reached()  # Relics: the Bone Abacus.
 	if level > level_before:
 		# Column of violet light on the necromancer (art-only, visual).
 		effects.burst(AnimData.LEVEL_UP_OFFSET, AnimData.LEVEL_UP_RADIUS, "level_up", player)
+
+
+## Head Start (Ossuary Dominion tree, MetaModifiers "head_start", expansion step 3):
+## the run begins that many levels up with their picks waiting (the first opens
+## on the first tick, like any level-up). Co-op: the host's tier sets the shared
+## level, like the host's Profane Oath. No-op without the upgrade.
+func _head_start() -> void:
+	var m: MetaModifiers = coop.slots[0].meta if coop != null else meta  # Whose Head Start counts.
+	var n := m.int_value("head_start")  # Levels gained.
+	if n <= 0:
+		return
+	level += n
+	pending_level_ups += n
+	xp_to_next = PlayerData.xp_to_next(level)
+	stat_add("head_start_levels", float(n))
+
+
+## Level `level` was just reached: every player's AbilityManager hears it (the
+## Bone Abacus relic's reroll; co-op: the one shared level reaches both slots).
+func _on_level_reached() -> void:
+	if coop == null:
+		abilities.on_level(level)
+		return
+	for s in coop.slots:
+		if s.abilities != null:
+			s.abilities.on_level(level)
+
+
+## Relics and Grave Offerings (GDD §15.0 "Relics and Grave Offerings"): pays the
+## Soul Ash of this machine's Grave Offering as its run starts (never under the
+## autotest or a --victory-preview run). Solo: an offering the balance can no
+## longer pay is dropped from run_config before game.meta is built. Online co-op:
+## the local player's own offering from his own save; the run applies both
+## loadouts' offerings either way (both machines must build the same run).
+func _pay_offering() -> void:
+	if GameState.autotest or GameState.victory_preview:
+		return
+	if coop == null:
+		if run_config.offering_id != "" and not Meta.relics.pay_offering(run_config.offering_id):
+			run_config.offering_id = ""
+			run_config.borrowed_relic = ""
+		return
+	var los: Array = coop_start.get("loadouts", [])  # Both loadouts (CoopNet.start_info).
+	var me := int(coop_start.get("local_slot", -1))  # This machine's seat.
+	if me >= 0 and me < los.size():
+		Meta.relics.pay_offering(String((los[me] as Dictionary).get("offering", "")))
 
 
 ## Pauses combat and shows three cards (GDD §16 "Level-up panel: Pause combat").
@@ -1071,6 +1396,7 @@ func build_summary() -> Dictionary:
 		"difficulty_label": difficulty.difficulty_label(),
 		"boss_id": String(boss_info.get("id", "")),
 		"skin_id": player.skin_id,
+		"recolour_id": player.recolour_id,
 		"run_rewards": rewards.counters(),  # Content wave 2: the one-run achievement counters (RunRewards).
 		"stats": stats.duplicate(),
 	}

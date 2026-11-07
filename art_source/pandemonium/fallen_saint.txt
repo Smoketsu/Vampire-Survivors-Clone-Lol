@@ -1,0 +1,13 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, a calm, confident stance, a black and gold censer-staff in her front (right) hand, a small falling golden star glowing above her open left hand
+
+LOW-RESOLUTION pixel art: the whole figure is only 52 pixels tall, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims, lacing or engravings. Details must be big enough to read at game size.
+
+Subject: THE FALLEN SAINT, a FEMALE fallen holy woman who now serves the necromancer, in the game's figure-redesign style: an exaggerated hourglass figure with a full bust and wide hips, a very narrow waist, attractive and confident, FULLY CLOTHED (a little daring is fine, but never nudity and no gap, notch or cut-out that reads as anatomy): long wavy ash-blonde hair, pale skin, calm violet glowing eyes, a cracked and darkened GOLD HALO tilted above her head, a fitted black and deep-violet nun-like gown with a high closed collar, gold trims, a long skirt with a high side slit showing one black-stockinged leg, black heeled boots, a torn white veil hanging behind her shoulders.
+Signature shape that must read in silhouette: the tilted halo, the veil and the staff.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: black and violet cloth #1C0F2B (outline) #3B1F5C #6B39A6 #A35CFA; gold halo and trims #8A6A1E #D9A93A #F5D870; white veil #8E8A86 #CFCBC4 #F4F1EA; hair #8C6040 #D9A93A #F5D870; skin #A79A80 #CFC7AE #EDE6D0; stockings and boots #14161C #2A2D36.
+
+Outline: a clean 1-pixel dark outline around the whole figure in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the figure), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark.
+Attached: a character of this game in the same figure style: match its pixel size, outline weight and flat look exactly (not its subject or colours).

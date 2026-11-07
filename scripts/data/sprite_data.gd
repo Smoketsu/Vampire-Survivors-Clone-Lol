@@ -185,6 +185,7 @@ const HEIGHTS: Dictionary = {
 	"summons/drowned_thrall_ally": 44.0,  # TUNING (not in GDD) Call of the Drowned's Thrall (soldier tier)
 	# --- Act III: the Electronic Empire (the shared kinds; assets/sprites/empire/) ---
 	"empire/scout_drone": 32.0,  # TUNING (not in GDD) fodder: a small flying drone, about 40 px wide with its rotors; art review round 1: 30 + two empty rows on top for the hover bob (walk_cycle.py "hover")
+	"empire/kill_drone": 32.0,  # TUNING (not in GDD) the Purge Protocol's armoured drone, 70 px wide with its rotors; like the Scout Drone: 30 + two empty rows on top for the hover bob (Act III missing sprites)
 	"empire/line_trooper": 50.0,  # TUNING (not in GDD) soldier tier: body ~46, the helmet dome on top
 	"empire/spotter": 56.0,  # TUNING (not in GDD) elite tier: a tall coated marksman, the antenna above
 	"summons/grave_gunner": 50.0,  # TUNING (not in GDD) a raised Line Trooper (Steel has no soul), drawn from its sprite
@@ -271,6 +272,269 @@ const HEIGHTS: Dictionary = {
 	"player/rust_prophet_deathlord": 60.0,  # TUNING (not in GDD) skin art: his body, the crowned hood and staff above
 	"summons/iron_revenant": 58.0,  # TUNING (not in GDD) a heavy summon (Corpse Catapult 56, Spawn of the Deep 60)
 	"summons/deus_revenant": 70.0,  # TUNING (not in GDD) its evolution, bigger
+	# --- Act IV: the Olympian Republic (the shared kinds; assets/sprites/pantheon/) ---
+	"pantheon/shade_of_dead": 36.0,  # TUNING (not in GDD) fodder: a hooded ghost with a long wisp tail (34) + two empty rows on top for the hover bob (walk_cycle.py "hover")
+	"pantheon/shade_archer": 40.0,  # TUNING (not in GDD) ranged soldier: a hooded-crested ghost drawing a recurve bow, a wisp tail (38) + two empty rows on top for the hover bob (walk_cycle.py "hover"); a little taller than the Shade of the Dead
+	"pantheon/hoplite": 56.0,  # TUNING (not in GDD) soldier tier: body ~50 (crest to sandals), the upright spear head above
+	"pantheon/hero": 58.0,  # TUNING (not in GDD) elite tier: a demigod, the tall plume on top (elites are also drawn larger by the game)
+	"pantheon/bronze_titan": 96.0,  # TUNING (not in GDD) the Reckoning's heavy, bigger than the heavy tier (60-72) and below the minibosses (104+)
+	# --- Act IV: the Shores of Ilion (assets/sprites/pantheon/, bosses/, player/) ---
+	"pantheon/legionary": 56.0,  # TUNING (not in GDD) soldier tier like the Hoplite: body ~50, the crest above
+	"pantheon/wolf_of_rome": 36.0,  # TUNING (not in GDD) fodder pack: a low bronze wolf, about 1.6 x as long as tall
+	"pantheon/cyclops": 70.0,  # TUNING (not in GDD) heavy tier (60-72): a hulking giant, the boulder beside his head
+	"pantheon/polyphemus": 112.0,  # TUNING (not in GDD) miniboss tier (104+): the giant with a boulder over his head
+	"pantheon/siege_tower": 104.0,  # TUNING (not in GDD) a structure: a tall tower on wheels (the Signal Pylon 96)
+	"bosses/achilles": 120.0,  # TUNING (not in GDD) boss tier: the hero with his crest and long spear (Kestrel 124)
+	"bosses/achilles_strike": 80.0,  # TUNING (not in GDD) attack pose: the low lunge, the spear thrust far ahead (BossPoseData 3)
+	"bosses/achilles_rage": 120.0,  # TUNING (not in GDD) his rage: helmet and shield gone, the spear raised high
+	"player/doomed_prophetess": 56.0,  # TUNING (not in GDD) character tier: body ~50, the bone circlet and bow tip above
+	"player/doomed_prophetess_hyper": 58.0,  # TUNING (not in GDD) skin art: her body, the gold laurel crown above
+	"player/doomed_prophetess_untouchable": 56.0,  # TUNING (not in GDD) skin art: her body
+	"player/doomed_prophetess_deathlord": 58.0,  # TUNING (not in GDD) skin art: her body, the spiked crown above
+	# --- Act IV: Mount Olympus (assets/sprites/pantheon/, bosses/, player/) ---
+	"pantheon/centaur_archer": 60.0,  # TUNING (not in GDD) ranged, a horse body (wider than tall), the helmet crest on top
+	"pantheon/amazon": 70.0,  # TUNING (not in GDD) elite tier, female (figure redesign, a towering muscular build since the art review round 1; round 5: 70, was 58, bigger than the elites for the detail, below the gods / bosses at 92+): the crest on top
+	"pantheon/gorgon": 54.0,  # TUNING (not in GDD) elite tier, female (figure redesign): reared on her tail, the snake hair on top
+	"pantheon/moon_hound": 30.0,  # TUNING (not in GDD) fodder: a lean hound (Bone Hound tier), wider than tall
+	"pantheon/sea_serpent": 64.0,  # TUNING (not in GDD) heavy tier: the reared S-neck over its coil
+	"pantheon/ares": 96.0,  # TUNING (not in GDD) a god of the trial (miniboss tier, below Zeus): the crest and the spear head above
+	"pantheon/artemis": 92.0,  # TUNING (not in GDD) a goddess of the trial (miniboss tier), the bow above her head
+	"pantheon/poseidon": 100.0,  # TUNING (not in GDD) a god of the trial (miniboss tier), the trident's prongs above
+	"bosses/zeus": 124.0,  # TUNING (not in GDD) boss tier: the King of the Gods
+	"bosses/zeus_cast": 128.0,  # TUNING (not in GDD) attack pose: the thunderbolt raised above his head
+	"bosses/zeus_colossus": 176.0,  # TUNING (not in GDD) phase 3, his true colossal form (x1.55 body, bigger than any boss)
+	"player/oathbreaker": 58.0,  # TUNING (not in GDD) character tier: body ~48, the thunderbolt staff above
+	"player/oathbreaker_hyper": 58.0,  # TUNING (not in GDD) skin art: his body, the gilded staff above
+	"player/oathbreaker_untouchable": 58.0,  # TUNING (not in GDD) skin art: his body, the ghost staff above
+	"player/oathbreaker_deathlord": 60.0,  # TUNING (not in GDD) skin art: his body, the spiked crown above
+	# --- Act IV: the Asphodel Underworld ---
+	"pantheon/cerberus": 92.0,  # TUNING (not in GDD) miniboss tier: a huge three-headed hound, wide rather than tall (the flame tips on top)
+	"bosses/hades": 116.0,  # TUNING (not in GDD) boss tier: a tall god, the blue flames of his crown and the bident above
+	"bosses/hades_bident": 108.0,  # TUNING (not in GDD) attack pose (BossPoseData 1): leaning into the sweep, lower
+	"bosses/hades_kneel": 84.0,  # TUNING (not in GDD) the ending: kneeling, offering his crown (HadesHazards' finale)
+	"player/ferrywoman": 56.0,  # TUNING (not in GDD) character tier: body ~48, the hood and the oar's lantern above
+	"player/ferrywoman_hyper": 56.0,  # TUNING (not in GDD) skin art: her body, the gilded oar
+	"player/ferrywoman_untouchable": 56.0,  # TUNING (not in GDD) skin art: her body, the white phantom
+	"player/ferrywoman_deathlord": 58.0,  # TUNING (not in GDD) skin art: her body, the spiked crown above
+	"summons/myrmidon_shade": 46.0,  # TUNING (not in GDD) a summon like the Warrior (44), the spear head above
+	"summons/legion_of_tartarus": 54.0,  # TUNING (not in GDD) its evolution, bigger
+	# --- Act V: the Shogunate of the Rising Sun (the shared kinds; assets/sprites/shogunate/) ---
+	"shogunate/ashigaru": 46.0,  # TUNING (not in GDD) fodder: body ~32 (hat to sandals), the long yari rising far above the hat
+	"shogunate/samurai": 56.0,  # TUNING (not in GDD) soldier tier: body ~50, the crescent crest above
+	"shogunate/teppo_gunner": 46.0,  # TUNING (not in GDD) ranged soldier: body ~44, the arquebus held level
+	"shogunate/ninja": 40.0,  # TUNING (not in GDD) soldier tier, a crouching figure
+	"shogunate/onryo": 36.0,  # TUNING (not in GDD) night fodder: a floating ghost (34) + two empty rows on top for the hover bob (walk_cycle.py "hover")
+	"shogunate/oni": 80.0,  # TUNING (not in GDD) night heavy tier (60-72 and up): a huge red ogre, the horns and the club
+	"obstacles/stone_lantern": 40.0,  # TUNING (not in GDD) a toro, unlit (an obstacle; the glow pool is drawn by code)
+	"obstacles/stone_lantern_lit": 40.0,  # TUNING (not in GDD) the same toro with a warm lit window
+	# --- Act V: the Burning Province (assets/sprites/shogunate/, bosses/, player/) ---
+	"shogunate/kunoichi": 52.0,  # TUNING (not in GDD) elite tier (elites are also drawn larger): body ~46, the hair knot and scarf above
+	"shogunate/kappa": 34.0,  # TUNING (not in GDD) fodder: a squat river imp, the water dish on top
+	"shogunate/shuten_doji": 112.0,  # TUNING (not in GDD) miniboss tier (104+, Polyphemus 112): the Oni King, the barrel on his shoulder
+	"bosses/kage": 64.0,  # TUNING (not in GDD) boss tier for a slender figure (a ninja grandmaster, not a giant): body ~58, the hair and scarf above; her clones wear it
+	"player/grave_kunoichi": 56.0,  # TUNING (not in GDD) character tier: body ~50, the hair knot above
+	"player/grave_kunoichi_hyper": 58.0,  # TUNING (not in GDD) skin art: her body, the gold crest above
+	"player/grave_kunoichi_untouchable": 56.0,  # TUNING (not in GDD) skin art: her body
+	"player/grave_kunoichi_deathlord": 58.0,  # TUNING (not in GDD) skin art: her body, the spiked crown above
+	# --- Act V: the Road to the Sun ---
+	"shogunate/kitsune": 52.0,  # TUNING (not in GDD) support tier: body ~44, her ears and tails above (the figure redesign)
+	"shogunate/sohei": 56.0,  # TUNING (not in GDD) soldier tier: body ~46, the naginata's blade above
+	"shogunate/kirin": 96.0,  # TUNING (not in GDD) miniboss tier: a tall beast, the horn and mane on top
+	"bosses/amaterasu": 116.0,  # TUNING (not in GDD) boss tier: a goddess, her sun crown and mirror above
+	"bosses/amaterasu_mirror": 112.0,  # TUNING (not in GDD) attack pose (BossPoseData 1): the mirror raised high
+	"player/shrine_maiden": 56.0,  # TUNING (not in GDD) character tier: body ~48, the hair ornament and the gohei above
+	"player/shrine_maiden_hyper": 56.0,  # TUNING (not in GDD) skin art: her body, gold and white
+	"player/shrine_maiden_untouchable": 56.0,  # TUNING (not in GDD) skin art: her body, the white phantom
+	"player/shrine_maiden_deathlord": 58.0,  # TUNING (not in GDD) skin art: her body, the spiked crown above
+	"summons/bound_oni": 60.0,  # TUNING (not in GDD) a heavy summon (Abomination ~56), the horns and kanabō above
+	"summons/oni_lord": 70.0,  # TUNING (not in GDD) its evolution, bigger
+	# --- Act V: Castle Kurogane (assets/sprites/shogunate/, bosses/, player/) ---
+	"shogunate/hatamoto": 72.0,  # TUNING (not in GDD) elite tier: body ~46, the tall white sashimono banner rising far above the helmet
+	"shogunate/kiba_musha": 60.0,  # TUNING (not in GDD) a horse and rider, about 1.2 x as long as tall
+	"shogunate/general_left": 100.0,  # TUNING (not in GDD) miniboss tier: the huge black war horse and the antler crest
+	"shogunate/command_platform": 124.0,  # TUNING (not in GDD) the Shogun's platform with its four nobori (BossShogun draws it at its art size)
+	"bosses/shogun": 116.0,  # TUNING (not in GDD) boss tier: the crescent crest and the raised war fan (Achilles 120)
+	"bosses/shogun_duel": 100.0,  # TUNING (not in GDD) duel pose: low iai stance, the blade drawn level (BossPoseData 3)
+	"player/ronin_revenant": 58.0,  # TUNING (not in GDD) character tier: body ~50, the straw hat and the small banner above
+	"player/ronin_revenant_hyper": 58.0,  # TUNING (not in GDD) skin art: his body, the gilded hat
+	"player/ronin_revenant_untouchable": 58.0,  # TUNING (not in GDD) skin art: his body, the white phantom
+	"player/ronin_revenant_deathlord": 58.0,  # TUNING (not in GDD) skin art: his body, the black iron crest
+	# --- Act VI: the Inferno (the shared kinds; assets/sprites/inferno/) ---
+	"inferno/damned": 30.0,  # TUNING (not in GDD) fodder: a hunched wailing soul in chains, body ~30
+	"inferno/imp": 32.0,  # TUNING (not in GDD) fodder flier: body ~26 + two empty rows on top for the hover bob, the pitchfork and horns above
+	"inferno/hell_knight": 54.0,  # TUNING (not in GDD) soldier tier: body ~50, the horned helm above, the burning greatsword held forward
+	"inferno/succubus": 56.0,  # TUNING (not in GDD) elite tier, female (figure redesign, the approved act6_units concept; 56, not 48: at 48 the face and the hourglass were lost, as with the Kunoichi at 52): body ~52, the curled horns above; she flies, the bust and hip box sway in the glide strip
+	"inferno/demon_brute": 84.0,  # TUNING (not in GDD) heavy tier (60-72 and up): a huge four-armed demon, the horns and the raised fists
+	"structures/demon_portal": 64.0,  # TUNING (not in GDD) the Inferno's portal structure: an obsidian-and-lava ring with a charm-pink swirl (the looping glow is drawn by code)
+	# --- Act VI: the Burning Gate (assets/sprites/inferno/, bosses/, player/) ---
+	"inferno/lava_hound": 30.0,  # TUNING (not in GDD) pack tier: a long low hound, ~1.5 x as long as tall
+	"inferno/pit_cultist": 46.0,  # TUNING (not in GDD) support tier: a robed man, the horned mask above
+	"inferno/gatekeeper": 108.0,  # TUNING (not in GDD) miniboss tier (104+, the General 100): a chained giant
+	"bosses/moloch": 124.0,  # TUNING (not in GDD) boss tier, colossal: the bull horns and the furnace belly (the Shogun 116)
+	"player/furnace_priest": 56.0,  # TUNING (not in GDD) character tier: body ~50, the horned mitre above
+	"player/furnace_priest_hyper": 56.0,  # TUNING (not in GDD) skin art: his body, gilded
+	"player/furnace_priest_untouchable": 56.0,  # TUNING (not in GDD) skin art: his body, the white phantom
+	"player/furnace_priest_deathlord": 56.0,  # TUNING (not in GDD) skin art: his body, the spiked crown inside the same height
+	# --- Act VI: the Palace of Silk and Ash ---
+	"inferno/lilim_witch": 56.0,  # TUNING (not in GDD) support tier, female (the approved act6_units level): body ~50, the horns and the eye-staff above
+	"inferno/twin_naamah": 62.0,  # TUNING (not in GDD) miniboss tier, female: body ~54, the tall horns and the crown above, the wings wide
+	"inferno/twin_agrat": 62.0,  # TUNING (not in GDD) miniboss tier, female: her sister's size
+	"bosses/lilith": 112.0,  # TUNING (not in GDD) boss tier: a queen, her horns, crown and great wings above
+	"bosses/lilith_demon": 124.0,  # TUNING (not in GDD) her true demon form, bigger (the last phase)
+	"player/succubus_queen": 56.0,  # TUNING (not in GDD) character tier: body ~50, the horns and tiara above
+	"player/succubus_queen_hyper": 56.0,  # TUNING (not in GDD) skin art: her body, gold and white
+	"player/succubus_queen_untouchable": 56.0,  # TUNING (not in GDD) skin art: her body, the white phantom
+	"player/succubus_queen_deathlord": 58.0,  # TUNING (not in GDD) skin art: her body, the spiked crown above
+	"summons/bound_succubus": 52.0,  # TUNING (not in GDD) a support summon (Banshee ~48), the horns above
+	"summons/lilim_matriarch": 62.0,  # TUNING (not in GDD) its evolution, bigger, the wings wide
+	# --- Act VI: Pandemonium ---
+	"inferno/fallen_angel": 60.0,  # TUNING (not in GDD) elite tier, female (figure redesign at the approved act6_units level, as the succubus): body ~52, the halo and the burning spear above
+	"inferno/seraph_general": 92.0,  # TUNING (not in GDD) miniboss tier: a tall winged warlord, the four wings and the halo crown above
+	"bosses/morning_star": 116.0,  # TUNING (not in GDD) boss tier: the Angel, six wings fanned and the halo above
+	"bosses/morning_star_beast": 140.0,  # TUNING (not in GDD) boss tier, bigger: the throne-skull Beast, horns and torn wings
+	"player/fallen_saint": 56.0,  # TUNING (not in GDD) character tier: body ~48, the halo and the staff above
+	"player/fallen_saint_hyper": 56.0,  # TUNING (not in GDD) skin art: her body, gold and white
+	"player/fallen_saint_untouchable": 56.0,  # TUNING (not in GDD) skin art: her body, the white phantom
+	"player/fallen_saint_deathlord": 56.0,  # TUNING (not in GDD) skin art: her body, the spiked crown above
+	"summons/archfiend": 62.0,  # TUNING (not in GDD) a heavy summon (Bound Oni 60), the horns and wings above
+	"summons/prince_of_hell": 72.0,  # TUNING (not in GDD) its evolution, bigger
+	# --- Act VII: the Sanguine Court (the shared kinds; assets/sprites/court/) ---
+	"court/blood_thrall": 30.0,  # TUNING (not in GDD) fodder: a hunched, bitten servant in torn peasant clothes, body ~30
+	"court/vampire_bat": 22.0,  # TUNING (not in GDD) fodder flier: body ~20 + two empty rows on top for the hover bob, the wings spread wide
+	"court/blood_knight": 54.0,  # TUNING (not in GDD) soldier tier: body ~50, the crest above, the halberd held upright
+	"court/werewolf": 52.0,  # TUNING (not in GDD) heavy tier, human hunter form: body ~48, the crossbow held forward
+	"court/werewolf_beast": 84.0,  # TUNING (not in GDD) heavy tier, the transformed beast (Demon Brute 84): hunched, the ears and claws
+	"court/vampire_noble": 56.0,  # TUNING (not in GDD) elite tier, female (figure redesign at the approved level; 56 as the succubus): body ~52, the high collar above; she glides, the bust and hip box sway in the glide strip
+	"structures/court_coffin": 40.0,  # TUNING (not in GDD) the Court's coffin structure, closed (the loop glow is drawn by code)
+	"structures/court_coffin_open": 40.0,  # TUNING (not in GDD) the same coffin opened: the lid slid aside, a red glow inside
+	# --- Act VIII: the Last Line (the shared kinds; assets/sprites/city/) ---
+	"city/civilian": 28.0,  # TUNING (not in GDD) a fleeing male bystander, small (the Blood Thrall 30), running pose
+	"city/civilian_woman": 28.0,  # TUNING (not in GDD) a fleeing female bystander (figure redesign, clothed): the ponytail above, bust rig, `swish`, idle strip
+	"city/street_thug": 30.0,  # TUNING (not in GDD) gang fodder: a hooded man with a raised bat, body ~30
+	"city/gang_gunner": 30.0,  # TUNING (not in GDD) ranged gang fodder: two pistols held out sideways (about 38 wide with the muzzle flashes)
+	"city/riot_cop": 44.0,  # TUNING (not in GDD) soldier tier: black riot armour behind a tall clear shield (the shield is an armour_front, drawn on the right)
+	"city/squad_car": 32.0,  # TUNING (not in GDD) a police car, drawn from above-front facing right: 64 wide x 32 high (the brief\'s ~64 is its length); drive strip
+	"city/swat_breacher": 44.0,  # TUNING (not in GDD) soldier tier: helmet, visor, vest, a shotgun across the body
+	"city/field_medic": 44.0,  # TUNING (not in GDD) support tier, female (figure redesign, clothed): the ponytail above; bust rig, `swish`, idle strip
+	"city/rifleman": 40.0,  # TUNING (not in GDD) army ranged soldier: olive drab, helmet, a rifle at the shoulder
+	"city/tank": 52.0,  # TUNING (not in GDD) army vehicle, drawn from above-front facing right: about 78 wide x 52 high (the brief\'s ~80 is its length; the antenna and turret on top); drive strip
+	"city/blitz": 44.0,  # TUNING (not in GDD) the reference Super, male: a sprinting speedster with a winged helmet; dash strip
+	"structures/city_wreck": 38.0,  # TUNING (not in GDD) a burning vehicle wreck, 60 x 38 art px (Act VIII, Skid Row: redrawn to cover the 52 x 36 wreck rect; drawn at its own size), the flames above
+	"structures/city_wreck_burnt": 38.0,  # TUNING (not in GDD) the same wreck burnt out, 60 x 38 art px: fire out, the shell and a few embers
+	# --- Act VII: Ravensmoor (assets/sprites/court/, bosses/, player/) ---
+	"court/ghoul": 38.0,  # TUNING (not in GDD) pack fodder: a gaunt grey corpse-eater, hunched and walking, big head carried forward (raised 30 -> 38 so its face reads)
+	"court/old_greymane": 96.0,  # TUNING (not in GDD) miniboss tier: a huge grey-maned wolf-man (the werewolf beast 84), the scarred mane above
+	"bosses/vargr": 120.0,  # TUNING (not in GDD) boss tier: the black wolf king, red cloak and iron crown (Moloch 124)
+	"player/moon_huntress": 56.0,  # TUNING (not in GDD) character tier, female (figure redesign): body ~50, the wolf ears above
+	"player/moon_huntress_hyper": 56.0,  # TUNING (not in GDD) skin art: her body, gilded
+	"player/moon_huntress_untouchable": 56.0,  # TUNING (not in GDD) skin art: her body, the white phantom
+	"player/moon_huntress_deathlord": 56.0,  # TUNING (not in GDD) skin art: her body, the spiked crown inside the same height
+	# --- Act VII: the Witchwood (assets/sprites/court/, bosses/, player/, structures/) ---
+	"court/crimson_witch": 52.0,  # TUNING (not in GDD) support tier, female (figure redesign): body ~44, the pointed hat above; bust rig, idle strip
+	"court/bloated_thrall": 60.0,  # TUNING (not in GDD) heavy tier: a vast pale belly on short legs
+	"court/bog_mother": 110.0,  # TUNING (not in GDD) miniboss tier (the Gatekeeper 108), female: a vast drowned witch, the root crown above; she glides (wades)
+	"bosses/isolde": 104.0,  # TUNING (not in GDD) boss tier, female (figure redesign): body ~86, the tall hat with its crescent above (Lilith 112); her sisters wear it tinted
+	"structures/hex_stone": 44.0,  # TUNING (not in GDD) a tall black standing stone, red runes
+	"structures/hex_stone_broken": 28.0,  # TUNING (not in GDD) the same stone snapped: the dead ground's stump
+	"player/hedge_witch": 56.0,  # TUNING (not in GDD) character tier, female (figure redesign): body ~48, the floppy hat above
+	"player/hedge_witch_hyper": 56.0,  # TUNING (not in GDD) skin art: her body, gilded
+	"player/hedge_witch_untouchable": 56.0,  # TUNING (not in GDD) skin art: her body, the white phantom
+	"player/hedge_witch_deathlord": 56.0,  # TUNING (not in GDD) skin art: her body, the spiked crown above
+	# --- Act VII: Castle Sanguis ---
+	"court/chiropteran": 50.0,  # TUNING (not in GDD) elite tier, male bat-man: body ~44, the wings spread wide and the ears above (it glides)
+	"court/chiropteran_king": 96.0,  # TUNING (not in GDD) miniboss tier (the Fallen Seraph General 92): a giant bat-man, the bone crown and the wings above
+	"bosses/carmilla": 64.0,  # TUNING (not in GDD) boss tier, female (the figure style at its limit, the Countess's 56 and up): body ~58, the crown above; she glides, the bust and hip box sway in the glide strip
+	"bosses/elder": 120.0,  # TUNING (not in GDD) boss tier, bigger: the first vampire, hunched, the great bat wings above
+	"bosses/elder_vampire": 120.0,  # TUNING (not in GDD) boss tier, the Elder's first form: a tall regal vampire lord in a long black coat, no wings (the bat-winged "bosses/elder" is his second form)
+	"structures/blood_fountain": 40.0,  # TUNING (not in GDD) the Banquet's blood fountain: a stone basin brimming red
+	"structures/elder_coffin": 48.0,  # TUNING (not in GDD) the Elder's great coffin, closed
+	"structures/elder_coffin_open": 48.0,  # TUNING (not in GDD) the same coffin opened
+	"player/dhampir": 56.0,  # TUNING (not in GDD) character tier: body ~50, the high collar and the white hair above
+	"player/dhampir_hyper": 56.0,  # TUNING (not in GDD) skin art: his body, gold and white
+	"player/dhampir_untouchable": 56.0,  # TUNING (not in GDD) skin art: his body, the white phantom
+	"player/dhampir_deathlord": 56.0,  # TUNING (not in GDD) skin art: his body, the spiked crown above
+	"summons/blood_spawn": 40.0,  # TUNING (not in GDD) a light summon (Rogue 38): a gaunt crouching brawler
+	"summons/nosferatu": 52.0,  # TUNING (not in GDD) its evolution, taller
+	# --- Act VIII: Skid Row (assets/sprites/city/, bosses/, structures/, projectiles/, player/) ---
+	"city/armoured_limo": 36.0,  # TUNING (not in GDD) the miniboss's car, drawn from above-front facing right: about 80 wide x 36 high (body ~72 x 30); drive strip (the cart rock)
+	"city/big_sal": 52.0,  # TUNING (not in GDD) miniboss tier on foot, male: a huge enforcer in a pinstripe suit, the sledgehammer above his shoulder
+	"bosses/don_marrow": 72.0,  # TUNING (not in GDD) boss tier, male: the Kingpin in a white suit, a gold cane and a gold minigun (body radius 18, drawn larger)
+	"structures/bounty_board": 44.0,  # TUNING (not in GDD) a billboard of wanted posters on two legs (no letters)
+	"projectiles/spectral_hearse": 30.0,  # TUNING (not in GDD) Hearse Run's spectral hearse from above-front, facing right (~56 wide); drawn faded by code
+	"player/undertaker": 56.0,  # TUNING (not in GDD) character tier, male: the top hat above
+	"player/undertaker_hyper": 56.0,  # TUNING (not in GDD) skin art: his body, gilded
+	"player/undertaker_untouchable": 56.0,  # TUNING (not in GDD) skin art: his body, the white phantom
+	"player/undertaker_deathlord": 56.0,  # TUNING (not in GDD) skin art: his body, the spiked crown inside the same height
+	# --- Act VIII: Fort Kessler (assets/sprites/city/, bosses/, player/, structures/, spells/, decals/) ---
+	"city/machine_gunner": 40.0,  # TUNING (not in GDD) heavy ranged soldier, male: kneeling behind a belt-fed gun (about 46 wide with the gun and bipod)
+	"city/attack_helicopter": 44.0,  # TUNING (not in GDD) a flying vehicle facing right (40 art px and 2 empty rows above and below for the hover bob): about 84 long with the tail boom, the rotor disc on top; hover strip
+	"city/mammoth": 60.0,  # TUNING (not in GDD) miniboss tier: the super-heavy tank, two turrets, about 108 long (the tank 78); drive strip
+	"bosses/harrow": 72.0,  # TUNING (not in GDD) boss tier, male: General Harrow in olive power armour, the hammer on his shoulder (drawn larger than his 30 px body)
+	"bosses/harrow_command": 60.0,  # TUNING (not in GDD) boss tier: his six-wheeled command car, the General in the roof hatch (phase 1)
+	"player/fallen_sergeant": 56.0,  # TUNING (not in GDD) character tier, female (figure redesign, clothed): olive field jacket and helmet, a bone mine in hand
+	"player/fallen_sergeant_hyper": 56.0,  # TUNING (not in GDD) skin art: her body, white and gold
+	"player/fallen_sergeant_untouchable": 56.0,  # TUNING (not in GDD) skin art: her body, the white phantom
+	"player/fallen_sergeant_deathlord": 56.0,  # TUNING (not in GDD) skin art: her body, black iron and crimson, the spiked crown inside the same height
+	"structures/kessler_mine": 9.0,  # TUNING (not in GDD) a minefield mine (Minefields), an olive disc; its red lamp is code
+	"spells/bone_mine": 9.0,  # TUNING (not in GDD) a Bone Mines mine, a bone disc; its violet lamp is code
+	"decals/fk_sandbags": 16.0,  # TUNING (not in GDD) a sandbag wall decal (FortKesslerGround), 44 long
+	# --- Act VIII: Liberty Heights ---
+	"city/atlas": 54.0,  # TUNING (not in GDD) elite Super, male strongman: broad and tall (Blitz 44)
+	"city/aurora": 48.0,  # TUNING (not in GDD) elite Super, female (figure redesign): body ~44, the hair and cape above; she hovers (glide strip, bust and hip box sway)
+	"city/nightjar": 48.0,  # TUNING (not in GDD) elite Super, male vigilante: the cowl and the spread cloak
+	"city/conscript": 32.0,  # TUNING (not in GDD) army fodder (the rifleman 40, the thug 30): the bayonet above
+	"bosses/paragon": 64.0,  # TUNING (not in GDD) boss tier, male: the strongest man alive, the cape behind
+	"player/revenant_heroine": 56.0,  # TUNING (not in GDD) character tier, female (figure redesign): body ~50, the hair above
+	"player/revenant_heroine_hyper": 56.0,  # TUNING (not in GDD) skin art: her body, gold and white
+	"player/revenant_heroine_untouchable": 56.0,  # TUNING (not in GDD) skin art: her body, the white phantom
+	"player/revenant_heroine_deathlord": 56.0,  # TUNING (not in GDD) skin art: her body, the spiked crown above
+	"summons/fallen_hero": 46.0,  # TUNING (not in GDD) a raised Super (male): the tattered cape behind
+	"summons/black_paragon": 54.0,  # TUNING (not in GDD) its evolution, taller
+	# --- Act IX: the Concord of Stars (the shared kinds; assets/sprites/concord/, structures/, bosses/) ---
+	"concord/broodling": 22.0,  # TUNING (not in GDD) Brood fodder, a creature: a hunched green-black insect, about 24 wide; walk strip
+	"concord/grey_drone": 28.0,  # TUNING (not in GDD) Harvester fodder, sex unmarked: a small grey with a probe held out (about 30 wide with it); walk strip
+	"concord/saucer": 36.0,  # TUNING (not in GDD) a Harvester flier, 64 x 32 art px plus 2 empty rows above and below for the hover bob; hover strip
+	"concord/vrask_hunter": 46.0,  # TUNING (not in GDD) elite Vrask, male: a lizard-man with a shoulder caster and a glaive (about 44 wide); walk strip
+	"concord/lumen_sentinel": 46.0,  # TUNING (not in GDD) Luminous ranged, male: white-gold crystal armour and a beam staff; glide strip
+	"concord/prism": 44.0,  # TUNING (not in GDD) Luminous support, female (figure redesign, gown covers chest and hips): the Star-Seer, the prism above her hand; glide strip, bust rig, `swish`, idle strip
+	"bosses/hive_mother": 96.0,  # TUNING (not in GDD) boss tier, female (figure redesign, chitin covers her completely): the Brood's queen, wings, horned helm and egg-sac abdomen (about 90 wide); idle strip
+	"structures/concord_terraformer": 40.0,  # TUNING (not in GDD) a landing pod rooted in alien turf, about 54 x 40 art px, vents glowing green; the steam is code
+	"structures/concord_terraformer_dead": 40.0,  # TUNING (not in GDD) the same pod cracked, charred and dark (destroyed)
+	# --- Act IX: the Crash Site (assets/sprites/concord/, bosses/, player/) ---
+	"concord/burrower": 34.0,  # TUNING (not in GDD) Brood soldier, a creature: a slate-dark armoured digger, cream claws (about 40 wide); walk strip
+	"concord/acid_spitter": 32.0,  # TUNING (not in GDD) Brood ranged, a creature: a green insect with a glowing acid sac (about 34 wide); walk strip
+	"concord/brood_matriarch": 64.0,  # TUNING (not in GDD) the miniboss, an insect creature (female by name): green-black chitin, wings, 60 x 60 art px plus 2 empty rows above and below for the hover bob; hover strip
+	"concord/brood_egg": 14.0,  # TUNING (not in GDD) an Infestation egg in a resin smear (about 14 wide); its hatch strip concord/brood_egg_hatch (4 frames of 16)
+	"concord/burrow_mound": 16.0,  # TUNING (not in GDD) a heaving dirt mound (about 28 wide; drawn scaled by BurrowerKit.draw_mound())
+	"bosses/hive_mother_flight": 100.0,  # TUNING (not in GDD) her Flight form (female, figure redesign, chitin covers her): wings spread wide, 100 x 96 art px plus 2 empty rows above and below for the hover bob; hover strip
+	"player/broodbound": 56.0,  # TUNING (not in GDD) character tier, female (figure redesign, a chitin gown covers chest and hips): the wing crown above
+	"player/broodbound_hyper": 56.0,  # TUNING (not in GDD) skin art: her body, gold chitin
+	"player/broodbound_untouchable": 56.0,  # TUNING (not in GDD) skin art: her body, the white phantom
+	"player/broodbound_deathlord": 56.0,  # TUNING (not in GDD) skin art: her body, the spiked crown above
+	# --- Act IX: the Proving Moon (assets/sprites/concord/, bosses/, player/) ---
+	"concord/warbeast": 44.0,  # TUNING (not in GDD) miniboss tier, a creature: the Vrask's armoured war-hound, long and low (about 92 wide); walk strip
+	"bosses/vrask_tal": 84.0,  # TUNING (not in GDD) boss tier, male: the Hunt-Lord, horned crest, shoulder caster, skull belt and glaive (about 106 wide); walk strip
+	"player/blooded": 56.0,  # TUNING (not in GDD) character tier, female (figure redesign, clothed): a brown hunting coat, the red braid, the shoulder cannon
+	"player/blooded_hyper": 56.0,  # TUNING (not in GDD) skin art: her body, white and gold
+	"player/blooded_untouchable": 56.0,  # TUNING (not in GDD) skin art: her body, the white phantom
+	"player/blooded_deathlord": 56.0,  # TUNING (not in GDD) skin art: her body, black iron and crimson, the small crown inside the same height
+	# --- Act IX: the Ark ---
+	"concord/grey_overseer": 38.0,  # TUNING (not in GDD) Harvester support, sex unmarked: a tall grey in a gunmetal mantle, a plasma crown; walk strip
+	"concord/luminous_archon": 64.0,  # TUNING (not in GDD) the miniboss, male: a being of white-gold light in crystal plates, a crown of shards; glide strip
+	"concord/vault_beast": 30.0,  # TUNING (not in GDD) a freed beast, a creature: six legs, rust-red hide, ochre crest, about 40 long; walk strip
+	"structures/specimen_tank": 40.0,  # TUNING (not in GDD) a sealed specimen tank, green fluid, a beast curled inside (tools/ark_tiles.py)
+	"structures/specimen_tank_dead": 22.0,  # TUNING (not in GDD) its shattered base and spilt fluid (ArkDirector's wreck)
+	"structures/reactor_vent": 30.0,  # TUNING (not in GDD) a round grated vent on a gunmetal collar, plasma below (tools/ark_tiles.py)
+	"structures/reactor_vent_dead": 22.0,  # TUNING (not in GDD) the same cracked and dark
+	"structures/reap_emitter": 46.0,  # TUNING (not in GDD) a gunmetal pylon with a plasma lens (tools/ark_tiles.py)
+	"bosses/harvester": 96.0,  # TUNING (not in GDD) boss tier, sex unmarked: the oldest grey, white robes, its great head (its throne of rings is code)
+	"bosses/harvester_true": 112.0,  # TUNING (not in GDD) its true form, a vast being of light and rings (the Gardener)
+	"player/starborn": 56.0,  # TUNING (not in GDD) character tier, female (figure redesign, suit covers chest and hips): a grey deserter in hull white and gunmetal
+	"player/starborn_hyper": 56.0,  # TUNING (not in GDD) skin art: her suit gilded
+	"player/starborn_untouchable": 56.0,  # TUNING (not in GDD) skin art: the white phantom
+	"player/starborn_deathlord": 56.0,  # TUNING (not in GDD) skin art: black iron, a crown above
+	"summons/ghost_saucer": 34.0,  # TUNING (not in GDD) a raised saucer, a machine: bone-grey hull, soul-light, 52 x 30 art px plus 2 empty rows above and below for the hover bob; hover strip
+	"summons/black_mothership": 40.0,  # TUNING (not in GDD) its evolution, larger, black and soul-lit, 54 x 36 art px plus 2 empty rows above and below; hover strip
 }
 
 ## Height (world px) used for a key missing from HEIGHTS.
@@ -353,12 +617,28 @@ const FLAT_SIZES: Dictionary = {
 	"markers/chest_badge": 21.0,  # TUNING (not in GDD) off-screen chest badge, 21 x 21 (edge arrows)
 	# --- Gullhaven Harbour (harbour placeholder art pass; MarkerArtData "Gullhaven Harbour") ---
 	"structures/harbour_pier": 152.0,  # TUNING (not in GDD) a smugglers' dry pier, 152 x 40, along +x (pier_length 150 x pier_width 40)
+	# --- Act III missing sprites (hand-built on the grid, tools/act3_projectiles.py) ---
+	"projectiles/soul_round": 12.0,  # TUNING (not in GDD) a Grave Gunner's rifle round, 12 x 5, soul-teal fire
+	"projectiles/scrap_bolt": 14.0,  # TUNING (not in GDD) a scrap drone's bolt, 14 x 6, a bone shard wrapped in violet
+	"projectiles/iron_shell": 20.0,  # TUNING (not in GDD) an Iron Revenant's cannon shell, 20 x 8, with a soul-teal trail
+	"projectiles/trojan_rocket": 24.0,  # TUNING (not in GDD) the Trojan Horse's Swarm Rocket, 24 x 12 (its hit circle is 6 px)
+	"projectiles/trojan_rocket_flame": 36.0,  # TUNING (not in GDD) its exhaust, a 3-frame strip of 12 x 8 (drawn by SpriteBank.draw_flat_frame)
+	"projectiles/empire_rail": 46.0,  # TUNING (not in GDD) the Lock-On rail slug, 46 x 7 (EmpireRulesData rail "art")
+	"projectiles/empire_missile": 26.0,  # TUNING (not in GDD) Deus Ex Machina's missile, 26 x 10 with its exhaust (missile "art")
+	"projectiles/mortar_shell": 12.0,  # TUNING (not in GDD) the Mortar Walker's lobbed shell, 12 x 12 (mortar "art")
+	"projectiles/deus_missile": 26.0,  # TUNING (not in GDD) the Deus Revenant's missile, 26 x 10 (HordeHazards draws it along its arc)
+	"projectiles/scrap_drone": 44.0,  # TUNING (not in GDD) a Scrap Swarm drone, a 2-frame rotor strip of 22 x 14
+	"projectiles/scrap_drone_bright": 44.0,  # TUNING (not in GDD) a Deathless Swarm kill drone (violet rotors), the same strip
 	"projectiles/harbour_anchor": 28.0,  # TUNING (not in GDD) the Harbourmaster's anchor raised or hurled, 24 x 28
 	"projectiles/anchor_chain_link": 7.0,  # TUNING (not in GDD) one link of the anchor chain, 7 x 5, along +x
 	"overlays/harbour_net": 33.0,  # TUNING (not in GDD) the Netcaster's net, 33 x 33, scaled to the pinned body
 	"overlays/tide_wall": 152.0,  # TUNING (not in GDD) the Tide Caller's rising water line, 152 x 28, along +x (wall_length 150)
 	"overlays/undertow_crest": 14.0,  # TUNING (not in GDD) one foam crest of the Undertow wave, 10 x 14, facing +x
 	"overlays/maelstrom_whirl": 96.0,  # TUNING (not in GDD) a Maelstrom whirlpool from above, 92 x 96
+	# --- Act IX: the Concord of Stars ---
+	"concord/mothership_eye": 192.0,  # TUNING (not in GDD) the mothership's eye seen from below, a round 192 x 192 sky overlay with transparent corners (the Final Harvest fades it in; no screen read)
+	# --- Act IX: the Crash Site ---
+	"projectiles/bone_beetle": 10.0,  # TUNING (not in GDD) a Bone Beetles beetle from above, about 10 x 8, its head to the right
 }
 ## Longest side (px) for a flat sprite key missing from FLAT_SIZES.
 const DEFAULT_FLAT_SIZE: float = 20.0  # TUNING (not in GDD)

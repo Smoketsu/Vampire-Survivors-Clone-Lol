@@ -59,6 +59,101 @@
 ##     2)"): on a stage with a "wastes" config it owns the WastesDirector (the
 ##     Signal Pylons, the scrap storms, the Trojan Horse; `wastes`) and hands it
 ##     the "pylons" / "storm" / "trojan" events. Null on every other stage.
+##   * Act IV, the Shores of Ilion (GDD §15.0 "The Shores of Ilion (Act IV
+##     phase 2)"): on a stage with an "ilion" config it owns the IlionDirector
+##     (the siege towers, Polyphemus the Cyclops; `ilion`) and hands it the
+##     "siege_towers" / "polyphemus" events. Null on every other stage.
+##   * Act IV, the Olympian Republic (GDD §15.0 "Act IV foundation (phase
+##     1)"): its kinds are looked up through pantheon_def() (PantheonEnemyData,
+##     then each Act IV stage's table) after the Empire's, and its bosses load
+##     by name from PANTHEON_BOSS_DIR after the Empire's folder. Its shared
+##     rules (Wrath of the Gods, Phalanx, Glory, the Twilight of the Gods) live
+##     in PantheonRules (Game.pantheon), not here.
+##   * Act IV, Mount Olympus (GDD §15.0 "Mount Olympus (Act IV phase 2)"): on a
+##     stage with an "olympus" config it owns the OlympusDirector (the Pantheon
+##     Trial's gods and Artemis's groves; `olympus`) and hands it the "god"
+##     events. Null on every other stage.
+##   * Act V, the Shogunate of the Rising Sun (GDD §15.0 "Act V foundation
+##     (phase 1)"): its kinds are looked up through shogunate_def()
+##     (ShogunateEnemyData, then each Act V stage's table) after the
+##     Pantheon's, and its bosses load by name from SHOGUNATE_BOSS_DIR after
+##     the Pantheon's folder. Its shared rules (the Sun's Course, the Draw, From
+##     the Shadows, the Endless Night) live in ShogunateRules (Game.shogunate);
+##     this director only asks them, while they exist, for the trickle's and
+##     the waves' night kinds (SunCourse.timeline_weights() / filter_groups(),
+##     the one timeline helper), hands the "ambush" events and the segments'
+##     "ambush" trickle to ShadowAmbush, and lets the Endless Night quicken
+##     each Reckoning enemy (ShogunateRules.on_reckoning_spawn()).
+##   * Act V, the Burning Province (GDD §15.0 "The Burning Province (Act V
+##     phase 2)"): on a stage with a "province" config it owns the
+##     ProvinceDirector (the paddy water, the village fires, Shuten-dōji;
+##     `province`) and hands it the "shuten_doji" events; the Province kinds'
+##     fire patches and smoke clouds live in ProvinceHazards
+##     (province_hazards(), created on first use on any stage, stepped here).
+##   * Act V, Castle Kurogane (GDD §15.0 "Castle Kurogane (Act V phase 2)"): on
+##     a stage with a "kurogane" config it owns the KuroganeDirector (the
+##     General of the Left, the Shogun's army objective; `kurogane`) and hands
+##     it the "general_left" events. Null on every other stage.
+##   * Act VI, the Inferno (GDD §15.0 "Act VI foundation (phase 1)"): its kinds
+##     are looked up through inferno_def() (InfernoEnemyData, then each Act VI
+##     stage's table) after the Shogunate's, and its bosses load by name from
+##     INFERNO_BOSS_DIR after the Shogunate's folder. Its shared rules (the
+##     Hell Pits, the demon portals, Temptation, the Last Judgment) live in
+##     InfernoRules (Game.inferno); this director only hands it the "portal"
+##     events (DemonPortals.start_event()).
+##   * Act VI, the Burning Gate (GDD §15.0 "The Burning Gate (Act VI phase
+##     2)"): on a stage with a "burning_gate" config it creates the
+##     BurningGateDirector (the Gatekeeper, Gate Crashed; `burning_gate`) and
+##     hands it the "gatekeeper" events. Null on every other stage.
+##   * Act VI, the Palace of Silk and Ash (GDD §15.0 "The Palace of Silk and Ash
+##     (Act VI phase 2)"): on a stage with a "silk_palace" config it owns the
+##     SilkPalaceDirector (the Hall of Mirrors' reflections, the Twin Succubi,
+##     guests; `silk_palace`) and hands it the "twins" events. Null elsewhere.
+##   * Act VII, the Sanguine Court (GDD §15.0 "Act VII foundation (phase 1)"):
+##     its kinds are looked up through court_def() (CourtEnemyData, then each
+##     Act VII stage's table) after the Inferno's, and its bosses load by name
+##     from COURT_BOSS_DIR after the Inferno's folder. Its shared rules
+##     (Bloodfeast, Night Wings, the Blood Moon, the Endless Feast) live in
+##     CourtRules (Game.court); this director hands it nothing.
+##   * Act VIII, the Last Line (GDD §15.0 "Act VIII foundation (phase 1)"):
+##     its kinds are looked up through city_def() (CityEnemyData, then each
+##     Act VIII stage's table) after the Court's, and its bosses load by name
+##     from CITY_BOSS_DIR after the Court's folder. Its shared rules (the
+##     escalation, Armour, Supers, Civilians, Martial Law) live in CityRules
+##     (Game.city). Civilians have their own alive cap: regular_alive() leaves
+##     them out, and they are never recycled to the spawn ring (they flee off).
+##   * Act IX, the Concord of Stars (GDD §15.0 "Act IX foundation (phase 1)"):
+##     its kinds are looked up through concord_def() (ConcordEnemyData, then
+##     each Act IX stage's table) after the City's, and its bosses load by name
+##     from CONCORD_BOSS_DIR after the City's folder. Its shared rules (Beams,
+##     Abduction, Terraforming, the Final Harvest) live in ConcordRules
+##     (Game.concord); this director hands it nothing (its pods spawn through
+##     spawn_at()).
+##   * Act VII, Ravensmoor (GDD §15.0 "Ravensmoor (Act VII phase 2)"): on a
+##     stage with a "ravensmoor" config it creates the RavensmoorDirector (the
+##     sleeping coffins, Coffin Nails, the ghoul packs, Old Greymane;
+##     `ravensmoor`) and hands it the "greymane" events. Null elsewhere.
+##   * Act VII, the Witchwood (GDD §15.0 "The Witchwood (Act VII phase 2)"): on
+##     a stage with a "witchwood" config it owns the WitchwoodDirector (the Fen,
+##     the hex stones, the Bog Mother, the covens; `witchwood`) and hands it the
+##     "bog_mother" and "coven" events. Null elsewhere.
+##   * Act VIII, Skid Row (GDD §15.0 "Skid Row (Act VIII phase 2)"): on a stage
+##     with a "skid_row" config it creates the SkidRowDirector (Big Sal and the
+##     Armoured Limo, the Bounty's doubled gangs, No Witnesses; `skid_row`) and
+##     hands it the "big_sal" events. Null elsewhere.
+##   * Act VIII, Fort Kessler (GDD §15.0 "Fort Kessler (Act VIII phase 2)"):
+##     on a stage with a "fort_kessler" config it owns the FortKesslerDirector
+##     (the minefields, Mammoth, the Broken Arrow objective; `fort_kessler`)
+##     and hands it the "mammoth" events. Null elsewhere.
+##   * Act IX, the Crash Site (GDD §15.0 "The Crash Site (Act IX phase 2)"):
+##     on a stage with a "crash_site" config it owns the CrashSiteDirector (the
+##     crater, Infestation's eggs, Nothing Hatched, the Brood Matriarch;
+##     `crash_site`) and hands it the "matriarch" events. Its eggs have their
+##     own cap: regular_alive() leaves them out. Null elsewhere.
+##   * Act IX, the Proving Moon (GDD §15.0 "The Proving Moon (Act IX phase
+##     2)"): on a stage with a "proving_moon" config it owns the
+##     ProvingMoonDirector (the Warbeast, the Last Trophy objective;
+##     `proving_moon`) and hands it the "warbeast" events. Null elsewhere.
 ##   * Online co-op (CoopSession; docs/coop/DESIGN.md): every enemy steps with
 ##     its NEAREST standing necromancer bound (CoopSession.bind_nearest()), so
 ##     it advances on, aims at and recycles around that one (bosses and kits
@@ -75,6 +170,24 @@ extends Node2D
 const EYE_BOSS_DIR: String = "res://scripts/enemies/eye/"
 ## Folder of the Electronic Empire's boss scripts ("boss_<id>.gd", each a Boss; Act III).
 const EMPIRE_BOSS_DIR: String = "res://scripts/enemies/empire/"
+# --- Act IV: the Olympian Republic ---
+## Folder of the Olympian Republic's boss scripts ("boss_<id>.gd", each a Boss; Act IV).
+const PANTHEON_BOSS_DIR: String = "res://scripts/enemies/pantheon/"
+# --- Act V: the Shogunate of the Rising Sun ---
+## Folder of the Shogunate's boss scripts ("boss_<id>.gd", each a Boss; Act V).
+const SHOGUNATE_BOSS_DIR: String = "res://scripts/enemies/shogunate/"
+# --- Act VI: the Inferno ---
+## Folder of the Inferno's boss scripts ("boss_<id>.gd", each a Boss; Act VI).
+const INFERNO_BOSS_DIR: String = "res://scripts/enemies/inferno/"
+# --- Act VII: the Sanguine Court ---
+## Folder of the Sanguine Court's boss scripts ("boss_<id>.gd", each a Boss; Act VII).
+const COURT_BOSS_DIR: String = "res://scripts/enemies/court/"
+# --- Act VIII: the Last Line ---
+## Folder of the Last Line's boss scripts ("boss_<id>.gd", each a Boss; Act VIII).
+const CITY_BOSS_DIR: String = "res://scripts/enemies/city/"
+# --- Act IX: the Concord of Stars ---
+## Folder of the Concord of Stars' boss scripts ("boss_<id>.gd", each a Boss; Act IX).
+const CONCORD_BOSS_DIR: String = "res://scripts/enemies/concord/"
 
 ## The boss entered the arena.
 signal boss_spawned(boss: Boss)
@@ -164,6 +277,82 @@ var archive_haz: ArchiveHazards = null
 ## Citadel's guns, Sentry Turrets, Valkyrie 2.0, guest squads; StageRegistry
 ## "citadel"; null on every other stage).
 var citadel: CitadelDirector = null
+# --- Act IV: the Asphodel Underworld ---
+## The Asphodel Underworld's mechanics (Act IV: the River Styx, Cerberus, guest
+## squads; StageRegistry "underworld"; null on every other stage).
+var underworld: UnderworldDirector = null
+
+
+# --- Act V: the Burning Province ---
+## The Burning Province's stage systems: the paddies, the village fires,
+## Shuten-dōji (StageRegistry "province"; null elsewhere).
+var province: ProvinceDirector = null
+## The Province kinds' world hazards (fire patches, smoke clouds;
+## ProvinceHazards), created on first use (province_hazards()); null until then.
+var province_haz: ProvinceHazards = null
+# --- Act V: the Road to the Sun ---
+## The Road to the Sun's mechanics (Act V: the Kirin, guest squads;
+## StageRegistry "sun_road"; null on every other stage).
+var sun_road: SunRoadDirector = null
+# --- Act V: Castle Kurogane ---
+## Castle Kurogane's mechanics (Act V: the General of the Left, the Shogun's
+## army objective; StageRegistry "kurogane"; null on every other stage).
+var kurogane: KuroganeDirector = null
+# --- Act VI: the Burning Gate ---
+## The Burning Gate's mechanics (Act VI: the Gatekeeper, Gate Crashed;
+## StageRegistry "burning_gate"; null on every other stage).
+var burning_gate: BurningGateDirector = null
+# --- Act VI: the Palace of Silk and Ash ---
+## The Palace of Silk and Ash's mechanics (Act VI: the Hall of Mirrors'
+## reflections, the Twin Succubi, guest squads; StageRegistry "silk_palace";
+## null on every other stage).
+var silk_palace: SilkPalaceDirector = null
+# --- Act VI: Pandemonium ---
+## Pandemonium's mechanics (Act VI: the Fallen Seraph General, guest squads;
+## StageRegistry "pandemonium"; null on every other stage).
+var pandemonium: PandemoniumDirector = null
+# --- Act VII: Ravensmoor ---
+## Ravensmoor's mechanics (Act VII: the sleeping coffins, Coffin Nails, the
+## ghoul packs, Old Greymane; StageRegistry "ravensmoor"; null on every other
+## stage).
+var ravensmoor: RavensmoorDirector = null
+# --- Act VII: the Witchwood ---
+## The Witchwood's mechanics (Act VII: the Fen, the hex stones, the Bog
+## Mother, the covens; StageRegistry "witchwood"; null on every other stage).
+var witchwood: WitchwoodDirector = null
+# --- Act VII: Castle Sanguis ---
+## Castle Sanguis's mechanics (Act VII: the Banquet's blood fountains, the
+## Chiropteran King, guest squads; StageRegistry "castle_sanguis"; null on
+## every other stage).
+var castle_sanguis: CastleSanguisDirector = null
+# --- Act VIII: Skid Row ---
+## Skid Row's mechanics (Act VIII: Big Sal and the Armoured Limo, the Bounty's
+## doubled gangs, No Witnesses; StageRegistry "skid_row"; null on every other
+## stage).
+var skid_row: SkidRowDirector = null
+# --- Act VIII: Fort Kessler ---
+## Fort Kessler's mechanics (Act VIII: the minefields, Mammoth, the Broken
+## Arrow objective; StageRegistry "fort_kessler"; null on every other stage).
+var fort_kessler: FortKesslerDirector = null
+# --- Act VIII: Liberty Heights ---
+## Liberty Heights's mechanics (Act VIII: the zone Supers, Fort Kessler's guest
+## squads, the cracks of Paragon's craters; StageRegistry "liberty_heights";
+## null on every other stage).
+var liberty_heights: LibertyHeightsDirector = null
+# --- Act IX: the Crash Site ---
+## The Crash Site's mechanics (Act IX: the crater, Infestation's eggs, Nothing
+## Hatched, the Brood Matriarch; StageRegistry "crash_site"; null on every
+## other stage).
+var crash_site: CrashSiteDirector = null
+# --- Act IX: the Proving Moon ---
+## The Proving Moon's mechanics (Act IX: the Warbeast, the Last Trophy
+## objective; StageRegistry "proving_moon"; null on every other stage).
+var proving_moon: ProvingMoonDirector = null
+# --- Act IX: the Ark ---
+## The Ark of the Concord's mechanics (Act IX: the Specimen Vaults' tanks, the
+## Reactor's vents, the Luminous Archon; StageRegistry "ark"; null on every
+## other stage).
+var ark: ArkDirector = null
 ## Sanctum kit bookkeeping: recent deaths, Confessor revivals, danger hints.
 var rites: CovenantRites
 ## The living miniboss shown on the HUD's miniboss bar (the Cathedral
@@ -180,6 +369,16 @@ var assembly: AssemblyDirector = null
 ## The Scrap Wastes' stage systems: Signal Pylons, scrap storms, the Trojan
 ## Horse (StageRegistry "wastes"; null elsewhere).
 var wastes: WastesDirector = null
+# --- Act IV: Mount Olympus ---
+## Mount Olympus's stage systems: the Pantheon Trial's gods, Artemis's groves
+## (StageRegistry "olympus"; null elsewhere).
+var olympus: OlympusDirector = null
+
+
+# --- Act IV: the Shores of Ilion ---
+## The Shores of Ilion's stage systems: siege towers, Polyphemus the Cyclops
+## (StageRegistry "ilion"; null elsewhere).
+var ilion: IlionDirector = null
 
 
 func _ready() -> void:
@@ -250,6 +449,114 @@ func _ready() -> void:
 		citadel.game = game
 		citadel.config = stage_def["citadel"]
 		add_child(citadel)
+	# --- Act IV: the Shores of Ilion ---
+	if not (stage_def.get("ilion", {}) as Dictionary).is_empty():
+		ilion = IlionDirector.new()
+		ilion.game = game
+		ilion.config = stage_def["ilion"]
+		add_child(ilion)
+	# --- Act IV: Mount Olympus ---
+	if not (stage_def.get("olympus", {}) as Dictionary).is_empty():
+		olympus = OlympusDirector.new()
+		olympus.game = game
+		olympus.config = stage_def["olympus"]
+		add_child(olympus)
+	# --- Act IV: the Asphodel Underworld ---
+	if not (stage_def.get("underworld", {}) as Dictionary).is_empty():
+		underworld = UnderworldDirector.new()
+		underworld.game = game
+		underworld.config = stage_def["underworld"]
+		add_child(underworld)
+	# --- Act V: the Burning Province ---
+	if not (stage_def.get("province", {}) as Dictionary).is_empty():
+		province = ProvinceDirector.new()
+		province.game = game
+		province.config = stage_def["province"]
+		add_child(province)
+	# --- Act V: the Road to the Sun ---
+	if not (stage_def.get("sun_road", {}) as Dictionary).is_empty():
+		sun_road = SunRoadDirector.new()
+		sun_road.game = game
+		sun_road.config = stage_def["sun_road"]
+		add_child(sun_road)
+	# --- Act V: Castle Kurogane ---
+	if not (stage_def.get("kurogane", {}) as Dictionary).is_empty():
+		kurogane = KuroganeDirector.new()
+		kurogane.game = game
+		kurogane.config = stage_def["kurogane"]
+		add_child(kurogane)  # Castle Kurogane's director.
+	# --- Act VI: the Burning Gate ---
+	if not (stage_def.get("burning_gate", {}) as Dictionary).is_empty():
+		burning_gate = BurningGateDirector.new()
+		burning_gate.game = game
+		burning_gate.config = stage_def["burning_gate"]
+		add_child(burning_gate)  # The Burning Gate's director.
+	# --- Act VI: the Palace of Silk and Ash ---
+	if not (stage_def.get("silk_palace", {}) as Dictionary).is_empty():
+		silk_palace = SilkPalaceDirector.new()
+		silk_palace.game = game
+		silk_palace.config = stage_def["silk_palace"]
+		add_child(silk_palace)  # The Palace of Silk and Ash's director.
+	# --- Act VI: Pandemonium ---
+	if not (stage_def.get("pandemonium", {}) as Dictionary).is_empty():
+		pandemonium = PandemoniumDirector.new()
+		pandemonium.game = game
+		pandemonium.config = stage_def["pandemonium"]
+		add_child(pandemonium)  # Pandemonium's director.
+	# --- Act VII: Ravensmoor ---
+	if not (stage_def.get("ravensmoor", {}) as Dictionary).is_empty():
+		ravensmoor = RavensmoorDirector.new()
+		ravensmoor.game = game
+		ravensmoor.config = stage_def["ravensmoor"]
+		add_child(ravensmoor)  # Ravensmoor's director.
+	# --- Act VII: the Witchwood ---
+	if not (stage_def.get("witchwood", {}) as Dictionary).is_empty():
+		witchwood = WitchwoodDirector.new()
+		witchwood.game = game
+		witchwood.config = stage_def["witchwood"]
+		add_child(witchwood)  # The Witchwood's director.
+	# --- Act VII: Castle Sanguis ---
+	if not (stage_def.get("castle_sanguis", {}) as Dictionary).is_empty():
+		castle_sanguis = CastleSanguisDirector.new()
+		castle_sanguis.game = game
+		castle_sanguis.config = stage_def["castle_sanguis"]
+		add_child(castle_sanguis)  # Castle Sanguis's director.
+	# --- Act VIII: Skid Row ---
+	if not (stage_def.get("skid_row", {}) as Dictionary).is_empty():
+		skid_row = SkidRowDirector.new()
+		skid_row.game = game
+		skid_row.config = stage_def["skid_row"]
+		add_child(skid_row)  # Skid Row's director.
+	# --- Act VIII: Fort Kessler ---
+	if not (stage_def.get("fort_kessler", {}) as Dictionary).is_empty():
+		fort_kessler = FortKesslerDirector.new()
+		fort_kessler.game = game
+		fort_kessler.config = stage_def["fort_kessler"]
+		add_child(fort_kessler)  # Fort Kessler's director.
+	# --- Act VIII: Liberty Heights ---
+	if not (stage_def.get("liberty_heights", {}) as Dictionary).is_empty():
+		liberty_heights = LibertyHeightsDirector.new()
+		liberty_heights.game = game
+		liberty_heights.config = stage_def["liberty_heights"]
+		add_child(liberty_heights)  # Liberty Heights's director.
+	# --- Act IX: the Crash Site ---
+	if not (stage_def.get("crash_site", {}) as Dictionary).is_empty():
+		crash_site = CrashSiteDirector.new()
+		crash_site.game = game
+		crash_site.config = stage_def["crash_site"]
+		add_child(crash_site)  # The Crash Site's director.
+	# --- Act IX: the Proving Moon ---
+	if not (stage_def.get("proving_moon", {}) as Dictionary).is_empty():
+		proving_moon = ProvingMoonDirector.new()
+		proving_moon.game = game
+		proving_moon.config = stage_def["proving_moon"]
+		add_child(proving_moon)  # The Proving Moon's director.
+	# --- Act IX: the Ark ---
+	if not (stage_def.get("ark", {}) as Dictionary).is_empty():
+		ark = ArkDirector.new()
+		ark.game = game
+		ark.config = stage_def["ark"]
+		add_child(ark)  # The Ark of the Concord's director.
 
 
 # =====================================================================================
@@ -313,7 +620,7 @@ func step(delta: float) -> void:
 			e.update_separation()
 		e.physics_step(delta)
 		e.resolve_blocking()
-		if not e.is_boss and not e.is_objective and not e.is_miniboss and e.position.distance_squared_to(player_pos) > recycle2:
+		if not e.is_boss and not e.is_objective and not e.is_miniboss and not e.civilian and e.position.distance_squared_to(player_pos) > recycle2:
 			_recycle(e)
 	if co != null:
 		co.bind_primary()  # Co-op: the stage directors act around the primary necromancer.
@@ -344,6 +651,62 @@ func step(delta: float) -> void:
 	# --- Act III: the Iron Citadel ---
 	if citadel != null:
 		citadel.step(delta)
+	# --- Act IV: the Shores of Ilion ---
+	if ilion != null:
+		ilion.step(delta)  # Siege towers, Polyphemus.
+	# --- Act IV: Mount Olympus ---
+	if olympus != null:
+		olympus.step(delta)
+	# --- Act IV: the Asphodel Underworld ---
+	if underworld != null:
+		underworld.step(delta)
+	# --- Act V: the Burning Province ---
+	if province != null:
+		province.step(delta)  # The paddies, the village fires, Shuten-dōji.
+	if province_haz != null:
+		province_haz.step(delta)  # Fire patches and smoke clouds of the Province kinds.
+	# --- Act V: the Road to the Sun ---
+	if sun_road != null:
+		sun_road.step(delta)
+	# --- Act V: Castle Kurogane ---
+	if kurogane != null:
+		kurogane.step(delta)  # The General of the Left.
+	# --- Act VI: the Burning Gate ---
+	if burning_gate != null:
+		burning_gate.step(delta)  # The Gatekeeper.
+	# --- Act VI: the Palace of Silk and Ash ---
+	if silk_palace != null:
+		silk_palace.step(delta)  # The Hall of Mirrors' reflections, guests.
+	# --- Act VI: Pandemonium ---
+	if pandemonium != null:
+		pandemonium.step(delta)  # Pandemonium's guest squads.
+	# --- Act VII: Ravensmoor ---
+	if ravensmoor != null:
+		ravensmoor.step(delta)  # The sleeping coffins, the ghoul packs, Old Greymane.
+	# --- Act VII: the Witchwood ---
+	if witchwood != null:
+		witchwood.step(delta)  # The Fen, the hex stones, the Bog Mother.
+	# --- Act VII: Castle Sanguis ---
+	if castle_sanguis != null:
+		castle_sanguis.step(delta)  # The Banquet's fountains, guest squads.
+	# --- Act VIII: Skid Row ---
+	if skid_row != null:
+		skid_row.step(delta)  # The Bounty's gangs, No Witnesses, Big Sal.
+	# --- Act VIII: Fort Kessler ---
+	if fort_kessler != null:
+		fort_kessler.step(delta)  # The minefields, Mammoth.
+	# --- Act VIII: Liberty Heights ---
+	if liberty_heights != null:
+		liberty_heights.step(delta)  # The zone Supers, guest squads.
+	# --- Act IX: the Crash Site ---
+	if crash_site != null:
+		crash_site.step(delta)  # The crater, Infestation's eggs, the Brood Matriarch.
+	# --- Act IX: the Proving Moon ---
+	if proving_moon != null:
+		proving_moon.step(delta)  # The Warbeast.
+	# --- Act IX: the Ark ---
+	if ark != null:
+		ark.step(delta)  # The tanks, the vents.
 
 
 ## The Archive kinds' world hazards (ArchiveHazards), created on first use.
@@ -353,6 +716,18 @@ func archive_hazards() -> ArchiveHazards:
 		archive_haz.game = game
 		add_child(archive_haz)
 	return archive_haz
+
+
+# --- Act V: the Burning Province ---
+## The Province kinds' world hazards (ProvinceHazards: the sake fires, the
+## village fires, the smoke clouds), created on first use, on any stage (a
+## Province kind forced elsewhere with --spawn= brings its own fire and smoke).
+func province_hazards() -> ProvinceHazards:
+	if province_haz == null:
+		province_haz = ProvinceHazards.new()
+		province_haz.game = game
+		add_child(province_haz)
+	return province_haz
 
 
 ## Removes inactive enemies from `active`, preserving the existing swap-pop
@@ -377,12 +752,17 @@ func release_retired() -> void:
 	_awaiting_grid_clear.clear()
 
 
-## Number of living regular (non-boss) enemies.
+## Number of living regular (non-boss) enemies (Act VIII: not counting the
+## civilians, who have their own alive cap).
 func regular_alive() -> int:
 	var n := 0
 	for e in active:
 		if e.active and not e.is_boss:
 			n += 1
+	if game.city != null:
+		n -= game.city.civilians.alive_count()  # Act VIII: civilians have their own cap.
+	if crash_site != null:
+		n -= crash_site.eggs_alive()  # Act IX, the Crash Site: Infestation's eggs have their own cap.
 	return n
 
 
@@ -422,6 +802,60 @@ func objective_text() -> String:
 	# --- Act III: the Iron Citadel ---
 	if citadel != null and citadel.objective_override() != "":
 		return citadel.objective_override()  # Shield Gates, sentry turrets.
+	# --- Act IV: the Shores of Ilion ---
+	if ilion != null and ilion.objective_override() != "":
+		return ilion.objective_override()  # Polyphemus, the siege towers.
+	# --- Act IV: Mount Olympus ---
+	if olympus != null and olympus.objective_override() != "":
+		return olympus.objective_override()  # The Pantheon Trial's god in play.
+	# --- Act IV: the Asphodel Underworld ---
+	if underworld != null and underworld.objective_override() != "":
+		return underworld.objective_override()  # Cerberus's heads.
+	# --- Act V: the Burning Province ---
+	if province != null and province.objective_override() != "":
+		return province.objective_override()  # Shuten-dōji.
+	# --- Act V: the Road to the Sun ---
+	if sun_road != null and sun_road.objective_override() != "":
+		return sun_road.objective_override()  # The Kirin.
+	# --- Act V: Castle Kurogane ---
+	if kurogane != null and kurogane.objective_override() != "":
+		return kurogane.objective_override()  # The General of the Left, the Shogun's army.
+	# --- Act VI: the Burning Gate ---
+	if burning_gate != null and burning_gate.objective_override() != "":
+		return burning_gate.objective_override()  # The Gatekeeper.
+	# --- Act VI: the Palace of Silk and Ash ---
+	if silk_palace != null and silk_palace.objective_override() != "":
+		return silk_palace.objective_override()  # The Twin Succubi, the Hall of Mirrors.
+	# --- Act VI: Pandemonium ---
+	if pandemonium != null and pandemonium.objective_override() != "":
+		return pandemonium.objective_override()  # The Fallen Seraph General.
+	# --- Act VII: Ravensmoor ---
+	if ravensmoor != null and ravensmoor.objective_override() != "":
+		return ravensmoor.objective_override()  # Old Greymane.
+	# --- Act VII: the Witchwood ---
+	if witchwood != null and witchwood.objective_override() != "":
+		return witchwood.objective_override()  # The Bog Mother.
+	# --- Act VII: Castle Sanguis ---
+	if castle_sanguis != null and castle_sanguis.objective_override() != "":
+		return castle_sanguis.objective_override()  # The Chiropteran King, the Waking.
+	# --- Act VIII: Skid Row ---
+	if skid_row != null and skid_row.objective_override() != "":
+		return skid_row.objective_override()  # Big Sal and his limo.
+	# --- Act VIII: Fort Kessler ---
+	if fort_kessler != null and fort_kessler.objective_override() != "":
+		return fort_kessler.objective_override()  # Broken Arrow's countdown, Mammoth.
+	# --- Act VIII: Liberty Heights ---
+	if liberty_heights != null and liberty_heights.objective_override() != "":
+		return liberty_heights.objective_override()  # A zone's Super.
+	# --- Act IX: the Crash Site ---
+	if crash_site != null and crash_site.objective_override() != "":
+		return crash_site.objective_override()  # The Brood Matriarch.
+	# --- Act IX: the Proving Moon ---
+	if proving_moon != null and proving_moon.objective_override() != "":
+		return proving_moon.objective_override()  # The Last Trophy's countdown, the Warbeast.
+	# --- Act IX: the Ark ---
+	if ark != null and ark.objective_override() != "":
+		return ark.objective_override()  # The Luminous Archon, the Reaping.
 	if boss != null and not boss.active:
 		return String(boss_info["dead_objective"])
 	return segments[segment_index]["objective"]
@@ -469,7 +903,10 @@ func _spawn_trickle(delta: float) -> void:
 		spawn_accum -= 1.0
 		if alive >= cap:
 			continue
-		var kind := _pick_kind(game.difficulty.trickle_weights(seg["weights"], game.elapsed))
+		var weights: Dictionary = seg["weights"]  # The segment's kind weights.
+		if game.shogunate != null:
+			weights = game.shogunate.sun.timeline_weights(seg)  # Act V: night kinds only at night (the one timeline helper).
+		var kind := _pick_kind(game.difficulty.trickle_weights(weights, game.elapsed))
 		var pos := _ring_point(randf() * TAU) if game.coop == null else _ring_point_at(game.coop.spawn_anchor(), randf() * TAU)  # Spawn point on the ring (co-op: each necromancer in turn).
 		var elite := elite_chance > 0.0 and randf() < elite_chance  # Promoted by the level.
 		var e := _spawn_enemy(kind, pos, elite)  # The new soldier.
@@ -558,8 +995,123 @@ func _run_event(ev: Dictionary) -> void:
 				citadel.start_event(ev)
 			game.stat_add("wave_events", 1.0)
 			return
+		# --- Act IV: the Shores of Ilion ---
+		"siege_towers", "polyphemus":
+			if ilion != null:
+				ilion.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return
+		# --- Act IV: Mount Olympus ---
+		"god":
+			if olympus != null:
+				olympus.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return
+		# --- Act IV: the Asphodel Underworld ---
+		"cerberus":
+			if underworld != null:
+				underworld.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return
+		# --- Act V: the Shogunate of the Rising Sun ---
+		"ambush":
+			if game.shogunate != null:
+				game.shogunate.ambush.start_event(ev)  # From the Shadows (it shows the banner when the squad appears).
+			game.stat_add("wave_events", 1.0)
+			return
+		# --- Act V: the Burning Province ---
+		"shuten_doji":
+			if province != null:
+				province.start_event(ev)  # Night only: it waits for the night.
+			game.stat_add("wave_events", 1.0)
+			return
+		# --- Act V: the Road to the Sun ---
+		"kirin":
+			if sun_road != null:
+				sun_road.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return  # The Kirin's event (SunRoadDirector).
+		# --- Act V: Castle Kurogane ---
+		"general_left":
+			if kurogane != null:
+				kurogane.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return  # Castle Kurogane's miniboss.
+		# --- Act VI: the Inferno ---
+		"portal":
+			game.inferno_rules().portals.start_event(ev)  # Demon portals (they show the event's banner).
+			game.stat_add("wave_events", 1.0)
+			return  # An Act VI portal event.
+		# --- Act VI: the Burning Gate ---
+		"gatekeeper":
+			if burning_gate != null:
+				burning_gate.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return  # The Burning Gate's miniboss.
+		# --- Act VI: the Palace of Silk and Ash ---
+		"twins":
+			if silk_palace != null:
+				silk_palace.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return  # The Twin Succubi's event (SilkPalaceDirector).
+		# --- Act VI: Pandemonium ---
+		"seraph_general":
+			if pandemonium != null:
+				pandemonium.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return  # Pandemonium's miniboss (PandemoniumDirector).
+		# --- Act VII: Ravensmoor ---
+		"greymane":
+			if ravensmoor != null:
+				ravensmoor.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return  # Ravensmoor's miniboss (RavensmoorDirector).
+		# --- Act VII: the Witchwood ---
+		"bog_mother", "coven":
+			if witchwood != null:
+				witchwood.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return  # The Witchwood's miniboss and covens (WitchwoodDirector).
+		# --- Act VII: Castle Sanguis ---
+		"chiropteran_king":
+			if castle_sanguis != null:
+				castle_sanguis.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return  # Castle Sanguis's miniboss (CastleSanguisDirector).
+		# --- Act VIII: Skid Row ---
+		"big_sal":
+			if skid_row != null:
+				skid_row.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return  # Skid Row's miniboss (SkidRowDirector).
+		# --- Act VIII: Fort Kessler ---
+		"mammoth":
+			if fort_kessler != null:
+				fort_kessler.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return  # Fort Kessler's miniboss (FortKesslerDirector).
+		# --- Act IX: the Crash Site ---
+		"matriarch":
+			if crash_site != null:
+				crash_site.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return  # The Crash Site's miniboss (CrashSiteDirector).
+		# --- Act IX: the Proving Moon ---
+		"warbeast":
+			if proving_moon != null:
+				proving_moon.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return  # The Proving Moon's miniboss (ProvingMoonDirector).
+		# --- Act IX: the Ark ---
+		"luminous_archon":
+			if ark != null:
+				ark.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return  # The Ark's miniboss (ArkDirector).
 	show_banner(ev["banner"])
 	var groups: Array = ev["groups"]
+	if game.shogunate != null:
+		groups = game.shogunate.sun.filter_groups(groups)  # Act V: night kinds only at night (the one timeline helper).
 	if harbour != null and harbour.wave_mult() < 1.0:
 		groups = _scaled_groups(groups, harbour.wave_mult())  # Act II: sunk bell buoys shrink the Eye's waves.
 	if assembly != null and assembly.wave_mult() < 1.0:
@@ -654,7 +1206,12 @@ func _spawn_boss() -> void:
 	# placeholder), else its id. Act I bosses by name; any other id is an
 	# Ancient Eye boss loaded from EYE_BOSS_DIR + "boss_<id>.gd" (each Act II
 	# stage adds its boss as a new file), else an Electronic Empire boss from
-	# EMPIRE_BOSS_DIR (Act III, the same way); Sir Alaric when none exists.
+	# EMPIRE_BOSS_DIR (Act III, the same way), else an Olympian Republic boss
+	# from PANTHEON_BOSS_DIR (Act IV), else a Shogunate boss from
+	# SHOGUNATE_BOSS_DIR (Act V), else an Inferno boss from INFERNO_BOSS_DIR
+	# (Act VI), else a Sanguine Court boss from COURT_BOSS_DIR (Act VII), else a
+	# Last Line boss from CITY_BOSS_DIR (Act VIII), else a Concord of Stars boss
+	# from CONCORD_BOSS_DIR (Act IX); Sir Alaric when none exists.
 	var sid := String(boss_info.get("script", boss_info["id"]))  # Boss script id.
 	match sid:
 		"vael":
@@ -667,6 +1224,18 @@ func _spawn_boss() -> void:
 			var path := EYE_BOSS_DIR + "boss_" + sid + ".gd"  # An Ancient Eye boss script.
 			if not ResourceLoader.exists(path):
 				path = EMPIRE_BOSS_DIR + "boss_" + sid + ".gd"  # Act III: an Electronic Empire boss script.
+			if not ResourceLoader.exists(path):
+				path = PANTHEON_BOSS_DIR + "boss_" + sid + ".gd"  # Act IV: an Olympian Republic boss script.
+			if not ResourceLoader.exists(path):
+				path = SHOGUNATE_BOSS_DIR + "boss_" + sid + ".gd"  # Act V: a Shogunate boss script.
+			if not ResourceLoader.exists(path):
+				path = INFERNO_BOSS_DIR + "boss_" + sid + ".gd"  # Act VI: an Inferno boss script.
+			if not ResourceLoader.exists(path):
+				path = COURT_BOSS_DIR + "boss_" + sid + ".gd"  # Act VII: a Sanguine Court boss script.
+			if not ResourceLoader.exists(path):
+				path = CITY_BOSS_DIR + "boss_" + sid + ".gd"  # Act VIII: a Last Line boss script.
+			if not ResourceLoader.exists(path):
+				path = CONCORD_BOSS_DIR + "boss_" + sid + ".gd"  # Act IX: a Concord of Stars boss script.
 			boss = (load(path) as Script).new() as Boss if ResourceLoader.exists(path) else BossAlaric.new()
 	add_child(boss)
 	boss.setup_boss(game, _ring_point(randf() * TAU), game.difficulty.boss_hp_mult() * float(stage_def["enemy_hp_mult"]), _next_slot)
@@ -712,6 +1281,8 @@ func _reckoning_wave_here(r: Dictionary) -> void:
 		var e := _spawn_enemy_def(rkind, rdef, _ring_point(offset + TAU * float(i) / float(count)), hp_scale, false)
 		e.damage *= dmg_scale
 		e.is_reckoning = true
+		if game.shogunate != null:
+			game.shogunate.on_reckoning_spawn(e)  # Act V: the Endless Night quickens it.
 	for comp: Dictionary in r.get("companions", []):
 		var n := int(comp["count"]) + floori(float(reckoning_wave) * float(comp["growth"]))  # Companions this wave.
 		var kind := resolve_kind(String(comp["kind"]))  # Real kind of the companion.
@@ -719,6 +1290,8 @@ func _reckoning_wave_here(r: Dictionary) -> void:
 			var c := _spawn_enemy_def(kind, enemy_def(kind), _ring_point(offset + TAU * (float(i) + 0.5) / float(maxi(1, n))), hp_scale, false)
 			c.damage *= dmg_scale
 			c.is_reckoning = true
+			if game.shogunate != null:
+				game.shogunate.on_reckoning_spawn(c)  # Act V: the Endless Night quickens it.
 		count += n
 	game.stat_add("reckoning_spawned", float(count))
 
@@ -761,8 +1334,12 @@ func spawn_at(kind: String, pos: Vector2, elite: bool) -> Enemy:
 ## BattleSisterData.ENEMIES (the Sister of the Scourge, March and Sanctum),
 ## then the Ancient Eye's tables (Act II: EyeEnemyData, then each stage's own
 ## HarbourEnemyData / ArchiveEnemyData / SpireEnemyData), then the
-## Electronic Empire's (Act III: empire_def()), then
-## SanctumEnemyData.ENEMIES (the Sanctum of Judgment's soldiers and the
+## Electronic Empire's (Act III: empire_def()), then the Olympian Republic's
+## (Act IV: pantheon_def()), then the Shogunate's (Act V: shogunate_def()),
+## then the Inferno's (Act VI: inferno_def()), then the Sanguine Court's
+## (Act VII: court_def()), then the Last Line's (Act VIII: city_def()),
+## then the Concord of Stars' (Act IX: concord_def()),
+## then SanctumEnemyData.ENEMIES (the Sanctum of Judgment's soldiers and the
 ## Cathedral Guardian).
 func enemy_def(kind: String) -> Dictionary:
 	kind = resolve_kind(kind)
@@ -780,6 +1357,24 @@ func enemy_def(kind: String) -> Dictionary:
 	var empire := empire_def(kind)  # Act III kinds ({} when not an Empire kind).
 	if not empire.is_empty():
 		return empire
+	var pantheon := pantheon_def(kind)  # Act IV kinds ({} when not a Pantheon kind).
+	if not pantheon.is_empty():
+		return pantheon
+	var shogunate := shogunate_def(kind)  # Act V kinds ({} when not a Shogunate kind).
+	if not shogunate.is_empty():
+		return shogunate
+	var inferno := inferno_def(kind)  # Act VI kinds ({} when not an Inferno kind).
+	if not inferno.is_empty():
+		return inferno
+	var court := court_def(kind)  # Act VII kinds ({} when not a Court kind).
+	if not court.is_empty():
+		return court
+	var city := city_def(kind)  # Act VIII kinds ({} when not a City kind).
+	if not city.is_empty():
+		return city
+	var concord := concord_def(kind)  # Act IX kinds ({} when not a Concord kind).
+	if not concord.is_empty():
+		return concord
 	return SanctumEnemyData.ENEMIES[kind]
 
 
@@ -813,13 +1408,115 @@ static func empire_def(kind: String) -> Dictionary:
 	return {}
 
 
+# --- Act IV: the Olympian Republic ---
+## Design row of Olympian Republic kind `kind` (real id), or {} when it is
+## none: PantheonEnemyData (the shared kinds and the Twilight's Bronze Titan)
+## first, then each Act IV stage's own table (phase 2 fills them).
+static func pantheon_def(kind: String) -> Dictionary:
+	if PantheonEnemyData.ENEMIES.has(kind):
+		return PantheonEnemyData.ENEMIES[kind]
+	if IlionEnemyData.ENEMIES.has(kind):
+		return IlionEnemyData.ENEMIES[kind]
+	if OlympusEnemyData.ENEMIES.has(kind):
+		return OlympusEnemyData.ENEMIES[kind]
+	if UnderworldEnemyData.ENEMIES.has(kind):
+		return UnderworldEnemyData.ENEMIES[kind]
+	return {}
+
+
+# --- Act V: the Shogunate of the Rising Sun ---
+## Design row of Shogunate kind `kind` (real id), or {} when it is none:
+## ShogunateEnemyData (the shared kinds, the Endless Night's Oni among them)
+## first, then each Act V stage's own table (phase 2 fills them).
+static func shogunate_def(kind: String) -> Dictionary:
+	if ShogunateEnemyData.ENEMIES.has(kind):
+		return ShogunateEnemyData.ENEMIES[kind]
+	if ProvinceEnemyData.ENEMIES.has(kind):
+		return ProvinceEnemyData.ENEMIES[kind]
+	if KuroganeEnemyData.ENEMIES.has(kind):
+		return KuroganeEnemyData.ENEMIES[kind]
+	if SunRoadEnemyData.ENEMIES.has(kind):
+		return SunRoadEnemyData.ENEMIES[kind]
+	return {}
+
+
+# --- Act VI: the Inferno ---
+## Design row of Inferno kind `kind` (real id), or {} when it is none:
+## InfernoEnemyData (the shared kinds, the demon portal, the charmed body, the
+## Last Judgment's Demon Brute among them) first, then each Act VI stage's own
+## table (phase 2 fills them).
+static func inferno_def(kind: String) -> Dictionary:
+	if InfernoEnemyData.ENEMIES.has(kind):
+		return InfernoEnemyData.ENEMIES[kind]
+	if BurningGateEnemyData.ENEMIES.has(kind):
+		return BurningGateEnemyData.ENEMIES[kind]
+	if SilkPalaceEnemyData.ENEMIES.has(kind):
+		return SilkPalaceEnemyData.ENEMIES[kind]
+	if PandemoniumEnemyData.ENEMIES.has(kind):
+		return PandemoniumEnemyData.ENEMIES[kind]
+	return {}
+
+
+# --- Act VII: the Sanguine Court ---
+## Design row of Sanguine Court kind `kind` (real id), or {} when it is none:
+## CourtEnemyData (the shared kinds and the coffin) first, then each Act VII
+## stage's own table (phase 2 fills them).
+static func court_def(kind: String) -> Dictionary:
+	if CourtEnemyData.ENEMIES.has(kind):
+		return CourtEnemyData.ENEMIES[kind]
+	if RavensmoorEnemyData.ENEMIES.has(kind):
+		return RavensmoorEnemyData.ENEMIES[kind]
+	if WitchwoodEnemyData.ENEMIES.has(kind):
+		return WitchwoodEnemyData.ENEMIES[kind]
+	if CastleSanguisEnemyData.ENEMIES.has(kind):
+		return CastleSanguisEnemyData.ENEMIES[kind]
+	return {}
+
+
+# --- Act VIII: the Last Line ---
+## Design row of Last Line kind `kind` (real id), or {} when it is none:
+## CityEnemyData (the shared kinds and the wreck) first, then each Act VIII
+## stage's own table (phase 2 fills them).
+static func city_def(kind: String) -> Dictionary:
+	if CityEnemyData.ENEMIES.has(kind):
+		return CityEnemyData.ENEMIES[kind]
+	if SkidRowEnemyData.ENEMIES.has(kind):
+		return SkidRowEnemyData.ENEMIES[kind]
+	if FortKesslerEnemyData.ENEMIES.has(kind):
+		return FortKesslerEnemyData.ENEMIES[kind]
+	if LibertyHeightsEnemyData.ENEMIES.has(kind):
+		return LibertyHeightsEnemyData.ENEMIES[kind]
+	return {}
+
+
+# --- Act IX: the Concord of Stars ---
+## Design row of Concord of Stars kind `kind` (real id), or {} when it is none:
+## ConcordEnemyData (the shared kinds and the landing pod) first, then each
+## Act IX stage's own table (phase 2 fills them).
+static func concord_def(kind: String) -> Dictionary:
+	if ConcordEnemyData.ENEMIES.has(kind):
+		return ConcordEnemyData.ENEMIES[kind]
+	if CrashSiteEnemyData.ENEMIES.has(kind):
+		return CrashSiteEnemyData.ENEMIES[kind]
+	if ProvingMoonEnemyData.ENEMIES.has(kind):
+		return ProvingMoonEnemyData.ENEMIES[kind]
+	if ArkEnemyData.ENEMIES.has(kind):
+		return ArkEnemyData.ENEMIES[kind]
+	return {}
+
+
 ## True if `kind` is a spawnable enemy kind of any stage's data (real ids;
 ## stage aliases are not resolved here).
 static func is_known_kind(kind: String) -> bool:
 	return EnemyData.ENEMIES.has(kind) or SanctumObjectiveData.STRUCTURES.has(kind) \
 			or MarchEnemyData.ENEMIES.has(kind) or BattleSisterData.ENEMIES.has(kind) \
 			or SanctumEnemyData.ENEMIES.has(kind) or not eye_def(kind).is_empty() \
-			or not empire_def(kind).is_empty()
+			or not empire_def(kind).is_empty() or not pantheon_def(kind).is_empty() \
+			or not shogunate_def(kind).is_empty() \
+			or not inferno_def(kind).is_empty() \
+			or not court_def(kind).is_empty() \
+			or not city_def(kind).is_empty() \
+			or not concord_def(kind).is_empty()  # Act V, Act VI, Act VII, Act VIII, Act IX
 
 
 ## Registers `e` as the living miniboss (GuardianKit; the HUD shows its bar
@@ -911,7 +1608,8 @@ func on_enemy_killed(e: Enemy) -> void:
 	e.deactivate()
 	if e.is_boss:
 		# Big reward burst (user brief: no longer the win condition).
-		game.effects.impact(e.position, 120.0, Palette.GOLD, "boss_death")  # Its strip when the art exists (visual only).
+		# Its strip when the art exists (visual only): an Empire boss falls as a machine (GDD §15.0 "Act III AoE art").
+		game.effects.impact(e.position, 120.0, Palette.GOLD, EmpireFxData.BOSS_DEATH if game.effects.empire_look else "boss_death")
 		var bdef: Dictionary = (e as Boss).boss_def  # The fallen boss's data (reward burst).
 		var n: int = bdef["reward_crystals"]
 		var each: int = maxi(1, floori(float(bdef["reward_xp"]) / float(n)))

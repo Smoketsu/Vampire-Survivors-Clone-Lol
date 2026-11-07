@@ -208,7 +208,7 @@ func _resolve_stomp(e: Enemy) -> void:
 ## The hull starts to split (it stands for SPLIT_TIME s).
 func _start_split(e: Enemy) -> void:
 	e.game.enemies.show_banner("The Trojan Horse's hull splits open: drones pour out!")
-	e.game.effects.impact(e.position, e.radius * 2.0, Palette.EMPIRE_SIGNAL_RED)
+	e.game.effects.impact(e.position, e.radius * 2.0, Palette.EMPIRE_SIGNAL_RED, EmpireFxData.BLAST_RED)  # Its strip when the art exists (visual only).
 	Sfx.play("shield_break", e.position, 0.6)
 	e.game.stat_add("trojan_split_at", e.game.elapsed)
 	set_phase(e, SPLITTING)

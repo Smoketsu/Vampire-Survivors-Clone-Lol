@@ -1,0 +1,12 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view, FULL BODY, FACING RIGHT, a calm confident pose, one hand raised with a few small beetles crawling over her fingers.
+
+LOW-RESOLUTION pixel art: the whole SUBJECT is only 56 pixels tall, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block. Chunky, simple, readable shapes; BIG clear shapes and strong contrast so the details read at small size; no anti-aliasing, no gradients, no texture noise, NO thin outlines or trim lines inside the body, only a few large flat colour areas per part, no glow haze.
+
+Subject: THE BROODBOUND, a FEMALE playable character, clearly an ALIEN INSECT WOMAN, in the game's figure-redesign style: an extremely exaggerated hourglass figure (very full bust, tiny cinched waist, very wide hips), glamorous and eerie. Her head is insect-like: a smooth glossy chitin face-plate, two big glowing AMBER-ORANGE COMPOUND EYES with a bright sheen, two long curved ANTENNAE and a crest of mandible-like horns. Her body is a fitted armour of BRIGHT GREEN CHITIN PLATES with a few BIG SOLID orange-amber plates (only the shoulder wing-cases, belt and boots, NO thin trim lines), shoulder plates like beetle wing-cases, and a pair of translucent pale-teal insect wings folded behind her; her arms end in slim chitin claws, two extra thin insect arms folded at her waist. Chest and hips FULLY COVERED by the chitin plates, never nude, tasteful. Never violet or purple, never near-black: the colours must stay bright against a dark floor. Signature shape in silhouette: the hourglass figure, the antennae and the wing-cases.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: chitin green #1B5E34 #2FA85A #6FE08A; orange-amber plates and eyes #B8541A #F08A2C #FFD060; wings pale teal #5FA8B0 #A8E0E4; claws and beetles cream #B8A878 #E8DCB8; dark inner shading #12261E.
+
+Outline: a clean 1-pixel dark outline around the whole subject in the darkest shade of each part's own colour. Light from the top-left.
+
+Output: a square PNG with a FULLY TRANSPARENT background, one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark. Draw ONLY ONE figure.
+Attached: a female playable character of this game in the figure-redesign style, for the pixel size, outline weight, proportions and flat look (not its subject or its colours).

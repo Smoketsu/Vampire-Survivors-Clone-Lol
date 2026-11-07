@@ -1,0 +1,7 @@
+A sheet of THREE separate pixel-art game ICON SYMBOLS in one row, evenly spaced with wide empty gaps between them, on a FULLY TRANSPARENT background (real alpha). Each symbol is simple, bold and centred in its third of the image, drawn as chunky low-resolution pixel art (each symbol about 24 pixels wide on a coarse grid, shown enlarged with crisp square pixels, nearest-neighbour, 1-pixel dark outline, flat colours, at most 3 shades per colour, light from the top-left). No frame, no badge background, no text, no letters.
+From left to right:
+1. LETHE'S FLOOD: two curving bands of dark water crossing in an X, their currents glowing pale silver-blue, small gold sparkles where they cross.
+2. LEGION OF TARTARUS: a round dark grey shield with a gold rim and a soul-teal glowing skull emblem, a dark crested helmet above it and a spear with a glowing soul-teal head behind it.
+3. EMPTY THRONE: a tall black stone throne seen from the front, empty, a dark bronze spiked crown lying on the step at its foot, a faint violet glow behind it.
+Colours: gold #E0A92E #FFDC66 #FFF6D8; dark water #0B1214 #1B2B2E; silver-blue #6FB6E8 #CFE6F5; dark grey #1A1F26 #3A4350 #5F6B7A; soul teal #1F7A5C #3FD39A #9CFFD8; bronze #6B4423 #A8702E; violet #6B39A6 #A35CFA.
+Attached: an approved icon of this game: match its pixel size, outline weight and flat look (only the symbol, not its frame).

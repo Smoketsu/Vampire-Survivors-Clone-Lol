@@ -26,6 +26,11 @@
 ##     summon on the ground, and the Empire's own soldiers too (never a boss, a
 ##     miniboss, a structure or a Reckoning foe). The orientation turns every
 ##     cycle (0, 90, 45, 135 degrees); the gaps between the beams are safe.
+##     After the sweep each beam stays LIVE for `live` s where it stopped: a
+##     burning line that hurts every body in it every `tick` s (`live_player`,
+##     `live_summon`, `live_enemy`), so the lit beam is a damaging zone, not
+##     only its first pass (owner bug report; the lit beam used to be a stale
+##     drawing that hurt nothing).
 ##   * CITADEL GUNS (a zone's "guns" config): the fortress itself fires orbital
 ##     strikes on telegraphed circles, more often the deeper the zone, through
 ##     THE one strike path, EmpireRules.strike() (the Purge Protocol's code):
@@ -47,7 +52,9 @@
 ## RNG only. Stats: citadel_gates_raised, citadel_gates_broken,
 ## citadel_lockdowns, citadel_garrison_spawned, citadel_laser_cycles,
 ## citadel_laser_player_hits, citadel_laser_summon_hits,
-## citadel_laser_enemy_hits, citadel_gun_salvos, citadel_gun_strikes,
+## citadel_laser_enemy_hits, citadel_laser_live_player_ticks,
+## citadel_laser_live_summon_ticks, citadel_laser_live_enemy_ticks,
+## citadel_gun_salvos, citadel_gun_strikes,
 ## citadel_gun_player_hits, citadel_turrets_placed, citadel_turrets_destroyed,
 ## citadel_turrets_left, citadel_guest_squads, citadel_guests_spawned,
 ## citadel_wall_pushes, objective_ash.
@@ -100,6 +107,10 @@ var turrets: Array[Turret] = []
 var guests: Array = []
 ## Zone index the systems below last saw (MarchDirector.zone_index).
 var _zone: int = 0
+## Damage source of the live beams' burn ticks (the sweep's own hit is "laser_grid"):
+## its own player_dmg_from_* / summon_dmg_from_* / dmg_* statistics.
+const LIVE_SOURCE := "laser_grid_live"
+
 ## Laser grid of the current zone ({} = none).
 var _lasers: Dictionary = {}
 ## Citadel guns of the current zone ({} = none).
@@ -112,7 +123,7 @@ var _next_salvo: float = INF
 var _next_laser: float = INF
 ## Laser cycles fired so far (orientation rotation).
 var _laser_cycles: int = 0
-## Laser phase: 0 idle, 1 telegraphed, 2 sweeping.
+## Laser phase: 0 idle, 1 telegraphed, 2 sweeping, 3 live (lit where the sweep stopped, burning).
 var _laser_phase: int = 0
 ## Seconds into the current laser phase.
 var _laser_time: float = 0.0
@@ -126,6 +137,8 @@ var _laser_origin: Vector2 = Vector2.ZERO
 var _laser_k: float = 0.0
 ## Bodies already hit this cycle: Object -> generation (0 for the necromancer).
 var _laser_hits: Dictionary = {}
+## Seconds until the live beams' next burn tick (phase 3; lasers.tick apart).
+var _laser_burn_cd: float = 0.0
 ## Game time of the next guest squad.
 var _next_guest: float = 0.0
 ## Guest squads sent so far.
@@ -160,11 +173,12 @@ func step(delta: float) -> void:
 	_step_gates()
 	_step_turrets()
 	_step_guns()
+	var lit := _laser_phase != 0  # Beams drawn last frame: the frame they go out must be redrawn too.
 	_step_lasers(delta)
 	if not guests.is_empty() and game.elapsed >= _next_guest and game.elapsed <= float(config["guest_until"]):
 		_next_guest += float(config["guest_interval"])
 		_send_guests()
-	if not gates.is_empty() or _laser_phase != 0:
+	if not gates.is_empty() or _laser_phase != 0 or lit:
 		queue_redraw()
 
 
@@ -320,7 +334,7 @@ func _break_gate(gt: Gate) -> void:
 	for k in n:
 		game.pickups.spawn(mid + Vector2.from_angle(TAU * float(k) / float(n)) * randf_range(16.0, 52.0), each)
 	for k in 5:
-		game.effects.impact(gt.a.lerp(gt.b, float(k) / 4.0), 34.0, Palette.EMPIRE_SIGNAL_AMBER)
+		game.effects.impact(gt.a.lerp(gt.b, float(k) / 4.0), 34.0, Palette.EMPIRE_SIGNAL_AMBER, EmpireFxData.BLAST)  # Its strip when the art exists (visual only).
 	game.shake(6.0)
 	Sfx.play("gate_fall", mid)
 	var zones: Array = config["zones"]
@@ -421,7 +435,7 @@ func _step_turrets() -> void:
 			turrets.remove_at(i)
 			game.stat_add("citadel_turrets_destroyed", 1.0)
 			game.stat_add("objective_ash", float(game.enemies.enemy_def(CitadelEnemyData.TURRET)["bounty_ash"]))
-			game.effects.impact(t.pos, 40.0, Palette.EMPIRE_SIGNAL_AMBER)
+			game.effects.impact(t.pos, 40.0, Palette.EMPIRE_SIGNAL_AMBER, EmpireFxData.BLAST)  # Its strip when the art exists (visual only).
 		elif t.pos.distance_to(game.player.position) > float(tc["despawn_distance"]):
 			turrets.remove_at(i)
 			game.enemies.despawn(e)
@@ -533,8 +547,18 @@ func _step_lasers(delta: float) -> void:
 			_laser_hit(_laser_k, k)
 			_laser_k = k
 			if k >= 1.0:
-				_laser_phase = 0
+				_laser_phase = 3  # The beams stay lit where they stopped, burning.
+				_laser_time = 0.0
+				_laser_burn_cd = float(_lasers["tick"])  # First burn a tick after the sweep's own hit.
 				_next_laser = game.elapsed + float(_lasers["interval"])
+		3:
+			_laser_time += delta
+			_laser_burn_cd -= delta
+			if _laser_burn_cd <= 0.0:
+				_laser_burn_cd += float(_lasers["tick"])
+				_laser_burn()
+			if _laser_time >= float(_lasers["live"]):
+				_laser_phase = 0
 
 
 ## Lays the next grid across the necromancer's ground: `beams` parallel lines
@@ -611,6 +635,34 @@ func _laser_hit(k0: float, k1: float) -> void:
 			game.stat_add("citadel_laser_enemy_hits", 1.0)
 
 
+## Burn tick of the live beams (phase 3): every body standing in a lit line
+## (its `width` + the body's radius) takes the live damage, through the same
+## paths and with the same exclusions as the sweep's hit.
+func _laser_burn() -> void:
+	var lc := _lasers
+	var mult := game.enemies.damage_mult  # Time scaling of the fortress's beams.
+	for pl in game.all_players:  # (Co-op: every necromancer in a beam.)
+		if not pl.dead and _in_band(pl.position, pl.radius, 1.0, 1.0):
+			game.combat.damage_player(float(lc["live_player"]) * mult, LIVE_SOURCE, pl)
+			game.stat_add("citadel_laser_live_player_ticks", 1.0)
+	var reach := float(lc["length"]) * 0.5
+	game.ally_grid.query(_laser_origin, reach, _tmp)
+	for u: SummonedUnit in _tmp:
+		if not u.active or u.airborne or u.state == SummonedUnit.State.SPAWNING:
+			continue
+		if _in_band(u.position, u.radius, 1.0, 1.0):
+			game.combat.damage_unit(u, float(lc["live_summon"]) * mult, LIVE_SOURCE)
+			game.stat_add("citadel_laser_live_summon_ticks", 1.0)
+	var hits: Array = []  # Own buffer: kills may query the grid again.
+	game.enemy_grid.query(_laser_origin, reach, hits)
+	for e: Enemy in hits:
+		if not e.active or e.is_boss or e.is_miniboss or e.is_structure or e.is_reckoning:
+			continue
+		if _in_band(e.position, e.radius, 1.0, 1.0):
+			game.combat.damage_enemy(e, float(lc["live_enemy"]) * game.enemies.hp_mult, LIVE_SOURCE)
+			game.stat_add("citadel_laser_live_enemy_ticks", 1.0)
+
+
 # =====================================================================================
 # HUD, autopilot, summary
 # =====================================================================================
@@ -658,6 +710,15 @@ func danger_push(p: Vector2) -> Vector2:
 			if o >= s0 - w and o <= s0 + sw + w:
 				var mid := s0 + sw * 0.5  # Centre of the band.
 				push += _laser_n * (1.0 if o >= mid else -1.0) * 1.5
+	elif _laser_phase >= 2 and not _lasers.is_empty():  # Off a firing or live beam's line.
+		var o := _offset(p)
+		var w := float(_lasers["width"]) * 0.5 + game.player.radius + 14.0
+		var sw := float(_lasers["sweep"])
+		var k := _laser_k if _laser_phase == 2 else 1.0
+		for s0 in _beam_start:
+			var line := s0 + sw * k  # The beam's line now.
+			if absf(o - line) <= w:
+				push += _laser_n * (1.0 if o >= line else -1.0) * 1.5
 	return push
 
 
@@ -667,10 +728,12 @@ func summary_line() -> String:
 	var names := PackedStringArray()
 	for g: Array in guests:
 		names.append(String(g[0]))
-	return "gates raised %d, broken %d, lockdowns %d, garrison %d, wall pushes %d | lasers: cycles %d, hits you %d / summons %d / enemies %d (dmg to you %d, enemy dmg %d) | guns: salvos %d, strikes %d, hits on you %d (dmg %d), summon dmg %d | turrets placed %d, destroyed %d, left behind %d | guests: %s, squads %d, spawned %d | objective ash %d" % [
+	return "gates raised %d, broken %d, lockdowns %d, garrison %d, wall pushes %d | lasers: cycles %d, initial hits you %d / summons %d / enemies %d (dmg to you %d, summon dmg %d, enemy dmg %d), live ticks you %d / summons %d / enemies %d (dmg to you %d, summon dmg %d, enemy dmg %d) | guns: salvos %d, strikes %d, hits on you %d (dmg %d), summon dmg %d | turrets placed %d, destroyed %d, left behind %d | guests: %s, squads %d, spawned %d | objective ash %d" % [
 		int(st.get("citadel_gates_raised", 0.0)), gates_broken, lockdowns, int(st.get("citadel_garrison_spawned", 0.0)), int(st.get("citadel_wall_pushes", 0.0)),
 		int(st.get("citadel_laser_cycles", 0.0)), int(st.get("citadel_laser_player_hits", 0.0)), int(st.get("citadel_laser_summon_hits", 0.0)),
-		int(st.get("citadel_laser_enemy_hits", 0.0)), int(st.get("player_dmg_from_laser_grid", 0.0)), int(st.get("dmg_laser_grid", 0.0)),
+		int(st.get("citadel_laser_enemy_hits", 0.0)), int(st.get("player_dmg_from_laser_grid", 0.0)), int(st.get("summon_dmg_from_laser_grid", 0.0)), int(st.get("dmg_laser_grid", 0.0)),
+		int(st.get("citadel_laser_live_player_ticks", 0.0)), int(st.get("citadel_laser_live_summon_ticks", 0.0)), int(st.get("citadel_laser_live_enemy_ticks", 0.0)),
+		int(st.get("player_dmg_from_" + LIVE_SOURCE, 0.0)), int(st.get("summon_dmg_from_" + LIVE_SOURCE, 0.0)), int(st.get("dmg_" + LIVE_SOURCE, 0.0)),
 		int(st.get("citadel_gun_salvos", 0.0)), int(st.get("citadel_gun_strikes", 0.0)), int(st.get("citadel_gun_player_hits", 0.0)),
 		int(st.get("player_dmg_from_citadel_gun", 0.0)), int(st.get("summon_dmg_from_citadel_gun", 0.0)),
 		int(st.get("citadel_turrets_placed", 0.0)), int(st.get("citadel_turrets_destroyed", 0.0)), int(st.get("citadel_turrets_left", 0.0)),
@@ -705,9 +768,9 @@ func _draw() -> void:
 		var half := float(_lasers["length"]) * 0.5
 		var sw := float(_lasers["sweep"])
 		for s0 in _beam_start:
-			var k := _laser_k if _laser_phase == 2 else 0.0
+			var k := _laser_k if _laser_phase == 2 else (1.0 if _laser_phase == 3 else 0.0)
 			var c := _laser_origin + _laser_n * (s0 + sw * k)  # The beam's line now.
 			var tele := clampf(_laser_time / maxf(0.01, float(_lasers["telegraph"])), 0.0, 1.0) if _laser_phase == 1 else 1.0
-			CitadelGlyphs.draw_laser(self, c - along * half, c + along * half, float(_lasers["width"]), _laser_phase == 2, tele, now)
+			CitadelGlyphs.draw_laser(self, c - along * half, c + along * half, float(_lasers["width"]), _laser_phase >= 2, tele, now)
 			if _laser_phase == 1:
 				CitadelGlyphs.draw_laser_band(self, _laser_origin + _laser_n * s0, _laser_n, along, half, sw, tele)

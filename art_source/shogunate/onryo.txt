@@ -1,0 +1,13 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, gliding forward, arms stretched ahead.
+
+LOW-RESOLUTION pixel art: the whole figure is only 34 pixels tall, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims, lacing or engravings.
+
+Subject: an ONRYO, the vengeful ghost of a woman from Japanese folklore (a FEMALE ghost, drawn as a ghost, NOT a sexy figure): a pale grey-white ghost in a white burial kimono (shiroshozoku) with the left side folded over the right, the kimono hem fading into a wispy ghostly tail, NO legs and NO feet, floating above the ground. Very long straight black hair hangs over her whole face and shoulders so the face is hidden except one pale eye glint, and her thin pale arms reach forward with limp hands. A few tiny cold pale-blue spirit flames are NOT drawn; only the pale ghost.
+Signature shape that must read in silhouette: the long black curtain of hair over the face, the reaching arms and the tapering ghost tail; a floating ghost with no feet.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material (a ghost: pale and cold, never green, never teal, never purple; the hair is the darkest part): lacquer red #6A1418 #B3262B #E2594A; lacquer black and outline #1A0B0C; indigo #161D38 #2E3F74 #6A82C0; steel grey #2A2E3A #4A5566 #8793A6 #C4CCD8; gold #8A6A1E #D9A93A #F5D870; skin #8C6040 #E0A882; wood and leather #4F3320 #8C6040; white cloth #8E8A86 #CFCBC4 #F4F1EA.
+Outline: a clean 1-pixel dark outline around the whole figure in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the figure), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark.
+Attached: (1) a sprite of this game: match its pixel size, outline weight and flat look exactly; (2) the Shade of the Dead, a ghost of another army: copy its floating pose and wisp tail idea only, not its colours.
+

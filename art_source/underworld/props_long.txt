@@ -1,0 +1,6 @@
+A sheet of FOUR separate pixel-art game OBSTACLE PROPS on a FULLY TRANSPARENT background (real alpha), with wide empty gaps between them. Three-quarter top-down view (camera above and in front, like a top-down action game), chunky low-resolution pixel art, crisp square pixels, 1-pixel dark outline, flat colours, at most 3 shades per material, light from the top-left. No ground, no cast shadow, no text.
+Top row, two LONG HORIZONTAL props (each about 70 pixels long and 24 pixels deep):
+1. A GRAVE STELE row: a long low weathered grey marble grave slab lying on the ground with a carved border, a few asphodel flowers at its foot.
+2. A JUDGES' BENCH: a long pale marble bench of the Underworld's judges with carved ends and a dark bronze trim.
+Bottom row, the SAME TWO props seen END-ON, standing vertically (each about 24 pixels wide and 70 pixels tall: the same slab and bench rotated to run away from the camera).
+Colours: marble #8E8A86 #CFCBC4 #F4F1EA; dark stone #2A2D36 #4A4E5A #7C8290; bronze #1E1408 #6B4423 #A8702E; asphodel white #CFCBC4 with bronze centres.

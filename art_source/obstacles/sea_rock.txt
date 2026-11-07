@@ -1,0 +1,10 @@
+Pixel-art game sprite for a top-down 2D horde-survival game. Three-quarter top-down view (camera above and slightly in front), on a transparent background. ONE object about 44 pixels wide.
+LOW-RESOLUTION pixel art, shown enlarged so every pixel is a big crisp square block. Chunky simple shapes, no detail under 2 pixels, no anti-aliasing, no gradients, no dithering, no texture noise. A clean 1-pixel dark outline.
+
+Subject: a dark wet SEA ROCK on the beach: a rounded grey boulder streaked dark, a little green weed at its foot, a heavy bronze ship's ANCHOR leaning against it.
+
+Colours: ONLY flat fills: rock #1E2228 (outline) #3B4352 #6B7A94 #A7B3C6; weed #3B5529 #76984A; bronze #6B4423 #A8702E #E0A955.
+Light from the top-left. Keep it a little darker and calmer than the characters (it is scenery), but clearly brighter than a near-black ground.
+
+Output: a PNG with a FULLY TRANSPARENT background, no ground, no cast shadow, no water, no text, no watermark.
+Attached: an obstacle of this game. Match its pixel size, outline weight and flat look exactly.

@@ -41,6 +41,13 @@
 ## `body` ("machine" / "cyborg": leaves_corpse(), rises_as_gunner(); Steel has
 ## no soul) and fire their ranged attacks through their kit's fire_ranged()
 ## hook into EmpireShots (Line of Fire) instead of ProjectileManager.
+## Olympian Republic kinds (PantheonEnemyData, Act IV) carry a PantheonKit (the
+## facing the Phalanx reads) and, for a hero, `glory` stacks (Glory: more damage
+## through hit_mult(), a bigger body); an open Hades fissure under a dying foe
+## swallows its corpse (leaves_corpse()).
+## Shogunate kinds (ShogunateEnemyData, Act V) carry a ShogunateKit; an
+## ETHEREAL one (the onryō) passes through obstacles and the Bone Ring
+## (`ethereal`, the one path).
 ## Survivor convention (user brief): enemies ALWAYS advance on the player;
 ## nobody kites or holds at range. Ranged units only slow down briefly after
 ## each shot (EnemyData.SHOOT_SLOW_*).
@@ -187,6 +194,54 @@ var body: String = ""
 ## ForbiddenVerse spell node, i.e. only while someone owns the spell; timed on
 ## Game.elapsed like Rot. 0 = never inscribed / expired.
 var inscribed_until: float = 0.0
+# --- Act IV: the Olympian Republic ---
+## Glory stacks of a hero (Glory, PantheonRulesData.GLORY: 0..max_stacks); 0
+## for every other enemy, so hit_mult() is unchanged for them.
+var glory: int = 0
+## Body radius (px) before Glory grows it (set on activation).
+var glory_base_radius: float = 0.0
+# --- Act V: the Shogunate of the Rising Sun ---
+## True for an ETHEREAL body (ShogunateEnemyData "ethereal": the onryō): it
+## drifts through obstacles (it also sets phases_obstacles, so
+## Arena.resolve_all() skips it) and through the Bone Ring (resolve_blocking()
+## skips it: no summon body-blocks it). THE one path of the rule; false for
+## every other enemy, so nothing changes on Acts I to IV.
+var ethereal: bool = false
+# --- Act VII: the Sanguine Court ---
+## True for a NIGHT WINGS flier (CourtEnemyData "flies": the vampire bat, phase
+## 2's Chiropterans): it flies over the Bone Ring (resolve_blocking() skips it:
+## no summon body-blocks it). THE flag of the rule (NightWings documents it;
+## its swoop and in-flight hits live in its CourtKit); false for every other
+## enemy, so nothing changes on Acts I to VI.
+var flies: bool = false
+## Bloodfeast's blood shield (HP; Bloodfeast, Act VII): healing past full banks
+## here, up to CourtRulesData.BLOODFEAST shield_cap x max HP, and
+## CombatResolver.damage_enemy() spends it before HP (Bloodfeast.absorb()).
+## 0 for every enemy that never fed (always 0 on Acts I to VI).
+var blood_shield: float = 0.0
+# --- Act VII: Ravensmoor ---
+## The pool generation of this foe whose corpse a Ghoul claimed
+## (GhoulKit.claim_corpse()): while it equals `generation`, leaves_corpse()
+## is false (the one corpse-path check of the Ghouls' meals). -1 = never
+## eaten (always on every stage without ghouls).
+var ghoul_meal: int = -1
+# --- Act VIII: the Last Line ---
+## True for a CIVILIAN (CityEnemyData "civilian"; Civilians): it never
+## body-blocks the ring (resolve_blocking() skips it), is never healed by a
+## medic (_pick_heal_target()), is never recycled to the spawn ring (it flees
+## off instead), the city's blasts spare it, and EnemyDirector.regular_alive()
+## leaves it out (its own alive cap). False for every other enemy, so nothing
+## changes on Acts I to VII.
+var civilian: bool = false
+## True for a City VEHICLE (CityEnemyData "vehicle"; Convoy): it drives its
+## lane over the ring (resolve_blocking() skips it: it runs summons over
+## instead of being blocked). False for every other enemy.
+var vehicle: bool = false
+## The street-steering hint's last decision (CityBlocks.street_dir(), a
+## city-block layout only): the street direction to keep, or ZERO = straight at
+## the goal; renewed every CityBlockData.STEER_EVERY ticks. Always ZERO on
+## every other stage.
+var street_hint: Vector2 = Vector2.ZERO
 ## True for animated stone (Sentinel, Guardian): never healed, shielded or
 ## raised by Covenant priests.
 var is_construct: bool = false
@@ -376,7 +431,13 @@ func activate(p_game: Game, p_kind: String, def: Dictionary, pos: Vector2, hp_mu
 	untargetable = false
 	claim_radius = float(def.get("claim_radius", 0.0))
 	claimer_until = 0.0
-	phases_obstacles = bool(def.get("phases", false))
+	ethereal = bool(def.get("ethereal", false))  # Act V: the onryō (false elsewhere).
+	flies = bool(def.get("flies", false))  # Act VII: Night Wings (false elsewhere).
+	blood_shield = 0.0  # Act VII: Bloodfeast's shield (never banked elsewhere).
+	civilian = bool(def.get("civilian", false))  # Act VIII: a civilian (false elsewhere).
+	vehicle = bool(def.get("vehicle", false))  # Act VIII: a vehicle (false elsewhere).
+	street_hint = Vector2.ZERO  # Act VIII: no street decision yet.
+	phases_obstacles = bool(def.get("phases", false)) or ethereal
 	floating = bool(def.get("floating", false))
 	body = String(def.get("body", ""))  # Act III: machine / cyborg ("" elsewhere).
 	inscribed_until = 0.0
@@ -446,6 +507,8 @@ func activate(p_game: Game, p_kind: String, def: Dictionary, pos: Vector2, hp_mu
 		heal_amount *= EnemyData.ELITE_HEAL_MULT
 		target_priority = minf(1.0, target_priority + 0.2)
 	hp = max_hp
+	glory = 0  # Act IV: Glory stacks (heroes only gain any).
+	glory_base_radius = radius
 	incoming_damage = 0.0
 	attack_cd = randf() * attack_interval
 	heal_cd = randf() * maxf(heal_interval, 0.1)
@@ -546,9 +609,12 @@ func step_frozen(delta: float) -> void:
 			queue_redraw()
 
 
-## Visual hit reaction.
+## Visual hit reaction: the white flash (not on stage bosses and minibosses,
+## EnemyData.BIG_HIT_FLASH) and the hit squash.
 func on_hit() -> void:
-	flash = 0.08
+	var big := is_boss or is_miniboss or self is Boss  # Big art the flash would hide.
+	if EnemyData.BIG_HIT_FLASH or not big:
+		flash = EnemyData.HIT_FLASH_TIME
 	if motion != null:
 		motion.hit(game.elapsed)  # Engine motion: hit squash with the flash.
 	queue_redraw()
@@ -563,7 +629,11 @@ func motion_lunge(dir: Vector2, power: float) -> void:
 
 ## Sprite key of this enemy's art (the engine-motion pivot); bosses override.
 ## An Ancient Eye kind's art lives in eye/ (Act II) and an Electronic Empire
-## kind's in empire/ (Act III): used when it has no enemies/ art (visual only;
+## kind's in empire/ (Act III), an Olympian Republic kind's in pantheon/ (Act
+## IV), a Shogunate kind's in shogunate/ (Act V), an Inferno kind's in inferno/
+## (Act VI), a Sanguine Court kind's in court/ (Act VII), a Last Line kind's
+## in city/ (Act VIII), a Concord of Stars kind's in concord/ (Act IX): used
+## when it has no enemies/ art (visual only;
 ## every Act I kind keeps its enemies/ key).
 func motion_sprite_key() -> String:
 	if wears != "":
@@ -574,6 +644,18 @@ func motion_sprite_key() -> String:
 			return "eye/" + kind
 		if SpriteBank.has("empire/" + kind):
 			return "empire/" + kind
+		if SpriteBank.has("pantheon/" + kind):
+			return "pantheon/" + kind  # Act IV: an Olympian Republic kind's art.
+		if SpriteBank.has("shogunate/" + kind):
+			return "shogunate/" + kind  # Act V: a Shogunate kind's art.
+		if SpriteBank.has("inferno/" + kind):
+			return "inferno/" + kind  # Act VI: an Inferno kind's art.
+		if SpriteBank.has("court/" + kind):
+			return "court/" + kind  # Act VII: a Sanguine Court kind's art.
+		if SpriteBank.has("city/" + kind):
+			return "city/" + kind  # Act VIII: a Last Line kind's art.
+		if SpriteBank.has("concord/" + kind):
+			return "concord/" + kind  # Act IX: a Concord of Stars kind's art.
 	return key
 
 
@@ -582,8 +664,15 @@ func motion_sprite_key() -> String:
 ## for every other foe. THE one gate of every corpse and raise path: Corpse
 ## Explosion's corpses, Raise Dead's anchors, Death Mark's Risen, the Lich's
 ## raise, Grave Tide and Call of the Drowned. Exactly `not is_structure` on
-## Acts I and II (no machines there).
+## Acts I and II (no machines there). Act IV: a foe lying on an open Hades
+## fissure leaves no corpse either (DivineWrath.swallows(); Game.pantheon is
+## null on every other act, so nothing changes there). Act VII: a corpse a
+## Ghoul claimed is eaten (ghoul_meal; -1 everywhere without ghouls).
 func leaves_corpse() -> bool:
+	if game.pantheon != null and game.pantheon.swallows_corpse(position, radius):
+		return false  # Act IV: swallowed by an open fissure.
+	if ghoul_meal == generation:
+		return false  # Act VII, Ravensmoor: a Ghoul is eating it (GhoulKit.claim_corpse(); fewer raises).
 	return not is_structure and body != EmpireEnemyData.MACHINE
 
 
@@ -744,8 +833,8 @@ func _pick_heal_target() -> void:
 	var best_frac := EnemyData.HEAL_MIN_MISSING_FRACTION
 	game.enemy_grid.query(position, heal_radius, _tmp)
 	for e: Enemy in _tmp:
-		if e == self or not e.active or e.is_construct:
-			continue
+		if e == self or not e.active or e.is_construct or e.civilian:
+			continue  # (Act VIII: a medic never heals a civilian.)
 		var frac := 1.0 - e.hp / e.max_hp
 		if frac >= best_frac:
 			best_frac = frac
@@ -765,27 +854,41 @@ func _pulse_aura() -> void:
 			continue
 		if e.position.distance_to(position) > aura_radius:
 			continue
-		if e.buff_time <= 0.0:
-			e.buff_damage = aura_damage_mult
-			e.buff_speed = aura_speed_mult
-			e.buff_taken = aura_taken_mult
-			e.queue_redraw()
-		else:
-			e.buff_damage = maxf(e.buff_damage, aura_damage_mult)
-			e.buff_speed = maxf(e.buff_speed, aura_speed_mult)
-			e.buff_taken = minf(e.buff_taken, aura_taken_mult)
-		e.buff_time = MarchEnemyData.AURA_LINGER
+		e.apply_buff(aura_damage_mult, aura_speed_mult, aura_taken_mult, MarchEnemyData.AURA_LINGER)
 		buffed += 1
 	if buffed > 0:
 		game.stat_add("march_aura_buff_pulses", float(buffed))
 
 
+## THE one enemy-buff path (the Banner Bearer's and Holy Standard's auras;
+## Act IV: Ares's war-cry): buffs this enemy for `time` s with damage dealt
+## x`dmg`, move speed x`spd` and damage taken x`taken`. While a buff already
+## runs, each multiplier keeps the stronger value (overlapping buffs never
+## stack) and the timer runs for the longer of the two (exactly `time` for the
+## auras, which all use MarchEnemyData.AURA_LINGER).
+func apply_buff(dmg: float, spd: float, taken: float, time: float) -> void:
+	if buff_time <= 0.0:
+		buff_damage = dmg
+		buff_speed = spd
+		buff_taken = taken
+		queue_redraw()
+	else:
+		buff_damage = maxf(buff_damage, dmg)
+		buff_speed = maxf(buff_speed, spd)
+		buff_taken = minf(buff_taken, taken)
+	buff_time = maxf(buff_time, time)
+
+
 ## Damage-dealt multiplier from an aura buff (1 when not buffed), times the
-## Banshee Dirge's damage cut while weakened (CombatResolver.weaken_enemy()).
+## Banshee Dirge's damage cut while weakened (CombatResolver.weaken_enemy()),
+## times a hero's Glory (Act IV: 1 + damage_per_stack x stacks; 0 stacks for
+## every other enemy).
 func hit_mult() -> float:
 	var m := buff_damage if buff_time > 0.0 else 1.0  # Aura buff.
 	if weaken_until > game.elapsed:
 		m *= 1.0 - weaken_cut  # Dirge: weakened hits.
+	if glory > 0:
+		m *= 1.0 + float(PantheonRulesData.GLORY["damage_per_stack"]) * float(glory)  # Act IV: Glory.
 	return m
 
 
@@ -794,6 +897,13 @@ func hit_mult() -> float:
 ## (MarchEnemyData.PROJECTILE_SOURCES). A Soul Nova ignores both. Graveyard
 ## kinds have neither, so this is exactly 1 for them.
 func damage_taken_mult(source: String) -> float:
+	# --- Act V: the Road to the Sun --- a kit's own share of the hit (the
+	# Kitsune's fox-fire illusions take none: CovenantKit.taken_mult(); exactly
+	# 1 for every other kit, so nothing changes elsewhere).
+	if kit != null:
+		var km := kit.taken_mult(self, source)  # The kit's share (1 = no change).
+		if km != 1.0:
+			return km
 	if source == "nova":
 		return 1.0
 	var m := buff_taken if buff_time > 0.0 else 1.0  # Aura buff.
@@ -866,6 +976,20 @@ func physics_step(delta: float) -> void:
 			_try_heal()
 	elif edge > attack_range:
 		move = dir
+	# --- Act VIII: the Last Line --- the street-steering hint (a city-block
+	# layout only: CityBlocks.street_dir(), straight while the street ahead is
+	# clear, else along the street toward the crossing onto the goal's street),
+	# so the advance follows the streets instead of piling on a building face.
+	if move != Vector2.ZERO and game.arena.city_blocks != null:
+		if (game.enemies._frame + think_slot) % CityBlockData.STEER_EVERY == 0:
+			var goal := t.position if (behavior != "ranged" and behavior != "healer" and behavior != "banner") else game.player.position
+			# Hysteresis: once off the straight line it takes a longer clear look to
+			# go straight again (no flip-flop at the edge of the look-ahead).
+			var look := CityBlockData.STEER_LOOK if street_hint == Vector2.ZERO else CityBlockData.STEER_LOOK_BACK
+			var sd := game.arena.city_blocks.street_dir(position, goal, radius, look)  # This tick's decision.
+			street_hint = Vector2.ZERO if sd.dot(move) > 0.999 else sd  # ZERO: straight was clear.
+		if street_hint != Vector2.ZERO:
+			move = street_hint
 	# Anyone in contact can strike except archers (chaplains swing weakly).
 	if behavior != "ranged" and edge <= attack_range and attack_cd <= 0.0:
 		_melee_hit(t, dir)
@@ -977,7 +1101,10 @@ func _rush_move(delta: float) -> void:
 			break
 		var side := rel - rush_dir * rel.dot(rush_dir)
 		var push := side.normalized() if side.length() > 0.1 else Vector2(-rush_dir.y, rush_dir.x)
-		u.position += push * float(_rush_def["charge_knockback"])
+		var shove := float(_rush_def["charge_knockback"])  # px the summon is shoved aside.
+		if game.concord != null:
+			shove *= game.concord.gravity()  # Act IX, the Proving Moon: low gravity (exactly 1.0 off the moon).
+		u.position += push * shove
 		game.combat.damage_unit(u, dmg * undead_damage_mult, "templar_charge")
 	if rush_left <= 0.0:
 		rush_state = 0
@@ -994,6 +1121,12 @@ func _rush_move(delta: float) -> void:
 ## the spatial hash returns blockers in no longer matters. Called by
 ## EnemyDirector right after physics_step().
 func resolve_blocking() -> void:
+	if ethereal:
+		return  # Act V: an ethereal body (the onryō) drifts through the Bone Ring.
+	if flies:
+		return  # Act VII, Night Wings: a flier passes over the Bone Ring.
+	if civilian or vehicle:
+		return  # Act VIII: a civilian never blocks the ring; a vehicle runs it over (Convoy).
 	var reach := game.horde.block_query_radius if game.coop == null else game.coop.block_query_radius()  # Widest blocker (co-op: of every army).
 	game.ally_grid.query(position, radius + reach, _tmp)
 	var touched := false  # A blocker already engaged this enemy this tick.
@@ -1064,7 +1197,14 @@ func _tick_timers(delta: float) -> void:
 		ward_resist = 0.0
 		queue_redraw()
 	if knockback != Vector2.ZERO:
-		knockback = knockback.move_toward(Vector2.ZERO, EnemyData.KNOCKBACK_DECAY * delta)
+		var decay := EnemyData.KNOCKBACK_DECAY  # px/s² the knockback slows by.
+		# --- Act IX: the Proving Moon --- low gravity: the decay is divided by the
+		# STAGE "gravity" (ConcordRules.gravity(); 2.0 on the moon: every knockback
+		# travels twice as far). Read only while game.concord exists, and it is
+		# exactly 1.0 off the moon.
+		if game.concord != null:
+			decay /= game.concord.gravity()
+		knockback = knockback.move_toward(Vector2.ZERO, decay * delta)
 	if flash > 0.0:
 		flash -= delta
 		if flash <= 0.0:
@@ -1104,11 +1244,11 @@ func _melee_hit(t: Node2D, dir: Vector2) -> void:
 	game.effects.slash(position + dir * radius, dir, Palette.SILVER, radius * 1.2)
 	motion_lunge(dir, MotionData.POWER_MELEE)
 	if t is SummonedUnit:
-		game.combat.damage_unit(t as SummonedUnit, dmg * undead_damage_mult, kind)
+		game.combat.damage_unit(t as SummonedUnit, dmg * undead_damage_mult, kind, self)  # Names the killer (Act IV: Glory).
 		if cleave_radius > 0.0:
 			_cleave(t as SummonedUnit, dmg * undead_damage_mult * cleave_mult)
 	else:
-		game.combat.damage_player(dmg, kind, t as Necromancer)  # (Co-op: that necromancer.)
+		game.combat.damage_player(dmg, kind, t as Necromancer, self)  # (Co-op: that necromancer.) self: Act VII, Bloodfeast hears the attacker.
 
 
 ## Halberd sweep (MarchEnemyData cleave_*): up to cleave_targets OTHER
@@ -1123,7 +1263,7 @@ func _cleave(struck: SummonedUnit, dmg: float) -> void:
 			continue
 		if u.position.distance_to(struck.position) > cleave_radius + u.radius:
 			continue
-		game.combat.damage_unit(u, dmg, kind + "_cleave")
+		game.combat.damage_unit(u, dmg, kind + "_cleave", self)  # self: a hero's cleave kill is Glory too (Act IV)
 		hits += 1
 	if hits > 0:
 		game.stat_add("march_cleave_hits", float(hits))

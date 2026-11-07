@@ -1,0 +1,7 @@
+A sheet of THREE separate small pixel-art game PROPS in one row, evenly spaced with wide empty gaps between them, on a FULLY TRANSPARENT background (real alpha). Top-down view at a slight angle (camera above and slightly in front). Chunky low-resolution pixel art with crisp square pixels, nearest-neighbour, a 1-pixel dark outline, flat colours, at most 3 shades per colour, light from the top-left. No ground, no shadow, no text, no letters, no markings.
+From left to right:
+1. A MILITARY LAND MINE lying on the ground: a small round olive-drab metal disc with a raised centre pressure plate and a tiny unlit red lamp, about 14 pixels wide.
+2. A BONE MINE: a small round bone-white disc made of a skull cap, a small dark violet gem lamp in the middle, about 14 pixels wide.
+3. A SANDBAG WALL: a short straight low wall of stacked tan sandbags, two rows, about 48 pixels long and 16 high.
+Colours: olive #4B5330 #6B7545 #8A9558; dark #101114 #1E2024; red lamp #D82A2A; bone #8C7B5E #D9CCAA #F2EBD3; violet #4A2569 #A35CFA; sandbags #5E5236 #8A7A55 #B0A27A.
+Attached: an approved game sprite for pixel size, outline weight and flat look.

@@ -1,0 +1,12 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, neutral ready stance.
+
+LOW-RESOLUTION pixel art: the whole figure is only 58 pixels tall, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. Details must be big enough to read at game size. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims or engravings.
+
+Subject: THE RONIN REVENANT, a dead MALE masterless samurai risen as a necromancer: a lean tall man with a battered wide straw hat (sandogasa) tilted over a gaunt pale face clearly visible with two glowing violet eyes and a thin dark moustache, long loose black hair, a tattered deep violet kimono and dark hakama over a few cracked black lacquer armour plates (one shoulder plate, a breastplate), a red sash, a katana at his left hip, and on his back a small tattered black war banner on a bamboo pole with a violet skull-circle emblem. His front (right) hand rests on the sword hilt.
+Signature shape that must read in silhouette: the wide straw hat, the small tattered banner on his back and the sword at the hip.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: violet #160A21 #4A2569 #7A42AD #A35CFA; lacquer red #6A1418 #B3262B; lacquer black #1A0B0C; steel grey #4A5566 #8793A6 #C4CCD8; straw #8A6A1E #D9A93A; pale skin #8C6040 #E0A882.
+Outline: a clean 1-pixel dark outline around the whole figure in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the figure), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark.
+Attached: (1) a player character of this game: match its pixel size, outline weight and flat look exactly; (2) a samurai sprite of this game for the armour pieces only (do NOT copy its colours: this man is a violet undead necromancer).

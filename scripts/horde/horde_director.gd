@@ -4,7 +4,9 @@
 ##     passive bonuses x meta upgrades, GDD §34 stacking rule; meta values
 ##     come from game.meta, see MetaModifiers), including the numbers of the
 ##     later classes' specials (_special_stats(), SummonBehavior),
-##   * per-ability sequential replenishment queues (GDD §24),
+##   * per-ability sequential replenishment queues (GDD §24; a replaced unit
+##     rises with a Bone Reserve barrier when that Ossuary upgrade is owned, and
+##     Commander's Presence adds minion damage per distinct class owned),
 ##   * soft formation anchors at 4 Hz (GDD §26),
 ##   * player threat evaluation at 5 Hz (GDD §32),
 ##   * staggered 5 Hz AI ticks: each unit thinks on 1 of 12 physics ticks,
@@ -34,6 +36,12 @@
 ##     Titan's heal, barrier and death wall through GolemKit (`golems`,
 ##     created by the first Golem, golem_kit()); Grave Masonry's hold bonus in
 ##     compute_stats().
+##   * Act VI, the Inferno: TEMPTATION through ONE call, charm() (and
+##     break_charms() when the charmer dies), run by the Inferno's Temptation
+##     (game.inferno): a charmed summon is parked (SummonedUnit.charmed: it is
+##     skipped by step(), the grids and the ring posts) while a hostile body
+##     wearing its look fights for hell, then comes back. An enemy effect on a
+##     unit, like Act II's Claims: no summon has an act rule of its own.
 ## Ranged overkill reservations are stored on the enemies themselves
 ## (Enemy.incoming_damage) and managed by ProjectileManager.
 class_name HordeDirector
@@ -110,6 +118,10 @@ var feathers: SeraphFeathers = null
 ## Content wave 2: the Bone Golem's army-wide rules (GolemKit); null until the
 ## first Golem rises (golem_kit()), so runs without one never create it.
 var golems: GolemKit = null
+# --- Act VI: the Palace of Silk and Ash ---
+## The thralls of this army (Enthrall: foes turned by the Temptation spell and
+## the Succubus class); null until the first turn (enthrall_foe()).
+var enthrall: Enthrall = null
 ## Radius (px) Enemy.resolve_blocking() adds to its own to find blockers:
 ## UnitData.MAX_BLOCK_RADIUS, raised to the widest block_radius ever spawned
 ## this run (the Corpse Abomination's), never lowered.
@@ -119,6 +131,20 @@ var block_query_radius: float = UnitData.MAX_BLOCK_RADIUS
 ## (StanceFormations._ring(); StanceData.RING_MIN before the first): the Scrap
 ## Swarm spell orbits just outside it. Read only; it changes no unit.
 var ring_radius: float = StanceData.RING_MIN
+# --- Act V: Castle Kurogane ---
+## Banner of the Dead: this army's standing banners, (x, y, radius px) each,
+## written every tick by the spell (set_banners(); empty = none). Read only
+## through attack_haste().
+var banner_zones: PackedVector3Array = PackedVector3Array()
+## Banner of the Dead: the attack-speed share (fraction) a summon inside a
+## banner's radius gains (0 = no banner).
+var banner_haste: float = 0.0
+## Warlord's Seal: the attack-speed share (fraction) a summon within
+## BannerData.SEAL_RADIUS px of this army's necromancer gains (cached at the
+## start of each step from the bound player's passive; 0 = not owned).
+var _seal_haste: float = 0.0
+## Warlord's Seal: where this army's necromancer stood at the start of the step.
+var _seal_pos: Vector2 = Vector2.ZERO
 
 
 func _init() -> void:
@@ -181,12 +207,16 @@ func golem_kit() -> GolemKit:
 ## Fixed-order update called by Game every physics tick.
 func step(delta: float) -> void:
 	_frame += 1
+	_seal_haste = game.abilities.passive_value(BannerData.SEAL, BannerData.SEAL_KEY)  # Act V: Warlord's Seal (0 when not owned).
+	_seal_pos = game.player.position
 	if temp_alive > 0:
 		_update_temporaries(delta)
 	suppression.step(delta)
 	hazards.step(delta)
 	if feathers != null:
 		feathers.step(delta)  # Act II: Fallen Seraph feather rings.
+	if enthrall != null:
+		enthrall.step()  # Act VI: thralls slain, charms run out (Enthrall).
 	_update_replenishment(delta)
 	synergies.step(delta)
 	if _frame % UnitData.FORMATION_TICK_DIVISOR == 0:
@@ -200,6 +230,8 @@ func step(delta: float) -> void:
 	# Safe to iterate directly: units only die from enemy / projectile / boss
 	# damage, which never runs inside this loop.
 	for u in units:
+		if u.charmed:
+			continue  # Act VI: parked by Temptation (its hostile body fights instead).
 		if u.think_slot == slot:
 			u.think()
 		u.physics_step(delta)
@@ -213,11 +245,18 @@ func step(delta: float) -> void:
 ## the new capacity allows ("Buy Warrior -> exactly two spawn", GDD §40).
 func set_class_level(cls: String, level: int) -> void:
 	var old_cap := capacity(cls)
+	# Commander's Presence (Ossuary): a new class raises every class's damage, so
+	# all of them are recomputed (capacities taken before the change).
+	var presence_caps: Dictionary = capacity_snapshot() if int(class_levels[cls]) <= 0 and level > 0 and game.meta.value("presence_damage") > 0.0 else {}
 	class_levels[cls] = level
 	if level > 0:
 		if game.records_here():
 			game.codex.meet(CodexData.SUMMON, cls)  # Codex: a summon class raised (records only).
-	_refresh_class(cls, old_cap)
+			Meta.record_class_level(cls, level)  # Ossuary Masteries: Lv 5 opens that class's mastery (Meta [class_lv5]).
+	if not presence_caps.is_empty():
+		recompute_all(presence_caps)
+	else:
+		_refresh_class(cls, old_cap)
 	synergies.evaluate()
 
 
@@ -336,8 +375,17 @@ func compute_stats(cls: String, level: int, with_buffs: bool = true, with_evolut
 			* (1.0 + game.meta.value("minion_hp"))
 	var dmg_mult := (1.0 + float(row.get("damage_bonus", 0.0))) * (1.0 + ab.passive_value("dark_command", "minion_damage")) \
 			* (1.0 + game.meta.value("minion_damage"))
+	# Commander's Presence (Ossuary expansion step 3): its own category, per distinct
+	# summon class owned (exactly 1 without the upgrade).
+	var presence := game.meta.value("presence_damage")  # Minion damage per class (0 = not owned).
+	if presence > 0.0:
+		dmg_mult *= 1.0 + presence * float(distinct_classes())
 	var spd_mult := (1.0 + float(row.get("speed_bonus", 0.0))) * (1.0 + ab.passive_value("dark_command", "minion_speed")) \
 			* (1.0 + synergies.value("unholy_host", "attack_speed"))
+	# Ossuary Mastery of this class (MasteryData; an evolved form is its base class):
+	# its own category on HP and damage, exactly 1 while the class has none.
+	hp_mult *= 1.0 + game.meta.mastery_value(cls, "hp")
+	dmg_mult *= 1.0 + game.meta.mastery_value(cls, "damage")
 	# Run modifiers (Vengeful Dead, DifficultyModifiers): own category, 1 when off.
 	hp_mult *= game.difficulty.minion_hp_mult()
 	dmg_mult *= game.difficulty.minion_damage_mult()
@@ -466,6 +514,14 @@ func compute_stats(cls: String, level: int, with_buffs: bool = true, with_evolut
 		if haste > 0.0:
 			out["attack_interval"] = float(out["attack_interval"]) / (1.0 + haste)
 			out["attack_range"] = float(out["attack_range"]) * (1.0 + ab.passive_value("recoil_frame", "ranged_reach"))
+	# --- Act IV: the Asphodel Underworld --- Myrmidon Oath: the front-line
+	# classes (PassiveData.OATH_CLASSES) gain max HP and damage, its own
+	# category. 0 when not owned, so every other run is unchanged.
+	if cls in PassiveData.OATH_CLASSES:
+		var oath_hp := ab.passive_value("myrmidon_oath", "front_hp")  # Max HP fraction.
+		if oath_hp > 0.0:
+			out["max_hp"] = float(out["max_hp"]) * (1.0 + oath_hp)
+			out["damage"] = float(out["damage"]) * (1.0 + ab.passive_value("myrmidon_oath", "front_damage"))
 	return out
 
 
@@ -498,10 +554,19 @@ func _special_stats(base: Dictionary, row: Dictionary, dmg_mult: float) -> Dicti
 	var out := {}  # Effective special numbers.
 	var src: Dictionary = base.get("special", {})  # Base special numbers.
 	var dmg := dmg_mult * (1.0 + float(row.get("special_bonus", 0.0)))  # Special damage multiplier.
+	# --- Act VI: Pandemonium --- Crown of Horns: every class special hits
+	# harder, its own category (0 when not owned, so every other run is unchanged).
+	dmg *= 1.0 + game.abilities.passive_value(ArchfiendBehavior.CROWN, ArchfiendBehavior.CROWN_KEY)
 	var area := 1.0 + float(row.get("special_area", 0.0))  # Radius / length multiplier.
 	var haste := 1.0 + float(row.get("special_haste", 0.0))  # Cooldown divisor.
 	haste *= 1.0 + game.abilities.passive_value("fallen_grace", "special_haste")  # Fallen Grace (0 when not owned).
+	# --- Act VIII: Liberty Heights --- Origin Story: every class special reaches
+	# wider, its own category (0 when not owned, so every other run is unchanged).
+	area *= 1.0 + game.abilities.passive_value(FallenHeroBehavior.ORIGIN, FallenHeroBehavior.ORIGIN_KEY)
 	var dur := 1.0 + float(row.get("special_duration", 0.0))  # Status duration multiplier.
+	# --- Act IX: the Ark --- Crop Circles: every class special's held effects
+	# last longer, its own category (0 when not owned, so every other run is unchanged).
+	dur *= 1.0 + game.abilities.passive_value(GhostSaucerBehavior.CROP, GhostSaucerBehavior.CROP_KEY)
 	for key: String in src:
 		var v := float(src[key])  # Base value of this key.
 		if key.ends_with("_damage"):
@@ -547,6 +612,31 @@ func _update_replenishment(delta: float) -> void:
 			if _try_spawn(cls):
 				replenish_timer[cls] = 0.0
 				game.stat_add("replacements", 1.0)
+				_bone_reserve(units[units.size() - 1])
+
+
+## Bone Reserve (Ossuary expansion step 3, MetaModifiers "reserve_barrier"): a
+## summon replaced after falling (the replacement timer above) rises with a barrier
+## of that share of its max HP (SummonedUnit.barrier_hp, absorbed before HP like
+## the Shieldwall's). No-op without the upgrade.
+func _bone_reserve(u: SummonedUnit) -> void:
+	var share := game.meta.value("reserve_barrier")  # Barrier share of max HP (0 = not owned).
+	if share <= 0.0:
+		return
+	var amount := u.max_hp * share  # Barrier HP.
+	if amount > u.barrier_hp:
+		game.stat_add("bone_reserve_barrier", amount - u.barrier_hp)
+		u.barrier_hp = amount
+		u.queue_redraw()
+
+
+## Number of summon classes owned (level 1+): Commander's Presence.
+func distinct_classes() -> int:
+	var n := 0
+	for cls: String in UnitData.CLASS_ORDER:
+		if int(class_levels[cls]) > 0:
+			n += 1
+	return n
 
 
 ## Number of missing units across all owned classes (capacity - alive).
@@ -758,6 +848,44 @@ func claim_fallen(u: SummonedUnit) -> bool:
 	return game.claims != null and game.claims.claim_fallen(u)
 
 
+# --- Act VI: the Inferno ---
+## TEMPTATION (Act VI, GDD §15.0 "Temptation"): THE one path that charms a
+## summon. `unit` (a summon of this army) is parked and a hostile body wearing
+## its look fights for hell for `duration` s (x Faithless), then the summon
+## comes back with the body's share of HP; breaking the body frees it at once
+## (weakened), killing the charmer `by` (an Enemy, or null for a boss effect that names no
+## charmer) breaks its charms at once (break_charms()). At most
+## InfernoRulesData.TEMPTATION max_charmed at once across every army. `opts`
+## (all optional) for phase 2: "tint" (Color of the body), "name" (its display
+## name), "source" (stats tag; default the charmer's kind), "ignore_cap"
+## (bool; Moloch's swallow), "no_temporary" (bool: refuse temporary summons). Creates the Inferno's rules on first use (an
+## Inferno kind forced onto another stage). Returns true when it took hold.
+func charm(unit: SummonedUnit, by: Enemy, duration: float, opts: Dictionary = {}) -> bool:
+	if unit == null or unit.director != self:
+		return unit != null and unit.director != null and unit.director.charm(unit, by, duration, opts)  # Co-op: the summon's own army.
+	return game.inferno_rules().temptation.charm(unit, by, duration, opts)
+
+
+## Act VI, the Palace of Silk and Ash: THE ONE PATH that turns foe `e` to this
+## army's side for `duration` s (Enthrall.turn(); opts there): the Temptation
+## spell (TemptSpell) and the Succubus class (BoundSuccubusBehavior). The
+## player's own charm, a spell's effect on an ENEMY: the summon charm path above
+## is never used. Returns the thrall, or null when refused.
+func enthrall_foe(e: Enemy, duration: float, opts: Dictionary) -> SummonedUnit:
+	if enthrall == null:
+		enthrall = Enthrall.new(game, self)
+	return enthrall.turn(e, duration, opts)
+
+
+## TEMPTATION: breaks every charm charmer `by` holds (its summons come back at
+## once). Called by InfernoKit.on_killed() when a charmer dies; a no-op off
+## Act VI (no Inferno rules). Returns the summons freed.
+func break_charms(by: Enemy) -> int:
+	if game.inferno == null or by == null:
+		return 0
+	return game.inferno.temptation.break_by(by)
+
+
 ## Number of living units of `cls`.
 func count_of(cls: String) -> int:
 	return class_counts[cls]
@@ -868,3 +996,32 @@ func state_counts() -> Dictionary:
 		var key: String = SummonedUnit.State.keys()[u.state]
 		counts[key] = int(counts.get(key, 0)) + 1
 	return counts
+
+
+# --- Act V: Castle Kurogane ---
+## Banner of the Dead (the spell, every tick): this army's standing banners
+## `zones` ((x, y, radius px) each) and their attack-speed share `haste`.
+func set_banners(zones: PackedVector3Array, haste: float) -> void:
+	banner_zones = zones
+	banner_haste = haste
+
+
+## THE one per-summon attack-speed read (SummonedUnit's attack timer runs this
+## much faster): 1 + Banner of the Dead's haste when `u` stands inside one of
+## this army's banners (the strongest, not added up) + Warlord's Seal's when it
+## stands within BannerData.SEAL_RADIUS px of its necromancer. Exactly 1 when
+## neither the spell nor the passive is owned (every older run unchanged). The
+## same on every stage (no act-only rule).
+func attack_haste(u: SummonedUnit) -> float:
+	if banner_haste <= 0.0 and _seal_haste <= 0.0:
+		return 1.0
+	var h := 0.0  # Extra share.
+	if banner_haste > 0.0:
+		for z in banner_zones:
+			if u.position.distance_squared_to(Vector2(z.x, z.y)) <= z.z * z.z:
+				h += banner_haste
+				break
+	if _seal_haste > 0.0 and u.position.distance_squared_to(_seal_pos) <= BannerData.SEAL_RADIUS * BannerData.SEAL_RADIUS:
+		h += _seal_haste
+	return 1.0 + h
+

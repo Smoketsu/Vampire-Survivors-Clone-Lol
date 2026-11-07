@@ -60,6 +60,10 @@
 ##     category (spells learned, summon classes raised, Covenant kinds slain,
 ##     bosses faced; CodexLog), how many were new to the save, and the save's
 ##     codex totals (Meta [codex]; in memory only unless --meta-save),
+##   * demo mode (DemoMode; --demo, or the demo build's feature tag): a "demo"
+##     line says whether it is on, the acts / stages it allows, its save file
+##     and how many NEW cards offered this run were full-game items (must be 0
+##     with --demo; counted in every run, read only),
 ##   * the Feedback buttons: a last "feedback" line says whether a form link is
 ##     set (FeedbackData.FORM_URL or --feedback-url=) and the length of three
 ##     sample reports (main menu, pause, results) built headless; nothing is
@@ -176,6 +180,78 @@
 ##     (_character_list()). The summary adds a "character" line (starting
 ##     spell level, stats, the innate's counters, characters unlocked this
 ##     run; CharacterInnates.summary_line()).
+##   * Act IV, the Olympian Republic (GDD §15.0 "Act IV foundation (phase
+##     1)"): --stage=ilion|olympus|underworld, --spawn= with its kinds
+##     (shade_of_dead, hoplite, hero, bronze_titan), --boss=achilles|zeus|
+##     hades. The bot steps off telegraphed bolt circles and fissures
+##     (PantheonRules.danger_push(); the waves cannot be dodged). When the
+##     Pantheon ran, the summary adds the "divine wrath", "phalanx", "glory",
+##     "pantheon kinds" and (on an Act IV stage) "pantheon stage" lines
+##     (PantheonReport).
+##   * Act IV, Mount Olympus: --spawn= with its kinds (centaur_archer, amazon,
+##     gorgon, moon_hound, sea_serpent) and its gods (ares, artemis, poseidon;
+##     any stage), --boss=zeus, --character=oathbreaker; the "olympus",
+##     "pantheon trial", "olympus kinds", "wrath called" and "zeus" lines
+##     (OlympusReport, through PantheonReport), and on every stage the
+##     "stolen thunder" / "grounded bones" lines when used.
+##   * Act V, the Shogunate of the Rising Sun (GDD §15.0 "Act V foundation
+##     (phase 1)"): --stage=province|kurogane|sun_road, --spawn= with its kinds
+##     (ashigaru, samurai, teppo_gunner, ninja, onryo, oni), --boss=kage|
+##     shogun|amaterasu. The bot steps out of flashing Draw lines
+##     (ShogunateRules.danger_push()) and the oni's raised club (its kit's
+##     danger_push()). When the Shogunate ran, the summary adds the "sun's
+##     course", "the draw", "from the shadows", "shogunate kinds" and (on an
+##     Act V stage) "shogunate stage" lines (ShogunateReport).
+##   * Act VI, the Inferno (GDD §15.0 "Act VI foundation (phase 1)"):
+##     --stage=burning_gate|silk_palace|pandemonium, --spawn= with its kinds
+##     (damned, imp, hell_knight, succubus, demon_brute, demon_portal),
+##     --boss=moloch|lilith|morning_star. The bot steps out of the Hell Pits and
+##     their glowing rims and the Adversary's grabs (InfernoRules.danger_push())
+##     and the kits' telegraphs (the knight's sweep, the brute's slam), and it
+##     SEALS portals (its one sealing behaviour, _seal_vector(): it walks into a
+##     portal's ring and stays there when its army holds and it is calm). When
+##     the Inferno ran, the summary adds the "hell pits", "portals",
+##     "temptation", "inferno kinds", "last judgment" (after 0:00) and (on an
+##     Act VI stage) "inferno stage" lines (InfernoReport).
+##   * Act VII, the Sanguine Court (GDD §15.0 "Act VII foundation (phase 1)"):
+##     --stage=ravensmoor|witchwood|castle_sanguis, --spawn= with its kinds
+##     (blood_thrall, vampire_bat, blood_knight, werewolf, vampire_noble,
+##     court_coffin), --boss=vargr|isolde|carmilla. The bot steps off the
+##     beast's lunge mark (its kit's danger_push()) and, on an Act VII stage,
+##     SAVES Dread Rally for the Blood Moon (_rally_wanted(): spent while the
+##     moon is up, held while it rises within COURT_RALLY_SAVE s unless the
+##     necromancer is in danger; CourtRules.rally_hint()). When the Court ran,
+##     the summary adds the "bloodfeast", "night wings", "blood moon", "court
+##     kinds", "endless feast" (after 0:00) and (on an Act VII stage) "court
+##     stage" lines (CourtReport).
+##   * Act VIII, the Last Line (GDD §15.0 "Act VIII foundation (phase 1)"):
+##     --stage=skid_row|fort_kessler|liberty_heights, --spawn= with its kinds
+##     (civilian, street_thug, gang_gunner, riot_cop, squad_car, swat_breacher,
+##     field_medic, rifleman, tank, blitz, city_wreck; Skid Row's armoured_limo,
+##     big_sal, bounty_board), --boss=don_marrow|harrow|paragon. The bot keeps out of the vehicles'
+##     headlight lanes and the landing circles (CityRules.danger_push()) and off
+##     Blitz's crouched line (his kit's danger_push()), never flees from a
+##     civilian, and on a city-block layout slides along the building faces
+##     instead of pinning against them (CityBlocks.steer(), the one bot
+##     steering). When the Last Line ran, the summary adds the "city blocks",
+##     "armour", "supers", "civilians", "escalation", "city kinds", "martial
+##     law" (after 0:00) and (on an Act VIII stage) "city stage" lines
+##     (CityReport).
+##   * Act IX, the Concord of Stars (GDD §15.0 "Act IX foundation (phase 1)"):
+##     --stage=crash_site|proving_moon|ark, --spawn= with its kinds
+##     (broodling, grey_drone, saucer, vrask_hunter, lumen_sentinel, prism,
+##     concord_terraformer), --boss=hive_mother|vrask_tal|harvester. The bot
+##     steps sideways out of the aiming lines and live beams
+##     (ConcordRules.danger_push(), the one beam behaviour). When the Concord
+##     ran, the summary adds the "beams", "abduction", "terraforming", "concord
+##     kinds", "final harvest" (after 0:00) and (on an Act IX stage) "concord
+##     stage" lines (ConcordReport).
+##     The Crash Site (phase 2) adds the kinds burrower, acid_spitter,
+##     brood_egg, brood_matriarch; the bot also steps off a Burrower's mound,
+##     the Hive Mother's mound and the acid puddles and landing circles; the
+##     "crash site", "burrowers", "acid", "brood matriarch" and "hive mother"
+##     lines (CrashSiteReport), and "act IX spell" / "act IX passives" when
+##     Bone Beetles, Chitin or Anchored was taken.
 class_name Autotest
 extends Node
 
@@ -199,6 +275,30 @@ const SANCTUM_SEEK_POLICIES := ["army", "summon", "evolve"]
 ## Summons the bot needs before it walks to the Citadel's gate generators and
 ## turrets (a starting army of four walked into a gate's guns and died).
 const CITADEL_SEEK_ARMY: int = 12
+# --- Act VI: the Inferno ---
+## Summons the bot needs before it walks into a demon portal's ring to seal it
+## ("when its army holds").
+const INFERNO_SEAL_ARMY: int = 8
+## Least share (0..1) of its max HP the bot needs to start a seal.
+const INFERNO_SEAL_HP: float = 0.5
+## Radius (px) in which the bot looks for a portal to seal.
+const INFERNO_SEAL_RADIUS: float = 700.0
+## Weight of the walk into a portal's ring in the autopilot mix (it must hold
+## its ground there against the flee push for the 3 s of the seal).
+const INFERNO_SEAL_WEIGHT: float = 2.2
+## Crowd pressure (the flee vector's length) above which the bot does not set
+## out for a portal ...
+const INFERNO_SEAL_PRESSURE: float = 0.9
+## ... and above which it gives up a seal at the ring.
+const INFERNO_SEAL_PRESSURE_NEAR: float = 2.5
+## "At the ring": within this x the seal radius of the portal's centre.
+const INFERNO_SEAL_NEAR: float = 1.6
+## x the pull while at the ring (it holds its ground through the pour).
+const INFERNO_SEAL_HOLD: float = 2.0
+# --- Act VII: the Sanguine Court ---
+## Seconds before a Blood Moon's rise within which the bot holds a full Dread
+## Rally meter for the moon (unless the necromancer is in danger).
+const COURT_RALLY_SAVE: float = 45.0
 ## Distance (px) at which the autopilot starts steering off obstacles.
 const OBSTACLE_LOOK: float = 22.0
 ## Game seconds between stuck-unit samples.
@@ -335,6 +435,8 @@ var _boss_death_time: float = -1.0
 var _reckoning_time: float = -1.0
 ## Peak simultaneous entity counts.
 var _peak: Dictionary = {"enemies": 0, "summons": 0, "projectiles": 0, "effects": 0, "crystals": 0}
+## Promo clips (--movie-spans): the span controller, null when the option is off.
+var _movie: MovieSpans = null
 ## Real-time start (ms) for the wall-clock duration line.
 var _real_start_msec: int = 0
 ## Necromancer max HP at the first step (after Soul Ash upgrades and the
@@ -393,6 +495,9 @@ var _new_offers: int = 0
 var _new_later_offers: int = 0
 ## Hands that held at least one later-item NEW card.
 var _hands_with_later: int = 0
+## Demo line: NEW cards offered this run whose item is not in the demo
+## (DemoMode.item_in_demo(); 0 in every demo run).
+var _full_game_offers: int = 0
 ## Distinct later items offered at least once (id -> true).
 var _later_seen: Dictionary = {}
 ## Highest Profane Pact level seen so far.
@@ -511,6 +616,10 @@ func _ready() -> void:
 	Engine.time_scale = speed
 	Engine.physics_ticks_per_second = int(roundf(60.0 * speed))
 	Engine.max_physics_steps_per_frame = maxi(8, int(ceilf(8.0 * speed)))
+	if GameState.autotest_movie_spans != "":
+		_movie = MovieSpans.new()  # Promo clips: x1 only inside the listed spans (opt-in).
+		add_child(_movie)
+		_movie.setup(GameState.autotest_movie_spans, speed)
 	_real_start_msec = Time.get_ticks_msec()
 	for _i in TIME_MARKS.size():
 		_level_at_mark.append(-1)
@@ -546,7 +655,7 @@ func _apply_forced_classes() -> void:
 	for cls: String in _classes():
 		if int(game.horde.class_levels[cls]) > 0:
 			continue
-		if game.abilities.active_count() >= PlayerData.ACTIVE_SLOTS:
+		if game.abilities.active_count() >= game.abilities.active_slots():
 			print("[autotest] forced class %s skipped: no active slot left" % cls)
 			continue
 		game.horde.set_class_level(cls, 1)
@@ -556,6 +665,12 @@ func _apply_forced_classes() -> void:
 
 ## Called by Game after each simulation step.
 func step(delta: float) -> void:
+	if _movie != null:
+		_movie.apply_view(game)
+	if _movie != null and _movie.update(game.elapsed):
+		print("[movie] all spans done")
+		get_tree().quit(0)
+		return
 	if not _forced_done:
 		_apply_forced_classes()
 	while _next_spawn < _spawns.size() and game.elapsed >= float(_spawns[_next_spawn]["time"]):
@@ -696,8 +811,12 @@ func _count_stuck(label: String, detail: String) -> void:
 
 
 ## True when a summon is trying to get somewhere (not idling in formation,
-## casting or fighting in reach).
+## casting or fighting in reach). A stunned summon (CombatResolver.stun_unit():
+## Grey Overseer pulses, Gorgons, ...) cannot move, so it never counts: a pack
+## of Overseers chain-stunning the ring is not a pathing fault.
 func _summon_wants_move(u: SummonedUnit) -> bool:
+	if u.stunned_until > game.elapsed:
+		return false
 	match u.state:
 		SummonedUnit.State.RETURNING, SummonedUnit.State.RETREATING, SummonedUnit.State.REPOSITIONING:
 			return true
@@ -787,6 +906,8 @@ func _count_offers(offers: Array[Dictionary]) -> void:
 			continue
 		_new_offers += 1
 		var id := String(o["id"])
+		if not DemoMode.item_in_demo(id):
+			_full_game_offers += 1  # Demo line: a full-game card was offered.
 		var later := false  # The item is flagged "shared_card_pool" in its data.
 		match kind:
 			"spell": later = bool(AbilityData.SPELLS[id].get("shared_card_pool", false))
@@ -1002,7 +1123,7 @@ func _forced_slots_short(kind: String) -> bool:
 			missing += 1
 	if missing == 0:
 		return false
-	var free := (PlayerData.PASSIVE_SLOTS - ab.passive_count()) if passive else (PlayerData.ACTIVE_SLOTS - ab.active_count())  # Free slots.
+	var free := (PlayerData.PASSIVE_SLOTS - ab.passive_count()) if passive else (ab.active_slots() - ab.active_count())  # Free slots (relics may add an active one).
 	return free <= missing + FORCED_SPARE_SLOTS
 
 
@@ -1077,10 +1198,22 @@ func _danger_at(pos: Vector2) -> Vector2:
 		danger += game.enemies.archive_haz.danger_push(pos)  # Act II: pages, spore clouds, ink (null elsewhere).
 	if game.empire != null:
 		danger += game.empire.danger_push(pos)  # Act III: Lock-On lines, orbital strikes (null elsewhere).
+	if game.pantheon != null:
+		danger += game.pantheon.danger_push(pos)  # Act IV: bolt circles, fissures (null elsewhere).
+	if game.shogunate != null:
+		danger += game.shogunate.danger_push(pos)  # Act V: flashing Draw lines (null elsewhere).
+	if game.inferno != null:
+		danger += game.inferno.danger_push(pos)  # Act VI: the Hell Pits, the Adversary's grabs (null elsewhere).
 	if game.enemies.assembly != null:
 		danger += game.enemies.assembly.danger_push(pos)  # Act III, the Assembly Halls: glowing / burning furnace channels.
 	if game.enemies.citadel != null:
 		danger += game.enemies.citadel.danger_push(pos)  # Act III, the Iron Citadel: laser grids (null elsewhere).
+	if game.enemies.underworld != null:
+		danger += game.enemies.underworld.danger_push(pos)  # Act IV, the Asphodel Underworld: out of the Styx (null elsewhere).
+	if game.city != null:
+		danger += game.city.danger_push(pos)  # Act VIII: headlight lanes, landing circles (null elsewhere).
+	if game.concord != null:
+		danger += game.concord.danger_push(pos)  # Act IX: aiming lines and live beams (null elsewhere).
 	return danger
 
 
@@ -1129,6 +1262,11 @@ func _rally_wanted() -> bool:
 	var h := game.horde
 	if h.player_in_danger or (game.enemies.boss != null and game.enemies.boss.active):
 		return true
+	# --- Act VII: the Sanguine Court --- save it for the Blood Moon (null elsewhere).
+	if game.court != null:
+		var hint := game.court.rally_hint(COURT_RALLY_SAVE)  # 1 spend, 0 hold, -1 no opinion.
+		if hint >= 0:
+			return hint == 1
 	var alive := 0  # Living permanent summons.
 	var hp_frac := 0.0  # Sum of their HP fractions.
 	for u in h.units:
@@ -1148,8 +1286,8 @@ func get_move_vector() -> Vector2:
 	var away := Vector2.ZERO
 	game.enemy_grid.query(p, FLEE_RADIUS, _tmp)
 	for e: Enemy in _tmp:
-		if not e.active:
-			continue
+		if not e.active or e.civilian:
+			continue  # (Act VIII: a civilian is harmless, never fled from.)
 		var diff := p - e.position
 		var d := maxf(diff.length(), 1.0)
 		away += diff / d * (1.0 - d / FLEE_RADIUS)
@@ -1169,10 +1307,22 @@ func get_move_vector() -> Vector2:
 		danger += game.enemies.archive_haz.danger_push(p)  # Act II: pages, spore clouds, ink (null elsewhere).
 	if game.empire != null:
 		danger += game.empire.danger_push(p)  # Act III: Lock-On lines, orbital strikes (null elsewhere).
+	if game.pantheon != null:
+		danger += game.pantheon.danger_push(p)  # Act IV: bolt circles, fissures (null elsewhere).
+	if game.shogunate != null:
+		danger += game.shogunate.danger_push(p)  # Act V: flashing Draw lines (null elsewhere).
+	if game.inferno != null:
+		danger += game.inferno.danger_push(p)  # Act VI: the Hell Pits, the Adversary's grabs (null elsewhere).
 	if game.enemies.assembly != null:
 		danger += game.enemies.assembly.danger_push(p)  # Act III, the Assembly Halls: glowing / burning furnace channels.
 	if game.enemies.citadel != null:
 		danger += game.enemies.citadel.danger_push(p)  # Act III, the Iron Citadel: laser grids (null elsewhere).
+	if game.enemies.underworld != null:
+		danger += game.enemies.underworld.danger_push(p)  # Act IV, the Asphodel Underworld: out of the Styx (null elsewhere).
+	if game.city != null:
+		danger += game.city.danger_push(p)  # Act VIII: headlight lanes, landing circles (null elsewhere).
+	if game.concord != null:
+		danger += game.concord.danger_push(p)  # Act IX: aiming lines and live beams (null elsewhere).
 	var objective := Vector2.ZERO
 	# Walk to shrines any time, to graves under consecration only when calm.
 	var goal := game.enemies.stage.seek_point(p, OBJECTIVE_SEEK_RADIUS, away.length() < 0.2)
@@ -1201,6 +1351,9 @@ func get_move_vector() -> Vector2:
 	if goal == Vector2.INF and game.enemies.citadel != null and away.length() < 0.3 and GameState.autotest_policy in SANCTUM_SEEK_POLICIES \
 			and game.horde.units.size() >= CITADEL_SEEK_ARMY:
 		goal = game.enemies.citadel.seek_point(p, OBJECTIVE_SEEK_RADIUS)  # The Iron Citadel: gate generators, then turrets, when calm and the army can take them.
+	# --- Act IV: the Shores of Ilion ---
+	if goal == Vector2.INF and game.enemies.ilion != null and away.length() < 0.2 and policy() in SANCTUM_SEEK_POLICIES:
+		goal = game.enemies.ilion.seek_point(p, OBJECTIVE_SEEK_RADIUS)  # The Shores of Ilion: burn the siege towers when calm.
 	if game.enemies.boss is BossVhalneth and game.enemies.boss.active:
 		# Vhal'Neth never walks: go and fight her arms, then her face (every policy).
 		var at := (game.enemies.boss as BossVhalneth).approach_point(p)
@@ -1216,12 +1369,22 @@ func get_move_vector() -> Vector2:
 		danger += game.enemies.sinking.danger_push(p) * 0.5  # Ul-Thalos: keep off the shore the sea is about to take.
 	if goal != Vector2.INF:
 		objective = (goal - p).normalized()
+	# --- Act VI: the Inferno ---
+	if game.inferno != null:
+		var seal := _seal_vector(p, away.length())  # Into a demon portal's ring (zero when not sealing).
+		if seal != Vector2.ZERO:
+			objective = seal * INFERNO_SEAL_WEIGHT
 	var avoid := game.arena.avoid_vector(p, game.player.radius, OBSTACLE_LOOK)
 	var wander := Vector2.from_angle(game.elapsed * 0.3) * 0.35
 	var loot := _loot_vector(p, away.length())  # Toward a nearby chest / drop when safe.
+	var mv: Vector2  # The mixed move.
 	if game.coop != null:
-		return _coop_move(away, toward, objective, danger, avoid, wander, loot)
-	return (away * 1.5 + toward * 1.2 + objective * 1.0 + danger * 3.0 + avoid * 1.5 + wander + loot * 1.4).limit_length(1.0)
+		mv = _coop_move(away, toward, objective, danger, avoid, wander, loot)
+	else:
+		mv = (away * 1.5 + toward * 1.2 + objective * 1.0 + danger * 3.0 + avoid * 1.5 + wander + loot * 1.4).limit_length(1.0)
+	if game.arena.city_blocks != null:
+		mv = game.arena.city_blocks.steer(p, mv, game.player.radius)  # Act VIII: slide along the building faces.
+	return mv
 
 
 ## Co-op autopilot mix (--coop-bot): the solo mix, plus a walk to a downed
@@ -1237,6 +1400,31 @@ func _coop_move(away: Vector2, toward: Vector2, objective: Vector2, danger: Vect
 	var cohesion := co.cohesion_vector(p) * CoopData.BOT_COHESION_WEIGHT
 	var w := wander if slot == 0 else -wander
 	return (away * 1.5 + toward * 1.2 + objective * 1.0 + danger * 3.0 + avoid * 1.5 + w + loot * 1.4 + revive + cohesion).limit_length(1.0)
+
+
+# --- Act VI: the Inferno ---
+## The bot's ONE sealing behaviour (Act VI, DemonPortals): a pull toward the
+## centre of the nearest demon portal within INFERNO_SEAL_RADIUS px when its
+## army holds (INFERNO_SEAL_ARMY summons), its HP is at least INFERNO_SEAL_HP
+## and the crowd `pressure` is low (at the ring it holds on through more
+## pressure, with a stronger pull, for the 3 s of the seal). Zero otherwise
+## (and for every policy that does not seek objectives).
+func _seal_vector(p: Vector2, pressure: float) -> Vector2:
+	if not policy() in SANCTUM_SEEK_POLICIES or game.horde.units.size() < INFERNO_SEAL_ARMY:
+		return Vector2.ZERO
+	if game.player.hp < game.player.max_hp * INFERNO_SEAL_HP:
+		return Vector2.ZERO
+	var at := game.inferno.seal_point(p, INFERNO_SEAL_RADIUS)
+	if at == Vector2.INF:
+		return Vector2.ZERO
+	var to := at - p
+	var d := to.length()
+	var near := d < float(game.inferno.portals.cfg["seal_radius"]) * INFERNO_SEAL_NEAR  # At (or in) the ring: hold on.
+	if pressure > (INFERNO_SEAL_PRESSURE_NEAR if near else INFERNO_SEAL_PRESSURE):
+		return Vector2.ZERO
+	if d < 6.0:
+		return Vector2.ZERO
+	return to / d * (INFERNO_SEAL_HOLD if near else 1.0)
 
 
 ## Unit vector toward the nearest chest (within ChestData.AUTOTEST_SEEK_RADIUS,
@@ -1320,7 +1508,16 @@ func finish(summary: Dictionary) -> void:
 	if game.claims != null:
 		print("[autotest] claims: %s" % game.claims.summary_line())  # Act II Claims (EyeClaims; Act II stages only).
 	EmpireReport.print_lines(game, st_all)  # Act III: line of fire, lock-on, steel, purge protocol, kinds, the stage (only when the Empire ran).
+	PantheonReport.print_lines(game, st_all)  # Act IV: divine wrath, phalanx, glory, kinds, the stage (only when the Pantheon ran).
+	ShogunateReport.print_lines(game, st_all)  # Act V: the sun's course, the draw, from the shadows, kinds, the stage (only when the Shogunate ran).
+	InfernoReport.print_lines(game, st_all)  # Act VI: hell pits, portals, temptation, kinds, the last judgment, the stage (only when the Inferno ran).
+	CourtReport.print_lines(game, st_all)  # Act VII: bloodfeast, night wings, blood moon, kinds, the endless feast, the stage (only when the Court ran).
+	CityReport.print_lines(game, st_all)  # Act VIII: city blocks, armour, supers, civilians, escalation, kinds, martial law, the stage (only when the Last Line ran).
+	ConcordReport.print_lines(game, st_all)  # Act IX: beams, abduction, terraforming, the final harvest, kinds, the stage (only when the Concord ran).
 	WastesReport.print_items(game, st_all)  # Act III, the Scrap Wastes: Death Ray and its passives (only when taken).
+	IlionReport.print_items(game, st_all)  # Act IV, the Shores of Ilion: Paris's Arrow and its passives (only when taken).
+	# --- Act V: the Burning Province ---
+	ProvinceReport.print_items(game, st_all)  # Hundred Shadows and its passives (only when taken).
 	print("[autotest] gravebow / bone colossus: %s | %s" % [GravebowKit.summary_line(st_all), ColossusKit.summary_line(st_all)])
 	print("[autotest] necro spells: %s" % ab.spells.summary_line())
 	print("[autotest] later spells: %s" % ab.spells.later_summary_line())
@@ -1370,6 +1567,32 @@ func finish(summary: Dictionary) -> void:
 	SpireReport.print_all(game, st)  # Act II, Ul-Thalos: the sinking, pillars, kinds, Vhal'Neth, the Waking, its items (only when they ran).
 	AssemblyReport.print_items(game, st)  # Act III, the Assembly Halls: Hollow Puppet, the Grave Drone, their passives, Signal Ghost (only when owned).
 	CitadelReport.item_lines(game, st)  # Act III, the Iron Citadel: Scrap Swarm, the Iron Revenant (only when used; the stage's own lines are EmpireReport's).
+	OlympusReport.item_lines(game, st)  # Act IV, Mount Olympus: Stolen Thunder, Grounded Bones (only when used; the stage's own lines are PantheonReport's).
+	UnderworldReport.item_lines(game, st)  # Act IV, the Asphodel Underworld: River Styx, the Myrmidon Shades (only when used; the stage's own lines are PantheonReport's).
+	SunRoadReport.item_lines(game, st)  # Act V, the Road to the Sun: Black Sun, the Bound Oni (only when used; the stage's own lines are ShogunateReport's).
+	KuroganeReport.item_lines(game, st)  # Act V, Castle Kurogane: Banner of the Dead, Warlord's Seal, Unbending (only when taken; the stage's own lines are ShogunateReport's).
+	# --- Act VI: the Burning Gate ---
+	BurningGateReport.item_lines(game, st)  # Brimstone, Furnace Heart, Salt Circle (only when taken; the stage's own lines are InfernoReport's).
+	SilkPalaceReport.item_lines(game, st)  # Act VI, the Palace of Silk and Ash: Temptation, the Succubus, Faithless (only when taken; the stage's own lines are InfernoReport's).
+	PandemoniumReport.item_lines(game, st)  # Act VI, Pandemonium: Fall from Grace, the Archfiend (only when used; the stage's own lines are InfernoReport's).
+	# --- Act VII: Ravensmoor ---
+	RavensmoorReport.item_lines(game, st)  # Moonfang, Pack Blood, Silver Bones (only when taken; the stage's own lines are CourtReport's).
+	# --- Act VII: the Witchwood ---
+	WitchwoodReport.item_lines(game, st)  # Hex Circle, Moonlit Rite, Embalmed (only when taken; the stage's own lines are CourtReport's).
+	# --- Act VII: Castle Sanguis ---
+	CastleSanguisReport.item_lines(game, st)  # Night Swarm, Old Blood, the Blood Spawn, Thirst Eternal (only when used; the stage's own lines are CourtReport's).
+	# --- Act VIII: Skid Row ---
+	SkidRowReport.item_lines(game, st)  # Hearse Run, Black Car, Kevlar Bones (only when taken; the stage's own lines are CityReport's).
+	# --- Act VIII: Fort Kessler ---
+	FortKesslerReport.item_lines(game, st)  # Bone Mines, Tripwire, Armour-Piercing Bones (only when taken; the stage's own lines are CityReport's).
+	# --- Act VIII: Liberty Heights ---
+	LibertyHeightsReport.item_lines(game, st)  # Hero's Fist, Secret Identity, the Fallen Hero, Origin Story (only when used; the stage's own lines are CityReport's).
+	# --- Act IX: the Crash Site ---
+	CrashSiteReport.item_lines(game, st)  # Bone Beetles, Chitin, Anchored (only when taken; the stage's own lines are ConcordReport's).
+	# --- Act IX: the Proving Moon ---
+	ProvingMoonReport.item_lines(game, st)  # Soul Caster, Trophy Rack, Mirror Bones (only when taken; the stage's own lines are ConcordReport's).
+	# --- Act IX: the Ark ---
+	ArkReport.item_lines(game, st)  # Tractor Beam, Starseed, the Ghost Saucer, Crop Circles (only when used; the stage's own lines are ConcordReport's).
 	if game.enemies.boss is BossSeraphine:
 		print("[autotest] seraphine: %s" % BossSeraphine.summary_line(st))
 	var fired := game.enemies.stage.fired
@@ -1394,6 +1617,7 @@ func finish(summary: Dictionary) -> void:
 	_print_soul_ash(summary)
 	_print_hyper_skins(summary)
 	RewardsReport.print_line(self, summary)  # Content wave 2: achievement rewards.
+	print("[autotest] demo: %s" % DemoMode.summary_line(_full_game_offers))  # Demo mode (DemoMode): read only.
 	print("[autotest] feedback: %s" % FeedbackReport.summary_line(game, summary))  # Feedback buttons: three sample reports built, nothing opened.
 	if game.coop != null:
 		game.coop.print_report()  # --coop-bot: a line per slot and the coop line (CoopSession).
@@ -1705,10 +1929,73 @@ func _print_powerups(summary: Dictionary) -> void:
 		int(ash.get("pact_bonus", 0)), int(ash.get("oath_bonus", 0))])
 
 
+## Ossuary deep levels: the run's upgrade levels against the whole Ossuary (the
+## Profane Oath left out, like the profiles): levels owned, of them the gated
+## ones (above MetaData.UNGATED_MAX_TIER), and their Soul Ash price.
+func _print_ossuary_totals() -> void:
+	var owned := 0  # Levels owned.
+	var deep := 0  # Of them above level 5 (the difficulty-gated levels).
+	var deep_total := 0  # Gated levels in the whole Ossuary.
+	var cost := 0  # Soul Ash price of the owned levels.
+	for id: String in MetaData.UPGRADE_ORDER:
+		if id == PactData.OATH_ID:
+			continue
+		var t := int(game.meta.tiers.get(id, 0))  # This upgrade's level.
+		owned += t
+		deep += maxi(0, t - MetaData.UNGATED_MAX_TIER)
+		deep_total += maxi(0, MetaData.max_tier(id) - MetaData.UNGATED_MAX_TIER)
+		cost += MetaData.cost_up_to(id, t)
+	var all_cost := MetaData.max_total_cost() - MetaData.cost_up_to(PactData.OATH_ID, MetaData.max_tier(PactData.OATH_ID))  # Whole Ossuary, Oath excluded.
+	print("[autotest] ossuary: levels %d / %d owned (levels 6-10: %d / %d) | soul ash %d / %d" % [
+		owned, MetaData.total_tiers(), deep, deep_total, cost, all_cost])
+
+
+## Ossuary new options (expansion step 3): what each one did this run (only with
+## upgrades, like the line above).
+func _print_ossuary_options() -> void:
+	var st := game.stats
+	print("[autotest] ossuary options: bone reserve %d barrier HP | presence +%d%% (%d classes) | echoes from Lv %d | dark tithe +%.0f meter | last rites %d | grave ward %d blocked | gilded %d draws, %d swaps | elite bounty +%d ash | head start %d | vanguard %d | patient grave %d rerolls" % [
+		int(st.get("bone_reserve_barrier", 0.0)), int(roundf(game.meta.value("presence_damage") * float(game.horde.distinct_classes()) * 100.0)),
+		game.horde.distinct_classes(), maxi(1, VolleyData.LEVEL_ON - game.meta.int_value("echo_levels")),
+		float(st.get("dark_tithe_points", 0.0)), int(st.get("last_rites_fired", 0.0)), int(st.get("grave_ward_blocks", 0.0)),
+		int(st.get("gilded_draws", 0.0)), int(st.get("gilded_swaps", 0.0)),
+		floori(float(st.get("elite_kills", 0.0)) * game.meta.value("elite_ash")), int(st.get("head_start_levels", 0.0)),
+		int(st.get("vanguard_raises", 0.0)), int(st.get("patient_grave_rerolls", 0.0))])
+## Ossuary Masteries (expansion step 4): the run's Mastery levels against all of them.
+func _print_mastery_line() -> void:
+	var levels := 0  # Mastery levels owned.
+	var cost := 0  # Soul Ash price of the owned levels.
+	for cls: String in MasteryData.CLASSES:
+		var lv := int(game.meta.masteries.get(cls, 0))  # This class's level.
+		levels += lv
+		cost += MasteryData.cost_up_to(lv)
+	print("[autotest] masteries: %d / %d levels owned | soul ash %d / %d | %s" % [
+		levels, MasteryData.CLASSES.size() * MasteryData.MAX_LEVEL, cost, MasteryData.total_cost(), game.meta.describe_masteries()])
+
+
+## Relics and Grave Offerings (GDD §15.0 "Relics and Grave Offerings"): what the
+## run equipped and what the relic hooks did (rerolls from the Bone Abacus, Grave
+## Feasts from Mourner's Bell, Gilded Coffer chests, extra active slots, the
+## chest bonus, the meter's start and the max HP multiplier).
+func _print_rites() -> void:
+	var m := game.meta  # The bound (solo) player's modifiers.
+	print("[autotest] rites: %s | active slots %d | chest +%d | meter start %d%%, charge x%.2f | max HP x%.2f | relic rerolls %d | relic feasts %d | offering chests %d" % [
+		m.rites.describe(), game.abilities.active_slots(), m.relic_int("chest_bonus"),
+		roundi(clampf(m.relic("ult_start"), 0.0, 1.0) * 100.0), game.dread_rally.charge_mult, m.relic("max_hp_mult"),
+		int(game.stats.get("relic_rerolls", 0.0)), int(game.stats.get("relic_feasts", 0.0)), int(game.stats.get("offering_chests", 0.0))])
+
+
 ## Prints the meta profile and the run's Soul Ash award (Meta.award_run()).
 func _print_soul_ash(summary: Dictionary) -> void:
 	print("[autotest] meta upgrades (--meta=%s): %s | revivals used: %d" % [
 		GameState.autotest_meta, game.meta.describe(), int(game.stats.get("revivals", 0.0))])
+	if not game.meta.is_empty():
+		_print_ossuary_totals()  # Only with upgrades: the default (--meta=none) summary keeps its lines.
+		_print_ossuary_options()
+	if not game.meta.masteries.is_empty():
+		_print_mastery_line()  # Only with Masteries (--meta=max): the other summaries keep their lines.
+	if not game.meta.rites.is_empty():
+		_print_rites()  # Relics / offering only (the default summary keeps its lines).
 	var ash: Dictionary = summary.get("soul_ash", {})
 	if ash.is_empty():
 		return
@@ -1760,6 +2047,14 @@ func _print_hyper_skins(summary: Dictionary) -> void:
 		int(st.get("rot_kills", 0.0)), int(st.get("kill_high_confessor", 0.0)), 1 if float(st.get("boss_kill_full_army", 0.0)) > 0.0 and String(summary.get("boss_id", "")) == HyperData.UNLOCK_BOSS_ID and bool(summary["boss_defeated"]) else 0,
 		int(float(Meta.lifetime.get("rot_kills", 0.0))), int(float(Meta.lifetime.get("high_confessor_kills", 0.0))), int(float(Meta.lifetime.get("seraphine_kills_full_army", 0.0))),
 		Meta.unlocked_skin_ids().size(), SkinData.all_ids().size(), ", ".join(new_skins) if not new_skins.is_empty() else "none", cards])
+	var rc := String(summary.get("recolour_id", ""))  # Worn skin recolour ("" = none; the line only prints when one is forced, so default runs print nothing new).
+	if rc != "":
+		var rkey := String(SkinData.skin(skin).get("sprite", "")) if skin != "" else SkinData.base_sprite(String(summary.get("character_id", CharacterData.DEFAULT_ID)))  # Sprite remapped.
+		var rtex := SpriteBank.texture(rkey)  # The original art (null without it).
+		var rre := Recolour.texture(rtex, rkey, rc) if rtex != null else null  # The recoloured art.
+		print("[autotest] recolours: %s (%s, from caskets) worn on %s | art %s: %s | %d recolours x %d skins, a casket %d Soul Ash" % [
+			RecolourData.display_name(rc), CasketLedger.recolour_tier(rc), skin if skin != "" else "the default look", rkey,
+			"remapped" if rre != null and rre != rtex else "no art, drawn unchanged", RecolourData.ORDER.size(), SkinData.all_ids().size(), CasketData.PRICE])
 
 
 ## Shadow Bolt damage stat with `prefix` ("dmg_" / "bossdmg_"), including the

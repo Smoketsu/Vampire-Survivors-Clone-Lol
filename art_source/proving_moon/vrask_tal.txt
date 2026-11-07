@@ -1,0 +1,13 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, a towering hunter's stance, weight forward, a long glaive held across the body in both hands
+
+LOW-RESOLUTION pixel art: the whole figure is only 84 pixels tall, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims, lacing or engravings.
+
+Subject: VRASK'TAL, THE HUNT-LORD, a MALE reptilian alien warlord (a boss), the same race as the attached Vrask hunter but bigger, broader and older: a tall lizard-man with a teal-scaled snout and a tall crest of dark horns, yellow slit eyes, scars on his snout; heavy dark gunmetal armour with teal trim on his shoulders, chest and legs; a long tattered cloak of shimmering teal scales from his shoulders; a heavy PLASMA CASTER on his left shoulder with a magenta lamp; a WRIST BOMB on his left forearm (a gunmetal bracer with a small red-magenta light); a long two-handed GLAIVE with a broad pale curved blade; and a BELT OF SMALL SKULLS hung around his waist (alien trophy skulls in weathered yellow-grey). A broad male warrior. Never violet or purple (violet is the player's colour).
+Signature shape that must read in silhouette: the horned lizard head, the shoulder caster, the skull belt and the long glaive.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: scales teal #1B5C4E #2A8F7A #5CC2AA; armour gunmetal #1E242C #3A424C #5A6470; cloak teal #1B5C4E #2A8F7A with glints #5CC2AA; horns #2B2F36; caster lamp and bomb light magenta #FF2FB8; glaive blade hull white #AEB8C4 #E8ECF0; trophy skulls weathered yellow-grey #8C8466 #C8BE96 #E0D2B0; eyes #FFE9A0
+
+Outline: a clean 1-pixel dark outline around the whole figure in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the subject), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark. Draw ONLY ONE figure.
+Attached: (1) a game sprite of his race (the Vrask hunter) for pixel size, outline weight, the flat look and the colours; (2) concept art of the Vrask hunter for the costume only (do NOT copy its detail level or painted shading).

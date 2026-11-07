@@ -30,7 +30,13 @@
 ##                         Pact below every card, fallbacks included).
 ##   --meta=PROFILE        Autotest Soul Ash upgrades, applied in memory only:
 ##                         "none" (default, no upgrades), "mid" or "max"
-##                         (MetaData.AUTOTEST_PROFILES).
+##                         (MetaData.AUTOTEST_PROFILES; "max" = every level,
+##                         the gated deep levels 6-10 included).
+##   --relics=a,b          Autotest relics equipped (RelicData ids, at most
+##                         RelicData.MAX_SLOTS; owning them is not needed;
+##                         default none, --meta=max equips
+##                         RelicData.AUTOTEST_MAX_RELICS).
+##   --offering=ID         Autotest Grave Offering (OfferingData id; nothing paid).
 ##   --meta-save           Test flag: lets the autotest read and write
 ##                         user://save.cfg (by default it never touches it).
 ##   --oath=N              Autotest active Profane Oath tier 0-5 (default 0;
@@ -78,6 +84,9 @@
 ##   --skin=ID             Autotest skin (SkinData id, e.g. dread_sovereign
 ##                         or gravecaller_hyper), forced for screenshots:
 ##                         ignores the unlock and the character. Cosmetic.
+##   --recolour=ID         Autotest skin recolour (RecolourData id, e.g. blood
+##                         or gilded) drawn on the worn skin, forced for
+##                         screenshots: ignores ownership. Cosmetic.
 ##   --synergies=off       Autotest A/B switch: no army synergy (the four
 ##                         original ones and the newer classes') ever
 ##                         activates (default on).
@@ -115,6 +124,13 @@
 ##                         open path can be tried with a dummy link before the
 ##                         owner's form exists. Never opens anything under the
 ##                         autotest (its summary only reports url_set=true).
+##   --demo                Demo mode (DemoMode, DemoData; GDD §15.0 "Demo mode
+##                         (owner request, Nov 2026)"), as in a build exported
+##                         with the `demo` feature tag: only the demo's acts
+##                         (Act I) are playable and no full-game item is ever
+##                         offered. Works with or without --autotest (a desktop
+##                         preview of the demo's menus); an autotest --stage=
+##                         outside the demo falls back to the Graveyard.
 ##   --feedback-entry=ID   Debug: the form's prefill field id (e.g.
 ##                         entry.123456789) instead of FeedbackData.DETAILS_ENTRY.
 ##   --coop-bot            Online co-op without the network (docs/coop/DESIGN.md):
@@ -169,6 +185,16 @@
 ##                         walk / idle strips, icons, effect strips, markers, decals) and
 ##                         prints them sorted with counts at the end ("[art-miss]" lines).
 ##                         Only meaningful in a window (headless skips _draw). Drawing only.
+##   --movie-spans=T:N,... Promo clips (MovieSpans; needs a window and --write-movie): the run
+##                         fast-forwards with drawing off and plays at x1 only for N game
+##                         seconds from each game second T, printing `[movie] span` frame
+##                         marks that tools/make_promo_clip.py uses to cut the AVI.
+##   --capture-scale=N     With --movie-spans: scales the picture so 1 art px = N window px
+##                         exactly (the window is the final video size, e.g. 1080x1920 at N=2:
+##                         no resampling afterwards); pass --view=(W/N)x(H/N) so the spawn ring
+##                         matches the visible area. Drawing only, opt-in.
+##   --hide-hud            With --movie-spans: hides the whole UI layer (HUD, level-up cards,
+##                         banners) so a shot shows only the world. Drawing only, opt-in.
 ##   --art-shots=T,...     Debug (art audit): at each game second T saves the window as
 ##                         <--shot-dir>/art_<T>.png (a window only; drawing only).
 ##   --draw-probe=T        With --monitor on the Web build: from game second T, hides one
@@ -197,6 +223,10 @@ var autotest_timeout: float = 1500.0
 var autotest_policy: String = "naive"
 ## Autotest: simulated meta-upgrade profile, "none", "mid" or "max" (see header).
 var autotest_meta: String = "none"
+## Autotest: RelicData ids equipped by --relics=a,b (empty = none / the profile's).
+var autotest_relics: Array = []
+## Autotest: OfferingData id of --offering=ID ("" = none).
+var autotest_offering: String = ""
 ## Autotest: true when --meta-save allows the run to use user://save.cfg.
 var autotest_meta_save: bool = false
 ## Autotest: active Profane Oath tier (--oath=N, 0 = off).
@@ -224,6 +254,8 @@ var autotest_modifiers: PackedStringArray = PackedStringArray()
 var autotest_hyper: bool = false
 ## Autotest: SkinData id forced by --skin= ("" = the default look).
 var autotest_skin: String = ""
+## Autotest: RecolourData id forced by --recolour= ("" = the skin's own colours).
+var autotest_recolour: String = ""
 ## Autotest: true when --synergies=off keeps every army synergy off (old and
 ## new; SynergyManager.evaluate()) for A/B balance runs.
 var autotest_synergies_off: bool = false
@@ -301,6 +333,12 @@ var autotest_art_misses: bool = false
 ## Debug (--art-shots=T,...): game seconds (ascending) at which the window is saved
 ## to autotest_shot_dir as art_<T>.png (empty = none; drawing only).
 var autotest_art_shots: PackedFloat32Array = PackedFloat32Array()
+## Promo clips (--movie-spans=T:N,...): the span list text for MovieSpans ("" = off).
+var autotest_movie_spans: String = ""
+## Promo clips (--capture-scale=N): art px -> window px factor (0 = off, the normal stretch).
+var autotest_capture_scale: float = 0.0
+## Promo clips (--hide-hud): hide the UI layer while recording.
+var autotest_hide_hud: bool = false
 ## Autotest: game seconds between two MonitorProbe lines (--monitor=N; 0 = off).
 var autotest_monitor: float = 0.0
 ## Autotest: "reduced" when --effects=reduced draws with Effects = Reduced
@@ -314,6 +352,9 @@ var feedback_url: String = ""
 ## Debug: the form's prefill field id from --feedback-entry= ("" =
 ## FeedbackData.DETAILS_ENTRY).
 var feedback_entry: String = ""
+## True when --demo turns demo mode on (DemoMode.on(); the exported demo
+## build turns it on with its feature tag instead).
+var demo_flag: bool = false
 ## Stage chosen last in the stage select this session (focused next time).
 var last_stage_id: String = StageRegistry.DEFAULT_ID
 ## Whether the F3 debug overlay is shown; persists across restarts.
@@ -327,6 +368,9 @@ func _ready() -> void:
 	_parse_args(_web_args())  # Web build only: the page URL's test flag (empty elsewhere).
 	if OS.get_environment("NECROPATHY_AUTOTEST") == "1" or OS.get_environment("GRAVEBOUND_AUTOTEST") == "1":
 		autotest = true  # GRAVEBOUND_AUTOTEST: the pre-rename name, still accepted.
+	if DemoMode.on() and not DemoMode.allows_stage(autotest_stage):
+		print("[demo] --stage=%s is full game only: the autotest plays %s" % [autotest_stage, StageRegistry.DEFAULT_ID])
+		autotest_stage = StageRegistry.DEFAULT_ID
 	if not autotest:
 		SaveMigration.run()  # First autoload: carry the Gravebound saves over before Settings / Meta load.
 
@@ -354,6 +398,8 @@ func _parse_args(args: PackedStringArray) -> void:
 			autotest = true
 		elif arg == "--mortal":
 			autotest_mortal = true
+		elif arg == "--demo":
+			demo_flag = true  # Demo mode (DemoMode), like the demo build's feature tag.
 		elif arg == "--victory-preview":
 			victory_preview = true  # Content wave 2: debug preview of the victory screen.
 		elif arg.begins_with("--feedback-url="):
@@ -377,6 +423,12 @@ func _parse_args(args: PackedStringArray) -> void:
 			autotest_adaptive = arg.get_slice("=", 1).to_lower()  # AdaptiveQuality: off or a pinned level.
 		elif arg == "--art-misses":
 			autotest_art_misses = true  # Debug: the art audit's missing-sprite list (SpriteBank).
+		elif arg.begins_with("--movie-spans="):
+			autotest_movie_spans = arg.get_slice("=", 1).strip_edges()  # Promo clips (MovieSpans).
+		elif arg.begins_with("--capture-scale="):
+			autotest_capture_scale = arg.get_slice("=", 1).to_float()  # Promo clips (MovieSpans).
+		elif arg == "--hide-hud":
+			autotest_hide_hud = true  # Promo clips (MovieSpans).
 		elif arg.begins_with("--art-shots="):
 			for t: String in arg.get_slice("=", 1).split(",", false):
 				autotest_art_shots.append(t.to_float())  # Debug: art audit screenshots (game seconds).
@@ -433,6 +485,18 @@ func _parse_args(args: PackedStringArray) -> void:
 			autotest_meta = profile if profile in MetaData.AUTOTEST_PROFILES else "none"
 		elif arg == "--meta-save":
 			autotest_meta_save = true
+		elif arg.begins_with("--relics="):
+			for id: String in arg.get_slice("=", 1).split(",", false):
+				if RelicData.has(id) and not autotest_relics.has(id) and autotest_relics.size() < RelicData.MAX_SLOTS:
+					autotest_relics.append(id)
+				else:
+					push_error("--relics: '%s' is not a relic, repeated, or past %d slots (relics: %s)" % [id, RelicData.MAX_SLOTS, ", ".join(PackedStringArray(RelicData.ORDER))])
+		elif arg.begins_with("--offering="):
+			var oid := arg.get_slice("=", 1).to_lower()  # Requested offering id.
+			if OfferingData.has(oid):
+				autotest_offering = oid
+			else:
+				push_error("Unknown --offering=%s (expected one of %s)" % [oid, ", ".join(PackedStringArray(OfferingData.ORDER))])
 		elif arg == "--pact":
 			autotest_pact = true
 		elif arg.begins_with("--spells="):
@@ -488,6 +552,12 @@ func _parse_args(args: PackedStringArray) -> void:
 				autotest_skin = skid
 			else:
 				push_error("Unknown --skin=%s (expected one of %s)" % [skid, ", ".join(SkinData.all_ids())])
+		elif arg.begins_with("--recolour="):
+			var rcid := arg.get_slice("=", 1).to_lower()  # Requested recolour id.
+			if RecolourData.has(rcid):
+				autotest_recolour = rcid
+			else:
+				push_error("Unknown --recolour=%s (expected one of %s)" % [rcid, ", ".join(RecolourData.ORDER)])
 		elif arg.begins_with("--synergies="):
 			var sv := arg.get_slice("=", 1).to_lower()  # "off" or "on".
 			if sv == "off" or sv == "on":

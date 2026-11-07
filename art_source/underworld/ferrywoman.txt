@@ -1,0 +1,13 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, neutral ready stance.
+
+LOW-RESOLUTION pixel art: the whole figure is only 50 pixels tall, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims or engravings.
+
+Subject: THE FERRYWOMAN, a FEMALE character, Charon's daughter, a dead ferry-girl of the River Styx who now serves the necromancer, in the figure-redesign style: an exaggerated hourglass figure with a big bust and wide hips, FULLY CLOTHED and modest (never explicit): a hooded dark violet ferryman's cloak over a fitted dark grey dress with a laced corset and a long skirt slit at the side, pale bone-white skin, a calm pale face with soft violet glowing eyes under the hood, long silver-white hair falling from the hood, a gold obol coin on a cord at her throat. In her front (right) hand a long wooden OAR held upright like a staff with a small violet soul lantern hanging from its top.
+Signature shape that must read in silhouette: the hood, the hourglass figure, the tall oar with the lantern.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: violet cloak #1C0F2B (outline) #3B1F5C #6B39A6 #A35CFA; dress grey #14161C #2A2D36 #4A4E5A #7C8290; skin and hair bone #4A3E2E #A79A80 #CFC7AE #EDE6D0; oar wood #2A1C12 #5B3D26 #8C6040; gold coin #E0A92E #FFDC66.
+
+Outline: a clean 1-pixel dark outline around the whole figure in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the figure), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark.
+Attached: a sprite of this game: match its pixel size, outline weight and flat look exactly (not its subject or colours).

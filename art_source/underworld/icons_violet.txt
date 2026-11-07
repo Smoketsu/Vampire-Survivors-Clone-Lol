@@ -1,0 +1,8 @@
+A sheet of FOUR separate pixel-art game ICON SYMBOLS in one row, evenly spaced with wide empty gaps between them, on a FULLY TRANSPARENT background (real alpha). Each symbol is simple, bold and centred in its quarter of the image, drawn as chunky low-resolution pixel art (each symbol about 24 pixels wide on a coarse grid, shown enlarged with crisp square pixels, nearest-neighbour, 1-pixel dark outline, flat colours, at most 3 shades per colour, light from the top-left). No frame, no badge background, no text, no letters.
+From left to right:
+1. RIVER STYX: a curving band of black water flowing diagonally, edged with pale bone-white banks, a bright violet current line running down its middle.
+2. FERRYMAN'S TOLL: a round gold obol coin hanging on a cord, crossed behind it by a wooden ferryman's oar.
+3. MYRMIDON SHADE: a round grey shield seen face-on with a soul-teal circle in the middle, a crested grey Corinthian helmet with a skull face peeking over its top edge.
+4. MYRMIDON OATH: a grey spear and a round shield crossed, a skeletal bone hand gripping the spear, a small soul-teal flame above.
+Colours: violet #3B1F5C #6B39A6 #A35CFA; black water #0B1214 #1B2B2E; bone #A79A80 #CFC7AE #EDE6D0; cold grey #3A4350 #5F6B7A #8E9AA8; soul teal #1F7A5C #3FD39A #9CFFD8; gold #E0A92E #FFDC66; wood #5B3D26 #8C6040.
+Attached: an approved icon of this game: match its pixel size, outline weight and flat look (only the symbol, not its frame).

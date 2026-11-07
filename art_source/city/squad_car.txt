@@ -1,0 +1,13 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), a VEHICLE seen from above and a little from the front-side, drawn FACING RIGHT (nose to the right), the whole car visible, roof, bonnet and windscreen readable
+
+LOW-RESOLUTION pixel art: the whole car is only 64 pixels long and about 36 high, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims, lacing or engravings.
+
+Subject: a POLICE PATROL CAR: a plain two-tone car, dark navy-blue body with a pale grey-white roof and doors, a dark windscreen, a LIGHT BAR on the roof drawn UNLIT (two dark lamp blocks, one blue one red, dull not glowing), headlights unlit, black tyres. NO writing, NO letters, NO badge, NO markings or stripes with text: colour and shape only.
+Signature shape that must read in silhouette: the long low car body with the light bar on the roof.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: navy body police-blue #2E5FD0 darker #1E2024 #101114; roof and doors #7A7F87 #B8C4D0; windscreen #1E2024 #3A3D44; light bar lamps unlit blue #1E3A80 and unlit red #7A1818; tyres #101114 #1E2024
+
+Outline: a clean 1-pixel dark outline around the whole subject in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the subject), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark.
+Attached: (1) a game sprite for pixel size, outline weight and flat look; (2) concept art of this unit for the costume only (do NOT copy its detail level or painted shading).

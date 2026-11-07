@@ -418,7 +418,7 @@ func _on_destroyed(f: Fab) -> void:
 	_xp_burst(f.pos, f.ev)
 	game.stat_add("objective_ash", float(cfg["ash"]))
 	game.stat_add("assembly_fabricators_destroyed", 1.0)
-	game.effects.impact(f.pos, 60.0, Palette.EMPIRE_SIGNAL_AMBER)
+	game.effects.impact(f.pos, 60.0, Palette.EMPIRE_SIGNAL_AMBER, EmpireFxData.BLAST)  # Its strip when the art exists (visual only).
 	Sfx.play("orbital_strike", f.pos, 1.4)
 	game.shake(5.0)
 	game.enemies.show_banner("A fabricator is smashed: the Empire's waves thin (-%d%%)!" % roundi((1.0 - wave_mult()) * 100.0))

@@ -20,7 +20,9 @@
 ##     focused / hovered one's effect shows in the one line under the grid and
 ##     in its tooltip; they stack), the ultimate picker (PreRunUltimates,
 ##     content wave 2: Dread Rally and the three new ultimates; locked ones
-##     padlocked with how to earn them), and the TOTAL Soul Ash multiplier as one
+##     padlocked with how to earn them), the Rites strip (PreRunRites, Ossuary
+##     expansion: the relic slots and the Grave Offering, each opening a small
+##     picker; GDD §15.0 "Relics and Grave Offerings"), and the TOTAL Soul Ash multiplier as one
 ##     gold plaque that rolls to each new value (its tooltip holds the
 ##     breakdown, the combined enemy numbers and the Profane Oath note),
 ##   * Back (to the stage select), Standard (Necromancer, no modifiers, no
@@ -98,6 +100,8 @@ var _extras: PreRunHyperSkins
 var _titles: PreRunTitleRow
 ## The ultimate picker (PreRunUltimates, in the right column under the modifiers).
 var _ults: PreRunUltimates
+## The Rites strip (PreRunRites: relic slots and the Grave Offering, under the ultimates).
+var _rites: PreRunRites
 ## Character the hero shows (follows the focused tile).
 var _hero_char: String = ""
 ## Skin previewed on the chosen character while its skin tile is focused
@@ -185,15 +189,31 @@ func _ready() -> void:
 	_mod_detail.clip_text = true
 	_mod_detail.custom_minimum_size.x = FrontDoorData.SETUP_WIDTH - 24.0
 	setup.add_child(_mod_detail)
-	# Content wave 2: the ultimate picker, under the modifiers (wide tiles lined up with them).
-	setup.add_child(_section("Ultimate"))
+	# Content wave 2: the ultimate picker, under the modifiers. Ossuary expansion:
+	# it shares its row with the Rites strip (relic slots and the Grave Offering),
+	# narrow tiles and one clipped detail line each, so the screen keeps its height.
+	var lower := HBoxContainer.new()
+	lower.add_theme_constant_override("separation", RelicUiData.ULT_RITES_GAP)
+	setup.add_child(lower)
+	var ult_box := VBoxContainer.new()
+	ult_box.add_theme_constant_override("separation", 8)
+	lower.add_child(ult_box)
+	ult_box.add_child(_section("Ultimate"))
 	_ults = PreRunUltimates.new()
 	_ults.config = config
-	_ults.tile_size = UltimateData.PICKER_TILE_WIDE
-	_ults.gap = UltimateData.PICKER_GAP_WIDE
-	_ults.detail_width = FrontDoorData.SETUP_WIDTH - 24.0
-	_ults.detail_lines = UltimateData.PICKER_WIDE_DETAIL_LINES
-	setup.add_child(_ults)
+	_ults.tile_size = UltimateData.PICKER_TILE
+	_ults.gap = UltimateData.PICKER_GAP
+	_ults.detail_width = RelicUiData.ULT_BLOCK_WIDTH
+	_ults.detail_lines = 1
+	_ults.detail_clip = true
+	ult_box.add_child(_ults)
+	var rites_box := VBoxContainer.new()
+	rites_box.add_theme_constant_override("separation", 8)
+	lower.add_child(rites_box)
+	rites_box.add_child(_section(RelicUiData.RITES_LABEL))
+	_rites = PreRunRites.new()
+	_rites.config = config
+	rites_box.add_child(_rites)
 	var spacer := Control.new()
 	spacer.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	spacer.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -385,7 +405,10 @@ func _show_hero(id: String) -> void:
 	var skin := config.skin_id if id == config.character_id else Meta.chosen_skin(id)  # Worn skin.
 	if id == config.character_id and _preview_skin != "":
 		skin = _preview_skin  # A focused skin tile wins.
-	_hero.show_character(id, skin, id == config.character_id)
+	var recolour := Meta.chosen_recolour(skin)  # Palette swap that skin wears (Ossuary recolours, cosmetic).
+	if id == config.character_id and skin == config.skin_id:
+		recolour = _extras.shown_recolour()  # The worn skin: the one being previewed.
+	_hero.show_character(id, skin, id == config.character_id, recolour)
 
 
 ## A skin tile is focused ("" = none): the hero wears it (the chosen character).
@@ -427,7 +450,7 @@ func _queue_wire() -> void:
 func _wire_focus() -> void:
 	var left: Array = _extras.rows() + _titles.rows()  # Left column rows (skins / Hyper, then the title).
 	var right: Array = _picker.tile_rows() + _rows_of(_level_buttons, DifficultyData.ORDER, DifficultyData.ORDER.size()) \
-			+ _rows_of(_mod_buttons, RunModifierData.ORDER, FrontDoorData.MOD_COLUMNS) + _ults.rows()  # Right column rows (the ultimates last).
+			+ _rows_of(_mod_buttons, RunModifierData.ORDER, FrontDoorData.MOD_COLUMNS) + [_ults.cards() + _rites.tiles()]  # Right column rows (the ultimates and the Rites strip share the last).
 	var bottom := [_back, _reset, _begin]  # Bottom row, left to right.
 	_wire_column(left, [], right, [_back])
 	_wire_column(right, left, [], bottom)
@@ -436,7 +459,7 @@ func _wire_focus() -> void:
 		_link(b, "left", bottom[maxi(0, j - 1)] if j > 0 else (left.back() as Array).back())
 		_link(b, "right", bottom[mini(bottom.size() - 1, j + 1)])
 		_link(b, "bottom", b)
-		var last: Array = right.back()  # The last right-column row (the ultimates).
+		var last: Array = right.back()  # The last right-column row (the ultimates and the Rites strip).
 		_link(b, "top", last[_nearest(j, bottom.size(), last.size())])
 
 
@@ -628,9 +651,13 @@ func _breakdown() -> String:
 	return out
 
 
-## Begin: remember the choice (Meta save) and hand the config on.
+## Begin: remember the choice (Meta save) and hand the config on. The rites are
+## finished first (RelicLedger.prepare_run(): an offering the balance cannot pay
+## is dropped, the Borrowed Relic's relic drawn); the offering is paid when the
+## run starts, not here.
 func _start() -> void:
 	Sfx.play("ui_confirm")
+	Meta.relics.prepare_run(config)
 	if not coop_guest:  # A co-op guest's difficulty / modifiers are the host's: not remembered.
 		Meta.remember_prerun(config)
 	confirmed.emit(config)
@@ -648,6 +675,8 @@ func close() -> void:
 
 ## Esc / controller B goes back to the stage select.
 func _input(event: InputEvent) -> void:
+	if _rites != null and _rites.picker_open():
+		return  # The Rites picker on top takes its own Back.
 	if event.is_action_pressed("ui_cancel"):
 		get_viewport().set_input_as_handled()
 		close()

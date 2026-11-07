@@ -1,0 +1,9 @@
+A sheet of SIX separate pixel-art game OBSTACLE PROPS on a FULLY TRANSPARENT background (real alpha), with wide empty gaps between them. Three-quarter top-down view (camera above and in front, like a top-down action game), chunky low-resolution pixel art, crisp square pixels, 1-pixel dark outline, flat colours, at most 3 shades per material, light from the top-left. No ground, no cast shadow, no text.
+Top row, three LONG HORIZONTAL props (each about 64 pixels long):
+1. A ROTTEN VILLAGE FENCE: a low, long fence of crooked grey-brown wooden pales and two rails, one pale broken, about 12 pixels deep.
+2. A THRALLS' COTTAGE: a long low peasant cottage seen from above and in front, a sagging dark straw-thatch roof, grey stone walls, one small window glowing warm candle-yellow, a crooked chimney, about 30 pixels deep.
+3. A BROKEN CHURCH WALL: a long ruined wall of grey stone blocks, its top jagged and broken, one gothic window arch, a little ivy, about 18 pixels deep.
+Bottom row, the SAME THREE props seen END-ON, standing vertically (each as tall as the top one is long and as wide as it is deep: the same fence, cottage and wall rotated to run away from the camera), in the same order.
+Colours: rotten wood #2E2018 #4F3320 #7A5236; thatch #3A2E1C #5E4A2C #85704A; grey stone #3B4352 #6E7A8C #9AA4B4; window glow #E0A92E #FFDC66; ivy #1A2218 #26301F; outline #12060A.
+Keep them a little darker and calmer than the characters (they are scenery), but clearly brighter than a near-black ground.
+Attached: an obstacle of this game. Match its pixel size, outline weight and flat look exactly.

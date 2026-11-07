@@ -1,0 +1,10 @@
+Pixel-art game sprite for a top-down 2D horde-survival game. Three-quarter top-down view (camera above and slightly in front), on a transparent background. ONE object, centred, about 36 pixels wide and 40 pixels tall.
+LOW-RESOLUTION pixel art, shown enlarged so every pixel is a big crisp square block. Chunky simple shapes, no detail under 2 pixels, no anti-aliasing, no gradients, no dithering, no texture noise. A clean 1-pixel dark outline.
+
+Subject: a dense STAND OF TALL BAMBOO seen from above and slightly in front: a tight cluster of eight green bamboo canes with clear joint rings, their tops crowned with leafy green fronds, a few dry leaves at the base.
+
+Colours: ONLY flat fills: bamboo green #10200F (outline) #2E5A2A #5A8A3A #A8C66A; joints #1F3A1E; dry leaves #8A6A1E #D9A93A.
+Light from the top-left. Keep it a little darker and calmer than the characters (it is scenery), but clearly brighter than a near-black ground.
+
+Output: a PNG with a FULLY TRANSPARENT background, no ground, no cast shadow, no water, no text, no watermark.
+Attached: an obstacle of this game. Match its pixel size, outline weight and flat look exactly.

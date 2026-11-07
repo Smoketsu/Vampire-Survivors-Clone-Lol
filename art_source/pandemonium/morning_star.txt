@@ -1,0 +1,13 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, standing tall, a burning sword held point-down in his front (right) hand
+
+LOW-RESOLUTION pixel art: the whole figure is only 116 pixels tall, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims, lacing or engravings. Details must be big enough to read at game size.
+
+Subject: THE MORNING STAR, the Adversary in his ANGEL form (the final boss), a MALE fallen angel of terrible beauty: a tall, slender, regal man with a beautiful pale face, long silver-white hair, cold glowing white eyes, a cracked GOLD HALO behind his head, SIX great BURNT BLACK FEATHERED WINGS (three on each side, spread wide in a fan behind him, the feather tips burnt and smouldering orange), ornate black obsidian armour with gold filigree edges and a black cloak, a long sword whose blade is pale gold-white light wreathed in orange flame. Serene, proud, terrible.
+Signature shape that must read in silhouette: the six spread wings, the halo and the long burning sword.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: obsidian armour, cloak and wings #0B0A10 #1E1A26 #352E40 #5A5068 (the lightest as a rim so black reads on a dark ground); gold #8A6A1E #D9A93A #F5D870; holy white light #FFF2B0; flame #8A2A08 #E0601A #FFB347; skin #A79A80 #CFC7AE #EDE6D0; silver hair #8E9AA8 #C4CCD8 #F4F1EA.
+
+Outline: a clean 1-pixel dark outline around the whole figure in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the figure), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark.
+Attached: (1) a boss sprite of this game for pixel size, outline weight and flat look; (2) concept art of the Morning Star on his throne for his face, hair, halo, armour and wings (standing, not seated; do NOT copy its detail level or the throne).

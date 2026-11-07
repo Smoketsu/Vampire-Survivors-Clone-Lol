@@ -1,0 +1,10 @@
+A sheet of FIVE separate pixel-art game OBSTACLE PROPS on a FULLY TRANSPARENT background (real alpha), in one row, with wide empty gaps between them. Three-quarter top-down view (camera above and in front, like a top-down action game), chunky low-resolution pixel art, crisp square pixels, 1-pixel dark outline, flat colours, at most 3 shades per material, light from the top-left. No ground, no cast shadow, no text.
+From left to right (each about 40 pixels wide):
+1. A FEN SNAG: the black rotten stump of a drowned dead tree with two broken branches, wet moss at its foot, a red thread charm tied on it.
+2. A STANDING STONE: a tall rough grey-green mossy standing stone, weathered, a few lichen spots.
+3. A WITCH'S CAULDRON: a big round black iron cauldron on three short legs, bubbling with blood-red brew, a ladle in it.
+4. A HEX STONE: a tall black standing stone carved with GLOWING BLOOD-RED witch runes and a crescent moon, small bone charms hanging on red string around it.
+5. A BROKEN HEX STONE: the same black stone snapped in half, the top lying cracked beside the stump, the runes dark and dead.
+Colours: black wood #1A1410 #3A2416 #6B4A2E; stone #2E3530 #4F5A52 #7A877C; moss #2E4A22 #4F7A36; black iron #1E1A26 #352E40 #5A5068; blood red #5A0A14 #A3142A #E0384E; bone #8C7B5E #D9CCAA.
+Keep them a little darker and calmer than the characters (they are scenery), but clearly brighter than a near-black ground.
+Attached: an obstacle of this game. Match its pixel size, outline weight and flat look exactly.

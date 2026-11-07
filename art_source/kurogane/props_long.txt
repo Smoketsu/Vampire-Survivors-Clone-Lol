@@ -1,0 +1,8 @@
+A sheet of FOUR separate pixel-art game OBSTACLE PROPS on a FULLY TRANSPARENT background (real alpha), with wide empty gaps between them. Three-quarter top-down view (camera above and in front, like a top-down action game), chunky low-resolution pixel art, crisp square pixels, 1-pixel dark outline, flat colours, at most 3 shades per material, light from the top-left. No ground, no cast shadow, no text.
+Top row, two LONG HORIZONTAL props (each about 80 pixels long and 28 pixels deep):
+1. A JAPANESE CASTLE WALL section: a low wall of big grey fitted stones (ishigaki) with a white plaster top band under a dark grey tiled roof cap running its whole length.
+2. A WOODEN PALISADE GATE: a long fence of dark timber planks with black iron studs and bands, a red lacquered cross-beam, two square posts at the ends with small tiled caps.
+Bottom row, the SAME TWO props seen END-ON, standing vertically (each about 28 pixels wide and 80 pixels tall: the same wall and gate fence rotated to run away from the camera).
+Colours: stone #1A1C22 (outline) #4A5566 #8793A6 #C4CCD8; white plaster #8E8A86 #CFCBC4 #F4F1EA; roof tiles #161D38 #2E3F74; dark timber #1A0B0C #4F3320 #8C6040; lacquer red #6A1418 #B3262B; iron #4A5566.
+Keep them a little darker and calmer than the characters (they are scenery), but clearly brighter than a near-black ground.
+Attached: an obstacle of this game. Match its pixel size, outline weight and flat look exactly.

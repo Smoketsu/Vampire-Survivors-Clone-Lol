@@ -376,6 +376,24 @@ RECIPES = {
         "source": "wastes_wall.png", "method": "quilt",
         "colors": ["ink_cold", "floor_slate", "floor_marble", "floor_stone"],
     },
+    # --- Act IV: the Shores of Ilion --- (one source each, no variants; the API sources came back
+    # nearly transparent and are stored with their alpha set opaque)
+    "ilion_beach": {
+        "source": "ilion_beach.png", "method": "quilt",
+        "colors": ["ink_warm", "floor_soil", "floor_earth", "floor_ochre"],
+    },
+    "ilion_camp": {
+        "source": "ilion_camp.png", "method": "quilt",
+        "colors": ["ink_warm", "floor_soil", "floor_earth", "floor_dirt"],
+    },
+    "ilion_gate": {
+        "source": "ilion_gate.png", "method": "quilt",
+        "colors": ["ink_cold", "floor_soil", "floor_slate", "floor_stone"],
+    },
+    "ilion_walls": {
+        "source": "ilion_walls.png", "method": "quilt",
+        "colors": ["ink_cold", "floor_slate", "floor_marble", "floor_stone"],
+    },
     # --- Act III: the Iron Citadel ---
     # The four zone floors of THE IRON CITADEL (CitadelGround, tiles/citadel_<style>): riveted
     # steel deck plates (one API texture, laid out three ways) and the Core's circuit-etched
@@ -402,6 +420,274 @@ RECIPES = {
         "source": "citadel_core.png", "method": "quilt",  # The Core: circuit-etched plating, dim red traces.
         "colors": ["ink_chrome", "floor_soil", "floor_slate", "chrome_dark", "signal_dark"],
         "bias": {"chrome_dark": 0.02, "signal_dark": 0.03}, "keep": ["chrome_dark", "signal_dark"],
+    },
+    # --- Act IV: Mount Olympus ---
+    # The four zone floors of MOUNT OLYMPUS (OlympusGround, tiles/olympus_<style>): trampled
+    # earth (the Field of Ares), moonlit moss (the Groves of Artemis), and one storm-dark marble
+    # texture laid out twice (the Terraces' long flagstone courses, the Summit's square slabs with
+    # dark gold joints).
+    "olympus_field": {
+        "source": "olympus_field.png", "method": "quilt",
+        "colors": ["ink_warm", "floor_earth", "floor_dirt", "floor_ochre", "floor_grass"],
+    },
+    "olympus_grove": {
+        "source": "olympus_grove.png", "method": "quilt",
+        "colors": ["ink_green", "floor_soil", "floor_grass", "floor_moss", "floor_slate"],
+    },
+    "olympus_terrace": {
+        "source": "olympus_marble.png", "method": "layout",  # The Terraces: long wet marble courses.
+        "layout": {"type": "courses", "rows": [32, 32, 32, 32], "joint": 1,
+                   "slabs": [[64, 64], [40, 48, 40], [56, 72], [48, 40, 40]], "offsets": [0, 24, 12, 36]},
+        "regions": {"stone": ["floor_marble", "floor_slate", "floor_stone"], "joint": ["ink_cold"]},
+        "cell_shift": True, "cell_l": 0.01, "bevel": 0.01,
+    },
+    "olympus_summit": {
+        "source": "olympus_marble.png", "method": "layout",  # The Summit: square marble slabs, gold joints.
+        "layout": {"type": "grid", "step": 32, "joint": 1},
+        "regions": {"stone": ["floor_marble", "floor_stone", "floor_slate"], "joint": ["floor_ochre"]},
+        "cell_shift": True, "cell_l": 0.012, "bevel": 0.01,
+    },
+    # --- Act IV: the Asphodel Underworld ---
+    # The four zone floors of THE ASPHODEL UNDERWORLD (UnderworldGround, tiles/underworld_<style>):
+    # one API texture of grey ash soil (the Asphodel Fields; darker and browner for the Styx's
+    # wet banks) and one of cracked dark marble (laid as the Judges' Hall's flagstones and as the
+    # throne room's big obsidian slabs with dark bronze joints). The asphodel flowers, the river
+    # and the floor details stay code-drawn (UnderworldGround / UnderworldGlyphs).
+    "underworld_asphodel": {
+        "source": "underworld_ash.png", "method": "quilt",  # The Asphodel Fields: grey ash.
+        "colors": ["floor_soil", "floor_slate", "floor_ash", "floor_stone"],
+    },
+    "underworld_styx": {
+        "source": "underworld_ash.png", "method": "quilt",  # The Styx Crossing: dark wet banks.
+        "colors": ["floor_soil", "floor_earth", "floor_slate"],
+    },
+    "underworld_hall": {
+        "source": "underworld_marble.png", "method": "layout",  # The Judges' Hall: cracked marble flags.
+        "layout": {"type": "grid", "step": 32, "joint": 1, "stagger": 16},
+        "regions": {"stone": ["floor_slate", "floor_marble"], "joint": ["ink_cold"]},
+        "cell_shift": True, "cell_l": 0.01, "bevel": 0.01,
+    },
+    "underworld_throne": {
+        "source": "underworld_marble.png", "method": "layout",  # The Throne of Hades: big obsidian slabs, bronze joints.
+        "layout": {"type": "grid", "step": 64, "joint": 1},
+        "regions": {"stone": ["floor_soil", "floor_marble"], "joint": ["bronze_ink"]},
+        "cell_shift": True, "cell_l": 0.008, "bevel": 0.008,
+    },    # --- Act V: the Road to the Sun ---
+    # The four zone floors of THE ROAD TO THE SUN (SunRoadGround, tiles/sun_road_<style>): one
+    # API texture of packed brown earth with gravel (the Torii Road; recoloured mossy and dark
+    # for the Sacred Forest) and one of worn grey granite (laid as the Shrine Steps' long step
+    # courses and as the High Plain of Heaven's pale paving). The petals, ferns, cloud wisps and
+    # sunlight specks stay code-drawn (SunRoadGround).
+    "sun_road_torii": {
+        "source": "sun_road_earth.png", "method": "quilt",  # The Torii Road: packed earth and gravel.
+        "colors": ["floor_earth", "floor_dirt", "floor_ash", "floor_stone"],
+    },
+    "sun_road_forest": {
+        "source": "sun_road_earth.png", "method": "quilt",  # The Sacred Forest: moss and cedar needles.
+        "colors": ["floor_soil", "floor_moss", "floor_grass", "floor_earth"],
+    },
+    "sun_road_steps": {
+        "source": "sun_road_stone.png", "method": "layout",  # The Shrine Steps: long step courses.
+        "layout": {"type": "grid", "step": 32, "joint": 1, "stagger": 16},
+        "regions": {"stone": ["floor_slate", "floor_stone"], "joint": ["ink_cold"]},
+        "cell_shift": True, "cell_l": 0.01, "bevel": 0.01,
+    },
+    "sun_road_heaven": {
+        "source": "sun_road_stone.png", "method": "quilt",  # The High Plain of Heaven: pale paving above the clouds.
+        "colors": ["floor_marble", "floor_slate", "floor_stone"],
+    },
+    # --- Act V: the Burning Province --- (one source each; the paddy water is code-drawn over the paddies tile)
+    "province_paddies": {
+        "source": "province_paddies.png", "method": "quilt",  # The Paddies: dark dike mud.
+        "colors": ["ink_warm", "floor_soil", "floor_earth", "floor_moss"],
+    },
+    "province_bamboo": {
+        "source": "province_bamboo.png", "method": "quilt",  # The Bamboo Grove: leaf litter on dark earth.
+        "colors": ["ink_green", "floor_soil", "floor_moss", "floor_grass"],
+    },
+    "province_village": {
+        "source": "province_village.png", "method": "quilt",  # The Burning Village: trampled earth, ash and cinders.
+        "colors": ["ink_warm", "floor_soil", "floor_dirt", "floor_ash"],
+    },
+    "province_shrine": {
+        "source": "province_shrine.png", "method": "quilt",  # The Mountain Shrine: raked grey gravel.
+        "colors": ["floor_soil", "floor_slate", "floor_stone"],
+    },
+    # --- Act V: Castle Kurogane ---
+    # The four zone floors of CASTLE KUROGANE (KuroganeGround, tiles/kurogane_<style>), one API source each (the
+    # bailey and courtyard sources came back nearly transparent and are stored with their alpha set opaque).
+    "kurogane_bailey": {
+        "source": "kurogane_bailey.png", "method": "quilt",  # The Outer Bailey: trampled earth, small stones.
+        "colors": ["ink_warm", "floor_soil", "floor_earth", "floor_dirt"],
+    },
+    "kurogane_gatehouse": {
+        "source": "kurogane_gatehouse.png", "method": "quilt",  # The Gatehouse: fitted granite paving.
+        "colors": ["ink_cold", "floor_soil", "floor_slate", "floor_stone"],
+    },
+    "kurogane_courtyard": {
+        "source": "kurogane_courtyard.png", "method": "quilt",  # The Courtyards: raked grey gravel.
+        "colors": ["ink_cold", "floor_slate", "floor_marble", "floor_ash"],
+    },
+    "kurogane_keep": {
+        "source": "kurogane_keep.png", "method": "layout",  # The Keep: dark polished floorboards in staggered rows.
+        "layout": {"type": "courses", "rows": [16, 16, 16, 16, 16, 16, 16, 16], "joint": 1,
+                   "slabs": [[128], [80, 48], [40, 88], [128], [96, 32], [56, 72], [128], [24, 104]],
+                   "offsets": [0, 40, 12, 72, 24, 100, 56, 8]},
+        "regions": {"stone": ["floor_earth", "floor_dirt"], "joint": ["ink_warm"]},
+        "cell_shift": True, "cell_l": 0.008, "bevel": 0.006,
+    },
+    # --- Act VI: the Burning Gate ---
+    # The four zone floors of THE BURNING GATE (BurningGateGround, tiles/burning_gate_<style>), one API source each (all
+    # four came back nearly transparent and are stored with their alpha set opaque, as Kurogane's).
+    "burning_gate_ash_plain": {
+        "source": "burning_gate_ash_plain.png", "method": "quilt",  # The Ash Plain: grey ash and obsidian shards.
+        "colors": ["ink_cold", "floor_soil", "floor_slate", "floor_ash"],
+    },
+    "burning_gate_cages": {
+        "source": "burning_gate_cages.png", "method": "quilt",  # The Cages: black cinders and soot.
+        "colors": ["ink_warm", "floor_soil", "floor_ash"],
+        "shares": {"ink_warm": 0.06, "floor_soil": 0.70, "floor_ash": 0.24},  # Exact shares: free snapping came out blotchy.
+    },
+    "burning_gate_river": {
+        "source": "burning_gate_river.png", "method": "quilt",  # The River of Fire: scorched red-brown bank.
+        "colors": ["ink_red", "ink_warm", "floor_soil", "floor_earth"],
+    },
+    "burning_gate_gate": {
+        "source": "burning_gate_gate.png", "method": "quilt",  # The Gate: black flagstones.
+        "colors": ["ink_cold", "floor_soil", "floor_slate", "floor_stone"],
+    },
+    # --- Act VI: the Palace of Silk and Ash ---
+    # The four zone floors of THE PALACE OF SILK AND ASH (SilkPalaceGround, tiles/silk_palace_<style>): one API
+    # texture of dark rose-garden soil strewn with black petals (the Rose Garden; recoloured a dark wine for the
+    # velvet of the Queen's Chamber) and one of dark rose-veined marble (laid in square flags for the Hall of
+    # Mirrors and in a smaller checker for the Ballroom over the lava lake). The petals, glints and the lava's glow
+    # stay code-drawn (SilkPalaceGround).
+    "silk_palace_roses": {
+        "source": "silk_palace_soil.png", "method": "quilt",  # The Rose Garden: dark soil, black petals, thorns.
+        "colors": ["ink_red", "floor_soil", "floor_earth", "obsidian_dark"],
+    },
+    "silk_palace_chamber": {
+        "source": "silk_palace_soil.png", "method": "quilt",  # The Queen's Chamber: dark wine velvet.
+        "colors": ["ink_red", "ink_biolume", "obsidian_dark", "floor_ash"],
+    },
+    "silk_palace_mirrors": {
+        "source": "silk_palace_marble.png", "method": "layout",  # The Hall of Mirrors: black-violet marble flags.
+        "layout": {"type": "grid", "step": 64, "joint": 1},
+        "regions": {"stone": ["obsidian_dark", "floor_marble"], "joint": ["obsidian_ink"]},
+        "cell_shift": True, "cell_l": 0.008, "bevel": 0.008,
+    },
+    "silk_palace_ballroom": {
+        "source": "silk_palace_marble.png", "method": "layout",  # The Ballroom: rose marble over the lava lake.
+        "layout": {"type": "grid", "step": 32, "joint": 1},
+        "regions": {"stone": ["floor_marble", "ink_red", "obsidian_dark"], "joint": ["ink_signal"]},
+        "cell_shift": True, "cell_l": 0.012, "bevel": 0.008,
+    },
+    # --- Act VI: Pandemonium ---
+    # The four zone floors of PANDEMONIUM (PandemoniumGround, tiles/pandemonium_<style>): one API texture of polished
+    # black obsidian (the Iron City's paving in courses, the Throne's polished floor) and one of grey ash-stone flagstones
+    # (the Chain Bridges' dark boards, recoloured warm; the Cathedral of Ash's flagstones). The lava glow, chains, scorch
+    # marks, gold inlay and bones stay code-drawn (PandemoniumGround).
+    "pandemonium_iron": {
+        "source": "pandemonium_obsidian.png", "method": "layout",  # The Iron City: obsidian paving in courses.
+        "layout": {"type": "grid", "step": 32, "joint": 1, "stagger": 16},
+        "regions": {"stone": ["obsidian_ink", "floor_soil", "floor_slate"], "joint": ["obsidian_ink"]},
+        "cell_shift": True, "cell_l": 0.01, "bevel": 0.01,
+    },
+    "pandemonium_bridges": {
+        "source": "pandemonium_ash.png", "method": "quilt",  # The Chain Bridges: dark boards over the lava glow.
+        "colors": ["obsidian_ink", "floor_earth", "floor_dirt"],
+    },
+    "pandemonium_cathedral": {
+        "source": "pandemonium_ash.png", "method": "quilt",  # The Cathedral of Ash: grey ash-stone flagstones.
+        "colors": ["obsidian_ink", "floor_slate", "floor_ash", "floor_marble"],
+    },
+    "pandemonium_throne": {
+        "source": "pandemonium_obsidian.png", "method": "quilt",  # The Throne: polished obsidian.
+        "colors": ["obsidian_ink", "floor_soil", "floor_slate", "floor_marble"],
+    },
+    # --- Act VII: Ravensmoor ---
+    # The four zone floors of RAVENSMOOR (RavensmoorGround, tiles/ravensmoor_<style>): one API texture of night moor
+    # heather over peat (the Moor; recoloured to the Village's trodden mud and the Wolfwood's needles) and one of
+    # sunken churchyard flagstones (the Old Church). Both came back partly transparent and are stored opaque. The
+    # stones, red leaves and heather tufts stay code-drawn (RavensmoorGround).
+    "ravensmoor_moor": {
+        "source": "ravensmoor_heath.png", "method": "quilt",  # The Moor: dark heather over peat.
+        "colors": ["blood_ink", "velvet_dark", "floor_soil", "floor_earth"],
+    },
+    "ravensmoor_village": {
+        "source": "ravensmoor_heath.png", "method": "quilt",  # The Village: a trodden mud lane.
+        "colors": ["ink_warm", "floor_earth", "floor_dirt", "floor_ash"],
+    },
+    "ravensmoor_old_church": {
+        "source": "ravensmoor_flags.png", "method": "quilt",  # The Old Church: sunken flagstones.
+        "colors": ["ink_cold", "floor_soil", "floor_slate", "floor_marble"],
+    },
+    "ravensmoor_wolfwood": {
+        "source": "ravensmoor_heath.png", "method": "quilt",  # The Wolfwood: pine needles and roots.
+        "colors": ["ink_green", "floor_soil", "floor_grass", "floor_earth"],
+    },
+    # --- Act VII: the Witchwood ---
+    # The four zone floors of THE WITCHWOOD (WitchwoodGround, tiles/witchwood_<style>), one API source each, stored
+    # with their alpha set opaque (as the Burning Gate's).
+    "witchwood_fen": {
+        "source": "witchwood_fen.png", "method": "quilt",  # The Fen: black peat and reeds (the pools are drawn by code).
+        "colors": ["ink_green", "floor_soil", "floor_moss"],
+        "shares": {"ink_green": 0.08, "floor_soil": 0.72, "floor_moss": 0.20},  # Exact shares: a dark, quiet peat.
+    },
+    "witchwood_hanging_wood": {
+        "source": "witchwood_hanging_wood.png", "method": "quilt",  # The Hanging Wood: leaf litter and roots.
+        "colors": ["ink_warm", "floor_soil", "floor_earth"],
+    },
+    "witchwood_standing_stones": {
+        "source": "witchwood_standing_stones.png", "method": "quilt",  # The Standing Stones: a dark heath.
+        "colors": ["ink_cold", "floor_soil", "floor_moss", "floor_slate"],
+    },
+    "witchwood_cauldron": {
+        "source": "witchwood_cauldron.png", "method": "quilt",  # The Cauldron: scorched ash soil, old blood.
+        "colors": ["ink_red", "ink_warm", "floor_soil", "floor_ash"],
+    },
+    # --- Act VII: Castle Sanguis ---
+    # The four zone floors of CASTLE SANGUIS (CastleSanguisGround, tiles/castle_sanguis_<style>): one API texture of grey
+    # castle flagstone (the Courtyard's paving in courses, the Crypt Gallery's cold slabs) and one of black marble veined red
+    # (the Banquet Hall's dark floor under the runners, the Throne of Blood's marble). The runners, moss, bones, gold inlay
+    # and pooled blood stay code-drawn (CastleSanguisGround).
+    "castle_sanguis_courtyard": {
+        "source": "castle_sanguis_stone.png", "method": "layout",  # The Courtyard: grey flagstones in courses.
+        "layout": {"type": "grid", "step": 32, "joint": 1, "stagger": 16},
+        "regions": {"stone": ["floor_slate", "floor_ash", "floor_stone"], "joint": ["obsidian_ink"]},
+        "cell_shift": True, "cell_l": 0.01, "bevel": 0.01,
+    },
+    "castle_sanguis_banquet": {
+        "source": "castle_sanguis_marble.png", "method": "quilt",  # The Banquet Hall: dark wine-stained stone.
+        "colors": ["blood_ink", "floor_soil", "floor_earth"],
+    },
+    "castle_sanguis_crypt": {
+        "source": "castle_sanguis_stone.png", "method": "quilt",  # The Crypt Gallery: cold dark slabs.
+        "colors": ["obsidian_ink", "floor_soil", "floor_slate"],
+    },
+    "castle_sanguis_throne": {
+        "source": "castle_sanguis_marble.png", "method": "quilt",  # The Throne of Blood: black marble veined red.
+        "colors": ["blood_ink", "obsidian_ink", "floor_soil", "blood_dark"],
+    },
+    # --- Act IX: the Proving Moon ---
+    # The four zone floors of THE PROVING MOON (ProvingMoonGround, tiles/proving_moon_<style>): one API texture of grey moon
+    # regolith (the Landing; recoloured darker for the Craters and paler for the Duelling Ring's packed dust) and one of the
+    # Trophy Hall's dark cut slabs. The craters, skulls and duelling marks are decals (decals/proving_moon_*).
+    "proving_moon_landing": {
+        "source": "proving_moon_regolith.png", "method": "quilt",  # The Landing: grey regolith.
+        "colors": ["ink_cold", "floor_soil", "floor_slate", "floor_marble"],
+    },
+    "proving_moon_craters": {
+        "source": "proving_moon_regolith.png", "method": "quilt",  # The Craters: darker, pitted regolith.
+        "colors": ["ink_cold", "floor_soil", "floor_slate"],
+    },
+    "proving_moon_trophy_hall": {
+        "source": "proving_moon_hall.png", "method": "quilt",  # The Trophy Hall: dark cut slabs.
+        "colors": ["ink_cold", "floor_soil", "floor_slate", "floor_marble"],
+    },
+    "proving_moon_duelling_ring": {
+        "source": "proving_moon_regolith.png", "method": "quilt",  # The Duelling Ring: packed, paler dust.
+        "colors": ["floor_soil", "floor_slate", "floor_marble", "floor_stone"],
     },
 }
 

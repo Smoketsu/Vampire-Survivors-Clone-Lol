@@ -13,13 +13,18 @@ extends RefCounted
 
 ## A row of level pips (a Control sized to fit them): `count` sockets, the
 ## first `filled` lit in `fill`; pips after `filled` and up to `idle` drawn
-## in `idle_fill` (the Profane Oath's owned-but-lowered tiers).
+## in `idle_fill` (the Profane Oath's owned-but-lowered tiers); empty sockets
+## from index `sealed_from` on drawn sealed (Ossuary levels behind a difficulty
+## gate, draw_sealed_pip()).
 class Pips:
 	extends Control
-	## Number of pips (the upgrade's tiers, 1..6).
+	## Number of pips (the upgrade's tiers, 1..10).
 	var count: int = 0
 	## Pips lit in `fill` (bought tiers, or the Oath's active tiers).
 	var filled: int = 0
+	## First pip index (0-based) whose empty socket is sealed (a gated level);
+	## -1 = none sealed.
+	var sealed_from: int = -1
 	## Pips lit up to this index in `idle_fill` (>= filled; 0 = none).
 	var idle: int = 0
 	## Colour of a lit pip.
@@ -37,14 +42,16 @@ class Pips:
 	func _ready() -> void:
 		SpriteBank.apply_sharp(self)
 
-	## Sets the pips and resizes / redraws when anything changed.
-	func set_pips(p_count: int, p_filled: int, p_fill: Color, p_idle: int = 0) -> void:
-		if p_count == count and p_filled == filled and p_fill == fill and p_idle == idle:
+	## Sets the pips and resizes / redraws when anything changed. `p_sealed`
+	## is the first sealed index (-1 = none).
+	func set_pips(p_count: int, p_filled: int, p_fill: Color, p_idle: int = 0, p_sealed: int = -1) -> void:
+		if p_count == count and p_filled == filled and p_fill == fill and p_idle == idle and p_sealed == sealed_from:
 			return
 		count = p_count
 		filled = p_filled
 		fill = p_fill
 		idle = p_idle
+		sealed_from = p_sealed
 		custom_minimum_size = Vector2(PixelMarks.pips_width(count, pip), pip.y)
 		update_minimum_size()
 		queue_redraw()
@@ -57,7 +64,11 @@ class Pips:
 				col = fill
 			elif i < idle:
 				col = idle_fill
-			PixelMarks.draw_pip(self, Vector2(float(i * (pip.x + OssuaryUiData.PIP_GAP)), y), pip, col)
+			var at := Vector2(float(i * (pip.x + OssuaryUiData.PIP_GAP)), y)  # Pip top-left.
+			if col.a <= 0.0 and sealed_from >= 0 and i >= sealed_from:
+				PixelMarks.draw_sealed_pip(self, at, pip)
+			else:
+				PixelMarks.draw_pip(self, at, pip, col)
 
 
 ## A right-pointing pixel arrow (shaft + head), `w` x `h` layout px, in
@@ -104,6 +115,18 @@ static func draw_pip(ci: CanvasItem, pos: Vector2, s: Vector2i, col: Color) -> v
 	ci.draw_rect(Rect2(pos + Vector2(0, 1), Vector2(w, h - 2)), col)
 	ci.draw_rect(Rect2(pos + Vector2(1, 0), Vector2(w - 2, 1)), col.lightened(0.35))
 	ci.draw_rect(Rect2(pos + Vector2(1, h - 1), Vector2(w - 2, 1)), col.darkened(0.35))
+
+
+## Draws a sealed pip socket at `pos` (whole px) of size `s`: a darker,
+## dimmer-rimmed socket crossed by a 1 px bar in the middle row (a level still
+## behind its difficulty gate; same cut-corner shape as draw_pip()).
+static func draw_sealed_pip(ci: CanvasItem, pos: Vector2, s: Vector2i) -> void:
+	var w := float(s.x)
+	var h := float(s.y)
+	ci.draw_rect(Rect2(pos + Vector2(1, 0), Vector2(w - 2, h)), OssuaryUiData.PIP_SEALED_RIM)
+	ci.draw_rect(Rect2(pos + Vector2(0, 1), Vector2(w, h - 2)), OssuaryUiData.PIP_SEALED_RIM)
+	ci.draw_rect(Rect2(pos + Vector2(1, 1), Vector2(w - 2, h - 2)), OssuaryUiData.PIP_SEALED)
+	ci.draw_rect(Rect2(pos + Vector2(2, floorf(h * 0.5)), Vector2(w - 4, 1)), OssuaryUiData.PIP_SEALED_RIM)
 
 
 ## Draws a right-pointing arrow filling `r` (whole px): a 2 px shaft and a

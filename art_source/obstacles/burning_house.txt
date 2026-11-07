@@ -1,0 +1,10 @@
+Pixel-art game sprite for a top-down 2D horde-survival game. Three-quarter top-down view (camera above and slightly in front), on a transparent background. TWO copies of the same object side by side with a wide transparent gap between them: (1) on the LEFT lying HORIZONTALLY, about 72 pixels long and 48 pixels deep; (2) on the RIGHT the same object turned to run VERTICALLY (top to bottom), 44 pixels wide and 80 pixels long.
+LOW-RESOLUTION pixel art, shown enlarged so every pixel is a big crisp square block. Chunky simple shapes, no detail under 2 pixels, no anti-aliasing, no gradients, no dithering, no texture noise. A clean 1-pixel dark outline.
+
+Subject: a small Japanese FARMHOUSE ON FIRE: a steep THATCHED straw roof with a dark wooden frame and paper sliding doors, bright orange-yellow FLAMES licking up through holes in the thatch and from one corner, dark smoke staining the roof, charred beams showing.
+
+Colours: ONLY flat fills: thatch #4F3A14 (outline) #8A6A1E #C2A050; timber #1A0B0C #4F3320 #8C6040; paper walls #8E8A86 #CFCBC4; flames #6A1418 #E2594A #F5A040 #F5D870; char #1C1E24 #3E434F.
+Light from the top-left. Keep it a little darker and calmer than the characters (it is scenery), but clearly brighter than a near-black ground.
+
+Output: a PNG with a FULLY TRANSPARENT background, no ground, no cast shadow, no water, no text, no watermark.
+Attached: an obstacle of this game. Match its pixel size, outline weight and flat look exactly.

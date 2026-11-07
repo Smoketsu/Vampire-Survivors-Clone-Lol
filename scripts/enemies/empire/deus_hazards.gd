@@ -140,7 +140,7 @@ func _land(rg: Array) -> void:
 		hits += 1
 	game.stat_add("deus_ring_summon_hits", float(hits))
 	_shocks.append([at, r, game.elapsed])
-	game.effects.impact(at, r * 0.8, Palette.EMPIRE_CHROME_LIGHT)
+	game.effects.impact(at, r * 0.8, Palette.EMPIRE_CHROME_LIGHT, EmpireFxData.BLAST_CHROME)  # Its strip when the art exists (visual only).
 	game.shake(3.0 if r < 80.0 else 6.0)
 	Sfx.play("servo_step" if r < 80.0 else "boss_impact", at)
 
@@ -216,7 +216,8 @@ func _draw() -> void:
 		CitadelGlyphs.draw_stomp_ring(self, rg[0], float(rg[1]), k)
 	for sh: Array in _shocks:
 		var k2 := clampf((t - float(sh[2])) / 0.35, 0.0, 1.0)
-		draw_arc(sh[0], float(sh[1]) * (0.7 + 0.5 * k2), 0.0, TAU, 40, Color(Palette.EMPIRE_CHROME_LIGHT, 0.6 * (1.0 - k2)), 3.0)
+		if not EmpireFx.shock(self, sh[0], float(sh[1]) * (0.7 + 0.5 * k2), 1.0 - k2):
+			draw_arc(sh[0], float(sh[1]) * (0.7 + 0.5 * k2), 0.0, TAU, 40, Color(Palette.EMPIRE_CHROME_LIGHT, 0.6 * (1.0 - k2)), 3.0)
 	if _charge_until != INF and boss != null:
 		var k3 := clampf(1.0 - (_charge_until - t) / maxf(0.01, float(DeusData.BOSS["pulse_charge"])), 0.0, 1.0)
 		CitadelGlyphs.draw_pulse_charge(self, boss.position, boss.radius, k3, t)

@@ -106,3 +106,189 @@ const HP_BACK := Color(0.0, 0.0, 0.0, 0.6)
 const FLASH := Color(1.0, 1.0, 1.0)
 ## Experience bar fill.
 const XP := Color(0.45, 0.85, 1.0)
+
+# --- Hostile (the Olympian Republic, Act IV) ----------------------------------------
+# GDD §15.0 "Act IV foundation (phase 1)": the fixed values of docs/act4/BRIEF_FOUNDATION.md
+# (tools/palette.json ramps bronze, marble, aegean, owned by the art pass). Gold stays
+# Palette.GOLD (evolution / chest / victory, and Glory).
+
+## Bronze outline ink (tools/palette.json "bronze" ramp, darkest): every Pantheon sprite's outline.
+const PANTHEON_BRONZE_INK := Color(0.118, 0.078, 0.031)  # #1E1408
+## Bronze in shadow ("bronze_dark"): shield rims, greaves, the underside of helmets.
+const PANTHEON_BRONZE_DARK := Color(0.420, 0.267, 0.137)  # #6B4423
+## Bronze ("bronze"): hoplite shields and helmets, the Titans' plates; the Phalanx's locked shield line.
+const PANTHEON_BRONZE := Color(0.659, 0.439, 0.180)  # #A8702E
+## Lit bronze ("bronze_light"): highlights, crests, the locked wall's top edge.
+const PANTHEON_BRONZE_LIGHT := Color(0.878, 0.663, 0.333)  # #E0A955
+## Marble in shadow ("marble_dark"): column flutes, the Titans' joints, shades' cores.
+const PANTHEON_MARBLE_DARK := Color(0.557, 0.541, 0.525)  # #8E8A86
+## Marble ("marble"): columns, statues, the pale Shades of the Dead.
+const PANTHEON_MARBLE := Color(0.812, 0.796, 0.769)  # #CFCBC4
+## Lit marble ("marble_light"): highlights; the lightning's white core.
+const PANTHEON_MARBLE_LIGHT := Color(0.957, 0.945, 0.918)  # #F4F1EA
+## Aegean blue in shadow ("aegean_dark"): deep water, the wave's body, cloaks in shadow.
+const PANTHEON_AEGEAN_DARK := Color(0.071, 0.243, 0.400)  # #123E66
+## Aegean blue ("aegean"): heroes' cloaks, Poseidon's waves, Zeus's lightning glow.
+const PANTHEON_AEGEAN := Color(0.173, 0.467, 0.722)  # #2C77B8
+## Lit Aegean ("aegean_light"): foam lines, lightning halos, wave crests.
+const PANTHEON_AEGEAN_LIGHT := Color(0.435, 0.714, 0.910)  # #6FB6E8
+
+# --- Act V: the Shogunate of the Rising Sun ---
+# GDD §15.0 "Act V foundation (phase 1)": the fixed values of docs/act5/BRIEF_FOUNDATION.md
+# (tools/palette.json ramps lacquer, indigo, sakura, owned by the art pass). Steel uses the
+# existing grey / chrome ramps; gold stays Palette.GOLD (evolution / chest / victory, and the sun).
+
+## Lacquer outline ink (tools/palette.json "lacquer" ramp, darkest): every Shogunate sprite's outline.
+const SHOGUN_LACQUER_INK := Color(0.102, 0.043, 0.047)  # #1A0B0C
+## Lacquer in shadow ("lacquer_dark"): armour plates in shadow, the oni's skin in shadow.
+const SHOGUN_LACQUER_DARK := Color(0.416, 0.078, 0.094)  # #6A1418
+## Lacquer red ("lacquer"): samurai and ashigaru armour, banners, the oni's skin.
+const SHOGUN_LACQUER := Color(0.702, 0.149, 0.169)  # #B3262B
+## Lit lacquer ("lacquer_light"): highlights, the match cord's glow, torii gates.
+const SHOGUN_LACQUER_LIGHT := Color(0.886, 0.349, 0.290)  # #E2594A
+## Indigo in shadow ("indigo_dark"): ninja garb, the night's tint.
+const SHOGUN_INDIGO_DARK := Color(0.086, 0.114, 0.220)  # #161D38
+## Indigo ("indigo"): gunners' coats, ninja garb, the smoke of an ambush.
+const SHOGUN_INDIGO := Color(0.180, 0.247, 0.455)  # #2E3F74
+## Lit indigo ("indigo_light"): the rim that keeps a ninja readable on dark ground.
+const SHOGUN_INDIGO_LIGHT := Color(0.416, 0.510, 0.753)  # #6A82C0
+## Sakura in shadow ("sakura_dark"): blossom petals in shadow.
+const SHOGUN_SAKURA_DARK := Color(0.659, 0.329, 0.431)  # #A8546E
+## Sakura pink ("sakura"): blossoms, kimono accents.
+const SHOGUN_SAKURA := Color(0.894, 0.580, 0.675)  # #E494AC
+## Lit sakura ("sakura_light"): highlights, petals in the light.
+const SHOGUN_SAKURA_LIGHT := Color(0.976, 0.827, 0.867)  # #F9D3DD
+
+# --- Act VI: the Inferno ---
+# GDD §15.0 "Act VI foundation (phase 1)": the fixed values of docs/act6/BRIEF_FOUNDATION.md
+# (tools/palette.json ramps obsidian, lava, demon, charm, owned by the art pass). Gold keeps
+# its meaning (evolution / chest / victory); charm pink is the act's signature colour
+# (Temptation).
+
+## Obsidian outline ink (tools/palette.json "obsidian" ramp, darkest): every Inferno sprite's outline.
+const INFERNO_OBSIDIAN_INK := Color(0.043, 0.039, 0.063)  # #0B0A10
+## Dark obsidian ("obsidian_dark"): armour shadows, the pits' crust, portal stone.
+const INFERNO_OBSIDIAN_DARK := Color(0.118, 0.102, 0.149)  # #1E1A26
+## Obsidian ("obsidian"): hell knight plate, the ash plain's rocks, portal rings.
+const INFERNO_OBSIDIAN := Color(0.208, 0.180, 0.251)  # #352E40
+## Lit obsidian ("obsidian_light"): glassy highlights on armour and rock.
+const INFERNO_OBSIDIAN_LIGHT := Color(0.353, 0.314, 0.408)  # #5A5068
+## Dark lava ("lava_dark"): cooling crust, ember cracks, a pit's rim.
+const INFERNO_LAVA_DARK := Color(0.541, 0.165, 0.031)  # #8A2A08
+## Lava ("lava"): the Hell Pits' fire, burning blades, ember armour.
+const INFERNO_LAVA := Color(0.878, 0.376, 0.102)  # #E0601A
+## Lit lava ("lava_light"): the pits' white-hot core, telegraph rims, sparks.
+const INFERNO_LAVA_LIGHT := Color(1.000, 0.702, 0.278)  # #FFB347
+## Dark demon skin ("demon_dark"): shadowed crimson-violet skin, wings.
+const INFERNO_DEMON_DARK := Color(0.361, 0.102, 0.227)  # #5C1A3A
+## Demon skin ("demon"): imps, brutes, the succubus's wings and tail.
+const INFERNO_DEMON := Color(0.608, 0.176, 0.369)  # #9B2D5E
+## Lit demon skin ("demon_light"): skin highlights.
+const INFERNO_DEMON_LIGHT := Color(0.831, 0.361, 0.541)  # #D45C8A
+## Charm pink ("charm"): Temptation (hearts over a charmed summon, the kiss, portal swirls).
+const INFERNO_CHARM := Color(1.000, 0.435, 0.710)  # #FF6FB5
+## Lit charm pink ("charm_light"): heart highlights, the sealing ring's glow.
+const INFERNO_CHARM_LIGHT := Color(1.000, 0.722, 0.867)  # #FFB8DD
+
+# --- Act VII: the Sanguine Court ---
+# GDD §15.0 "Act VII foundation (phase 1)": the fixed values of docs/act7/BRIEF_FOUNDATION.md
+# (tools/palette.json ramps blood, velvet, moonlight, owned by the art pass). Candle gold is the
+# existing gold and keeps its meaning (evolution / chest / victory); fresh blood is the act's
+# signature colour (Bloodfeast).
+
+## Blood outline ink (tools/palette.json "blood" ramp, darkest): every Court sprite's outline.
+const COURT_BLOOD_INK := Color(0.071, 0.024, 0.039)  # #12060A
+## Dark blood ("blood_dark"): dried blood, the shadows of the knights' plate, a blood shield's edge.
+const COURT_BLOOD_DARK := Color(0.353, 0.039, 0.078)  # #5A0A14
+## Blood ("blood"): Bloodfeast's red thread, the knights' plate, the Blood Moon's tint.
+const COURT_BLOOD := Color(0.639, 0.078, 0.165)  # #A3142A
+## Fresh blood ("blood_light"): the act's signature colour: a feeding thread's bright core, a shield's glint.
+const COURT_BLOOD_LIGHT := Color(0.878, 0.220, 0.306)  # #E0384E
+## Dark velvet ("velvet_dark"): gowns and capes in shadow, coffin wood.
+const COURT_VELVET_DARK := Color(0.086, 0.059, 0.110)  # #160F1C
+## Velvet ("velvet"): the nobles' gowns, the bats' wings, the castle's banners.
+const COURT_VELVET := Color(0.169, 0.118, 0.212)  # #2B1E36
+## Lit velvet ("velvet_light"): highlights on velvet and wings.
+const COURT_VELVET_LIGHT := Color(0.302, 0.227, 0.369)  # #4D3A5E
+## Dark moonlight ("moon_dark"): silver in shadow, the werewolf hunter's crossbow, moor stone.
+const COURT_MOON_DARK := Color(0.431, 0.478, 0.549)  # #6E7A8C
+## Moonlight ("moon"): silver, pale thralls' skin, the moon on a clear night.
+const COURT_MOON := Color(0.706, 0.753, 0.816)  # #B4C0D0
+## Lit moonlight ("moon_light"): silver glints, mist.
+const COURT_MOON_LIGHT := Color(0.902, 0.933, 0.969)  # #E6EEF7
+
+# --- Act VIII: the Last Line ---
+# GDD §15.0 "Act VIII foundation (phase 1)": the fixed values of docs/act8/BRIEF_FOUNDATION.md
+# (tools/palette.json ramps asphalt, concrete, neon, olive, siren, owned by the art pass). Gold keeps
+# its meaning (evolution / chest / victory) and crimson stays danger; the heroes' bright colours pop
+# off the asphalt.
+
+## City outline ink (tools/palette.json "asphalt" ramp, darkest): every City sprite's outline.
+const CITY_INK := Color(0.063, 0.067, 0.078)  # #101114
+## Dark asphalt ("asphalt_dark"): alleys, the road in shadow, tyres.
+const CITY_ASPHALT_DARK := Color(0.118, 0.125, 0.141)  # #1E2024
+## Asphalt ("asphalt"): the streets' roadway.
+const CITY_ASPHALT := Color(0.227, 0.239, 0.267)  # #3A3D44
+## Concrete ("concrete"): sidewalks, curbs, rooftops, the base's walls.
+const CITY_CONCRETE := Color(0.333, 0.349, 0.373)  # #55595F
+## Lit concrete ("concrete_light"): curb edges, parapets, plaza paving.
+const CITY_CONCRETE_LIGHT := Color(0.478, 0.498, 0.529)  # #7A7F87
+## Sodium orange ("sodium"): streetlights, the lane lines, headlight glow.
+const CITY_SODIUM := Color(0.910, 0.643, 0.227)  # #E8A43A
+## Neon pink ("neon_pink"): signs of the Night Market, the gangs' colours.
+const CITY_NEON_PINK := Color(1.000, 0.310, 0.659)  # #FF4FA8
+## Neon cyan ("neon_cyan"): signs, the speedster's trail, a super's plate edge.
+const CITY_NEON_CYAN := Color(0.247, 0.878, 0.910)  # #3FE0E8
+## Dark olive ("olive_dark"): the army's drab in shadow, tank hulls.
+const CITY_OLIVE_DARK := Color(0.294, 0.325, 0.188)  # #4B5330
+## Olive ("olive"): the army's drab, tanks, sandbags.
+const CITY_OLIVE := Color(0.420, 0.459, 0.271)  # #6B7545
+## Hazard yellow ("hazard"): hazard stripes, the escalation badge, a shell's landing ring.
+const CITY_HAZARD := Color(0.949, 0.769, 0.094)  # #F2C418
+## Police blue ("police_blue"): the police's uniforms and the light bar's blue half.
+const CITY_POLICE_BLUE := Color(0.180, 0.373, 0.816)  # #2E5FD0
+## Siren red ("siren_red"): the light bar's red half (pulsed slowly, never a flash).
+const CITY_SIREN_RED := Color(0.847, 0.165, 0.165)  # #D82A2A
+## Hero orange ("hero_orange"): the speedster's suit, a super's plate accent.
+const CITY_HERO_ORANGE := Color(0.941, 0.478, 0.118)  # #F07A1E
+
+# --- Act IX: the Concord of Stars ---
+# GDD §15.0 "Act IX foundation (phase 1)": the fixed values of docs/act9/BRIEF_FOUNDATION.md
+# (tools/palette.json ramps hull, gunmetal, plasma, laser, chitin, hive, vrask, lumen, turf, owned by the
+# art pass). Hull white and gunmetal, plasma green and laser magenta against starfield black; each race
+# adds one accent of its own. Gold keeps its meaning (evolution / chest / victory) and crimson stays
+# danger; the Luminous's pale light is never the UI gold, and no Concord kind wears the necromancer's
+# violet and bone (the Hive Mother's purple is her own ramp).
+
+## Concord outline ink (tools/palette.json "hull" ramp, darkest): every Concord sprite's outline; starfield black.
+const CONCORD_INK := Color(0.027, 0.031, 0.059)  # #07080F
+## Hull shade ("hull_shade"): the saucer's hull and the greys' suits in shadow.
+const CONCORD_HULL_SHADE := Color(0.682, 0.722, 0.769)  # #AEB8C4
+## Hull white ("hull"): the saucer's hull, the greys' skin and suits lit, the terraformer pod's shell.
+const CONCORD_HULL := Color(0.910, 0.925, 0.941)  # #E8ECF0
+## Dark gunmetal ("gunmetal_dark"): armour plates, weapon housings in shadow, the Vrask's dark armour.
+const CONCORD_GUNMETAL_DARK := Color(0.118, 0.141, 0.173)  # #1E242C
+## Gunmetal ("gunmetal"): armour plates, the saucer's underside, the pod's struts.
+const CONCORD_GUNMETAL := Color(0.227, 0.259, 0.298)  # #3A424C
+## Dark plasma ("plasma_dark"): plasma lights in shadow, the tractor cone's edge, the turf heal's rim.
+const CONCORD_PLASMA_DARK := Color(0.122, 0.659, 0.290)  # #1FA84A
+## Plasma green ("plasma"): the saucer's lights, the tractor beam, the pods' vents, the heal shimmer.
+const CONCORD_PLASMA := Color(0.235, 1.000, 0.416)  # #3CFF6A
+## Laser magenta ("laser"): every Concord aiming line and beam (ConcordBeams), the act's signature colour.
+const CONCORD_LASER := Color(1.000, 0.184, 0.722)  # #FF2FB8
+## Chitin ("chitin"): the Brood's green-black carapace.
+const CONCORD_CHITIN := Color(0.106, 0.227, 0.165)  # #1B3A2A
+## Lit chitin ("chitin_light"): highlights on the Brood's carapace.
+const CONCORD_CHITIN_LIGHT := Color(0.180, 0.420, 0.271)  # #2E6B45
+## Hive purple ("hive"): the Hive Mother only (her own chitin; never the necromancer's violet).
+const CONCORD_HIVE := Color(0.416, 0.247, 0.627)  # #6A3FA0
+## Hive bone ("hive_bone"): the Hive Mother's horned helm and spines.
+const CONCORD_HIVE_BONE := Color(0.878, 0.824, 0.690)  # #E0D2B0
+## Vrask teal ("vrask"): the Vrask's scales.
+const CONCORD_VRASK := Color(0.165, 0.561, 0.478)  # #2A8F7A
+## Lumen ("lumen"): the Luminous's pale light (never the UI gold).
+const CONCORD_LUMEN := Color(1.000, 0.914, 0.627)  # #FFE9A0
+## Dark turf ("turf_dark"): the alien ground's shadow and a scorched cell's char.
+const CONCORD_TURF_DARK := Color(0.102, 0.110, 0.133)  # #1A1C22
+## Turf ("turf"): the alien flesh ground Terraforming spreads.
+const CONCORD_TURF := Color(0.353, 0.165, 0.416)  # #5A2A6A

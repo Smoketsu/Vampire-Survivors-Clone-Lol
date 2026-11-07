@@ -310,6 +310,26 @@ var compel_until: float = 0.0
 var compel_point: Vector2 = Vector2.ZERO
 ## Multiplier on move speed while compelled (0 = held fast: it cannot move).
 var compel_speed: float = 0.0
+# --- Act IV: Mount Olympus ---
+## Game time (s) until which this summon is STUNNED (turned to stone by a
+## Gorgon's gaze): it neither thinks, moves, attacks nor casts, and is drawn
+## stone-grey (0 = never / expired). Written only by THE one stun path for
+## summons, CombatResolver.stun_unit().
+var stunned_until: float = 0.0
+# --- Act V: the Burning Province ---
+## Game time (s) until which this summon is BLINDED by smoke (a Kunoichi's
+## smoke bomb, Kage's smoke fields): it keeps to the ring but cannot find or
+## fight a foe (0 = never / expired). Written only by THE one summon blind
+## path, CombatResolver.blind_unit() (through blind()).
+var blinded_until: float = 0.0
+# --- Act VI: the Inferno ---
+## True while TEMPTATION holds this summon (Act VI; HordeDirector.charm(), the
+## one charm path, run by Temptation): it is parked off the field (hidden, out
+## of the ally grid, it neither thinks nor steps, CombatResolver.damage_unit()
+## ignores it) while a hostile body wearing its look fights for hell in its
+## place; it comes back (set_charmed(false, ...)) when the charm ends. Still
+## counted in its class (no replacement rises). Always false off Act VI.
+var charmed: bool = false
 
 
 # =====================================================================================
@@ -354,6 +374,9 @@ func activate(p_director: HordeDirector, p_game: Game, cls: String, stats: Dicti
 	held_until = 0.0
 	misdirect_until = 0.0
 	compel_until = 0.0
+	stunned_until = 0.0  # Act IV: Mount Olympus (a Gorgon's stone).
+	blinded_until = 0.0  # Act V: the Burning Province (smoke).
+	charmed = false  # Act VI: the Inferno (Temptation).
 	slot_jitter = randf()
 	band_jitter = randf()
 	anchor_offset = pos - game.player.position
@@ -472,6 +495,7 @@ func apply_stats(stats: Dictionary, preserve_pct: bool = true) -> void:
 ## and hide (GDD §24 "On death").
 func deactivate() -> void:
 	_drop_target()
+	charmed = false  # Act VI: a charmed summon that dies is no longer parked.
 	if behavior != null:
 		behavior.on_deactivate(self)
 	airborne = false
@@ -544,8 +568,8 @@ func misdirect(dir: Vector2, duration: float, speed_mult: float) -> bool:
 func think() -> void:
 	if not active or state == State.DEAD or state == State.SPAWNING:
 		return
-	if compel_until > game.elapsed:
-		_stall_since = -1.0  # Held or lured: no stall window, no decisions.
+	if compel_until > game.elapsed or stunned_until > game.elapsed:
+		_stall_since = -1.0  # Held, lured or stunned: no stall window, no decisions.
 		return
 	var player_pos := game.player.position
 	var d_player := position.distance_to(player_pos)
@@ -555,6 +579,10 @@ func think() -> void:
 		return
 	if misdirect_until > game.elapsed:
 		return  # Turned around (misdirect()): no decisions until it wears off.
+	# --- Act V: the Burning Province ---
+	if blinded_until > game.elapsed:
+		_think_blinded()
+		return  # Blinded by smoke (blind()): it keeps to the ring but finds no foe.
 	_update_threat_avoidance()
 	if _check_stall(player_pos):
 		return
@@ -885,7 +913,7 @@ func try_bash(e: Enemy, normal: Vector2) -> void:
 	e.knockback += normal * bash_knockback / maxf(e.mass, 0.1)
 	game.effects.slash(position + normal * radius, normal, Palette.COLD_BLUE if evolution == "" else Palette.VIOLET, radius * 1.6)
 	game.stat_add("warrior_bashes", 1.0)
-	game.combat.damage_enemy(e, bash_damage, "bash" if evolution == "" else evolution + "_bash", director.slot)  # Co-op: called from the enemy's step, so the bash names its army.
+	game.combat.damage_enemy(e, bash_damage, "bash" if evolution == "" else evolution + "_bash", director.slot, position)  # Co-op: called from the enemy's step, so the bash names its army. Act IV: from where it stands.
 
 
 # =====================================================================================
@@ -898,7 +926,7 @@ func physics_step(delta: float) -> void:
 		return
 	state_time += delta
 	target_hold += delta
-	attack_cd -= delta
+	attack_cd -= delta * director.attack_haste(self)  # Act V: Banner of the Dead / Warlord's Seal (exactly 1 without them).
 	_kite_cd -= delta
 	bash_cd -= delta
 	_shield_cd -= delta
@@ -923,6 +951,8 @@ func physics_step(delta: float) -> void:
 		if aura_cd <= 0.0:
 			aura_cd = aura_interval
 			SummonAbilities.aura_pulse(self)
+	if stunned_until > 0.0 and _step_stunned():
+		return  # Act IV: turned to stone (stun()): no move, no attack, no cast.
 	if misdirect_until > game.elapsed:
 		velocity = misdirect_dir * move_speed * misdirect_speed  # Turned around (misdirect()).
 	elif compel_until > 0.0 and _step_compelled(delta):
@@ -959,6 +989,97 @@ func compel(point: Vector2, until: float, speed_mult: float) -> bool:
 	velocity = Vector2.ZERO
 	queue_redraw()
 	return true
+
+
+# --- Act V: the Burning Province ---
+## Act V, the summon side of THE one blind path (CombatResolver.blind_unit()
+## calls it; nothing else should): blinds the unit until game time `until` (a
+## longer blind already running is kept). It drops its target and leaves a
+## special in progress (CASTING); while blinded it follows the ring but finds
+## no foe, so it neither strikes, shoots nor casts at one (a class special
+## that needs no target still runs). Spawning and dead units are immune; an
+## airborne one (a Gargoyle's swoop) flies above the smoke. Returns true when
+## it took hold.
+func blind(until: float) -> bool:
+	if not active or airborne or state == State.SPAWNING or state == State.DEAD:
+		return false
+	blinded_until = maxf(blinded_until, until)
+	_drop_target()
+	if state != State.FOLLOWING and state != State.RETURNING:
+		_enter(State.FOLLOWING)  # Leaves CASTING: a special in progress is cancelled.
+	queue_redraw()
+	return true
+
+
+# --- Act VI: the Inferno ---
+## Act VI, the summon side of THE one charm path (Temptation calls it through
+## HordeDirector.charm(); nothing else should). `on` true parks the unit: it
+## drops its target, leaves a special in progress (CASTING) and is hidden (a
+## hostile body wearing its look fights in its place). `on` false brings it
+## back at world point `at` (moved out of obstacles), FOLLOWING its ring post.
+## Spawning, dead, airborne and mid-special units cannot be charmed. Returns
+## true when the state changed.
+func set_charmed(on: bool, at: Vector2) -> bool:
+	if on:
+		if not active or charmed or airborne or state == State.SPAWNING or state == State.DEAD:
+			return false
+		if behavior != null and behavior.is_busy():
+			return false  # Mid-special (a dash, a swoop): not now.
+		charmed = true
+		_drop_target()
+		_enter(State.FOLLOWING)  # Leaves CASTING: a special in progress is cancelled.
+		velocity = Vector2.ZERO
+		visible = false
+		return true
+	if not charmed:
+		return false
+	charmed = false
+	position = game.arena.free_point(at, radius)
+	velocity = Vector2.ZERO
+	_stall_since = -1.0
+	_enter(State.FOLLOWING)
+	visible = active
+	queue_redraw()
+	return true
+
+
+## The 5 Hz decision of a blinded unit: no target, back to the ring.
+func _think_blinded() -> void:
+	if target != null or heal_target != null:
+		_drop_target()
+	if state != State.FOLLOWING and state != State.RETURNING:
+		_enter(State.FOLLOWING)
+
+
+# --- Act IV: Mount Olympus ---
+## Act IV, the summon side of THE one stun path (CombatResolver.stun_unit()
+## calls it; nothing else should): stuns the unit until game time `until`
+## (a longer stun already running is kept). It drops its target, leaves a
+## special in progress (CASTING) and is drawn stone-grey. Airborne, spawning
+## and dead units are immune. Returns true when it took hold.
+func stun(until: float) -> bool:
+	if not active or airborne or state == State.SPAWNING or state == State.DEAD:
+		return false
+	stunned_until = maxf(stunned_until, until)
+	_drop_target()
+	_enter(State.FOLLOWING)  # Leaves CASTING: a special in progress is cancelled.
+	velocity = Vector2.ZERO
+	self_modulate = ReaperHorrorGlyphs.STONE_TINT
+	queue_redraw()
+	return true
+
+
+## The tick of a stunned unit: holds it still and returns true; once the stun
+## ran out it clears it (and the stone tint) and returns false.
+func _step_stunned() -> bool:
+	if stunned_until > game.elapsed:
+		velocity = Vector2.ZERO
+		return true
+	stunned_until = 0.0
+	if not stone_form:
+		self_modulate = Color.WHITE
+	queue_redraw()
+	return false
 
 
 ## True while the Ancient Eye compels this unit.
@@ -1169,7 +1290,7 @@ func _release_attack() -> void:
 					var struck := target  # The struck enemy (the target may die).
 					game.effects.slash(position + dir * radius, dir, Palette.BONE, radius * 1.4)
 					var mult := behavior.melee_bonus(self, struck) if behavior != null else 1.0  # Class bonus (Pack Hunt).
-					var dealt := game.combat.damage_enemy(struck, damage * mult, dmg_source)
+					var dealt := game.combat.damage_enemy(struck, damage * mult, dmg_source, -1, position)  # Act IV: a blow from where it stands (the Phalanx's flank test).
 					if behavior != null:
 						behavior.on_melee_hit(self, struck, dealt)  # Hellhound burn.
 					if cleave_radius > 0.0 or lifesteal > 0.0:
@@ -1291,6 +1412,8 @@ func _draw_over(ci: CanvasItem) -> void:
 		ProgressionGlyphs.draw_barrier(ci, Vector2.ZERO, radius, barrier_hp / maxf(max_hp, 1.0))
 	if compel_until > 0.0 and game != null and compel_until > game.elapsed:
 		SpireGlyphs.draw_compelled(ci, radius, compel_speed > 0.0)  # Act II: lured (notes) or held (a tentacle coil).
+	if blinded_until > 0.0 and game != null and blinded_until > game.elapsed:
+		ProvinceGlyphs.draw_blinded(ci, radius, game.elapsed)  # Act V: smoke over its eyes (visual only).
 	if hp < max_hp - 0.5 and state != State.SPAWNING:
 		# The node is mirrored via scale.x; counter-flip so the bar always
 		# fills left-to-right.

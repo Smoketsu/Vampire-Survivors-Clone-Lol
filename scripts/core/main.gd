@@ -123,6 +123,9 @@ func _start_game() -> void:
 	Sfx.play_music(Sfx.run_mode_for(_run_config.stage_id if _run_config != null else StageRegistry.DEFAULT_ID))
 	_game = Game.new()
 	_game.run_config = _run_config.duplicate_config() if _run_config != null else RunConfig.new()
+	if _run_config != null:
+		_run_config.offering_id = ""  # A Grave Offering is for one run: Restart / Again / Next start without it.
+		_run_config.borrowed_relic = ""
 	_game.main_menu_requested.connect(UiMotion.transition.bind(self, _show_menu), CONNECT_DEFERRED)
 	if _coop_info.is_empty():
 		_game.restart_requested.connect(UiMotion.transition.bind(self, _start_game), CONNECT_DEFERRED)

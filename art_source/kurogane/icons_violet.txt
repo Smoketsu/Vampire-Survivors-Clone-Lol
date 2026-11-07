@@ -1,0 +1,7 @@
+A sheet of THREE separate pixel-art game ICON SYMBOLS in one row, evenly spaced with wide empty gaps between them, on a FULLY TRANSPARENT background (real alpha). Each symbol is simple, bold and centred in its third of the image, drawn as chunky low-resolution pixel art (each symbol about 24 pixels wide on a coarse grid, shown enlarged with crisp square pixels, nearest-neighbour, 1-pixel dark outline, flat colours, at most 3 shades per colour, light from the top-left). No frame, no badge background, no text, no letters.
+From left to right:
+1. BANNER OF THE DEAD: a tall black war banner (nobori) on a bone pole planted in the ground, a violet skull-circle emblem on the cloth, a small violet glow at its foot.
+2. WARLORD'S SEAL: a square red lacquered seal stamp with a violet skull mark on its face, seen at an angle, a small violet glow around it.
+3. UNBENDING: an upright bone-white skeleton forearm and fist raised, a white katana blade line snapping in two against it, a small spark at the break.
+Colours: violet #160A21 #4A2569 #7A42AD #A35CFA; bone #2A2219 #8C7B5E #D9CCAA #F2EBD3; black cloth #1A0B0C #2E3F74; lacquer red #6A1418 #B3262B #E2594A; steel white #C4CCD8 #F4F1EA.
+Attached: an approved icon of this game: match its pixel size, outline weight and flat look (only the symbol, not its frame).

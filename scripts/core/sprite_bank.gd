@@ -256,13 +256,16 @@ static func draw_disc(ci: CanvasItem, o: Vector2, r: float, color: Color) -> voi
 ## the colours when not flashing (components above 1 brighten): a playable
 ## character without its own art draws the necromancer tinted
 ## (CharacterGlyphs), and a skin's palette fallback tints too (SkinGlyphs).
+## `recolour` (RecolourData id, "" = none) draws the sprite, its walk strip and
+## its idle strip palette-swapped (Recolour: a skin recolour, cosmetic).
 ## Grid art is drawn on the art grid through the sharp-pixel shader (see the
 ## header). Returns false and draws nothing when there is no art, so the
 ## caller can draw its glyph.
-static func draw(ci: CanvasItem, key: String, o: Vector2, flash: bool, tint: Color = Color.WHITE) -> bool:
+static func draw(ci: CanvasItem, key: String, o: Vector2, flash: bool, tint: Color = Color.WHITE, recolour: String = "") -> bool:
 	var tex := texture(key)  # Art for this key, or null.
 	if tex == null:
 		return false
+	var still := Recolour.texture(tex, key, recolour) if recolour != "" else tex  # The still to draw (recoloured or not).
 	var icon := icon_cap > 0.0  # Drawing a HUD / card icon rather than a world unit.
 	var size := _drawn_size(key, tex)  # Drawn size (px).
 	var h := size.y  # Drawn height (px).
@@ -294,14 +297,29 @@ static func draw(ci: CanvasItem, key: String, o: Vector2, flash: bool, tint: Col
 			var fw := float(tex.get_width())  # Frame width (texels) = the still's width.
 			if layer.walk_frame > 0 and layer.walk_frame < n:
 				var src := Rect2(fw * float(layer.walk_frame), 0.0, fw, float(tex.get_height()))  # Frame in the strip.
-				ci.draw_texture_rect_region(_walk[key], Rect2(top_left, size), src, mod)
+				ci.draw_texture_rect_region(Recolour.texture(_walk[key], key + WalkData.SUFFIX, recolour) if recolour != "" else _walk[key], Rect2(top_left, size), src, mod)
 				return true
 			if layer.idle_frame > 0 and layer.idle_frame < m:
 				var isrc := Rect2(fw * float(layer.idle_frame), 0.0, fw, float(tex.get_height()))  # Frame in the idle strip.
-				ci.draw_texture_rect_region(_idle[key], Rect2(top_left, size), isrc, mod)
+				ci.draw_texture_rect_region(Recolour.texture(_idle[key], key + IdleData.SUFFIX, recolour) if recolour != "" else _idle[key], Rect2(top_left, size), isrc, mod)
 				return true
-	ci.draw_texture_rect(tex, Rect2(top_left, size), false, mod)
+	ci.draw_texture_rect(still, Rect2(top_left, size), false, mod)
 	return true
+
+
+## Builds the recoloured still, walk strip and idle strip of sprite `key` for
+## recolour `id` now (Recolour caches them), so the first frame drawn in a run
+## does not pay for the remap. Does nothing for "" / an unknown id or no art.
+## Drawing only.
+static func warm_recolour(key: String, id: String) -> void:
+	var tex := texture(key)  # Art for this key, or null.
+	if tex == null or not RecolourData.has(id):
+		return
+	Recolour.texture(tex, key, id)
+	if walk_frames(key) > 0:
+		Recolour.texture(_walk[key], key + WalkData.SUFFIX, id)
+	if idle_frames(key) > 0:
+		Recolour.texture(_idle[key], key + IdleData.SUFFIX, id)
 
 
 ## Draws stage boss `key` (its still sprite key) in attack pose `pose`
@@ -364,6 +382,29 @@ static func draw_flat(ci: CanvasItem, key: String, o: Vector2, angle: float, tin
 			corner = (o + corner).round() - o  # Whole screen px, so unrotated pickups stay crisp.
 	ci.draw_set_transform(o, angle, Vector2.ONE)
 	ci.draw_texture_rect(tex, Rect2(corner, size), false, tint)
+	ci.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+	return true
+
+
+## Draws frame `frame` (0-based, wrapped) of the flat sprite strip `key`, a
+## PNG of `frames` equal frames side by side (a spinning rotor, a flickering
+## flame), like draw_flat(): centred on `o`, turned by `angle` (art pointing
+## right), whole art pixels. FLAT_SIZES[key] is the strip's longest side.
+## Returns false when there is no art, so the caller draws its glyph.
+static func draw_flat_frame(ci: CanvasItem, key: String, frames: int, frame: int, o: Vector2, angle: float, tint: Color = Color.WHITE) -> bool:
+	var tex := texture(key)  # Art for this key, or null.
+	if tex == null or frames < 1:
+		return false
+	var fw := float(tex.get_width()) / float(frames)  # One frame's width (texels).
+	var fh := float(tex.get_height())  # Frame height (texels).
+	var k := float(SpriteData.ART_SCALE)  # Texture px -> world px.
+	var size := Vector2(fw, fh) * k  # Drawn size of one frame (px).
+	var corner := -size * 0.5  # Rect corner in the rotated frame (px).
+	apply_sharp(ci)
+	if angle == 0.0:
+		corner = (o + corner).round() - o  # Whole screen px, so an unrotated strip stays crisp.
+	ci.draw_set_transform(o, angle, Vector2.ONE)
+	ci.draw_texture_rect_region(tex, Rect2(corner, size), Rect2(fw * float(posmod(frame, frames)), 0.0, fw, fh), tint)
 	ci.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 	return true
 

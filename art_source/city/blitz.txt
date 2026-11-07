@@ -1,0 +1,13 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, a dynamic mid-sprint pose, leaning far forward, arms pumping, with a few thin glowing orange speed-ring lines trailing behind him
+
+LOW-RESOLUTION pixel art: the whole figure is only 44 pixels tall, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims, lacing or engravings.
+
+Subject: a MALE SPEEDSTER SUPERHERO named Blitz, an original design: a tight orange-and-white bodysuit (orange torso and legs, white shoulders, gloves and boots), a winged SILVER HELMET with small wings at the sides and orange round goggles, a lean athletic build. NO chest emblem, NO logo, NO letters, NO lightning bolt, NO cape, NO bat shapes.
+Signature shape that must read in silhouette: the winged silver helmet and the leaning sprint.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: suit orange #F07A1E with lighter #FFB060 and darker #A04A10; white #E8E1C8 #FFFFFF; helmet silver #7A7F87 #B8C4D0; goggles orange and #3FE0E8; skin #D9B8A8 #A8806E; speed rings #F07A1E #E8A43A
+
+Outline: a clean 1-pixel dark outline around the whole subject in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the subject), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark.
+Attached: (1) a game sprite for pixel size, outline weight and flat look; (2) concept art of this unit for the costume only (do NOT copy its detail level or painted shading).

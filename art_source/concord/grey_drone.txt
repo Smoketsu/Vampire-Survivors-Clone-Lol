@@ -1,0 +1,13 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, standing and holding a short glowing probe out in front of it with one hand
+
+LOW-RESOLUTION pixel art: the whole figure is only 28 pixels tall, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims, lacing or engravings.
+
+Subject: a GREY DRONE, a small thin grey alien of the Harvesters (a drone; its sex is not marked, no anatomy shown), smooth silver-grey skin, a big bald egg-shaped head with two large glossy BLACK almond eyes and no nose or mouth to speak of, thin limbs, fully dressed in a plain, close-fitting silver-white jumpsuit with grey boots and gloves, holding a short probe with a glowing green tip. No weapon besides the probe. Never violet or purple (violet and bone are the player's), never bone-white skulls.
+Signature shape that must read in silhouette: the big egg-shaped head on a thin body and the probe held out.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: grey skin and jumpsuit #E8ECF0 #AEB8C4; gunmetal boots, gloves and probe body #3A424C #1E242C; eyes black #07080F with one white glint; probe tip glow #3CFF6A
+
+Outline: a clean 1-pixel dark outline around the whole subject in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the subject), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark. Draw ONLY ONE figure.
+Attached: (1) a game sprite for pixel size, outline weight and flat look; (2) concept art of this unit for the costume only (do NOT copy its detail level or painted shading).

@@ -174,7 +174,7 @@ func _hit_lane(u: SummonedUnit, pos: Vector2) -> void:
 		u.game.stat_add("rogue_dash_hits", 1.0)
 		_swoop_reset(u, e)  # Death from Above (no-op without it).
 		_add_bleed(u, e)
-		u.game.combat.damage_enemy(e, float(u.special["dash_damage"]), "rogue_dash")
+		u.game.combat.damage_enemy(e, float(u.special["dash_damage"]), "rogue_dash", -1, u.position)  # Act IV: the dash strikes from where the rogue is (a flank breaks a shield wall).
 		if not e.active and int(u.special.get("dash_kill_reset", 0)) > 0:
 			_reset_pending = true  # Shadow Reaper: the dash killed it.
 

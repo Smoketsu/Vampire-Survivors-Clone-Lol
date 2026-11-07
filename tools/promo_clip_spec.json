@@ -1,0 +1,354 @@
+{
+ "name": "necropathy_tiktok_v2",
+ "render": [
+  1080,
+  1920
+ ],
+ "size": [
+  1080,
+  1920
+ ],
+ "fps": 30,
+ "lufs": -14,
+ "shots": [
+  {
+   "id": "hook",
+   "stage": "graveyard",
+   "seed": 3,
+   "start": 840,
+   "seconds": 3.0,
+   "texts": [
+    {
+     "text": "A Survivors-Like",
+     "font": "jersey",
+     "size": 57,
+     "scale": 2,
+     "color": "cream",
+     "y": 230,
+     "from": 0.0,
+     "to": 3.0
+    },
+    {
+     "text": "where you control",
+     "font": "jersey",
+     "size": 57,
+     "scale": 2,
+     "color": "cream",
+     "y": 352,
+     "from": 0.0,
+     "to": 3.0
+    },
+    {
+     "text": "the Horde!",
+     "font": "jersey",
+     "size": 57,
+     "scale": 2,
+     "color": "gold",
+     "y": 474,
+     "from": 0.0,
+     "to": 3.0
+    }
+   ]
+  },
+  {
+   "id": "early",
+   "stage": "graveyard",
+   "seed": 3,
+   "start": 60,
+   "seconds": 3.0,
+   "texts": [
+    {
+     "text": "Fight against an",
+     "font": "jersey",
+     "size": 57,
+     "scale": 2,
+     "color": "cream",
+     "y": 230,
+     "from": 0.0,
+     "to": 3.0
+    },
+    {
+     "text": "ever increasing",
+     "font": "jersey",
+     "size": 57,
+     "scale": 2,
+     "color": "cream",
+     "y": 352,
+     "from": 0.0,
+     "to": 3.0
+    },
+    {
+     "text": "swarm of enemies!",
+     "font": "jersey",
+     "size": 57,
+     "scale": 2,
+     "color": "gold",
+     "y": 474,
+     "from": 0.0,
+     "to": 3.0
+    }
+   ]
+  },
+  {
+   "id": "late",
+   "stage": "graveyard",
+   "seed": 3,
+   "start": 960,
+   "seconds": 3.0,
+   "texts": [
+    {
+     "text": "Fight against an",
+     "font": "jersey",
+     "size": 57,
+     "scale": 2,
+     "color": "cream",
+     "y": 230,
+     "from": 0.0,
+     "to": 3.0
+    },
+    {
+     "text": "ever increasing",
+     "font": "jersey",
+     "size": 57,
+     "scale": 2,
+     "color": "cream",
+     "y": 352,
+     "from": 0.0,
+     "to": 3.0
+    },
+    {
+     "text": "swarm of enemies!",
+     "font": "jersey",
+     "size": 57,
+     "scale": 2,
+     "color": "gold",
+     "y": 474,
+     "from": 0.0,
+     "to": 3.0
+    }
+   ]
+  },
+  {
+   "id": "evo",
+   "stage": "graveyard",
+   "seed": 3,
+   "start": 1035,
+   "seconds": 3.4,
+   "texts": [
+    {
+     "text": "Spells and Summons",
+     "font": "jersey",
+     "size": 57,
+     "scale": 2,
+     "color": "cream",
+     "y": 230,
+     "from": 0.0,
+     "to": 3.4
+    },
+    {
+     "text": "all Have Evolutions!",
+     "font": "jersey",
+     "size": 57,
+     "scale": 2,
+     "color": "gold",
+     "y": 352,
+     "from": 0.0,
+     "to": 3.4
+    }
+   ]
+  },
+  {
+   "id": "act4",
+   "stage": "olympus",
+   "seed": 3,
+   "start": 1040,
+   "seconds": 2.6,
+   "texts": [
+    {
+     "text": "Varied Levels and",
+     "font": "jersey",
+     "size": 57,
+     "scale": 2,
+     "color": "cream",
+     "y": 230,
+     "from": 0.0,
+     "to": 2.6
+    },
+    {
+     "text": "Enemy Types!",
+     "font": "jersey",
+     "size": 57,
+     "scale": 2,
+     "color": "gold",
+     "y": 352,
+     "from": 0.0,
+     "to": 2.6
+    },
+    {
+     "text": "Mount Olympus",
+     "font": "jersey",
+     "size": 28,
+     "scale": 3,
+     "color": "teal",
+     "y": 1380,
+     "from": 0.1,
+     "to": 2.6
+    }
+   ]
+  },
+  {
+   "id": "act5",
+   "stage": "kurogane",
+   "seed": 3,
+   "start": 1100,
+   "seconds": 2.6,
+   "texts": [
+    {
+     "text": "Varied Levels and",
+     "font": "jersey",
+     "size": 57,
+     "scale": 2,
+     "color": "cream",
+     "y": 230,
+     "from": 0.0,
+     "to": 2.6
+    },
+    {
+     "text": "Enemy Types!",
+     "font": "jersey",
+     "size": 57,
+     "scale": 2,
+     "color": "gold",
+     "y": 352,
+     "from": 0.0,
+     "to": 2.6
+    },
+    {
+     "text": "Castle Kurogane",
+     "font": "jersey",
+     "size": 28,
+     "scale": 3,
+     "color": "teal",
+     "y": 1380,
+     "from": 0.1,
+     "to": 2.6
+    }
+   ]
+  },
+  {
+   "id": "act8",
+   "stage": "liberty_heights",
+   "seed": 3,
+   "start": 1040,
+   "seconds": 2.6,
+   "texts": [
+    {
+     "text": "Varied Levels and",
+     "font": "jersey",
+     "size": 57,
+     "scale": 2,
+     "color": "cream",
+     "y": 230,
+     "from": 0.0,
+     "to": 2.6
+    },
+    {
+     "text": "Enemy Types!",
+     "font": "jersey",
+     "size": 57,
+     "scale": 2,
+     "color": "gold",
+     "y": 352,
+     "from": 0.0,
+     "to": 2.6
+    },
+    {
+     "text": "Liberty Heights",
+     "font": "jersey",
+     "size": 28,
+     "scale": 3,
+     "color": "teal",
+     "y": 1380,
+     "from": 0.1,
+     "to": 2.6
+    }
+   ]
+  },
+  {
+   "id": "act9",
+   "stage": "ark",
+   "seed": 3,
+   "start": 780,
+   "seconds": 2.6,
+   "texts": [
+    {
+     "text": "Varied Levels and",
+     "font": "jersey",
+     "size": 57,
+     "scale": 2,
+     "color": "cream",
+     "y": 230,
+     "from": 0.0,
+     "to": 2.6
+    },
+    {
+     "text": "Enemy Types!",
+     "font": "jersey",
+     "size": 57,
+     "scale": 2,
+     "color": "gold",
+     "y": 352,
+     "from": 0.0,
+     "to": 2.6
+    },
+    {
+     "text": "The Ark of the Concord",
+     "font": "jersey",
+     "size": 28,
+     "scale": 3,
+     "color": "teal",
+     "y": 1380,
+     "from": 0.1,
+     "to": 2.6
+    }
+   ]
+  },
+  {
+   "id": "end",
+   "stage": "graveyard",
+   "seed": 3,
+   "start": 900,
+   "seconds": 3.2,
+   "dim": 0.6,
+   "logo": {
+    "y": 520,
+    "scale": 3,
+    "from": 0.0,
+    "to": 3.2
+   },
+   "texts": [
+    {
+     "text": "FREE IN YOUR BROWSER",
+     "font": "jersey",
+     "size": 38,
+     "scale": 3,
+     "color": "gold",
+     "y": 900,
+     "from": 0.3,
+     "to": 3.2
+    },
+    {
+     "text": "LINK IN BIO",
+     "font": "jersey",
+     "size": 57,
+     "scale": 3,
+     "color": "teal",
+     "y": 1080,
+     "from": 0.7,
+     "to": 3.2
+    }
+   ]
+  }
+ ],
+ "art_scale": 2
+}
