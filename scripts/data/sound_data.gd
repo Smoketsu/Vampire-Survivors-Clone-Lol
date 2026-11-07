@@ -724,6 +724,62 @@ const STARSONG_SCORE := {
 			[18.5, 698.46, 2.6], [21.5, 440.0, 2.3]]},  # TUNING (not in GDD) [start (s), Hz, length (s)]
 }
 
+# --- Act X (temporary number): the Black Tide ---
+## "Dead Men's Shanty", the Black Tide run loop (GDD §15.0 "The Black Tide art and audio"): the
+## RunLoopSynth score of every stage whose STAGE has "music": "shanty". A sea shanty gone dark, in
+## D minor with the harmonic A major pull (Dm, Bb, Gm, A), 4/4 at 120 bpm: eight 2 s bars, a 16 s
+## loop, four 4 s chord segments. A stamped foot-drum on every beat (the existing "drums" job), an
+## oom-pah-pah of plucked strings (the existing "waltz" job, four beats a bar), an accordion-like
+## reed pad (the existing "organ" job, a fast attack and a gentle vibrato), a tin-whistle tune
+## (the existing "flute" job), a bell buoy tolling far off (the existing "hits") and a fog horn
+## swelling twice a loop (the existing "horn"), over a deep D drone and a swelling sea-wind bed.
+## No new job. Rendered lazily (Sfx), never under the autotest, so every earlier loop and the
+## startup bank stay sample for sample what they were.
+const SHANTY_SCORE := {
+	"loop_seconds": 16.0,  # TUNING (not in GDD) eight 4/4 bars of 2 s (120 bpm)
+	"root_hz": 36.71,  # TUNING (not in GDD) D1, the drone under D minor
+	"chords": [
+		[146.83, 174.61, 220.0],
+		[116.54, 146.83, 174.61],
+		[98.0, 116.54, 146.83],
+		[110.0, 138.59, 164.81],
+	],  # TUNING (not in GDD) Dm, Bb, Gm, A (the raised third of A is the shanty's dark pull)
+	"drone_lp_hz": 65.0,  # TUNING (not in GDD) the hull's low hum
+	"wind_lp_hz": 170.0,  # TUNING (not in GDD) sea wind and the slap of water
+	"wind_swells": 4.0,  # TUNING (not in GDD) the swell: four breaths a loop
+	"vibrato_hz": 0.4,  # TUNING (not in GDD)
+	"vibrato_depth": 0.004,  # TUNING (not in GDD)
+	# The stamped foot-drum: a thump on every beat (0.5 s), the first beat of each bar accented.
+	"drums": {"step": 0.5, "hz0": 100.0, "hz1": 50.0, "dur": 0.28, "amp": 0.36, "decay": 0.09,
+		"accent_every": 4, "accent_amp": 0.56, "slap": 0.16, "ghost_at": 0.5, "ghost_amp": 0.0},  # TUNING (not in GDD)
+	# Oom-pah-pah: a plucked bass on beat 1, the chord on beats 2 to 4 (Dm Dm Bb Bb Gm Gm A A).
+	"waltz": {"beat": 0.5, "beats_per_bar": 4, "dur": 0.4, "bass_amp": 0.2, "chord_amp": 0.045, "decay": 0.14,
+		"lp0": 1700.0, "lp1": 600.0,
+		"bars": [
+			[73.42, [293.66, 349.23, 440.0]], [73.42, [293.66, 349.23, 440.0]],
+			[58.27, [293.66, 349.23, 466.16]], [58.27, [293.66, 349.23, 466.16]],
+			[49.0, [293.66, 392.0, 466.16]], [49.0, [293.66, 392.0, 466.16]],
+			[55.0, [277.18, 329.63, 440.0]], [55.0, [277.18, 329.63, 440.0]],
+		]},  # TUNING (not in GDD) [bass Hz, [chord Hz, ...]] per bar
+	# The accordion: reedy sine partials, a quick swell under each chord root.
+	"organ": {"attack": 0.4, "decay": 1.2, "vib_hz": 5.5, "vib_depth": 0.004,
+		"partials": [[1.0, 0.07], [2.0, 0.055], [3.0, 0.04], [4.0, 0.025], [5.0, 0.012]],
+		"notes": [[0.0, 146.83, 3.9], [4.0, 116.54, 3.9], [8.0, 98.0, 3.9], [12.0, 110.0, 3.8]]},  # TUNING (not in GDD) [start (s), Hz, length (s)]
+	# The tin whistle: a slow, sad tune over the four chords; every note ends before the loop does.
+	"flute": {"amp": 0.07, "breath": 0.06, "attack": 0.12, "decay": 1.1, "vib_hz": 5.0, "vib_depth": 0.01,
+		"notes": [[0.0, 587.33, 1.5], [1.75, 698.46, 0.9], [2.75, 659.25, 1.2],
+			[4.0, 587.33, 1.5], [5.75, 698.46, 0.9], [6.75, 587.33, 1.2],
+			[8.0, 783.99, 1.5], [9.75, 698.46, 0.9], [10.75, 587.33, 1.2],
+			[12.0, 554.37, 1.5], [13.75, 659.25, 0.9], [14.75, 440.0, 1.1]]},  # TUNING (not in GDD) [start (s), Hz, length (s)]
+	# The bell buoy: a dull inharmonic toll far off, once every 8 s, 4 s into the loop.
+	"hits": {"every": 8.0, "offset": 4.0, "root_hz": 392.0, "dur": 2.6, "decay": 0.9,
+		"partials": [[1.0, 0.05], [2.4, 0.03], [3.9, 0.014]], "click": 0.008},  # TUNING (not in GDD)
+	# The fog horn: two slow, low swells a loop (a saw and its fifth through a rising low-pass).
+	"horn": {"starts": [0.0, 8.0], "dur": 6.5, "attack": 2.2, "decay": 3.0, "amp": 0.05,
+		"lp0": 240.0, "lp1": 800.0,
+		"notes": [[73.42, 110.0], [98.0, 146.83]]},  # TUNING (not in GDD) [root, fifth] (Hz) per swell
+}
+
 ## Run-loop scores by STAGE "music" id (Sfx.play_music() modes; "" / absent =
 ## the Act I loop): "tide" = "Below the Tide" (Act II), "iron" = "Iron Requiem"
 ## (Act III), "bronze" = "Hymn of Bronze" (Act IV), "sun" = "The Setting Sun" (Act V), "brimstone" = "Hymn of the Pit" (Act VI), "sanguine" = "Waltz of the Red Moon" (Act VII), "siren" = "Sirens at Midnight" (Act VIII). Each has its own fixed synth seed (Sfx.SCORE_SEEDS).
@@ -737,6 +793,8 @@ const SCORES := {
 	"siren": SIREN_SCORE,  # Act VIII
 	# --- Act IX: the Concord of Stars ---
 	"starsong": STARSONG_SCORE,  # Act IX: "The Reaping Stars"
+	# --- The Black Tide ---
+	"shanty": SHANTY_SCORE,  # the Black Tide: "Dead Men's Shanty"
 }
 ## Sound pack each score asks for when its run starts (Sfx.prepare_pack():
 ## "empire" = EMPIRE_SOUNDS, the Act III effects; "pantheon" = PANTHEON_SOUNDS,
@@ -750,6 +808,8 @@ const SCORE_PACKS := {
 	"siren": "city",  # Act VIII
 	# --- Act IX: the Concord of Stars ---
 	"starsong": "concord",  # Act IX: the Concord sound pack
+	# --- The Black Tide ---
+	"shanty": "corsair",  # the Black Tide sound pack
 }
 
 ## Act III sound effects (the Electronic Empire; recipe keys as SOUNDS). Kept
@@ -1823,4 +1883,151 @@ const CONCORD_SOUNDS: Dictionary = {  # TUNING (not in GDD)
 			{"wave": "square", "f0": 210.0, "f1": 130.0, "dur": 1.1, "amp": 0.08, "attack": 0.1, "decay": 0.6, "lp0": 1600.0, "lp1": 900.0, "vib_hz": 18.0, "vib_depth": 0.05},
 			{"wave": "noise", "dur": 1.2, "amp": 0.12, "attack": 0.1, "decay": 0.6, "lp0": 3000.0, "lp1": 1500.0},
 			{"wave": "sine", "f0": 70.0, "f1": 50.0, "dur": 1.3, "amp": 0.22, "attack": 0.1, "decay": 0.7}]},
+}
+
+# --- The Black Tide ---
+## The Black Tide sound effects (the Corsair Brotherhood and the sea; recipe keys as SOUNDS). Kept OUT of SOUNDS like
+## the other packs: Sfx renders it lazily the first time a Black Tide run's music ("shanty") is asked for
+## (Sfx.prepare_pack("corsair"); seeds Sfx.PACK_SEED + Sfx.PACK_SEED_OFFSETS["corsair"] + i, offset 7000). Sounds are
+## only ever appended at the END (the pack's seeds follow its order). Nothing plays them until the stage code wires
+## its sound map (docs/tide/ART_MANIFEST.md lists what each is for).
+const CORSAIR_SOUNDS: Dictionary = {  # TUNING (not in GDD)
+	# A deck cannon: a flat crack, a low thump and a rolling boom.
+	"cannon_fire": {"dur": 1.1, "volume_db": -9.0, "max_voices": 3, "min_interval": 90, "pitch_var": 0.05, "priority": 3,
+		"layers": [
+			{"wave": "noise", "dur": 0.08, "amp": 0.6, "attack": 0.001, "decay": 0.02, "lp0": 9000.0, "lp1": 2500.0},
+			{"wave": "sine", "f0": 130.0, "f1": 38.0, "dur": 0.7, "amp": 0.75, "attack": 0.002, "decay": 0.22},
+			{"wave": "noise", "start": 0.03, "dur": 0.9, "amp": 0.4, "attack": 0.01, "decay": 0.32, "lp0": 1600.0, "lp1": 160.0},
+			{"wave": "saw", "f0": 70.0, "f1": 40.0, "start": 0.04, "dur": 0.6, "amp": 0.2, "attack": 0.005, "decay": 0.25, "lp0": 400.0}]},
+	# A cannonball lands: a splintering crunch and a short low thud.
+	"cannon_hit": {"dur": 0.5, "volume_db": -11.0, "max_voices": 4, "min_interval": 60, "pitch_var": 0.08, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.2, "amp": 0.5, "attack": 0.001, "decay": 0.06, "lp0": 5000.0, "lp1": 700.0},
+			{"wave": "sine", "f0": 110.0, "f1": 45.0, "dur": 0.4, "amp": 0.6, "attack": 0.002, "decay": 0.12},
+			{"wave": "square", "f0": 190.0, "f1": 90.0, "dur": 0.12, "amp": 0.12, "attack": 0.001, "decay": 0.04, "lp0": 1500.0}]},
+	# A musket shot: a sharp crack with a short hiss of smoke.
+	"musket_shot": {"dur": 0.5, "volume_db": -15.0, "max_voices": 4, "min_interval": 60, "pitch_var": 0.08, "priority": 1,
+		"layers": [
+			{"wave": "noise", "dur": 0.05, "amp": 0.55, "attack": 0.001, "decay": 0.012, "lp0": 9000.0, "lp1": 3500.0},
+			{"wave": "sine", "f0": 220.0, "f1": 70.0, "dur": 0.2, "amp": 0.3, "attack": 0.001, "decay": 0.06},
+			{"wave": "noise", "start": 0.04, "dur": 0.4, "amp": 0.1, "attack": 0.02, "decay": 0.15, "lp0": 4500.0, "lp1": 1500.0}]},
+	# The grapple is thrown: a rope whirring through the air, a rising swish.
+	"hook_throw": {"dur": 0.6, "volume_db": -16.0, "max_voices": 3, "min_interval": 120, "pitch_var": 0.06, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.5, "amp": 0.2, "attack": 0.25, "decay": 0.12, "lp0": 800.0, "lp1": 5000.0},
+			{"wave": "sine", "f0": 300.0, "f1": 900.0, "dur": 0.45, "amp": 0.07, "attack": 0.3, "decay": 0.1, "vib_hz": 24.0, "vib_depth": 0.03},
+			{"wave": "tri", "f0": 180.0, "f1": 420.0, "dur": 0.45, "amp": 0.1, "attack": 0.3, "decay": 0.1, "lp0": 1500.0}]},
+	# The hook bites the rail: an iron clank, a wooden thunk and a taut rope's creak.
+	"hook_bite": {"dur": 0.7, "volume_db": -12.0, "max_voices": 4, "min_interval": 80, "pitch_var": 0.07, "priority": 2,
+		"layers": [
+			{"wave": "sine", "f0": 1250.0, "f1": 1180.0, "dur": 0.4, "amp": 0.16, "attack": 0.001, "decay": 0.09},
+			{"wave": "sine", "f0": 2870.0, "f1": 2790.0, "dur": 0.3, "amp": 0.07, "attack": 0.001, "decay": 0.06},
+			{"wave": "noise", "dur": 0.05, "amp": 0.5, "attack": 0.001, "decay": 0.012, "lp0": 3500.0, "lp1": 900.0},
+			{"wave": "sine", "f0": 140.0, "f1": 70.0, "dur": 0.2, "amp": 0.4, "attack": 0.001, "decay": 0.06},
+			{"wave": "saw", "f0": 210.0, "f1": 250.0, "start": 0.15, "dur": 0.5, "amp": 0.05, "attack": 0.1, "decay": 0.3, "lp0": 700.0, "vib_hz": 14.0, "vib_depth": 0.06}]},
+	# A hook line is cut: a sharp snap and a falling lash of rope.
+	"hook_cut": {"dur": 0.45, "volume_db": -13.0, "max_voices": 3, "min_interval": 80, "pitch_var": 0.08, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.03, "amp": 0.6, "attack": 0.001, "decay": 0.008, "lp0": 8000.0, "lp1": 3000.0},
+			{"wave": "sine", "f0": 900.0, "f1": 160.0, "dur": 0.25, "amp": 0.2, "attack": 0.001, "decay": 0.08},
+			{"wave": "noise", "start": 0.05, "dur": 0.3, "amp": 0.12, "attack": 0.01, "decay": 0.12, "lp0": 3500.0, "lp1": 900.0}]},
+	# A small splash: something light falls into the sea.
+	"splash": {"dur": 0.6, "volume_db": -15.0, "max_voices": 4, "min_interval": 50, "pitch_var": 0.12, "priority": 1,
+		"layers": [
+			{"wave": "noise", "dur": 0.5, "amp": 0.3, "attack": 0.02, "decay": 0.15, "lp0": 5500.0, "lp1": 900.0},
+			{"wave": "sine", "f0": 400.0, "f1": 120.0, "dur": 0.2, "amp": 0.15, "attack": 0.001, "decay": 0.07},
+			{"wave": "noise", "start": 0.15, "dur": 0.4, "amp": 0.08, "attack": 0.05, "decay": 0.15, "lp0": 3000.0, "lp1": 600.0}]},
+	# A man goes overboard: a heavy splash and a gurgle sinking away.
+	"overboard": {"dur": 1.0, "volume_db": -12.0, "max_voices": 3, "min_interval": 70, "pitch_var": 0.1, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.8, "amp": 0.4, "attack": 0.01, "decay": 0.25, "lp0": 4500.0, "lp1": 400.0},
+			{"wave": "sine", "f0": 220.0, "f1": 60.0, "dur": 0.4, "amp": 0.4, "attack": 0.002, "decay": 0.13},
+			{"wave": "sine", "f0": 160.0, "f1": 90.0, "start": 0.3, "dur": 0.6, "amp": 0.08, "attack": 0.05, "decay": 0.3, "vib_hz": 11.0, "vib_depth": 0.1}]},
+	# A shark leaps and lands: a surge of water, a wet slam.
+	"shark_leap": {"dur": 0.9, "volume_db": -12.0, "max_voices": 2, "min_interval": 150, "pitch_var": 0.06, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.4, "amp": 0.3, "attack": 0.25, "decay": 0.1, "lp0": 800.0, "lp1": 4500.0},
+			{"wave": "noise", "start": 0.4, "dur": 0.5, "amp": 0.45, "attack": 0.004, "decay": 0.16, "lp0": 3800.0, "lp1": 500.0},
+			{"wave": "sine", "f0": 140.0, "f1": 50.0, "start": 0.4, "dur": 0.4, "amp": 0.5, "attack": 0.002, "decay": 0.14}]},
+	# The kraken surfaces: a deep, wet groan with a bubbling rumble under it.
+	"kraken_rise": {"dur": 2.4, "volume_db": -9.0, "max_voices": 2, "min_interval": 600, "pitch_var": 0.04, "priority": 3,
+		"layers": [
+			{"wave": "saw", "f0": 44.0, "f1": 78.0, "dur": 2.0, "amp": 0.24, "attack": 0.8, "decay": 1.0, "lp0": 160.0, "lp1": 480.0, "vib_hz": 3.5, "vib_depth": 0.04},
+			{"wave": "sine", "f0": 38.0, "f1": 31.0, "start": 0.1, "dur": 2.2, "amp": 0.4, "attack": 0.5, "decay": 1.2},
+			{"wave": "noise", "dur": 2.0, "amp": 0.18, "attack": 0.7, "decay": 0.8, "lp0": 300.0, "lp1": 1400.0, "vib_hz": 9.0, "vib_depth": 0.3},
+			{"wave": "tri", "f0": 90.0, "f1": 55.0, "start": 0.6, "dur": 1.4, "amp": 0.1, "attack": 0.3, "decay": 0.7, "lp0": 500.0, "vib_hz": 7.0, "vib_depth": 0.08}]},
+	# A tentacle seizes a summon: a slick, crushing squeeze and a snap of timber.
+	"tentacle_grab": {"dur": 0.9, "volume_db": -11.0, "max_voices": 3, "min_interval": 150, "pitch_var": 0.06, "priority": 3,
+		"layers": [
+			{"wave": "noise", "dur": 0.35, "amp": 0.35, "attack": 0.004, "decay": 0.12, "lp0": 3000.0, "lp1": 400.0},
+			{"wave": "sine", "f0": 160.0, "f1": 55.0, "dur": 0.5, "amp": 0.5, "attack": 0.003, "decay": 0.18},
+			{"wave": "saw", "f0": 130.0, "f1": 90.0, "start": 0.1, "dur": 0.7, "amp": 0.1, "attack": 0.05, "decay": 0.4, "lp0": 450.0, "vib_hz": 16.0, "vib_depth": 0.1},
+			{"wave": "noise", "start": 0.3, "dur": 0.5, "amp": 0.15, "attack": 0.02, "decay": 0.2, "lp0": 2000.0, "lp1": 300.0, "vib_hz": 20.0, "vib_depth": 0.4}]},
+	# A powder keg bursts: a bright flash, a heavy boom, a shower of splinters.
+	"powder_blast": {"dur": 1.2, "volume_db": -8.0, "max_voices": 3, "min_interval": 70, "pitch_var": 0.06, "priority": 3,
+		"layers": [
+			{"wave": "noise", "dur": 0.12, "amp": 0.7, "attack": 0.001, "decay": 0.03, "lp0": 10000.0, "lp1": 3000.0},
+			{"wave": "sine", "f0": 100.0, "f1": 28.0, "dur": 0.9, "amp": 0.85, "attack": 0.002, "decay": 0.3},
+			{"wave": "noise", "start": 0.02, "dur": 1.0, "amp": 0.5, "attack": 0.008, "decay": 0.34, "lp0": 2400.0, "lp1": 120.0},
+			{"wave": "noise", "start": 0.2, "dur": 0.4, "amp": 0.12, "attack": 0.01, "decay": 0.14, "lp0": 9000.0, "lp1": 4000.0, "vib_hz": 40.0, "vib_depth": 0.5},
+			{"wave": "saw", "f0": 55.0, "f1": 32.0, "start": 0.03, "dur": 0.7, "amp": 0.2, "attack": 0.005, "decay": 0.3, "lp0": 300.0}]},
+	# A lit fuse: a short, spitting hiss, rising a little.
+	"fuse_hiss": {"dur": 0.8, "volume_db": -20.0, "max_voices": 4, "min_interval": 200, "pitch_var": 0.1, "priority": 1,
+		"layers": [
+			{"wave": "noise", "dur": 0.75, "amp": 0.16, "attack": 0.05, "decay": 0.5, "lp0": 5000.0, "lp1": 9000.0, "vib_hz": 35.0, "vib_depth": 0.5},
+			{"wave": "noise", "start": 0.1, "dur": 0.01, "amp": 0.25, "attack": 0.001, "decay": 0.003, "lp0": 9000.0},
+			{"wave": "noise", "start": 0.33, "dur": 0.01, "amp": 0.22, "attack": 0.001, "decay": 0.003, "lp0": 9000.0},
+			{"wave": "noise", "start": 0.55, "dur": 0.01, "amp": 0.25, "attack": 0.001, "decay": 0.003, "lp0": 9000.0}]},
+	# A cutlass clash: a ringing steel scrape and two quick strikes.
+	"cutlass_clash": {"dur": 0.5, "volume_db": -16.0, "max_voices": 4, "min_interval": 50, "pitch_var": 0.1, "priority": 1,
+		"layers": [
+			{"wave": "noise", "dur": 0.04, "amp": 0.45, "attack": 0.001, "decay": 0.01, "lp0": 9000.0, "lp1": 4000.0},
+			{"wave": "sine", "f0": 1760.0, "f1": 1700.0, "dur": 0.4, "amp": 0.14, "attack": 0.001, "decay": 0.1},
+			{"wave": "sine", "f0": 2640.0, "f1": 2580.0, "start": 0.01, "dur": 0.3, "amp": 0.08, "attack": 0.001, "decay": 0.07},
+			{"wave": "sine", "f0": 4180.0, "start": 0.015, "dur": 0.2, "amp": 0.04, "attack": 0.001, "decay": 0.05},
+			{"wave": "noise", "start": 0.1, "dur": 0.03, "amp": 0.3, "attack": 0.001, "decay": 0.008, "lp0": 8000.0, "lp1": 3000.0}]},
+	# A cutlass slash: a quick whistling swish ending in a soft cut.
+	"cutlass_slash": {"dur": 0.3, "volume_db": -17.0, "max_voices": 4, "min_interval": 45, "pitch_var": 0.1, "priority": 1,
+		"layers": [
+			{"wave": "noise", "dur": 0.22, "amp": 0.25, "attack": 0.08, "decay": 0.05, "lp0": 2000.0, "lp1": 7000.0},
+			{"wave": "sine", "f0": 700.0, "f1": 1900.0, "dur": 0.18, "amp": 0.06, "attack": 0.08, "decay": 0.04},
+			{"wave": "noise", "start": 0.19, "dur": 0.06, "amp": 0.2, "attack": 0.001, "decay": 0.02, "lp0": 3000.0, "lp1": 800.0}]},
+	# The bosun's whistle: a shrill two-tone pipe, kept soft.
+	"bosun_whistle": {"dur": 0.9, "volume_db": -19.0, "max_voices": 2, "min_interval": 250, "pitch_var": 0.03, "priority": 2,
+		"layers": [
+			{"wave": "sine", "f0": 2300.0, "f1": 3100.0, "dur": 0.35, "amp": 0.14, "attack": 0.03, "decay": 0.25, "vib_hz": 28.0, "vib_depth": 0.02},
+			{"wave": "sine", "f0": 3100.0, "f1": 2900.0, "start": 0.38, "dur": 0.5, "amp": 0.14, "attack": 0.03, "decay": 0.3, "vib_hz": 28.0, "vib_depth": 0.02},
+			{"wave": "noise", "dur": 0.85, "amp": 0.03, "attack": 0.03, "decay": 0.4, "lp0": 6000.0, "lp1": 8000.0}]},
+	# A hull groans and the deck tilts: a long, low creak of working timber.
+	"hull_creak": {"dur": 1.6, "volume_db": -17.0, "max_voices": 2, "min_interval": 500, "pitch_var": 0.08, "priority": 1,
+		"layers": [
+			{"wave": "saw", "f0": 95.0, "f1": 140.0, "dur": 1.5, "amp": 0.14, "attack": 0.4, "decay": 0.8, "lp0": 600.0, "lp1": 1100.0, "vib_hz": 13.0, "vib_depth": 0.07},
+			{"wave": "square", "f0": 61.0, "f1": 90.0, "dur": 1.4, "amp": 0.06, "attack": 0.5, "decay": 0.7, "lp0": 380.0, "vib_hz": 9.0, "vib_depth": 0.09},
+			{"wave": "noise", "dur": 1.4, "amp": 0.06, "attack": 0.4, "decay": 0.6, "lp0": 700.0, "lp1": 1500.0, "vib_hz": 17.0, "vib_depth": 0.5}]},
+	# A plank crashes onto the rail, or falls away: a heavy wooden slap.
+	"plank_drop": {"dur": 0.7, "volume_db": -12.0, "max_voices": 2, "min_interval": 150, "pitch_var": 0.07, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.15, "amp": 0.5, "attack": 0.001, "decay": 0.045, "lp0": 3000.0, "lp1": 500.0},
+			{"wave": "sine", "f0": 120.0, "f1": 55.0, "dur": 0.4, "amp": 0.6, "attack": 0.002, "decay": 0.13},
+			{"wave": "square", "f0": 250.0, "f1": 150.0, "start": 0.08, "dur": 0.2, "amp": 0.05, "attack": 0.002, "decay": 0.06, "lp0": 900.0}]},
+	# The great wave: a rising wash, a heavy break and a long hiss of foam.
+	"wave_crash": {"dur": 2.2, "volume_db": -10.0, "max_voices": 2, "min_interval": 1500, "pitch_var": 0.04, "priority": 3,
+		"layers": [
+			{"wave": "noise", "dur": 1.0, "amp": 0.3, "attack": 0.8, "decay": 0.2, "lp0": 300.0, "lp1": 3500.0},
+			{"wave": "noise", "start": 0.8, "dur": 1.4, "amp": 0.5, "attack": 0.05, "decay": 0.6, "lp0": 4500.0, "lp1": 600.0},
+			{"wave": "sine", "f0": 80.0, "f1": 34.0, "start": 0.8, "dur": 1.2, "amp": 0.5, "attack": 0.03, "decay": 0.4}]},
+	# Cursed coins spin up round Marrec: a handful of bright, tinny chimes.
+	"coin_chime": {"dur": 0.9, "volume_db": -19.0, "max_voices": 3, "min_interval": 100, "pitch_var": 0.06, "priority": 1,
+		"layers": [
+			{"wave": "sine", "f0": 1760.0, "dur": 0.5, "amp": 0.1, "attack": 0.001, "decay": 0.14},
+			{"wave": "sine", "f0": 2349.0, "start": 0.07, "dur": 0.5, "amp": 0.09, "attack": 0.001, "decay": 0.14},
+			{"wave": "sine", "f0": 2637.0, "start": 0.15, "dur": 0.5, "amp": 0.08, "attack": 0.001, "decay": 0.14},
+			{"wave": "sine", "f0": 3520.0, "start": 0.22, "dur": 0.5, "amp": 0.05, "attack": 0.001, "decay": 0.12},
+			{"wave": "noise", "start": 0.0, "dur": 0.01, "amp": 0.2, "attack": 0.001, "decay": 0.003, "lp0": 9000.0}]},
+	# The Oath breaks and ghost crew moan: a low, hollow wail through a narrow filter.
+	"ghost_moan": {"dur": 1.8, "volume_db": -17.0, "max_voices": 2, "min_interval": 500, "pitch_var": 0.06, "priority": 2,
+		"layers": [
+			{"wave": "tri", "f0": 220.0, "f1": 165.0, "dur": 1.7, "amp": 0.14, "attack": 0.6, "decay": 0.9, "lp0": 900.0, "vib_hz": 5.5, "vib_depth": 0.03},
+			{"wave": "tri", "f0": 223.0, "f1": 167.0, "dur": 1.7, "amp": 0.1, "attack": 0.6, "decay": 0.9, "lp0": 900.0, "vib_hz": 4.0, "vib_depth": 0.03},
+			{"wave": "noise", "dur": 1.6, "amp": 0.05, "attack": 0.6, "decay": 0.7, "lp0": 500.0, "lp1": 1200.0}]},
 }

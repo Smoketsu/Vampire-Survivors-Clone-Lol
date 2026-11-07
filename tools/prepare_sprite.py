@@ -221,6 +221,11 @@ FACTION_RAMPS = {
     # or the Covenant's crimson (no `violet`, `bone`, `soul`, `crimson` here). Each hue has its own ramp (palette.json),
     # as in Act VIII. The bosses/ and structures/ keys of the act are converted with an explicit --ramps list.
     "concord": ["hull", "gunmetal", "plasma", "laser", "chitin", "vrask", "lumen", "lavender"],
+    # --- The Black Tide (assets/sprites/corsair/) ---
+    # Tarred oak, sailcloth cream, brass, powder-smoke grey, sash red, lantern amber, the navy sea with white foam and the
+    # Brotherhood's weathered skin; the creatures (kraken, serpent) and the ghosts (spectre) are added per key or with --ramps
+    # (make_art.py passes --ramps for every unit). Never the player's violet, the undead's bone or soul teal, or the Covenant's crimson.
+    "corsair": ["oak", "sail", "brass", "powder", "sash", "lantern", "sea", "foam", "tan"],
 }
 # Per-key exceptions to FACTION_RAMPS: key -> (ramps added, ramps removed). The arcane
 # blue of the Mage and Lich and the icy cyan of the frost summons never mix (GDD 15.0 art
