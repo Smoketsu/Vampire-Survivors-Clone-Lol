@@ -208,7 +208,9 @@ const ORDER := ["grave_dominion", "necrotic_vigor", "dark_command", "soul_recycl
 	# --- Act IX: the Proving Moon ---
 	"trophy_rack", "mirror_bones",
 	# --- Act IX: the Ark ---
-	"starseed", "crop_circles"]
+	"starseed", "crop_circles",
+	# --- Act X: the Maelstrom ---
+	"dead_reckoning", "slow_match"]
 
 ## Passives that only help summons (a "dead" level-up card while no summon
 ## class is owned, see AbilityManager.build_offers()).
@@ -258,7 +260,9 @@ const ARMY_PASSIVES := ["grave_dominion", "necrotic_vigor", "dark_command", "sou
 	# --- Act IX: the Proving Moon ---
 	"mirror_bones",
 	# --- Act IX: the Ark ---
-	"crop_circles"]
+	"crop_circles",
+	# --- Act X: the Maelstrom ---
+	"slow_match"]
 
 # --- Act III: the Assembly Halls ---
 ## Overclock (paired with the Grave Drone): a summon class is "ranged" (and
@@ -329,7 +333,9 @@ const MINION_SPECIAL_SOURCES := ["bash", "abom_stomp", "rogue_dash", "gargoyle_s
 	# what lets Armour-Piercing Bones, Armour.pierce_share(), count them as summon hits)
 	"fallen_hero_slam", "black_paragon_slam",
 	# --- Act IX: the Ark --- (the Ghost Saucer's and Black Mothership's dropped foes, GhostSaucerBehavior)
-	"ghost_saucer_lift", "black_mothership_lift"]
+	"ghost_saucer_lift", "black_mothership_lift",
+	# --- Act X: the Maelstrom --- (the Powder Wraith's and Magazine Lord's kegs, PowderWraithBehavior)
+	"powder_wraith_keg", "magazine_lord_keg"]
 ## Unholy Resilience: enemy damage-source tags (CombatResolver.damage_unit
 ## `source`) that count as AREA or HOLY damage, tag -> category ("area" |
 ## "holy"; the category only splits the summary stats). Every other source
@@ -1902,6 +1908,51 @@ const PASSIVES := {
 			{"special_hold": 0.18},  # TUNING (not in GDD)
 			{"special_hold": 0.24},  # TUNING (not in GDD)
 			{"special_hold": 0.30},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act X: the Maelstrom ---
+	# Dead Reckoning (owner-approved proposal: Abyssal Mooring's paired passive;
+	# own decision on its rule; GDD §15.0 "Anchor Drop, Abyssal Mooring, Dead
+	# Reckoning and the Ghost Helmsman"; unlocked by defeating Vandermere,
+	# UnlockData): the dead know where to strike: Anchor Drop recharges
+	# reckoning_haste sooner and its stun lasts reckoning_stun longer
+	# (AbilityManager.apply_spell_mods() on the spell rows' own keys, like
+	# Starseed). Pairs with Anchor Drop -> Abyssal Mooring.
+	"dead_reckoning": {
+		"display_name": "Dead Reckoning",  # Owner-approved proposal
+		"icon": "dead_reckoning",
+		"description": "Your Anchor Drop falls sooner, and its stun holds longer.",
+		"labels": {"reckoning_haste": ["Anchor Drop cooldown", "neg_pct"], "reckoning_stun": ["Anchor stun", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"reckoning_haste": 0.04, "reckoning_stun": 0.1},  # TUNING (not in GDD)
+			{"reckoning_haste": 0.08, "reckoning_stun": 0.2},  # TUNING (not in GDD)
+			{"reckoning_haste": 0.12, "reckoning_stun": 0.3},  # TUNING (not in GDD)
+			{"reckoning_haste": 0.16, "reckoning_stun": 0.4},  # TUNING (not in GDD)
+			{"reckoning_haste": 0.20, "reckoning_stun": 0.5},  # TUNING (not in GDD)
+		],
+	},
+	# Slow Match (own decision: Magazine Lord's paired passive, its name and
+	# rule; GDD §15.0 "The Powder Wraith, Magazine Lord and Slow Match";
+	# unlocked by defeating Vandermere): a slow match is the gunner's fuse cord:
+	# every class special's KNOCKBACK pushes special_push farther (its
+	# *_knockback keys: the Powder Wraith's keg, the Fallen Hero's slam, the
+	# Abomination's stomp...; HordeDirector._special_stats(), THE one path of
+	# summon special numbers, its own category; 0 when not owned, so every
+	# other run is unchanged). On a deck, farther is overboard. Works the same
+	# on every stage. Pairs with the Powder Wraith -> Magazine Lord.
+	"slow_match": {
+		"display_name": "Slow Match",
+		"icon": "slow_match",
+		"description": "Every summon's special knocks foes farther.",
+		"labels": {"special_push": ["Special knockback", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"special_push": 0.1},  # TUNING (not in GDD)
+			{"special_push": 0.2},  # TUNING (not in GDD)
+			{"special_push": 0.3},  # TUNING (not in GDD)
+			{"special_push": 0.4},  # TUNING (not in GDD)
+			{"special_push": 0.5},  # TUNING (not in GDD)
 		],
 	},
 }

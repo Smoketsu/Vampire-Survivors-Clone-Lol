@@ -281,6 +281,19 @@ const UNLOCKS := {
 	"crop_circles": {"type": "passive", "boss": "harvester", "text": "Defeat the Harvester on the Ark of the Concord to unlock."},  # Its paired passive (own decision), unlocked with it
 	"the_unharvested": {"type": "title", "achievement": "last_harvest",
 		"text": "Earn The Last Harvest: beat the Harvester on the Ark of the Concord."},  # Own decision (the clear is recorded as a title, as Acts VI-VIII did)
+	# --- Act X: the Maelstrom ---
+	# Vandermere's fall (owner-approved proposal "Rewards": Anchor Drop is
+	# unlocked by Vandermere; the finale grants the Powder Wraith): the spell
+	# with its paired passive, and the summon class with its paired passive,
+	# offered on every stage (no card-row "act" key). The title Captain of the
+	# Dead is Dead Men Tell Tales' reward (it only records the clear: no
+	# epilogue part until the reorder, docs/last_acts/PLAN.md).
+	"anchor_drop": {"type": "spell", "boss": "vandermere", "text": "Defeat Vandermere in the Maelstrom to unlock."},  # Owner-approved proposal
+	"dead_reckoning": {"type": "passive", "boss": "vandermere", "text": "Defeat Vandermere in the Maelstrom to unlock."},  # Anchor Drop's paired passive (owner-approved proposal), unlocked with it
+	"powder_wraith": {"type": "class", "boss": "vandermere", "text": "Defeat Vandermere in the Maelstrom to unlock."},  # Owner-approved proposal: the finale's reward
+	"slow_match": {"type": "passive", "boss": "vandermere", "text": "Defeat Vandermere in the Maelstrom to unlock."},  # Its paired passive (own decision), unlocked with it
+	"captain_of_the_dead": {"type": "title", "achievement": "dead_men_tell_tales",
+		"text": "Earn Dead Men Tell Tales: beat Vandermere with his Oath broken three times."},  # Own decision (the clear is recorded as a title, as Acts VI-IX did)
 }
 
 ## End-screen plate heading of a newly unlocked item, by type.

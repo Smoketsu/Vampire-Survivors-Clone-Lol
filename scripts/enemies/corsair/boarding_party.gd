@@ -411,3 +411,38 @@ func draw(ci: CanvasItem) -> void:
 			for h: Array in b["hooks"]:
 				if _alive(h[0], int(h[1])):
 					ci.draw_line((h[0] as Enemy).position, boat.position, Palette.CORSAIR_SAIL_SHADE, 1.5)
+
+
+# =====================================================================================
+# --- Act X: the Maelstrom --- a boat with its own crew (the Ghost Bosun's
+# whistle, Vandermere's Crew)
+# =====================================================================================
+
+## Launches boat kind `size` (any boat row; its crew size need not be in
+## BOAT_ORDER: the spectral longboat) carrying exactly `kinds` (crew kind ids,
+## in pouring order) at the director's HP scaling `hp_scale`, on a lane of the
+## usual seeded pick (_pick_lane()). It takes nothing from the queue and may go
+## past max_boats (an event's boat, not the timeline's). Its crew counts as
+## alive while it waits (waiting()). False when no lane is free (counted).
+func launch_boat(size: String, kinds: Array, hp_scale: float) -> bool:
+	if not enabled or game.deck == null or kinds.is_empty():
+		return false
+	var lane := _pick_lane()
+	if lane.is_empty():
+		game.stat_add("boarding_event_refused", 1.0)
+		return false
+	var now := game.elapsed
+	launched += 1
+	var crew: Array = []
+	for k: String in kinds:
+		crew.append({"kind": k, "hp": hp_scale, "elite": false, "dmg": 1.0, "reck": false, "promoted": false, "t": now})
+	var b := {"id": launched, "state": LANE, "t": now, "size": size, "rail": lane[0], "n": lane[1], "lane": int(lane[2]),
+		"crew": crew, "capacity": crew.size(), "taken": crew.size(),
+		"planks": int(CorsairRulesData.BOAT_PLANKS.get(size, 1)), "next_pour": 0.0, "boat": null, "boat_gen": 0, "hooks": []}
+	boats.append(b)
+	peak_boats = maxi(peak_boats, boats.size())
+	game.stat_add("boats_launched", 1.0)
+	game.stat_add("boats_" + size, 1.0)
+	if game.corsair != null:
+		game.corsair.play_sound("hook_throw", lane[0], 0.3)
+	return true

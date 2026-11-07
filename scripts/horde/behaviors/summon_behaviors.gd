@@ -19,6 +19,7 @@
 ##   "bloodthirst" Blood Spawn    BloodSpawnBehavior (Act VII, Castle Sanguis)
 ##   "hero_slam" Fallen Hero      FallenHeroBehavior (Act VIII, Liberty Heights)
 ##   "saucer_lift" Ghost Saucer   GhostSaucerBehavior (Act IX, the Ark of the Concord)
+##   "keg_burst" Powder Wraith    PowderWraithBehavior (Act X, the Maelstrom)
 ## It creates / reuses the per-unit instance and builds the class-specific
 ## level-up card lines (AbilityManager._summon_offer()), so the shared code
 ## only ever talks to this file and the SummonBehavior base class.
@@ -85,6 +86,9 @@ static func for_unit(current: SummonBehavior, kind: String) -> SummonBehavior:
 		# --- Act IX: the Ark ---
 		"saucer_lift":
 			b = GhostSaucerBehavior.new()  # The Ghost Saucer.
+		# --- Act X: the Maelstrom ---
+		"keg_burst":
+			b = PowderWraithBehavior.new()  # The Powder Wraith.
 	if b != null:
 		b.kind = kind
 	return b
@@ -233,6 +237,14 @@ static func card_lines(cls: String, cur: Dictionary, nxt: Dictionary) -> PackedS
 			else:
 				_delta(out, "Drop damage", a, b, "lift_damage")
 				_delta(out, "Lift cooldown (s)", a, b, "lift_cooldown")
+		# --- Act X: the Maelstrom ---
+		"keg_burst":
+			if a.is_empty():
+				out.append("Marches a lit keg into a pack and bursts")
+				out.append("Reforms at your ring 12 s later")
+			else:
+				_delta(out, "Keg damage", a, b, "keg_damage")
+				_delta(out, "Keg blast (px)", a, b, "keg_radius")
 	return out
 
 

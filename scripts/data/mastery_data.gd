@@ -53,6 +53,8 @@ const CLASSES: Array[String] = [
 	"fallen_hero",
 	# --- Act IX: the Ark ---
 	"ghost_saucer",
+	# --- Act X: the Maelstrom ---
+	"powder_wraith",
 ]  # TUNING (not in GDD) every offerable summon class of all nine acts
 
 ## Evolved-only class -> the classes whose mastery it uses (the best level
@@ -92,6 +94,8 @@ const FLAVOUR := {
 	"fallen_hero": "A hero who fights for you now.",  # TUNING (not in GDD) Act VIII's finale class
 	# --- Act IX: the Ark ---
 	"ghost_saucer": "A saucer that harvests for you now.",  # TUNING (not in GDD) Act IX's finale class
+	# --- Act X: the Maelstrom ---
+	"powder_wraith": "A keg that always comes back.",  # TUNING (not in GDD) the Black Tide's finale class
 }  # TUNING (not in GDD) flavour only
 
 ## Autotest profile "max" owns every level of every mastery; "none" and "mid"

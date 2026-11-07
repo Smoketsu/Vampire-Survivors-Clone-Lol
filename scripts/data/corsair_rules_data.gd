@@ -90,6 +90,8 @@ const BOAT_CREW := {
 	"skiff": 6,  # Owner-approved proposal
 	"longboat": 12,  # Owner-approved proposal
 	"raider_ship": 24,  # Owner-approved proposal
+	# --- Act X: the Maelstrom ---
+	"ghost_longboat": 8,  # TUNING (not in GDD) the spectral longboat (only through BoardingParty.launch_boat(); never in BOAT_ORDER)
 }
 ## Boat sizes in order, smallest first (a launch picks the smallest allowed
 ## size that holds the waiting crew, else the largest allowed).
@@ -127,7 +129,9 @@ const SEA := {
 ## The strike types (a kind's row "strike" "type"): "leap" (a shark breaches
 ## onto the deck: a shadow, then it lands as an ordinary deck enemy) and
 ## "tentacle" (a kraken arm grabs one summon, holds it, drags it overboard).
-const STRIKE_TYPES: Array[String] = ["leap", "tentacle"]
+const STRIKE_TYPES: Array[String] = ["leap", "tentacle",
+	# --- Act X: the Maelstrom ---
+	"breach"]
 ## The tentacle (owner-approved proposal: "grabs one summon, holds it 5 s with
 ## the existing held_until hook, then drags it overboard (lost until the next
 ## replenish). Kill the tentacle (200 HP, surfaced 3 s) to free it").
@@ -143,6 +147,17 @@ const TENTACLE := {
 const LEAP := {
 	"telegraph": 0.8,  # Owner-approved proposal: a 0.8 s shadow
 	"inset": 40.0,  # TUNING (not in GDD) px inside the rail the landing is at least
+}
+# --- Act X: the Maelstrom ---
+## The breach (the Sea Serpent's strike, type "breach"; owner-approved proposal:
+## "Breaches in a line across the rail band, then submerges | Step out of the
+## line"): a LANE from the serpent's hull point across the rail band toward its
+## target shows `telegraph` s (SEA's, 1 s), then the serpent's body sweeps it
+## and everything in it is hit once, both armies (the SEA damage keys of its
+## row's "strike").
+const BREACH := {
+	"length": 170.0,  # TUNING (not in GDD) px of the lane from the hull inward (past the 120 px rail band)
+	"half_width": 15.0,  # TUNING (not in GDD) px each side of the lane's line
 }
 
 # --- The Reckoning: the Black Tide ---------------------------------------------------
@@ -164,6 +179,12 @@ const BLACK_TIDE := {
 	"wave_knock": 260.0,  # TUNING (not in GDD) px/s knockback on deck enemies (the far rail drowns them)
 	"wave_damage": 6.0,  # TUNING (not in GDD) to every summon and the necromancer it reaches, x the damage scaling
 	"strike_radius": 40.0,  # TUNING (not in GDD) px
+	# --- Act X: the Maelstrom --- "the kraken surfaces" (owner-approved proposal):
+	# every kraken_every s (the first kraken_first s after 0:00) a kraken arm comes
+	# up out of the sea (SeaStrikes.spawn_swimmer(), the Reckoning's flag; the
+	# swimmer cap holds). 0 = off.
+	"kraken_every": 30.0,  # TUNING (not in GDD) s between two kraken arms in the Black Tide (every stage of the act)
+	"kraken_first": 8.0,  # TUNING (not in GDD) s after 0:00 before the first
 }
 
 # --- Sounds --------------------------------------------------------------------------
@@ -186,6 +207,16 @@ const SOUNDS := {
 	"cutlass_clash": "cutlass_clash",  # Corsair pack: a rapier lunge lands.
 	"hull_creak": "hull_creak",  # Corsair pack: a boat sinks.
 	"wave_crash": "wave_crash",  # Corsair pack: the Black Tide's great wave.
+	# --- Act X: the Maelstrom ---
+	"heave_creak": "hull_creak",  # Corsair pack: the Heave's telegraph, the deck about to tip.
+	"ghost_whistle": "bosun_whistle",  # Corsair pack: the Ghost Bosun's whistle.
+	"oath_break": "ghost_moan",  # Corsair pack: Vandermere's Oath breaks.
+	"ghost_rise": "ghost_moan",  # Corsair pack: a ghost crewman rises for the necromancer.
+	"serpent_breach": "wave_crash",  # Corsair pack: a sea serpent breaches across the rail band.
+	"crew_call": "bosun_whistle",  # Corsair pack: Vandermere calls his crew.
+	"keg_lit": "fuse_hiss",  # Corsair pack: a Powder Wraith lights its keg.
+	"keg_burst": "powder_blast",  # Corsair pack: a Powder Wraith's keg bursts.
+	"anchor_drop": "cannon_hit",  # Corsair pack: an Anchor Drop slams down.
 }
 
 # --- Counter-passive hooks (not built) -------------------------------------------------

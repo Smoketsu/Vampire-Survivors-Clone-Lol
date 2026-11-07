@@ -575,6 +575,9 @@ func _special_stats(base: Dictionary, row: Dictionary, dmg_mult: float) -> Dicti
 	# --- Act IX: the Ark --- Crop Circles: every class special's held effects
 	# last longer, its own category (0 when not owned, so every other run is unchanged).
 	dur *= 1.0 + game.abilities.passive_value(GhostSaucerBehavior.CROP, GhostSaucerBehavior.CROP_KEY)
+	# --- Act X: the Maelstrom --- Slow Match: every class special's knockback
+	# pushes farther, its own category (0 when not owned, so every other run is unchanged).
+	var push := 1.0 + game.abilities.passive_value(PowderWraithBehavior.SLOW_MATCH, PowderWraithBehavior.SLOW_MATCH_KEY)
 	for key: String in src:
 		var v := float(src[key])  # Base value of this key.
 		if key.ends_with("_damage"):
@@ -585,6 +588,8 @@ func _special_stats(base: Dictionary, row: Dictionary, dmg_mult: float) -> Dicti
 			v /= haste
 		elif key.ends_with("_duration"):
 			v *= dur
+		elif key.ends_with("_knockback"):
+			v *= push  # Act X, the Maelstrom: Slow Match.
 		out[key] = v
 	return out
 

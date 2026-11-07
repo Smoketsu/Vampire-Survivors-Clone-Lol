@@ -368,4 +368,36 @@ const ENEMIES := {
 		"is_structure": true,
 		"hook": true,  # A boat's grapple (BoardingParty)
 	},  # The Grapple Hook.
+	# --- Act X: the Maelstrom ---
+	# Swimmer heavy (a creature; owner-approved proposal: "Breaches in a line across the rail band, then submerges |
+	# Step out of the line"). It circles the hull submerged like every swimmer (SeaStrikes) and its STRIKE is the
+	# BREACH (CorsairRulesData.BREACH, the "breach" strike type): a lane from the hull across the rail band shows
+	# its telegraph, then the serpent's body sweeps it, hitting both armies, and it submerges again. A shared row:
+	# any stage of the act may field it. Its id is "corsair_serpent" (Act IV's Olympus owns "sea_serpent"); its art
+	# is the art pass's corsair/sea_serpent (CorsairSerpentKit draws it).
+	"corsair_serpent": {
+		"display_name": "Sea Serpent",  # Owner-approved proposal
+		"max_hp": 260.0,  # TUNING (not in GDD) a swimmer heavy (the kraken arm 200)
+		"move_speed": 40.0,  # TUNING (not in GDD) px/s
+		"damage": 0.0,  # TUNING (not in GDD) per hit, before the time scaling (its breach is its blow)
+		"attack_interval": 1.0,  # TUNING (not in GDD) s
+		"attack_range": 0.0,  # TUNING (not in GDD) px
+		"radius": 15.0,  # TUNING (not in GDD) px
+		"armor": 0.1,  # TUNING (not in GDD) scales
+		"xp": 12,  # TUNING (not in GDD)
+		"behavior": "structure",
+		"projectile_speed": 0.0,  # TUNING (not in GDD) px/s (0 = none)
+		"undead_damage_mult": 1.0,
+		"heal_amount": 0.0,
+		"heal_interval": 0.0,
+		"heal_radius": 0.0,
+		"target_priority": 0.85,  # TUNING (not in GDD) 0..1
+		"mass": 60.0,  # TUNING (not in GDD)
+		"faction": FACTION,
+		"kit": "corsair_serpent",
+		"is_structure": true,  # Never walks the deck: it only breaches and submerges
+		"water": true,
+		"elite_kind": true,
+		"strike": {"type": "breach", "strike_every": 11.0, "dmg_summon": 11.0, "dmg_player": 8.0, "dmg_enemy": 18.0, "surface_time": 1.5},  # TUNING (not in GDD) over SEA (the lane's size in CorsairRulesData.BREACH)
+	},  # The Sea Serpent.
 }

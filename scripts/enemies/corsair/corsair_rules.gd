@@ -192,7 +192,11 @@ func powder_blast(at: Vector2, keg: Dictionary, skip: Enemy = null) -> void:
 func danger_push(p: Vector2) -> Vector2:
 	if not enabled:
 		return Vector2.ZERO
-	return deck.danger_push(p) + sea.danger_push(p) + tide.danger_push(p)
+	var push := deck.danger_push(p) + sea.danger_push(p) + tide.danger_push(p)
+	# --- Act X: the Maelstrom --- the Heave: lean uphill, off the low rail.
+	if game.enemies.maelstrom != null:
+		push += game.enemies.maelstrom.danger_push(p)
+	return push
 
 
 # =====================================================================================

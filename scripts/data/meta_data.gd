@@ -444,7 +444,9 @@ const ACHIEVEMENT_ORDER := ["bone_legion", "heretics_bane", "dread_sovereign", "
 	# --- Act IX: the Proving Moon ---
 	"the_hunter_hunted",
 	# --- Act IX: the Ark ---
-	"last_harvest"]
+	"last_harvest",
+	# --- Act X: the Maelstrom ---
+	"dead_men_tell_tales"]
 
 ## Achievement definitions (GDD §9.4 "Example Achievement Unlocks"). Each
 ## achievement is tracked and recorded in the save and pays a one-time Soul
@@ -691,6 +693,16 @@ const ACHIEVEMENTS := {
 	# clear, with the title The Unharvested (UnlockData / TitleData).
 	"last_harvest": {"display_name": "The Last Harvest", "description": "Beat the Harvester on the Ark of the Concord",
 		"stat": "boss_kills", "stage": "ark", "goal": 1, "unlock": "The title The Unharvested", "bounty": 500},  # Owner-approved proposal; bounty TUNING (not in GDD) as Last Supper
+	# --- Act X: the Maelstrom ---
+	# The Black Tide's finale (owner-approved proposal: "Dead Men Tell Tales
+	# (beat Vandermere with the Oath broken three times; opens the act's
+	# epilogue part)"; the lead's plan: no epilogue part until the reorder, so
+	# it only records the clear, with the title Captain of the Dead): a run in
+	# which Vandermere fell with his Oath broken at least three times (run stat
+	# vandermere_tales_kills, set by MaelstromDirector; MetaProgress counts it,
+	# lifetime dead_men_tales_kills).
+	"dead_men_tell_tales": {"display_name": "Dead Men Tell Tales", "description": "Beat Vandermere in the Maelstrom with his Oath broken three times",
+		"stat": "dead_men_tales_kills", "goal": 1, "unlock": "The title Captain of the Dead", "bounty": 500},  # Owner-approved proposal; bounty TUNING (not in GDD) as The Last Harvest
 }
 
 # --- Content wave 2: B. Achievement rewards ---

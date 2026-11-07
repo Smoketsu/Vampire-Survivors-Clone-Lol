@@ -386,6 +386,11 @@ var proving_moon: ProvingMoonDirector = null
 ## Reactor's vents, the Luminous Archon; StageRegistry "ark"; null on every
 ## other stage).
 var ark: ArkDirector = null
+# --- Act X: the Maelstrom ---
+## The Maelstrom's mechanics (Act X: the Heave, the raised ghost crew, the
+## Ghost Bosun, Vandermere's crew; StageRegistry "maelstrom"; null on every
+## other stage).
+var maelstrom: MaelstromDirector = null
 ## Sanctum kit bookkeeping: recent deaths, Confessor revivals, danger hints.
 var rites: CovenantRites
 ## The living miniboss shown on the HUD's miniboss bar (the Cathedral
@@ -590,6 +595,12 @@ func _ready() -> void:
 		ark.game = game
 		ark.config = stage_def["ark"]
 		add_child(ark)  # The Ark of the Concord's director.
+	# --- Act X: the Maelstrom ---
+	if not (stage_def.get("maelstrom", {}) as Dictionary).is_empty():
+		maelstrom = MaelstromDirector.new()
+		maelstrom.game = game
+		maelstrom.config = stage_def["maelstrom"]
+		add_child(maelstrom)  # The Maelstrom's director.
 
 
 # =====================================================================================
@@ -740,6 +751,9 @@ func step(delta: float) -> void:
 	# --- Act IX: the Ark ---
 	if ark != null:
 		ark.step(delta)  # The tanks, the vents.
+	# --- Act X: the Maelstrom ---
+	if maelstrom != null:
+		maelstrom.step(delta)  # The Heave, the raised ghosts, the Ghost Bosun.
 
 
 ## The Archive kinds' world hazards (ArchiveHazards), created on first use.
@@ -893,6 +907,9 @@ func objective_text() -> String:
 	# --- Act IX: the Ark ---
 	if ark != null and ark.objective_override() != "":
 		return ark.objective_override()  # The Luminous Archon, the Reaping.
+	# --- Act X: the Maelstrom ---
+	if maelstrom != null and maelstrom.objective_override() != "":
+		return maelstrom.objective_override()  # The Ghost Bosun, the Heave's arrow (the HUD arrow, owner-approved proposal).
 	if boss != null and not boss.active:
 		return String(boss_info["dead_objective"])
 	return segments[segment_index]["objective"]
@@ -1158,6 +1175,12 @@ func _run_event(ev: Dictionary) -> void:
 				ark.start_event(ev)
 			game.stat_add("wave_events", 1.0)
 			return  # The Ark's miniboss (ArkDirector).
+		# --- Act X: the Maelstrom ---
+		"ghost_bosun":
+			if maelstrom != null:
+				maelstrom.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return  # The Maelstrom's miniboss (MaelstromDirector).
 	show_banner(ev["banner"])
 	var groups: Array = ev["groups"]
 	if game.shogunate != null:
