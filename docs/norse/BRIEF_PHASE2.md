@@ -107,7 +107,7 @@ The foundation built the whole roster as shared kinds: `raider`, `shield_maiden`
 - **Vigrid:** the miniboss **Fire-Giant of the south** (extends `FireGiantKit`, the burning tracks), Odin's ravens, Fenrir.
 
 ## Balance
-Tune for slot VI: the stubs use HP ×1.6 / 1.65 / 1.7 and damage ×1.4 / 1.45 / 1.5 from 7:00 (a hair above the Shogunate's
+Tune for slot VI: the stubs use HP ×1.6 / 1.65 / 1.65 and damage ×1.4 / 1.45 / 1.45 from 7:00 (Vigrid was softened from 1.7 / 1.5 in the foundation pass, with fewer frost giants and softer berserkers, giants and shield-maidens: the seed-7 army bot broke there) (a hair above the Shogunate's
 HP, between Olympus's and the Shogunate's damage). Compare with `docs/act4/playtest/` and `docs/act5/playtest/`. The army bot
 on seed 7 must end healthy; watch the cold (the `long winter` line's "army summon-s" and frostbite) and the Rune-Stones' horns
 (`rune-stones` line) first. One Godot process at a time.
