@@ -778,6 +778,40 @@ const SHANTY_SCORE := {
 	"horn": {"starts": [0.0, 8.0], "dur": 6.5, "attack": 2.2, "decay": 3.0, "amp": 0.05,
 		"lp0": 240.0, "lp1": 800.0,
 		"notes": [[73.42, 110.0], [98.0, 146.83]]},  # TUNING (not in GDD) [root, fifth] (Hz) per swell
+# --- Act VI (final order): the Hall of the Slain ---
+## "Horns at the Last Feast", the Hall of the Slain run loop (GDD §15.0 "Hall of the Slain art and audio"): the RunLoopSynth
+## score of every stage whose STAGE has "music": "valhall". Slow war drums (the existing Act VI "drums" job, 75 bpm), long low
+## horn calls (the existing "horn" job with a quicker attack, it is the Reckoning's colour: Gjallarhorn), a cold drone and
+## a bare organ pad of open fifths in A Aeolian (A, G, F, G: Am, G, F, G without thirds) and a few frozen chimes (the existing
+## "hits" job). No new job: nothing in the synth changed. 16 s, 20 beats at 75 bpm. Rendered lazily (Sfx), never under the autotest.
+const VALHALL_SCORE := {
+	"loop_seconds": 16.0,  # TUNING (not in GDD) 20 drum beats of 0.8 s
+	"root_hz": 27.5,  # TUNING (not in GDD) A0, a cold drone under A
+	"chords": [
+		[110.0, 164.81, 220.0],
+		[98.0, 146.83, 196.0],
+		[87.31, 130.81, 174.61],
+		[98.0, 146.83, 196.0],
+	],  # TUNING (not in GDD) open fifths, no thirds: bare and cold
+	"drone_lp_hz": 55.0,  # TUNING (not in GDD) a deep frozen hum
+	"wind_lp_hz": 420.0,  # TUNING (not in GDD) a snow wind
+	"wind_swells": 3.0,  # TUNING (not in GDD)
+	"vibrato_hz": 0.3,  # TUNING (not in GDD)
+	"vibrato_depth": 0.002,  # TUNING (not in GDD)
+	# War drums: a skin thump every 0.8 s, every 4th a heavy accent, a soft ghost hit a half beat later.
+	"drums": {"step": 0.8, "hz0": 95.0, "hz1": 46.0, "dur": 0.42, "amp": 0.42, "decay": 0.14,
+		"accent_every": 4, "accent_amp": 0.68, "slap": 0.14, "ghost_at": 0.5, "ghost_amp": 0.17},  # TUNING (not in GDD)
+	# Frozen chimes: a quiet inharmonic ping every 4 s, 2 s into each segment.
+	"hits": {"every": 4.0, "offset": 2.0, "root_hz": 660.0, "dur": 2.0, "decay": 0.7,
+		"partials": [[1.0, 0.04], [2.76, 0.02], [5.4, 0.008]], "click": 0.01},  # TUNING (not in GDD)
+	# The bare organ pad: sine partials, a slow swell, one note per half loop (A, then G).
+	"organ": {"attack": 2.2, "decay": 4.0, "vib_hz": 0.4, "vib_depth": 0.002,
+		"partials": [[1.0, 0.09], [2.0, 0.07], [3.0, 0.04], [4.0, 0.025], [6.0, 0.012]],
+		"notes": [[0.0, 110.0, 7.6], [8.0, 98.0, 7.6]]},  # TUNING (not in GDD) [start (s), Hz, length (s)]
+	# The horn calls: two long, low brass swells a loop (a saw and its fifth through a low-pass that opens).
+	"horn": {"starts": [1.6, 9.6], "dur": 5.2, "attack": 0.9, "decay": 3.0, "amp": 0.065,
+		"lp0": 360.0, "lp1": 1300.0,
+		"notes": [[110.0, 164.81], [98.0, 146.83]]},  # TUNING (not in GDD) [root, fifth] (Hz) per call
 }
 
 ## Run-loop scores by STAGE "music" id (Sfx.play_music() modes; "" / absent =
@@ -795,6 +829,8 @@ const SCORES := {
 	"starsong": STARSONG_SCORE,  # Act IX: "The Reaping Stars"
 	# --- The Black Tide ---
 	"shanty": SHANTY_SCORE,  # the Black Tide: "Dead Men's Shanty"
+	# --- Act VI (final order): the Hall of the Slain ---
+	"valhall": VALHALL_SCORE,  # "Horns at the Last Feast"
 }
 ## Sound pack each score asks for when its run starts (Sfx.prepare_pack():
 ## "empire" = EMPIRE_SOUNDS, the Act III effects; "pantheon" = PANTHEON_SOUNDS,
@@ -810,6 +846,8 @@ const SCORE_PACKS := {
 	"starsong": "concord",  # Act IX: the Concord sound pack
 	# --- The Black Tide ---
 	"shanty": "corsair",  # the Black Tide sound pack
+	# --- Act VI (final order): the Hall of the Slain ---
+	"valhall": "norse",  # the Norse sound pack
 }
 
 ## Act III sound effects (the Electronic Empire; recipe keys as SOUNDS). Kept
@@ -2030,4 +2068,54 @@ const CORSAIR_SOUNDS: Dictionary = {  # TUNING (not in GDD)
 			{"wave": "tri", "f0": 220.0, "f1": 165.0, "dur": 1.7, "amp": 0.14, "attack": 0.6, "decay": 0.9, "lp0": 900.0, "vib_hz": 5.5, "vib_depth": 0.03},
 			{"wave": "tri", "f0": 223.0, "f1": 167.0, "dur": 1.7, "amp": 0.1, "attack": 0.6, "decay": 0.9, "lp0": 900.0, "vib_hz": 4.0, "vib_depth": 0.03},
 			{"wave": "noise", "dur": 1.6, "amp": 0.05, "attack": 0.6, "decay": 0.7, "lp0": 500.0, "lp1": 1200.0}]},
+# --- Act VI (final order): the Hall of the Slain ---
+## The Hall of the Slain's sound effects (recipe keys as SOUNDS). Kept OUT of SOUNDS like the other packs: Sfx renders it
+## lazily the first time a Norse run's music ("valhall") is asked for (Sfx.prepare_pack("norse"); seeds Sfx.PACK_SEED +
+## Sfx.PACK_SEED_OFFSETS["norse"] + i). Nothing plays them until the stage code wires them to the rules.
+const NORSE_SOUNDS: Dictionary = {  # TUNING (not in GDD)
+	# A valkyrie dives: a rising rush of wings, a falling spear-shriek and a gold chime on the strike.
+	"valkyrie_dive": {"dur": 1.2, "volume_db": -14.0, "max_voices": 3, "min_interval": 200, "pitch_var": 0.05, "priority": 3,
+		"layers": [
+			{"wave": "noise", "dur": 0.9, "amp": 0.26, "attack": 0.6, "decay": 0.25, "lp0": 600.0, "lp1": 6000.0},
+			{"wave": "sine", "f0": 1800.0, "f1": 520.0, "dur": 0.8, "amp": 0.1, "attack": 0.05, "decay": 0.4},
+			{"wave": "tri", "f0": 900.0, "f1": 260.0, "dur": 0.8, "amp": 0.06, "attack": 0.05, "decay": 0.4, "lp0": 3000.0},
+			{"wave": "sine", "f0": 1760.0, "start": 0.8, "dur": 0.4, "amp": 0.1, "attack": 0.002, "decay": 0.15},
+			{"wave": "sine", "f0": 2637.0, "start": 0.8, "dur": 0.35, "amp": 0.05, "attack": 0.002, "decay": 0.12}]},
+	# A berserker bellows: a growling saw, breath noise and a chest thump.
+	"berserk_roar": {"dur": 1.0, "volume_db": -12.0, "max_voices": 2, "min_interval": 350, "pitch_var": 0.08, "priority": 2,
+		"layers": [
+			{"wave": "saw", "f0": 120.0, "f1": 70.0, "dur": 0.9, "amp": 0.2, "attack": 0.05, "decay": 0.4, "lp0": 1400.0, "lp1": 600.0, "vib_hz": 28.0, "vib_depth": 0.06},
+			{"wave": "square", "f0": 60.0, "f1": 45.0, "dur": 0.85, "amp": 0.1, "attack": 0.05, "decay": 0.4, "lp0": 500.0},
+			{"wave": "noise", "dur": 0.8, "amp": 0.14, "attack": 0.06, "decay": 0.35, "lp0": 2200.0, "lp1": 900.0},
+			{"wave": "sine", "f0": 70.0, "f1": 40.0, "dur": 0.3, "amp": 0.3, "attack": 0.004, "decay": 0.12}]},
+	# A Rune-Stone is taken: a cold ringing chime that dies into a stone thrum.
+	"rune_capture": {"dur": 1.6, "volume_db": -13.0, "max_voices": 2, "min_interval": 400, "pitch_var": 0.03, "priority": 3,
+		"layers": [
+			{"wave": "sine", "f0": 880.0, "dur": 1.4, "amp": 0.16, "attack": 0.002, "decay": 0.9},
+			{"wave": "sine", "f0": 1318.5, "dur": 1.2, "amp": 0.09, "attack": 0.002, "decay": 0.7},
+			{"wave": "sine", "f0": 2437.0, "dur": 0.9, "amp": 0.04, "attack": 0.002, "decay": 0.5},
+			{"wave": "noise", "dur": 0.08, "amp": 0.2, "attack": 0.001, "decay": 0.03, "lp0": 2500.0},
+			{"wave": "sine", "f0": 73.4, "f1": 55.0, "start": 0.05, "dur": 1.3, "amp": 0.26, "attack": 0.02, "decay": 0.8}]},
+	# The hall's horn calls a squad: a long low brass note with a fifth, a rough start and a swell.
+	"horn_call": {"dur": 2.2, "volume_db": -11.0, "max_voices": 2, "min_interval": 800, "pitch_var": 0.02, "priority": 3,
+		"layers": [
+			{"wave": "saw", "f0": 110.0, "dur": 2.0, "amp": 0.2, "attack": 0.25, "decay": 1.2, "lp0": 380.0, "lp1": 1100.0, "vib_hz": 5.0, "vib_depth": 0.006},
+			{"wave": "saw", "f0": 164.8, "start": 0.05, "dur": 1.9, "amp": 0.1, "attack": 0.3, "decay": 1.2, "lp0": 420.0, "lp1": 1200.0, "vib_hz": 5.0, "vib_depth": 0.006},
+			{"wave": "sine", "f0": 55.0, "dur": 2.0, "amp": 0.24, "attack": 0.2, "decay": 1.3},
+			{"wave": "noise", "dur": 0.2, "amp": 0.06, "attack": 0.05, "decay": 0.08, "lp0": 900.0}]},
+	# A frost giant's stomp: a deep thud, a shatter of ice and a long rumble.
+	"frost_giant_stomp": {"dur": 1.0, "volume_db": -10.0, "max_voices": 2, "min_interval": 250, "pitch_var": 0.06, "priority": 3,
+		"layers": [
+			{"wave": "sine", "f0": 80.0, "f1": 28.0, "dur": 0.8, "amp": 0.42, "attack": 0.003, "decay": 0.35},
+			{"wave": "noise", "dur": 0.5, "amp": 0.35, "attack": 0.002, "decay": 0.2, "lp0": 1800.0, "lp1": 200.0},
+			{"wave": "noise", "start": 0.04, "dur": 0.3, "amp": 0.12, "attack": 0.001, "decay": 0.1, "lp0": 9000.0, "lp1": 5000.0},
+			{"wave": "sine", "f0": 3300.0, "start": 0.05, "dur": 0.2, "amp": 0.04, "attack": 0.001, "decay": 0.08},
+			{"wave": "tri", "f0": 45.0, "start": 0.1, "dur": 0.85, "amp": 0.16, "attack": 0.03, "decay": 0.5, "lp0": 160.0}]},
+	# An Einherjar returns to the field: a rising golden swell and a soft horn note.
+	"einherjar_rise": {"dur": 1.5, "volume_db": -15.0, "max_voices": 3, "min_interval": 300, "pitch_var": 0.04, "priority": 2,
+		"layers": [
+			{"wave": "sine", "f0": 440.0, "f1": 880.0, "dur": 1.2, "amp": 0.1, "attack": 0.8, "decay": 0.4},
+			{"wave": "sine", "f0": 660.0, "f1": 1320.0, "dur": 1.2, "amp": 0.05, "attack": 0.9, "decay": 0.4},
+			{"wave": "noise", "dur": 1.0, "amp": 0.06, "attack": 0.6, "decay": 0.3, "lp0": 800.0, "lp1": 6000.0},
+			{"wave": "saw", "f0": 130.8, "start": 0.7, "dur": 0.7, "amp": 0.1, "attack": 0.1, "decay": 0.35, "lp0": 500.0, "lp1": 1200.0}]},
 }

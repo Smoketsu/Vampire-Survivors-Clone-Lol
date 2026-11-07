@@ -226,6 +226,12 @@ FACTION_RAMPS = {
     # Brotherhood's weathered skin; the creatures (kraken, serpent) and the ghosts (spectre) are added per key or with --ramps
     # (make_art.py passes --ramps for every unit). Never the player's violet, the undead's bone or soul teal, or the Covenant's crimson.
     "corsair": ["oak", "sail", "brass", "powder", "sash", "lantern", "sea", "foam", "tan"],
+    # --- Act VI (final order): the Hall of the Slain (assets/sprites/norse/) ---
+    # Frost white, iron grey, pine green-black, valkyrie pale gold, ice-blue rune glow, the barrow-dead's blue-grey,
+    # plus skin and leather / wood (brown). Hearth amber sits near skin, so keys that need it add it in KEY_RAMPS.
+    # Never the player's violet, the undead's bone or soul teal, or the Covenant's crimson (berserkers and the
+    # fire-giant add crimson / flame per key).
+    "norse": ["frost", "iron", "pine", "valk", "rune", "draugr", "skin", "brown"],
 }
 # Per-key exceptions to FACTION_RAMPS: key -> (ramps added, ramps removed). The arcane
 # blue of the Mage and Lich and the icy cyan of the frost summons never mix (GDD 15.0 art
@@ -245,6 +251,17 @@ KEY_RAMPS = {
     "bosses/hive_mother": (["hive", "hive_bone", "gold"], ["violet", "bone", "soul", "crimson"]),  # her purple chitin, cream spines and gold eyes only (the bosses/ folder has no faction set)
     "concord/prism": ([], ["chitin", "vrask", "plasma"]),  # the Star-Seer: hull gown, laser trim, lumen hair, lavender skin
     "concord/grey_drone": ([], ["lavender", "lumen", "vrask", "chitin"]),  # a silver grey with a plasma probe
+    # --- Act VI (final order): the Hall of the Slain ---
+    "norse/berserker": (["crimson"], []),  # red fury eyes and blood
+    # The three playable characters are NECROMANCERS of the act (owner note): violet, bone, soul teal, pale skin.
+    "norse/rune_seer": (["violet", "bone", "soul", "grey"], ["frost", "iron", "pine", "valk", "rune", "draugr"]),
+    "norse/shield_maiden_hero": (["violet", "bone", "soul", "grey"], ["frost", "iron", "pine", "valk", "rune", "draugr"]),
+    "norse/berserker_hero": (["violet", "bone", "soul", "grey"], ["frost", "iron", "pine", "valk", "rune", "draugr"]),
+    "norse/fire_giant": (["hearth", "flame", "crimson"], ["frost", "draugr"]),  # black iron with amber fire cracks
+    "norse/skald": (["hearth"], []),  # the lyre's warm gold-brown and the horn
+    "norse/wolf_of_the_wastes": ([], ["skin", "valk", "pine"]),  # grey fur, ice-blue eyes
+    "norse/fenrir": (["hearth"], ["skin", "valk", "pine", "frost"]),  # black fur, burning yellow eyes
+    "norse/raven": (["hearth"], ["skin", "valk", "frost", "draugr"]),
 }
 # Ramps holding less than this share (0-1) of the opaque pixels are dropped (re-snapped).
 RAMP_MIN_SHARE = 0.03
