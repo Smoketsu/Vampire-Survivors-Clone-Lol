@@ -20,24 +20,31 @@ def cap(*lines):
     return [(l[1:], GOLD) if l.startswith("*") else (l, CREAM) for l in lines]
 
 
-def texts(c, dur):
+def texts(c, dur, t0=0.0):
+    """Caption text entries for one caption c, shown from t0 to dur (s within the shot)."""
     out = []
     for i, (line, col) in enumerate(c):
         assert FONT.getbbox(line)[2] * 2 <= 838, "caption line too wide: " + line
-        out.append({"text": line, "font": "jersey", "size": 57, "scale": 2, "color": col, "y": 230 + 122 * i, "from": 0.0, "to": dur})
+        out.append({"text": line, "font": "jersey", "size": 57, "scale": 2, "color": col, "y": 230 + 122 * i, "from": t0, "to": dur})
     return out
 
 
 # shot: (stage, seed, start, extra, caption); every shot is SEC seconds
-SEC = 5.6
+SEC = 5.6  # length of every shot (s of game time = s of video) unless CLIP_SEC overrides it for that clip
+CLIP_SEC = {2: 4.6}  # per-clip shot length (s): Day 2 shows five different spell builds, so each shot is shorter
+# Opening title of a clip (caption shown over the first shot only, then the shot's own caption takes over):
+# clip number -> (caption, seconds it stays up). Day 2: "36 Spells to Master!" before the first build's names.
+INTRO = {2: (cap("*36 Spells", "to Master!"), 1.6)}
 G = lambda *a: a
 CLIPS = {
  1: [("graveyard", 7, 700, [], cap("Command an Army", "*of the Dead!")),
      ("graveyard", 7, 830, [], cap("Warriors Block,", "Priests Heal,", "*Archers Fire!")),
      ("graveyard", 7, 960, [], cap("Warriors Block,", "Priests Heal,", "*Archers Fire!"))],
- 2: [("crimson_march", 5, 600, ["--policy=evolve", "--spells=bone_spear,corpse_explosion,plague_cloud,soul_chains,death_mark"], cap("*36 Spells", "to Master!")),
-     ("crimson_march", 5, 666, ["--policy=evolve", "--spells=bone_spear,corpse_explosion,plague_cloud,soul_chains,death_mark"], cap("Bone Spears,", "Soul Chains,", "*Corpse Explosions!")),
-     ("crimson_march", 5, 732, ["--policy=evolve", "--spells=bone_spear,corpse_explosion,plague_cloud,soul_chains,death_mark"], cap("Bone Spears,", "Soul Chains,", "*Corpse Explosions!"))],
+ 2: [("crimson_march", 5, 700, ["--policy=evolve", "--spells=bone_spear,soul_chains,corpse_explosion"], cap("Bone Spear,", "Soul Chains,", "*Corpse Explosion!")),
+     ("graveyard", 6, 720, ["--policy=evolve", "--spells=plague_cloud,wither,soul_siphon"], cap("Plague Cloud,", "Wither,", "*Soul Siphon!")),
+     ("harbour", 4, 720, ["--policy=evolve", "--spells=undertow,forbidden_verse,call_of_the_drowned"], cap("Undertow,", "Forbidden Verse,", "*Call of the Drowned!")),
+     ("wastes", 4, 720, ["--policy=evolve", "--spells=death_ray,stolen_thunder,scrap_swarm"], cap("Death Ray,", "Stolen Thunder,", "*Scrap Swarm!")),
+     ("ravensmoor", 4, 720, ["--policy=evolve", "--spells=moonfang,night_swarm,witch_circle"], cap("Moonfang,", "Night Swarm,", "*Witch Circle!"))],
  3: [("burning_gate", 4, 600, [], cap("*Descend into Hell!")),
      ("burning_gate", 4, 780, [], cap("Break the Portals,", "*Survive the Pits!")),
      ("pandemonium", 4, 800, [], cap("Hell Comes for", "*Your Souls!"))],
@@ -92,10 +99,15 @@ if __name__ == "__main__":
     for n, shots in CLIPS.items():
         out = []
         for i, (stage, seed, start, extra, c) in enumerate(shots):
-            s = {"id": "s%d" % i, "stage": stage, "seed": seed, "start": start, "seconds": SEC}
+            sec = CLIP_SEC.get(n, SEC)
+            s = {"id": "s%d" % i, "stage": stage, "seed": seed, "start": start, "seconds": sec}
             if extra:
                 s["extra"] = extra
-            s["texts"] = texts(c, SEC)
+            if i == 0 and n in INTRO:
+                intro, t_intro = INTRO[n]
+                s["texts"] = texts(intro, t_intro) + texts(c, sec, t_intro)
+            else:
+                s["texts"] = texts(c, sec)
             out.append(s)
         out.append(END)
         spec = {"name": "day%02d" % n, "render": [1080, 1920], "size": [1080, 1920], "fps": 30, "lufs": -14, "art_scale": 2, "shots": out}
