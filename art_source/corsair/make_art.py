@@ -275,6 +275,141 @@ def convert(keys: list) -> None:
         raw.write_bytes(keep)
 
 
+
+# --- sheets: the deck furniture and the icons (one API image each, cut apart by transparent gaps) ---
+SHEET_HEAD = ("A sheet of {n} separate pixel-art game {what} in one row, evenly spaced with wide empty gaps between them, on a FULLY TRANSPARENT "
+              "background (real alpha). Each is simple, bold and centred in its share of the image, drawn as chunky low-resolution pixel art "
+              "(shown enlarged with crisp square pixels, nearest-neighbour, 1-pixel dark outline, flat colours, at most 3 shades per colour, light "
+              "from the top-left). No frame, no badge background, no ground shadow, no text, no letters.\nFrom left to right:\n")
+PIRATE_COLOURS = ("Colours: tarred oak #2B1D14 #4A3220 #7A5632; brass #7A5A1C #C4912A #EBC85A; powder grey #2E3239 #5E636C #9498A0; sailcloth cream "
+                  "#8F8466 #D6CBA4 #F0E9CE; sash red #6A1620 #B02A30 #E2563F; lantern amber #B0661C #F2A63A #FFDF8A; navy #0E1A33 #1B3560 #2F5F96; "
+                  "foam white #8FB4D2 #D8E9F4; ghost green #1D4F4A #46A78F #B7F0DC; dark #0B0A10.")
+OBSTACLES = ["a ship's MAST seen from above: a thick round tarred-oak mast stub with a brass-banded base, ropes coiled round it and a furled cream sail bundle on top (a round object, about 36 px across)",
+             "a ship's HATCH cover seen from above: a rectangular wooden grating hatch with iron corner brackets and a rope handle (a rectangle about 44 x 30 px)",
+             "a small cluster of two POWDER BARRELS seen from above, tarred oak with iron bands, one with a red stripe (about 28 px across)",
+             "a big stack of four POWDER BARRELS lashed together with rope seen from above, iron bands, a spilled bit of black powder (about 38 px across)",
+             "a DECK CANNON on a wooden carriage seen from above, pointing right, a black iron barrel with a brass muzzle ring and brass wheels (a rectangle about 40 x 22 px)"]
+OBSTACLE_KEYS = [("obstacles/deck_mast_l", 36, "oak,brass,sail,powder,sea"), ("obstacles/deck_hatch_l", 44, "oak,powder,brass,sea"),
+                 ("obstacles/deck_barrels_s", 28, "oak,powder,sash,brass,sea"), ("obstacles/deck_barrels_l", 38, "oak,powder,sash,brass,sea"),
+                 ("obstacles/deck_cannon_l", 40, "powder,brass,oak,sea")]
+VERTICAL = ["obstacles/deck_hatch_l", "obstacles/deck_cannon_l"]  # Rect kinds whose vertical sprite (_v) is the horizontal one turned 90 degrees.
+# Icon sheets: file -> (frame icon, [(id, description)]). violet frame = icons/abyssal_pact, gold frame = icons/tidecallers_host.
+ICONSETS = {
+    "icons_a": ("icons/abyssal_pact", [
+        ("chain_shot", "CHAIN SHOT: two spiked iron balls joined by a short chain, spinning, trailing pale green spectral light"),
+        ("cannonade", "CANNONADE: three black cannonballs falling with amber fire trails and a brass cannon muzzle flash below"),
+        ("anchor_drop", "ANCHOR DROP: a big rusted iron anchor plunging down, pale green spectral glow, a shock ring on the ground"),
+        ("powder_wraith", "POWDER WRAITH: a bone-white skull wearing a torn red bandana with a lit powder keg fuse sparking amber beside it")]),
+    "icons_b": ("icons/tidecallers_host", [
+        ("keelhauler", "KEELHAULER: a long barnacled chain with a heavy hook swinging through a ring of white foam, pale green glow"),
+        ("dead_mens_broadside", "DEAD MEN'S BROADSIDE: a row of five ghostly cannonballs in a fan, amber and pale green fire"),
+        ("abyssal_mooring", "ABYSSAL MOORING: a huge anchor with a chain wound round it sinking into dark whirlpool water, pale green glow"),
+        ("magazine_lord", "MAGAZINE LORD: a tower of three powder kegs with burning amber fuses under a black tricorn hat")]),
+    "icons_c": ("icons/abyssal_pact", [
+        ("bosuns_whistle", "BOSUN'S WHISTLE: a brass bosun's whistle on a chain with three small sound waves"),
+        ("black_powder", "BLACK POWDER: an open powder horn spilling black grains and an amber spark"),
+        ("dead_reckoning", "DEAD RECKONING: a brass compass with a skull on its face and a pale green needle"),
+        ("sea_legs", "SEA LEGS: a sturdy brown sea boot planted on a tilted wooden deck, foam at the edge")]),
+    "icons_d": ("icons/tidecallers_host", [
+        ("barnacle_bones", "BARNACLE BONES: a bone-white ribcage encrusted with grey-white barnacles and a bit of seaweed"),
+        ("ach_not_one_aboard", "NOT ONE ABOARD: a small rowboat with a grapple rope cut, a cutlass slashing the rope"),
+        ("ach_walked_the_plank", "WALKED THE PLANK: a wooden plank over foam water with a splash at its end"),
+        ("ach_dead_men_tell_tales", "DEAD MEN TELL TALES: a pale green ghost skull wearing a tricorn, a rolled scroll beside it")]),
+}
+
+
+def gen_sheets(keys: list) -> None:
+    PROMPTS.mkdir(exist_ok=True)
+    RAW.mkdir(exist_ok=True)
+    jobs = {"obstacles": SHEET_HEAD.format(n=5, what="DECK FURNITURE PIECES (top-down game obstacles)") + "\n".join(
+        "%d. %s" % (i + 1, d) for i, d in enumerate(OBSTACLES)) + "\n" + PIRATE_COLOURS}
+    for name, (frame, items) in ICONSETS.items():
+        jobs[name] = SHEET_HEAD.format(n=4, what="ICON SYMBOLS (each about 24 pixels wide on a coarse grid)") + "\n".join(
+            "%d. %s" % (i + 1, d) for i, (_, d) in enumerate(items)) + "\n" + PIRATE_COLOURS + (
+            "\nAttached: an approved icon of this game: match its pixel size, outline weight and flat look (only the symbol, not its frame).")
+    for name, text in jobs.items():
+        if keys and name not in keys:
+            continue
+        out = RAW / (name + ".png")
+        if out.exists():
+            continue
+        pf = PROMPTS / (name + ".txt")
+        pf.write_text(text)
+        cmd = [sys.executable, "tools/gen_image.py", str(pf), str(out), "--key", "corsair/" + name, "--size", "1536x1024"]
+        if name != "obstacles":
+            cmd += ["--ref", str(ROOT / "assets/sprites/icons/bone_spear.png")]
+        subprocess.run(cmd, cwd=ROOT, check=True)
+
+
+def islands(im, axis: int, min_gap: int = 12) -> list:
+    """Spans [a, b) of opaque columns (axis 0) or rows (axis 1) separated by >= min_gap empty ones."""
+    a = im.getchannel("A").point(lambda v: 255 if v > 40 else 0)
+    w, h = a.size
+    occ = []
+    for i in range(w if axis == 0 else h):
+        box = (i, 0, i + 1, h) if axis == 0 else (0, i, w, i + 1)
+        occ.append(a.crop(box).getbbox() is not None)
+    spans, start, gap = [], None, 0
+    for i, o in enumerate(occ):
+        if o:
+            if start is None:
+                start = i
+            gap = 0
+        elif start is not None:
+            gap += 1
+            if gap >= min_gap:
+                spans.append((start, i - gap + 1))
+                start, gap = None, 0
+    if start is not None:
+        spans.append((start, len(occ)))
+    return spans
+
+
+def crop_tight(im):
+    a = im.getchannel("A").point(lambda v: 255 if v > 40 else 0)
+    return im.crop(a.getbbox())
+
+
+def cut_sheets(keys: list) -> None:
+    """Cuts the obstacle sheet and each icon sheet apart and converts the pieces (icons set on an approved frame)."""
+    from PIL import Image
+    work = HERE / "_work"
+    work.mkdir(exist_ok=True)
+    im = Image.open(RAW / "obstacles.png").convert("RGBA")
+    spans = islands(im, 0, 8)
+    print("obstacle spans", len(spans))
+    for (x0, x1), (key, width, ramps) in zip(spans, OBSTACLE_KEYS):
+        part = crop_tight(im.crop((x0, 0, x1, im.height)))
+        height = max(6, round(width * part.height / part.width))
+        pth = work / (key.replace("/", "_") + ".png")
+        part.save(pth)
+        run(["tools/prepare_sprite.py", str(pth), key, "--art-height", str(height), "--ink-l", "0.15", "--ramps", ramps])
+        if key in VERTICAL:
+            out = ROOT / "assets/sprites" / (key + ".png")
+            Image.open(out).convert("RGBA").rotate(90, expand=True).save(ROOT / "assets/sprites" / (key + "_v.png"))
+    for name, (frame_key, items) in ICONSETS.items():
+        sheet = Image.open(RAW / (name + ".png")).convert("RGBA")
+        spans = islands(sheet, 0, 10)
+        print(name, "spans", len(spans))
+        for (x0, x1), (sid, _) in zip(spans, items):
+            sym = crop_tight(sheet.crop((x0, 0, x1, sheet.height)))
+            p = work / (sid + ".png")
+            sym.save(p)
+            out = work / (sid + "_24.png")
+            run(["tools/prepare_sprite.py", str(p), "icons/" + sid, "--art-height", "24", "--ink-l", "0.2", "--out", str(out),
+                 "--ramps", "oak,sail,brass,powder,sash,lantern,sea,foam,spectre,bone,steel,brown"])
+            frame = Image.open(ROOT / "assets/sprites" / (frame_key + ".png")).convert("RGBA")
+            fill = frame.getpixel((4, 16))
+            for y in range(3, 29):
+                for x in range(3, 29):
+                    frame.putpixel((x, y), fill)
+            s = Image.open(out).convert("RGBA")
+            if s.width > 26:
+                s = s.resize((26, round(s.height * 26 / s.width)), Image.NEAREST)
+            frame.alpha_composite(s, ((32 - s.width) // 2, (32 - s.height) // 2))
+            frame.save(ROOT / "assets/sprites/icons" / (sid + ".png"))
+
+
 # Hovering stills (hover rigs: the bob moves the whole sprite): PAD empty rows are added above and below each.
 HOVER = ["corsair/vandermere", "corsair/reef_shark", "corsair/hull_crab", "corsair/kraken_arm", "corsair/old_hollow_eye", "corsair/sea_serpent",
          "corsair/skiff", "corsair/longboat", "corsair/raider_ship", "corsair/gunboat", "corsair/ram_longboat", "corsair/ghost_longboat"]
@@ -310,4 +445,4 @@ def strips(keys: list) -> None:
 if __name__ == "__main__":
     step = sys.argv[1]
     keys = sys.argv[2:]
-    {"gen": gen, "convert": convert, "strips": strips}.get(step, lambda k: None)(keys)
+    {"gen": gen, "convert": convert, "strips": strips, "gen_sheets": gen_sheets, "sheets": cut_sheets}.get(step, lambda k: None)(keys)

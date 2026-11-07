@@ -3150,3 +3150,12 @@ the ring, the true form's glow over the base sprite when its art is missing.
 
 ### Act IX art review, round 1 (figures)
 The Hive Mother (all poses) was redrawn with wider hips and a bigger bust; the Broodbound is an alien insect woman in bright green and gold (base converted from `art_source/crash_site/raw/broodbound_flat.png`, thin trim lines removed before conversion; skins Hyper / Untouchable / Deathlord regenerated from her); the Starborn Deathlord wears a black half-mask visor. Rebuilt by `art_source/crash_site/make_art.py` (figures step) and `art_source/ark/make_art.py`. Rig lines in `tools/walk_cycle.py`.
+
+### The Black Tide (corsair), shared art and audio (Nov 2026)
+
+See `docs/tide/ART_MANIFEST.md` (the full file list) and GDD §15.0 "The Black Tide art and audio". Look: tarred oak, sailcloth cream, brass,
+powder-smoke grey, sash red, lantern amber on a navy sea with white foam; ink `corsair_ink` #0A0D18. Ramps `oak sail brass powder sash lantern
+sea foam kraken serpent spectre tan`; the kraken (purple), serpent (teal) and ghosts (spectre) are creature / ghost ramps passed with `--ramps`.
+Every unit is converted by `art_source/corsair/make_art.py` (`gen`, `convert`, `strips`, `gen_sheets`, `sheets`): `pixelate_source.py` then
+`prepare_sprite.py --no-cleanup --no-prune` (`--no-levels` except the dark ghosts and the skeleton summons). Hover stills get 2 empty rows
+above and below (HEIGHTS = art + 4). Floors and sea are drawn by `tools/corsair_tiles.py` straight from the palette.

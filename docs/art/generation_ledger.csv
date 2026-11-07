@@ -1361,3 +1361,8 @@ utc,key,model,quality,size,refs,text_in,image_in,image_out,usd_est,file
 2026-11-07 14:40,corsair/summons/powder_wraith,gpt-image-2.5-flare,medium,1024x1024,2,561,210,439,0.0177,summons_powder_wraith.png
 2026-11-07 14:40,corsair/player/ghost_helmsman,gpt-image-2.5-flare,medium,1024x1024,2,630,680,439,0.0218,player_ghost_helmsman.png
 2026-11-07 14:40,corsair/summons/magazine_lord,gpt-image-2.5-flare,medium,1024x1024,2,586,253,439,0.0181,summons_magazine_lord.png
+2026-11-07 14:43,corsair/obstacles,gpt-image-2.5-flare,medium,1536x1024,0,516,0,343,0.0129,obstacles.png
+2026-11-07 14:43,corsair/icons_a,gpt-image-2.5-flare,medium,1536x1024,1,461,4,343,0.0126,icons_a.png
+2026-11-07 14:43,corsair/icons_b,gpt-image-2.5-flare,medium,1536x1024,1,465,4,343,0.0126,icons_b.png
+2026-11-07 14:44,corsair/icons_c,gpt-image-2.5-flare,medium,1536x1024,1,440,4,343,0.0125,icons_c.png
+2026-11-07 14:44,corsair/icons_d,gpt-image-2.5-flare,medium,1536x1024,1,452,4,343,0.0126,icons_d.png
