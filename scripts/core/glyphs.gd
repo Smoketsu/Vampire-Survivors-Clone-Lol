@@ -149,7 +149,7 @@ static func draw_enemy(ci: CanvasItem, kind: String, o: Vector2, r: float, flash
 	# Empire's (Act III) in empire/, the Olympian Republic's (Act IV) in pantheon/,
 	# the Shogunate's (Act V) in shogunate/, the Inferno's (Act VI) in inferno/,
 	# the Sanguine Court's (Act VII) in court/, the Last Line's (Act VIII) in city/,
-	# the Concord of Stars' (Act IX) in concord/.
+	# the Concord of Stars' (Act IX) in concord/, the Hall of the Slain's in norse/.
 	if SpriteBank.draw(ci, "enemies/" + kind, o, flash) or SpriteBank.draw(ci, "structures/" + kind, o, flash) \
 			or SpriteBank.draw(ci, "eye/" + kind, o, flash) or SpriteBank.draw(ci, "empire/" + kind, o, flash) \
 			or SpriteBank.draw(ci, "pantheon/" + kind, o, flash) \
@@ -157,7 +157,8 @@ static func draw_enemy(ci: CanvasItem, kind: String, o: Vector2, r: float, flash
 			or SpriteBank.draw(ci, "inferno/" + kind, o, flash) \
 			or SpriteBank.draw(ci, "court/" + kind, o, flash) \
 			or SpriteBank.draw(ci, "city/" + kind, o, flash) \
-			or SpriteBank.draw(ci, "concord/" + kind, o, flash):
+			or SpriteBank.draw(ci, "concord/" + kind, o, flash) \
+			or SpriteBank.draw(ci, "norse/" + kind, o, flash):
 		return
 	match kind:
 		"recruit":
@@ -184,7 +185,8 @@ static func draw_enemy(ci: CanvasItem, kind: String, o: Vector2, r: float, flash
 									if not CourtGlyphs.draw_enemy(ci, kind, o, r, flash):  # ... else the Sanguine Court's (Act VII) ...
 										if not CityGlyphs.draw_enemy(ci, kind, o, r, flash):  # ... else the Last Line's (Act VIII) ...
 											if not ConcordGlyphs.draw_enemy(ci, kind, o, r, flash):  # ... else the Concord of Stars' (Act IX) ...
-												EyeGlyphs.draw_enemy(ci, kind, o, r, flash)  # ... else the Ancient Eye's (Act II).
+												if not NorseGlyphs.draw_enemy(ci, kind, o, r, flash):  # ... else the Hall of the Slain's ...
+													EyeGlyphs.draw_enemy(ci, kind, o, r, flash)  # ... else the Ancient Eye's (Act II).
 
 
 ## Covenant Recruit: small crimson round body, ivory tabard, silver helm, spear.

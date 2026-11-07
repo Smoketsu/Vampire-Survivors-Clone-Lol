@@ -14,7 +14,11 @@
 ## §15.0 "Act VIII foundation (phase 1)": Skid Row -> Fort Kessler -> Liberty
 ## Heights, opened by slaying Queen Carmilla; Act IX, GDD §15.0 "Act IX
 ## foundation (phase 1)": the Crash Site -> the Proving Moon -> the Ark of the
-## Concord, opened by defeating Paragon). One
+## Concord, opened by defeating Paragon; the Hall of the Slain, temporarily
+## Act XI, GDD §15.0 "The Hall of the Slain foundation (phase 1)": the Barrow
+## Fields -> Valgard -> Vigrid, opened for now by defeating the Harvester (the
+## Black Tide, Act X, is built in parallel; the merge chains it after
+## Vandermere)). One
 ## entry per stage, each
 ## the STAGE dictionary of its file under scripts/data/stages/. A run reads
 ## its stage through RunConfig.stage_def() as `Game.stage_def`; nothing else
@@ -66,7 +70,9 @@
 ##                        Ancient Eye, 3 = the Electronic Empire, 4 = the
 ##                        Olympian Republic, 5 = the Shogunate of the Rising
 ##                        Sun, 6 = the Inferno, 7 = the Sanguine Court,
-##                        8 = the Last Line, 9 = the Concord of Stars;
+##                        8 = the Last Line, 9 = the Concord of Stars,
+##                        11 = the Hall of the Slain, TEMPORARY until the
+##                        reorder pass (docs/last_acts/PLAN.md);
 ##                        absent = 1). The stage select shows one
 ##                        act at a time; Act II-only cards (PassiveData "act")
 ##                        are offered only on stages of that act.
@@ -315,6 +321,22 @@
 ##                        Reactor's vents as structure windows, the wrecks;
 ##                        the "luminous_archon" event); ground "ark" is its
 ##                        ArkGround (four zone floors).
+## --- Act XI (temporary): the Hall of the Slain ---
+##   norse              — true: the Hall of the Slain's shared rules
+##                        (NorseRules as Game.norse: the Long Winter,
+##                        Berserkergang, the Rune-Stones, and Ragnarök when the
+##                        RECKONING has a "ragnarok" key); ground "norse" is the
+##                        placeholder NorseGround (from the "floor" dictionary,
+##                        styles snow / hall / ash), on the normal
+##                        scattered-obstacle arena. Its timelines may use the
+##                        event type "rune_stone" (RuneStones.start_event()).
+##   long_winter        — the stage's Long Winter: any key of
+##                        NorseRulesData.LONG_WINTER overrides it ({} = the
+##                        defaults; "points": the braziers' offsets from the
+##                        start).
+##   rune_stones        — the stage's Rune-Stones: any key of
+##                        NorseRulesData.RUNE_STONES overrides it ({} = the
+##                        defaults; e.g. its horn "table").
 class_name StageRegistry
 extends RefCounted
 
@@ -333,7 +355,9 @@ const ORDER := ["graveyard", "crimson_march", "sanctum", "harbour", "archive", "
 	# --- Act VIII: the Last Line ---
 	"skid_row", "fort_kessler", "liberty_heights",
 	# --- Act IX: the Concord of Stars ---
-	"crash_site", "proving_moon", "ark"]
+	"crash_site", "proving_moon", "ark",
+	# --- Act XI (temporary): the Hall of the Slain ---
+	"barrow_fields", "valgard", "vigrid"]
 ## Stage used when none (or an unknown id) is given.
 const DEFAULT_ID: String = "graveyard"
 ## Stage id -> STAGE dictionary.
@@ -372,6 +396,10 @@ const STAGES := {
 	"crash_site": CrashSiteStage.STAGE,
 	"proving_moon": ProvingMoonStage.STAGE,
 	"ark": ArkStage.STAGE,  # Act IX, stage 27
+	# --- Act XI (temporary): the Hall of the Slain ---
+	"barrow_fields": BarrowFieldsStage.STAGE,
+	"valgard": ValgardStage.STAGE,
+	"vigrid": VigridStage.STAGE,  # The Hall of the Slain's finale
 }
 
 ## Acts in order: act number -> {name, subtitle} (stage select tabs).
@@ -391,6 +419,9 @@ const ACTS := {
 	8: {"name": "Act VIII", "subtitle": "The Last Line"},
 	# --- Act IX: the Concord of Stars ---
 	9: {"name": "Act IX", "subtitle": "The Concord of Stars"},
+	# --- Act XI (temporary): the Hall of the Slain (final slot VI; the reorder
+	# pass renumbers every act from one ordered list) ---
+	11: {"name": "Act XI", "subtitle": "The Hall of the Slain"},
 }
 
 
@@ -464,4 +495,9 @@ const BOSS_ARRIVALS := {
 	"hive_mother": CrashSiteStage.BOSS,
 	"vrask_tal": ProvingMoonStage.BOSS,
 	"harvester": ArkStage.BOSS,  # Act IX, the finale's boss
+	# --- Act XI (temporary): the Hall of the Slain (stubs: each stage's BOSS
+	# until phase 2 gives the boss its own data file) ---
+	"hrimgar": BarrowFieldsStage.BOSS,
+	"sigrun": ValgardStage.BOSS,
+	"odin": VigridStage.BOSS,  # The Hall of the Slain's finale boss
 }

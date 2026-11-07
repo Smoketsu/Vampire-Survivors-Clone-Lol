@@ -2456,6 +2456,46 @@ achievement **The Last Harvest** (beat the Harvester: the title The Unharvested)
 `--spawn=grey_overseer@T`, `luminous_archon@T`, `specimen_tank@T`, `vault_beast@T`, `reactor_vent@T`,
 `reap_emitter@T`; lines `ark`, `ark events`, `ark kinds`, `harvester`, `tractor beam`, `ghost saucer`.
 
+### The Hall of the Slain (foundation, not yet playable)
+
+<!-- --- Act XI (temporary): the Hall of the Slain --- -->
+In the north the dead are not owned but chosen, and since the necromancer took the world's dead the god's hall stands
+empty. So the raiders, the shield-maidens, the berserkers, the barrow-dead and the giants come south, and the valkyries
+fly with them (GDD §15.0 "The Hall of the Slain foundation (phase 1)" and the rows after it; the act's section of
+`docs/proposals/LAST_SIX_ACTS.md`, with the owner's decisions of Nov 7, 2026). Its final place is **Act VI**, between the
+Shogunate and the Necropolis Dynasty; until the reorder pass it sits on a temporary **Act XI** tab after the Concord, and
+it is tuned for its final slot. Three stub stages, **the Barrow Fields**, **Valgard, the Hall of Heroes** and **Vigrid,
+the Last Field** (bosses Hrimgar the Draugr-King, Sigrun the Shield-Queen, Odin and Fenrir), registered but not yet
+playable ("Coming soon"); for now the Harvester's fall opens the Barrow Fields (the Black Tide, built in parallel, takes
+that place at the merge). The act's shared rules:
+
+- **The Long Winter** (owner decision, replacing the proposal's Choosing). The cold rises with the clock: a level every
+  5:00, three at most, and the frost creeps in from the edges of the screen. Six **braziers** burn on the field; within
+  220 px of a lit one everything is warm. Out of warmth you and your army are slowed (10% / 20% / 30% by level, the same
+  ground slow as Gullhaven's water) and, from level 2, your summons take frostbite (0.5% / 1% of their health a second).
+  The Norse are born to the cold. **Frost giants and seers douse** the braziers they pass (the fire gutters first); stand
+  within 60 px of a dark brazier for 2 s to relight it (a ring fills; the first relights pay a little Soul Ash).
+- **Berserkergang.** A Norse warrior (raider, shield-maiden, berserker, skald) below 40% health goes berserk for good:
+  +30% speed and damage, red eyes, and slows, stuns and freezes no longer hold it. Berserkers start in the fury. Chip
+  damage pushes warriors into it: burst is the answer.
+- **Rune-Stones.** Carved stones rise during the run (four per stage). Held by the hall, a stone wards every Norse warrior
+  within 300 px (they take 25% less damage) and blows a horn every 60 s that calls a squad. Stand within 120 px of it with
+  more bodies (you and your summons) than the hall has there for 3 s: it is taken (its ward and horn stop, and the first
+  take pays Soul Ash). Seers walk back to re-carve it. Taking a stone never buffs your army.
+- **Ragnarök.** At 0:00 the wolf swallows the sun and the arena goes dark red: the Einherjar of the hall march out at
+  once (gold-lit elite warriors), fire-giants step out of the south edge, and every valkyrie dives at your ring.
+- **Music.** The stubs play "Hymn of Bronze" for now; the act's own score and sounds come with the audio pass.
+
+The shared kinds: the **Raider** (fodder in crowds), the **Shield-Maiden** (a shield bash that throws one summon back),
+the **Berserker** (always in the fury), the **Skald** (his war-song makes the warriors near him strike faster), the
+**Valkyrie** (a flier with a telegraphed spear dive; aloft, swords cannot reach her), the **Seer** (douses braziers,
+re-carves stones, a curse that blinds one summon), the **Draugr** (armour 3, a cold touch that slows a summon), the
+**Wolf of the Wastes** (packs of five that lunge), the **Frost Giant** (boulders on a landing circle, a stomp; douses
+braziers) and the **Fire-Giant** (Ragnarök's heavy). The Codex has a **Hall** tab. Autotest:
+`--stage=barrow_fields|valgard|vigrid`, `--boss=hrimgar|sigrun|odin`, `--spawn=` with the kinds above
+(`rune_stone@T` raises a stone, `brazier@T` places a brazier); lines `long winter`, `berserkergang`, `rune-stones`,
+`norse kinds`, `ragnarok`, `norse stage`.
+
 ### The illustrated epilogue
 
 The campaign epilogue (content wave 2, GDD §15.0 "Illustrated epilogue (content wave 2)") is a short
@@ -3172,6 +3212,11 @@ scripts/
                             streak, the saucer's tractor cone, the Final Harvest's eye (textures only; Act IX)
     concord_report.gd       The autotest's Act IX lines (beams, abduction, terraforming, final harvest, concord
                             kinds, concord stage)
+    norse_ground.gd         The Hall of the Slain stubs' placeholder floor (styles snow / hall / ash)
+    norse_glyphs.gd         Code-drawn fallbacks of the Norse kinds, the Rune-Stone, the brazier and the stubs'
+                            obstacles (barrows, pines, boulders, long tables, pillars, ash rocks)
+    norse_report.gd         The autotest's Hall of the Slain lines (long winter, berserkergang, rune-stones, ragnarok,
+                            norse kinds, norse stage)
     crash_site_report.gd    The autotest's Crash Site lines (crash site, burrowers, acid, brood matriarch, hive
                             mother) and its items (Bone Beetles, Chitin, Anchored; Act IX)
     crash_site_ground.gd    The Crash Site's four zone floors (tiles/crash_site_<style>, Act IX)
@@ -3557,6 +3602,19 @@ scripts/
                             Terraforming.seed(), the Reaping's lifts (Abduction.lift())
       boss_harvester.gd     The Harvester: the Council (swarms, the cloak, beams), the Reaping (emitters, the cap
                             lifted), the Gardener (rings of turf, adds)
+    norse/                  The Hall of the Slain (temporarily Act XI): its kits ("<id>_kit.gd", loaded by name
+                            after the Concord's folder; NorseKit base: the fury's looks, the stone ward, the skald's
+                            song, the Einherjar) and its shared rules:
+      norse_rules.gd        Game.norse: owns the Long Winter, the Rune-Stones and Ragnarök; BERSERKERGANG
+                            (enter_fury(), the one writer of Enemy.berserk); the draugr's cold touch
+      long_winter.gd        THE LONG WINTER: the cold level, the braziers (place()), the slow (TerrainSlow) and
+                            frostbite out of warmth, the douse and the relight, the frost vignette
+      rune_stones.gd        THE RUNE-STONES: raise_stone(), the ward, the horn (horn_blown), the capture, the carving
+      ragnarok.gd           Ragnarök: the red sky, the Einherjar's march, the fire-giants, every valkyrie dives
+      raider_kit.gd, shield_maiden_kit.gd, berserker_kit.gd, skald_kit.gd, norse_valkyrie_kit.gd, seer_kit.gd,
+      draugr_kit.gd, wolf_of_the_wastes_kit.gd, frost_giant_kit.gd, fire_giant_kit.gd, rune_stone_kit.gd,
+      brazier_kit.gd        The shared kinds (the bash, the song, the dive, the carving and curse, the lunge, the
+                            boulder and stomp; the two structure bodies hand their spot to the rules)
     pantheon/               The Olympian Republic (Act IV): its kits ("<id>_kit.gd", loaded by name after the
                             Eye's and the Empire's) and bosses ("boss_<id>.gd"), and the act's shared rules:
       pantheon_rules.gd     Game.pantheon: owns the wrath, the Phalanx and Glory, the one front test
@@ -3855,6 +3913,15 @@ scripts/
     stages/ark_stage.gd            kinds of all four races, the Final Harvest, placeholder floors / bosses; the
                                    Proving Moon reads "gravity" (ConcordRules.gravity())
     proving_moon_enemy_data.gd  The Proving Moon's table: the Warbeast (Act IX)
+    norse_enemy_data.gd     The Hall of the Slain's shared kinds (raider, shield_maiden, berserker, skald, valkyrie,
+                            seer, draugr, wolf_of_the_wastes, frost_giant, fire_giant) and the rune_stone / brazier
+                            structure rows (barrow_fields_ / valgard_ / vigrid_enemy_data.gd: each stage's own, empty
+                            until phase 2)
+    norse_rules_data.gd     The Hall of the Slain's shared rules: LONG_WINTER, EINHERJAR, BERSERK, RUNE_STONES,
+                            RAGNAROK, the SOUNDS map, the Fur-Lined Bones / Keep the Fires keys
+    stages/barrow_fields_stage.gd  The Hall of the Slain stubs (temporarily act 11, final slot VI): "norse": true,
+    stages/valgard_stage.gd        zones, the "long_winter" / "rune_stones" overrides, a timeline of the shared kinds
+    stages/vigrid_stage.gd         with four "rune_stone" events, Ragnarök, placeholder floors / bosses
     vrask_tal_data.gd       Vrask'Tal's arrival and numbers (the Stalk, the Duel, the Last Trophy and its bomb)
     soul_caster_data.gd     Soul Caster / Apex Predator rules, Trophy Rack keys, First Blood key (Act IX; the spell
                             node is abilities/spells/soul_caster.gd)
@@ -4102,7 +4169,7 @@ Options (after `--`):
 | `--spells=a,b,...` | Any policy first takes these spells (ids from `AbilityData.SPELL_ORDER`, e.g. `bone_spear,soul_siphon,corpse_explosion,plague_cloud` or the later `death_mark,bone_wall,soul_chains` / `wither,raise_dead`) and their evolution passives, which also get ×8 card weight in hands and chests so they are offered reliably (a test-only hook; without `--spells` the draw is unchanged), never banishes them, and stops taking other new actives (or passives) once the free slots are down to the forced spells (or passives) still missing plus one spare, because chests can fill slots too (a hand with nothing else is rerolled or skipped). The `army`, `evolve` and `summon` bots never take a new item that is not on their build list (they reroll or skip), so the newer spells and the later summon classes do not change those baselines (`--classes` / `--spells` items are exempt); the `summon` and `army` bots also keep active slots free for the core classes they still lack (summon: Warriors, Mages, Menders, Warders; army: those plus Archers). Use it to exercise a spell and reach its evolution. |
 | `--passives=a,b,...` | Any policy first takes these passives (ids from `PassiveData.ORDER` except the Pact, e.g. `unholy_precision,unholy_resilience` or `blood_scent,mournsong,siegecraft`) exactly like the `--spells` items (score, ×8 card weight, slot reservation, never banished), so a passive's effect can be exercised. |
 | Bone Golem (content wave 2) | `--classes=bone_golem,...` and `--passives=grave_masonry` force the locked Golem and its passive. A run that had either prints a `bone golem` line: `absorbed=<n> max_growth=<%> bulwarks=<n> titan=<bool> bone_bastion_prevented=<dmg>`, then its level, alive / capacity, deaths, damage by source (slams with their volleys, splash, the Titan's wall), slams and slam hits, planted seconds, taunts, Grave Masonry's level and damage prevented, the Titan's heal, barriers and walls, and whether Bone Bastion was active. |
-| `--stage=ID` | Stage to play: `graveyard` (default), `crimson_march`, `sanctum`, the Act II stages `harbour`, `archive` and `spire`, the Act III stages `wastes`, `assembly` and `citadel`, the Act IV stages `ilion`, `olympus` and `underworld`, the Act V stages `province`, `kurogane` and `sun_road`, the Act VI stages `burning_gate`, `silk_palace` and `pandemonium`, the Act VII stages `ravensmoor`, `witchwood` and `castle_sanguis` (the summary adds the `bloodfeast`, `night wings`, `blood moon`, `court kinds`, `endless feast` and `court stage` lines; `--boss=vargr\|isolde\|carmilla`), the Act VIII stages `skid_row`, `fort_kessler` and `liberty_heights` (city blocks; the summary adds the `city blocks`, `armour`, `supers`, `civilians`, `escalation`, `city kinds`, `martial law` and `city stage` lines; `--boss=don_marrow\|harrow\|paragon`; `--spawn=` takes `civilian`, `street_thug`, `gang_gunner`, `riot_cop`, `squad_car`, `swat_breacher`, `field_medic`, `rifleman`, `tank`, `blitz` and `city_wreck`, Skid Row's `armoured_limo`, `big_sal` and `bounty_board`, and Fort Kessler's `machine_gunner`, `attack_helicopter` and `mammoth`; Skid Row adds `skid row` (Big Sal, the Bounty, No Witnesses), `tear gas`, `big sal` and `don marrow` lines, Fort Kessler adds the `fort kessler`, `fort kessler kinds`, `mammoth`, `fort kessler threats` (top summon-damage and summon-death sources) and `harrow` lines, and on any stage `act VIII spell` / `act VIII passives` when Hearse Run, Black Car, Kevlar Bones, Bone Mines, Tripwire or Armour-Piercing Bones were taken), or the Act IX stages `crash_site`, `proving_moon` and `ark` (see *Act IX* above). Stage locks are ignored. Act II runs print a `dread` line (peak, average, end, Dread calmed by kills, seconds per 25-Dread step, Dread by source) and a `claims` line (claims, Thralls freed, expired, still risen at the end, refusals by the cap, claims by class). Gullhaven adds `tide` (level, seawall, High Water, surges and shoves, seconds in water for you / summons / enemies / swimmers), `harbour` and `harbour events` (buoys sunk and when, tolls, wave and trickle size, caches and chests, the Harbourmaster), `harbour kinds` / `harbour tricks` (also on any stage where a Harbour kind spawned, e.g. `--spawn=deep_kin@60x3`), `merrow` (when he is the boss, also `--boss=merrow`), `act II spell` (Undertow when learned) and `act II passives` (Salt of the Deep, Brinewalker). |
+| `--stage=ID` | Stage to play: `graveyard` (default), `crimson_march`, `sanctum`, the Act II stages `harbour`, `archive` and `spire`, the Act III stages `wastes`, `assembly` and `citadel`, the Act IV stages `ilion`, `olympus` and `underworld`, the Act V stages `province`, `kurogane` and `sun_road`, the Act VI stages `burning_gate`, `silk_palace` and `pandemonium`, the Act VII stages `ravensmoor`, `witchwood` and `castle_sanguis` (the summary adds the `bloodfeast`, `night wings`, `blood moon`, `court kinds`, `endless feast` and `court stage` lines; `--boss=vargr\|isolde\|carmilla`), the Act VIII stages `skid_row`, `fort_kessler` and `liberty_heights` (city blocks; the summary adds the `city blocks`, `armour`, `supers`, `civilians`, `escalation`, `city kinds`, `martial law` and `city stage` lines; `--boss=don_marrow\|harrow\|paragon`; `--spawn=` takes `civilian`, `street_thug`, `gang_gunner`, `riot_cop`, `squad_car`, `swat_breacher`, `field_medic`, `rifleman`, `tank`, `blitz` and `city_wreck`, Skid Row's `armoured_limo`, `big_sal` and `bounty_board`, and Fort Kessler's `machine_gunner`, `attack_helicopter` and `mammoth`; Skid Row adds `skid row` (Big Sal, the Bounty, No Witnesses), `tear gas`, `big sal` and `don marrow` lines, Fort Kessler adds the `fort kessler`, `fort kessler kinds`, `mammoth`, `fort kessler threats` (top summon-damage and summon-death sources) and `harrow` lines, and on any stage `act VIII spell` / `act VIII passives` when Hearse Run, Black Car, Kevlar Bones, Bone Mines, Tripwire or Armour-Piercing Bones were taken), or the Act IX stages `crash_site`, `proving_moon` and `ark` (see *Act IX* above), or the Hall of the Slain's stub stages `barrow_fields`, `valgard` and `vigrid` (temporarily Act XI; see *The Hall of the Slain* above). Stage locks are ignored. Act II runs print a `dread` line (peak, average, end, Dread calmed by kills, seconds per 25-Dread step, Dread by source) and a `claims` line (claims, Thralls freed, expired, still risen at the end, refusals by the cap, claims by class). Gullhaven adds `tide` (level, seawall, High Water, surges and shoves, seconds in water for you / summons / enemies / swimmers), `harbour` and `harbour events` (buoys sunk and when, tolls, wave and trickle size, caches and chests, the Harbourmaster), `harbour kinds` / `harbour tricks` (also on any stage where a Harbour kind spawned, e.g. `--spawn=deep_kin@60x3`), `merrow` (when he is the boss, also `--boss=merrow`), `act II spell` (Undertow when learned) and `act II passives` (Salt of the Deep, Brinewalker). |
 | (the Hollow Archive) | `--stage=archive` adds `archive` (tomes burned and when, Nothing Unwritten, seconds in ink / spores, the orrery's risings, turns and pushes, the Librarian), `archive rifts` (opened and when, closed early, closed by themselves, cultists spat out) and `archive events` lines; any Archive kind adds `archive enemies` (spawned / killed per kind), `archive kits` (curses, wraith rises and dives, spore clouds and their summon damage, mass splits, Librarian beams, summons turned, lashes, kills) and `archive hazards`; the Archivist adds `archivist` (phase times, kill time, pages and their hits, Footnotes and the damage wasted on copies, Erasure steps and pushes); Forbidden Verse adds `act ii spells`, Marginalia / Iron Mind `act ii passives`. `--spawn=` takes `scribe`, `ink_wraith`, `spore_pilgrim`, `gibbering_mass`, `librarian`, `archive_rift`, `unwritten_one`; `--boss=archivist`; `--character=heretic_scribe`. |
 | (Act III) | `--stage=wastes\|assembly\|citadel` (the Act III stubs) prints `line of fire` (shots fired, rails, arcs; stopped by summons, absorbed by barriers, stopped by Bone Walls, Orb intercepts; reached you and the damage; expired, capped, peak), `lock-on` (lines painted on you / on summons, refused at the cap, fired, cancelled by a slain Spotter, rails stopped by summons or reaching you, most lines at once), `steel` (machine and cyborg kills, Grave Gunners raised per raising effect, their damage and kills), `purge protocol` (orbital salvos and strikes, hits), `empire kinds` (spawned / killed and damage per kind), `empire stage` and `ranged share` (the share of Empire spawns that attack from range; every Act III stage). The Empire's lines also print on any stage where an Empire kind was forced: `--spawn=scout_drone@60x10,line_trooper@90x6,spotter@120`. Grave Gunners need a raising effect, e.g. `--spells=death_mark` or `--ultimate=grave_tide`; `--boss=kestrel\|motherboard\|deus_ex_machina`. The Scrap Wastes (`--stage=wastes`) adds `wastes` (pylons raised / destroyed and when, the share of shooter reach samples boosted, shrunk or storm-halved, storms, the Trojan Horse, objective Soul Ash), `wastes kinds` (Aegis shield blocks and breaks, mortar shells, rockets launched / intercepted / hitting you / shot down, decoys; also wherever a Wastes kind was forced, e.g. `--spawn=aegis_bot@60x6,mortar_walker@90x2,trojan_horse@120`), `trojan horse` and `kestrel` (when she is the boss, also `--boss=kestrel`). On any stage, `act III spell` (Death Ray when learned, e.g. `--spells=death_ray`) and `act III passives` (Conductive Marrow, Lead-Lined Bones, e.g. `--passives=lead_lined_bones`). |
 | (Act IV) | `--stage=ilion\|olympus\|underworld` (the Act IV stubs) prints `divine wrath` (the stage's kind; salvos and strikes per kind: waves, bolts, fissures; damage to enemies with the kills, to summons and to you; fodder drowned, lightning chains, corpses swallowed, shades spat, capped strikes, whether the Twilight began), `phalanx` (walls formed, bodies locked, front hits by shots and melee with the damage prevented, flank breaks, most bodies locked at once), `glory` (stacks gained, the peak, heroes killed and with how many stacks, chests and Soul Ash bounty), `pantheon kinds` (spawned / killed and damage per kind) and `pantheon stage`. The lines also print on any stage where a Pantheon kind was forced: `--spawn=hoplite@60x8,hero@90,shade_of_dead@30x12,bronze_titan@120`; `--boss=achilles\|zeus\|hades` (placeholder boss scripts until phase 2). |

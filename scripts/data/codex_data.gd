@@ -45,7 +45,9 @@ const TABS: Array = [["feats", "Achievements"], ["spells", "Spells"], ["summons"
 		# --- Act VIII: the Last Line ---
 		["city", "Last Line"],
 		# --- Act IX: the Concord of Stars ---
-		["concord", "Concord"]]  # TUNING (not in GDD) Act II adds the Ancient Eye tab, Act III the Electronic Empire's, Act IV the Olympian Republic's, Act V the Shogunate's, Act VI the Inferno's, Act VII the Sanguine Court's, Act VIII the Last Line's, Act IX the Concord's
+		["concord", "Concord"],
+		# --- Act XI (temporary): the Hall of the Slain ---
+		["norse", "Hall"]]  # TUNING (not in GDD) Act II adds the Ancient Eye tab, Act III the Electronic Empire's, Act IV the Olympian Republic's, Act V the Shogunate's, Act VI the Inferno's, Act VII the Sanguine Court's, Act VIII the Last Line's, Act IX the Concord's, the Norse act the Hall's
 
 ## Summon classes shown on the Summons page (UnitData ids, card order). The
 ## Profane Bishop is a merge evolution, so it sits with the evolutions.
@@ -298,6 +300,22 @@ const CONCORD_LUMINOUS: Array[String] = ["lumen_sentinel", "prism",
 ## Concord stage bosses (StageRegistry.BOSS_ARRIVALS ids).
 const CONCORD_BOSSES: Array[String] = ["hive_mother", "vrask_tal", "harvester"]
 
+# --- Act XI (temporary): the Hall of the Slain ---
+## The Hall of the Slain (GDD §15.0 "The Hall of the Slain foundation (phase
+## 1)"; the Hall tab), GROUPED as NorseRulesData.GROUPS: the warriors of the
+## hall, the hall's valkyries and seers with its stones and braziers, the cold
+## things of the north, then its stage bosses (StageRegistry.BOSS_ARRIVALS ids).
+## Each of its stages adds its own as it is built (phase 2).
+const NORSE_WARRIORS: Array[String] = ["raider", "shield_maiden", "berserker", "skald"]
+## The hall's kinds (group "hall"): the valkyries, the seers and the
+## Rune-Stone (recorded when first taken: a stone is never slain). The brazier
+## has no entry (it is the necromancer's warmth, not a foe).
+const NORSE_HALL: Array[String] = ["valkyrie", "seer", "rune_stone"]
+## The cold things of the north (group "wilds").
+const NORSE_WILDS: Array[String] = ["draugr", "wolf_of_the_wastes", "frost_giant", "fire_giant"]
+## The Hall of the Slain's stage bosses (StageRegistry.BOSS_ARRIVALS ids).
+const NORSE_BOSSES: Array[String] = ["hrimgar", "sigrun", "odin"]
+
 ## Section headers of each page: page id -> [[section id, header text], ...].
 const SECTIONS: Dictionary = {
 	"spells": [["spells", "Spells"], ["spell_evolutions", "Evolutions"]],  # TUNING (not in GDD)
@@ -319,6 +337,9 @@ const SECTIONS: Dictionary = {
 	# --- Act IX: the Concord of Stars (grouped by race) ---
 	"concord": [["concord_brood", "The Brood"], ["concord_harvesters", "The Harvesters"], ["concord_vrask", "The Vrask"],
 		["concord_luminous", "The Luminous"], ["concord_bosses", "Bosses"]],  # TUNING (not in GDD) Act IX
+	# --- Act XI (temporary): the Hall of the Slain (grouped by group) ---
+	"norse": [["norse_warriors", "The Warriors"], ["norse_hall", "The Hall"], ["norse_wilds", "The North"],
+		["norse_bosses", "Bosses"]],  # TUNING (not in GDD) the Norse act
 }
 
 ## One-sentence descriptions of the Covenant (the enemy data has none),
@@ -525,6 +546,21 @@ const DESCRIPTIONS: Dictionary = {
 	"hive_mother": "The Hive Mother, the Brood's queen grown into the crater: egg waves, a burrow under your ring, and acid from the sky.",  # Owner-approved Act IX proposal
 	"vrask_tal": "Vrask'Tal, the Hunt-Lord: he stalks your ring cloaked, duels you with his glaive, and arms the bomb on his wrist.",  # Owner-approved Act IX proposal
 	"harvester": "The Harvester, the oldest of its kind: the one who planted the world, come to reap what is left.",  # Owner-approved Act IX proposal
+	# --- Act XI (temporary): the Hall of the Slain ---
+	"raider": "Raiders with axe and round shield, come south in crowds. Anything cuts them down.",  # Owner-approved proposal (LAST_SIX_ACTS.md)
+	"shield_maiden": "A shield-maiden: her shield bash throws one of your dead out of the ring. Flank her.",  # Owner-approved proposal
+	"berserker": "A berserker in a bear pelt, always in the fury: faster, harder, and no slow or stun holds him. Burst him down.",  # Owner-approved proposal (Berserkergang)
+	"skald": "A skald whose war-song makes the warriors near him strike faster. Kill him first.",  # Owner-approved proposal
+	"valkyrie": "A valkyrie who dives on your ring with her spear. Aloft, only arrows, fliers and spells reach her.",  # Owner-approved proposal (Night Wings)
+	"seer": "A seer who douses your braziers, re-carves the rune-stones you take and curses one of your dead blind.",  # Owner decision Nov 7, 2026 (the Long Winter) and the proposal
+	"rune_stone": "A carved stone that wards the warriors near it and calls them with its horn. Stand by it with your army to take it.",  # Owner-approved proposal (Rune-Stones)
+	"draugr": "Barrow-dead in rusted mail. Their armour turns light blows, and their touch chills your dead.",  # Owner-approved proposal
+	"wolf_of_the_wastes": "Wolves in packs of five that lunge at the ring. Blockers hold them.",  # Owner-approved proposal
+	"frost_giant": "A frost giant: its boulders fall where a circle shows, it stamps your ring away and douses your braziers.",  # Owner-approved proposal and the Long Winter
+	"fire_giant": "A fire-giant of the south, come to burn the last field.",  # Owner-approved proposal (Ragnarok)
+	"hrimgar": "Hrimgar the Draugr-King, who rises from his barrow three times unless you break it.",  # Owner-approved proposal
+	"sigrun": "Sigrun, the Shield-Queen, captain of the valkyries: she charges your ring and calls you to a duel.",  # Owner-approved proposal
+	"odin": "Odin, the one-eyed god, and Fenrir the wolf, come for the army the world promised them.",  # Owner-approved proposal
 	# --- Act IX: the Crash Site ---
 	"burrower": "It tunnels under your ring and bursts up among your dead. A mound of dirt shows a moment ahead: keep blockers inside the ring.",  # Owner-approved Act IX proposal
 	"acid_spitter": "It lobs acid over your ring that leaves a burning puddle. Kill it on approach, and step out of the green.",  # Owner-approved Act IX proposal
@@ -613,6 +649,11 @@ const LOCKED_HINT: Dictionary = {
 	"concord_vrask": "Slay one to record it.",  # TUNING (not in GDD) Act IX Vrask
 	"concord_luminous": "Slay one to record it.",  # TUNING (not in GDD) Act IX Luminous
 	"concord_bosses": "Face it to record it.",  # TUNING (not in GDD) Act IX bosses
+	# --- Act XI (temporary): the Hall of the Slain ---
+	"norse_warriors": "Slay one to record it.",  # TUNING (not in GDD) the Norse act
+	"norse_hall": "Slay or take one to record it.",  # TUNING (not in GDD) the Norse act (a stone is taken)
+	"norse_wilds": "Slay one to record it.",  # TUNING (not in GDD) the Norse act
+	"norse_bosses": "Face it to record it.",  # TUNING (not in GDD) the Norse act bosses
 	"evolution": "Undiscovered.",  # TUNING (not in GDD) owner rule: no hint
 }
 ## Name shown for a locked entry.
@@ -662,6 +703,11 @@ const TAGS: Dictionary = {
 	"concord_vrask": "The Vrask",  # TUNING (not in GDD) Act IX
 	"concord_luminous": "The Luminous",  # TUNING (not in GDD) Act IX
 	"concord_bosses": "Stage boss",  # TUNING (not in GDD) Act IX bosses
+	# --- Act XI (temporary): the Hall of the Slain ---
+	"norse_warriors": "Warrior",  # TUNING (not in GDD) the Norse act
+	"norse_hall": "The Hall",  # TUNING (not in GDD) the Norse act
+	"norse_wilds": "The North",  # TUNING (not in GDD) the Norse act
+	"norse_bosses": "Stage boss",  # TUNING (not in GDD) the Norse act bosses
 }
 
 # --- Layout (layout px at 1280x720; TUNING, not in GDD) -----------------------------
@@ -901,11 +947,12 @@ static func is_known(cat: String, id: String) -> bool:
 					or CITY_CIVILIANS.has(id) or CITY_GANGS.has(id) or CITY_POLICE.has(id) \
 					or CITY_SWAT.has(id) or CITY_ARMY.has(id) or CITY_HEROES.has(id) \
 					or CONCORD_BROOD.has(id) or CONCORD_HARVESTERS.has(id) or CONCORD_VRASK.has(id) \
-					or CONCORD_LUMINOUS.has(id)  # Act IV to Act IX
+					or CONCORD_LUMINOUS.has(id) \
+					or NORSE_WARRIORS.has(id) or NORSE_HALL.has(id) or NORSE_WILDS.has(id)  # Act IV to Act IX, the Norse act
 		BOSS:
 			return BOSSES.has(id) or EYE_BOSSES.has(id) or EMPIRE_BOSSES.has(id) or PANTHEON_BOSSES.has(id) \
 					or SHOGUNATE_BOSSES.has(id) or INFERNO_BOSSES.has(id) or COURT_BOSSES.has(id) \
-					or CITY_BOSSES.has(id) or CONCORD_BOSSES.has(id)  # (Act IX last)
+					or CITY_BOSSES.has(id) or CONCORD_BOSSES.has(id) or NORSE_BOSSES.has(id)  # (the Norse act last)
 	return false
 
 
@@ -926,11 +973,12 @@ static func total(cat: String) -> int:
 					+ CITY_CIVILIANS.size() + CITY_GANGS.size() + CITY_POLICE.size() \
 					+ CITY_SWAT.size() + CITY_ARMY.size() + CITY_HEROES.size() \
 					+ CONCORD_BROOD.size() + CONCORD_HARVESTERS.size() + CONCORD_VRASK.size() \
-					+ CONCORD_LUMINOUS.size()  # Act IV to Act IX
+					+ CONCORD_LUMINOUS.size() \
+					+ NORSE_WARRIORS.size() + NORSE_HALL.size() + NORSE_WILDS.size()  # Act IV to Act IX, the Norse act
 		BOSS:
 			return BOSSES.size() + EYE_BOSSES.size() + EMPIRE_BOSSES.size() + PANTHEON_BOSSES.size() \
 					+ SHOGUNATE_BOSSES.size() + INFERNO_BOSSES.size() + COURT_BOSSES.size() \
-					+ CITY_BOSSES.size() + CONCORD_BOSSES.size()  # (Act IX last)
+					+ CITY_BOSSES.size() + CONCORD_BOSSES.size() + NORSE_BOSSES.size()  # (the Norse act last)
 	return 0
 
 
@@ -966,6 +1014,9 @@ static func enemy_row(id: String) -> Dictionary:
 	var concord := EnemyDirector.concord_def(id)  # Act IX kinds ({} when none).
 	if not concord.is_empty():
 		return concord
+	var norse := EnemyDirector.norse_def(id)  # The Hall of the Slain's kinds ({} when none).
+	if not norse.is_empty():
+		return norse
 	match id:
 		"alaric":
 			return EnemyData.BOSS

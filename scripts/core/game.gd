@@ -88,6 +88,11 @@
 ## Final Harvest), stepped after the City's and before the obstacle push-out;
 ## null on Acts I to VIII unless a Concord kind forced there asks for it
 ## (concord_rules()).
+## The Hall of the Slain (the Norse act, temporarily Act XI; GDD §15.0 "The
+## Hall of the Slain foundation (phase 1)"): `norse` (NorseRules) runs its
+## shared rules (the Long Winter, Berserkergang, the Rune-Stones, Ragnarök),
+## stepped after the Concord's and before the obstacle push-out; null on every
+## other act unless a Norse kind forced there asks for it (norse_rules()).
 ## Online co-op (docs/coop/DESIGN.md): `coop` (CoopSession) holds two player
 ## slots in this one simulation; the per-player fields below (player, horde,
 ## abilities, grave_step, dread_rally, ultimates, stance, character, innates,
@@ -263,6 +268,11 @@ var city: CityRules = null
 ## stage's STAGE has "concord": true, or a Concord kind spawned on another stage
 ## asked for it through concord_rules(); Acts I to VIII never create it).
 var concord: ConcordRules = null
+# --- Act XI (temporary): the Hall of the Slain ---
+## The Hall of the Slain's shared rules (NorseRules; null unless the stage's
+## STAGE has "norse": true, or a Norse kind spawned on another stage asked for
+## it through norse_rules(); no other act ever creates it).
+var norse: NorseRules = null
 ## Content wave 2: the run counters of the one-run achievements (RunRewards;
 ## never null once _ready ran; reads the run only, never changes gameplay).
 var rewards: RunRewards
@@ -459,6 +469,11 @@ func _ready() -> void:
 		# --- Act IX: the Ark ---
 		"ark":
 			ground = ArkGround.new()  # Act IX: the Ark of the Concord's four zone floors (ArkStage.ZONES).
+		# --- Act XI (temporary): the Hall of the Slain ---
+		"norse":
+			var nog := NorseGround.new()  # The Norse stubs' placeholder floor (the STAGE's "floor").
+			nog.look = stage_def.get("floor", {})
+			ground = nog
 		_:
 			ground = Ground.new()
 	add_child(ground)
@@ -551,6 +566,8 @@ func _ready() -> void:
 		city_rules()  # Act VIII: the Last Line's shared rules.
 	if bool(stage_def.get("concord", false)):
 		concord_rules()  # Act IX: the Concord of Stars' shared rules.
+	if bool(stage_def.get("norse", false)):
+		norse_rules()  # The Hall of the Slain's shared rules.
 
 	if autotest != null:
 		player.invulnerable = not GameState.autotest_mortal
@@ -858,6 +875,8 @@ func _physics_process(delta: float) -> void:
 		city.step(delta)  # Act VIII: the escalation, the civilians, wrecks and shells, Martial Law (pushed out of buildings next).
 	if concord != null:
 		concord.step(delta)  # Act IX: the Final Harvest, the beams, the lifted summons, the alien ground (pods pushed out next).
+	if norse != null:
+		norse.step(delta)  # The Hall of the Slain: Ragnarök, the Long Winter, the Rune-Stones (pushed out next).
 	if pf != null:
 		tl = pf.lap(PerfProbe.SEC_ENEMIES, tl)
 	arena.resolve_all(delta)
@@ -1038,6 +1057,18 @@ func concord_rules() -> ConcordRules:
 		concord = ConcordRules.new(self)
 		add_child(concord)
 	return concord
+
+
+# --- Act XI (temporary): the Hall of the Slain ---
+## The Hall of the Slain's shared rules, created on first use: at the start of
+## a Norse run, or when a Norse kind forced onto another stage is activated
+## (NorseKit.reset()), so the fury works there (the cold, the braziers, the
+## timeline's stones and Ragnarök stay off off the act).
+func norse_rules() -> NorseRules:
+	if norse == null:
+		norse = NorseRules.new(self)
+		add_child(norse)
+	return norse
 
 
 # --- Act IV: the Asphodel Underworld ---

@@ -252,6 +252,18 @@
 ##     "crash site", "burrowers", "acid", "brood matriarch" and "hive mother"
 ##     lines (CrashSiteReport), and "act IX spell" / "act IX passives" when
 ##     Bone Beetles, Chitin or Anchored was taken.
+##   * The Hall of the Slain (the Norse act, temporarily Act XI; GDD §15.0 "The
+##     Hall of the Slain foundation (phase 1)"): --stage=barrow_fields|valgard|
+##     vigrid, --spawn= with its kinds (raider, shield_maiden, berserker,
+##     skald, valkyrie, seer, draugr, wolf_of_the_wastes, frost_giant,
+##     fire_giant, rune_stone, brazier), --boss=hrimgar|sigrun|odin. The bot
+##     drifts toward the nearest lit brazier while it stands in the cold and
+##     relights a doused one when calm (NorseRules.warm_point(), the one cold
+##     behaviour), and takes a Rune-Stone the hall holds when its army holds
+##     and it is calm (_stone_vector(), NorseRules.stone_point()). When the
+##     Norse rules ran, the summary adds the "long winter", "berserkergang",
+##     "rune-stones", "norse kinds", "ragnarok" (after 0:00) and (on a Norse
+##     stage) "norse stage" lines (NorseReport).
 class_name Autotest
 extends Node
 
@@ -295,6 +307,19 @@ const INFERNO_SEAL_PRESSURE_NEAR: float = 2.5
 const INFERNO_SEAL_NEAR: float = 1.6
 ## x the pull while at the ring (it holds its ground through the pour).
 const INFERNO_SEAL_HOLD: float = 2.0
+# --- Act XI (temporary): the Hall of the Slain ---
+## Radius (px) in which the bot looks for a brazier to warm up at or relight.
+const NORSE_WARM_REACH: float = 900.0
+## Crowd pressure (the flee vector's length) above which the bot stays put
+## instead of walking to a brazier.
+const NORSE_WARM_PRESSURE: float = 0.8
+## Radius (px) in which the bot looks for a Rune-Stone the hall holds.
+const NORSE_STONE_RADIUS: float = 600.0
+## Summons the bot's army needs before it goes to take a stone (it must
+## outnumber the hall there).
+const NORSE_STONE_ARMY: int = 8
+## Weight of the walk into a stone's ring in the autopilot mix.
+const NORSE_STONE_WEIGHT: float = 2.0
 # --- Act VII: the Sanguine Court ---
 ## Seconds before a Blood Moon's rise within which the bot holds a full Dread
 ## Rally meter for the moon (unless the necromancer is in danger).
@@ -1323,6 +1348,8 @@ func get_move_vector() -> Vector2:
 		danger += game.city.danger_push(p)  # Act VIII: headlight lanes, landing circles (null elsewhere).
 	if game.concord != null:
 		danger += game.concord.danger_push(p)  # Act IX: aiming lines and live beams (null elsewhere).
+	if game.norse != null:
+		danger += game.norse.danger_push(p)  # The Hall of the Slain: its own telegraphs (null elsewhere).
 	var objective := Vector2.ZERO
 	# Walk to shrines any time, to graves under consecration only when calm.
 	var goal := game.enemies.stage.seek_point(p, OBJECTIVE_SEEK_RADIUS, away.length() < 0.2)
@@ -1354,6 +1381,10 @@ func get_move_vector() -> Vector2:
 	# --- Act IV: the Shores of Ilion ---
 	if goal == Vector2.INF and game.enemies.ilion != null and away.length() < 0.2 and policy() in SANCTUM_SEEK_POLICIES:
 		goal = game.enemies.ilion.seek_point(p, OBJECTIVE_SEEK_RADIUS)  # The Shores of Ilion: burn the siege towers when calm.
+	# --- Act XI (temporary): the Hall of the Slain --- out of the cold: toward
+	# the nearest lit brazier (or a doused one to relight) unless pressed.
+	if goal == Vector2.INF and game.norse != null and away.length() < NORSE_WARM_PRESSURE:
+		goal = game.norse.warm_point(p, NORSE_WARM_REACH)
 	if game.enemies.boss is BossVhalneth and game.enemies.boss.active:
 		# Vhal'Neth never walks: go and fight her arms, then her face (every policy).
 		var at := (game.enemies.boss as BossVhalneth).approach_point(p)
@@ -1374,6 +1405,11 @@ func get_move_vector() -> Vector2:
 		var seal := _seal_vector(p, away.length())  # Into a demon portal's ring (zero when not sealing).
 		if seal != Vector2.ZERO:
 			objective = seal * INFERNO_SEAL_WEIGHT
+	# --- Act XI (temporary): the Hall of the Slain ---
+	if game.norse != null:
+		var take := _stone_vector(p, away.length())  # Into a Rune-Stone's ring (zero when not taking one).
+		if take != Vector2.ZERO:
+			objective = take * NORSE_STONE_WEIGHT
 	var avoid := game.arena.avoid_vector(p, game.player.radius, OBSTACLE_LOOK)
 	var wander := Vector2.from_angle(game.elapsed * 0.3) * 0.35
 	var loot := _loot_vector(p, away.length())  # Toward a nearby chest / drop when safe.
@@ -1423,6 +1459,31 @@ func _seal_vector(p: Vector2, pressure: float) -> Vector2:
 	if pressure > (INFERNO_SEAL_PRESSURE_NEAR if near else INFERNO_SEAL_PRESSURE):
 		return Vector2.ZERO
 	if d < 6.0:
+		return Vector2.ZERO
+	return to / d * (INFERNO_SEAL_HOLD if near else 1.0)
+
+
+# --- Act XI (temporary): the Hall of the Slain ---
+## The bot's ONE stone-taking behaviour (RuneStones): a pull toward the centre
+## of the nearest stone the hall holds within NORSE_STONE_RADIUS px when its
+## army holds (NORSE_STONE_ARMY summons, which outnumber the hall there), its
+## HP is at least INFERNO_SEAL_HP and the crowd `pressure` is low (at the ring
+## it holds on through more pressure, for the 3 s of the capture). Zero
+## otherwise (and for every policy that does not seek objectives).
+func _stone_vector(p: Vector2, pressure: float) -> Vector2:
+	if not policy() in SANCTUM_SEEK_POLICIES or game.horde.units.size() < NORSE_STONE_ARMY:
+		return Vector2.ZERO
+	if game.player.hp < game.player.max_hp * INFERNO_SEAL_HP:
+		return Vector2.ZERO
+	var at := game.norse.stone_point(p, NORSE_STONE_RADIUS)
+	if at == Vector2.INF:
+		return Vector2.ZERO
+	var to := at - p
+	var d := to.length()
+	var near := d < float(game.norse.stones.cfg["capture_radius"])  # In the ring: hold on.
+	if pressure > (INFERNO_SEAL_PRESSURE_NEAR if near else INFERNO_SEAL_PRESSURE):
+		return Vector2.ZERO
+	if d < 30.0:
 		return Vector2.ZERO
 	return to / d * (INFERNO_SEAL_HOLD if near else 1.0)
 
@@ -1514,6 +1575,7 @@ func finish(summary: Dictionary) -> void:
 	CourtReport.print_lines(game, st_all)  # Act VII: bloodfeast, night wings, blood moon, kinds, the endless feast, the stage (only when the Court ran).
 	CityReport.print_lines(game, st_all)  # Act VIII: city blocks, armour, supers, civilians, escalation, kinds, martial law, the stage (only when the Last Line ran).
 	ConcordReport.print_lines(game, st_all)  # Act IX: beams, abduction, terraforming, the final harvest, kinds, the stage (only when the Concord ran).
+	NorseReport.print_lines(game, st_all)  # The Hall of the Slain: the long winter, the fury, the stones, ragnarok, kinds, the stage (only when the Norse rules ran).
 	WastesReport.print_items(game, st_all)  # Act III, the Scrap Wastes: Death Ray and its passives (only when taken).
 	IlionReport.print_items(game, st_all)  # Act IV, the Shores of Ilion: Paris's Arrow and its passives (only when taken).
 	# --- Act V: the Burning Province ---

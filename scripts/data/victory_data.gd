@@ -55,6 +55,10 @@ const STAGES := {
 	"crash_site": {"title": "The Hatchery Burns", "boss_line": "The Hive Mother falls back into her crater."},  # TUNING (not in GDD) Act IX placeholder
 	"proving_moon": {"title": "The Hunt Is Over", "boss_line": "Vrask'Tal's last trophy is his own."},  # TUNING (not in GDD) Act IX placeholder
 	"ark": {"title": "The Harvest Ends", "boss_line": "The Harvester falls, and the stars go dark."},  # TUNING (not in GDD) Act IX placeholder
+	# --- Act XI (temporary): the Hall of the Slain (placeholders until each stage is built) ---
+	"barrow_fields": {"title": "The Barrows Are Silent", "boss_line": "Hrimgar sinks into his barrow and does not rise."},  # TUNING (not in GDD) placeholder
+	"valgard": {"title": "The Hall Stands Empty", "boss_line": "Sigrun falls, and the doors of the hall swing shut."},  # TUNING (not in GDD) placeholder
+	"vigrid": {"title": "The Twilight Ends", "boss_line": "Odin and Fenrir fall together on the last field."},  # TUNING (not in GDD) placeholder
 }
 ## Title of a victory on a stage missing from STAGES.
 const DEFAULT_TITLE: String = "Victory"  # TUNING (not in GDD)
@@ -75,6 +79,8 @@ const ACT_LINES := {
 	8: "You outlasted the city. Martial Law ground you down at last.",  # TUNING (not in GDD) Act VIII
 	# --- Act IX: the Concord of Stars ---
 	9: "You outlasted the Concord. The Final Harvest reaped you at last.",  # TUNING (not in GDD) Act IX
+	# --- Act XI (temporary): the Hall of the Slain ---
+	11: "You outlasted the hall. Ragnarok took you at last.",  # TUNING (not in GDD) the Norse act
 }
 
 # --- The last stand (LastStand; seconds of real time from its start) ----------------

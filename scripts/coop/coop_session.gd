@@ -426,6 +426,9 @@ func step(delta: float) -> void:
 	if game.concord != null:
 		bind_primary()
 		game.concord.step(delta)  # Act IX: the Final Harvest, the beams, the lifted summons, the alien ground (before the push-out, as in solo).
+	if game.norse != null:
+		bind_primary()
+		game.norse.step(delta)  # The Hall of the Slain: Ragnarök, the Long Winter (each slot's cold), the Rune-Stones (before the push-out, as in solo).
 	if pf != null:
 		tl = pf.lap(PerfProbe.SEC_ENEMIES, tl)
 	bind_primary()

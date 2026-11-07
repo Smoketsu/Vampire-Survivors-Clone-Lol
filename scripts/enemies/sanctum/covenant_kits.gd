@@ -22,8 +22,10 @@
 ## (e.g. "vampire_noble" -> VampireNobleKit), and an id with none of those is
 ## a LAST LINE kit (Act VIII): CITY_KIT_DIR + "<id>_kit.gd" (e.g. "blitz" ->
 ## BlitzKit), and an id with none of those is a CONCORD OF STARS kit (Act IX):
-## CONCORD_KIT_DIR + "<id>_kit.gd" (e.g. "saucer" -> SaucerKit).
-## Kit ids must be unique across the eight folders.
+## CONCORD_KIT_DIR + "<id>_kit.gd" (e.g. "saucer" -> SaucerKit), and an id
+## with none of those is a HALL OF THE SLAIN kit (the Norse act):
+## NORSE_KIT_DIR + "<id>_kit.gd" (e.g. "raider" -> RaiderKit).
+## Kit ids must be unique across the nine folders.
 ## Enemy only ever talks to this file and the CovenantKit base class.
 class_name CovenantKits
 extends RefCounted
@@ -50,6 +52,9 @@ const CITY_KIT_DIR: String = "res://scripts/enemies/city/"
 # --- Act IX: the Concord of Stars ---
 ## Folder of the Concord of Stars' kit scripts ("<id>_kit.gd", each a ConcordKit; Act IX).
 const CONCORD_KIT_DIR: String = "res://scripts/enemies/concord/"
+# --- Act XI (temporary): the Hall of the Slain ---
+## Folder of the Hall of the Slain's kit scripts ("<id>_kit.gd", each a NorseKit).
+const NORSE_KIT_DIR: String = "res://scripts/enemies/norse/"
 
 ## Eye / Empire kit id -> its loaded Script (null when no file exists), filled on first use.
 static var _eye_scripts: Dictionary = {}
@@ -112,6 +117,8 @@ static func _eye_kit(id: String) -> CovenantKit:
 			path = CITY_KIT_DIR + id + "_kit.gd"  # Act VIII: a Last Line kit.
 		if not ResourceLoader.exists(path):
 			path = CONCORD_KIT_DIR + id + "_kit.gd"  # Act IX: a Concord of Stars kit.
+		if not ResourceLoader.exists(path):
+			path = NORSE_KIT_DIR + id + "_kit.gd"  # The Hall of the Slain: a Norse kit.
 		_eye_scripts[id] = load(path) if ResourceLoader.exists(path) else null
 	var scr: Script = _eye_scripts[id]
 	if scr == null:

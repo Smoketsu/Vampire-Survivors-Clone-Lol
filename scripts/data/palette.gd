@@ -292,3 +292,38 @@ const CONCORD_LUMEN := Color(1.000, 0.914, 0.627)  # #FFE9A0
 const CONCORD_TURF_DARK := Color(0.102, 0.110, 0.133)  # #1A1C22
 ## Turf ("turf"): the alien flesh ground Terraforming spreads.
 const CONCORD_TURF := Color(0.353, 0.165, 0.416)  # #5A2A6A
+
+# --- Act XI (temporary number): the Hall of the Slain ---
+# The cold north (docs/proposals/LAST_SIX_ACTS.md "VI. The Hall of the Slain"):
+# frost white, iron grey, pine green-black and hearth amber, with valkyrie gold
+# and an ice-blue rune glow (kept clear of the undead's soul-teal). Gold keeps
+# its UI meaning (evolution, chest, victory): the Einherjar's gold is the paler
+# NORSE_VALKYRIE_GOLD, never Palette.GOLD; crimson stays danger (the fury).
+## Outline ink of the Norse kinds (a cold near-black).
+const NORSE_INK := Color(0.055, 0.063, 0.078)  # #0E1014
+## Frost white: snow, pale furs, the hall's light.
+const NORSE_FROST := Color(0.910, 0.933, 0.949)  # #E8EEF2
+## Frost shade: snow in shadow, worn linen.
+const NORSE_FROST_SHADE := Color(0.706, 0.761, 0.800)  # #B4C2CC
+## Iron grey: mail, helms, axe heads.
+const NORSE_IRON := Color(0.353, 0.376, 0.408)  # #5A6068
+## Dark iron: shadowed mail, rust-black draugr gear.
+const NORSE_IRON_DARK := Color(0.180, 0.196, 0.220)  # #2E3238
+## Pine green-black: cloaks, pine woods, barrow turf.
+const NORSE_PINE := Color(0.086, 0.141, 0.118)  # #16241E
+## Lighter pine: moss on the barrows, cloak folds.
+const NORSE_PINE_LIGHT := Color(0.173, 0.290, 0.227)  # #2C4A3A
+## Hearth amber: fire light, leather, round-shield wood.
+const NORSE_HEARTH := Color(0.910, 0.604, 0.235)  # #E89A3C
+## Dark hearth: leather straps, shield wood in shadow.
+const NORSE_HEARTH_DARK := Color(0.643, 0.337, 0.118)  # #A4561E
+## Valkyrie gold: the valkyries' wings and the Einherjar's light (paler than
+## the UI gold, so it never reads as a chest or an evolution).
+const NORSE_VALKYRIE_GOLD := Color(0.957, 0.851, 0.541)  # #F4D98A
+## Rune glow: ice-blue carved runes, a warded Norse warrior's shimmer (bluer
+## than the undead's soul-teal).
+const NORSE_RUNE := Color(0.549, 0.784, 1.000)  # #8CC8FF
+## Berserk red: the fury's eyes and its aura (danger).
+const NORSE_BERSERK := Color(0.847, 0.157, 0.165)  # #D8282A
+## Fire of the south: the fire-giants and Ragnarök's burning sky.
+const NORSE_FIRE := Color(1.000, 0.416, 0.102)  # #FF6A1A

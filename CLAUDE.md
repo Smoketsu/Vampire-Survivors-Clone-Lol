@@ -172,7 +172,7 @@ Autotest options (full table in the README):
 - `--passives=a,b` (force passives the same way, e.g. `unholy_precision,unholy_resilience`)
 - `--stage=graveyard|crimson_march|sanctum|harbour|archive|spire|wastes|assembly|citadel|ilion|olympus|underworld|province|kurogane|sun_road|`
   `burning_gate|silk_palace|pandemonium|ravensmoor|witchwood|castle_sanguis|skid_row|fort_kessler|liberty_heights|crash_site|`
-  `proving_moon|ark` (default graveyard; stage locks are
+  `proving_moon|ark|barrow_fields|valgard|vigrid` (default graveyard; the last three are the Hall of the Slain's stubs; stage locks are
   ignored)
 - `--unlocks=all|none` (Act II's lockable spells / passives / classes in the card pool; forced items
   are open either way)

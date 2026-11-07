@@ -608,6 +608,9 @@ func _draw_obstacle(o: Obstacle) -> void:
 	# --- Act IX: the Ark ---
 	if ArkGlyphs.draw_obstacle(self, o):
 		return  # An Ark of the Concord obstacle kind (Act IX).
+	# --- Act XI (temporary): the Hall of the Slain ---
+	if NorseGlyphs.draw_obstacle(self, o):
+		return  # A Norse stub's placeholder obstacle kind.
 	var c := o.center
 	var dark := Color(0.06, 0.06, 0.07)
 	match o.kind:
