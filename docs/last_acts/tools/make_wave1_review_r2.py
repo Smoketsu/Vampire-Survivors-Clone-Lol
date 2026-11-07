@@ -35,6 +35,7 @@ def _strips(ref, stems):
                 if suf == "":
                     MISSING.append(st)
     return out
+ALL = None  # Marker: every PNG the branch added since BASE.
 MISSING = []  # Requested keys not found on their branch.
 # Groups: (id, heading, blurb, weak spot note, [(ref, [keys or stems])], strips expanded?)
 GROUPS = [
@@ -50,7 +51,15 @@ GROUPS = [
        + ["summons/powder_wraith_walk"], False)]),
     ("norse", "Hall of the Slain: the Long Winter", "The Long Winter pieces: braziers and the frost creep.",
      "No known weak spots.", [("norse-art", ["norse/brazier_lit", "norse/brazier_doused", "norse/frost_creep"], False)]),
+    ("norse_rest", "Hall of the Slain: enemies, bosses, floors, obstacles and icons", "Everything else the Hall of the Slain art branch added since round 1 (not yet reviewed).",
+     "Weak spots: Odin's eyepatch is hard to read at 72 px; walk rigs auto-fitted (giants, Fenrir, weapon-heavy figures may need tuning); floors and obstacles procedural.",
+     [("norse-art", ALL, False)]),
+    ("dynasty", "Necropolis Dynasty: enemies, bosses, floors, obstacles and icons", "Everything else the Necropolis Dynasty art branch added since round 1 (not yet reviewed).",
+     "Weak spots: Sekhmet is noisy; the mummy's green eyes are lost at 40 px; the scarab swarm is mushy; bust boxes set by eye.",
+     [("dynasty-art", ALL, False)]),
 ]
+EXCLUDE = {"norse/rune_seer", "norse/shield_maiden_hero", "norse/berserker_hero", "norse/brazier_lit", "norse/brazier_doused", "norse/frost_creep",
+           "player/the_embalmer", "player/lion_priestess", "player/pharaohs_shade"}  # Stems already shown in round 2's character / Long Winter groups.
 MANIFESTS = {"tide-art": "docs/tide/ART_MANIFEST.md", "norse-art": "docs/norse/ART_MANIFEST.md", "dynasty-art": "docs/dynasty/ART_MANIFEST.md"}  # Manifest per branch.
 COLLECTION = "wave1_art_r2"  # db collection the owner's marks are saved in.
 KEYREF = {}  # sprite key -> git ref it is read from, filled by main().
@@ -194,7 +203,11 @@ def main() -> None:
         keys = []
         for ref, items, expand in parts:
             ks = _strips(ref, items) if expand else []
-            if not expand:
+            if items is ALL:
+                for k in sorted(added(BASE, ref), key=order):
+                    if re.sub(r"_(walk|idle)$", "", k) not in EXCLUDE:
+                        ks.append(k)
+            elif not expand:
                 for k in items:
                     try:
                         show(ref, C + k + ".png")
@@ -218,7 +231,7 @@ def main() -> None:
     page = show(*TEMPLATE_REF).decode("utf-8")
     page = (page.replace("<title>Act II Art Review</title>", "<title>Last Acts Art Review R2</title>")
             .replace("<h1>Act II Art Review</h1>", "<h1>Last Acts Art Review R2</h1>")
-            .replace("{{LEDE}}", "Round 2: %d images (the redone characters, the Black Tide marks, the Long Winter pieces). "
+            .replace("{{LEDE}}", "Round 2: %d images (the redone characters, the Black Tide marks, the Long Winter pieces, and the rest of the Hall of the Slain and the Necropolis Dynasty). "
                      "Strips animate. Mark each one OK or Redo, with a note on what should change." % total)
             .replace("{{COLLECTION}}", json.dumps(COLLECTION))
             .replace("{{NAV}}", "".join('<a href="#%s">%s</a>' % (g, l) for g, l in nav))
