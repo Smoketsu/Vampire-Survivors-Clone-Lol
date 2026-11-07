@@ -1020,6 +1020,42 @@ RIGS = {
     "player/ghost_helmsman": dict(mode="robe", hip=36, rigid=[], sway=1, dip=1),  # R1: the violet necromancer redo
     "summons/powder_wraith": dict(mode="legs", hip=32, back=(0, 14), front=(14, 36), rigid=[], spread=2, lift=1, dip=1),
     "summons/magazine_lord": dict(mode="legs", hip=43, back=(0, 15), front=(15, 32), rigid=[], spread=1, lift=1, dip=1),
+    # --- Act VII slot: the Necropolis Dynasty (assets/sprites/dynasty/) ---
+    # The wrapped dead and the soldiers stride on their legs (staffs and spears end above the hip or ride as `rigid` columns); the
+    # robed figures (the women's long dresses and gowns, the stone servants, the crocodile warden's sand) glide with the hem
+    # swaying; the scarab swarm scuttles, Ammit and the Devourer's Whelp prowl on four legs; the Pharaoh's Shade floats. Every
+    # female figure (figure redesign) has a `bust` box (art px, [start, end)) and an idle strip. Osiris (on his throne) and the
+    # canopic jar have no strip. Boxes read from each still.
+    "dynasty/mummy": dict(mode="legs", hip=27, back=(0, 14), front=(14, 28), rigid=[], spread=1, lift=1, dip=1),
+    "dynasty/mummy_female": dict(mode="legs", hip=24, back=(0, 12), front=(12, 24), rigid=[], spread=1, lift=1, dip=1,
+                                 bust=(8, 17, 10, 17, 1), bust_exclude=[(0, 8, 8, 24), (17, 24, 8, 24)]),
+    "dynasty/scarab_swarm": dict(mode="legs", hip=26, back=(0, 17), front=(17, 34), rigid=[], spread=1, lift=1, dip=1),
+    "dynasty/khopesh_guard": dict(mode="legs", hip=33, back=(0, 14), front=(14, 28), rigid=[], spread=2, lift=1, dip=1),
+    "dynasty/nile_archer": dict(mode="robe", hip=30, rigid=[], sway=1, dip=1,
+                                bust=(13, 20, 15, 21, 1), bust_exclude=[(8, 13, 11, 20), (20, 32, 11, 20)]),
+    "dynasty/heka_priest": dict(mode="legs", hip=33, back=(0, 17), front=(17, 28), rigid=[(28, 36, 0, None)], spread=2, lift=1, dip=1),
+    "dynasty/embalmer": dict(mode="robe", hip=30, rigid=[], sway=1, dip=1,
+                             bust=(8, 15, 12, 18, 1), bust_exclude=[(15, 22, 10, 26), (0, 8, 10, 24)]),
+    "dynasty/jackal_warrior": dict(mode="legs", hip=36, back=(0, 11), front=(11, 22), rigid=[(22, 30, 0, None)], spread=2, lift=2, dip=1),
+    "dynasty/bastet_hunter": dict(mode="robe", hip=30, rigid=[], sway=1, dip=1,
+                                  bust=(10, 17, 12, 18, 1), bust_exclude=[(0, 10, 10, 34), (17, 28, 10, 34)]),
+    "dynasty/crocodile_warden": dict(mode="robe", hip=38, rigid=[], sway=1, dip=1),
+    "dynasty/ushabti_statue": dict(mode="robe", hip=30, rigid=[], sway=1, dip=1),
+    "dynasty/sand_colossus": dict(mode="legs", hip=60, back=(0, 22), front=(22, 44), rigid=[], spread=2, lift=2, dip=1),
+    "dynasty/lion_warden": dict(mode="legs", hip=58, back=(0, 26), front=(26, 60), rigid=[], spread=2, lift=2, dip=1),
+    "dynasty/devourers_whelp": dict(mode="legs", hip=22, back=(0, 28), front=(28, 60), rigid=[], spread=2, lift=1, dip=1),
+    "dynasty/anubis": dict(mode="legs", hip=64, back=(14, 33), front=(33, 56), rigid=[(0, 14, 0, None)], spread=2, lift=2, dip=1),
+    "dynasty/sekhmet": dict(mode="robe", hip=54, rigid=[(0, 14, 0, None)], sway=2, dip=1,
+                            bust=(19, 34, 30, 41, 2, 2), bust_exclude=[(0, 19, 28, 60), (34, 52, 28, 52)]),
+    "dynasty/ammit": dict(mode="legs", hip=28, back=(0, 38), front=(38, 76), rigid=[], spread=2, lift=2, dip=1),
+    # The Dynasty's three playable necromancers (violet, owner note Nov 2026; assets/sprites/player/): robes glide, the female two with bust boxes.
+    "player/the_embalmer": dict(mode="robe", hip=40, rigid=[(23, 32, 0, None)], sway=1, dip=1,
+                                bust=(10, 20, 17, 25, 1), bust_exclude=[(0, 10, 12, 50), (20, 32, 12, 50)]),
+    "player/lion_priestess": dict(mode="robe", hip=40, rigid=[(27, 38, 0, None)], sway=1, dip=1,
+                                  bust=(11, 22, 16, 25, 1), bust_exclude=[(0, 11, 12, 50), (22, 38, 12, 50)]),
+    "player/pharaohs_shade": dict(mode="robe", hip=42, rigid=[(31, 40, 0, None)], sway=1, dip=1, float=2),
+    "dynasty/ushabti_sentinel": dict(mode="robe", hip=30, rigid=[], sway=1, dip=1),
+    "dynasty/eternal_guard": dict(mode="robe", hip=38, rigid=[], sway=1, dip=1),
 }
 
 # Skins (SkinData, cosmetic): skin sprite key -> its character's sprite key. A skin keeps

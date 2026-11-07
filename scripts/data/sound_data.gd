@@ -831,6 +831,8 @@ const SCORES := {
 	"shanty": SHANTY_SCORE,  # the Black Tide: "Dead Men's Shanty"
 	# --- Act VI (final order): the Hall of the Slain ---
 	"valhall": VALHALL_SCORE,  # "Horns at the Last Feast"
+	# --- the Necropolis Dynasty (Act VII slot) ---
+	"weighing": WEIGHING_SCORE,  # "The Weighing of the Heart"
 }
 ## Sound pack each score asks for when its run starts (Sfx.prepare_pack():
 ## "empire" = EMPIRE_SOUNDS, the Act III effects; "pantheon" = PANTHEON_SOUNDS,
@@ -848,6 +850,7 @@ const SCORE_PACKS := {
 	"shanty": "corsair",  # the Black Tide sound pack
 	# --- Act VI (final order): the Hall of the Slain ---
 	"valhall": "norse",  # the Norse sound pack
+	"weighing": "dynasty",  # the Necropolis Dynasty sound pack
 }
 
 ## Act III sound effects (the Electronic Empire; recipe keys as SOUNDS). Kept
@@ -2118,4 +2121,109 @@ const NORSE_SOUNDS: Dictionary = {  # TUNING (not in GDD)
 			{"wave": "sine", "f0": 660.0, "f1": 1320.0, "dur": 1.2, "amp": 0.05, "attack": 0.9, "decay": 0.4},
 			{"wave": "noise", "dur": 1.0, "amp": 0.06, "attack": 0.6, "decay": 0.3, "lp0": 800.0, "lp1": 6000.0},
 			{"wave": "saw", "f0": 130.8, "start": 0.7, "dur": 0.7, "amp": 0.1, "attack": 0.1, "decay": 0.35, "lp0": 500.0, "lp1": 1200.0}]},
+
+# --- the Necropolis Dynasty (Act VII slot; stage key dynasty) ---
+## "The Weighing of the Heart", the Dynasty's run loop (GDD §15.0 "The Necropolis Dynasty art and audio"): the
+## RunLoopSynth score of every stage whose STAGE has "music": "weighing". Frame drums, a reed drone and a
+## mournful modal melody in G Hijaz (G Ab B C D Eb F#), 24 s: eight 3 s bars of eight steps (0.375 s), four 6 s
+## chord segments (G5, Ab over Eb, G with F#, C5). The frame drums are the existing "machine" job in the
+## maqsum pattern (dum on 0 and 4, tek on 2, 3 and 6, a faint finger-cymbal tick on every step, in place of the
+## heartbeat); the reed drone is the existing "organ" job on odd partials (a reedy hum on a low G) over a very
+## deep drone; the melody is the existing "flute" job (a breathy ney with a wide vibrato); a sparse sistrum
+## shimmer is the existing "hits" job; a low "horn" swell blooms twice a loop (the Reckoning's colour: the
+## Devourer's Hour). Never shrill: everything above 1 kHz is a sine or low-passed. Rendered lazily (Sfx), never
+## under the autotest; its fixed seed is Sfx.SCORE_SEEDS["weighing"].
+const WEIGHING_SCORE := {
+	"loop_seconds": 24.0,  # TUNING (not in GDD) eight bars of 3 s
+	"root_hz": 49.0,  # TUNING (not in GDD) G1, a very low desert hum under G
+	"chords": [
+		[98.0, 146.83, 196.0],
+		[103.83, 155.56, 196.0],
+		[98.0, 146.83, 185.0],
+		[130.81, 196.0, 261.63],
+	],  # TUNING (not in GDD) G5 (open), Ab over Eb, G with the F# leading tone, C5
+	"drone_lp_hz": 70.0,  # TUNING (not in GDD) a soft, deep hum
+	"wind_lp_hz": 420.0,  # TUNING (not in GDD) blown sand
+	"wind_swells": 3.0,  # TUNING (not in GDD)
+	"vibrato_hz": 0.3,  # TUNING (not in GDD)
+	"vibrato_depth": 0.002,  # TUNING (not in GDD)
+	# Frame drums in the maqsum: 8 steps of 0.375 s a bar (dum, tek, tek / dum, tek), a faint finger-cymbal tick on each step.
+	"machine": {"step": 0.375, "steps_per_bar": 8, "kick_steps": [0, 4], "snare_steps": [2, 3, 6],
+		"hat_steps": [0, 1, 2, 3, 4, 5, 6], "open_hat_steps": [7], "kick_amp": 0.38, "snare_amp": 0.1,
+		"hat_amp": 0.022, "open_hat_amp": 0.035, "kick_hz0": 150.0, "kick_hz1": 72.0, "kick_dur": 0.28,
+		"snare_dur": 0.12, "hat_dur": 0.04, "open_hat_dur": 0.2},  # TUNING (not in GDD)
+	# The reed drone: a low G on odd partials (a reedy hum), swelling in over a second, re-struck each segment.
+	"organ": {"attack": 1.0, "decay": 3.0, "vib_hz": 5.0, "vib_depth": 0.002,
+		"partials": [[1.0, 0.05], [3.0, 0.035], [5.0, 0.022], [7.0, 0.012]],
+		"notes": [[0.0, 98.0, 5.9], [6.0, 103.83, 5.9], [12.0, 98.0, 5.9], [18.0, 130.81, 5.8]]},  # TUNING (not in GDD) [start (s), Hz, length (s)]
+	# The mournful reed melody (G Hijaz): four phrases of six seconds, each answering the last.
+	"flute": {"amp": 0.09, "breath": 0.06, "attack": 0.18, "decay": 1.1, "vib_hz": 5.2, "vib_depth": 0.014,
+		"notes": [
+			[0.4, 587.33, 1.6], [2.2, 523.25, 1.0], [3.4, 493.88, 0.9], [4.4, 415.3, 1.5],
+			[6.4, 493.88, 1.4], [8.0, 523.25, 1.0], [9.2, 587.33, 2.2],
+			[12.4, 622.25, 1.5], [14.0, 587.33, 1.0], [15.2, 493.88, 1.0], [16.4, 415.3, 1.4],
+			[18.4, 392.0, 1.8], [20.4, 415.3, 0.9], [21.5, 493.88, 1.0], [22.6, 392.0, 1.0]]},  # TUNING (not in GDD) [start (s), Hz, length (s)]
+	# A sistrum shimmer: a quiet, thin ping every 6 s, 3 s into each segment.
+	"hits": {"every": 6.0, "offset": 3.0, "root_hz": 2400.0, "dur": 0.9, "decay": 0.3,
+		"partials": [[1.0, 0.012], [1.51, 0.008], [2.3, 0.005]], "click": 0.008},  # TUNING (not in GDD)
+	# The Devourer's swell: a low G and D that bloom and fade twice a loop.
+	"horn": {"starts": [0.5, 12.5], "dur": 5.6, "attack": 2.6, "decay": 2.4, "amp": 0.035,
+		"lp0": 200.0, "lp1": 800.0,
+		"notes": [[49.0, 73.42], [49.0, 73.42]]},  # TUNING (not in GDD)
+}
+
+## Necropolis Dynasty sound effects (recipe keys as SOUNDS). Kept OUT of SOUNDS like the other packs: Sfx renders
+## it lazily the first time a Dynasty run's music ("weighing") is asked for (Sfx.prepare_pack("dynasty"); seeds
+## Sfx.PACK_SEED + Sfx.PACK_SEED_OFFSETS["dynasty"] + i, offset 9000). Nothing plays them until the stage agents wire the sound map.
+const DYNASTY_SOUNDS: Dictionary = {  # TUNING (not in GDD)
+	# A Name appears on a cartouche over a fallen body: a bright little bell, two partials, a faint shimmer.
+	"cartouche_chime": {"dur": 0.9, "volume_db": -17.0, "max_voices": 4, "min_interval": 90, "pitch_var": 0.06, "priority": 1,
+		"layers": [
+			{"wave": "sine", "f0": 1568.0, "dur": 0.8, "amp": 0.16, "attack": 0.002, "decay": 0.3},
+			{"wave": "sine", "f0": 4328.0, "dur": 0.5, "amp": 0.05, "attack": 0.002, "decay": 0.15},
+			{"wave": "sine", "f0": 2349.0, "start": 0.07, "dur": 0.6, "amp": 0.07, "attack": 0.002, "decay": 0.22},
+			{"wave": "noise", "dur": 0.02, "amp": 0.03, "attack": 0.001, "decay": 0.006, "lp0": 8000.0}]},
+	# A body returns (Rebirth): a low groan that rises through a dry rasp, ending on a thump.
+	"rebirth_groan": {"dur": 1.7, "volume_db": -12.0, "max_voices": 2, "min_interval": 250, "pitch_var": 0.06, "priority": 3,
+		"layers": [
+			{"wave": "saw", "f0": 52.0, "f1": 84.0, "dur": 1.4, "amp": 0.2, "attack": 0.5, "decay": 0.7, "lp0": 200.0, "lp1": 600.0, "vib_hz": 6.0, "vib_depth": 0.03},
+			{"wave": "noise", "dur": 1.2, "amp": 0.12, "attack": 0.5, "decay": 0.5, "lp0": 300.0, "lp1": 1400.0},
+			{"wave": "sine", "f0": 110.0, "f1": 140.0, "start": 0.3, "dur": 1.2, "amp": 0.1, "attack": 0.6, "decay": 0.5, "vib_hz": 5.0, "vib_depth": 0.04},
+			{"wave": "sine", "f0": 90.0, "f1": 42.0, "start": 1.15, "dur": 0.5, "amp": 0.3, "attack": 0.004, "decay": 0.18}]},
+	# The Sandstorm blows in: a long, swelling roar of sand and a low wind moan.
+	"sandstorm": {"dur": 3.4, "volume_db": -17.0, "max_voices": 1, "min_interval": 3000, "pitch_var": 0.02, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 3.2, "amp": 0.22, "attack": 1.4, "decay": 1.4, "lp0": 500.0, "lp1": 2600.0},
+			{"wave": "noise", "start": 0.4, "dur": 2.6, "amp": 0.08, "attack": 1.2, "decay": 1.2, "lp0": 3500.0, "lp1": 6000.0},
+			{"wave": "sine", "f0": 70.0, "f1": 95.0, "dur": 3.2, "amp": 0.18, "attack": 1.3, "decay": 1.5, "vib_hz": 0.8, "vib_depth": 0.08},
+			{"wave": "sine", "f0": 196.0, "f1": 233.0, "start": 0.6, "dur": 2.4, "amp": 0.04, "attack": 1.2, "decay": 1.0, "vib_hz": 5.0, "vib_depth": 0.03}]},
+	# A Canopic Jar breaks: a crack, bright pottery shards and a low thud.
+	"jar_shatter": {"dur": 0.8, "volume_db": -12.0, "max_voices": 3, "min_interval": 100, "pitch_var": 0.08, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.1, "amp": 0.4, "attack": 0.001, "decay": 0.03, "lp0": 9000.0, "lp1": 3500.0},
+			{"wave": "tri", "f0": 1900.0, "f1": 1500.0, "start": 0.03, "dur": 0.08, "amp": 0.08, "attack": 0.001, "decay": 0.03},
+			{"wave": "tri", "f0": 2600.0, "f1": 2000.0, "start": 0.09, "dur": 0.07, "amp": 0.07, "attack": 0.001, "decay": 0.025},
+			{"wave": "tri", "f0": 1300.0, "f1": 1000.0, "start": 0.16, "dur": 0.09, "amp": 0.06, "attack": 0.001, "decay": 0.03},
+			{"wave": "noise", "start": 0.12, "dur": 0.4, "amp": 0.1, "attack": 0.002, "decay": 0.2, "lp0": 6000.0, "lp1": 2500.0},
+			{"wave": "sine", "f0": 130.0, "f1": 60.0, "dur": 0.4, "amp": 0.34, "attack": 0.003, "decay": 0.15}]},
+	# A scarab swarm rushes: dense little clicks and a faint wobbling whirr.
+	"scarab_swarm": {"dur": 0.9, "volume_db": -21.0, "max_voices": 3, "min_interval": 150, "pitch_var": 0.1, "priority": 1,
+		"layers": [
+			{"wave": "noise", "dur": 0.7, "amp": 0.06, "attack": 0.15, "decay": 0.3, "lp0": 6500.0, "lp1": 3500.0},
+			{"wave": "sine", "f0": 2900.0, "f1": 3300.0, "dur": 0.7, "amp": 0.03, "attack": 0.1, "decay": 0.3, "vib_hz": 28.0, "vib_depth": 0.05},
+			{"wave": "noise", "start": 0.04, "dur": 0.01, "amp": 0.3, "attack": 0.001, "decay": 0.004, "lp0": 6500.0},
+			{"wave": "noise", "start": 0.11, "dur": 0.01, "amp": 0.26, "attack": 0.001, "decay": 0.004, "lp0": 7000.0},
+			{"wave": "noise", "start": 0.17, "dur": 0.01, "amp": 0.32, "attack": 0.001, "decay": 0.004, "lp0": 6000.0},
+			{"wave": "noise", "start": 0.26, "dur": 0.01, "amp": 0.24, "attack": 0.001, "decay": 0.004, "lp0": 7000.0},
+			{"wave": "noise", "start": 0.33, "dur": 0.01, "amp": 0.3, "attack": 0.001, "decay": 0.004, "lp0": 6500.0},
+			{"wave": "noise", "start": 0.43, "dur": 0.01, "amp": 0.22, "attack": 0.001, "decay": 0.004, "lp0": 7000.0},
+			{"wave": "noise", "start": 0.52, "dur": 0.01, "amp": 0.26, "attack": 0.001, "decay": 0.004, "lp0": 6000.0}]},
+	# A Heka glyph is written on a summon: a rising whisper of two glassy tones and a small bell at the end.
+	"heka_glyph": {"dur": 1.0, "volume_db": -16.0, "max_voices": 3, "min_interval": 120, "pitch_var": 0.05, "priority": 2,
+		"layers": [
+			{"wave": "sine", "f0": 440.0, "f1": 880.0, "dur": 0.7, "amp": 0.12, "attack": 0.4, "decay": 0.25},
+			{"wave": "sine", "f0": 447.0, "f1": 893.0, "dur": 0.7, "amp": 0.07, "attack": 0.4, "decay": 0.25},
+			{"wave": "tri", "f0": 220.0, "f1": 330.0, "dur": 0.6, "amp": 0.06, "attack": 0.3, "decay": 0.25, "lp0": 700.0},
+			{"wave": "noise", "dur": 0.6, "amp": 0.04, "attack": 0.4, "decay": 0.15, "lp0": 1500.0, "lp1": 5000.0},
+			{"wave": "sine", "f0": 1760.0, "start": 0.62, "dur": 0.38, "amp": 0.09, "attack": 0.002, "decay": 0.14}]},
 }

@@ -1,0 +1,8 @@
+A sheet of 4 separate pixel-art game ICON SYMBOLS in one row, evenly spaced with a wide empty gap between them, on a FULLY TRANSPARENT background (real alpha). Each symbol is simple, bold and centred in its part of the image, drawn as chunky low-resolution pixel art (each symbol about 24 pixels wide on a coarse grid, shown enlarged with crisp square pixels, nearest-neighbour, 1-pixel dark outline, flat colours, at most 3 shades per colour, light from the top-left). No frame, no badge background, no text, no letters, no hieroglyph writing.
+From left to right:
+1. NO JARS LEFT: a canopic jar with a jackal-head lid shattered into pieces, a gold spark above.
+2. A LIGHT HEART: a glowing true-gold heart lighter than a white feather on a balance scale, the scale tipped toward the heart.
+3. USHABTI SENTINEL: a grey-sandstone mummiform statue servant holding a staff and a shield, soul-teal glowing eyes.
+4. ETERNAL GUARD: a tall true-gold-trimmed sandstone statue servant with a large gold sun shield, soul-teal glowing eyes.
+Colours: sandstone #8C6B3E #D2B574 #F0DDA6; stone grey #3B4352 #6B7A94 #A7B3C6; true gold #8A5A12 #E0A92E #FFDC66; soul teal #1C6B58 #3DCC94 #A8FFD2; lapis #2B54B8; dark #0B0A10.
+Attached: an approved icon of this game: match its pixel size, outline weight and flat look (only the symbol, not its frame).

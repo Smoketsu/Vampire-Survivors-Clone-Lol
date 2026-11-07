@@ -111,6 +111,10 @@ const MUSIC_SHANTY: StringName = &"shanty"
 ## play_music() mode: the Hall of the Slain in-run loop "Horns at the Last Feast" (SoundData.VALHALL_SCORE;
 ## a stage whose STAGE has "music": "valhall").
 const MUSIC_VALHALL: StringName = &"valhall"
+# --- the Necropolis Dynasty (Act VII slot) ---
+## play_music() mode: the Dynasty in-run loop "The Weighing of the Heart" (SoundData.WEIGHING_SCORE;
+## a stage whose STAGE has "music": "weighing").
+const MUSIC_WEIGHING: StringName = &"weighing"
 ## play_music() mode: the epilogue's slow "Grave Lullaby" cue (content wave 2;
 ## MenuThemeData.EPILOGUE_VARIANT, rendered the first time the epilogue plays).
 const MUSIC_EPILOGUE: StringName = &"epilogue"
@@ -124,7 +128,7 @@ const SYNTH_SEED: int = 9001
 ## keeps the SYNTH_SEED - 2 it always had.
 const SCORE_SEEDS := {"tide": SYNTH_SEED - 2, "iron": SYNTH_SEED - 3, "bronze": SYNTH_SEED - 4, "sun": SYNTH_SEED - 5,
 	"brimstone": SYNTH_SEED - 6, "sanguine": SYNTH_SEED - 7, "siren": SYNTH_SEED - 8, "starsong": SYNTH_SEED - 9,
-	"shanty": SYNTH_SEED - 10, "valhall": SYNTH_SEED - 11}
+	"shanty": SYNTH_SEED - 10, "valhall": SYNTH_SEED - 11, "weighing": SYNTH_SEED - 12}
 ## Seed base of the lazily rendered sound packs (pack sound i uses PACK_SEED + i).
 const PACK_SEED: int = SYNTH_SEED + 5000
 ## Seed offset of each lazily rendered pack (pack sound i of pack P uses
@@ -133,7 +137,7 @@ const PACK_SEED: int = SYNTH_SEED + 5000
 ## seeds are what they always were).
 const PACK_SEED_OFFSETS := {"empire": 0, "pantheon": 1000, "shogunate": 2000, "inferno": 3000, "court": 4000, "city": 5000, "concord": 6000,
 	# The last acts (wave 1): Black Tide 7000, Norse 8000, Dynasty 9000.
-	"corsair": 7000, "norse": 8000}
+	"corsair": 7000, "norse": 8000, "dynasty": 9000}
 ## A card_select within this many ms replaces the generic ui_confirm click.
 const CONFIRM_SUPPRESS_MSEC: int = 120  # TUNING (not in GDD)
 ## Sounds that replace the generic ui_confirm click of the same press when
@@ -570,6 +574,8 @@ func prepare_pack(pack: String) -> void:
 		defs = SoundData.CORSAIR_SOUNDS  # the Black Tide
 	elif pack == "norse":
 		defs = SoundData.NORSE_SOUNDS  # Act VI (final order): the Hall of the Slain
+	elif pack == "dynasty":
+		defs = SoundData.DYNASTY_SOUNDS  # the Necropolis Dynasty
 	var k := 0  # Index of the sound within its pack (its seed).
 	_mutex.lock()  # The worker reads the queue and recipes.
 	for id: String in defs:

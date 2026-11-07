@@ -1,0 +1,12 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, OSIRIS, Lord of the Dead (male god) seated on a tall dark throne with bronze trim: green papyrus skin, a tall white atef crown, a long white linen robe, holding a bronze crook and flail crossed on his chest, a stern face. Signature shape: the tall white crown and the throne.
+
+LOW-RESOLUTION pixel art: the whole SUBJECT is only 96 pixels tall, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no hieroglyph text, no fine trims or engravings.
+
+Subject sex: male (a god, green-skinned).
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: papyrus green #285A30 #4E8F40 #8CC45E; linen #8F8670 #C9C0A4 #F0E8D2; DULL bronze-gold #6B5A22 #A38E3C #D2BB62; blue-black night #1B2038 #2E3660 #4B5894; lapis blue #16327C #2B54B8 #5F8BE6
+
+Outline: a clean 1-pixel dark outline around the whole subject in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the subject), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark. Draw ONLY ONE figure.
+Attached: (1) a game sprite of this game for pixel size, outline weight and flat look; (2) concept art of this unit for its shape and colours only (do NOT copy its detail level or painted shading; keep it flat, chunky and low-resolution).

@@ -232,6 +232,12 @@ FACTION_RAMPS = {
     # Never the player's violet, the undead's bone or soul teal, or the Covenant's crimson (berserkers and the
     # fire-giant add crimson / flame per key).
     "norse": ["frost", "iron", "pine", "valk", "rune", "draugr", "skin", "brown"],
+    # --- Act VII slot: the Necropolis Dynasty (assets/sprites/dynasty/) ---
+    # Blue-black night (Anubis, jackals, Bastet), a DULL bronze-gold for enemy trim (true gold stays the player's reward colour),
+    # lapis, linen wrappings, carnelian, papyrus green, the act's own skin tones (`dynskin`) and wood. Sandstone (`sand`: statues,
+    # the colossus, tombs) is added per key (KEY_RAMPS) because it sits next to the linen and the skin. Never the player's violet,
+    # the undead's bone or soul teal (the Ushabti Sentinel and the Pharaoh's Shade are the player's and add soul / grey).
+    "dynasty": ["night", "dyn_bronze", "lapis", "linen", "carnelian", "papyrus", "dynskin", "brown"],
 }
 # Per-key exceptions to FACTION_RAMPS: key -> (ramps added, ramps removed). The arcane
 # blue of the Mage and Lich and the icy cyan of the frost summons never mix (GDD 15.0 art
