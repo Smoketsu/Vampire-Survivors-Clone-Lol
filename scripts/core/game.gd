@@ -88,6 +88,11 @@
 ## Final Harvest), stepped after the City's and before the obstacle push-out;
 ## null on Acts I to VIII unless a Concord kind forced there asks for it
 ## (concord_rules()).
+## Temporary Act XII (GDD §15.0 "The Necropolis Dynasty foundation (phase 1)"):
+## `dynasty` (DynastyRules) runs the Necropolis Dynasty's shared rules (Rebirth,
+## the Black Land, Heka, the Devourer's Hour), stepped after the Concord's and
+## before the obstacle push-out; null on every other act unless a Dynasty kind
+## forced there asks for it (dynasty_rules()).
 ## Online co-op (docs/coop/DESIGN.md): `coop` (CoopSession) holds two player
 ## slots in this one simulation; the per-player fields below (player, horde,
 ## abilities, grave_step, dread_rally, ultimates, stance, character, innates,
@@ -263,6 +268,11 @@ var city: CityRules = null
 ## stage's STAGE has "concord": true, or a Concord kind spawned on another stage
 ## asked for it through concord_rules(); Acts I to VIII never create it).
 var concord: ConcordRules = null
+# --- Act XII (temporary number): the Necropolis Dynasty ---
+## The Necropolis Dynasty's shared rules (DynastyRules; null unless the stage's
+## STAGE has "dynasty": true, or a Dynasty kind spawned on another stage asked
+## for it through dynasty_rules(); no other act creates it).
+var dynasty: DynastyRules = null
 ## Content wave 2: the run counters of the one-run achievements (RunRewards;
 ## never null once _ready ran; reads the run only, never changes gameplay).
 var rewards: RunRewards
@@ -459,6 +469,11 @@ func _ready() -> void:
 		# --- Act IX: the Ark ---
 		"ark":
 			ground = ArkGround.new()  # Act IX: the Ark of the Concord's four zone floors (ArkStage.ZONES).
+		# --- Act XII (temporary number): the Necropolis Dynasty ---
+		"dynasty":
+			var dyg := DynastyGround.new()  # The Dynasty stubs' placeholder floor (the STAGE's "floor").
+			dyg.look = stage_def.get("floor", {})
+			ground = dyg
 		_:
 			ground = Ground.new()
 	add_child(ground)
@@ -551,6 +566,8 @@ func _ready() -> void:
 		city_rules()  # Act VIII: the Last Line's shared rules.
 	if bool(stage_def.get("concord", false)):
 		concord_rules()  # Act IX: the Concord of Stars' shared rules.
+	if bool(stage_def.get("dynasty", false)):
+		dynasty_rules()  # Act XII (temporary): the Necropolis Dynasty's shared rules.
 
 	if autotest != null:
 		player.invulnerable = not GameState.autotest_mortal
@@ -858,6 +875,8 @@ func _physics_process(delta: float) -> void:
 		city.step(delta)  # Act VIII: the escalation, the civilians, wrecks and shells, Martial Law (pushed out of buildings next).
 	if concord != null:
 		concord.step(delta)  # Act IX: the Final Harvest, the beams, the lifted summons, the alien ground (pods pushed out next).
+	if dynasty != null:
+		dynasty.step(delta)  # Act XII (temporary): the Devourer's Hour, the Sandstorm, the cartouches, the glyphs, the quicksand (returned bodies pushed out next).
 	if pf != null:
 		tl = pf.lap(PerfProbe.SEC_ENEMIES, tl)
 	arena.resolve_all(delta)
@@ -1038,6 +1057,18 @@ func concord_rules() -> ConcordRules:
 		concord = ConcordRules.new(self)
 		add_child(concord)
 	return concord
+
+
+# --- Act XII (temporary number): the Necropolis Dynasty ---
+## The Necropolis Dynasty's shared rules, created on first use: at the start of
+## a Dynasty run, or when a Dynasty kind forced onto another stage is activated
+## (DynastyKit.reset()), so its Rebirth and its glyphs work there (the clocks
+## stay off off the act).
+func dynasty_rules() -> DynastyRules:
+	if dynasty == null:
+		dynasty = DynastyRules.new(self)
+		add_child(dynasty)
+	return dynasty
 
 
 # --- Act IV: the Asphodel Underworld ---

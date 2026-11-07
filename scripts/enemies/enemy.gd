@@ -200,6 +200,11 @@ var inscribed_until: float = 0.0
 var glory: int = 0
 ## Body radius (px) before Glory grows it (set on activation).
 var glory_base_radius: float = 0.0
+# --- Act XII (temporary number): the Necropolis Dynasty ---
+## Times this body has RETURNED (Rebirth, DynastyRulesData.REBIRTH: 0..2, more
+## in the Devourer's Hour): hit_mult() multiplies its every hit by
+## damage_mult per return. 0 for every other enemy, so hit_mult() is unchanged.
+var reborn: int = 0
 # --- Act V: the Shogunate of the Rising Sun ---
 ## True for an ETHEREAL body (ShogunateEnemyData "ethereal": the onryō): it
 ## drifts through obstacles (it also sets phases_obstacles, so
@@ -508,6 +513,7 @@ func activate(p_game: Game, p_kind: String, def: Dictionary, pos: Vector2, hp_mu
 		target_priority = minf(1.0, target_priority + 0.2)
 	hp = max_hp
 	glory = 0  # Act IV: Glory stacks (heroes only gain any).
+	reborn = 0  # Act XII (temporary): Rebirth sets it on a returned body after its activation.
 	glory_base_radius = radius
 	incoming_damage = 0.0
 	attack_cd = randf() * attack_interval
@@ -632,7 +638,8 @@ func motion_lunge(dir: Vector2, power: float) -> void:
 ## kind's in empire/ (Act III), an Olympian Republic kind's in pantheon/ (Act
 ## IV), a Shogunate kind's in shogunate/ (Act V), an Inferno kind's in inferno/
 ## (Act VI), a Sanguine Court kind's in court/ (Act VII), a Last Line kind's
-## in city/ (Act VIII), a Concord of Stars kind's in concord/ (Act IX): used
+## in city/ (Act VIII), a Concord of Stars kind's in concord/ (Act IX), a
+## Necropolis Dynasty kind's in dynasty/ (Act XII, temporary): used
 ## when it has no enemies/ art (visual only;
 ## every Act I kind keeps its enemies/ key).
 func motion_sprite_key() -> String:
@@ -656,6 +663,8 @@ func motion_sprite_key() -> String:
 			return "city/" + kind  # Act VIII: a Last Line kind's art.
 		if SpriteBank.has("concord/" + kind):
 			return "concord/" + kind  # Act IX: a Concord of Stars kind's art.
+		if SpriteBank.has("dynasty/" + kind):
+			return "dynasty/" + kind  # Act XII (temporary): a Necropolis Dynasty kind's art.
 	return key
 
 
@@ -889,6 +898,8 @@ func hit_mult() -> float:
 		m *= 1.0 - weaken_cut  # Dirge: weakened hits.
 	if glory > 0:
 		m *= 1.0 + float(PantheonRulesData.GLORY["damage_per_stack"]) * float(glory)  # Act IV: Glory.
+	if reborn > 0 and game.dynasty != null:
+		m *= pow(float(game.dynasty.rebirth.cfg["damage_mult"]), float(reborn))  # Act XII (temporary): Rebirth's stamp.
 	return m
 
 

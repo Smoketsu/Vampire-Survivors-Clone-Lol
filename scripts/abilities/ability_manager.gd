@@ -202,8 +202,17 @@ func invalidate_spell_stats() -> void:
 
 ## Applies the Hyper power-up (PowerupManager) to an effective stats row in
 ## place: damage keys x spell_damage_mult(), cooldown keys x
-## spell_cooldown_mult(). Returns `out` unchanged while Hyper is off.
+## spell_cooldown_mult(). Returns `out` unchanged while Hyper is off (and, on a
+## Dynasty run, no Sandstorm blows: it halves "range").
 func _apply_spell_buffs(out: Dictionary) -> Dictionary:
+	# --- Act XII (temporary number): the Necropolis Dynasty --- the Sandstorm:
+	# every spell's aim reach ("range") x DynastyRules.army_reach_mult() while it
+	# blows (the cache is dropped when it rises and falls; only while
+	# Game.dynasty exists, so nothing changes elsewhere).
+	if game.dynasty != null and out.has("range"):
+		var reach := game.dynasty.army_reach_mult()  # x reach now (1 outside a storm).
+		if reach < 1.0:
+			out["range"] = float(out["range"]) * reach
 	var pw := game.powerups  # Owner of the timed buffs.
 	if pw == null or not pw.is_active("hyper"):
 		return out

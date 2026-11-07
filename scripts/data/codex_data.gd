@@ -45,7 +45,9 @@ const TABS: Array = [["feats", "Achievements"], ["spells", "Spells"], ["summons"
 		# --- Act VIII: the Last Line ---
 		["city", "Last Line"],
 		# --- Act IX: the Concord of Stars ---
-		["concord", "Concord"]]  # TUNING (not in GDD) Act II adds the Ancient Eye tab, Act III the Electronic Empire's, Act IV the Olympian Republic's, Act V the Shogunate's, Act VI the Inferno's, Act VII the Sanguine Court's, Act VIII the Last Line's, Act IX the Concord's
+		["concord", "Concord"],
+		# --- Act XII (temporary number): the Necropolis Dynasty ---
+		["dynasty", "Dynasty"]]  # TUNING (not in GDD) Act II adds the Ancient Eye tab, Act III the Electronic Empire's, Act IV the Olympian Republic's, Act V the Shogunate's, Act VI the Inferno's, Act VII the Sanguine Court's, Act VIII the Last Line's, Act IX the Concord's, Act XII (temporary) the Dynasty's
 
 ## Summon classes shown on the Summons page (UnitData ids, card order). The
 ## Profane Bishop is a merge evolution, so it sits with the evolutions.
@@ -298,6 +300,25 @@ const CONCORD_LUMINOUS: Array[String] = ["lumen_sentinel", "prism",
 ## Concord stage bosses (StageRegistry.BOSS_ARRIVALS ids).
 const CONCORD_BOSSES: Array[String] = ["hive_mother", "vrask_tal", "harvester"]
 
+# --- Act XII (temporary number): the Necropolis Dynasty ---
+## The Necropolis Dynasty (GDD §15.0 "The Necropolis Dynasty foundation (phase
+## 1)"; the Dynasty tab), GROUPED BY GROUP (DynastyRulesData.GROUPS): the
+## wrapped dead, the sacred beasts, the guard, the priesthood, stone and jars,
+## then its stage bosses (StageRegistry.BOSS_ARRIVALS ids). Each Dynasty stage
+## adds its own as it is built (phase 2). The cartouche is no roster kind (no
+## entry).
+const DYNASTY_DEAD: Array[String] = ["mummy", "mummy_female"]
+## The sacred beasts (group "beasts").
+const DYNASTY_BEASTS: Array[String] = ["scarab_swarm"]
+## The guard (group "guard").
+const DYNASTY_GUARD: Array[String] = ["khopesh_guard"]
+## The priesthood (group "priests").
+const DYNASTY_PRIESTS: Array[String] = ["heka_priest", "embalmer"]
+## Stone and jars (group "stone": the structures and, in phase 2, the statues).
+const DYNASTY_STONE: Array[String] = ["canopic_jar"]
+## Dynasty stage bosses (StageRegistry.BOSS_ARRIVALS ids).
+const DYNASTY_BOSSES: Array[String] = ["anubis", "sekhmet", "osiris"]
+
 ## Section headers of each page: page id -> [[section id, header text], ...].
 const SECTIONS: Dictionary = {
 	"spells": [["spells", "Spells"], ["spell_evolutions", "Evolutions"]],  # TUNING (not in GDD)
@@ -319,6 +340,9 @@ const SECTIONS: Dictionary = {
 	# --- Act IX: the Concord of Stars (grouped by race) ---
 	"concord": [["concord_brood", "The Brood"], ["concord_harvesters", "The Harvesters"], ["concord_vrask", "The Vrask"],
 		["concord_luminous", "The Luminous"], ["concord_bosses", "Bosses"]],  # TUNING (not in GDD) Act IX
+	# --- Act XII (temporary number): the Necropolis Dynasty (grouped by group) ---
+	"dynasty": [["dynasty_dead", "The Wrapped Dead"], ["dynasty_beasts", "Sacred Beasts"], ["dynasty_guard", "The Guard"],
+		["dynasty_priests", "The Priesthood"], ["dynasty_stone", "Stone and Jars"], ["dynasty_bosses", "Bosses"]],  # TUNING (not in GDD) Act XII
 }
 
 ## One-sentence descriptions of the Covenant (the enemy data has none),
@@ -538,6 +562,17 @@ const DESCRIPTIONS: Dictionary = {
 	"vault_beast": "A beast the Concord harvested from some dead world. Freed, it bites whatever is nearest: your dead, you, or its keepers.",  # Owner-approved Act IX proposal
 	"reactor_vent": "A vent of the Ark's reactor that breathes alien ground on a timer. Break it to stop it.",  # TUNING (not in GDD) brief
 	"reap_emitter": "One of the Harvester's emitters: its tractor beam lifts your dead from the ring. Destroy them all to end the Reaping.",  # Owner-approved Act IX proposal
+	# --- Act XII (temporary number): the Necropolis Dynasty ---
+	"mummy": "The wrapped dead. A fallen mummy's Name waits over it: smash it or raise it, or it stands again. Fire burns them well.",  # Proposal (Rebirth)
+	"mummy_female": "The wrapped dead, quicker on her feet. Her Name waits over her too: smash it or raise it before she returns.",  # Proposal (Rebirth)
+	"scarab_swarm": "A swarm of sacred beetles that tears through your Warders' barriers. Beasts do not return.",  # Proposal
+	"khopesh_guard": "A tomb guard with curved blades: when he plants his feet, he spins. He returns unless you take his Name.",  # Proposal (Rebirth)
+	"heka_priest": "He writes a glyph on one of your dead, and it runs around your ring. A Mender's heal or a Warder's barrier clears it.",  # Proposal (Heka)
+	"embalmer": "She heals the Dynasty's soldiers and hastens every Name near her. Kill her first.",  # Proposal (Rebirth)
+	"canopic_jar": "A jar that holds the Names of the dead near it: no blow reaches them. Break it, and they return no more.",  # Proposal (Rebirth)
+	"anubis": "Anubis, Opener of the Way: he leads the procession of the dead, embalms the fallen, then duels you as the jackal.",  # Proposal
+	"sekhmet": "Sekhmet, the Lioness of Retribution: she leaps between the pillars, calls the Red Wind, and feasts in her fury.",  # Proposal
+	"osiris": "Osiris, Lord of the Dead, judges you on the great scales; Ammit the Devourer waits at his feet.",  # Proposal
 }
 
 ## Sprite key of an entry whose art is not "<category folder>/<id>":
@@ -613,6 +648,13 @@ const LOCKED_HINT: Dictionary = {
 	"concord_vrask": "Slay one to record it.",  # TUNING (not in GDD) Act IX Vrask
 	"concord_luminous": "Slay one to record it.",  # TUNING (not in GDD) Act IX Luminous
 	"concord_bosses": "Face it to record it.",  # TUNING (not in GDD) Act IX bosses
+	# --- Act XII (temporary number): the Necropolis Dynasty ---
+	"dynasty_dead": "Slay one to record it.",  # TUNING (not in GDD) Act XII
+	"dynasty_beasts": "Slay one to record it.",  # TUNING (not in GDD) Act XII beasts
+	"dynasty_guard": "Slay one to record it.",  # TUNING (not in GDD) Act XII guard
+	"dynasty_priests": "Slay one to record it.",  # TUNING (not in GDD) Act XII priests
+	"dynasty_stone": "Break one to record it.",  # TUNING (not in GDD) Act XII stone
+	"dynasty_bosses": "Face it to record it.",  # TUNING (not in GDD) Act XII bosses
 	"evolution": "Undiscovered.",  # TUNING (not in GDD) owner rule: no hint
 }
 ## Name shown for a locked entry.
@@ -662,6 +704,13 @@ const TAGS: Dictionary = {
 	"concord_vrask": "The Vrask",  # TUNING (not in GDD) Act IX
 	"concord_luminous": "The Luminous",  # TUNING (not in GDD) Act IX
 	"concord_bosses": "Stage boss",  # TUNING (not in GDD) Act IX bosses
+	# --- Act XII (temporary number): the Necropolis Dynasty ---
+	"dynasty_dead": "The wrapped dead",  # TUNING (not in GDD) Act XII
+	"dynasty_beasts": "Sacred beast",  # TUNING (not in GDD) Act XII
+	"dynasty_guard": "The guard",  # TUNING (not in GDD) Act XII
+	"dynasty_priests": "The priesthood",  # TUNING (not in GDD) Act XII
+	"dynasty_stone": "Stone and jars",  # TUNING (not in GDD) Act XII
+	"dynasty_bosses": "Stage boss",  # TUNING (not in GDD) Act XII bosses
 }
 
 # --- Layout (layout px at 1280x720; TUNING, not in GDD) -----------------------------
@@ -901,11 +950,13 @@ static func is_known(cat: String, id: String) -> bool:
 					or CITY_CIVILIANS.has(id) or CITY_GANGS.has(id) or CITY_POLICE.has(id) \
 					or CITY_SWAT.has(id) or CITY_ARMY.has(id) or CITY_HEROES.has(id) \
 					or CONCORD_BROOD.has(id) or CONCORD_HARVESTERS.has(id) or CONCORD_VRASK.has(id) \
-					or CONCORD_LUMINOUS.has(id)  # Act IV to Act IX
+					or CONCORD_LUMINOUS.has(id) \
+					or DYNASTY_DEAD.has(id) or DYNASTY_BEASTS.has(id) or DYNASTY_GUARD.has(id) \
+					or DYNASTY_PRIESTS.has(id) or DYNASTY_STONE.has(id)  # Act IV to Act IX, Act XII (temporary)
 		BOSS:
 			return BOSSES.has(id) or EYE_BOSSES.has(id) or EMPIRE_BOSSES.has(id) or PANTHEON_BOSSES.has(id) \
 					or SHOGUNATE_BOSSES.has(id) or INFERNO_BOSSES.has(id) or COURT_BOSSES.has(id) \
-					or CITY_BOSSES.has(id) or CONCORD_BOSSES.has(id)  # (Act IX last)
+					or CITY_BOSSES.has(id) or CONCORD_BOSSES.has(id) or DYNASTY_BOSSES.has(id)  # (Act XII, temporary, last)
 	return false
 
 
@@ -926,11 +977,13 @@ static func total(cat: String) -> int:
 					+ CITY_CIVILIANS.size() + CITY_GANGS.size() + CITY_POLICE.size() \
 					+ CITY_SWAT.size() + CITY_ARMY.size() + CITY_HEROES.size() \
 					+ CONCORD_BROOD.size() + CONCORD_HARVESTERS.size() + CONCORD_VRASK.size() \
-					+ CONCORD_LUMINOUS.size()  # Act IV to Act IX
+					+ CONCORD_LUMINOUS.size() \
+					+ DYNASTY_DEAD.size() + DYNASTY_BEASTS.size() + DYNASTY_GUARD.size() \
+					+ DYNASTY_PRIESTS.size() + DYNASTY_STONE.size()  # Act IV to Act IX, Act XII (temporary)
 		BOSS:
 			return BOSSES.size() + EYE_BOSSES.size() + EMPIRE_BOSSES.size() + PANTHEON_BOSSES.size() \
 					+ SHOGUNATE_BOSSES.size() + INFERNO_BOSSES.size() + COURT_BOSSES.size() \
-					+ CITY_BOSSES.size() + CONCORD_BOSSES.size()  # (Act IX last)
+					+ CITY_BOSSES.size() + CONCORD_BOSSES.size() + DYNASTY_BOSSES.size()  # (Act XII, temporary, last)
 	return 0
 
 
@@ -966,6 +1019,9 @@ static func enemy_row(id: String) -> Dictionary:
 	var concord := EnemyDirector.concord_def(id)  # Act IX kinds ({} when none).
 	if not concord.is_empty():
 		return concord
+	var dynasty := EnemyDirector.dynasty_def(id)  # Act XII (temporary) kinds ({} when none).
+	if not dynasty.is_empty():
+		return dynasty
 	match id:
 		"alaric":
 			return EnemyData.BOSS

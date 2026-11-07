@@ -147,6 +147,15 @@ static func section_entries(section: String) -> Array:
 				var b := _boss(id)
 				b["section"] = section
 				out.append(b)  # Act IX bosses.
+		# --- Act XII (temporary number): the Necropolis Dynasty (grouped by group) ---
+		"dynasty_dead", "dynasty_beasts", "dynasty_guard", "dynasty_priests", "dynasty_stone":
+			for id: String in _dynasty_list(section):
+				out.append(_covenant(id, section))  # Act XII kinds, by group.
+		"dynasty_bosses":
+			for id: String in CodexData.DYNASTY_BOSSES:
+				var b := _boss(id)
+				b["section"] = section
+				out.append(b)  # Act XII bosses.
 	return out
 
 
@@ -242,6 +251,21 @@ static func _concord_list(section: String) -> Array[String]:
 	return CodexData.CONCORD_LUMINOUS
 
 
+# --- Act XII (temporary number): the Necropolis Dynasty ---
+## The Dynasty kinds of group section `section` (CodexData.DYNASTY_*).
+static func _dynasty_list(section: String) -> Array[String]:
+	match section:
+		"dynasty_dead":
+			return CodexData.DYNASTY_DEAD
+		"dynasty_beasts":
+			return CodexData.DYNASTY_BEASTS
+		"dynasty_guard":
+			return CodexData.DYNASTY_GUARD
+		"dynasty_priests":
+			return CodexData.DYNASTY_PRIESTS
+	return CodexData.DYNASTY_STONE
+
+
 static func _covenant(id: String, section: String) -> Dictionary:
 	var d := CodexData.enemy_row(id)
 	var stats: Array = [[_t("hp"), num(float(d.get("max_hp", 0.0)))]]
@@ -268,6 +292,8 @@ static func _covenant(id: String, section: String) -> Dictionary:
 		sprite = "city/" + id  # ...a Last Line kind (Act VIII)...
 	elif not SpriteBank.has(sprite) and SpriteBank.has("concord/" + id):
 		sprite = "concord/" + id  # ...a Concord of Stars kind (Act IX)...
+	elif not SpriteBank.has(sprite) and SpriteBank.has("dynasty/" + id):
+		sprite = "dynasty/" + id  # ...a Necropolis Dynasty kind (Act XII, temporary)...
 	elif not SpriteBank.has(sprite):
 		sprite = "structures/" + id  # ...or a structure.
 	var kills := Meta.codex_kill_count(id)  # Lifetime kills of this kind.

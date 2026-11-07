@@ -14,7 +14,10 @@
 ## §15.0 "Act VIII foundation (phase 1)": Skid Row -> Fort Kessler -> Liberty
 ## Heights, opened by slaying Queen Carmilla; Act IX, GDD §15.0 "Act IX
 ## foundation (phase 1)": the Crash Site -> the Proving Moon -> the Ark of the
-## Concord, opened by defeating Paragon). One
+## Concord, opened by defeating Paragon; temporary Act XII, GDD §15.0 "The
+## Necropolis Dynasty foundation (phase 1)": the Necropolis of Sand -> the
+## Temple of the Lioness -> the Hall of Two Truths, opened (for now) by
+## defeating the Harvester; the reorder pass moves it to slot VII). One
 ## entry per stage, each
 ## the STAGE dictionary of its file under scripts/data/stages/. A run reads
 ## its stage through RunConfig.stage_def() as `Game.stage_def`; nothing else
@@ -66,8 +69,10 @@
 ##                        Ancient Eye, 3 = the Electronic Empire, 4 = the
 ##                        Olympian Republic, 5 = the Shogunate of the Rising
 ##                        Sun, 6 = the Inferno, 7 = the Sanguine Court,
-##                        8 = the Last Line, 9 = the Concord of Stars;
-##                        absent = 1). The stage select shows one
+##                        8 = the Last Line, 9 = the Concord of Stars,
+##                        12 = the Necropolis Dynasty (a temporary number:
+##                        docs/last_acts/PLAN.md; the reorder pass makes it
+##                        VII); absent = 1). The stage select shows one
 ##                        act at a time; Act II-only cards (PassiveData "act")
 ##                        are offered only on stages of that act.
 ##   playable           — false hides a registered stage from the stage select
@@ -315,6 +320,26 @@
 ##                        Reactor's vents as structure windows, the wrecks;
 ##                        the "luminous_archon" event); ground "ark" is its
 ##                        ArkGround (four zone floors).
+## --- Act XII (temporary number): the Necropolis Dynasty ---
+##   dynasty            — true: the Necropolis Dynasty's shared rules
+##                        (DynastyRules as Game.dynasty: Rebirth, the Black
+##                        Land, Heka, and the Devourer's Hour when the
+##                        RECKONING has a "devourers_hour" key); ground
+##                        "dynasty" is the placeholder DynastyGround (from the
+##                        "floor" dictionary, styles sand / temple / hall), on
+##                        the normal scattered-obstacle arena.
+##   rebirth            — the stage's Rebirth: any key of
+##                        DynastyRulesData.REBIRTH overrides it ({} = the
+##                        defaults; e.g. "jars_required").
+##   jars               — the stage's own Canopic Jar clock: any key of
+##                        DynastyRulesData.JARS ({} = the stubs' clock; "every"
+##                        0 = off, for a stage that places its jars with
+##                        Rebirth.place_jar()).
+##   quicksand          — any key of DynastyRulesData.QUICKSAND ({} = defaults;
+##                        "chance" 0 = no fixed patches).
+##   sandstorm          — any key of DynastyRulesData.SANDSTORM ({} = defaults).
+##   heka               — any key of DynastyRulesData.HEKA ({} = defaults).
+##   zones              — the Dynasty stubs too: the planned zones.
 class_name StageRegistry
 extends RefCounted
 
@@ -333,7 +358,9 @@ const ORDER := ["graveyard", "crimson_march", "sanctum", "harbour", "archive", "
 	# --- Act VIII: the Last Line ---
 	"skid_row", "fort_kessler", "liberty_heights",
 	# --- Act IX: the Concord of Stars ---
-	"crash_site", "proving_moon", "ark"]
+	"crash_site", "proving_moon", "ark",
+	# --- Act XII (temporary number): the Necropolis Dynasty ---
+	"necropolis", "lioness_temple", "two_truths"]
 ## Stage used when none (or an unknown id) is given.
 const DEFAULT_ID: String = "graveyard"
 ## Stage id -> STAGE dictionary.
@@ -372,6 +399,10 @@ const STAGES := {
 	"crash_site": CrashSiteStage.STAGE,
 	"proving_moon": ProvingMoonStage.STAGE,
 	"ark": ArkStage.STAGE,  # Act IX, stage 27
+	# --- Act XII (temporary number): the Necropolis Dynasty ---
+	"necropolis": NecropolisStage.STAGE,
+	"lioness_temple": LionessTempleStage.STAGE,
+	"two_truths": TwoTruthsStage.STAGE,  # Temporary Act XII, the finale
 }
 
 ## Acts in order: act number -> {name, subtitle} (stage select tabs).
@@ -391,6 +422,8 @@ const ACTS := {
 	8: {"name": "Act VIII", "subtitle": "The Last Line"},
 	# --- Act IX: the Concord of Stars ---
 	9: {"name": "Act IX", "subtitle": "The Concord of Stars"},
+	# --- Act XII (temporary number; final slot VII): the Necropolis Dynasty ---
+	12: {"name": "Act XII", "subtitle": "The Necropolis Dynasty"},
 }
 
 
@@ -464,4 +497,9 @@ const BOSS_ARRIVALS := {
 	"hive_mother": CrashSiteStage.BOSS,
 	"vrask_tal": ProvingMoonStage.BOSS,
 	"harvester": ArkStage.BOSS,  # Act IX, the finale's boss
+	# --- Act XII (temporary number): the Necropolis Dynasty (stubs: each
+	# stage's BOSS until phase 2 gives the boss its own data file) ---
+	"anubis": NecropolisStage.BOSS,
+	"sekhmet": LionessTempleStage.BOSS,
+	"osiris": TwoTruthsStage.BOSS,  # The act's finale boss
 }

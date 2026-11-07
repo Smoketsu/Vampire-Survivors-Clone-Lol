@@ -129,6 +129,14 @@
 ##     Abduction, Terraforming, the Final Harvest) live in ConcordRules
 ##     (Game.concord); this director hands it nothing (its pods spawn through
 ##     spawn_at()).
+##   * Act XII (temporary number), the Necropolis Dynasty (GDD §15.0 "The
+##     Necropolis Dynasty foundation (phase 1)"): its kinds are looked up
+##     through dynasty_def() (DynastyEnemyData, then each Dynasty stage's
+##     table) after the Concord's, and its bosses load by name from
+##     DYNASTY_BOSS_DIR after the Concord's folder. Its shared rules (Rebirth,
+##     the Black Land, Heka, the Devourer's Hour) live in DynastyRules
+##     (Game.dynasty); the cartouches have their own cap, so regular_alive()
+##     leaves them out.
 ##   * Act VII, Ravensmoor (GDD §15.0 "Ravensmoor (Act VII phase 2)"): on a
 ##     stage with a "ravensmoor" config it creates the RavensmoorDirector (the
 ##     sleeping coffins, Coffin Nails, the ghoul packs, Old Greymane;
@@ -188,6 +196,9 @@ const CITY_BOSS_DIR: String = "res://scripts/enemies/city/"
 # --- Act IX: the Concord of Stars ---
 ## Folder of the Concord of Stars' boss scripts ("boss_<id>.gd", each a Boss; Act IX).
 const CONCORD_BOSS_DIR: String = "res://scripts/enemies/concord/"
+# --- Act XII (temporary number): the Necropolis Dynasty ---
+## Folder of the Necropolis Dynasty's boss scripts ("boss_<id>.gd", each a Boss).
+const DYNASTY_BOSS_DIR: String = "res://scripts/enemies/dynasty/"
 
 ## The boss entered the arena.
 signal boss_spawned(boss: Boss)
@@ -763,6 +774,8 @@ func regular_alive() -> int:
 		n -= game.city.civilians.alive_count()  # Act VIII: civilians have their own cap.
 	if crash_site != null:
 		n -= crash_site.eggs_alive()  # Act IX, the Crash Site: Infestation's eggs have their own cap.
+	if game.dynasty != null:
+		n -= game.dynasty.rebirth.alive_count()  # Act XII (temporary): Rebirth's cartouches have their own cap.
 	return n
 
 
@@ -1211,7 +1224,8 @@ func _spawn_boss() -> void:
 	# SHOGUNATE_BOSS_DIR (Act V), else an Inferno boss from INFERNO_BOSS_DIR
 	# (Act VI), else a Sanguine Court boss from COURT_BOSS_DIR (Act VII), else a
 	# Last Line boss from CITY_BOSS_DIR (Act VIII), else a Concord of Stars boss
-	# from CONCORD_BOSS_DIR (Act IX); Sir Alaric when none exists.
+	# from CONCORD_BOSS_DIR (Act IX), else a Necropolis Dynasty boss from
+	# DYNASTY_BOSS_DIR (Act XII, temporary); Sir Alaric when none exists.
 	var sid := String(boss_info.get("script", boss_info["id"]))  # Boss script id.
 	match sid:
 		"vael":
@@ -1236,6 +1250,8 @@ func _spawn_boss() -> void:
 				path = CITY_BOSS_DIR + "boss_" + sid + ".gd"  # Act VIII: a Last Line boss script.
 			if not ResourceLoader.exists(path):
 				path = CONCORD_BOSS_DIR + "boss_" + sid + ".gd"  # Act IX: a Concord of Stars boss script.
+			if not ResourceLoader.exists(path):
+				path = DYNASTY_BOSS_DIR + "boss_" + sid + ".gd"  # Act XII (temporary): a Necropolis Dynasty boss script.
 			boss = (load(path) as Script).new() as Boss if ResourceLoader.exists(path) else BossAlaric.new()
 	add_child(boss)
 	boss.setup_boss(game, _ring_point(randf() * TAU), game.difficulty.boss_hp_mult() * float(stage_def["enemy_hp_mult"]), _next_slot)
@@ -1339,6 +1355,7 @@ func spawn_at(kind: String, pos: Vector2, elite: bool) -> Enemy:
 ## then the Inferno's (Act VI: inferno_def()), then the Sanguine Court's
 ## (Act VII: court_def()), then the Last Line's (Act VIII: city_def()),
 ## then the Concord of Stars' (Act IX: concord_def()),
+## then the Necropolis Dynasty's (Act XII, temporary: dynasty_def()),
 ## then SanctumEnemyData.ENEMIES (the Sanctum of Judgment's soldiers and the
 ## Cathedral Guardian).
 func enemy_def(kind: String) -> Dictionary:
@@ -1375,6 +1392,9 @@ func enemy_def(kind: String) -> Dictionary:
 	var concord := concord_def(kind)  # Act IX kinds ({} when not a Concord kind).
 	if not concord.is_empty():
 		return concord
+	var dynasty := dynasty_def(kind)  # Act XII (temporary) kinds ({} when not a Dynasty kind).
+	if not dynasty.is_empty():
+		return dynasty
 	return SanctumEnemyData.ENEMIES[kind]
 
 
@@ -1505,6 +1525,22 @@ static func concord_def(kind: String) -> Dictionary:
 	return {}
 
 
+# --- Act XII (temporary number): the Necropolis Dynasty ---
+## Design row of Necropolis Dynasty kind `kind` (real id), or {} when it is
+## none: DynastyEnemyData (the shared kinds, the jar and the cartouche) first,
+## then each Dynasty stage's own table (phase 2 fills them).
+static func dynasty_def(kind: String) -> Dictionary:
+	if DynastyEnemyData.ENEMIES.has(kind):
+		return DynastyEnemyData.ENEMIES[kind]
+	if NecropolisEnemyData.ENEMIES.has(kind):
+		return NecropolisEnemyData.ENEMIES[kind]
+	if LionessTempleEnemyData.ENEMIES.has(kind):
+		return LionessTempleEnemyData.ENEMIES[kind]
+	if TwoTruthsEnemyData.ENEMIES.has(kind):
+		return TwoTruthsEnemyData.ENEMIES[kind]
+	return {}
+
+
 ## True if `kind` is a spawnable enemy kind of any stage's data (real ids;
 ## stage aliases are not resolved here).
 static func is_known_kind(kind: String) -> bool:
@@ -1516,7 +1552,8 @@ static func is_known_kind(kind: String) -> bool:
 			or not inferno_def(kind).is_empty() \
 			or not court_def(kind).is_empty() \
 			or not city_def(kind).is_empty() \
-			or not concord_def(kind).is_empty()  # Act V, Act VI, Act VII, Act VIII, Act IX
+			or not concord_def(kind).is_empty() \
+			or not dynasty_def(kind).is_empty()  # Act V, Act VI, Act VII, Act VIII, Act IX, Act XII (temporary)
 
 
 ## Registers `e` as the living miniboss (GuardianKit; the HUD shows its bar

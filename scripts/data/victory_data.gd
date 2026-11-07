@@ -55,6 +55,10 @@ const STAGES := {
 	"crash_site": {"title": "The Hatchery Burns", "boss_line": "The Hive Mother falls back into her crater."},  # TUNING (not in GDD) Act IX placeholder
 	"proving_moon": {"title": "The Hunt Is Over", "boss_line": "Vrask'Tal's last trophy is his own."},  # TUNING (not in GDD) Act IX placeholder
 	"ark": {"title": "The Harvest Ends", "boss_line": "The Harvester falls, and the stars go dark."},  # TUNING (not in GDD) Act IX placeholder
+	# --- Act XII (temporary number): the Necropolis Dynasty (placeholders until each stage is built) ---
+	"necropolis": {"title": "The Procession Ends", "boss_line": "Anubis lays down his flail, and the road of tombs is quiet."},  # TUNING (not in GDD) Act XII placeholder
+	"lioness_temple": {"title": "The Lioness Sleeps", "boss_line": "Sekhmet's fury burns out, and the temple falls quiet."},  # TUNING (not in GDD) Act XII placeholder
+	"two_truths": {"title": "The Scales Are Empty", "boss_line": "Osiris falls from his throne, and no one weighs the dead again."},  # TUNING (not in GDD) Act XII placeholder
 }
 ## Title of a victory on a stage missing from STAGES.
 const DEFAULT_TITLE: String = "Victory"  # TUNING (not in GDD)
@@ -75,6 +79,8 @@ const ACT_LINES := {
 	8: "You outlasted the city. Martial Law ground you down at last.",  # TUNING (not in GDD) Act VIII
 	# --- Act IX: the Concord of Stars ---
 	9: "You outlasted the Concord. The Final Harvest reaped you at last.",  # TUNING (not in GDD) Act IX
+	# --- Act XII (temporary number): the Necropolis Dynasty ---
+	12: "You outlasted the Dynasty. The Devourer ate you at last.",  # TUNING (not in GDD) Act XII
 }
 
 # --- The last stand (LastStand; seconds of real time from its start) ----------------
