@@ -42,13 +42,20 @@ Palette constants for `palette.gd` (names `DYN_*`): ink `#0A0B16`; night `#1B203
 | `dynasty/sekhmet` | 52x92 | boss, female goddess (figure style) | walk, idle; robe glide, bust + idle |
 | `dynasty/osiris` | 46x96 | boss, male god on his throne (no strip; stationary) | none; still only |
 | `dynasty/ammit` | 76x44 | boss, monster (Ammit the Devourer) | walk; legs walk |
-| `dynasty/the_embalmer` | 30x56 | PLAYABLE character, female (figure style) for the Anubis spell Linen Bind | walk, idle; bust + idle; the code agent picks the character id |
-| `dynasty/lion_priestess` | 40x56 | PLAYABLE character, female (figure style) for Burning Eye | walk, idle; bust + idle |
-| `dynasty/pharaohs_shade` | 46x56 | PLAYABLE character, male, for Feather's Verdict | walk; float glide |
 | `dynasty/ushabti_sentinel` | 20x46 | finale summon class (the necromancer's, soul-teal eyes) | walk |
 | `dynasty/eternal_guard` | 32x58 | its evolution (true-gold trim) | walk |
 
-Boss attack poses (cast / strike) are not drawn: the stage agents add them (BossPoseData) once the kits exist. The playable characters live in `dynasty/` (not `player/`); the code agent maps `CharacterData` ids to these keys. The Pharaoh's Shade is for the Osiris spell, the Embalmer for Anubis's, the Lion-Priestess for Sekhmet's.
+Boss attack poses (cast / strike) are not drawn: the stage agents add them (BossPoseData) once the kits exist. 
+
+## Playable characters (`assets/sprites/player/`, redone Nov 2026 to the game's convention: violet necromancers of the act's theme, bone and soul-teal accents, a casting focus, 56 px tall)
+
+| Key | Size | What | Strips |
+|---|---|---|---|
+| `player/the_embalmer` | 32x56 | female (figure style): violet linen robe with bandage wraps, canopic-jar staff (spell Linen Bind, Anubis) | walk, idle (bust rig) |
+| `player/lion_priestess` | 38x56 | female (figure style): violet priestess dress, lioness-head hood, sun-disc staff (Burning Eye, Sekhmet) | walk, idle (bust rig) |
+| `player/pharaohs_shade` | 40x56 | male: violet-robed spectral pharaoh, nemes, crook staff with a soul flame (Feather's Verdict, Osiris) | walk |
+
+Source: `art_source/dynasty/gen_chars.py` (raws in `chars/`). The earlier enemy-styled versions in `dynasty/` were removed.
 
 ## World markers
 
@@ -121,4 +128,4 @@ Boss attack poses (cast / strike) are not drawn: the stage agents add them (Boss
 
 ## Cost
 
-About $0.52 of API images (25 unit images, 7 sheets; medium quality), ledger rows tagged `dynasty/...` in `docs/art/generation_ledger.csv`.
+About $0.57 of API images (25 unit images, 7 sheets; medium quality), ledger rows tagged `dynasty/...` in `docs/art/generation_ledger.csv`.

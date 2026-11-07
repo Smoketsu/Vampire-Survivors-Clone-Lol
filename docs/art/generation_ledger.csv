@@ -1361,3 +1361,6 @@ utc,key,model,quality,size,refs,text_in,image_in,image_out,usd_est,file
 2026-11-07 14:41,dynasty/markers,gpt-image-2.5-flare,medium,1536x1024,1,286,4,343,0.0118,sheet_markers.png
 2026-11-07 14:41,dynasty/obstacles_a,gpt-image-2.5-flare,medium,1536x1024,1,521,16,343,0.0130,sheet_obstacles_a.png
 2026-11-07 14:42,dynasty/obstacles_b,gpt-image-2.5-flare,medium,1536x1024,1,462,16,343,0.0127,sheet_obstacles_b.png
+2026-11-07 16:27,dynasty/char_lion_priestess,gpt-image-2.5-flare,medium,1024x1024,2,618,24,439,0.0165,lion_priestess.png
+2026-11-07 16:27,dynasty/char_pharaohs_shade,gpt-image-2.5-flare,medium,1024x1024,2,598,24,439,0.0164,pharaohs_shade.png
+2026-11-07 16:27,dynasty/char_the_embalmer,gpt-image-2.5-flare,medium,1024x1024,2,626,24,439,0.0165,the_embalmer.png

@@ -979,11 +979,12 @@ RIGS = {
     "dynasty/sekhmet": dict(mode="robe", hip=54, rigid=[(0, 14, 0, None)], sway=2, dip=1,
                             bust=(19, 34, 30, 41, 2, 2), bust_exclude=[(0, 19, 28, 60), (34, 52, 28, 52)]),
     "dynasty/ammit": dict(mode="legs", hip=28, back=(0, 38), front=(38, 76), rigid=[], spread=2, lift=2, dip=1),
-    "dynasty/the_embalmer": dict(mode="robe", hip=34, rigid=[(18, 32, 0, None)], sway=1, dip=1,
-                                 bust=(10, 18, 17, 24, 1), bust_exclude=[(18, 32, 12, 40), (0, 10, 12, 40)]),
-    "dynasty/lion_priestess": dict(mode="robe", hip=36, rigid=[(26, 40, 0, None)], sway=1, dip=1,
-                                   bust=(16, 25, 19, 28, 2), bust_exclude=[(0, 16, 18, 40), (25, 40, 8, 30)]),
-    "dynasty/pharaohs_shade": dict(mode="robe", hip=40, rigid=[], sway=1, dip=1, float=2),
+    # The Dynasty's three playable necromancers (violet, owner note Nov 2026; assets/sprites/player/): robes glide, the female two with bust boxes.
+    "player/the_embalmer": dict(mode="robe", hip=40, rigid=[(23, 32, 0, None)], sway=1, dip=1,
+                                bust=(10, 20, 17, 25, 1), bust_exclude=[(0, 10, 12, 50), (20, 32, 12, 50)]),
+    "player/lion_priestess": dict(mode="robe", hip=40, rigid=[(27, 38, 0, None)], sway=1, dip=1,
+                                  bust=(11, 22, 16, 25, 1), bust_exclude=[(0, 11, 12, 50), (22, 38, 12, 50)]),
+    "player/pharaohs_shade": dict(mode="robe", hip=42, rigid=[(31, 40, 0, None)], sway=1, dip=1, float=2),
     "dynasty/ushabti_sentinel": dict(mode="robe", hip=30, rigid=[], sway=1, dip=1),
     "dynasty/eternal_guard": dict(mode="robe", hip=38, rigid=[], sway=1, dip=1),
 }

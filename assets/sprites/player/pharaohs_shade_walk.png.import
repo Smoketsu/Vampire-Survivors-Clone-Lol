@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bg5d8pso1hy5h"
-path="res://.godot/imported/the_embalmer.png-5abc6c522e17f8588440f4f39366c7c1.ctex"
+uid="uid://c2hjs4ila0p5q"
+path="res://.godot/imported/pharaohs_shade_walk.png-cc9cb16a0098d27756040e211baf2726.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/dynasty/the_embalmer.png"
-dest_files=["res://.godot/imported/the_embalmer.png-5abc6c522e17f8588440f4f39366c7c1.ctex"]
+source_file="res://assets/sprites/player/pharaohs_shade_walk.png"
+dest_files=["res://.godot/imported/pharaohs_shade_walk.png-cc9cb16a0098d27756040e211baf2726.ctex"]
 
 [params]
 

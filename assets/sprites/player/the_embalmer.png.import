@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cnsw8hqcfkhnl"
-path="res://.godot/imported/the_embalmer_walk.png-05da6442eb526f851e4b70a9adb4b765.ctex"
+uid="uid://b1i8r8nrclf50"
+path="res://.godot/imported/the_embalmer.png-5c8b3a281c8b92d7ff3f84db1354fc90.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/dynasty/the_embalmer_walk.png"
-dest_files=["res://.godot/imported/the_embalmer_walk.png-05da6442eb526f851e4b70a9adb4b765.ctex"]
+source_file="res://assets/sprites/player/the_embalmer.png"
+dest_files=["res://.godot/imported/the_embalmer.png-5c8b3a281c8b92d7ff3f84db1354fc90.ctex"]
 
 [params]
 

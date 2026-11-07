@@ -39,23 +39,19 @@ UNITS = {
     "sekhmet": (92, "sand,carnelian,bronze,night,dynskin", ["--no-prune"]),
     "osiris": (96, "papyrus,linen,bronze,night,lapis", ["--no-prune"]),
     "ammit": (44, "papyrus,sand,night,bronze,lapis,carnelian", ["--no-prune"]),
-    # The player's own: true gold trim, soul teal glow.
-    "the_embalmer": (56, "linen,dynskin,gold,soul,night,brown", ["--no-prune"]),
-    "lion_priestess": (56, "carnelian,dynskin,gold,night,linen", ["--no-prune"]),
-    "pharaohs_shade": (56, "lapis,gold,soul,linen,grey", ["--no-prune"]),
-    "ushabti_sentinel": (46, "sand,grey,soul,brown", ["--no-prune"]),
+        "ushabti_sentinel": (46, "sand,grey,soul,brown", ["--no-prune"]),
     "eternal_guard": (58, "sand,grey,soul,gold,brown", ["--no-prune"]),
 }
 # Walk / glide strips: ids (rigs in tools/walk_cycle.py) and idle strips (bust rigs: the female figures).
 STRIPS = ["mummy", "mummy_female", "scarab_swarm", "khopesh_guard", "nile_archer", "heka_priest", "embalmer", "jackal_warrior",
           "bastet_hunter", "crocodile_warden", "ushabti_statue", "sand_colossus", "lion_warden", "devourers_whelp", "anubis", "sekhmet",
-          "ammit", "the_embalmer", "lion_priestess", "pharaohs_shade", "ushabti_sentinel", "eternal_guard"]
-IDLES = ["mummy_female", "nile_archer", "embalmer", "bastet_hunter", "sekhmet", "the_embalmer", "lion_priestess"]
+          "ammit", "ushabti_sentinel", "eternal_guard"]
+IDLES = ["mummy_female", "nile_archer", "embalmer", "bastet_hunter", "sekhmet"]
 
 
 # Female figures (figure-redesign style) go through tools/pixelate_source.py first (the Act IX women's recipe: it keeps the face,
 # collar and hourglass at 40-90 px) and then prepare_sprite.py --no-cleanup --no-levels.
-PIXELATED = ["mummy_female", "nile_archer", "embalmer", "bastet_hunter", "sekhmet", "the_embalmer", "lion_priestess"]
+PIXELATED = ["mummy_female", "nile_archer", "embalmer", "bastet_hunter", "sekhmet"]
 
 
 def run(args: list) -> None:
@@ -91,3 +87,6 @@ if __name__ == "__main__":
             units(step.split(":")[1].split(","))
         else:
             globals()[step]()
+# NOTE: the three playable characters (player/the_embalmer, lion_priestess, pharaohs_shade) are built by art_source/dynasty/gen_chars.py +
+# `tools/prepare_sprite.py art_source/dynasty/chars/<id>.png player/<id> --art-height 56 --ink-l 0.15 --ramps violet,bone,soul,brown,grey --no-levels`
+# then `tools/walk_cycle.py build|idle player/<id>` (owner note: purple necromancers of the act's theme).

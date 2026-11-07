@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://csy4nhpjf65gn"
-path="res://.godot/imported/pharaohs_shade_walk.png-ffc4e83593a6019f92d7e136a637679f.ctex"
+uid="uid://m8xj5w1a6q6f"
+path="res://.godot/imported/pharaohs_shade.png-16f79dff8bc26f3c1db80c51d849dd1c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/dynasty/pharaohs_shade_walk.png"
-dest_files=["res://.godot/imported/pharaohs_shade_walk.png-ffc4e83593a6019f92d7e136a637679f.ctex"]
+source_file="res://assets/sprites/player/pharaohs_shade.png"
+dest_files=["res://.godot/imported/pharaohs_shade.png-16f79dff8bc26f3c1db80c51d849dd1c.ctex"]
 
 [params]
 

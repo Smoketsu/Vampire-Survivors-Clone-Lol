@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b2jm465afho2i"
-path="res://.godot/imported/lion_priestess_walk.png-040d312bba2ee6762834367e13d4a4a6.ctex"
+uid="uid://bud2qoshh20b"
+path="res://.godot/imported/lion_priestess.png-44e3c663f5a4ff884dae725a1a663b17.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/dynasty/lion_priestess_walk.png"
-dest_files=["res://.godot/imported/lion_priestess_walk.png-040d312bba2ee6762834367e13d4a4a6.ctex"]
+source_file="res://assets/sprites/player/lion_priestess.png"
+dest_files=["res://.godot/imported/lion_priestess.png-44e3c663f5a4ff884dae725a1a663b17.ctex"]
 
 [params]
 

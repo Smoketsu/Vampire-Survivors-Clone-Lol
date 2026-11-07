@@ -660,11 +660,12 @@ const FLAT_SIZES: Dictionary = {
 	"dynasty/sekhmet": 92.0,  # TUNING (not in GDD) boss, female goddess (figure redesign): lioness head and sun disc, red gown; bust rig, idle strip (about 52 wide)
 	"dynasty/osiris": 96.0,  # TUNING (not in GDD) boss, male god seated on his throne (still only, no strip) (about 46 wide)
 	"dynasty/ammit": 44.0,  # TUNING (not in GDD) boss, a monster: crocodile jaws, lion front, hippo rump (about 76 wide)
-	"dynasty/the_embalmer": 56.0,  # TUNING (not in GDD) playable character, female (figure redesign): hooded linen wrap, a glowing bandage; bust rig, idle strip (about 30 wide)
-	"dynasty/lion_priestess": 56.0,  # TUNING (not in GDD) playable character, female (figure redesign): gold lion mask hood, a small sun; bust rig, idle strip (about 40 wide)
-	"dynasty/pharaohs_shade": 56.0,  # TUNING (not in GDD) playable character, male: a spectral pharaoh, teal ghost skin (about 46 wide)
 	"dynasty/ushabti_sentinel": 46.0,  # TUNING (not in GDD) summon class, the necromancer's stone servant (no sex) (about 20 wide)
 	"dynasty/eternal_guard": 58.0,  # TUNING (not in GDD) its evolution: a taller gold-trimmed stone guardian (about 32 wide)
+	# The Dynasty's playable necromancers (violet, owner note Nov 2026; assets/sprites/player/)
+	"player/the_embalmer": 56.0,  # TUNING (not in GDD) female (figure redesign): violet linen-wrapped necromancer, a canopic-jar staff focus (about 32 wide); glide strip, bust rig, idle strip
+	"player/lion_priestess": 56.0,  # TUNING (not in GDD) female (figure redesign): violet priestess in a lioness-head hood, a sun-disc staff focus (about 38 wide); glide strip, bust rig, idle strip
+	"player/pharaohs_shade": 56.0,  # TUNING (not in GDD) male: a violet-robed spectral pharaoh in a nemes, a crook staff with a soul flame (about 40 wide); glide strip
 	"markers/dyn_cartouche": 20.0,  # TUNING (not in GDD) a gold cartouche floating over a fallen Dynasty body (Rebirth), 12 x 20
 	"markers/dyn_heka_glyph": 16.0,  # TUNING (not in GDD) the gold Heka glyph sigil over a cursed summon, 16 x 16
 }

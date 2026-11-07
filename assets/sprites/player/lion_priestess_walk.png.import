@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cgrm0tofogcg0"
-path="res://.godot/imported/pharaohs_shade.png-fdd5df5154ef429fedc2331f1c8e1886.ctex"
+uid="uid://cepcg8525tre"
+path="res://.godot/imported/lion_priestess_walk.png-88e69b6ebb0c6667f2df2e51779b6b9c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/dynasty/pharaohs_shade.png"
-dest_files=["res://.godot/imported/pharaohs_shade.png-fdd5df5154ef429fedc2331f1c8e1886.ctex"]
+source_file="res://assets/sprites/player/lion_priestess_walk.png"
+dest_files=["res://.godot/imported/lion_priestess_walk.png-88e69b6ebb0c6667f2df2e51779b6b9c.ctex"]
 
 [params]
 

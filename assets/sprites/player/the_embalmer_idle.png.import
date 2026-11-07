@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dx23lg3abyju6"
-path="res://.godot/imported/lion_priestess_idle.png-b8fcc8f86990c456d54b801c21031997.ctex"
+uid="uid://b27xy2biqljds"
+path="res://.godot/imported/the_embalmer_idle.png-353414388ae935cfe61d2ceed69eb34e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/dynasty/lion_priestess_idle.png"
-dest_files=["res://.godot/imported/lion_priestess_idle.png-b8fcc8f86990c456d54b801c21031997.ctex"]
+source_file="res://assets/sprites/player/the_embalmer_idle.png"
+dest_files=["res://.godot/imported/the_embalmer_idle.png-353414388ae935cfe61d2ceed69eb34e.ctex"]
 
 [params]
 
