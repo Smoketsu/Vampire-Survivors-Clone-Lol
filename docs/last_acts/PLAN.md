@@ -1,7 +1,9 @@
 # The last six acts: the lead's build plan
 
 Owner decisions (Nov 7, 2026): build all six acts of `docs/proposals/LAST_SIX_ACTS.md` now, aiming to finish within the
-week; **every open question in that doc takes its recommendation** (owner: "go ahead and start building"); use subagents
+week; the owner answered the doc's open questions in the doc: every recommendation is taken **except two**: the Norse act's first rule is
+**the Long Winter** (the cold closes in, braziers are warmth; the Choosing is dropped), and the act select has **three Parts of five acts**
+(I–V the living, VI–X gods, hell and heaven, XI–XV beyond and before; the Host ends Part Two). Use subagents
 with the cheapest model that does the job. GDD §15.0 rows "The last five acts and the act order", "The fifteenth act: the
 Celestial Host" and "Building the last six acts" record it.
 
