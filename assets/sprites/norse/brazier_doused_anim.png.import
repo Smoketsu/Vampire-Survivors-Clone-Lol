@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dmhe7cknupb42"
-path="res://.godot/imported/draugr_female_idle.png-2f9fd92dd91ea9c2dbee6396c9b2c5bd.ctex"
+uid="uid://dyw5lcuuqa3av"
+path="res://.godot/imported/brazier_doused_anim.png-7db47cdbc44c781e18c5a269aa6df05b.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/norse/draugr_female_idle.png"
-dest_files=["res://.godot/imported/draugr_female_idle.png-2f9fd92dd91ea9c2dbee6396c9b2c5bd.ctex"]
+source_file="res://assets/sprites/norse/brazier_doused_anim.png"
+dest_files=["res://.godot/imported/brazier_doused_anim.png-7db47cdbc44c781e18c5a269aa6df05b.ctex"]
 
 [params]
 

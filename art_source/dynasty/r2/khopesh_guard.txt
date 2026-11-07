@@ -1,0 +1,12 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, standing guard stance, sword held low and out to the side so the whole blade shows
+
+LOW-RESOLUTION pixel art: the whole figure is only 46 pixels tall, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no hieroglyph text, no fine trims or engravings.
+
+Subject: a KHOPESH GUARD (male): a muscular bare-chested Egyptian soldier in a lapis-and-bronze striped nemes headcloth, white linen kilt with a lapis sash, bronze bracers and a broad bronze collar. In his right hand a REAL KHOPESH: the ancient Egyptian sickle-sword: a short straight grip, then a blade that goes straight out and then curves sharply OUTWARD into a big hooked sickle-shaped crescent (like a reaping sickle or the numeral 7 / question mark), thick bronze blade with the hook clearly visible, NOT a straight sword and NOT a scimitar. Signature shape: the striped headcloth and the hooked sickle blade.
+
+Colours: ONLY flat fills, at most 3 shades per material: brown skin #5A3622 #8A5430 #B87C48; linen #8F8670 #C9C0A4 #F0E8D2; DULL bronze-gold #6B5A22 #A38E3C #D2BB62; lapis blue #16327C #2B54B8 #5F8BE6; blue-black night #1B2038 #2E3660 #4B5894
+
+Outline: a clean 1-pixel dark outline around the whole subject in the darkest shade of each part's own colour (never pure black). Light from the top-left. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark. Draw ONLY ONE figure.
+Attached: (1) the old version of this sprite for pixel size, outline and flat look (keep the headcloth, kilt and colours, but REPLACE the sword with a real hooked khopesh); (2) a game sprite for outline weight.

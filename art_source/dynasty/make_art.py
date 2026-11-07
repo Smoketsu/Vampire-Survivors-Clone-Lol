@@ -39,7 +39,7 @@ UNITS = {
     "sekhmet": (92, "sand,carnelian,dyn_bronze,night,dynskin", ["--no-prune"]),
     "osiris": (96, "papyrus,linen,dyn_bronze,night,lapis", ["--no-prune"]),
     "ammit": (44, "papyrus,sand,night,dyn_bronze,lapis,carnelian", ["--no-prune"]),
-        "ushabti_sentinel": (46, "sand,grey,soul,brown", ["--no-prune"]),
+    "ushabti_sentinel": (46, "grey,lapis,dyn_bronze,soul,sand", ["--no-prune"]),
     "eternal_guard": (58, "sand,grey,soul,gold,brown", ["--no-prune"]),
 }
 # Walk / glide strips: ids (rigs in tools/walk_cycle.py) and idle strips (bust rigs: the female figures).

@@ -151,3 +151,6 @@ Nothing plays them until the stage code wires its sound map.
 - `gunnery_mate` bust box up 2 px, `marrec` up 4 px, `swashbuckler` refit to rows 14-19 (idle and walk rebuilt).
 - `hull_crab` regenerated: a speckled, coloured crab (orange-red shell, cream speckles), no grey. `old_hollow_eye` regenerated as a whole kraken (bulbous head, hollow eye, eight tentacles, 72x72 art, 76 with the hover rows).
 - `kraken_arm_walk` and `old_hollow_eye_walk`: the tentacles wave (rows sheared by a sine growing toward the tips, foam fixed; `wave_strip()` in `make_art.py`). `vandermere_walk`: the wheel turns (`rotor` disc rig, 11.25 degrees a frame, loops every 8 frames). `powder_wraith_walk`: a small amber flash at the keg's fuse on frames 1, 2, 5 and 6 (`flash_strip()`).
+
+## Round 2 of the owner's art review (Nov 7, 2026)
+- `swashbuckler` bust box moved onto the white blouse (cols 20-28, rows 14-18; it sat on the red sleeve), idle and walk rebuilt. `grappler_walk` rebuilt: only the rope loop and the hook swing, about his hand (`pendulums` entry with the new `exclude` field: the old box also took his head); the head stays still and the line stays attached. Check sheets: `docs/last_acts/bust_check/`.

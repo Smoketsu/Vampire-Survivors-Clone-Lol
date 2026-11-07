@@ -129,3 +129,7 @@ Source: `art_source/dynasty/gen_chars.py` (raws in `chars/`). The earlier enemy-
 ## Cost
 
 About $0.57 of API images (25 unit images, 7 sheets; medium quality), ledger rows tagged `dynasty/...` in `docs/art/generation_ledger.csv`.
+
+## Round 2 of the owner's art review (Nov 7, 2026)
+- Bust boxes refit: `bastet_hunter` (the cream chest, rows 12-16), `embalmer` (cols 9-15, rows 11-16), `mummy_female` (rows 10-15); `player/the_embalmer` box 4 px further right. Idle and walk strips rebuilt; sheets in `docs/last_acts/bust_check/`.
+- Redrawn (prompts and raw images: `art_source/dynasty/r2/`, `gen.py`): `khopesh_guard` (a real khopesh: straight grip, hooked sickle blade), `mummy` (28 -> 36x40: wrapped head to toe, arms forward, hunched, trailing bandages, faint green eyes), `ushabti_sentinel` (a clean mummiform stone shabti, striped headdress, hieroglyph bands in lapis and dull gold, soul-teal eyes; still 20x46, the height `SpriteData` has), `player/lion_priestess` (a cream lioness head-dress with round ears and fangs over a violet mane, 34x56, violet and bone, box on the chest: cols 13-23, rows 20-26). Walk strips rebuilt (new hips in `walk_cycle.py`); `ushabti_sentinel` ramps now grey, lapis, dyn_bronze, soul, sand (`make_art.py`).

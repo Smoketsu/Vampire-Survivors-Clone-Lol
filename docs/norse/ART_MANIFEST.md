@@ -103,3 +103,9 @@ Strips: `_walk` 8 frames of the still's size (legs / glide / robe rigs), `_idle`
 - Skins / Hyper skins for the three characters.
 - Hearth fire, mead-hall braziers, Fenrir's chain, Odin's ravens in flight (the `raven` still can be spun by code).
 - Dedicated Einherjar variants per kind (use `einherjar_overlay` + the kind's sprite, or the `einherjar` hero).
+
+## Round 2 of the owner's art review (Nov 7, 2026)
+- Bust boxes refit from the sprites: `seer` (under the collar), `sigrun` (the breastplate, rows 36-43) and `valkyrie` (the chest under the winged helm, rows 23-28); `player/rune_seer` and `player/shield_maiden_hero` boxes 4 px further right. All idle and walk strips rebuilt; sheets in `docs/last_acts/bust_check/`.
+- `draugr_female`: no bust rig any more, a plain walk, **the idle strip is deleted** (code falls back to the still, as for every unit without a strip).
+- `sigrun` and `valkyrie`: the wings flap in walk and idle (`wings` rig entries; Sigrun's spear and shield stay fixed). `fenrir_walk`: the broken chain on his neck and the loose end under his jaw swing (brown pixels only, `pendulums`).
+- `brazier_lit_anim.png` / `brazier_doused_anim.png` (32x32 frames, 8 side by side, 8 fps loop, frame 0 = the still; `art_source/norse/r2_props.py`): flames that flicker and sway, a smoke wisp that drifts. **Code:** play them like any strip, frame = int(game_time * 8) mod 8, drawing region `Rect2(32 * frame, 0, 32, 32)` of `norse/brazier_lit_anim` / `norse/brazier_doused_anim`; the stills stay the fallback. Nothing plays them yet (LongWinter still draws the still).

@@ -1487,3 +1487,11 @@ utc,key,model,quality,size,refs,text_in,image_in,image_out,usd_est,file
 2026-11-07 16:27,dynasty/char_lion_priestess,gpt-image-2.5-flare,medium,1024x1024,2,618,24,439,0.0165,lion_priestess.png
 2026-11-07 16:27,dynasty/char_pharaohs_shade,gpt-image-2.5-flare,medium,1024x1024,2,598,24,439,0.0164,pharaohs_shade.png
 2026-11-07 16:27,dynasty/char_the_embalmer,gpt-image-2.5-flare,medium,1024x1024,2,626,24,439,0.0165,the_embalmer.png
+2026-11-07 20:19,dynasty/r2_khopesh_guard,gpt-image-2.5-flare,medium,1024x1024,2,619,12,439,0.0164,khopesh_guard.png
+2026-11-07 20:19,dynasty/r2_ushabti_sentinel,gpt-image-2.5-flare,medium,1024x1024,2,592,12,439,0.0162,ushabti_sentinel.png
+2026-11-07 20:19,dynasty/r2_mummy,gpt-image-2.5-flare,medium,1024x1024,2,539,12,439,0.0160,mummy.png
+2026-11-07 20:19,dynasty/r2_lion_priestess,gpt-image-2.5-flare,medium,1024x1024,2,692,24,439,0.0168,lion_priestess.png
+2026-11-07 20:24,dynasty/r2_lion_priestess,gpt-image-2.5-flare,medium,1024x1024,2,724,24,439,0.0170,lion_priestess_v2.png
+2026-11-07 20:24,dynasty/r2_lion_priestess,gpt-image-2.5-flare,medium,1024x1024,2,724,24,439,0.0170,lion_priestess_v3.png
+2026-11-07 20:26,dynasty/r2_lion_priestess,gpt-image-2.5-flare,medium,1024x1024,2,786,24,439,0.0173,lion_priestess_v4.png
+2026-11-07 20:26,dynasty/r2_lion_priestess,gpt-image-2.5-flare,medium,1024x1024,2,786,24,439,0.0173,lion_priestess_v5.png
