@@ -490,6 +490,35 @@ const HEIGHTS: Dictionary = {
 	"player/revenant_heroine_deathlord": 56.0,  # TUNING (not in GDD) skin art: her body, the spiked crown above
 	"summons/fallen_hero": 46.0,  # TUNING (not in GDD) a raised Super (male): the tattered cape behind
 	"summons/black_paragon": 54.0,  # TUNING (not in GDD) its evolution, taller
+	# --- Act VI (final order): the Hall of the Slain (assets/sprites/norse/; art by art_source/norse/gen.py) ---
+	"norse/raider": 40.0,  # TUNING (not in GDD) Hall of the Slain art, on-screen height in px
+	"norse/shield_maiden": 44.0,  # TUNING (not in GDD) Hall of the Slain art, on-screen height in px
+	"norse/berserker": 50.0,  # TUNING (not in GDD) Hall of the Slain art, on-screen height in px
+	"norse/skald": 44.0,  # TUNING (not in GDD) Hall of the Slain art, on-screen height in px
+	"norse/valkyrie": 52.0,  # TUNING (not in GDD) Hall of the Slain art, on-screen height in px
+	"norse/draugr": 42.0,  # TUNING (not in GDD) Hall of the Slain art, on-screen height in px
+	"norse/draugr_female": 42.0,  # TUNING (not in GDD) Hall of the Slain art, on-screen height in px
+	"norse/wolf_of_the_wastes": 26.0,  # TUNING (not in GDD) Hall of the Slain art, on-screen height in px
+	"norse/frost_giant": 72.0,  # TUNING (not in GDD) Hall of the Slain art, on-screen height in px
+	"norse/seer": 46.0,  # TUNING (not in GDD) Hall of the Slain art, on-screen height in px
+	"norse/rune_stone": 40.0,  # TUNING (not in GDD) Hall of the Slain art, on-screen height in px
+	"norse/rune_stone_taken": 40.0,  # TUNING (not in GDD) Hall of the Slain art, on-screen height in px
+	"norse/einherjar": 46.0,  # TUNING (not in GDD) Hall of the Slain art, on-screen height in px
+	"norse/barrow_wight": 56.0,  # TUNING (not in GDD) Hall of the Slain art, on-screen height in px
+	"norse/einherjar_champion": 60.0,  # TUNING (not in GDD) Hall of the Slain art, on-screen height in px
+	"norse/fire_giant": 80.0,  # TUNING (not in GDD) Hall of the Slain art, on-screen height in px
+	"norse/hrimgar": 88.0,  # TUNING (not in GDD) Hall of the Slain art, on-screen height in px
+	"norse/sigrun": 80.0,  # TUNING (not in GDD) Hall of the Slain art, on-screen height in px
+	"norse/odin": 72.0,  # TUNING (not in GDD) Hall of the Slain art, on-screen height in px
+	"norse/fenrir": 80.0,  # TUNING (not in GDD) Hall of the Slain art, on-screen height in px
+	"norse/raven": 18.0,  # TUNING (not in GDD) Hall of the Slain art, on-screen height in px
+	"norse/boss_barrow": 56.0,  # TUNING (not in GDD) Hall of the Slain art, on-screen height in px
+	"norse/boss_barrow_broken": 56.0,  # TUNING (not in GDD) Hall of the Slain art, on-screen height in px
+	"norse/rune_seer": 56.0,  # TUNING (not in GDD) Hall of the Slain art, on-screen height in px
+	"norse/shield_maiden_hero": 56.0,  # TUNING (not in GDD) Hall of the Slain art, on-screen height in px
+	"norse/berserker_hero": 56.0,  # TUNING (not in GDD) Hall of the Slain art, on-screen height in px
+	"norse/draugr_thane": 54.0,  # TUNING (not in GDD) Hall of the Slain art, on-screen height in px
+	"norse/barrow_king": 62.0,  # TUNING (not in GDD) Hall of the Slain art, on-screen height in px
 	# --- Act IX: the Concord of Stars (the shared kinds; assets/sprites/concord/, structures/, bosses/) ---
 	"concord/broodling": 22.0,  # TUNING (not in GDD) Brood fodder, a creature: a hunched green-black insect, about 24 wide; walk strip
 	"concord/grey_drone": 28.0,  # TUNING (not in GDD) Harvester fodder, sex unmarked: a small grey with a probe held out (about 30 wide with it); walk strip
