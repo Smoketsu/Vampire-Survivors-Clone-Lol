@@ -155,7 +155,7 @@ func _wave_push(delta: float) -> void:
 
 
 ## The autotest autopilot's push away from the far rail while a wave is due.
-func danger_push(p: Vector2) -> Vector2:
+func danger_push(_p: Vector2) -> Vector2:
 	if _wave_at < 0.0:
 		return Vector2.ZERO
 	return Vector2(0.0, float(_side)) * 0.6  # Lean into the wave (toward the rail it comes from).

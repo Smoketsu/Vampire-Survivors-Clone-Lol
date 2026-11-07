@@ -32,6 +32,7 @@
 ##   * SINK: the hull destroyed -> its remaining crew drowns (no XP), and one
 ##     floating crate (crate_xp crystals) washes against the rail.
 ##   * EMPTIED: no crew left and none waiting -> it casts off (leave_time s).
+##   * CO-OP: max_boats and queue_cap x the co-op alive cap (CoopData).
 ##   * THE BLACK TIDE (BlackTide running): the whole rail is a boarding point,
 ##     tide_max_boats boats at once, a shorter lane and pour, a larger queue.
 ## Determinism: the seeded gameplay RNG only (lanes), game time, ordered lists
@@ -131,11 +132,14 @@ func structures_alive() -> int:
 	return n
 
 
-## A boarding number, the Black Tide's version while it runs (tide_<key>).
+## A boarding number, the Black Tide's version while it runs (tide_<key>). In
+## co-op (twice the enemies) the boat and queue caps grow with the alive cap
+## (CoopData through DifficultyModifiers.coop_mult("alive_cap"); solo x1).
 func _cap(key: String) -> int:
-	if _tide() and cfg.has("tide_" + key):
-		return int(cfg["tide_" + key])
-	return int(cfg[key])
+	var v := int(cfg["tide_" + key]) if _tide() and cfg.has("tide_" + key) else int(cfg[key])
+	if game.coop != null and (key == "max_boats" or key == "queue_cap"):
+		v = roundi(float(v) * game.difficulty.coop_mult("alive_cap"))
+	return v
 
 
 ## A boarding time (s), the Black Tide's version while it runs.
