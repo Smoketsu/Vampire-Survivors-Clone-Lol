@@ -14,7 +14,10 @@
 ## §15.0 "Act VIII foundation (phase 1)": Skid Row -> Fort Kessler -> Liberty
 ## Heights, opened by slaying Queen Carmilla; Act IX, GDD §15.0 "Act IX
 ## foundation (phase 1)": the Crash Site -> the Proving Moon -> the Ark of the
-## Concord, opened by defeating Paragon). One
+## Concord, opened by defeating Paragon; Act X (temporary number; the pirate
+## act's final slot is II, GDD §15.0 "Act X foundation: the Black Tide (phase
+## 1)"): the Smuggler's Cutter -> the Treasure Galleon -> the Maelstrom,
+## opened by defeating the Harvester). One
 ## entry per stage, each
 ## the STAGE dictionary of its file under scripts/data/stages/. A run reads
 ## its stage through RunConfig.stage_def() as `Game.stage_def`; nothing else
@@ -66,7 +69,8 @@
 ##                        Ancient Eye, 3 = the Electronic Empire, 4 = the
 ##                        Olympian Republic, 5 = the Shogunate of the Rising
 ##                        Sun, 6 = the Inferno, 7 = the Sanguine Court,
-##                        8 = the Last Line, 9 = the Concord of Stars;
+##                        8 = the Last Line, 9 = the Concord of Stars,
+##                        10 = the Black Tide (temporary until the reorder);
 ##                        absent = 1). The stage select shows one
 ##                        act at a time; Act II-only cards (PassiveData "act")
 ##                        are offered only on stages of that act.
@@ -315,6 +319,23 @@
 ##                        Reactor's vents as structure windows, the wrecks;
 ##                        the "luminous_archon" event); ground "ark" is its
 ##                        ArkGround (four zone floors).
+## --- Act X: the Black Tide ---
+##   corsair            — true: the Black Tide's shared rules (Act X, CorsairRules
+##                        as Game.corsair: Boarding, the Deck, Strikes from the
+##                        Sea, and the Black Tide Reckoning when the RECKONING
+##                        has a "black_tide" key); ground "corsair" is the
+##                        placeholder CorsairGround (the sea and the deck, from
+##                        the "floor" dictionary), on a FIXED furniture layout
+##                        (the ARENA's "fixed" list, Arena).
+##   deck               — the stage's deck (DeckBounds, Game.deck): any key of
+##                        CorsairRulesData.DECK (length, beam, bow, ...).
+##   boarding           — the stage's boarding (BoardingParty): any key of
+##                        CorsairRulesData.BOARDING, plus "points" ([x, side]
+##                        pairs on the straight rail), "whole_rail" and "boats"
+##                        (the tier cap).
+##   sea                — the stage's sea strikes (SeaStrikes): any key of
+##                        CorsairRulesData.SEA ({} = the defaults).
+##   zones              — Act X stubs too: the planned zones (names and starts).
 class_name StageRegistry
 extends RefCounted
 
@@ -333,7 +354,9 @@ const ORDER := ["graveyard", "crimson_march", "sanctum", "harbour", "archive", "
 	# --- Act VIII: the Last Line ---
 	"skid_row", "fort_kessler", "liberty_heights",
 	# --- Act IX: the Concord of Stars ---
-	"crash_site", "proving_moon", "ark"]
+	"crash_site", "proving_moon", "ark",
+	# --- Act X: the Black Tide (temporary act number; final slot II) ---
+	"cutter", "galleon", "maelstrom"]
 ## Stage used when none (or an unknown id) is given.
 const DEFAULT_ID: String = "graveyard"
 ## Stage id -> STAGE dictionary.
@@ -372,6 +395,10 @@ const STAGES := {
 	"crash_site": CrashSiteStage.STAGE,
 	"proving_moon": ProvingMoonStage.STAGE,
 	"ark": ArkStage.STAGE,  # Act IX, stage 27
+	# --- Act X: the Black Tide ---
+	"cutter": CutterStage.STAGE,
+	"galleon": GalleonStage.STAGE,
+	"maelstrom": MaelstromStage.STAGE,  # Act X, stage 30 (temporary numbers until the reorder)
 }
 
 ## Acts in order: act number -> {name, subtitle} (stage select tabs).
@@ -391,6 +418,8 @@ const ACTS := {
 	8: {"name": "Act VIII", "subtitle": "The Last Line"},
 	# --- Act IX: the Concord of Stars ---
 	9: {"name": "Act IX", "subtitle": "The Concord of Stars"},
+	# --- Act X: the Black Tide (temporary number; final slot II) ---
+	10: {"name": "Act X", "subtitle": "The Black Tide"},
 }
 
 
@@ -464,4 +493,9 @@ const BOSS_ARRIVALS := {
 	"hive_mother": CrashSiteStage.BOSS,
 	"vrask_tal": ProvingMoonStage.BOSS,
 	"harvester": ArkStage.BOSS,  # Act IX, the finale's boss
+	# --- Act X: the Black Tide (stubs: each stage's BOSS until phase 2 gives the
+	# boss its own data file) ---
+	"crow": CutterStage.BOSS,
+	"marrec": GalleonStage.BOSS,
+	"vandermere": MaelstromStage.BOSS,  # Act X, the finale's boss
 }

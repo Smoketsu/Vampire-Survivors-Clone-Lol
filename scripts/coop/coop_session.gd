@@ -426,6 +426,9 @@ func step(delta: float) -> void:
 	if game.concord != null:
 		bind_primary()
 		game.concord.step(delta)  # Act IX: the Final Harvest, the beams, the lifted summons, the alien ground (before the push-out, as in solo).
+	if game.corsair != null:
+		bind_primary()
+		game.corsair.step(delta)  # Act X: the boats, the sea's strikes, the Black Tide (before the push-out, as in solo).
 	if pf != null:
 		tl = pf.lap(PerfProbe.SEC_ENEMIES, tl)
 	bind_primary()

@@ -252,6 +252,15 @@
 ##     "crash site", "burrowers", "acid", "brood matriarch" and "hive mother"
 ##     lines (CrashSiteReport), and "act IX spell" / "act IX passives" when
 ##     Bone Beetles, Chitin or Anchored was taken.
+##   * Act X, the Black Tide (GDD §15.0 "Act X foundation: the Black Tide
+##     (phase 1)"): --stage=cutter|galleon|maelstrom, --spawn= with its kinds
+##     (deckhand, musketeer, powder_runner, swashbuckler, boarding_bruiser,
+##     reef_shark, kraken_arm; the boats and hooks come with BoardingParty),
+##     --boss=crow|marrec|vandermere. The bot keeps off the rail and steps out
+##     of the strike circles (CorsairRules.danger_push()). When the Black Tide
+##     ran, the summary adds the "boarding", "deck", "sea strikes", "corsair
+##     kinds", "black tide" (after 0:00) and (on an Act X stage) "corsair
+##     stage" lines (CorsairReport).
 class_name Autotest
 extends Node
 
@@ -1214,6 +1223,8 @@ func _danger_at(pos: Vector2) -> Vector2:
 		danger += game.city.danger_push(pos)  # Act VIII: headlight lanes, landing circles (null elsewhere).
 	if game.concord != null:
 		danger += game.concord.danger_push(pos)  # Act IX: aiming lines and live beams (null elsewhere).
+	if game.corsair != null:
+		danger += game.corsair.danger_push(pos)  # Act X: off the rail, out of the strike circles (null elsewhere).
 	return danger
 
 
@@ -1323,6 +1334,8 @@ func get_move_vector() -> Vector2:
 		danger += game.city.danger_push(p)  # Act VIII: headlight lanes, landing circles (null elsewhere).
 	if game.concord != null:
 		danger += game.concord.danger_push(p)  # Act IX: aiming lines and live beams (null elsewhere).
+	if game.corsair != null:
+		danger += game.corsair.danger_push(p)  # Act X: off the rail, out of the strike circles (null elsewhere).
 	var objective := Vector2.ZERO
 	# Walk to shrines any time, to graves under consecration only when calm.
 	var goal := game.enemies.stage.seek_point(p, OBJECTIVE_SEEK_RADIUS, away.length() < 0.2)
@@ -1514,6 +1527,7 @@ func finish(summary: Dictionary) -> void:
 	CourtReport.print_lines(game, st_all)  # Act VII: bloodfeast, night wings, blood moon, kinds, the endless feast, the stage (only when the Court ran).
 	CityReport.print_lines(game, st_all)  # Act VIII: city blocks, armour, supers, civilians, escalation, kinds, martial law, the stage (only when the Last Line ran).
 	ConcordReport.print_lines(game, st_all)  # Act IX: beams, abduction, terraforming, the final harvest, kinds, the stage (only when the Concord ran).
+	CorsairReport.print_lines(game, st_all)  # Act X: boarding, the deck, the sea's strikes, the black tide, kinds, the stage (only when the Black Tide ran).
 	WastesReport.print_items(game, st_all)  # Act III, the Scrap Wastes: Death Ray and its passives (only when taken).
 	IlionReport.print_items(game, st_all)  # Act IV, the Shores of Ilion: Paris's Arrow and its passives (only when taken).
 	# --- Act V: the Burning Province ---

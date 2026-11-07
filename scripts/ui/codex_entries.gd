@@ -147,6 +147,15 @@ static func section_entries(section: String) -> Array:
 				var b := _boss(id)
 				b["section"] = section
 				out.append(b)  # Act IX bosses.
+		# --- Act X: the Black Tide ---
+		"corsair_crew", "corsair_sea", "corsair_boats":
+			for id: String in _corsair_list(section):
+				out.append(_covenant(id, section))  # Act X kinds.
+		"corsair_bosses":
+			for id: String in CodexData.CORSAIR_BOSSES:
+				var b := _boss(id)
+				b["section"] = section
+				out.append(b)  # Act X bosses.
 	return out
 
 
@@ -229,6 +238,17 @@ static func _city_list(section: String) -> Array[String]:
 	return CodexData.CITY_HEROES
 
 
+# --- Act X: the Black Tide ---
+## The Black Tide kinds of section `section` (CodexData.CORSAIR_*).
+static func _corsair_list(section: String) -> Array[String]:
+	match section:
+		"corsair_crew":
+			return CodexData.CORSAIR_CREW
+		"corsair_sea":
+			return CodexData.CORSAIR_SEA
+	return CodexData.CORSAIR_BOATS
+
+
 # --- Act IX: the Concord of Stars ---
 ## The Concord kinds of race section `section` (CodexData.CONCORD_*).
 static func _concord_list(section: String) -> Array[String]:
@@ -268,6 +288,8 @@ static func _covenant(id: String, section: String) -> Dictionary:
 		sprite = "city/" + id  # ...a Last Line kind (Act VIII)...
 	elif not SpriteBank.has(sprite) and SpriteBank.has("concord/" + id):
 		sprite = "concord/" + id  # ...a Concord of Stars kind (Act IX)...
+	elif not SpriteBank.has(sprite) and SpriteBank.has("corsair/" + id):
+		sprite = "corsair/" + id  # ...a Black Tide kind (Act X)...
 	elif not SpriteBank.has(sprite):
 		sprite = "structures/" + id  # ...or a structure.
 	var kills := Meta.codex_kill_count(id)  # Lifetime kills of this kind.

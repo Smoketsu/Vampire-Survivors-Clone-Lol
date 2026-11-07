@@ -45,7 +45,9 @@ const TABS: Array = [["feats", "Achievements"], ["spells", "Spells"], ["summons"
 		# --- Act VIII: the Last Line ---
 		["city", "Last Line"],
 		# --- Act IX: the Concord of Stars ---
-		["concord", "Concord"]]  # TUNING (not in GDD) Act II adds the Ancient Eye tab, Act III the Electronic Empire's, Act IV the Olympian Republic's, Act V the Shogunate's, Act VI the Inferno's, Act VII the Sanguine Court's, Act VIII the Last Line's, Act IX the Concord's
+		["concord", "Concord"],
+		# --- Act X: the Black Tide ---
+		["corsair", "Black Tide"]]  # TUNING (not in GDD) Act II adds the Ancient Eye tab, Act III the Electronic Empire's, Act IV the Olympian Republic's, Act V the Shogunate's, Act VI the Inferno's, Act VII the Sanguine Court's, Act VIII the Last Line's, Act IX the Concord's, Act X the Black Tide's
 
 ## Summon classes shown on the Summons page (UnitData ids, card order). The
 ## Profane Bishop is a merge evolution, so it sits with the evolutions.
@@ -298,6 +300,19 @@ const CONCORD_LUMINOUS: Array[String] = ["lumen_sentinel", "prism",
 ## Concord stage bosses (StageRegistry.BOSS_ARRIVALS ids).
 const CONCORD_BOSSES: Array[String] = ["hive_mother", "vrask_tal", "harvester"]
 
+# --- Act X: the Black Tide ---
+## Act X, the Black Tide (GDD §15.0 "Act X foundation: the Black Tide (phase
+## 1)"; the Black Tide tab): the Brotherhood's crews, the sea's beasts, the
+## boats and their hooks, then its stage bosses (StageRegistry.BOSS_ARRIVALS
+## ids). Each Act X stage adds its own kinds as it is built (phase 2).
+const CORSAIR_CREW: Array[String] = ["deckhand", "musketeer", "powder_runner", "swashbuckler", "boarding_bruiser"]
+## The sea's beasts (rows "water").
+const CORSAIR_SEA: Array[String] = ["reef_shark", "kraken_arm"]
+## The boats and their grapple hooks (structures BoardingParty brings).
+const CORSAIR_BOATS: Array[String] = ["skiff", "longboat", "raider_ship", "boarding_hook"]
+## Black Tide stage bosses (StageRegistry.BOSS_ARRIVALS ids).
+const CORSAIR_BOSSES: Array[String] = ["crow", "marrec", "vandermere"]
+
 ## Section headers of each page: page id -> [[section id, header text], ...].
 const SECTIONS: Dictionary = {
 	"spells": [["spells", "Spells"], ["spell_evolutions", "Evolutions"]],  # TUNING (not in GDD)
@@ -319,6 +334,9 @@ const SECTIONS: Dictionary = {
 	# --- Act IX: the Concord of Stars (grouped by race) ---
 	"concord": [["concord_brood", "The Brood"], ["concord_harvesters", "The Harvesters"], ["concord_vrask", "The Vrask"],
 		["concord_luminous", "The Luminous"], ["concord_bosses", "Bosses"]],  # TUNING (not in GDD) Act IX
+	# --- Act X: the Black Tide ---
+	"corsair": [["corsair_crew", "The Brotherhood"], ["corsair_sea", "The Sea"], ["corsair_boats", "Boats"],
+		["corsair_bosses", "Bosses"]],  # TUNING (not in GDD) Act X
 }
 
 ## One-sentence descriptions of the Covenant (the enemy data has none),
@@ -525,6 +543,21 @@ const DESCRIPTIONS: Dictionary = {
 	"hive_mother": "The Hive Mother, the Brood's queen grown into the crater: egg waves, a burrow under your ring, and acid from the sky.",  # Owner-approved Act IX proposal
 	"vrask_tal": "Vrask'Tal, the Hunt-Lord: he stalks your ring cloaked, duels you with his glaive, and arms the bomb on his wrist.",  # Owner-approved Act IX proposal
 	"harvester": "The Harvester, the oldest of its kind: the one who planted the world, come to reap what is left.",  # Owner-approved Act IX proposal
+	# --- Act X: the Black Tide ---
+	"deckhand": "Cutlass mobs of the Brotherhood, pouring off the boats in streams. Meet them at the rail.",  # Owner-approved Act X proposal
+	"musketeer": "A gunman of the Brotherhood. Ordinary shot, from the boats and then the deck: Archers answer him.",  # Owner-approved Act X proposal
+	"powder_runner": "He sprints with a lit keg. Kill him at range, and the blast throws his own crew over the rail.",  # Owner-approved Act X proposal
+	"swashbuckler": "A duellist whose rapier lunge jumps your first blocker. Rogues, Gargoyles and area damage end her.",  # Owner-approved Act X proposal
+	"boarding_bruiser": "An axeman in a leather apron, flat armour 3. Wither him, or push him overboard.",  # Owner-approved Act X proposal
+	"reef_shark": "It circles the hull and leaps into your ring. Hit it at the leap; on the deck, knock it back into the sea.",  # Owner-approved Act X proposal
+	"kraken_arm": "A tentacle from below that drags one of your dead overboard. Kill it while it is above the water.",  # Owner-approved Act X proposal
+	"skiff": "A small boat of six. Cut both grapple hooks and it drifts off; sink it and its crew drowns.",  # Owner-approved Act X proposal (Boarding)
+	"longboat": "A boat of twelve. Ranged summons, spells and fliers sink it; your Warriors cut its hooks.",  # Owner-approved Act X proposal (Boarding)
+	"raider_ship": "A raider of twenty-four with two planks. Sink it before its whole crew is aboard.",  # Owner-approved Act X proposal (Boarding)
+	"boarding_hook": "A grapple biting the rail. Cut both hooks of a boat and it drifts away with its crew.",  # Owner-approved Act X proposal (Boarding)
+	"crow": "Captain Ezekiel Crow, the Gull King: broadsides, a cutlass duel, and his own ship set ablaze.",  # Owner-approved Act X proposal
+	"marrec": "Admiral Isabeau Marrec, the Sea Wolf: her fleet, the boarding plank and cursed gold.",  # Owner-approved Act X proposal
+	"vandermere": "Captain Cornelius Vandermere, lashed to the wheel of the Hollow Queen behind an oath only the dead can break.",  # Owner-approved Act X proposal
 	# --- Act IX: the Crash Site ---
 	"burrower": "It tunnels under your ring and bursts up among your dead. A mound of dirt shows a moment ahead: keep blockers inside the ring.",  # Owner-approved Act IX proposal
 	"acid_spitter": "It lobs acid over your ring that leaves a burning puddle. Kill it on approach, and step out of the green.",  # Owner-approved Act IX proposal
@@ -613,6 +646,11 @@ const LOCKED_HINT: Dictionary = {
 	"concord_vrask": "Slay one to record it.",  # TUNING (not in GDD) Act IX Vrask
 	"concord_luminous": "Slay one to record it.",  # TUNING (not in GDD) Act IX Luminous
 	"concord_bosses": "Face it to record it.",  # TUNING (not in GDD) Act IX bosses
+	# --- Act X: the Black Tide ---
+	"corsair_crew": "Slay one to record it.",  # TUNING (not in GDD) Act X
+	"corsair_sea": "Slay one to record it.",  # TUNING (not in GDD) Act X
+	"corsair_boats": "Sink one to record it.",  # TUNING (not in GDD) Act X
+	"corsair_bosses": "Face it to record it.",  # TUNING (not in GDD) Act X bosses
 	"evolution": "Undiscovered.",  # TUNING (not in GDD) owner rule: no hint
 }
 ## Name shown for a locked entry.
@@ -662,6 +700,11 @@ const TAGS: Dictionary = {
 	"concord_vrask": "The Vrask",  # TUNING (not in GDD) Act IX
 	"concord_luminous": "The Luminous",  # TUNING (not in GDD) Act IX
 	"concord_bosses": "Stage boss",  # TUNING (not in GDD) Act IX bosses
+	# --- Act X: the Black Tide ---
+	"corsair_crew": "The Brotherhood",  # TUNING (not in GDD) Act X
+	"corsair_sea": "The sea",  # TUNING (not in GDD) Act X
+	"corsair_boats": "Boat",  # TUNING (not in GDD) Act X
+	"corsair_bosses": "Stage boss",  # TUNING (not in GDD) Act X bosses
 }
 
 # --- Layout (layout px at 1280x720; TUNING, not in GDD) -----------------------------
@@ -901,11 +944,12 @@ static func is_known(cat: String, id: String) -> bool:
 					or CITY_CIVILIANS.has(id) or CITY_GANGS.has(id) or CITY_POLICE.has(id) \
 					or CITY_SWAT.has(id) or CITY_ARMY.has(id) or CITY_HEROES.has(id) \
 					or CONCORD_BROOD.has(id) or CONCORD_HARVESTERS.has(id) or CONCORD_VRASK.has(id) \
-					or CONCORD_LUMINOUS.has(id)  # Act IV to Act IX
+					or CONCORD_LUMINOUS.has(id) \
+					or CORSAIR_CREW.has(id) or CORSAIR_SEA.has(id) or CORSAIR_BOATS.has(id)  # Act IV to Act X
 		BOSS:
 			return BOSSES.has(id) or EYE_BOSSES.has(id) or EMPIRE_BOSSES.has(id) or PANTHEON_BOSSES.has(id) \
 					or SHOGUNATE_BOSSES.has(id) or INFERNO_BOSSES.has(id) or COURT_BOSSES.has(id) \
-					or CITY_BOSSES.has(id) or CONCORD_BOSSES.has(id)  # (Act IX last)
+					or CITY_BOSSES.has(id) or CONCORD_BOSSES.has(id) or CORSAIR_BOSSES.has(id)  # (Act X last)
 	return false
 
 
@@ -926,11 +970,12 @@ static func total(cat: String) -> int:
 					+ CITY_CIVILIANS.size() + CITY_GANGS.size() + CITY_POLICE.size() \
 					+ CITY_SWAT.size() + CITY_ARMY.size() + CITY_HEROES.size() \
 					+ CONCORD_BROOD.size() + CONCORD_HARVESTERS.size() + CONCORD_VRASK.size() \
-					+ CONCORD_LUMINOUS.size()  # Act IV to Act IX
+					+ CONCORD_LUMINOUS.size() \
+					+ CORSAIR_CREW.size() + CORSAIR_SEA.size() + CORSAIR_BOATS.size()  # Act IV to Act X
 		BOSS:
 			return BOSSES.size() + EYE_BOSSES.size() + EMPIRE_BOSSES.size() + PANTHEON_BOSSES.size() \
 					+ SHOGUNATE_BOSSES.size() + INFERNO_BOSSES.size() + COURT_BOSSES.size() \
-					+ CITY_BOSSES.size() + CONCORD_BOSSES.size()  # (Act IX last)
+					+ CITY_BOSSES.size() + CONCORD_BOSSES.size() + CORSAIR_BOSSES.size()  # (Act X last)
 	return 0
 
 
@@ -966,6 +1011,9 @@ static func enemy_row(id: String) -> Dictionary:
 	var concord := EnemyDirector.concord_def(id)  # Act IX kinds ({} when none).
 	if not concord.is_empty():
 		return concord
+	var corsair := EnemyDirector.corsair_def(id)  # Act X kinds ({} when none).
+	if not corsair.is_empty():
+		return corsair
 	match id:
 		"alaric":
 			return EnemyData.BOSS

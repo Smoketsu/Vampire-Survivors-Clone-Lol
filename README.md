@@ -15,7 +15,7 @@ Bishops, Shadow Reapers, Cathedral Horrors, Hellhounds, Keening Ladies and
 Ossuary Engines.
 
 This repository holds the game's campaign: nine acts of three stages each,
-27 playable stages from *The Desecrated Graveyard* (Act I) to *The Ark of the
+27 playable stages (and the Black Tide, Act X for now, being built) from *The Desecrated Graveyard* (Act I) to *The Ark of the
 Concord* (Act IX), each boss opening the next stage (Acts VI-IX went live in
 Nov 2026), built in Godot 4.3 with no addons. The art is true pixel art (PNGs in `assets/`; the code
 drawings remain as the fallback for any missing image), and the sound and
@@ -2456,6 +2456,45 @@ achievement **The Last Harvest** (beat the Harvester: the title The Unharvested)
 `--spawn=grey_overseer@T`, `luminous_archon@T`, `specimen_tank@T`, `vault_beast@T`, `reactor_vent@T`,
 `reap_emitter@T`; lines `ark`, `ark events`, `ark kinds`, `harvester`, `tractor beam`, `ghost saucer`.
 
+### Act X: the Black Tide (foundation)
+
+<!-- --- Act X: the Black Tide --- -->
+The Covenant is ash and the only road out of the burning country is the sea. **The Corsair Brotherhood**, a loose fleet
+of cutthroats, gunners and duellists under the black flag, wants the gold the necromancer took from the church's vaults
+and the secret of a crew that never dies; under the ship, the sea has sharks, crabs, serpents and a kraken (GDD §15.0
+"Act X foundation: the Black Tide (phase 1)" and the rows after it; owner-approved proposal
+`docs/proposals/NEW_ACTS_AND_ORDER.md` Part 1). The whole act is fought **on one ship's deck**. It is built as **Act X**
+for now (its final slot is II; the reorder pass moves it), with an **Act X** tab and three stages still marked *Coming
+soon*: **the Smuggler's Cutter** (960 x 360 deck), **the Treasure Galleon** (1,500 x 540) and **the Maelstrom** (the
+*Hollow Queen*, 1,300 x 500), bosses Captain Crow, Admiral Marrec and Captain Vandermere (placeholder boss scripts until
+phase 2); defeating the Harvester opens the Cutter and each boss opens the next stage. The act's shared rules:
+
+- **Boarding.** Nobody walks in from the screen edge: every enemy the timeline sends comes **by boat**. A boat shows its
+  lane 3 s ahead (a dotted wake and an amber lantern at the rail), hooks the rail with two grapple lines (40 HP each)
+  and pours one crewman every 0.6 s. Cut both hooks and the boat drifts off with the rest of its crew; sink the hull
+  (Archers, Mages, spells, fliers, or a summon at the rail) and the crew still aboard drowns, leaving a floating crate.
+  Skiffs carry 6, longboats 12, raider ships 24 on two planks; at most 4 boats at a time.
+- **The Deck.** The ship is the arena. You and your army stop at the rail; fliers may hover up to 120 px past it. An
+  enemy knocked past the rail (a powder blast, a stomp, a Bone Wall, the Black Tide's wave) **drowns**, dropping its
+  XP at the rail: knockback is the act's counterplay. Beside the rail the Bone Ring flattens into a half-ring facing the
+  water (its posts slide inboard); on the narrow Cutter it flattens fore and aft. The Cutter fits the screen and the
+  camera stays still; the bigger decks scroll, clamped over the deck.
+- **Strikes from the Sea.** Sharks and kraken arms circle the hull under the water (they cannot be hit while
+  submerged). When one strikes it surfaces and a dark ring marks its target for 1 s: a **shark** leaps onto the deck
+  inside your ring and fights on as a boarder; a **kraken arm** grabs one summon and drags it to the rail, and it is gone
+  overboard after 5 s unless you kill the arm while it is surfaced. Every strike hits both armies. At most 8 swimmers.
+- **The Black Tide.** At 0:00 every boat closes at once and the whole rail boards, the rail band is struck every 3 s,
+  and every 20 s a great wave shoves everything toward the far rail (the boarders drown there).
+- **Music.** The stubs play "Below the Tide" for now; the act's own score and sounds come with the audio pass.
+
+The shared kinds so far: the **Deckhand** (cutlass fodder), the **Musketeer** (ordinary shot), the **Powder Runner**
+(a lit keg that blasts both sides and knocks everyone 60 px; it goes off when he falls, too), the **Swashbuckler** (a
+rapier lunge past your first blocker), the **Boarding Bruiser** (flat armour 3), the **Reef Shark** and the **Kraken
+Arm**, plus the boats and their hooks. The Codex has a **Black Tide** tab (the Brotherhood, the Sea, Boats, Bosses).
+Autotest: `--stage=cutter|galleon|maelstrom`, `--boss=crow|marrec|vandermere`, `--spawn=` with the kinds above; lines
+`boarding`, `deck`, `sea strikes`, `black tide`, `corsair kinds`, `corsair stage`. The deck in the game:
+`docs/tide/deck_spike.png` and `docs/tide/deck_spike_rail.png`.
+
 ### The illustrated epilogue
 
 The campaign epilogue (content wave 2, GDD §15.0 "Illustrated epilogue (content wave 2)") is a short
@@ -3185,6 +3224,12 @@ scripts/
                             Tractor Beam's lift column, the Ghost Saucer's beams (textures only; Act IX)
     ark_report.gd           The autotest's Ark lines (ark, ark kinds, harvester) and the Tractor Beam / Ghost
                             Saucer lines (Act IX)
+    corsair_ground.gd       Act X placeholder look: the sea (foam lines) and the ship's deck (planks, rail, hull band)
+                            from Game.deck's outline; redrawn on cell change only
+    corsair_glyphs.gd       Code-drawn fallbacks of the Black Tide's kinds, boats and hooks and the stubs' deck
+                            furniture (masts, hatches, barrels, cannons, the wheel; Act X)
+    corsair_report.gd       The autotest's Act X lines (boarding, deck, sea strikes, black tide, corsair kinds,
+                            corsair stage)
     fort_kessler_report.gd  The autotest's Fort Kessler lines (the stage, its kinds, Mammoth, the threats, Harrow) and
                             its items (Bone Mines, Tripwire, Armour-Piercing Bones)
     fort_kessler_ground.gd  Fort Kessler's floor: CityGround with each zone's look (checkpoints, minefields, aprons,
@@ -3515,6 +3560,21 @@ scripts/
                             the guest squads, the cracks of Paragon's craters
       boss_paragon.gd       Paragon: the Hero (heat vision, the punch's fling), Hope (the roster Supers not yet
                             killed), No Restraint (the dives, the craters); paragon_sky.gd draws the white sky
+    corsair/                The Black Tide (Act X): its kits ("<id>_kit.gd", loaded by name after the Concord's)
+                            and bosses ("boss_<id>.gd", phase 2), and the act's shared rules:
+      corsair_rules.gd      Game.corsair: owns the deck, the boats, the sea and the Black Tide; route_spawn() (the
+                            one spawn route of a corsair stage), powder_blast(), danger_push(), the Sea Legs /
+                            Barnacle Bones hooks (null on Acts I to IX)
+      deck_bounds.gd        THE DECK (Game.deck): the convex outline, clamp_point() / walkable_point() (the ring
+                            posts), contain_all() (last step of Arena.resolve_all(): the rail, the fliers' band,
+                            drowning overboard, drops), the camera clamp, the rail and perimeter helpers
+      boarding_party.gd     BOARDING: the capped queue, lanes, boats, grapple hooks, the pour, repel and sink
+      sea_strikes.gd        STRIKES FROM THE SEA: the swimmers (submerged, surfacing, cap 8), leaps, tentacle
+                            grabs (held_until, dragged overboard), strike() for ownerless circles
+      black_tide.gd         The Black Tide Reckoning: the whole rail boards, rail strikes, the great wave
+      corsair_kit.gd        CorsairKit: the water state, surfacing, the submerged look, Barnacle Bones' read
+      *_kit.gd              deckhand, musketeer, powder_runner (the keg), swashbuckler (the lunge),
+                            boarding_bruiser, reef_shark, kraken_arm, corsair_boat, boarding_hook
     concord/                The Concord of Stars (Act IX): its kits ("<id>_kit.gd", loaded by name after the
                             City's) and bosses ("boss_<id>.gd", phase 2), and the act's shared rules:
       concord_rules.gd      Game.concord: owns the beams, Abduction, Terraforming and the Final Harvest;
@@ -3854,6 +3914,17 @@ scripts/
     stages/proving_moon_stage.gd   "concord": true, zones, the "terraforming" overrides, a timeline of the shared
     stages/ark_stage.gd            kinds of all four races, the Final Harvest, placeholder floors / bosses; the
                                    Proving Moon reads "gravity" (ConcordRules.gravity())
+    corsair_enemy_data.gd   The Black Tide's shared kinds (Deckhand, Musketeer, Powder Runner, Swashbuckler, Boarding
+                            Bruiser, Reef Shark, Kraken Arm), the boats (skiff, longboat, raider_ship) and the
+                            grapple hook; the crew / water / strike / boat / hook / keg / lunge keys; the Black Tide's
+                            kind and companions (Act X; cutter_ / galleon_ / maelstrom_enemy_data.gd: each stage's
+                            own, empty until phase 2)
+    corsair_rules_data.gd   Act X's shared rules: DECK, BOARDING (BOAT_CREW, BOAT_PLANKS), SEA (TENTACLE, LEAP),
+                            BLACK_TIDE, the SOUNDS map, the Sea Legs / Barnacle Bones keys
+    stages/cutter_stage.gd         Act X stubs: the Smuggler's Cutter, the Treasure Galleon and the Maelstrom; act 10
+    stages/galleon_stage.gd        (temporary; final slot II), "corsair": true, "deck", "boarding", "sea", a FIXED
+    stages/maelstrom_stage.gd      furniture layout ("fixed"), a timeline of the shared kinds, the Black Tide,
+                                   placeholder look / bosses
     proving_moon_enemy_data.gd  The Proving Moon's table: the Warbeast (Act IX)
     vrask_tal_data.gd       Vrask'Tal's arrival and numbers (the Stalk, the Duel, the Last Trophy and its bomb)
     soul_caster_data.gd     Soul Caster / Apex Predator rules, Trophy Rack keys, First Blood key (Act IX; the spell
@@ -4102,7 +4173,7 @@ Options (after `--`):
 | `--spells=a,b,...` | Any policy first takes these spells (ids from `AbilityData.SPELL_ORDER`, e.g. `bone_spear,soul_siphon,corpse_explosion,plague_cloud` or the later `death_mark,bone_wall,soul_chains` / `wither,raise_dead`) and their evolution passives, which also get ×8 card weight in hands and chests so they are offered reliably (a test-only hook; without `--spells` the draw is unchanged), never banishes them, and stops taking other new actives (or passives) once the free slots are down to the forced spells (or passives) still missing plus one spare, because chests can fill slots too (a hand with nothing else is rerolled or skipped). The `army`, `evolve` and `summon` bots never take a new item that is not on their build list (they reroll or skip), so the newer spells and the later summon classes do not change those baselines (`--classes` / `--spells` items are exempt); the `summon` and `army` bots also keep active slots free for the core classes they still lack (summon: Warriors, Mages, Menders, Warders; army: those plus Archers). Use it to exercise a spell and reach its evolution. |
 | `--passives=a,b,...` | Any policy first takes these passives (ids from `PassiveData.ORDER` except the Pact, e.g. `unholy_precision,unholy_resilience` or `blood_scent,mournsong,siegecraft`) exactly like the `--spells` items (score, ×8 card weight, slot reservation, never banished), so a passive's effect can be exercised. |
 | Bone Golem (content wave 2) | `--classes=bone_golem,...` and `--passives=grave_masonry` force the locked Golem and its passive. A run that had either prints a `bone golem` line: `absorbed=<n> max_growth=<%> bulwarks=<n> titan=<bool> bone_bastion_prevented=<dmg>`, then its level, alive / capacity, deaths, damage by source (slams with their volleys, splash, the Titan's wall), slams and slam hits, planted seconds, taunts, Grave Masonry's level and damage prevented, the Titan's heal, barriers and walls, and whether Bone Bastion was active. |
-| `--stage=ID` | Stage to play: `graveyard` (default), `crimson_march`, `sanctum`, the Act II stages `harbour`, `archive` and `spire`, the Act III stages `wastes`, `assembly` and `citadel`, the Act IV stages `ilion`, `olympus` and `underworld`, the Act V stages `province`, `kurogane` and `sun_road`, the Act VI stages `burning_gate`, `silk_palace` and `pandemonium`, the Act VII stages `ravensmoor`, `witchwood` and `castle_sanguis` (the summary adds the `bloodfeast`, `night wings`, `blood moon`, `court kinds`, `endless feast` and `court stage` lines; `--boss=vargr\|isolde\|carmilla`), the Act VIII stages `skid_row`, `fort_kessler` and `liberty_heights` (city blocks; the summary adds the `city blocks`, `armour`, `supers`, `civilians`, `escalation`, `city kinds`, `martial law` and `city stage` lines; `--boss=don_marrow\|harrow\|paragon`; `--spawn=` takes `civilian`, `street_thug`, `gang_gunner`, `riot_cop`, `squad_car`, `swat_breacher`, `field_medic`, `rifleman`, `tank`, `blitz` and `city_wreck`, Skid Row's `armoured_limo`, `big_sal` and `bounty_board`, and Fort Kessler's `machine_gunner`, `attack_helicopter` and `mammoth`; Skid Row adds `skid row` (Big Sal, the Bounty, No Witnesses), `tear gas`, `big sal` and `don marrow` lines, Fort Kessler adds the `fort kessler`, `fort kessler kinds`, `mammoth`, `fort kessler threats` (top summon-damage and summon-death sources) and `harrow` lines, and on any stage `act VIII spell` / `act VIII passives` when Hearse Run, Black Car, Kevlar Bones, Bone Mines, Tripwire or Armour-Piercing Bones were taken), or the Act IX stages `crash_site`, `proving_moon` and `ark` (see *Act IX* above). Stage locks are ignored. Act II runs print a `dread` line (peak, average, end, Dread calmed by kills, seconds per 25-Dread step, Dread by source) and a `claims` line (claims, Thralls freed, expired, still risen at the end, refusals by the cap, claims by class). Gullhaven adds `tide` (level, seawall, High Water, surges and shoves, seconds in water for you / summons / enemies / swimmers), `harbour` and `harbour events` (buoys sunk and when, tolls, wave and trickle size, caches and chests, the Harbourmaster), `harbour kinds` / `harbour tricks` (also on any stage where a Harbour kind spawned, e.g. `--spawn=deep_kin@60x3`), `merrow` (when he is the boss, also `--boss=merrow`), `act II spell` (Undertow when learned) and `act II passives` (Salt of the Deep, Brinewalker). |
+| `--stage=ID` | Stage to play: `graveyard` (default), `crimson_march`, `sanctum`, the Act II stages `harbour`, `archive` and `spire`, the Act III stages `wastes`, `assembly` and `citadel`, the Act IV stages `ilion`, `olympus` and `underworld`, the Act V stages `province`, `kurogane` and `sun_road`, the Act VI stages `burning_gate`, `silk_palace` and `pandemonium`, the Act VII stages `ravensmoor`, `witchwood` and `castle_sanguis` (the summary adds the `bloodfeast`, `night wings`, `blood moon`, `court kinds`, `endless feast` and `court stage` lines; `--boss=vargr\|isolde\|carmilla`), the Act VIII stages `skid_row`, `fort_kessler` and `liberty_heights` (city blocks; the summary adds the `city blocks`, `armour`, `supers`, `civilians`, `escalation`, `city kinds`, `martial law` and `city stage` lines; `--boss=don_marrow\|harrow\|paragon`; `--spawn=` takes `civilian`, `street_thug`, `gang_gunner`, `riot_cop`, `squad_car`, `swat_breacher`, `field_medic`, `rifleman`, `tank`, `blitz` and `city_wreck`, Skid Row's `armoured_limo`, `big_sal` and `bounty_board`, and Fort Kessler's `machine_gunner`, `attack_helicopter` and `mammoth`; Skid Row adds `skid row` (Big Sal, the Bounty, No Witnesses), `tear gas`, `big sal` and `don marrow` lines, Fort Kessler adds the `fort kessler`, `fort kessler kinds`, `mammoth`, `fort kessler threats` (top summon-damage and summon-death sources) and `harrow` lines, and on any stage `act VIII spell` / `act VIII passives` when Hearse Run, Black Car, Kevlar Bones, Bone Mines, Tripwire or Armour-Piercing Bones were taken), the Act IX stages `crash_site`, `proving_moon` and `ark` (see *Act IX* above), or the Act X stages `cutter`, `galleon` and `maelstrom` (see *Act X: the Black Tide* above). Stage locks are ignored. Act II runs print a `dread` line (peak, average, end, Dread calmed by kills, seconds per 25-Dread step, Dread by source) and a `claims` line (claims, Thralls freed, expired, still risen at the end, refusals by the cap, claims by class). Gullhaven adds `tide` (level, seawall, High Water, surges and shoves, seconds in water for you / summons / enemies / swimmers), `harbour` and `harbour events` (buoys sunk and when, tolls, wave and trickle size, caches and chests, the Harbourmaster), `harbour kinds` / `harbour tricks` (also on any stage where a Harbour kind spawned, e.g. `--spawn=deep_kin@60x3`), `merrow` (when he is the boss, also `--boss=merrow`), `act II spell` (Undertow when learned) and `act II passives` (Salt of the Deep, Brinewalker). |
 | (the Hollow Archive) | `--stage=archive` adds `archive` (tomes burned and when, Nothing Unwritten, seconds in ink / spores, the orrery's risings, turns and pushes, the Librarian), `archive rifts` (opened and when, closed early, closed by themselves, cultists spat out) and `archive events` lines; any Archive kind adds `archive enemies` (spawned / killed per kind), `archive kits` (curses, wraith rises and dives, spore clouds and their summon damage, mass splits, Librarian beams, summons turned, lashes, kills) and `archive hazards`; the Archivist adds `archivist` (phase times, kill time, pages and their hits, Footnotes and the damage wasted on copies, Erasure steps and pushes); Forbidden Verse adds `act ii spells`, Marginalia / Iron Mind `act ii passives`. `--spawn=` takes `scribe`, `ink_wraith`, `spore_pilgrim`, `gibbering_mass`, `librarian`, `archive_rift`, `unwritten_one`; `--boss=archivist`; `--character=heretic_scribe`. |
 | (Act III) | `--stage=wastes\|assembly\|citadel` (the Act III stubs) prints `line of fire` (shots fired, rails, arcs; stopped by summons, absorbed by barriers, stopped by Bone Walls, Orb intercepts; reached you and the damage; expired, capped, peak), `lock-on` (lines painted on you / on summons, refused at the cap, fired, cancelled by a slain Spotter, rails stopped by summons or reaching you, most lines at once), `steel` (machine and cyborg kills, Grave Gunners raised per raising effect, their damage and kills), `purge protocol` (orbital salvos and strikes, hits), `empire kinds` (spawned / killed and damage per kind), `empire stage` and `ranged share` (the share of Empire spawns that attack from range; every Act III stage). The Empire's lines also print on any stage where an Empire kind was forced: `--spawn=scout_drone@60x10,line_trooper@90x6,spotter@120`. Grave Gunners need a raising effect, e.g. `--spells=death_mark` or `--ultimate=grave_tide`; `--boss=kestrel\|motherboard\|deus_ex_machina`. The Scrap Wastes (`--stage=wastes`) adds `wastes` (pylons raised / destroyed and when, the share of shooter reach samples boosted, shrunk or storm-halved, storms, the Trojan Horse, objective Soul Ash), `wastes kinds` (Aegis shield blocks and breaks, mortar shells, rockets launched / intercepted / hitting you / shot down, decoys; also wherever a Wastes kind was forced, e.g. `--spawn=aegis_bot@60x6,mortar_walker@90x2,trojan_horse@120`), `trojan horse` and `kestrel` (when she is the boss, also `--boss=kestrel`). On any stage, `act III spell` (Death Ray when learned, e.g. `--spells=death_ray`) and `act III passives` (Conductive Marrow, Lead-Lined Bones, e.g. `--passives=lead_lined_bones`). |
 | (Act IV) | `--stage=ilion\|olympus\|underworld` (the Act IV stubs) prints `divine wrath` (the stage's kind; salvos and strikes per kind: waves, bolts, fissures; damage to enemies with the kills, to summons and to you; fodder drowned, lightning chains, corpses swallowed, shades spat, capped strikes, whether the Twilight began), `phalanx` (walls formed, bodies locked, front hits by shots and melee with the damage prevented, flank breaks, most bodies locked at once), `glory` (stacks gained, the peak, heroes killed and with how many stacks, chests and Soul Ash bounty), `pantheon kinds` (spawned / killed and damage per kind) and `pantheon stage`. The lines also print on any stage where a Pantheon kind was forced: `--spawn=hoplite@60x8,hero@90,shade_of_dead@30x12,bronze_titan@120`; `--boss=achilles\|zeus\|hades` (placeholder boss scripts until phase 2). |
