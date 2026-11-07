@@ -535,6 +535,39 @@ const HEIGHTS: Dictionary = {
 	"player/starborn_deathlord": 56.0,  # TUNING (not in GDD) skin art: black iron, a crown above
 	"summons/ghost_saucer": 34.0,  # TUNING (not in GDD) a raised saucer, a machine: bone-grey hull, soul-light, 52 x 30 art px plus 2 empty rows above and below for the hover bob; hover strip
 	"summons/black_mothership": 40.0,  # TUNING (not in GDD) its evolution, larger, black and soul-lit, 54 x 36 art px plus 2 empty rows above and below; hover strip
+	# --- The Black Tide (assets/sprites/corsair/, player/, summons/; docs/tide/ART_MANIFEST.md) ---
+	"corsair/deckhand": 40.0,  # TUNING (not in GDD) a DECKHAND, male; walk strip
+	"corsair/musketeer": 42.0,  # TUNING (not in GDD) a MUSKETEER, male; walk strip
+	"corsair/powder_runner": 40.0,  # TUNING (not in GDD) a POWDER RUNNER, male; walk strip
+	"corsair/swashbuckler": 44.0,  # TUNING (not in GDD) a SWASHBUCKLER, female; walk strip; bust rig + idle strip
+	"corsair/grappler": 42.0,  # TUNING (not in GDD) a GRAPPLER, male; walk strip
+	"corsair/gunnery_mate": 42.0,  # TUNING (not in GDD) a GUNNERY MATE, female; walk strip; bust rig + idle strip
+	"corsair/boatswain": 42.0,  # TUNING (not in GDD) a BOATSWAIN, male; walk strip
+	"corsair/voodoo_navigator": 44.0,  # TUNING (not in GDD) a VOODOO NAVIGATOR, female; walk strip; bust rig + idle strip
+	"corsair/boarding_bruiser": 56.0,  # TUNING (not in GDD) a BOARDING BRUISER, male; walk strip
+	"corsair/reef_shark": 48.0,  # TUNING (not in GDD) a REEF SHARK, creature (a hover still: 2 empty rows above and below the art for the bob; hover strip)
+	"corsair/hull_crab": 44.0,  # TUNING (not in GDD) a GIANT HULL CRAB, creature (a hover still: 2 empty rows above and below the art for the bob; hover strip)
+	"corsair/kraken_arm": 60.0,  # TUNING (not in GDD) a KRAKEN ARM, creature (a hover still: 2 empty rows above and below the art for the bob; hover strip)
+	"corsair/sea_serpent": 56.0,  # TUNING (not in GDD) a SEA SERPENT, creature (a hover still: 2 empty rows above and below the art for the bob; hover strip)
+	"corsair/skiff": 34.0,  # TUNING (not in GDD) a small SKIFF rowing boat seen from nearly directly ABOVE (a plan view with a sl, an object (a boat) (a hover still: 2 empty rows above and below the art for the bob; hover strip)
+	"corsair/longboat": 42.0,  # TUNING (not in GDD) a LONGBOAT seen from nearly directly ABOVE (a plan view with a slight 3/4 tilt), an object (a boat) (a hover still: 2 empty rows above and below the art for the bob; hover strip)
+	"corsair/raider_ship": 64.0,  # TUNING (not in GDD) a RAIDER SHIP, an object (a boat) (a hover still: 2 empty rows above and below the art for the bob; hover strip)
+	"corsair/gunboat": 50.0,  # TUNING (not in GDD) a GUNBOAT, an object (a boat) (a hover still: 2 empty rows above and below the art for the bob; hover strip)
+	"corsair/ram_longboat": 48.0,  # TUNING (not in GDD) a RAM LONGBOAT, an object (a boat) (a hover still: 2 empty rows above and below the art for the bob; hover strip)
+	"corsair/ghost_longboat": 42.0,  # TUNING (not in GDD) a GHOST LONGBOAT seen from nearly directly ABOVE (a plan view with a slight 3/4 , an object (a boat) (a hover still: 2 empty rows above and below the art for the bob; hover strip)
+	"corsair/grapple_hook": 16.0,  # TUNING (not in GDD) a GRAPPLING HOOK, an object
+	"corsair/boarding_plank": 16.0,  # TUNING (not in GDD) a BOARDING PLANK, an object
+	"corsair/bosun_gorran": 64.0,  # TUNING (not in GDD) BOSUN GORRAN, male; walk strip
+	"corsair/old_hollow_eye": 76.0,  # TUNING (not in GDD) OLD HOLLOW-EYE, creature (a hover still: 2 empty rows above and below the art for the bob; hover strip)
+	"corsair/ghost_bosun": 48.0,  # TUNING (not in GDD) THE GHOST BOSUN, male; walk strip
+	"corsair/crow": 88.0,  # TUNING (not in GDD) CAPTAIN EZEKIEL CROW, male; walk strip
+	"corsair/marrec": 92.0,  # TUNING (not in GDD) ADMIRAL ISABEAU MARREC, female; walk strip; bust rig + idle strip
+	"corsair/vandermere": 100.0,  # TUNING (not in GDD) CAPTAIN CORNELIUS VANDERMERE, male (a hover still: 2 empty rows above and below the art for the bob; hover strip)
+	"player/marooned_quartermaster": 56.0,  # TUNING (not in GDD) THE MAROONED QUARTERMASTER, male; walk strip
+	"player/corsair_queen": 56.0,  # TUNING (not in GDD) THE CORSAIR QUEEN, female; walk strip; bust rig + idle strip
+	"player/ghost_helmsman": 56.0,  # TUNING (not in GDD) THE GHOST HELMSMAN, male; walk strip
+	"summons/powder_wraith": 44.0,  # TUNING (not in GDD) a POWDER WRAITH, undead skeleton; walk strip
+	"summons/magazine_lord": 52.0,  # TUNING (not in GDD) a MAGAZINE LORD, undead skeleton; walk strip
 }
 
 ## Height (world px) used for a key missing from HEIGHTS.

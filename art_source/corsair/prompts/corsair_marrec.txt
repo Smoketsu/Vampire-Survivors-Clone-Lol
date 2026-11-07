@@ -1,0 +1,12 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, a confident pose
+
+LOW-RESOLUTION pixel art: the whole SUBJECT is only 92 pixels tall and about 70 wide, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims, lacing or engravings.
+
+Subject (female): ADMIRAL ISABEAU MARREC, THE SEA WOLF, a FEMALE admiral boss in the game's figure-redesign style (an extremely exaggerated hourglass figure, a very full bust, a tiny cinched waist, very wide hips), glamorous and commanding, FACE CLEARLY VISIBLE, long brown hair, holding a curved sabre aloft: a navy tricorn with gold trim, a long NAVY COAT with gold epaulettes and gold buttons over a cream blouse, a brass-buckled belt, tight dark trousers and tall black boots. Chest and hips FULLY COVERED, never nude, tasteful. Signature shape: the hourglass figure, the gold-trimmed navy coat and the sabre.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: tarred oak #2B1D14 #4A3220 #7A5632; sailcloth cream #8F8466 #D6CBA4 #F0E9CE; brass #7A5A1C #C4912A #EBC85A; powder grey #2E3239 #5E636C #9498A0; sash red #6A1620 #B02A30 #E2563F; lantern amber #B0661C #F2A63A #FFDF8A; navy #0E1A33 #1B3560 #2F5F96; weathered skin #5C3824 #96623E #C68B5E
+
+Outline: a clean 1-pixel dark outline around the whole subject in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the subject), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark. Draw ONLY ONE subject.
+Attached: (1) a game sprite for pixel size, outline weight and flat look (not its subject or colours); (2) concept art of this unit for its shape and colours only (do NOT copy its painted shading or detail level; redraw it as chunky low-resolution pixel art).

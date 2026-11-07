@@ -1,0 +1,8 @@
+A sheet of 4 separate pixel-art game ICON SYMBOLS (each about 24 pixels wide on a coarse grid) in one row, evenly spaced with wide empty gaps between them, on a FULLY TRANSPARENT background (real alpha). Each is simple, bold and centred in its share of the image, drawn as chunky low-resolution pixel art (shown enlarged with crisp square pixels, nearest-neighbour, 1-pixel dark outline, flat colours, at most 3 shades per colour, light from the top-left). No frame, no badge background, no ground shadow, no text, no letters.
+From left to right:
+1. BARNACLE BONES: a bone-white ribcage encrusted with grey-white barnacles and a bit of seaweed
+2. NOT ONE ABOARD: a small rowboat with a grapple rope cut, a cutlass slashing the rope
+3. WALKED THE PLANK: a wooden plank over foam water with a splash at its end
+4. DEAD MEN TELL TALES: a pale green ghost skull wearing a tricorn, a rolled scroll beside it
+Colours: tarred oak #2B1D14 #4A3220 #7A5632; brass #7A5A1C #C4912A #EBC85A; powder grey #2E3239 #5E636C #9498A0; sailcloth cream #8F8466 #D6CBA4 #F0E9CE; sash red #6A1620 #B02A30 #E2563F; lantern amber #B0661C #F2A63A #FFDF8A; navy #0E1A33 #1B3560 #2F5F96; foam white #8FB4D2 #D8E9F4; ghost green #1D4F4A #46A78F #B7F0DC; dark #0B0A10.
+Attached: an approved icon of this game: match its pixel size, outline weight and flat look (only the symbol, not its frame).
