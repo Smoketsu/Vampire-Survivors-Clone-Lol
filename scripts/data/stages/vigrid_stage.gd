@@ -33,10 +33,10 @@ const BOSS_TIME: float = 1020.0  # TUNING (not in GDD) 17:00, as on every stage
 ## Enemy max-HP multiplier of this stage on top of the shared time scaling
 ## (final slot VI: a hair above the Shogunate's 1.55 / 1.6 / 1.65; the step
 ## between the stages goes in HP, the Act IV lesson).
-const ENEMY_HP_MULT: float = 1.7  # TUNING (not in GDD) placeholder, tuned in the act's bot passes
+const ENEMY_HP_MULT: float = 1.65  # foundation pass: 1.7 -> 1.65 (the seed-7 army bot broke at 10:00); TUNING (not in GDD) placeholder, tuned in the act's bot passes
 ## Enemy damage multiplier of this stage on top of the shared time scaling
 ## (between Olympus's 1.3 and the Shogunate's 1.5).
-const ENEMY_DAMAGE_MULT: float = 1.5  # TUNING (not in GDD) placeholder, tuned in the act's bot passes
+const ENEMY_DAMAGE_MULT: float = 1.45  # foundation pass: 1.5 -> 1.45; TUNING (not in GDD) placeholder, tuned in the act's bot passes
 ## Elapsed game seconds from which the two multipliers apply to regular
 ## enemies (the boss always gets them).
 const ENEMY_MULT_FROM: float = 420.0  # TUNING (not in GDD) 7:00, as Acts III to IX
@@ -82,32 +82,34 @@ const RECKONING := {
 const RECKONING_OBJECTIVE: String = "RAGNAROK: the sun is gone, the hall's heroes march and the giants burn the field. Endure."
 
 ## Continuous spawning segments (keys as GraveyardStage.SEGMENTS): a plain ramp
-## of the shared kinds (placeholder), the stage's lead kind weighted up.
+## of the shared kinds (placeholder), the stage's lead kind weighted up (the
+## frost giants a third of the first pass's: four or more heavies at once broke
+## the seed-7 army bot's ring at 10:00).
 ## Berserkers, valkyries and giants stay rare (elites and heavies).
 const SEGMENTS := [
 	{"start": 0.0, "rate": 1.4, "max_alive": 30,  # TUNING (not in GDD)
 		"weights": {"raider": 1.0},
 		"objective": "The Frozen Sea: the last battle begins in the cold. Keep near the braziers"},
 	{"start": 60.0, "rate": 1.7, "max_alive": 40,  # TUNING (not in GDD)
-		"weights": {"raider": 0.784, "shield_maiden": 0.196, "frost_giant": 0.02},
+		"weights": {"raider": 0.784, "shield_maiden": 0.196, "frost_giant": 0.007},
 		"objective": "Shield-maidens! Their bash throws your dead out of the ring"},
 	{"start": 150.0, "rate": 2.0, "max_alive": 50,  # TUNING (not in GDD)
-		"weights": {"raider": 0.608, "shield_maiden": 0.196, "draugr": 0.118, "wolf_of_the_wastes": 0.059, "frost_giant": 0.02},
+		"weights": {"raider": 0.608, "shield_maiden": 0.196, "draugr": 0.118, "wolf_of_the_wastes": 0.059, "frost_giant": 0.007},
 		"objective": "Draugr from the barrows: armoured, and their touch is cold"},
 	{"start": 300.0, "rate": 2.3, "max_alive": 60,  # TUNING (not in GDD)
-		"weights": {"raider": 0.49, "shield_maiden": 0.176, "draugr": 0.137, "wolf_of_the_wastes": 0.098, "skald": 0.039, "seer": 0.039, "frost_giant": 0.02},
+		"weights": {"raider": 0.49, "shield_maiden": 0.176, "draugr": 0.137, "wolf_of_the_wastes": 0.098, "skald": 0.039, "seer": 0.039, "frost_giant": 0.007},
 		"objective": "Skalds sing their warriors faster; seers douse braziers and re-carve the stones you take"},
 	{"start": 480.0, "rate": 2.6, "max_alive": 70,  # TUNING (not in GDD)
-		"weights": {"raider": 0.451, "shield_maiden": 0.176, "draugr": 0.137, "wolf_of_the_wastes": 0.098, "skald": 0.039, "seer": 0.039, "berserker": 0.025, "valkyrie": 0.015, "frost_giant": 0.02},
+		"weights": {"raider": 0.451, "shield_maiden": 0.176, "draugr": 0.137, "wolf_of_the_wastes": 0.098, "skald": 0.039, "seer": 0.039, "berserker": 0.025, "valkyrie": 0.015, "frost_giant": 0.007},
 		"objective": "Wounded warriors go berserk: finish them in one blow"},
 	{"start": 720.0, "rate": 2.9, "max_alive": 80,  # TUNING (not in GDD)
-		"weights": {"raider": 0.431, "shield_maiden": 0.176, "draugr": 0.137, "wolf_of_the_wastes": 0.098, "skald": 0.039, "seer": 0.039, "berserker": 0.029, "valkyrie": 0.02, "frost_giant": 0.029},
+		"weights": {"raider": 0.431, "shield_maiden": 0.176, "draugr": 0.137, "wolf_of_the_wastes": 0.098, "skald": 0.039, "seer": 0.039, "berserker": 0.029, "valkyrie": 0.02, "frost_giant": 0.010},
 		"objective": "Frost giants douse the braziers they pass. Stand by one to relight it"},
 	{"start": 900.0, "rate": 3.1, "max_alive": 88,  # TUNING (not in GDD)
-		"weights": {"raider": 0.412, "shield_maiden": 0.176, "draugr": 0.137, "wolf_of_the_wastes": 0.098, "skald": 0.039, "seer": 0.049, "berserker": 0.034, "valkyrie": 0.02, "frost_giant": 0.034},
+		"weights": {"raider": 0.412, "shield_maiden": 0.176, "draugr": 0.137, "wolf_of_the_wastes": 0.098, "skald": 0.039, "seer": 0.049, "berserker": 0.034, "valkyrie": 0.02, "frost_giant": 0.011},
 		"objective": "The whole north comes south"},
 	{"start": BOSS_TIME, "rate": 2.5, "max_alive": 66,  # TUNING (not in GDD)
-		"weights": {"raider": 0.451, "shield_maiden": 0.176, "draugr": 0.137, "wolf_of_the_wastes": 0.098, "skald": 0.039, "seer": 0.039, "berserker": 0.025, "valkyrie": 0.015, "frost_giant": 0.02},
+		"weights": {"raider": 0.451, "shield_maiden": 0.176, "draugr": 0.137, "wolf_of_the_wastes": 0.098, "skald": 0.039, "seer": 0.039, "berserker": 0.025, "valkyrie": 0.015, "frost_giant": 0.007},
 		"objective": "Odin and Fenrir have come for you"},
 ]
 

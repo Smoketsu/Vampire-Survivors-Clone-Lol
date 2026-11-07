@@ -16,6 +16,8 @@
 ##     (standing, a telegraph circle), then stamps: every body inside takes
 ##     stomp_damage (STOMP_SOURCE) and the summons are thrown stomp_push px
 ##     back.
+## A giant whose row "douses" (the frost giant) first turns aside to a lit
+## brazier near it and stamps it out (NorseKit.douse_step(), the Long Winter).
 ## A giant dying with a boulder in the air takes it with him (the telegraph is
 ## his). No RNG. Stats: giant_boulders, giant_boulder_hits, giant_stomps,
 ## giant_stomp_hits.
@@ -72,6 +74,8 @@ func physics(e: Enemy, delta: float) -> bool:
 			g.shake(2.0)
 			set_phase(e, IDLE)
 		return true
+	if douse_step(e, delta):
+		return true  # The Long Winter: it stamps out a brazier on its way (rows with "douses").
 	var t: Node2D = e.target if e.target != null and is_instance_valid(e.target) else g.player
 	var dist := e.position.distance_to(t.position)
 	if d.has("stomp_every") and _stomp_cd <= 0.0 and dist - body_radius(e, t) <= float(d.get("stomp_radius", 60.0)):

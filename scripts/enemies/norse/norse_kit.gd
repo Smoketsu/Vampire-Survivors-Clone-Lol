@@ -109,6 +109,29 @@ func physics(e: Enemy, delta: float) -> bool:
 ## Rune-Stone the hall holds (RuneStones.ward_mult(), 1 outside every ward),
 ## times a flier's Night Wings test aloft. Exactly 1 for a grounded kind far
 ## from every held stone.
+## THE DOUSER'S DETOUR (the Long Winter; rows with "douses"): while a lit
+## brazier lies within douse_seek px, the kind walks to it and stands by it
+## (LongWinter._douses() puts it out after douse_time s). True while it owns
+## the tick (the kit then skips its own moves). Kits that douse call it from
+## physics() when they are idle.
+func douse_step(e: Enemy, delta: float) -> bool:
+	var g := e.game
+	if not bool(d.get("douses", false)) or g.norse == null or g.norse.winter.braziers.is_empty():
+		return false
+	var w := g.norse.winter
+	var idx := w.nearest_lit(e.position, float(w.cfg["douse_seek"]))
+	if idx < 0:
+		return false
+	var to := w.braziers[idx].pos - e.position
+	if to.length() > float(w.cfg["douse_radius"]) * 0.6:
+		var spd := e.move_speed * (1.0 - e.slow_factor if e.slow_timer > 0.0 else 1.0)
+		e.velocity = to.normalized() * spd + e.sep * spd * EnemyData.SEPARATION_STRENGTH
+		e.position += (e.velocity + e.knockback) * delta
+	else:
+		hold(e)
+	return true
+
+
 func taken_mult(e: Enemy, source: String) -> float:
 	var m := 1.0
 	var g := e.game

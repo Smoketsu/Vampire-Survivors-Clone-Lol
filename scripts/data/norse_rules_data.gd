@@ -49,6 +49,8 @@ const GROUPS: Array[String] = ["warriors", "hall", "wilds"]
 ##   warm_radius    — px around a lit brazier that is warm.
 ##   brazier_radius — px: a brazier's body (drawing and placement).
 ##   douse_radius   — px: a frost giant or seer passing this close douses it.
+##   douse_seek     — px: a douser this close to a lit brazier turns aside to
+##                    it (NorseKit.douse_step(): it passes by on purpose).
 ##   douse_time     — s of the douse's telegraph (the fire gutters; the douser
 ##                    must stay within douse_radius*1.5 or it holds).
 ##   relight_radius — px: the necromancer standing this close relights it.
@@ -69,7 +71,8 @@ const LONG_WINTER := {
 	"tick": 0.5,  # TUNING (not in GDD) s
 	"warm_radius": 220.0,  # Owner decision: "within ~220 px of a lit brazier"
 	"brazier_radius": 12.0,  # TUNING (not in GDD) px (~32 px sprite)
-	"douse_radius": 34.0,  # TUNING (not in GDD) px
+	"douse_radius": 40.0,  # TUNING (not in GDD) px
+	"douse_seek": 170.0,  # TUNING (not in GDD) px
 	"douse_time": 1.2,  # TUNING (not in GDD) s ("a brief telegraph")
 	"relight_radius": 60.0,  # Owner decision: "within ~60 px"
 	"relight_time": 2.0,  # Owner decision: "for 2 s"

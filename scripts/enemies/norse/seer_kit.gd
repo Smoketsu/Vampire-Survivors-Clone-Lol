@@ -12,6 +12,8 @@
 ##     BLINDED for curse_time s (CombatResolver.blind_unit(), the one summon
 ##     blind path: it keeps to the ring but cannot find a foe: weakened to
 ##     nothing for a while). Her target first, else the nearest summon.
+## Then THE DOUSE (the Long Winter): with no stone to carve, she turns aside
+## to a lit brazier near her and puts it out (NorseKit.douse_step()).
 ## No RNG. Stats: seer_walks (ticks walking to a stone), seer_carve_seconds,
 ## seer_curses, seer_curse_hits.
 class_name SeerKit
@@ -62,6 +64,8 @@ func physics(e: Enemy, delta: float) -> bool:
 				st.carve(idx, delta * float(d.get("carve_rate", 1.0)))
 				g.stat_add("seer_carve_seconds", delta)
 			return true
+	if douse_step(e, delta):
+		return true  # The Long Winter: she puts out a brazier on her way.
 	if phase == IDLE and _cd <= 0.0:
 		var u := _pick(e)
 		if u != null:

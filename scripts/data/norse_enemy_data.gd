@@ -156,7 +156,7 @@ const ENEMIES := {
 		"display_name": "Shield-Maiden",
 		"max_hp": 44.0,  # TUNING (not in GDD) a soldier (Samurai 42)
 		"move_speed": 52.0,  # TUNING (not in GDD) px/s
-		"damage": 5.0,  # TUNING (not in GDD) a spear thrust, before the time scaling
+		"damage": 4.0,  # TUNING (not in GDD) a spear thrust, before the time scaling (foundation pass: 5 -> 4; a wounded maiden goes berserk)
 		"attack_interval": 1.15,  # TUNING (not in GDD) s
 		"attack_range": 13.0,  # TUNING (not in GDD) px; the spear outreaches an axe
 		"radius": 9.0,  # TUNING (not in GDD) px (~42 px sprite)
@@ -179,7 +179,7 @@ const ENEMIES := {
 		"bash_range": 22.0,  # TUNING (not in GDD) px from her edge to the summon's
 		"bash_windup": 0.45,  # TUNING (not in GDD) s (she draws her shield back)
 		"bash_push": 46.0,  # TUNING (not in GDD) px the summon is thrown back
-		"bash_damage": 4.0,  # TUNING (not in GDD) before the time scaling
+		"bash_damage": 3.0,  # TUNING (not in GDD) before the time scaling (foundation pass: 4 -> 3)
 	},  # The shield-maiden.
 	# Warriors, elite: bear pelt, two axes, always in the fury (owner-approved
 	# proposal: "Burst; Bone Wall").
@@ -187,8 +187,8 @@ const ENEMIES := {
 		"display_name": "Berserker",
 		"max_hp": 150.0,  # TUNING (not in GDD) an elite (Ninja 30 x elite; Vrask hunter 150)
 		"move_speed": 60.0,  # TUNING (not in GDD) px/s before the fury's +30%
-		"damage": 8.0,  # TUNING (not in GDD) per axe, before the fury and the time scaling
-		"attack_interval": 0.8,  # TUNING (not in GDD) s: two axes
+		"damage": 5.0,  # TUNING (not in GDD) per axe, before the fury and the time scaling (foundation pass: 8 -> 5, the fury and a skald's song stack on it; the seed-7 Vigrid bot died to berserkers)
+		"attack_interval": 0.9,  # TUNING (not in GDD) s: two axes (foundation pass: 0.8 -> 0.9)
 		"attack_range": 9.0,  # TUNING (not in GDD) px
 		"radius": 12.0,  # TUNING (not in GDD) px (~48 px sprite)
 		"armor": 0.1,  # TUNING (not in GDD) a bear pelt
@@ -271,7 +271,7 @@ const ENEMIES := {
 		"dive_rise": 0.8,  # TUNING (not in GDD) s (the telegraph circle)
 		"dive_fall": 0.25,  # TUNING (not in GDD) s
 		"dive_radius": 36.0,  # TUNING (not in GDD) px
-		"dive_damage": 9.0,  # TUNING (not in GDD) before the time scaling
+		"dive_damage": 7.0,  # TUNING (not in GDD) before the time scaling (foundation pass: 9 -> 7)
 		"dive_push": 24.0,  # TUNING (not in GDD) px
 		"landed_time": 1.3,  # TUNING (not in GDD) s on the ground after a dive (every blow lands)
 	},  # The valkyrie.
@@ -388,16 +388,16 @@ const ENEMIES := {
 		"group": "wilds",
 		"elite_kind": true,
 		"douses": true,  # Owner decision Nov 7, 2026: "Frost giants and seers douse a brazier they pass"
-		"boulder_every": 6.5,  # TUNING (not in GDD) s
+		"boulder_every": 8.0,  # TUNING (not in GDD) s (foundation pass: 6.5 -> 8, the seed-7 Vigrid ring broke under four giants at 11:00)
 		"boulder_range_min": 90.0,  # TUNING (not in GDD) px (closer, it stomps)
 		"boulder_range_max": 340.0,  # TUNING (not in GDD) px
-		"boulder_radius": 40.0,  # TUNING (not in GDD) px of the landing circle
+		"boulder_radius": 34.0,  # TUNING (not in GDD) px of the landing circle (foundation pass: 40 -> 34)
 		"boulder_flight": 1.2,  # TUNING (not in GDD) s from the throw to the landing (the telegraph)
-		"boulder_damage": 12.0,  # TUNING (not in GDD) before the time scaling
-		"stomp_every": 5.0,  # TUNING (not in GDD) s
-		"stomp_radius": 60.0,  # TUNING (not in GDD) px
+		"boulder_damage": 5.0,  # TUNING (not in GDD) before the time scaling (foundation pass: 12 -> 5: it lands on a packed ring)
+		"stomp_every": 6.0,  # TUNING (not in GDD) s (foundation pass: 5 -> 6)
+		"stomp_radius": 52.0,  # TUNING (not in GDD) px (foundation pass: 60 -> 52)
 		"stomp_windup": 0.7,  # TUNING (not in GDD) s
-		"stomp_damage": 9.0,  # TUNING (not in GDD) before the time scaling
+		"stomp_damage": 5.0,  # TUNING (not in GDD) before the time scaling (foundation pass: 9 -> 5)
 		"stomp_push": 30.0,  # TUNING (not in GDD) px
 	},  # The frost giant.
 	# Wilds, heavy (male): the fire-giants of the south, Ragnarök's heavy

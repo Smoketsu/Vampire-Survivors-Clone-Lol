@@ -22,8 +22,10 @@
 ##     is above 0 the summons also take frostbite (that share of their max HP a
 ##     second, CombatResolver.damage_unit(), FROSTBITE_SOURCE). Norse kinds are
 ##     born to the cold: nothing here ever reads an enemy.
-##   * DOUSING: a lit brazier with a Norse kind whose row "douses" (the frost
-##     giant, the seer) within douse_radius px gutters (a flicker, the douse's
+##   * DOUSING: a Norse kind whose row "douses" (the frost giant, the seer)
+##     turns aside to a lit brazier within douse_seek px and stands at it
+##     (NorseKit.douse_step()); a lit brazier with a douser within douse_radius
+##     px gutters (a flicker, the douse's
 ##     telegraph); douse_time s of it staying within 1.5 x douse_radius puts the
 ##     brazier OUT.
 ##   * RELIGHTING: a standing necromancer within relight_radius px of a brazier
@@ -179,6 +181,22 @@ func longest_out() -> float:
 		if not b.lit:
 			m = maxf(m, game.elapsed - b.out_since)
 	return m
+
+
+## Index of the nearest LIT brazier within `reach` px of `p` (a douser's
+## detour, NorseKit.douse_step()), or -1.
+func nearest_lit(p: Vector2, reach: float) -> int:
+	var best := -1
+	var best_d := reach * reach
+	for i in braziers.size():
+		var b := braziers[i]
+		if not b.lit:
+			continue
+		var dsq := b.pos.distance_squared_to(p)
+		if dsq < best_d:
+			best_d = dsq
+			best = i
+	return best
 
 
 ## Lit braziers now.
