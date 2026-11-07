@@ -14,125 +14,68 @@
  "shots": [
   {
    "id": "s0",
-   "stage": "sanctum",
+   "stage": "crimson_march",
    "seed": 5,
-   "start": 620,
-   "seconds": 5.6,
+   "start": 600,
+   "seconds": 4.6,
    "extra": [
     "--policy=summon",
-    "--classes=bone_hound,abomination,gargoyle,frost_wraith",
-    "--passives=blood_scent,bone_plating,unholy_resilience,soul_recycling"
+    "--classes=bone_hound",
+    "--passives=blood_scent"
    ],
-   "texts": [
-    {
-     "text": "Summons Evolve",
-     "font": "jersey",
-     "size": 57,
-     "scale": 2,
-     "color": "cream",
-     "y": 230,
-     "from": 0.0,
-     "to": 5.6
-    },
-    {
-     "text": "into Monsters!",
-     "font": "jersey",
-     "size": 57,
-     "scale": 2,
-     "color": "gold",
-     "y": 352,
-     "from": 0.0,
-     "to": 5.6
-    }
-   ]
+   "texts": []
   },
   {
    "id": "s1",
    "stage": "sanctum",
    "seed": 5,
-   "start": 700,
-   "seconds": 5.6,
+   "start": 600,
+   "seconds": 4.6,
    "extra": [
     "--policy=summon",
-    "--classes=bone_hound,abomination,gargoyle,frost_wraith",
-    "--passives=blood_scent,bone_plating,unholy_resilience,soul_recycling"
+    "--classes=abomination",
+    "--passives=bone_plating"
    ],
-   "texts": [
-    {
-     "text": "Hellhounds,",
-     "font": "jersey",
-     "size": 57,
-     "scale": 2,
-     "color": "cream",
-     "y": 230,
-     "from": 0.0,
-     "to": 5.6
-    },
-    {
-     "text": "Bone Colossi,",
-     "font": "jersey",
-     "size": 57,
-     "scale": 2,
-     "color": "cream",
-     "y": 352,
-     "from": 0.0,
-     "to": 5.6
-    },
-    {
-     "text": "Winter Revenants!",
-     "font": "jersey",
-     "size": 57,
-     "scale": 2,
-     "color": "gold",
-     "y": 474,
-     "from": 0.0,
-     "to": 5.6
-    }
-   ]
+   "texts": []
   },
   {
    "id": "s2",
-   "stage": "sanctum",
+   "stage": "graveyard",
    "seed": 5,
-   "start": 840,
-   "seconds": 5.6,
+   "start": 800,
+   "seconds": 4.6,
    "extra": [
     "--policy=summon",
-    "--classes=bone_hound,abomination,gargoyle,frost_wraith",
-    "--passives=blood_scent,bone_plating,unholy_resilience,soul_recycling"
+    "--classes=frost_wraith",
+    "--passives=soul_recycling"
    ],
-   "texts": [
-    {
-     "text": "Hellhounds,",
-     "font": "jersey",
-     "size": 57,
-     "scale": 2,
-     "color": "cream",
-     "y": 230,
-     "from": 0.0,
-     "to": 5.6
-    },
-    {
-     "text": "Bone Colossi,",
-     "font": "jersey",
-     "size": 57,
-     "scale": 2,
-     "color": "cream",
-     "y": 352,
-     "from": 0.0,
-     "to": 5.6
-    },
-    {
-     "text": "Winter Revenants!",
-     "font": "jersey",
-     "size": 57,
-     "scale": 2,
-     "color": "gold",
-     "y": 474,
-     "from": 0.0,
-     "to": 5.6
-    }
-   ]
+   "texts": []
+  },
+  {
+   "id": "s3",
+   "stage": "wastes",
+   "seed": 6,
+   "start": 660,
+   "seconds": 4.6,
+   "extra": [
+    "--policy=summon",
+    "--classes=spawn_of_the_deep",
+    "--passives=crushing_depths"
+   ],
+   "texts": []
+  },
+  {
+   "id": "s4",
+   "stage": "olympus",
+   "seed": 7,
+   "start": 760,
+   "seconds": 4.6,
+   "extra": [
+    "--policy=summon",
+    "--classes=bone_golem",
+    "--passives=grave_masonry"
+   ],
+   "texts": []
   },
   {
    "id": "end",

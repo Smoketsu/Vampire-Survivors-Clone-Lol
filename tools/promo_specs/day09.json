@@ -16,110 +16,61 @@
    "id": "s0",
    "stage": "graveyard",
    "seed": 6,
-   "start": 600,
-   "seconds": 5.6,
+   "start": 640,
+   "seconds": 4.6,
    "extra": [
     "--policy=evolve",
-    "--spells=bone_spear,soul_siphon,corpse_explosion,plague_cloud,death_mark"
+    "--spells=bone_spear,soul_siphon"
    ],
-   "texts": [
-    {
-     "text": "Every Spell Has",
-     "font": "jersey",
-     "size": 57,
-     "scale": 2,
-     "color": "cream",
-     "y": 230,
-     "from": 0.0,
-     "to": 5.6
-    },
-    {
-     "text": "an Evolution!",
-     "font": "jersey",
-     "size": 57,
-     "scale": 2,
-     "color": "gold",
-     "y": 352,
-     "from": 0.0,
-     "to": 5.6
-    }
-   ]
+   "texts": []
   },
   {
    "id": "s1",
-   "stage": "graveyard",
+   "stage": "crimson_march",
    "seed": 6,
-   "start": 660,
-   "seconds": 5.6,
+   "start": 640,
+   "seconds": 4.6,
    "extra": [
     "--policy=evolve",
-    "--spells=bone_spear,soul_siphon,corpse_explosion,plague_cloud,death_mark"
+    "--spells=corpse_explosion,plague_cloud"
    ],
-   "texts": [
-    {
-     "text": "Bone Spear Becomes",
-     "font": "jersey",
-     "size": 57,
-     "scale": 2,
-     "color": "cream",
-     "y": 230,
-     "from": 0.0,
-     "to": 5.6
-    },
-    {
-     "text": "Ossuary Lance!",
-     "font": "jersey",
-     "size": 57,
-     "scale": 2,
-     "color": "gold",
-     "y": 352,
-     "from": 0.0,
-     "to": 5.6
-    }
-   ]
+   "texts": []
   },
   {
    "id": "s2",
-   "stage": "graveyard",
-   "seed": 6,
-   "start": 720,
-   "seconds": 5.6,
+   "stage": "harbour",
+   "seed": 4,
+   "start": 640,
+   "seconds": 4.6,
    "extra": [
     "--policy=evolve",
-    "--spells=bone_spear,soul_siphon,corpse_explosion,plague_cloud,death_mark"
+    "--spells=undertow"
    ],
-   "texts": [
-    {
-     "text": "Soul Rapture,",
-     "font": "jersey",
-     "size": 57,
-     "scale": 2,
-     "color": "cream",
-     "y": 230,
-     "from": 0.0,
-     "to": 5.6
-    },
-    {
-     "text": "Pestilence,",
-     "font": "jersey",
-     "size": 57,
-     "scale": 2,
-     "color": "cream",
-     "y": 352,
-     "from": 0.0,
-     "to": 5.6
-    },
-    {
-     "text": "Grave Eruption!",
-     "font": "jersey",
-     "size": 57,
-     "scale": 2,
-     "color": "gold",
-     "y": 474,
-     "from": 0.0,
-     "to": 5.6
-    }
-   ]
+   "texts": []
+  },
+  {
+   "id": "s3",
+   "stage": "wastes",
+   "seed": 4,
+   "start": 640,
+   "seconds": 4.6,
+   "extra": [
+    "--policy=evolve",
+    "--spells=death_ray"
+   ],
+   "texts": []
+  },
+  {
+   "id": "s4",
+   "stage": "olympus",
+   "seed": 4,
+   "start": 760,
+   "seconds": 4.6,
+   "extra": [
+    "--policy=evolve",
+    "--spells=stolen_thunder"
+   ],
+   "texts": []
   },
   {
    "id": "end",

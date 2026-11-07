@@ -16,117 +16,56 @@
    "id": "s0",
    "stage": "crimson_march",
    "seed": 9,
-   "start": 600,
-   "seconds": 5.6,
+   "start": 330,
+   "seconds": 4.6,
    "extra": [
-    "--classes=abomination,gargoyle,frost_wraith,bone_hound,banshee"
+    "--classes=abomination,gargoyle"
    ],
-   "texts": [
-    {
-     "text": "Abominations,",
-     "font": "jersey",
-     "size": 57,
-     "scale": 2,
-     "color": "cream",
-     "y": 230,
-     "from": 0.0,
-     "to": 5.6
-    },
-    {
-     "text": "Gargoyles, Wraiths,",
-     "font": "jersey",
-     "size": 57,
-     "scale": 2,
-     "color": "cream",
-     "y": 352,
-     "from": 0.0,
-     "to": 5.6
-    },
-    {
-     "text": "Hounds, Banshees!",
-     "font": "jersey",
-     "size": 57,
-     "scale": 2,
-     "color": "gold",
-     "y": 474,
-     "from": 0.0,
-     "to": 5.6
-    }
-   ]
+   "texts": []
   },
   {
    "id": "s1",
-   "stage": "crimson_march",
+   "stage": "graveyard",
    "seed": 9,
-   "start": 720,
-   "seconds": 5.6,
+   "start": 330,
+   "seconds": 4.6,
    "extra": [
-    "--classes=abomination,gargoyle,frost_wraith,bone_hound,banshee"
+    "--classes=frost_wraith,bone_hound"
    ],
-   "texts": [
-    {
-     "text": "Abominations,",
-     "font": "jersey",
-     "size": 57,
-     "scale": 2,
-     "color": "cream",
-     "y": 230,
-     "from": 0.0,
-     "to": 5.6
-    },
-    {
-     "text": "Gargoyles, Wraiths,",
-     "font": "jersey",
-     "size": 57,
-     "scale": 2,
-     "color": "cream",
-     "y": 352,
-     "from": 0.0,
-     "to": 5.6
-    },
-    {
-     "text": "Hounds, Banshees!",
-     "font": "jersey",
-     "size": 57,
-     "scale": 2,
-     "color": "gold",
-     "y": 474,
-     "from": 0.0,
-     "to": 5.6
-    }
-   ]
+   "texts": []
   },
   {
    "id": "s2",
    "stage": "sanctum",
    "seed": 9,
-   "start": 700,
-   "seconds": 5.6,
+   "start": 450,
+   "seconds": 4.6,
    "extra": [
-    "--classes=corpse_catapult,bone_golem,abomination,banshee"
+    "--classes=banshee"
    ],
-   "texts": [
-    {
-     "text": "Catapults, Golems",
-     "font": "jersey",
-     "size": 57,
-     "scale": 2,
-     "color": "cream",
-     "y": 230,
-     "from": 0.0,
-     "to": 5.6
-    },
-    {
-     "text": "and More!",
-     "font": "jersey",
-     "size": 57,
-     "scale": 2,
-     "color": "gold",
-     "y": 352,
-     "from": 0.0,
-     "to": 5.6
-    }
-   ]
+   "texts": []
+  },
+  {
+   "id": "s3",
+   "stage": "harbour",
+   "seed": 9,
+   "start": 450,
+   "seconds": 4.6,
+   "extra": [
+    "--classes=corpse_catapult"
+   ],
+   "texts": []
+  },
+  {
+   "id": "s4",
+   "stage": "ravensmoor",
+   "seed": 9,
+   "start": 330,
+   "seconds": 4.6,
+   "extra": [
+    "--classes=bone_golem"
+   ],
+   "texts": []
   },
   {
    "id": "end",
