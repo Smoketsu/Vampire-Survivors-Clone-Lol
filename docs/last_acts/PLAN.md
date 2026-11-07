@@ -44,6 +44,16 @@ Sprite folders: `assets/sprites/<key>/` (e.g. `corsair/`), concept art in `art_s
   the figure-redesign style (CLAUDE.md), fully clothed. The Host uses starlight white, pale silver, cerulean and dawn rose,
   never crimson or warm gold.
 
+## Playable characters: the art convention (owner, Nov 7, 2026)
+
+Every playable character is a **necromancer of the act's theme, never a member of the enemy faction**. Reference set:
+`assets/sprites/player/necromancer.png`, `bone_oracle.png`, `wither_witch.png`, `ferrywoman.png`, `shrine_maiden.png`,
+`marionette.png`, `lightning_abbess.png`, `grave_kunoichi.png`, `heretic_scribe.png`. The dominant colour is the necromancer's
+**violet / purple** (robes, coat, cloak, dress), with bone-white and soul-teal accents and pale, undead-touched skin; the theme
+shows only in silhouette, cut and props; every character holds a casting focus; **56 px tall, at most ~46 px wide**; the
+reference set's outline and shading; female characters in the figure-redesign style, fully clothed. Character sprites live
+in `assets/sprites/player/`.
+
 ## The gate every phase passes
 
 Stages 1–27 keep their same-seed autotest summaries (`docs/act9/tools/gate.sh` is the model; extend it to the new
