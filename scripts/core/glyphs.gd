@@ -160,7 +160,8 @@ static func draw_enemy(ci: CanvasItem, kind: String, o: Vector2, r: float, flash
 			or SpriteBank.draw(ci, "city/" + kind, o, flash) \
 			or SpriteBank.draw(ci, "concord/" + kind, o, flash) \
 			or SpriteBank.draw(ci, "corsair/" + kind, o, flash) \
-			or SpriteBank.draw(ci, "norse/" + kind, o, flash):
+			or SpriteBank.draw(ci, "norse/" + kind, o, flash) \
+			or SpriteBank.draw(ci, "dynasty/" + kind, o, flash):  # Act XII (temporary): the Necropolis Dynasty's.
 		return
 	match kind:
 		"recruit":
@@ -189,7 +190,8 @@ static func draw_enemy(ci: CanvasItem, kind: String, o: Vector2, r: float, flash
 											if not ConcordGlyphs.draw_enemy(ci, kind, o, r, flash):  # ... else the Concord of Stars' (Act IX) ...
 												if not CorsairGlyphs.draw_enemy(ci, kind, o, r, flash):  # ... else the Black Tide's (Act X) ...
 													if not NorseGlyphs.draw_enemy(ci, kind, o, r, flash):  # ... else the Hall of the Slain's ...
-														EyeGlyphs.draw_enemy(ci, kind, o, r, flash)  # ... else the Ancient Eye's (Act II).
+														if not DynastyGlyphs.draw_enemy(ci, kind, o, r, flash):  # ... else the Necropolis Dynasty's (Act XII, temporary) ...
+															EyeGlyphs.draw_enemy(ci, kind, o, r, flash)  # ... else the Ancient Eye's (Act II).
 
 
 ## Covenant Recruit: small crimson round body, ivory tabard, silver helm, spear.

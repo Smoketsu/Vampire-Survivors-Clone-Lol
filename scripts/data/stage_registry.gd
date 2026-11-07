@@ -19,7 +19,11 @@
 ## 1)"): the Smuggler's Cutter -> the Treasure Galleon -> the Maelstrom,
 ## opened by defeating the Harvester; the Hall of the Slain, temporarily
 ## Act XI, GDD §15.0 "The Hall of the Slain foundation (phase 1)": the Barrow
-## Fields -> Valgard -> Vigrid, opened by defeating Vandermere). One
+## Fields -> Valgard -> Vigrid, opened by defeating Vandermere; temporary Act
+## XII, GDD §15.0 "The Necropolis Dynasty foundation (phase 1)": the
+## Necropolis of Sand -> the Temple of the Lioness -> the Hall of Two Truths,
+## opened by defeating Odin; the reorder pass moves the three acts to their
+## final slots). One
 ## entry per stage, each
 ## the STAGE dictionary of its file under scripts/data/stages/. A run reads
 ## its stage through RunConfig.stage_def() as `Game.stage_def`; nothing else
@@ -72,9 +76,9 @@
 ##                        Olympian Republic, 5 = the Shogunate of the Rising
 ##                        Sun, 6 = the Inferno, 7 = the Sanguine Court,
 ##                        8 = the Last Line, 9 = the Concord of Stars,
-##                        10 = the Black Tide, 11 = the Hall of the Slain
-##                        (TEMPORARY until the reorder pass,
-##                        docs/last_acts/PLAN.md);
+##                        10 = the Black Tide, 11 = the Hall of the Slain,
+##                        12 = the Necropolis Dynasty (TEMPORARY until the
+##                        reorder pass, docs/last_acts/PLAN.md);
 ##                        absent = 1). The stage select shows one
 ##                        act at a time; Act II-only cards (PassiveData "act")
 ##                        are offered only on stages of that act.
@@ -356,6 +360,26 @@
 ##   rune_stones        — the stage's Rune-Stones: any key of
 ##                        NorseRulesData.RUNE_STONES overrides it ({} = the
 ##                        defaults; e.g. its horn "table").
+## --- Act XII (temporary number): the Necropolis Dynasty ---
+##   dynasty            — true: the Necropolis Dynasty's shared rules
+##                        (DynastyRules as Game.dynasty: Rebirth, the Black
+##                        Land, Heka, and the Devourer's Hour when the
+##                        RECKONING has a "devourers_hour" key); ground
+##                        "dynasty" is the placeholder DynastyGround (from the
+##                        "floor" dictionary, styles sand / temple / hall), on
+##                        the normal scattered-obstacle arena.
+##   rebirth            — the stage's Rebirth: any key of
+##                        DynastyRulesData.REBIRTH overrides it ({} = the
+##                        defaults; e.g. "jars_required").
+##   jars               — the stage's own Canopic Jar clock: any key of
+##                        DynastyRulesData.JARS ({} = the stubs' clock; "every"
+##                        0 = off, for a stage that places its jars with
+##                        Rebirth.place_jar()).
+##   quicksand          — any key of DynastyRulesData.QUICKSAND ({} = defaults;
+##                        "chance" 0 = no fixed patches).
+##   sandstorm          — any key of DynastyRulesData.SANDSTORM ({} = defaults).
+##   heka               — any key of DynastyRulesData.HEKA ({} = defaults).
+##   zones              — the Dynasty stubs too: the planned zones.
 class_name StageRegistry
 extends RefCounted
 
@@ -378,7 +402,9 @@ const ORDER := ["graveyard", "crimson_march", "sanctum", "harbour", "archive", "
 	# --- Act X: the Black Tide (temporary act number; final slot II) ---
 	"cutter", "galleon", "maelstrom",
 	# --- Act XI (temporary): the Hall of the Slain ---
-	"barrow_fields", "valgard", "vigrid"]
+	"barrow_fields", "valgard", "vigrid",
+	# --- Act XII (temporary number): the Necropolis Dynasty ---
+	"necropolis", "lioness_temple", "two_truths"]
 ## Stage used when none (or an unknown id) is given.
 const DEFAULT_ID: String = "graveyard"
 ## Stage id -> STAGE dictionary.
@@ -425,6 +451,10 @@ const STAGES := {
 	"barrow_fields": BarrowFieldsStage.STAGE,
 	"valgard": ValgardStage.STAGE,
 	"vigrid": VigridStage.STAGE,  # The Hall of the Slain's finale
+	# --- Act XII (temporary number): the Necropolis Dynasty ---
+	"necropolis": NecropolisStage.STAGE,
+	"lioness_temple": LionessTempleStage.STAGE,
+	"two_truths": TwoTruthsStage.STAGE,  # Temporary Act XII, the finale
 }
 
 ## Acts in order: act number -> {name, subtitle} (stage select tabs).
@@ -449,6 +479,8 @@ const ACTS := {
 	# --- Act XI (temporary): the Hall of the Slain (final slot VI; the reorder
 	# pass renumbers every act from one ordered list) ---
 	11: {"name": "Act XI", "subtitle": "The Hall of the Slain"},
+	# --- Act XII (temporary number; final slot VII): the Necropolis Dynasty ---
+	12: {"name": "Act XII", "subtitle": "The Necropolis Dynasty"},
 }
 
 
@@ -532,4 +564,9 @@ const BOSS_ARRIVALS := {
 	"hrimgar": BarrowFieldsStage.BOSS,
 	"sigrun": ValgardStage.BOSS,
 	"odin": VigridStage.BOSS,  # The Hall of the Slain's finale boss
+	# --- Act XII (temporary number): the Necropolis Dynasty (stubs: each
+	# stage's BOSS until phase 2 gives the boss its own data file) ---
+	"anubis": NecropolisStage.BOSS,
+	"sekhmet": LionessTempleStage.BOSS,
+	"osiris": TwoTruthsStage.BOSS,  # The act's finale boss
 }

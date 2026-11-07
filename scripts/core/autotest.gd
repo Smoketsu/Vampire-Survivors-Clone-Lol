@@ -273,6 +273,15 @@
 ##     Norse rules ran, the summary adds the "long winter", "berserkergang",
 ##     "rune-stones", "norse kinds", "ragnarok" (after 0:00) and (on a Norse
 ##     stage) "norse stage" lines (NorseReport).
+##   * Act XII (temporary number), the Necropolis Dynasty (GDD §15.0 "The
+##     Necropolis Dynasty foundation (phase 1)"):
+##     --stage=necropolis|lioness_temple|two_truths, --spawn= with its kinds
+##     (mummy, mummy_female, scarab_swarm, khopesh_guard, heka_priest,
+##     embalmer, canopic_jar), --boss=anubis|sekhmet|osiris. The bot steps
+##     out of the Devourer's lanes (DynastyRules.danger_push()). When the
+##     Dynasty ran, the summary adds the "rebirth", "black land", "heka",
+##     "dynasty kinds", "devourer's hour" (after 0:00) and (on a Dynasty
+##     stage) "dynasty stage" lines (DynastyReport).
 class_name Autotest
 extends Node
 
@@ -1250,6 +1259,8 @@ func _danger_at(pos: Vector2) -> Vector2:
 		danger += game.concord.danger_push(pos)  # Act IX: aiming lines and live beams (null elsewhere).
 	if game.corsair != null:
 		danger += game.corsair.danger_push(pos)  # Act X: off the rail, out of the strike circles (null elsewhere).
+	if game.dynasty != null:
+		danger += game.dynasty.danger_push(pos)  # Act XII (temporary): the Devourer's lanes (null elsewhere).
 	return danger
 
 
@@ -1363,6 +1374,8 @@ func get_move_vector() -> Vector2:
 		danger += game.corsair.danger_push(p)  # Act X: off the rail, out of the strike circles (null elsewhere).
 	if game.norse != null:
 		danger += game.norse.danger_push(p)  # The Hall of the Slain: its own telegraphs (null elsewhere).
+	if game.dynasty != null:
+		danger += game.dynasty.danger_push(p)  # Act XII (temporary): the Devourer's lanes (null elsewhere).
 	var objective := Vector2.ZERO
 	# Walk to shrines any time, to graves under consecration only when calm.
 	var goal := game.enemies.stage.seek_point(p, OBJECTIVE_SEEK_RADIUS, away.length() < 0.2)
@@ -1590,6 +1603,7 @@ func finish(summary: Dictionary) -> void:
 	ConcordReport.print_lines(game, st_all)  # Act IX: beams, abduction, terraforming, the final harvest, kinds, the stage (only when the Concord ran).
 	CorsairReport.print_lines(game, st_all)  # Act X: boarding, the deck, the sea's strikes, the black tide, kinds, the stage (only when the Black Tide ran).
 	NorseReport.print_lines(game, st_all)  # The Hall of the Slain: the long winter, the fury, the stones, ragnarok, kinds, the stage (only when the Norse rules ran).
+	DynastyReport.print_lines(game, st_all)  # Act XII (temporary): rebirth, the black land, heka, the devourer's hour, kinds, the stage (only when the Dynasty ran).
 	WastesReport.print_items(game, st_all)  # Act III, the Scrap Wastes: Death Ray and its passives (only when taken).
 	IlionReport.print_items(game, st_all)  # Act IV, the Shores of Ilion: Paris's Arrow and its passives (only when taken).
 	# --- Act V: the Burning Province ---

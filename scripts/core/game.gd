@@ -101,6 +101,11 @@
 ## shared rules (the Long Winter, Berserkergang, the Rune-Stones, Ragnarök),
 ## stepped after the Concord's and before the obstacle push-out; null on every
 ## other act unless a Norse kind forced there asks for it (norse_rules()).
+## Temporary Act XII (GDD §15.0 "The Necropolis Dynasty foundation (phase 1)"):
+## `dynasty` (DynastyRules) runs the Necropolis Dynasty's shared rules (Rebirth,
+## the Black Land, Heka, the Devourer's Hour), stepped after the Concord's and
+## before the obstacle push-out; null on every other act unless a Dynasty kind
+## forced there asks for it (dynasty_rules()).
 ## Online co-op (docs/coop/DESIGN.md): `coop` (CoopSession) holds two player
 ## slots in this one simulation; the per-player fields below (player, horde,
 ## abilities, grave_step, dread_rally, ultimates, stance, character, innates,
@@ -289,6 +294,11 @@ var deck: DeckBounds = null
 ## STAGE has "norse": true, or a Norse kind spawned on another stage asked for
 ## it through norse_rules(); no other act ever creates it).
 var norse: NorseRules = null
+# --- Act XII (temporary number): the Necropolis Dynasty ---
+## The Necropolis Dynasty's shared rules (DynastyRules; null unless the stage's
+## STAGE has "dynasty": true, or a Dynasty kind spawned on another stage asked
+## for it through dynasty_rules(); no other act creates it).
+var dynasty: DynastyRules = null
 ## Content wave 2: the run counters of the one-run achievements (RunRewards;
 ## never null once _ready ran; reads the run only, never changes gameplay).
 var rewards: RunRewards
@@ -496,6 +506,11 @@ func _ready() -> void:
 			var nog := NorseGround.new()  # The Norse stubs' placeholder floor (the STAGE's "floor").
 			nog.look = stage_def.get("floor", {})
 			ground = nog
+		# --- Act XII (temporary number): the Necropolis Dynasty ---
+		"dynasty":
+			var dyg := DynastyGround.new()  # The Dynasty stubs' placeholder floor (the STAGE's "floor").
+			dyg.look = stage_def.get("floor", {})
+			ground = dyg
 		_:
 			ground = Ground.new()
 	add_child(ground)
@@ -592,6 +607,8 @@ func _ready() -> void:
 		corsair_rules()  # Act X: the Black Tide's shared rules (and the deck).
 	if bool(stage_def.get("norse", false)):
 		norse_rules()  # The Hall of the Slain's shared rules.
+	if bool(stage_def.get("dynasty", false)):
+		dynasty_rules()  # Act XII (temporary): the Necropolis Dynasty's shared rules.
 
 	if autotest != null:
 		player.invulnerable = not GameState.autotest_mortal
@@ -903,6 +920,8 @@ func _physics_process(delta: float) -> void:
 		corsair.step(delta)  # Act X: the boats, the sea's strikes, the Black Tide (the deck clamp runs in the push-out next).
 	if norse != null:
 		norse.step(delta)  # The Hall of the Slain: Ragnarök, the Long Winter, the Rune-Stones (pushed out next).
+	if dynasty != null:
+		dynasty.step(delta)  # Act XII (temporary): the Devourer's Hour, the Sandstorm, the cartouches, the glyphs, the quicksand (returned bodies pushed out next).
 	if pf != null:
 		tl = pf.lap(PerfProbe.SEC_ENEMIES, tl)
 	arena.resolve_all(delta)
@@ -1108,6 +1127,16 @@ func norse_rules() -> NorseRules:
 		norse = NorseRules.new(self)
 		add_child(norse)
 	return norse
+# --- Act XII (temporary number): the Necropolis Dynasty ---
+## The Necropolis Dynasty's shared rules, created on first use: at the start of
+## a Dynasty run, or when a Dynasty kind forced onto another stage is activated
+## (DynastyKit.reset()), so its Rebirth and its glyphs work there (the clocks
+## stay off off the act).
+func dynasty_rules() -> DynastyRules:
+	if dynasty == null:
+		dynasty = DynastyRules.new(self)
+		add_child(dynasty)
+	return dynasty
 
 
 # --- Act IV: the Asphodel Underworld ---

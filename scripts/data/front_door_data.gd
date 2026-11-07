@@ -195,6 +195,10 @@ const STAGE_LINES: Dictionary = {
 	"barrow_fields": "The barrows crack open above the frozen fjord. Keep the fires lit.",  # TUNING (not in GDD) the Norse act
 	"valgard": "Climb to the hall at the edge of the sky, where the heroes feast.",  # TUNING (not in GDD) the Norse act
 	"vigrid": "The last field, under a sky going out. The god rides with his wolf.",  # TUNING (not in GDD) the Norse act
+	# --- Act XII (temporary number): the Necropolis Dynasty ---
+	"necropolis": "The oldest masters of the dead come down the tomb road for theirs.",  # TUNING (not in GDD) Act XII
+	"lioness_temple": "In the Lioness's temple the stone itself walks.",  # TUNING (not in GDD) Act XII
+	"two_truths": "Stand before the scales, and take the dead from Osiris himself.",  # TUNING (not in GDD) Act XII
 }
 
 ## Size (px) of an act tab button on the stage select (Act I / Act II / Act III).
@@ -206,7 +210,7 @@ const ACT_TAB_SIZE: Vector2 = Vector2(300.0, 40.0)  # TUNING (not in GDD)
 ## fits six acts at 1280 x 600 layout px (GDD §15.0 "Act IV foundation (phase 1)").
 const ACT_TABS_FULL_MAX: int = 3  # TUNING (not in GDD)
 ## Size (px) of a compact act tab ("Act IV").
-const ACT_TAB_COMPACT_SIZE: Vector2 = Vector2(84.0, 40.0)  # TUNING (not in GDD) Act IX: 104 -> 98, so nine tabs keep a margin at 1280 px; Act X: 98 -> 84 for ten tabs (the reorder pass groups the tabs by Part)
+const ACT_TAB_COMPACT_SIZE: Vector2 = Vector2(70.0, 40.0)  # TUNING (not in GDD) Act IX: 104 -> 98, so nine tabs keep a margin at 1280 px; wave 1 of the last acts (Acts X-XII, temporary numbers): 98 -> 70, so twelve tabs fit at 1280 px until the reorder pass groups them by Part
 ## Lock line of a registered stage that is not yet playable (StageRegistry "playable").
 const COMING_SOON: String = "Coming soon"  # TUNING (not in GDD)
 
@@ -552,6 +556,33 @@ const VIGNETTES: Dictionary = {
 		],
 		"fx": "motes", "fx_color": Color8(255, 106, 26),
 	},  # TUNING (not in GDD) ember motes
+	# --- Act XII (temporary number): the Necropolis Dynasty (placeholder scenes
+	# from the shared kinds' art until each stage brings its own floor, props and
+	# boss; a missing sprite or tile is skipped) ---
+	"necropolis": {
+		"tile": "tiles/dynasty_sand",
+		"items": [
+			["dynasty/mummy", 196, 112, true], ["dynasty/mummy_female", 230, 128, true], ["dynasty/canopic_jar", 160, 150, true],
+			["summons/warrior", 46, 214, false], ["summons/archer", 88, 224, false],
+		],
+		"fx": "motes", "fx_color": Color8(210, 181, 116),
+	},  # TUNING (not in GDD) sand motes
+	"lioness_temple": {
+		"tile": "tiles/dynasty_sand",
+		"items": [
+			["dynasty/khopesh_guard", 204, 116, true], ["dynasty/scarab_swarm", 236, 184, true], ["dynasty/mummy", 170, 196, true],
+			["summons/warrior", 46, 214, false], ["summons/mage", 90, 224, false],
+		],
+		"fx": "motes", "fx_color": Color8(191, 59, 43),
+	},  # TUNING (not in GDD) carnelian motes
+	"two_truths": {
+		"tile": "tiles/dynasty_sand",
+		"items": [
+			["dynasty/heka_priest", 206, 104, true], ["dynasty/embalmer", 170, 188, true], ["dynasty/mummy_female", 228, 196, true],
+			["summons/warrior", 46, 214, false], ["summons/archer", 88, 224, false],
+		],
+		"fx": "motes", "fx_color": Color8(43, 84, 184),
+	},  # TUNING (not in GDD) lapis motes
 }
 ## Ambient motes of a vignette: most at once, seconds between two (random in
 ## range), life (s), rise speed (px/s), sideways sway (px).

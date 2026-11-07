@@ -49,7 +49,9 @@ const TABS: Array = [["feats", "Achievements"], ["spells", "Spells"], ["summons"
 		# --- Act X: the Black Tide ---
 		["corsair", "Black Tide"],
 		# --- Act XI (temporary): the Hall of the Slain ---
-		["norse", "Hall"]]  # TUNING (not in GDD) Act II adds the Ancient Eye tab, Act III the Electronic Empire's, Act IV the Olympian Republic's, Act V the Shogunate's, Act VI the Inferno's, Act VII the Sanguine Court's, Act VIII the Last Line's, Act IX the Concord's, the Norse act the Hall's
+		["norse", "Hall"],
+		# --- Act XII (temporary number): the Necropolis Dynasty ---
+		["dynasty", "Dynasty"]]  # TUNING (not in GDD) Act II adds the Ancient Eye tab, Act III the Electronic Empire's, Act IV the Olympian Republic's, Act V the Shogunate's, Act VI the Inferno's, Act VII the Sanguine Court's, Act VIII the Last Line's, Act IX the Concord's, Act XII (temporary) the Dynasty's
 
 ## Summon classes shown on the Summons page (UnitData ids, card order). The
 ## Profane Bishop is a merge evolution, so it sits with the evolutions.
@@ -329,6 +331,24 @@ const NORSE_HALL: Array[String] = ["valkyrie", "seer", "rune_stone"]
 const NORSE_WILDS: Array[String] = ["draugr", "wolf_of_the_wastes", "frost_giant", "fire_giant"]
 ## The Hall of the Slain's stage bosses (StageRegistry.BOSS_ARRIVALS ids).
 const NORSE_BOSSES: Array[String] = ["hrimgar", "sigrun", "odin"]
+# --- Act XII (temporary number): the Necropolis Dynasty ---
+## The Necropolis Dynasty (GDD §15.0 "The Necropolis Dynasty foundation (phase
+## 1)"; the Dynasty tab), GROUPED BY GROUP (DynastyRulesData.GROUPS): the
+## wrapped dead, the sacred beasts, the guard, the priesthood, stone and jars,
+## then its stage bosses (StageRegistry.BOSS_ARRIVALS ids). Each Dynasty stage
+## adds its own as it is built (phase 2). The cartouche is no roster kind (no
+## entry).
+const DYNASTY_DEAD: Array[String] = ["mummy", "mummy_female"]
+## The sacred beasts (group "beasts").
+const DYNASTY_BEASTS: Array[String] = ["scarab_swarm"]
+## The guard (group "guard").
+const DYNASTY_GUARD: Array[String] = ["khopesh_guard"]
+## The priesthood (group "priests").
+const DYNASTY_PRIESTS: Array[String] = ["heka_priest", "embalmer"]
+## Stone and jars (group "stone": the structures and, in phase 2, the statues).
+const DYNASTY_STONE: Array[String] = ["canopic_jar"]
+## Dynasty stage bosses (StageRegistry.BOSS_ARRIVALS ids).
+const DYNASTY_BOSSES: Array[String] = ["anubis", "sekhmet", "osiris"]
 
 ## Section headers of each page: page id -> [[section id, header text], ...].
 const SECTIONS: Dictionary = {
@@ -357,6 +377,9 @@ const SECTIONS: Dictionary = {
 	# --- Act XI (temporary): the Hall of the Slain (grouped by group) ---
 	"norse": [["norse_warriors", "The Warriors"], ["norse_hall", "The Hall"], ["norse_wilds", "The North"],
 		["norse_bosses", "Bosses"]],  # TUNING (not in GDD) the Norse act
+	# --- Act XII (temporary number): the Necropolis Dynasty (grouped by group) ---
+	"dynasty": [["dynasty_dead", "The Wrapped Dead"], ["dynasty_beasts", "Sacred Beasts"], ["dynasty_guard", "The Guard"],
+		["dynasty_priests", "The Priesthood"], ["dynasty_stone", "Stone and Jars"], ["dynasty_bosses", "Bosses"]],  # TUNING (not in GDD) Act XII
 }
 
 ## One-sentence descriptions of the Covenant (the enemy data has none),
@@ -606,6 +629,17 @@ const DESCRIPTIONS: Dictionary = {
 	"vault_beast": "A beast the Concord harvested from some dead world. Freed, it bites whatever is nearest: your dead, you, or its keepers.",  # Owner-approved Act IX proposal
 	"reactor_vent": "A vent of the Ark's reactor that breathes alien ground on a timer. Break it to stop it.",  # TUNING (not in GDD) brief
 	"reap_emitter": "One of the Harvester's emitters: its tractor beam lifts your dead from the ring. Destroy them all to end the Reaping.",  # Owner-approved Act IX proposal
+	# --- Act XII (temporary number): the Necropolis Dynasty ---
+	"mummy": "The wrapped dead. A fallen mummy's Name waits over it: smash it or raise it, or it stands again. Fire burns them well.",  # Proposal (Rebirth)
+	"mummy_female": "The wrapped dead, quicker on her feet. Her Name waits over her too: smash it or raise it before she returns.",  # Proposal (Rebirth)
+	"scarab_swarm": "A swarm of sacred beetles that tears through your Warders' barriers. Beasts do not return.",  # Proposal
+	"khopesh_guard": "A tomb guard with curved blades: when he plants his feet, he spins. He returns unless you take his Name.",  # Proposal (Rebirth)
+	"heka_priest": "He writes a glyph on one of your dead, and it runs around your ring. A Mender's heal or a Warder's barrier clears it.",  # Proposal (Heka)
+	"embalmer": "She heals the Dynasty's soldiers and hastens every Name near her. Kill her first.",  # Proposal (Rebirth)
+	"canopic_jar": "A jar that holds the Names of the dead near it: no blow reaches them. Break it, and they return no more.",  # Proposal (Rebirth)
+	"anubis": "Anubis, Opener of the Way: he leads the procession of the dead, embalms the fallen, then duels you as the jackal.",  # Proposal
+	"sekhmet": "Sekhmet, the Lioness of Retribution: she leaps between the pillars, calls the Red Wind, and feasts in her fury.",  # Proposal
+	"osiris": "Osiris, Lord of the Dead, judges you on the great scales; Ammit the Devourer waits at his feet.",  # Proposal
 }
 
 ## Sprite key of an entry whose art is not "<category folder>/<id>":
@@ -691,6 +725,13 @@ const LOCKED_HINT: Dictionary = {
 	"norse_hall": "Slay or take one to record it.",  # TUNING (not in GDD) the Norse act (a stone is taken)
 	"norse_wilds": "Slay one to record it.",  # TUNING (not in GDD) the Norse act
 	"norse_bosses": "Face it to record it.",  # TUNING (not in GDD) the Norse act bosses
+	# --- Act XII (temporary number): the Necropolis Dynasty ---
+	"dynasty_dead": "Slay one to record it.",  # TUNING (not in GDD) Act XII
+	"dynasty_beasts": "Slay one to record it.",  # TUNING (not in GDD) Act XII beasts
+	"dynasty_guard": "Slay one to record it.",  # TUNING (not in GDD) Act XII guard
+	"dynasty_priests": "Slay one to record it.",  # TUNING (not in GDD) Act XII priests
+	"dynasty_stone": "Break one to record it.",  # TUNING (not in GDD) Act XII stone
+	"dynasty_bosses": "Face it to record it.",  # TUNING (not in GDD) Act XII bosses
 	"evolution": "Undiscovered.",  # TUNING (not in GDD) owner rule: no hint
 }
 ## Name shown for a locked entry.
@@ -750,6 +791,13 @@ const TAGS: Dictionary = {
 	"norse_hall": "The Hall",  # TUNING (not in GDD) the Norse act
 	"norse_wilds": "The North",  # TUNING (not in GDD) the Norse act
 	"norse_bosses": "Stage boss",  # TUNING (not in GDD) the Norse act bosses
+	# --- Act XII (temporary number): the Necropolis Dynasty ---
+	"dynasty_dead": "The wrapped dead",  # TUNING (not in GDD) Act XII
+	"dynasty_beasts": "Sacred beast",  # TUNING (not in GDD) Act XII
+	"dynasty_guard": "The guard",  # TUNING (not in GDD) Act XII
+	"dynasty_priests": "The priesthood",  # TUNING (not in GDD) Act XII
+	"dynasty_stone": "Stone and jars",  # TUNING (not in GDD) Act XII
+	"dynasty_bosses": "Stage boss",  # TUNING (not in GDD) Act XII bosses
 }
 
 # --- Layout (layout px at 1280x720; TUNING, not in GDD) -----------------------------
@@ -991,12 +1039,14 @@ static func is_known(cat: String, id: String) -> bool:
 					or CONCORD_BROOD.has(id) or CONCORD_HARVESTERS.has(id) or CONCORD_VRASK.has(id) \
 					or CONCORD_LUMINOUS.has(id) \
 					or CORSAIR_CREW.has(id) or CORSAIR_SEA.has(id) or CORSAIR_BOATS.has(id) \
-					or NORSE_WARRIORS.has(id) or NORSE_HALL.has(id) or NORSE_WILDS.has(id)  # Act IV to the Norse act
+					or NORSE_WARRIORS.has(id) or NORSE_HALL.has(id) or NORSE_WILDS.has(id) \
+					or DYNASTY_DEAD.has(id) or DYNASTY_BEASTS.has(id) or DYNASTY_GUARD.has(id) \
+					or DYNASTY_PRIESTS.has(id) or DYNASTY_STONE.has(id)  # Act IV to Act XII (temporary numbers)
 		BOSS:
 			return BOSSES.has(id) or EYE_BOSSES.has(id) or EMPIRE_BOSSES.has(id) or PANTHEON_BOSSES.has(id) \
 					or SHOGUNATE_BOSSES.has(id) or INFERNO_BOSSES.has(id) or COURT_BOSSES.has(id) \
 					or CITY_BOSSES.has(id) or CONCORD_BOSSES.has(id) or CORSAIR_BOSSES.has(id) \
-					or NORSE_BOSSES.has(id)  # (the Norse act last)
+					or NORSE_BOSSES.has(id) or DYNASTY_BOSSES.has(id)  # (Act XII, temporary, last)
 	return false
 
 
@@ -1019,12 +1069,14 @@ static func total(cat: String) -> int:
 					+ CONCORD_BROOD.size() + CONCORD_HARVESTERS.size() + CONCORD_VRASK.size() \
 					+ CONCORD_LUMINOUS.size() \
 					+ CORSAIR_CREW.size() + CORSAIR_SEA.size() + CORSAIR_BOATS.size() \
-					+ NORSE_WARRIORS.size() + NORSE_HALL.size() + NORSE_WILDS.size()  # Act IV to the Norse act
+					+ NORSE_WARRIORS.size() + NORSE_HALL.size() + NORSE_WILDS.size() \
+					+ DYNASTY_DEAD.size() + DYNASTY_BEASTS.size() + DYNASTY_GUARD.size() \
+					+ DYNASTY_PRIESTS.size() + DYNASTY_STONE.size()  # Act IV to Act XII (temporary numbers)
 		BOSS:
 			return BOSSES.size() + EYE_BOSSES.size() + EMPIRE_BOSSES.size() + PANTHEON_BOSSES.size() \
 					+ SHOGUNATE_BOSSES.size() + INFERNO_BOSSES.size() + COURT_BOSSES.size() \
 					+ CITY_BOSSES.size() + CONCORD_BOSSES.size() + CORSAIR_BOSSES.size() \
-					+ NORSE_BOSSES.size()  # (the Norse act last)
+					+ NORSE_BOSSES.size() + DYNASTY_BOSSES.size()  # (Act XII, temporary, last)
 	return 0
 
 
@@ -1066,6 +1118,9 @@ static func enemy_row(id: String) -> Dictionary:
 	var norse := EnemyDirector.norse_def(id)  # The Hall of the Slain's kinds ({} when none).
 	if not norse.is_empty():
 		return norse
+	var dynasty := EnemyDirector.dynasty_def(id)  # Act XII (temporary) kinds ({} when none).
+	if not dynasty.is_empty():
+		return dynasty
 	match id:
 		"alaric":
 			return EnemyData.BOSS

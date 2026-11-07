@@ -165,6 +165,15 @@ static func section_entries(section: String) -> Array:
 				var b := _boss(id)
 				b["section"] = section
 				out.append(b)  # The Hall of the Slain's bosses.
+		# --- Act XII (temporary number): the Necropolis Dynasty (grouped by group) ---
+		"dynasty_dead", "dynasty_beasts", "dynasty_guard", "dynasty_priests", "dynasty_stone":
+			for id: String in _dynasty_list(section):
+				out.append(_covenant(id, section))  # Act XII kinds, by group.
+		"dynasty_bosses":
+			for id: String in CodexData.DYNASTY_BOSSES:
+				var b := _boss(id)
+				b["section"] = section
+				out.append(b)  # Act XII bosses.
 	return out
 
 
@@ -280,6 +289,19 @@ static func _norse_list(section: String) -> Array[String]:
 		"norse_hall":
 			return CodexData.NORSE_HALL
 	return CodexData.NORSE_WILDS
+# --- Act XII (temporary number): the Necropolis Dynasty ---
+## The Dynasty kinds of group section `section` (CodexData.DYNASTY_*).
+static func _dynasty_list(section: String) -> Array[String]:
+	match section:
+		"dynasty_dead":
+			return CodexData.DYNASTY_DEAD
+		"dynasty_beasts":
+			return CodexData.DYNASTY_BEASTS
+		"dynasty_guard":
+			return CodexData.DYNASTY_GUARD
+		"dynasty_priests":
+			return CodexData.DYNASTY_PRIESTS
+	return CodexData.DYNASTY_STONE
 
 
 static func _covenant(id: String, section: String) -> Dictionary:
@@ -312,6 +334,8 @@ static func _covenant(id: String, section: String) -> Dictionary:
 		sprite = "corsair/" + id  # ...a Black Tide kind (Act X)...
 	elif not SpriteBank.has(sprite) and SpriteBank.has("norse/" + id):
 		sprite = "norse/" + id  # ...a Hall of the Slain kind...
+	elif not SpriteBank.has(sprite) and SpriteBank.has("dynasty/" + id):
+		sprite = "dynasty/" + id  # ...a Necropolis Dynasty kind (Act XII, temporary)...
 	elif not SpriteBank.has(sprite):
 		sprite = "structures/" + id  # ...or a structure.
 	var kills := Meta.codex_kill_count(id)  # Lifetime kills of this kind.

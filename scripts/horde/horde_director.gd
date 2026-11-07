@@ -514,6 +514,14 @@ func compute_stats(cls: String, level: int, with_buffs: bool = true, with_evolut
 		if haste > 0.0:
 			out["attack_interval"] = float(out["attack_interval"]) / (1.0 + haste)
 			out["attack_range"] = float(out["attack_range"]) * (1.0 + ab.passive_value("recoil_frame", "ranged_reach"))
+	# --- Act XII (temporary number): the Necropolis Dynasty --- the Sandstorm:
+	# the ranged summons reach half as far while it blows
+	# (DynastyRules.army_reach_mult(); only while Game.dynasty exists, and
+	# DynastyRules.on_storm_changed() refreshes every army when it rises / falls).
+	if game.dynasty != null and String(out["attack_profile"]) in PassiveData.RECOIL_PROFILES:
+		var reach := game.dynasty.army_reach_mult()  # x reach now (1 outside a storm).
+		if reach < 1.0:
+			out["attack_range"] = float(out["attack_range"]) * reach
 	# --- Act IV: the Asphodel Underworld --- Myrmidon Oath: the front-line
 	# classes (PassiveData.OATH_CLASSES) gain max HP and damage, its own
 	# category. 0 when not owned, so every other run is unchanged.
@@ -764,6 +772,11 @@ func spawn_temporary(cls: String, pos: Vector2, duration: float, hp_mult: float,
 ## II, where this is exactly spawn_temporary() plus the two tags.
 func raise_corpse(cls: String, pos: Vector2, duration: float, hp_mult: float, dmg_mult: float,
 		tag: String, glyph: String, gunner: bool) -> SummonedUnit:
+	# --- Act XII (temporary number): the Necropolis Dynasty --- REBIRTH: a raise
+	# steals the Name of the nearest cartouche there (Rebirth.on_raise(); only
+	# while Game.dynasty exists, so nothing changes elsewhere).
+	if game.dynasty != null:
+		game.dynasty.rebirth.on_raise(pos)
 	var steel := EmpireRulesData.STEEL  # Grave Gunner rules.
 	var u := spawn_temporary(String(steel["class"]) if gunner else cls, pos, duration, hp_mult, dmg_mult)
 	if gunner:

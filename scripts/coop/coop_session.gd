@@ -432,6 +432,9 @@ func step(delta: float) -> void:
 	if game.norse != null:
 		bind_primary()
 		game.norse.step(delta)  # The Hall of the Slain: Ragnarök, the Long Winter (each slot's cold), the Rune-Stones (before the push-out, as in solo).
+	if game.dynasty != null:
+		bind_primary()
+		game.dynasty.step(delta)  # Act XII (temporary): the Devourer's Hour, the Sandstorm, the cartouches, the glyphs, the quicksand (before the push-out, as in solo).
 	if pf != null:
 		tl = pf.lap(PerfProbe.SEC_ENEMIES, tl)
 	bind_primary()

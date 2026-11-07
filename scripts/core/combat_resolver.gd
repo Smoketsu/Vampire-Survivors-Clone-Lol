@@ -206,6 +206,14 @@
 ##             path), and the kill path records a Concord enemy's death spot
 ##             beside the Ghoul's claim (CrashSiteDirector.on_concord_death():
 ##             an egg is laid there on the Crash Site only).
+## Act XII, temporary (the Necropolis Dynasty; GDD §15.0 "Rebirth" and "Heka";
+## Game.dynasty is null on every other act, so none of this runs there):
+## REBIRTH in damage_enemy(): a cartouche brought to 0 HP is SMASHED without a
+## kill (Rebirth.smash(), before the kill path), and the kill path tells
+## DynastyRules.on_enemy_died() before the raise paths (a fallen mummy or
+## guardian gets its cartouche, which the Lich's raise then finds). HEKA:
+## curse_unit() is THE one path that curses a summon (x damage and move speed,
+## SummonedUnit.curse()) and lift_curse() the one that lifts it.
 ## Online co-op (CoopSession): every rule above reads the BOUND player's
 ## passives, synergies, meter and innate, so each entry point first binds the
 ## player the hit belongs to (the one path for "whose hit"), then restores the
@@ -496,6 +504,11 @@ func damage_enemy(e: Enemy, amount: float, source: String, as_slot: int = -1, or
 	# only asked while Game.concord exists).
 	if e.hp <= 0.0 and game.concord != null and CrashSiteDirector.clear_egg(game, e, source):
 		return dealt
+	# --- Act XII (temporary number): the Necropolis Dynasty --- a cartouche
+	# this hit reached is smashed and leaves WITHOUT a kill (Rebirth.smash();
+	# false for anything but a cartouche, only asked while Game.dynasty exists).
+	if e.hp <= 0.0 and game.dynasty != null and Rebirth.smash(game, e, source):
+		return dealt
 	if e.hp <= 0.0:
 		game.stat_add("kills_by_" + source, 1.0)  # Killing blow per damage source (autotest spell summaries).
 		if source in MetaData.WARRIOR_KILL_SOURCES:
@@ -512,6 +525,12 @@ func damage_enemy(e: Enemy, amount: float, source: String, as_slot: int = -1, or
 		# Site, and nothing runs while the Concord's rules do not exist).
 		if game.concord != null:
 			CrashSiteDirector.on_concord_death(game, e)
+		# --- Act XII (temporary number): the Necropolis Dynasty --- Rebirth: a
+		# fallen mummy or guardian gets its cartouche BEFORE the raise paths
+		# below (the Lich's raise then steals its Name); only while
+		# Game.dynasty exists.
+		if game.dynasty != null:
+			game.dynasty.on_enemy_died(e)
 		game.horde.evolutions.on_enemy_killed(e, source)  # Lich raise-the-dead.
 		game.innates.on_enemy_killed(e, source)  # Character innates (no-op without one).
 		_kill_enemy(e, is_minion_source(source))
@@ -1060,6 +1079,29 @@ func blind_unit(u: SummonedUnit, duration: float, source: String) -> float:
 	game.stat_add("summon_blinded_seconds", duration)
 	game.stat_add("summon_blinds_" + source, 1.0)
 	return duration
+
+
+# --- Act XII (temporary number): the Necropolis Dynasty ---
+## THE one curse path for summons (Heka: a priest's glyph): curses summon `u`
+## until game time `until` (SummonedUnit.curse(): x `mult` on its damage and
+## move speed, kept through every stat refresh). Airborne, flying, spawning,
+## dead and charmed units are immune. An enemy effect on a unit: summons have
+## no act rule of their own. `source` tags the stats. Returns true when it
+## took. Stats: summon_curses, summon_curses_<source>.
+func curse_unit(u: SummonedUnit, mult: float, until: float, source: String) -> bool:
+	if not u.active or u.airborne or u.flies or u.charmed or u.state == SummonedUnit.State.SPAWNING \
+			or u.state == SummonedUnit.State.DEAD or until <= game.elapsed:
+		return false
+	u.curse(mult, until)
+	game.stat_add("summon_curses", 1.0)
+	game.stat_add("summon_curses_" + source, 1.0)
+	return true
+
+
+## Lifts the curse on summon `u` (Heka: a cleanse, a jump, the glyph's end);
+## a no-op when it carries none.
+func lift_curse(u: SummonedUnit) -> void:
+	u.uncurse()
 
 
 ## Oni's Resolve (PassiveData "onis_resolve"): the share (0..1) of a stun summon

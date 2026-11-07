@@ -408,3 +408,42 @@ const NORSE_RUNE := Color(0.549, 0.784, 1.000)  # #8CC8FF
 const NORSE_BERSERK := Color(0.847, 0.157, 0.165)  # #D8282A
 ## Fire of the south: the fire-giants and Ragnarök's burning sky.
 const NORSE_FIRE := Color(1.000, 0.416, 0.102)  # #FF6A1A
+# --- Act XII (temporary number): the Necropolis Dynasty ---
+# GDD §15.0 "The Necropolis Dynasty foundation (phase 1)": the act's look (proposal: "gold, lapis blue,
+# sandstone, carnelian red and papyrus green, with blue-black desert night"), the same hex values as the
+# art pass's tools/palette.json ramps night, bronze, lapis, sand, linen, carnelian and papyrus. Gold is
+# the player's colour (evolution / chest / victory / selection), so every Dynasty enemy wears a DULLER
+# bronze-gold (DYN_BRONZE); crimson stays danger, and no Dynasty kind wears the necromancer's violet.
+
+## Dynasty outline ink ("night" ramp, darkest): every Dynasty sprite's outline; blue-black desert night.
+const DYN_INK := Color(0.039, 0.043, 0.086)  # #0A0B16
+## Night blue in shade ("dyn_night_dark"): the night sky's floor tint, dark wigs, Anubis's skin in shadow.
+const DYN_NIGHT_DARK := Color(0.106, 0.125, 0.220)  # #1B2038
+## Night blue ("dyn_night"): jackal fur, the Sandstorm's dusk veil.
+const DYN_NIGHT := Color(0.180, 0.212, 0.376)  # #2E3660
+## Dull bronze-gold in shade ("dyn_bronze_dark"): collars and bracers in shadow, a cartouche's rim.
+const DYN_BRONZE_DARK := Color(0.420, 0.353, 0.133)  # #6B5A22
+## Dull bronze-gold ("dyn_bronze"): the enemies' gold: collars, blades, the cartouches, the Heka glyphs (never the reward gold).
+const DYN_BRONZE := Color(0.639, 0.557, 0.235)  # #A38E3C
+## Dull bronze-gold lit ("dyn_bronze_light"): highlights, a glyph's glow.
+const DYN_BRONZE_LIGHT := Color(0.824, 0.733, 0.384)  # #D2BB62
+## Lapis blue in shade ("dyn_lapis_dark"): scarab shells, a sealed cartouche's rim.
+const DYN_LAPIS_DARK := Color(0.086, 0.196, 0.486)  # #16327C
+## Lapis blue ("dyn_lapis"): headcloth stripes, scarab shells, a cartouche a Canopic Jar holds.
+const DYN_LAPIS := Color(0.169, 0.329, 0.722)  # #2B54B8
+## Sandstone in shade ("dyn_sand_dark"): tombs, statues, the quicksand's rim.
+const DYN_SAND_DARK := Color(0.549, 0.420, 0.243)  # #8C6B3E
+## Sandstone ("dyn_sand"): tomb walls, obelisks, the dunes; the Sandstorm's tint.
+const DYN_SAND := Color(0.824, 0.710, 0.455)  # #D2B574
+## Sandstone lit ("dyn_sand_light"): stone highlights, wind-blown sand.
+const DYN_SAND_LIGHT := Color(0.941, 0.867, 0.651)  # #F0DDA6
+## Linen in shade ("dyn_linen_dark"): mummy bandages in shadow, a corpse's wrapping.
+const DYN_LINEN_DARK := Color(0.561, 0.525, 0.439)  # #8F8670
+## Linen ("dyn_linen"): mummy wrappings, kilts, dresses.
+const DYN_LINEN := Color(0.788, 0.753, 0.643)  # #C9C0A4
+## Carnelian red ("dyn_carnelian"): gems, belts, the Devourer's eyes.
+const DYN_CARNELIAN := Color(0.749, 0.231, 0.169)  # #BF3B2B
+## Papyrus green ("dyn_papyrus"): reeds, the Embalmer's collar.
+const DYN_PAPYRUS := Color(0.306, 0.561, 0.251)  # #4E8F40
+## Egyptian skin ("dyn_skin"): the Dynasty's men and women (their own ramp; the Covenant's skin is peach).
+const DYN_SKIN := Color(0.541, 0.329, 0.188)  # #8A5430
