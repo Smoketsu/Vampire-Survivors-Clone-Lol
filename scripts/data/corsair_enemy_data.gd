@@ -379,7 +379,7 @@ const ENEMIES := {
 		"max_hp": 30.0,  # TUNING (not in GDD)
 		"move_speed": 54.0,  # TUNING (not in GDD) px/s
 		"damage": 0.0,  # TUNING (not in GDD) her grenadoes deal the damage
-		"attack_interval": 3.6,  # TUNING (not in GDD) s between two lobs
+		"attack_interval": 4.4,  # TUNING (not in GDD) s between two lobs (first pass 3.6: the naive bot died to the blasts)
 		"attack_range": 200.0,  # TUNING (not in GDD) px (she stops this far from her target)
 		"radius": 9.0,  # TUNING (not in GDD) px
 		"armor": 0.0,  # TUNING (not in GDD)
@@ -396,7 +396,7 @@ const ENEMIES := {
 		"kit": "gunnery_mate",
 		"crew": true,
 		"figure": true,  # Female, figure style (owner-approved proposal)
-		"grenado": {"reach": 260.0, "flight": 1.1, "radius": 46.0, "dmg_summon": 9.0, "dmg_player": 7.0, "dmg_enemy": 10.0, "push": 34.0},  # TUNING (not in GDD) the lob and its blast
+		"grenado": {"reach": 260.0, "flight": 1.2, "radius": 44.0, "dmg_summon": 7.0, "dmg_player": 4.0, "dmg_enemy": 10.0, "push": 34.0},  # TUNING (not in GDD) the lob and its blast (first pass 9 / 7 on summons / you)
 	},  # The Gunnery Mate.
 	# Support, FEMALE, figure style (owner-approved proposal: "Marks a spot on the ring; the sea strikes it 1.5 s later |
 	# Kill her first; the mark fails if she dies"). Brief: "marks a strike on the ring through SeaStrikes.strike(),

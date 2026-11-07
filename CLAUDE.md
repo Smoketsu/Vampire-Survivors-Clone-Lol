@@ -735,6 +735,10 @@ tiny tweaks.
    (the finale), fifteen acts in all. Waits on the owner's answers to the doc's open questions; then wave 1 (Dynasty + Norse + a
    Black Tide deck spike), wave 2 (Black Tide + Celestial Host + Titans), wave 3 (Turning Year), each with the `docs/act5/` plan
    and tuned for its final slot, then the reorder in one pass.
+   Wave 1b, the Black Tide's **Treasure Galleon** (branch `tide-galleon`; GDD §15.0 from "The Treasure Galleon (Act X
+   phase 2)"): broadsides, the deck cannons (a world rule), the Gunnery Mate, Voodoo Navigator, Gunboat and Hull Crab,
+   Old Hollow-Eye, Admiral Marrec, Cannonade / Dead Men's Broadside + Black Powder, the Corsair Queen, Walked the Plank →
+   Sea Legs; still `"playable": false` until the lead's integration.
 7. **Phase 4 polish:** accessibility, profiling on real hardware, and the **final balance pass**.
    The owner's Oct 2026 playtest balance pass is in (GDD §15.0 "Balance pass (Oct 2026 playtest)": Dread Rally raises the army, spells ×1.2, boss HP Alaric −35% / Vael −40% / Seraphine −30%, later level-up items weigh 0.5, Frost Wraith / Bone Hound / Banshee base damage raised; the earlier +5% global multiplier was removed); further value tweaks wait for this pass (naive-bot
    death rates above target on both stages and spell-only builds lacking single-target damage are

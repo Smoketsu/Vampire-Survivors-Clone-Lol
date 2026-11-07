@@ -120,23 +120,23 @@ const RECKONING_OBJECTIVE: String = "THE BLACK TIDE: the whole rail boards, the 
 ## flow than the stub's (the crews are killed as they step aboard, so the flow
 ## is the pressure), the Gunnery Mate and the Voodoo Navigator from the Reef.
 const SEGMENTS := [
-	{"start": 0.0, "rate": 2.1, "max_alive": 48,  # TUNING (not in GDD)
+	{"start": 0.0, "rate": 1.7, "max_alive": 42,  # TUNING (not in GDD)
 		"weights": {"deckhand": 1.0},
 		"objective": "Boats pull alongside: watch the amber lanterns at the rail"},
-	{"start": 60.0, "rate": 2.7, "max_alive": 62,  # TUNING (not in GDD)
+	{"start": 60.0, "rate": 2.2, "max_alive": 54,  # TUNING (not in GDD)
 		"weights": {"deckhand": 0.8, "musketeer": 0.2},
 		"objective": "Cut both grapple hooks and the boat drifts off with its crew"},
-	{"start": 180.0, "rate": 3.3, "max_alive": 78,  # TUNING (not in GDD)
-		"weights": {"deckhand": 0.64, "musketeer": 0.2, "powder_runner": 0.1, "reef_shark": 0.06},
+	{"start": 180.0, "rate": 2.8, "max_alive": 68,  # TUNING (not in GDD)
+		"weights": {"deckhand": 0.69, "musketeer": 0.19, "powder_runner": 0.06, "reef_shark": 0.06},
 		"objective": "Stand at a deck cannon for 3 s and it fires at the nearest boat"},
 	{"start": 300.0, "rate": 3.9, "max_alive": 94,  # TUNING (not in GDD) the Reef
-		"weights": {"deckhand": 0.52, "musketeer": 0.16, "powder_runner": 0.08, "swashbuckler": 0.05, "gunnery_mate": 0.06, "reef_shark": 0.06, "hull_crab": 0.04, "voodoo_navigator": 0.03},
+		"weights": {"deckhand": 0.54, "musketeer": 0.16, "powder_runner": 0.06, "swashbuckler": 0.05, "gunnery_mate": 0.06, "reef_shark": 0.06, "hull_crab": 0.04, "voodoo_navigator": 0.03},
 		"objective": "Hull crabs climb the rail: keep blockers near the rail band"},
 	{"start": 600.0, "rate": 4.4, "max_alive": 108,  # TUNING (not in GDD) the Storm
-		"weights": {"deckhand": 0.48, "musketeer": 0.16, "powder_runner": 0.08, "swashbuckler": 0.07, "gunnery_mate": 0.07, "boarding_bruiser": 0.02, "reef_shark": 0.05, "hull_crab": 0.04, "voodoo_navigator": 0.03},
+		"weights": {"deckhand": 0.48, "musketeer": 0.16, "powder_runner": 0.06, "swashbuckler": 0.07, "gunnery_mate": 0.07, "boarding_bruiser": 0.02, "reef_shark": 0.05, "hull_crab": 0.04, "voodoo_navigator": 0.03},
 		"objective": "A Voodoo Navigator marks the sea's strikes on your ring: kill her and the strike fails"},
 	{"start": 900.0, "rate": 4.8, "max_alive": 120,  # TUNING (not in GDD) the Gun Deck
-		"weights": {"deckhand": 0.46, "musketeer": 0.16, "powder_runner": 0.09, "swashbuckler": 0.07, "gunnery_mate": 0.08, "boarding_bruiser": 0.03, "reef_shark": 0.04, "hull_crab": 0.04, "voodoo_navigator": 0.03},
+		"weights": {"deckhand": 0.46, "musketeer": 0.16, "powder_runner": 0.06, "swashbuckler": 0.07, "gunnery_mate": 0.07, "boarding_bruiser": 0.03, "reef_shark": 0.04, "hull_crab": 0.04, "voodoo_navigator": 0.03},
 		"objective": "The whole Brotherhood is on the water: man the deck cannons"},
 	{"start": BOSS_TIME, "rate": 3.4, "max_alive": 90,  # TUNING (not in GDD) thinner during the boss fight
 		"weights": {"deckhand": 0.56, "musketeer": 0.18, "powder_runner": 0.08, "swashbuckler": 0.06, "gunnery_mate": 0.06, "reef_shark": 0.06},
@@ -155,7 +155,7 @@ const EVENTS := [
 	{"time": 170.0, "type": "wave", "banner": "Fins in the water! The sharks are circling!", "formation": "ring",  # TUNING (not in GDD)
 		"groups": [{"kind": "reef_shark", "count": 3, "elite": false}]},
 	{"time": 240.0, "type": "wave", "banner": "A raider ship runs alongside: two planks at once!", "formation": "arc",  # TUNING (not in GDD)
-		"groups": [{"kind": "powder_runner", "count": 3, "elite": false}, {"kind": "deckhand", "count": 18, "elite": false}, {"kind": "musketeer", "count": 3, "elite": false}]},
+		"groups": [{"kind": "powder_runner", "count": 2, "elite": false}, {"kind": "deckhand", "count": 18, "elite": false}, {"kind": "musketeer", "count": 3, "elite": false}]},
 	{"time": 330.0, "type": "wave", "banner": "Hull crabs climb out of the Reef!", "formation": "ring",  # TUNING (not in GDD)
 		"groups": [{"kind": "hull_crab", "count": 3, "elite": false}, {"kind": "reef_shark", "count": 2, "elite": false}]},
 	{"time": 390.0, "type": "wave", "banner": "A GUNBOAT runs out her guns: step out of the shell lines!", "formation": "arc",  # TUNING (not in GDD)
