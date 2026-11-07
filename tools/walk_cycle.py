@@ -961,20 +961,23 @@ RIGS = {
     "corsair/musketeer": dict(mode="legs", hip=30, back=(0, 22), front=(22, 44), rigid=[], spread=1, lift=1, dip=1),
     "corsair/powder_runner": dict(mode="legs", hip=29, back=(0, 14), front=(14, 36), rigid=[], spread=2, lift=2, dip=1),
     "corsair/swashbuckler": dict(mode="legs", hip=32, back=(0, 24), front=(24, 48), rigid=[], spread=1, lift=1, dip=1,
-                                 bust=(15, 26, 16, 23, 2), bust_exclude=[(26, 48, 14, 24)]),
-    "corsair/grappler": dict(mode="legs", hip=32, back=(0, 17), front=(17, 34), rigid=[], spread=1, lift=1, dip=1),
+                                 bust=(14, 25, 14, 20, 2), bust_exclude=[(26, 48, 12, 24), (0, 13, 14, 26)]),  # R1: refit (the chest sits at rows 14-19, cols 14-24; the arms stay still)
+    "corsair/grappler": dict(mode="legs", hip=32, back=(0, 17), front=(17, 34), rigid=[], spread=1, lift=1, dip=1,
+                             pendulums=[dict(box=(15, 34, 0, 22), pivot=(15, 15), degrees=18.0)]),  # R1: the hook line swings round in the air
     "corsair/gunnery_mate": dict(mode="legs", hip=31, back=(0, 16), front=(16, 32), rigid=[], spread=1, lift=1, dip=1,
-                                 bust=(12, 22, 13, 19, 2), bust_exclude=[(22, 32, 8, 20)]),
+                                 bust=(12, 22, 11, 17, 2), bust_exclude=[(22, 32, 6, 20)]),  # R1: up 2 px (it sat on her stomach)
     "corsair/boatswain": dict(mode="legs", hip=29, back=(0, 16), front=(16, 30), rigid=[], spread=1, lift=1, dip=1),
     "corsair/voodoo_navigator": dict(mode="robe", hip=30, rigid=[], sway=1, dip=1, bust=(11, 21, 14, 20, 2),
                                      bust_exclude=[(22, 32, 6, 20)]),
     "corsair/boarding_bruiser": dict(mode="legs", hip=38, back=(0, 20), front=(20, 48), rigid=[], spread=2, lift=2, dip=1),
-    "corsair/bosun_gorran": dict(mode="legs", hip=48, back=(0, 34), front=(34, 62), rigid=[], spread=2, lift=2, dip=1),
+    "corsair/bosun_gorran": dict(mode="legs", hip=48, back=(0, 34), front=(34, 62), rigid=[], spread=2, lift=2, dip=1,
+                                 pendulums=[dict(box=(0, 19, 36, 62), pivot=(9, 37), degrees=14.0)]),  # R1: the hanging chain-hook swings about his hand
     "corsair/ghost_bosun": dict(mode="robe", hip=36, rigid=[], sway=1, dip=1, float=1),
     "corsair/crow": dict(mode="legs", hip=62, back=(0, 54), front=(54, 98), rigid=[], spread=2, lift=2, dip=1),
     "corsair/marrec": dict(mode="legs", hip=73, back=(0, 30), front=(30, 56), rigid=[], spread=2, lift=2, dip=1,
-                           bust=(24, 40, 31, 41, 3, 2), bust_exclude=[(0, 14, 20, 50)]),
-    "corsair/vandermere": dict(mode="hover", bob=2, parts=[]),
+                           bust=(24, 40, 27, 37, 3, 2), bust_exclude=[(0, 14, 20, 50)]),  # R1: up 4 px
+    "corsair/vandermere": dict(mode="hover", bob=2, parts=[],
+                               rotor=[dict(c=(33.0, 59.0), r=(14.5, 12.5), deg=11.25, colors=["corsair_oak", "corsair_oak_light", "corsair_oak_dark"])]),  # R1: he turns the wheel
     "corsair/reef_shark": dict(mode="hover", bob=2, parts=[]),
     "corsair/hull_crab": dict(mode="hover", bob=2, parts=[]),
     "corsair/kraken_arm": dict(mode="hover", bob=2, parts=[]),
@@ -986,10 +989,10 @@ RIGS = {
     "corsair/gunboat": dict(mode="hover", bob=2, parts=[]),
     "corsair/ram_longboat": dict(mode="hover", bob=2, parts=[]),
     "corsair/ghost_longboat": dict(mode="hover", bob=2, parts=[]),
-    "player/marooned_quartermaster": dict(mode="legs", hip=39, back=(0, 27), front=(27, 62), rigid=[], spread=1, lift=1, dip=1),
-    "player/corsair_queen": dict(mode="legs", hip=43, back=(0, 32), front=(32, 60), rigid=[], spread=1, lift=1, dip=1,
-                                 bust=(22, 34, 15, 24, 2), bust_exclude=[(34, 60, 10, 24)]),
-    "player/ghost_helmsman": dict(mode="legs", hip=46, back=(0, 18), front=(18, 44), rigid=[], spread=1, lift=1, dip=1),
+    "player/marooned_quartermaster": dict(mode="robe", hip=36, rigid=[], sway=1, dip=1),  # R1: the violet necromancer redo
+    "player/corsair_queen": dict(mode="robe", hip=34, rigid=[], sway=1, dip=1,
+                                 bust=(11, 23, 14, 22, 2), bust_exclude=[(24, 32, 0, 30)]),  # R1: violet necromancer redo; the box reaches 2 px further right
+    "player/ghost_helmsman": dict(mode="robe", hip=36, rigid=[], sway=1, dip=1),  # R1: the violet necromancer redo
     "summons/powder_wraith": dict(mode="legs", hip=32, back=(0, 14), front=(14, 36), rigid=[], spread=2, lift=1, dip=1),
     "summons/magazine_lord": dict(mode="legs", hip=43, back=(0, 15), front=(15, 32), rigid=[], spread=1, lift=1, dip=1),
 }

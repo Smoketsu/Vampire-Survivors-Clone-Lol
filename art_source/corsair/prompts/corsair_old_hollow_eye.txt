@@ -1,8 +1,8 @@
 Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, a menacing pose
 
-LOW-RESOLUTION pixel art: the whole SUBJECT is only 72 pixels tall and about 60 wide, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims, lacing or engravings.
+LOW-RESOLUTION pixel art: the whole SUBJECT is only 72 pixels tall and about 76 wide, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims, lacing or engravings.
 
-Subject (creature, no sex): OLD HOLLOW-EYE, a miniboss creature: a gigantic kraken arm, thick and scarred, rising from a ring of white FOAM, with a pale blind HOLLOW EYE socket set in its tip, barnacles and old harpoon scars on its purple skin, two rows of cream suckers. Signature shape: the huge scarred tentacle with the single hollow eye.
+Subject (creature, no sex): OLD HOLLOW-EYE, a miniboss creature: a gigantic KRAKEN, a WHOLE OCTOPUS-like monster seen from above-front, a big bulbous purple head-mantle covered in barnacles and old harpoon scars, ONE pale blind HOLLOW EYE socket (a single huge cloudy white eye) in the middle of its head, and eight thick tentacles spreading out and curling around it with two rows of cream suckers, all rising from a ring of white FOAM. Signature shape: the big scarred head with the single hollow eye and the spread of curling tentacles.
 
 Colours: ONLY flat fills from this list, at most 3 shades per material: kraken purple #3A2150 #6B3C86 #A877BC; cream #8F8466 #D6CBA4 #F0E9CE; foam white #8FB4D2 #D8E9F4 #F6FBFF; navy #0E1A33 #1B3560
 

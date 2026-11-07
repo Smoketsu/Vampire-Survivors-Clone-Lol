@@ -49,14 +49,14 @@ The act's ink is `corsair_ink` #0A0D18 (navy-black), the outline of every Black 
 | `corsair/grapple_hook` | 28x16 | an object | - | a GRAPPLING HOOK: a four-pronged iron grapnel with a short length of cream rope tied to its ring, pointing right, hooked over a short piece of oak rai |
 | `corsair/boarding_plank` | 60x16 | an object | - | a BOARDING PLANK: a long, narrow wooden gangplank seen from above lying horizontally, tarred oak with cross cleats and rope handrails on both edges, i |
 | `corsair/bosun_gorran` | 62x64 | male | `_walk` (496x64) | BOSUN GORRAN, a MALE miniboss pirate bosun, enormous, broad and scarred, bellowing, one fist raised and the other holding a big ship's iron chain-hook |
-| `corsair/old_hollow_eye` | 54x76 | creature, no sex | `_walk` (432x76) | OLD HOLLOW-EYE, a miniboss creature: a gigantic kraken arm, thick and scarred, rising from a ring of white FOAM, with a pale blind HOLLOW EYE socket s |
+| `corsair/old_hollow_eye` | 72x76 | creature, no sex | `_walk` (432x76) | OLD HOLLOW-EYE, a miniboss creature: a gigantic kraken arm, thick and scarred, rising from a ring of white FOAM, with a pale blind HOLLOW EYE socket s |
 | `corsair/ghost_bosun` | 34x48 | male | `_walk` (272x48) | THE GHOST BOSUN, a MALE spectral miniboss: a translucent-looking drowned bosun, hollow glowing eyes, raising a small whistle to his lips, a tattered c |
 | `corsair/crow` | 98x88 | male | `_walk` (784x88) | CAPTAIN EZEKIEL CROW, THE GULL KING, a lean MALE pirate captain boss, a cutlass in one hand and a flintlock pistol raised in the other, a heavy cloak  |
 | `corsair/marrec` | 56x92 | female | `_walk` (448x92), `_idle` (1344x92) | ADMIRAL ISABEAU MARREC, THE SEA WOLF, a FEMALE admiral boss in the game's figure-redesign style (an extremely exaggerated hourglass figure, a very ful |
 | `corsair/vandermere` | 60x100 | male | `_walk` (480x100) | CAPTAIN CORNELIUS VANDERMERE, a ghostly MALE captain boss lashed to a ship's wheel: he stands gripping a big wooden ship's WHEEL in front of him (rope |
-| `player/marooned_quartermaster` | 62x56 | male | `_walk` (496x56) | THE MAROONED QUARTERMASTER, a MALE playable necromancer, a lean castaway ship's quartermaster with a rusted shackle and a short chain on one wrist, wh |
-| `player/corsair_queen` | 60x56 | female | `_walk` (480x56), `_idle` (1440x56) | THE CORSAIR QUEEN, a FEMALE playable necromancer in the game's figure-redesign style (an extremely exaggerated hourglass figure, a very full bust, a t |
-| `player/ghost_helmsman` | 44x56 | male | `_walk` (352x56) | THE GHOST HELMSMAN, a MALE playable necromancer, a broad drowned ship's helmsman holding a huge rusted iron ANCHOR on his shoulder with a chain, pale  |
+| `player/marooned_quartermaster` | 44x56 | male | `_walk` (496x56) | THE MAROONED QUARTERMASTER, a MALE playable necromancer, a lean castaway ship's quartermaster with a rusted shackle and a short chain on one wrist, wh |
+| `player/corsair_queen` | 32x56 | female | `_walk` (480x56), `_idle` (1440x56) | THE CORSAIR QUEEN, a FEMALE playable necromancer in the game's figure-redesign style (an extremely exaggerated hourglass figure, a very full bust, a t |
+| `player/ghost_helmsman` | 52x56 | male | `_walk` (352x56) | THE GHOST HELMSMAN, a MALE playable necromancer, a broad drowned ship's helmsman holding a huge rusted iron ANCHOR on his shoulder with a chain, pale  |
 | `summons/powder_wraith` | 36x44 | undead skeleton, no sex | `_walk` (288x44) | a POWDER WRAITH, an undead SKELETON (a summoned ally) marching forward carrying a lit powder keg on its shoulder with a short fuse spitting an amber s |
 | `summons/magazine_lord` | 32x52 | undead skeleton, no sex | `_walk` (256x52) | a MAGAZINE LORD, a large armoured undead SKELETON (a summoned ally, the evolved Powder Wraith) wearing a captain's dark coat and a tricorn with a burn |
 
@@ -143,3 +143,11 @@ Nothing plays them until the stage code wires its sound map.
 - `ghost_bosun` converted mostly navy-blue with green rim light rather than the ghost green; `ghost_helmsman`, `powder_wraith` and `magazine_lord` are small and dark (converted with the level stretch).
 - Female figures (swashbuckler, gunnery_mate, voodoo_navigator, marrec, corsair_queen) wear blouses with a cream neckline (covered, as `battle_sister`); rigs were fitted from a grid check, not yet seen in motion in the engine.
 - Hand-rolled sea water (no AI source): a plain navy with foam dashes; no shore / rail art was made (the code draws rails and the hull edge).
+
+## Round 1 (the owner's marks)
+
+- **Playable characters redone as purple necromancers** (`player/marooned_quartermaster`, `player/corsair_queen`, `player/ghost_helmsman`; 56 px tall, 32 to 52 wide): the necromancer's violet, bone white and soul-teal on pale undead skin, the act's theme only in cut and props (quartermaster: tricorn, peg leg, shackle, a ship's-lantern staff; queen: plumed tricorn, long coat, a glowing cutlass focus, figure-redesign style, covered; helmsman: hooded oilskin, a wheel-topped lantern staff, anchor charm). Walk strips are robe glides; the queen has her bust rig (box widened 2 px to the right) and idle strip. Prompts and refs: `art_source/corsair/make_art.py` (`CHAR_COL`, `CHAR_RAMPS`; references `player/necromancer`, `ferrywoman`, `shrine_maiden`).
+- `bosun_gorran_walk`: the hanging chain-hook swings (pendulum rig). `grappler_walk`: the hook line swings round in the air (pendulum).
+- `gunnery_mate` bust box up 2 px, `marrec` up 4 px, `swashbuckler` refit to rows 14-19 (idle and walk rebuilt).
+- `hull_crab` regenerated: a speckled, coloured crab (orange-red shell, cream speckles), no grey. `old_hollow_eye` regenerated as a whole kraken (bulbous head, hollow eye, eight tentacles, 72x72 art, 76 with the hover rows).
+- `kraken_arm_walk` and `old_hollow_eye_walk`: the tentacles wave (rows sheared by a sine growing toward the tips, foam fixed; `wave_strip()` in `make_art.py`). `vandermere_walk`: the wheel turns (`rotor` disc rig, 11.25 degrees a frame, loops every 8 frames). `powder_wraith_walk`: a small amber flash at the keg's fuse on frames 1, 2, 5 and 6 (`flash_strip()`).

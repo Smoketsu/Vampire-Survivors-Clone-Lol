@@ -2,7 +2,7 @@ Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Surviv
 
 LOW-RESOLUTION pixel art: the whole SUBJECT is only 40 pixels tall and about 56 wide, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims, lacing or engravings.
 
-Subject (creature, no sex): a GIANT HULL CRAB, a creature, seen from above-front, a wide barnacled shell, two huge claws raised, eight legs and two stalk eyes: an armoured shell in dull orange-red and powder grey with amber glints, pale underside. Signature shape: the wide round shell and the two huge raised claws.
+Subject (creature, no sex): a GIANT HULL CRAB, a creature, seen from above-front, a wide round barnacled shell, two huge claws raised, eight legs and two stalk eyes. COLOURFUL and SPECKLED, not grey: the shell is bright orange-red with many cream and pale-yellow speckles and dark red spots, the claws and legs a deeper red with cream tips, small cream barnacles on the shell, a pale cream underside, amber stalk eyes. NO grey anywhere. Signature shape: the wide speckled shell and the two huge raised claws.
 
 Colours: ONLY flat fills from this list, at most 3 shades per material: tarred oak #2B1D14 #4A3220 #7A5632; sailcloth cream #8F8466 #D6CBA4 #F0E9CE; brass #7A5A1C #C4912A #EBC85A; powder grey #2E3239 #5E636C #9498A0; sash red #6A1620 #B02A30 #E2563F; lantern amber #B0661C #F2A63A #FFDF8A; navy #0E1A33 #1B3560 #2F5F96; weathered skin #5C3824 #96623E #C68B5E
 

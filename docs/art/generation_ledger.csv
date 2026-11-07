@@ -1366,3 +1366,8 @@ utc,key,model,quality,size,refs,text_in,image_in,image_out,usd_est,file
 2026-11-07 14:43,corsair/icons_b,gpt-image-2.5-flare,medium,1536x1024,1,465,4,343,0.0126,icons_b.png
 2026-11-07 14:44,corsair/icons_c,gpt-image-2.5-flare,medium,1536x1024,1,440,4,343,0.0125,icons_c.png
 2026-11-07 14:44,corsair/icons_d,gpt-image-2.5-flare,medium,1536x1024,1,452,4,343,0.0126,icons_d.png
+2026-11-07 16:27,corsair/player/corsair_queen,gpt-image-2.5-flare,medium,1024x1024,2,678,24,439,0.0168,player_corsair_queen.png
+2026-11-07 16:27,corsair/player/marooned_quartermaster,gpt-image-2.5-flare,medium,1024x1024,2,637,24,439,0.0165,player_marooned_quartermaster.png
+2026-11-07 16:27,corsair/player/ghost_helmsman,gpt-image-2.5-flare,medium,1024x1024,2,625,24,439,0.0165,player_ghost_helmsman.png
+2026-11-07 19:02,corsair/corsair/old_hollow_eye,gpt-image-2.5-flare,medium,1024x1024,2,581,548,439,0.0205,corsair_old_hollow_eye.png
+2026-11-07 19:02,corsair/corsair/hull_crab,gpt-image-2.5-flare,medium,1024x1024,2,654,502,439,0.0205,corsair_hull_crab.png

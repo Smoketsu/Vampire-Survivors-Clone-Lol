@@ -87,9 +87,10 @@ unit("corsair/boarding_bruiser", 56, "male", "a BOARDING BRUISER, a huge MALE pi
 unit("corsair/reef_shark", 44, "creature, no sex", "a REEF SHARK, a creature, seen from above-front leaping out of the water with its "
      "toothy jaws open: powder-grey back and fin, a cream belly, red gums and white teeth, a small ring of white sea FOAM splashing at its "
      "base. Signature shape: the dorsal fin and the open toothy jaws.", ramps="powder,sail,foam,sea,sash", colours=PAL + "; foam white #8FB4D2 #D8E9F4 #F6FBFF", kind="creature", w=" and about 44 wide")
-unit("corsair/hull_crab", 40, "creature, no sex", "a GIANT HULL CRAB, a creature, seen from above-front, a wide barnacled shell, two huge "
-     "claws raised, eight legs and two stalk eyes: an armoured shell in dull orange-red and powder grey with amber glints, pale underside. "
-     "Signature shape: the wide round shell and the two huge raised claws.", ramps="sash,lantern,powder,foam,sea,oak", kind="creature", w=" and about 56 wide")
+unit("corsair/hull_crab", 40, "creature, no sex", "a GIANT HULL CRAB, a creature, seen from above-front, a wide round barnacled shell, two huge "
+     "claws raised, eight legs and two stalk eyes. COLOURFUL and SPECKLED, not grey: the shell is bright orange-red with many cream and pale-yellow speckles and "
+     "dark red spots, the claws and legs a deeper red with cream tips, small cream barnacles on the shell, a pale cream underside, amber stalk eyes. "
+     "NO grey anywhere. Signature shape: the wide speckled shell and the two huge raised claws.", ramps="sash,lantern,sail,brass,foam,sea,oak", kind="creature", w=" and about 56 wide")
 unit("corsair/kraken_arm", 56, "creature, no sex", "a KRAKEN ARM, a creature: a single huge purple tentacle rising from a ring of white FOAM, "
      "curled at the tip, two rows of cream-pink suckers down its inner side. Signature shape: the tall curled tentacle with its suckers.",
      ramps="kraken,sail,foam,sea", colours="kraken purple #3A2150 #6B3C86 #A877BC; suckers cream #8F8466 #D6CBA4 #F0E9CE; foam white #8FB4D2 #D8E9F4 #F6FBFF; navy #0E1A33 #1B3560", kind="creature")
@@ -134,10 +135,11 @@ unit("corsair/bosun_gorran", 64, "male", "BOSUN GORRAN, a MALE miniboss pirate b
      "and the other holding a big ship's iron chain-hook: a black bicorne hat with a brass badge, a long dark navy greatcoat open over a bare "
      "chest, a thick red sash, a brass whistle on a chain, big black boots, a grey-streaked beard. Signature shape: the huge frame and the black bicorne.",
      w=" and about 56 wide")
-unit("corsair/old_hollow_eye", 72, "creature, no sex", "OLD HOLLOW-EYE, a miniboss creature: a gigantic kraken arm, thick and scarred, rising from a ring of "
-     "white FOAM, with a pale blind HOLLOW EYE socket set in its tip, barnacles and old harpoon scars on its purple skin, two rows of cream suckers. "
-     "Signature shape: the huge scarred tentacle with the single hollow eye.",
-     ramps="kraken,sail,foam,sea,sash", colours="kraken purple #3A2150 #6B3C86 #A877BC; cream #8F8466 #D6CBA4 #F0E9CE; foam white #8FB4D2 #D8E9F4 #F6FBFF; navy #0E1A33 #1B3560", kind="creature", w=" and about 60 wide")
+unit("corsair/old_hollow_eye", 72, "creature, no sex", "OLD HOLLOW-EYE, a miniboss creature: a gigantic KRAKEN, a WHOLE OCTOPUS-like monster seen from above-front, "
+     "a big bulbous purple head-mantle covered in barnacles and old harpoon scars, ONE pale blind HOLLOW EYE socket (a single huge cloudy white eye) in the middle of its head, and "
+     "eight thick tentacles spreading out and curling around it with two rows of cream suckers, all rising from a ring of white FOAM. Signature shape: the big scarred head "
+     "with the single hollow eye and the spread of curling tentacles.",
+     ramps="kraken,sail,foam,sea,sash", colours="kraken purple #3A2150 #6B3C86 #A877BC; cream #8F8466 #D6CBA4 #F0E9CE; foam white #8FB4D2 #D8E9F4 #F6FBFF; navy #0E1A33 #1B3560", kind="creature", w=" and about 76 wide")
 unit("corsair/ghost_bosun", 48, "male", "THE GHOST BOSUN, a MALE spectral miniboss: a translucent-looking drowned bosun, hollow glowing eyes, "
      "raising a small whistle to his lips, a tattered cap and a ragged coat, dripping with seaweed and pale green mist, pale green-white spectral glow. "
      "Signature shape: the ragged coat and the whistle at the lips.",
@@ -156,18 +158,24 @@ unit("corsair/vandermere", 96, "male", "CAPTAIN CORNELIUS VANDERMERE, a ghostly 
      "hollow glowing eyes, barnacles on his shoulders, pale green-white spectral glow. Signature shape: the big wheel and the drooping tricorn.",
      ramps="spectre,sea,powder,oak,sail", colours="ghost green #1D4F4A #46A78F #B7F0DC; rotten oak #2B1D14 #4A3220 #7A5632; navy #0E1A33 #1B3560 #2F5F96; powder grey #2E3239 #5E636C #9498A0; cream #8F8466 #D6CBA4", w=" and about 80 wide")
 # --- the three playable characters (player/) and the summons (summons/) ---
-unit("player/marooned_quartermaster", 56, "male", "THE MAROONED QUARTERMASTER, a MALE playable necromancer, a lean castaway ship's quartermaster "
-     "with a rusted shackle and a short chain on one wrist, whirling a spiked chain-shot (two iron balls joined by a chain) in one hand with "
-     "pale green spectral glints: a torn navy officer's coat, a ragged cream shirt, a faded red sash, a salt-stained tricorn, a short beard. "
-     "Never violet (violet is the necromancer's). Signature shape: the torn coat and the whirling chain-shot.", w=" and about 50 wide")
-unit("player/corsair_queen", 56, "female", "THE CORSAIR QUEEN, a FEMALE playable necromancer in the game's figure-redesign style (an extremely "
-     "exaggerated hourglass figure, a very full bust, a tiny cinched waist, very wide hips), glamorous and regal, FACE CLEARLY VISIBLE, long black hair, "
-     "one hand pointing a brass-topped cane like a cannon at the enemy: a black-and-crimson-sashed tricorn with a white plume, a long fitted "
-     "BLACK COAT trimmed with brass over a cream blouse, a red sash, tight dark trousers and tall black boots, brass rings. Chest and hips FULLY "
-     "COVERED, never nude, tasteful. Never violet. Signature shape: the hourglass figure, the plumed tricorn and the long black coat.", w=" and about 46 wide")
-unit("player/ghost_helmsman", 56, "male", "THE GHOST HELMSMAN, a MALE playable necromancer, a broad drowned ship's helmsman holding a huge "
-     "rusted iron ANCHOR on his shoulder with a chain, pale green spectral glow in his eyes and along the anchor: a weathered hooded oilskin coat in "
-     "dark navy-grey, a cream shirt, a rope belt, wet boots, a grey beard. Never violet. Signature shape: the huge anchor and the hooded oilskin.", w=" and about 52 wide")
+CHAR_COL = "violet #4A2569 #7A42AD #A35CFA (the dominant colour); bone white #7F785F #B4AA8A #E8E1C8; soul teal glow #1C6B58 #3DCC94 #A8FFD2; pale undead-touched skin #8A8796 #B4B0BE #DAD6E2; brown wood #4F3320 #8C6040; dark #160A21"
+CHAR_RAMPS = "violet,bone,grey,soul,brown,arcane"
+unit("player/marooned_quartermaster", 56, "male", "THE MAROONED QUARTERMASTER, a MALE playable NECROMANCER of the Black Tide (a necromancer first: the dominant colour is VIOLET), a lean "
+     "pale undead-touched castaway ship's quartermaster, a short beard, a torn long VIOLET quartermaster's coat with a high collar and bone-white buttons, a "
+     "bone-white peg leg on one side, a worn violet tricorn, a rusted shackle on one wrist, holding a tall staff topped with a glowing soul-teal ship's lantern as his "
+     "casting focus. He stands upright and compact (about 44 pixels wide at most, no sprawling arms). Signature shape: the violet coat, the tricorn and the tall lantern staff.",
+     ramps=CHAR_RAMPS, colours=CHAR_COL, w=" and at most 46 wide", ink="0.2")
+unit("player/corsair_queen", 56, "female", "THE CORSAIR QUEEN, a FEMALE playable NECROMANCER of the Black Tide (a necromancer first: the dominant colour is VIOLET) in the game's "
+     "figure-redesign style (an extremely exaggerated hourglass figure, a very full bust, a tiny cinched waist, very wide hips), glamorous and regal, pale "
+     "undead-touched skin, FACE CLEARLY VISIBLE, long dark hair under a VIOLET tricorn with a bone-white plume, a long fitted VIOLET captain's coat with bone-white "
+     "trim and a violet skirt-length tail, a high collar, tall boots, holding a slim bone-white cutlass raised upright whose blade glows soul-teal as her casting focus. "
+     "Chest and hips FULLY COVERED, never nude, tasteful. She stands compact (about 44 pixels wide at most, no sprawling arms). Signature shape: the hourglass figure, the plumed tricorn and the long coat.",
+     ramps=CHAR_RAMPS, colours=CHAR_COL, w=" and at most 46 wide", ink="0.2")
+unit("player/ghost_helmsman", 56, "male", "THE GHOST HELMSMAN, a MALE playable NECROMANCER of the Black Tide (a necromancer first: the dominant colour is VIOLET), a broad "
+     "spectral drowned ship's helmsman in a long hooded VIOLET oilskin coat with bone-white rope trim, a grey beard, pale undead-touched face with glowing soul-teal eyes, "
+     "holding up a small ship's-wheel-topped staff with a glowing soul-teal lantern as his casting focus, a bone-white anchor charm at his belt. He stands upright and "
+     "compact (about 44 pixels wide at most). Signature shape: the hooded violet oilskin and the wheel-topped lantern staff.",
+     ramps=CHAR_RAMPS, colours=CHAR_COL, w=" and at most 46 wide", ink="0.2")
 unit("summons/powder_wraith", 44, "undead skeleton, no sex", "a POWDER WRAITH, an undead SKELETON (a summoned ally) marching forward carrying a lit powder keg "
      "on its shoulder with a short fuse spitting an amber spark, bone-white bones with dark eye sockets, a tattered red sash and a torn black "
      "pirate bandana. Signature shape: the skeleton with the keg and the amber spark.",
@@ -186,7 +194,7 @@ for _k, _v in REF.items():
 
 
 # Units converted WITH the level stretch (their AI renders were too dark and sank into the floors).
-LEVELS = ["corsair/ghost_bosun", "player/ghost_helmsman", "summons/powder_wraith", "summons/magazine_lord"]
+LEVELS = ["corsair/ghost_bosun", "summons/powder_wraith", "summons/magazine_lord"]
 
 
 def prompt_for(key: str) -> str:
@@ -213,6 +221,8 @@ def prompt_for(key: str) -> str:
 def refs_for(key: str) -> list:
     """Reference images of unit `key`: a game sprite, then the concept crop when one exists."""
     u = U[key]
+    if key.startswith("player/"):
+        return [REFS / "sprite_necro.png", REFS / ("sprite_necro_f.png" if U[key]["sex"] == "female" else "sprite_necro_f2.png")]
     r = []
     r.append(REFS / ("sprite_female.png" if u["sex"].startswith("female") else "sprite_skeleton.png" if "undead" in u["sex"] else "sprite_male.png"))
     c = REFS / ("concept_%s.png" % u["ref"])
@@ -434,11 +444,63 @@ def pad(key: str) -> None:
     out.save(p)
 
 
+# Round 1 (owner's marks): tentacles that wave in the air. Each still (padded) is sheared row by row: shift = A * ((h - 1 - y) / (h - 1)) ** 1.3
+# * sin(2 pi f / 8 + y * 0.1) px, so the foam at the base stays put and the tips sweep; a row never loses a pixel off the canvas.
+WAVE = {"corsair/kraken_arm": 3.0, "corsair/old_hollow_eye": 2.0}
+# The Powder Wraith's fuse flash: (tip x, tip y) of the spark in the still, drawn in the lantern colours on these frames of its walk strip.
+FLASH = {"summons/powder_wraith": ((33, 9), (1, 2, 5, 6))}
+
+
+def wave_strip(key: str) -> None:
+    """Writes <key>_walk.png: 8 frames of the padded still with the tentacles waving (frame 0 = the still)."""
+    import math
+    import numpy as np
+    from PIL import Image
+    still = np.array(Image.open(ROOT / "assets/sprites" / (key + ".png")).convert("RGBA"))
+    h, w = still.shape[:2]
+    amp = WAVE[key]
+    frames = []
+    for f in range(8):
+        out = np.zeros_like(still)
+        for y in range(h):
+            row = still[y]
+            xs = np.nonzero(row[:, 3])[0]
+            if len(xs) == 0:
+                continue
+            a = amp * ((h - 1 - y) / (h - 1)) ** 1.3
+            d = int(round(a * math.sin(2 * math.pi * f / 8 + y * 0.1))) if f else 0
+            d = max(-int(xs.min()), min(d, w - 1 - int(xs.max())))  # Never push a pixel off the canvas.
+            out[y] = np.roll(row, d, axis=0)
+        frames.append(out)
+    Image.fromarray(np.concatenate(frames, axis=1)).save(ROOT / "assets/sprites" / (key + "_walk.png"))
+
+
+def flash_strip(key: str) -> None:
+    """Adds the small fuse flash (a plus of lantern pixels where the frame is empty) to the walk strip of `key`."""
+    from PIL import Image
+    pal = {"c": (0xFF, 0xDF, 0x8A, 255), "m": (0xF2, 0xA6, 0x3A, 255)}
+    p = ROOT / "assets/sprites" / (key + "_walk.png")
+    im = Image.open(p).convert("RGBA")
+    (tx, ty), frames = FLASH[key]
+    fw = im.height if False else Image.open(ROOT / "assets/sprites" / (key + ".png")).width
+    px = im.load()
+    for f in frames:
+        for dx, dy, c in ((0, 0, "c"), (-1, 0, "m"), (1, 0, "m"), (0, -1, "m"), (0, 1, "m"), (-2, 0, "m"), (2, -2, "m")):
+            x, y = tx + dx, ty + dy
+            if 0 <= x < fw and 0 <= y < im.height and px[f * fw + x, y][3] == 0:
+                px[f * fw + x, y] = pal[c]
+    im.save(p)
+
+
 def strips(keys: list) -> None:
     for key in HOVER:
         pad(key)
-    ks = [k for k in U if k not in NO_STRIP]
+    ks = [k for k in U if k not in NO_STRIP and k not in WAVE]
     run(["tools/walk_cycle.py", "build"] + ks)
+    for k in WAVE:
+        wave_strip(k)
+    for k in FLASH:
+        flash_strip(k)
     run(["tools/walk_cycle.py", "idle"] + IDLES)
 
 
