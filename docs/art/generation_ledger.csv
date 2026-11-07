@@ -1321,3 +1321,8 @@ utc,key,model,quality,size,refs,text_in,image_in,image_out,usd_est,file
 2026-11-07 02:02,concepts/year_lineup,gpt-image-2.5-flare,medium,1536x1024,2,371,952,343,0.0198,year_lineup.png
 2026-11-07 02:02,concepts/year_bosses,gpt-image-2.5-flare,medium,1536x1024,2,298,952,343,0.0194,year_bosses.png
 2026-11-07 02:02,concepts/year_stage,gpt-image-2.5-flare,medium,1536x1024,2,276,952,343,0.0193,year_stage.png
+2026-11-07 14:09,concepts/act15_horsemen,gpt-image-2.5-flare,medium,1536x1024,2,346,952,343,0.0196,horsemen.png
+2026-11-07 14:09,concepts/act15_mictlan,gpt-image-2.5-flare,medium,1536x1024,2,320,952,343,0.0195,mictlan.png
+2026-11-07 14:09,concepts/act15_host,gpt-image-2.5-flare,medium,1536x1024,2,289,952,343,0.0194,host.png
+2026-11-07 14:09,concepts/act15_diyu,gpt-image-2.5-flare,medium,1536x1024,2,307,952,343,0.0194,diyu.png
+2026-11-07 14:10,concepts/act15_plague,gpt-image-2.5-flare,medium,1536x1024,2,309,952,343,0.0195,plague.png

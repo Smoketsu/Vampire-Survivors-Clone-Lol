@@ -36,7 +36,7 @@ Only the Covenant (I) and the Shogunate (V) keep their numbers. Every rule is ke
 Three build waves, then the reorder in one pass. Each act follows the plan Acts IV–IX used (`docs/act5/`): a foundation that builds the act's three rules on stub stages and passes the same-seed gate, three stage agents in parallel, an integration merge, your art review rounds, bot playtest passes, then your "ship it".
 
 1. **Now: this doc.** Two new proposals (Norse, the Turning Year), short versions of the three written ones, concept art for all five, and the open questions at the end. Nothing is built until you answer them.
-2. **Wave 1: the Necropolis Dynasty and the Hall of the Slain, with a Black Tide deck spike.** Egypt and Norse both reuse paths the game already has (corpses, ground slow, debuffs, structures), so they can run side by side. The spike is one small sloop, one boat and one swimmer with the Bone Ring on a 360 px beam, so you can see the ring on a deck before the pirate act is built.
+2. **Wave 1: the Necropolis Dynasty and the Hall of the Slain, with a Black you**, structures), so they can run side by side. The spike is one small sloop, one boat and one swimmer with the Bone Ring on a 360 px beam, so you can see the ring on a deck before the pirate act is built.
 3. **Wave 2: the Black Tide and the Age of Titans.** The two acts with new arena systems (the deck and boarding; neutral herds, a mass raise and the meteor finale).
 4. **Wave 3: the Turning Year, alone.** It is the finale and its last boss phase brings back one rule from every act, so it is built when every act exists.
 5. **The reorder pass.** One ordered act list from which every act and stage number is derived; the unlock chain; act tabs grouped by Part (14 tabs do not fit in one row at 1280 px); a save migration that keeps every stage a player has opened; the Soul Ash decision (below); a bot pass for each moved act; the CI job names; and the story text: a closing card and an epilogue part for every act, all written together once the order is final.
@@ -325,6 +325,85 @@ Finale summon class **the Ossuary Oak**: a slow tree of bone that roots in place
 
 *Stage 40 in play:* the blight under the ring against living ground all around, dryads at work, thickets closing the paths, treants and the great stag closing in. The blight should read stronger than this in the game (a darker grey with dead grass).
 
+## A fifteenth act: five candidates
+
+Recommended: **Death and the Four Horsemen as Act XV**, a new finale after the Turning Year. Every act so far is a power that claims the dead; the last claim is Death's own. Fifteen then reads as fourteen claims and the one that never had to ask. If the Turning Year should stay the finale, **Mictlan** (Aztec) is the strongest pick for a mid-campaign slot.
+
+| Candidate | Slot | What it adds | Overlap with built or planned acts |
+| --- | --- | --- | --- |
+| **Death and the Four Horsemen** | XV, the new finale (stages 43–45) | The last and largest claim: Death itself | Low |
+| **The Celestial Host** | X, closing Part One beside the Inferno | Heaven answers hell | High: the Covenant, Seraphine and Act VI's fallen angels already own the holy look |
+| **Mictlan, the Flower War** | VIII, between the Dynasty and Olympus | A third great pantheon of the dead | Medium: a sun cult near the Shogunate's sun goddess |
+| **The Jade Court of Diyu** | VIII, among the god acts | The bureaucracy of the dead | Medium: East Asian next to the Shogunate; hopping corpses next to the Court |
+| **The Plague Years** | III, early in the campaign | A second mortal act for the thin opening | Low in play; close to Act I's medieval tone |
+
+### 1. Death and the Four Horsemen (recommended)
+
+The Turning Year ends with the dead planted and rising each spring: death no longer ends anything. The one power that cannot allow that is Death, who has never had to ride before. The Four ride out. Look: bone white, ash grey, rust red, sickly green and pale gold under a black sun. Stage key `pale`.
+
+- **Mortality** (the headline). Summons slain by the Pale Host's reapers do not come back at the next replenish; they return only when Death's hourglass turns, every 3:00. For the first time the army itself is the resource to protect.
+- **The Hourglass.** Death watches the necromancer's craft: every corpse he raises drops a grain into a glass on the HUD. When it fills, a Reaper elite is sent at the necromancer himself. Raising is never free here.
+- **The Rider's Gift.** Each stage is ridden by a Horseman whose gift bends the arena (one path, a gift per stage): Pestilence's contagion jumps between summons that stand close, so the ring must spread; Famine withers crystals and drops left on the ground for 6 s; War sounds a horn every 60 s and the whole screen charges.
+- **Stages:** 43. the Withered Fields (Pestilence and Famine, a pair who ride together), 44. the Endless Battlefield (War, who grows with every death on either side), 45. the Pale Gate (Death, the Pale Rider: the hourglass, the scythe, and a last phase in which he offers the necromancer the scythe).
+- **The ending:** the necromancer takes the scythe and the pale horse. He does not defeat Death; he becomes it. The true end of the campaign, after the Turning Year's spring.
+
+![Death and the Four Horsemen: Pestilence, Death, War and Famine on their horses under a black sun, with a plague-rider, a famine wraith, a war-herald and a reaper in front](../../art_source/concepts/act15/horsemen.png)
+
+*Key art:* the Four on their horses, Death in the centre with his hourglass, and their servants in front.
+
+### 2. The Celestial Host
+
+With hell's throne taken, heaven itself comes down to judge the necromancer. It would close Part One with heaven and hell both answering to him. Look: white, pale gold, sky blue and dawn rose.
+
+- **Judgment.** Every raise adds sin to a meter; at each threshold an angel of judgment descends on the necromancer.
+- **Hallowed Light.** Beams of sunlight sweep the arena and burn the undead that stand in them, summons and necromancer alike.
+- **Choirs.** Angels sing in circles that make them untouchable while the hymn holds; break the circle to break the hymn.
+- **Bosses:** a Throne (a burning wheel of eyes), an Archangel captain, and a six-winged seraph whose face is never seen.
+- **Why not first:** the Covenant, Seraphine and her Fallen Seraph, and Act VI's fallen angels already wear this look, so it would need a very different palette to feel new.
+
+![The Celestial Host: an angelic legionary, a choir angel, a cherub, a burning wheel of eyes and a judge angel, under a six-winged seraph with a flaming sword](../../art_source/concepts/act15/host.png)
+
+*Key art:* the Host on the clouds under the six-winged seraph.
+
+### 3. Mictlan, the Flower War
+
+The dead of the western empire walk the nine levels of Mictlan to its Lord and Lady, and the fifth sun needs blood to keep burning. The necromancer has taken both the dead and the blood. Look: jade, obsidian, turquoise, gold and marigold.
+
+- **The Flower War.** Warriors fight to capture, not kill: nets take a summon alive and carry it toward an altar; free it before it gets there.
+- **The Fifth Sun.** A sun meter fed by every summon that reaches an altar; when it fills, the sun flares and every enemy surges for 30 s.
+- **The Nine Levels.** Each stage descends through levels of the underworld, each with its own hazard: the obsidian wind, the clashing hills, the river guarded by the xolo dog.
+- **Bosses:** the Jaguar Lord, Tezcatlipoca the Smoking Mirror (mirror copies of himself), and Mictlantecuhtli and Mictecacihuatl, the Lord and Lady of the Dead, as a two-boss finale. Sacrifice is shown in the game's stylised way, never as gore.
+
+![Mictlan: a jaguar knight, an eagle knight, a priestess, a xolo dog, a warrior with a capture net and an obsidian-wind spirit, before a pyramid where the Lord and Lady of the Dead sit enthroned](../../art_source/concepts/act15/mictlan.png)
+
+*Key art:* the Lord and Lady of the Dead on the pyramid, the jaguar and eagle knights, a priestess, a xolo and a netter below.
+
+### 4. The Jade Court of Diyu
+
+The dead of the east are kept in ledgers, and the necromancer's army is entirely unregistered. The Ten Courts of the underworld send clerks, guards and King Yama himself to set the books straight. Look: lacquer red, black, jade, gold, paper white and ghost blue.
+
+- **The Ledger.** Clerks write a summon's name into the book; a written summon is struck from the army after 10 s unless the clerk dies first.
+- **Talismans.** Paper seals stick to summons and freeze them; hopping corpses move only while they are unseen.
+- **The Ten Courts.** Each zone is a court with its own punishment as the hazard.
+- **Bosses:** Ox-Head and Horse-Face as a pair, the Ghost Bride (figure style), and King Yama, Judge of the Dead.
+
+![The Jade Court of Diyu: a hopping corpse with a talisman, Ox-Head and Horse-Face, a ghost bride in red, a clerk with a ledger and paper lanterns, before King Yama on his throne](../../art_source/concepts/act15/diyu.png)
+
+*Key art:* King Yama's hall of judgment with his court in front.
+
+### 5. The Plague Years
+
+The pirates bring the plague ashore, and a city of the living fights the necromancer and the sickness at once. A mortal act for the opening, where only the Covenant and the Black Tide sit today. Look: soot black, plague green, bone, ember orange.
+
+- **Contagion.** Sickness spreads between bodies standing close, both armies; the ring has to breathe.
+- **Quarantine.** The city walls off districts on the clock: gates close and open, and the arena changes shape.
+- **Pyres.** Burning corpses denies the necromancer's raises but stops the sickness from spreading.
+- **Bosses:** the Plague Doctor-General, the Saint of the Lantern (figure style), and the Rat King.
+
+![The Plague Years: a plague doctor, a flagellant, a nun with a censer, a rat-catcher, rats and a corpse cart, before the Rat King and a white-robed saint with a lantern](../../art_source/concepts/act15/plague.png)
+
+*Key art:* the Rat King and the Saint of the Lantern behind the city's plague doctor, flagellant, nun, rat-catcher and corpse-cart. The red crosses on the doors would become painted X marks in the game (the red cross is a protected emblem).
+
 ## Open questions for you
 
 Each has a recommendation; answer inline or in a comment and wave 1 starts.
@@ -340,3 +419,4 @@ Each has a recommendation; answer inline or in a comment and wave 1 starts.
 - [ ] **The stage select:** a Part One / Part Two switch with the act tabs under it? Recommended (fourteen tabs do not fit in one row).
 - [ ] **Wave 1:** the Necropolis Dynasty and the Hall of the Slain together, with the Black Tide deck spike beside them? Recommended.
 - [ ] **Concept art:** any image to redo before sprites start? Two notes of mine: Odin could move further from a wizard silhouette, and the Turning Year's blight needs to read stronger in the game.
+- [ ] **The fifteenth act:** which of the five candidates above? Recommended: Death and the Four Horsemen as XV, the new finale after the Turning Year. It would join wave 3 (built after the Turning Year), and the order drawing and build plan update once you pick.
