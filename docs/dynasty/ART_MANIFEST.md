@@ -8,7 +8,7 @@ All sprites are true pixel art, 1 art px = 1 screen px, drawn at the heights in 
 | Ramp | Colours (dark to light; ink first) | Use |
 |---|---|---|
 | `night` | `#0A0B16`, `#1B2038`, `#2E3660`, `#4B5894` | the Dynasty's blue-black night (Act VII slot): Anubis, jackal warriors, Bastet, Ammit; also the act's ink |
-| `bronze` | `#0A0B16`, `#6B5A22`, `#A38E3C`, `#D2BB62` | the Dynasty's DULL bronze-gold: enemy collars, bands, blades (true gold stays the player's reward colour) |
+| `dyn_bronze` (renamed from `bronze` at the wave 1 integration: Act IV owns the `bronze` ramp) | `#0A0B16`, `#6B5A22`, `#A38E3C`, `#D2BB62` | the Dynasty's DULL bronze-gold: enemy collars, bands, blades (true gold stays the player's reward colour) |
 | `lapis` | `#0A0B16`, `#16327C`, `#2B54B8`, `#5F8BE6` | lapis blue: scarabs, headcloth stripes, inlay |
 | `sand` | `#0A0B16`, `#8C6B3E`, `#D2B574`, `#F0DDA6` | sandstone: statues, the colossus, tombs, obelisks, columns |
 | `linen` | `#0A0B16`, `#8F8670`, `#C9C0A4`, `#F0E8D2` | linen: mummy wrappings, dresses, kilts, Osiris's robe |

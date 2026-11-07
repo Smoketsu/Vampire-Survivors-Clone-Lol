@@ -22,8 +22,9 @@
 class_name CartoucheKit
 extends DynastyKit
 
-## Sprite key of the cartouche icon (assets/sprites/dynasty/cartouche.png).
-const SPRITE: String = "dynasty/cartouche"
+## Sprite key of the cartouche icon (the art pass's marker
+## assets/sprites/markers/dyn_cartouche.png; wired at the wave 1 integration).
+const SPRITE: String = "markers/dyn_cartouche"
 ## Steps the icon's fill is drawn in (a redraw only when it changes step).
 const FILL_STEPS: int = 12  # TUNING (not in GDD) drawing only
 

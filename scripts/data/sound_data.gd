@@ -778,6 +778,8 @@ const SHANTY_SCORE := {
 	"horn": {"starts": [0.0, 8.0], "dur": 6.5, "attack": 2.2, "decay": 3.0, "amp": 0.05,
 		"lp0": 240.0, "lp1": 800.0,
 		"notes": [[73.42, 110.0], [98.0, 146.83]]},  # TUNING (not in GDD) [root, fifth] (Hz) per swell
+}
+
 # --- Act VI (final order): the Hall of the Slain ---
 ## "Horns at the Last Feast", the Hall of the Slain run loop (GDD §15.0 "Hall of the Slain art and audio"): the RunLoopSynth
 ## score of every stage whose STAGE has "music": "valhall". Slow war drums (the existing Act VI "drums" job, 75 bpm), long low
@@ -2071,6 +2073,8 @@ const CORSAIR_SOUNDS: Dictionary = {  # TUNING (not in GDD)
 			{"wave": "tri", "f0": 220.0, "f1": 165.0, "dur": 1.7, "amp": 0.14, "attack": 0.6, "decay": 0.9, "lp0": 900.0, "vib_hz": 5.5, "vib_depth": 0.03},
 			{"wave": "tri", "f0": 223.0, "f1": 167.0, "dur": 1.7, "amp": 0.1, "attack": 0.6, "decay": 0.9, "lp0": 900.0, "vib_hz": 4.0, "vib_depth": 0.03},
 			{"wave": "noise", "dur": 1.6, "amp": 0.05, "attack": 0.6, "decay": 0.7, "lp0": 500.0, "lp1": 1200.0}]},
+}
+
 # --- Act VI (final order): the Hall of the Slain ---
 ## The Hall of the Slain's sound effects (recipe keys as SOUNDS). Kept OUT of SOUNDS like the other packs: Sfx renders it
 ## lazily the first time a Norse run's music ("valhall") is asked for (Sfx.prepare_pack("norse"); seeds Sfx.PACK_SEED +
@@ -2121,6 +2125,7 @@ const NORSE_SOUNDS: Dictionary = {  # TUNING (not in GDD)
 			{"wave": "sine", "f0": 660.0, "f1": 1320.0, "dur": 1.2, "amp": 0.05, "attack": 0.9, "decay": 0.4},
 			{"wave": "noise", "dur": 1.0, "amp": 0.06, "attack": 0.6, "decay": 0.3, "lp0": 800.0, "lp1": 6000.0},
 			{"wave": "saw", "f0": 130.8, "start": 0.7, "dur": 0.7, "amp": 0.1, "attack": 0.1, "decay": 0.35, "lp0": 500.0, "lp1": 1200.0}]},
+}
 
 # --- the Necropolis Dynasty (Act VII slot; stage key dynasty) ---
 ## "The Weighing of the Heart", the Dynasty's run loop (GDD §15.0 "The Necropolis Dynasty art and audio"): the

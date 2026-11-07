@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bbxru1ro5iu67"
-path="res://.godot/imported/rune_seer_idle.png-6672fe3881c1f469be5e417b141cfbf2.ctex"
+uid="uid://dl258ly0i3o02"
+path="res://.godot/imported/shield_maiden_hero_walk.png-f26cbf92b217d3498c0c869534538095.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/norse/rune_seer_idle.png"
-dest_files=["res://.godot/imported/rune_seer_idle.png-6672fe3881c1f469be5e417b141cfbf2.ctex"]
+source_file="res://assets/sprites/player/shield_maiden_hero_walk.png"
+dest_files=["res://.godot/imported/shield_maiden_hero_walk.png-f26cbf92b217d3498c0c869534538095.ctex"]
 
 [params]
 

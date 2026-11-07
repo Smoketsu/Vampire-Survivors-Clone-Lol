@@ -215,5 +215,5 @@ const STAGE := {
 	# Music key "bronze" FOR NOW (the Act IV hymn, whose lazy pack also renders
 	# the horn and boulder sounds NorseRulesData.SOUNDS borrows): the audio pass
 	# adds the act's own score and the lead switches this at the merge.
-	"music": "bronze",
+	"music": "valhall",  # Wave 1 integration: the act's own score (SoundData.SCORES; its pack renders with it)
 }

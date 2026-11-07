@@ -381,33 +381,57 @@ const CORSAIR_TAN_LIGHT := Color(0.776, 0.545, 0.369)  # #C68B5E
 # its UI meaning (evolution, chest, victory): the Einherjar's gold is the paler
 # NORSE_VALKYRIE_GOLD, never Palette.GOLD; crimson stays danger (the fury).
 ## Outline ink of the Norse kinds (a cold near-black).
-const NORSE_INK := Color(0.055, 0.063, 0.078)  # #0E1014
+const NORSE_INK := Color(0.043, 0.059, 0.086)  # #0B0F16
 ## Frost white: snow, pale furs, the hall's light.
-const NORSE_FROST := Color(0.910, 0.933, 0.949)  # #E8EEF2
+const NORSE_FROST := Color(0.918, 0.949, 0.980)  # #EAF2FA
 ## Frost shade: snow in shadow, worn linen.
-const NORSE_FROST_SHADE := Color(0.706, 0.761, 0.800)  # #B4C2CC
+const NORSE_FROST_SHADE := Color(0.663, 0.733, 0.800)  # #A9BBCC
 ## Iron grey: mail, helms, axe heads.
-const NORSE_IRON := Color(0.353, 0.376, 0.408)  # #5A6068
+const NORSE_IRON := Color(0.357, 0.396, 0.439)  # #5B6570
 ## Dark iron: shadowed mail, rust-black draugr gear.
-const NORSE_IRON_DARK := Color(0.180, 0.196, 0.220)  # #2E3238
+const NORSE_IRON_DARK := Color(0.169, 0.192, 0.224)  # #2B3139
 ## Pine green-black: cloaks, pine woods, barrow turf.
-const NORSE_PINE := Color(0.086, 0.141, 0.118)  # #16241E
+const NORSE_PINE := Color(0.122, 0.290, 0.227)  # #1F4A3A
 ## Lighter pine: moss on the barrows, cloak folds.
 const NORSE_PINE_LIGHT := Color(0.173, 0.290, 0.227)  # #2C4A3A
 ## Hearth amber: fire light, leather, round-shield wood.
-const NORSE_HEARTH := Color(0.910, 0.604, 0.235)  # #E89A3C
+const NORSE_HEARTH := Color(0.941, 0.565, 0.180)  # #F0902E
 ## Dark hearth: leather straps, shield wood in shadow.
-const NORSE_HEARTH_DARK := Color(0.643, 0.337, 0.118)  # #A4561E
+const NORSE_HEARTH_DARK := Color(0.635, 0.298, 0.102)  # #A24C1A
 ## Valkyrie gold: the valkyries' wings and the Einherjar's light (paler than
 ## the UI gold, so it never reads as a chest or an evolution).
 const NORSE_VALKYRIE_GOLD := Color(0.957, 0.851, 0.541)  # #F4D98A
 ## Rune glow: ice-blue carved runes, a warded Norse warrior's shimmer (bluer
 ## than the undead's soul-teal).
-const NORSE_RUNE := Color(0.549, 0.784, 1.000)  # #8CC8FF
+const NORSE_RUNE := Color(0.561, 0.816, 1.000)  # #8FD0FF
 ## Berserk red: the fury's eyes and its aura (danger).
 const NORSE_BERSERK := Color(0.847, 0.157, 0.165)  # #D8282A
 ## Fire of the south: the fire-giants and Ragnarök's burning sky.
 const NORSE_FIRE := Color(1.000, 0.416, 0.102)  # #FF6A1A
+## The rest of the Hall of the Slain's ramps as the art pass named them (tools/palette.json
+## norse_<ramp>[_dark|_light|_glow]; the constants above follow its hexes since the wave 1 integration).
+## Iron grey lit: blade edges, wolf fur highlights (tools/palette.json "norse_iron_light"; added at the wave 1 integration).
+const NORSE_IRON_LIGHT := Color(0.561, 0.600, 0.639)  # #8F99A3
+## Pine green-black in shade: cloaks, tunics, pines (tools/palette.json "norse_pine_dark"; added at the wave 1 integration).
+const NORSE_PINE_DARK := Color(0.071, 0.157, 0.122)  # #12281F
+## Hearth amber bright: flame cores (tools/palette.json "norse_hearth_glow"; added at the wave 1 integration).
+const NORSE_HEARTH_GLOW := Color(1.000, 0.780, 0.400)  # #FFC766
+## Valkyrie pale gold in shade: armour trim, wing shadows (tools/palette.json "norse_valk_dark"; added at the wave 1 integration).
+const NORSE_VALK_DARK := Color(0.690, 0.541, 0.235)  # #B08A3C
+## Valkyrie pale gold: wings, spears, the Einherjar's light (tools/palette.json "norse_valk"; added at the wave 1 integration).
+const NORSE_VALK := Color(0.961, 0.843, 0.478)  # #F5D77A
+## Valkyrie gold bright: wing highlights, Einherjar glow core (tools/palette.json "norse_valk_glow"; added at the wave 1 integration).
+const NORSE_VALK_GLOW := Color(1.000, 0.953, 0.769)  # #FFF3C4
+## Ice-blue rune in shade: rune outlines, frost-giant eyes (tools/palette.json "norse_rune_dark"; added at the wave 1 integration).
+const NORSE_RUNE_DARK := Color(0.247, 0.447, 0.769)  # #3F72C4
+## Ice-blue rune bright: rune cores, ice glints (tools/palette.json "norse_rune_glow"; added at the wave 1 integration).
+const NORSE_RUNE_GLOW := Color(0.878, 0.957, 1.000)  # #E0F4FF
+## Undead blue-grey in shade: draugr flesh in shadow (tools/palette.json "norse_draugr_dark"; added at the wave 1 integration).
+const NORSE_DRAUGR_DARK := Color(0.204, 0.286, 0.353)  # #34495A
+## Undead blue-grey: draugr and Barrow-Wight flesh (tools/palette.json "norse_draugr"; added at the wave 1 integration).
+const NORSE_DRAUGR := Color(0.424, 0.549, 0.627)  # #6C8CA0
+## Undead blue-grey lit: frost-touched skin (tools/palette.json "norse_draugr_light"; added at the wave 1 integration).
+const NORSE_DRAUGR_LIGHT := Color(0.651, 0.753, 0.808)  # #A6C0CE
 # --- Act XII (temporary number): the Necropolis Dynasty ---
 # GDD §15.0 "The Necropolis Dynasty foundation (phase 1)": the act's look (proposal: "gold, lapis blue,
 # sandstone, carnelian red and papyrus green, with blue-black desert night"), the same hex values as the
@@ -447,3 +471,22 @@ const DYN_CARNELIAN := Color(0.749, 0.231, 0.169)  # #BF3B2B
 const DYN_PAPYRUS := Color(0.306, 0.561, 0.251)  # #4E8F40
 ## Egyptian skin ("dyn_skin"): the Dynasty's men and women (their own ramp; the Covenant's skin is peach).
 const DYN_SKIN := Color(0.541, 0.329, 0.188)  # #8A5430
+## The rest of the Dynasty's ramps as the art pass named them (tools/palette.json dyn_*; added at the wave 1 integration).
+## Night blue lit: fur highlights (tools/palette.json "dyn_night_light"; added at the wave 1 integration).
+const DYN_NIGHT_LIGHT := Color(0.294, 0.345, 0.580)  # #4B5894
+## Lapis blue lit: scarab glints, inlay (tools/palette.json "dyn_lapis_light"; added at the wave 1 integration).
+const DYN_LAPIS_LIGHT := Color(0.373, 0.545, 0.902)  # #5F8BE6
+## Linen lit: bright wrappings, Osiris's white robe (tools/palette.json "dyn_linen_light"; added at the wave 1 integration).
+const DYN_LINEN_LIGHT := Color(0.941, 0.910, 0.824)  # #F0E8D2
+## Carnelian red in shade: Sekhmet's gown in shadow (tools/palette.json "dyn_carnelian_dark"; added at the wave 1 integration).
+const DYN_CARNELIAN_DARK := Color(0.482, 0.118, 0.086)  # #7B1E16
+## Carnelian lit: the sun disc's glow (tools/palette.json "dyn_carnelian_light"; added at the wave 1 integration).
+const DYN_CARNELIAN_LIGHT := Color(0.910, 0.471, 0.333)  # #E87855
+## Papyrus green in shade: the crocodile's scales in shadow, Osiris's face (tools/palette.json "dyn_papyrus_dark"; added at the wave 1 integration).
+const DYN_PAPYRUS_DARK := Color(0.157, 0.353, 0.188)  # #285A30
+## Papyrus green lit: scale highlights (tools/palette.json "dyn_papyrus_light"; added at the wave 1 integration).
+const DYN_PAPYRUS_LIGHT := Color(0.549, 0.769, 0.369)  # #8CC45E
+## Egyptian skin in shade (tools/palette.json "dyn_skin_dark"; added at the wave 1 integration).
+const DYN_SKIN_DARK := Color(0.353, 0.212, 0.133)  # #5A3622
+## Egyptian skin lit (tools/palette.json "dyn_skin_light"; added at the wave 1 integration).
+const DYN_SKIN_LIGHT := Color(0.722, 0.486, 0.282)  # #B87C48

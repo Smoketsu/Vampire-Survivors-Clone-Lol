@@ -198,20 +198,21 @@ const STORM_HUD_COLOR := Color(0.824, 0.733, 0.384)  # TUNING (not in GDD) DYN_B
 const STORM_HUD_GAP: float = 4.0  # TUNING (not in GDD)
 
 # --- Sounds --------------------------------------------------------------------------------
-## Dynasty event -> sound id. FOR NOW every event points at an existing sound
-## (the comment names the intended Dynasty pack id, which the audio pass adds;
-## the lead switches the ids at the merge).
+## Dynasty event -> sound id: the Dynasty pack (SoundData.DYNASTY_SOUNDS,
+## rendered lazily with the "weighing" music; wired at the wave 1 integration)
+## where it has one, else a startup-bank sound (the comment names the intended
+## pack id still to come).
 const SOUNDS := {
-	"cartouche": "ui_tick",  # Intended "cartouche_glow" (a soft dry chime as the Name appears).
-	"rebirth": "summon_rise",  # Intended "rebirth" (a dry rasp of linen as the body stands again).
+	"cartouche": "cartouche_chime",  # Dynasty pack: a soft dry chime as the Name appears.
+	"rebirth": "rebirth_groan",  # Dynasty pack: a dry rasp of linen as the body stands again.
 	"name_stolen": "summon_rise",  # Intended "name_stolen" (a teal whoosh: the Name is yours).
 	"smash": "enemy_hit",  # Intended "cartouche_smash" (a clay crack).
 	"jar_rise": "boss_telegraph",  # Intended "jar_rise" (sand pouring off stone).
-	"jar_break": "catapult_impact",  # Intended "jar_break" (a heavy pot shatters, a sigh of breath).
-	"heka_write": "priest_ward",  # Intended "heka_write" (a whispered syllable and a chime).
+	"jar_break": "jar_shatter",  # Dynasty pack: a heavy pot shatters, a sigh of breath.
+	"heka_write": "heka_glyph",  # Dynasty pack: a whispered syllable and a chime.
 	"heka_cleanse": "orb_block",  # Intended "heka_cleanse" (a bright unravelling).
 	"storm_warn": "boss_telegraph",  # Intended "storm_warn" (a far rising wind).
-	"storm_rise": "plague_cast",  # Intended "storm_rise" (a roaring, hissing wind).
+	"storm_rise": "sandstorm",  # Dynasty pack: a roaring, hissing wind.
 	"devourer_lane": "boss_telegraph",  # Intended "devourer_growl" (a low growl from below).
 	"devourer_eat": "boss_impact",  # Intended "devourer_bite" (a huge snap of jaws).
 	"khopesh_spin": "warrior_bash",  # Intended "khopesh_spin" (a whirling double blade).

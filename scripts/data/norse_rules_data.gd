@@ -101,12 +101,18 @@ const FROSTBITE_SOURCE: String = "frostbite"
 ## Kind id of a brazier (a structure row in NorseEnemyData for the Codex and
 ## --spawn=; LongWinter draws and runs every brazier itself).
 const BRAZIER_KIND: String = "brazier"
-## Sprite key of a lit brazier, and of a doused one.
-const BRAZIER_SPRITE: String = "norse/brazier"
-## Sprite key of a doused (cold) brazier.
-const BRAZIER_OUT_SPRITE: String = "norse/brazier_out"
+## Sprite key of a lit brazier (the art pass's brazier_lit; wired at the wave 1 integration).
+const BRAZIER_SPRITE: String = "norse/brazier_lit"
+## Sprite key of a doused (cold) brazier (the art pass's brazier_doused).
+const BRAZIER_OUT_SPRITE: String = "norse/brazier_doused"
 ## Frost vignette colour (drawing only; a flat tinted band, no screen read).
 const FROST_TINT: Color = Color(0.82, 0.92, 1.0, 0.55)  # TUNING (not in GDD) visual only
+## Sprite key of the frost edge laid over the vignette's bands (a 128 x 48 strip,
+## tileable along x, its frost edge on the top row; rotated per screen edge).
+## A missing PNG leaves the plain gradient bands (wired at the wave 1 integration).
+const FROST_SPRITE: String = "norse/frost_creep"
+## Opacity of the frost edge strip over the bands, 0-1 (drawing only).
+const FROST_SPRITE_ALPHA: float = 0.85  # TUNING (not in GDD) visual only
 
 # --- The Einherjar (NorseKit.make_einherjar()) ----------------------------------------------
 
@@ -241,23 +247,25 @@ const RANGED_SOURCES: Array[String] = [BOULDER_SOURCE]
 
 # --- Sounds ---------------------------------------------------------------------------------
 
-## Norse event -> sound id. EXISTING sounds for now (the Norse pack is the
-## audio pass's; the intended ids are in the comments); an id that is not
-## rendered is skipped silently by Sfx.play().
+## Norse event -> sound id: the Norse pack (SoundData.NORSE_SOUNDS, rendered
+## lazily with the "valhall" music; wired at the wave 1 integration) where it
+## has one, else a startup-bank sound (other acts' packs are not rendered on a
+## Norse stage). An id that is not rendered is skipped silently by Sfx.play().
 const SOUNDS := {
-	"valkyrie_dive": "gargoyle_dive",  # Intended Norse id "valkyrie_cry" (a high war cry and a rush of wings).
-	"einherjar_march": "glory_gain",  # Intended "einherjar_horn" (a gold horn note).
-	"brazier_douse": "ground_burn",  # Intended "brazier_hiss" (a fire hissing out under snow).
-	"brazier_relight": "pit_burn",  # Intended "brazier_whoomph" (a fire catching).
-	"cold_rises": "deep_freeze",  # Intended "winter_wind" (a rising icy wind).
-	"berserk": "ares_warcry",  # Intended "berserk_roar" (a bear-like roar).
-	"horn": "artemis_horn",  # Intended "war_horn" (a long low war horn).
-	"stone_taken": "portal_seal",  # Intended "stone_crack" (runes going dark, stone cracking).
-	"stone_carved": "hex_chant",  # Intended "rune_carve" (chisel taps and a rising hum).
-	"ragnarok": "wolf_howl",  # Intended "ragnarok" (the wolf's howl, the sun going out).
-	"wolf_lunge": "hound_pounce",  # Intended "wolf_snarl".
-	"boulder_throw": "boulder_throw",  # Pantheon pack (a rock heave).
-	"boulder_land": "boulder_land",  # Pantheon pack.
-	"maiden_bash": "shield_bash",  # Empire pack (a shield clang).
-	"skald_song": "taiko_hit",  # Intended "skald_song" (a drum and a chant).
+	"valkyrie_dive": "valkyrie_dive",  # Norse pack: a war cry and a rush of wings.
+	"einherjar_march": "einherjar_rise",  # Norse pack: the Einherjar of the hall march out.
+	"brazier_douse": "deep_freeze",  # Startup bank (a cold crack); intended a fire hissing out under snow (not in the Norse pack yet).
+	"brazier_relight": "pu_feast",  # Startup bank (a warm swell); intended a fire catching (not in the Norse pack yet).
+	"cold_rises": "deep_freeze",  # Startup bank; intended a rising icy wind (not in the Norse pack yet).
+	"berserk": "berserk_roar",  # Norse pack: a bear-like roar.
+	"horn": "horn_call",  # Norse pack: a long low war horn.
+	"stone_taken": "rune_capture",  # Norse pack: the runes go dark.
+	"stone_carved": "priest_ward",  # Startup bank (a chime); intended chisel taps and a rising hum.
+	"ragnarok": "reckoning",  # Startup bank; intended the wolf's howl, the sun going out.
+	"wolf_lunge": "rogue_dash",  # Startup bank (a lunge); intended a wolf's snarl.
+	"boulder_throw": "catapult_launch",  # Startup bank (a heave).
+	"boulder_land": "frost_giant_stomp",  # Norse pack: a giant's heavy impact.
+	"maiden_bash": "warrior_bash",  # Startup bank (a shield clang).
+	"skald_song": "banshee_wail",  # Startup bank (a chant); intended a drum and a chant.
 }
+

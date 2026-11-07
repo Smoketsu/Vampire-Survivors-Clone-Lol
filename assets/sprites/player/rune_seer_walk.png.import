@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://uyy7e667v0yd"
-path="res://.godot/imported/berserker_hero_walk.png-5c956b06ef95b9cc7866d075f974ca42.ctex"
+uid="uid://bkv7fkl1sehn5"
+path="res://.godot/imported/rune_seer_walk.png-767580a18254478375b580860246812a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/norse/berserker_hero_walk.png"
-dest_files=["res://.godot/imported/berserker_hero_walk.png-5c956b06ef95b9cc7866d075f974ca42.ctex"]
+source_file="res://assets/sprites/player/rune_seer_walk.png"
+dest_files=["res://.godot/imported/rune_seer_walk.png-767580a18254478375b580860246812a.ctex"]
 
 [params]
 

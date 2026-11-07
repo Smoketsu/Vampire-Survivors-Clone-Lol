@@ -517,9 +517,9 @@ const HEIGHTS: Dictionary = {
 	"norse/raven": 18.0,  # TUNING (not in GDD) Hall of the Slain art, on-screen height in px
 	"norse/boss_barrow": 56.0,  # TUNING (not in GDD) Hall of the Slain art, on-screen height in px
 	"norse/boss_barrow_broken": 56.0,  # TUNING (not in GDD) Hall of the Slain art, on-screen height in px
-	"norse/rune_seer": 56.0,  # TUNING (not in GDD) Hall of the Slain art, on-screen height in px
-	"norse/shield_maiden_hero": 56.0,  # TUNING (not in GDD) Hall of the Slain art, on-screen height in px
-	"norse/berserker_hero": 56.0,  # TUNING (not in GDD) Hall of the Slain art, on-screen height in px
+	"player/rune_seer": 56.0,  # TUNING (not in GDD) Hall of the Slain art (playable character; moved from norse/ at the wave 1 integration), on-screen height in px
+	"player/shield_maiden_hero": 56.0,  # TUNING (not in GDD) Hall of the Slain art (playable character), on-screen height in px
+	"player/berserker_hero": 56.0,  # TUNING (not in GDD) Hall of the Slain art (playable character), on-screen height in px
 	"norse/draugr_thane": 54.0,  # TUNING (not in GDD) Hall of the Slain art, on-screen height in px
 	"norse/barrow_king": 62.0,  # TUNING (not in GDD) Hall of the Slain art, on-screen height in px
 	# --- Act IX: the Concord of Stars (the shared kinds; assets/sprites/concord/, structures/, bosses/) ---

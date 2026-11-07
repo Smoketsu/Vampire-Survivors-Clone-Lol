@@ -45,6 +45,8 @@ static func draw_enemy(ci: CanvasItem, kind: String, o: Vector2, r: float, flash
 		"skiff", "longboat", "raider_ship":
 			_boat(ci, o, r, flash, kind == "raider_ship")
 		"boarding_hook":
+			if SpriteBank.draw(ci, "corsair/grapple_hook", o, flash):
+				return true  # The art pass names the hook's sprite grapple_hook (wired at the wave 1 integration).
 			SpriteBank.draw_disc(ci, o, r, Glyphs._c(INK, flash))
 			SpriteBank.draw_disc(ci, o, r * 0.75, Glyphs._c(Palette.CORSAIR_POWDER_LIGHT, flash))  # Iron.
 			ci.draw_rect(Rect2(o + Vector2(-r * 0.15, -r * 0.9), Vector2(r * 0.3, r * 0.9)), Glyphs._c(Palette.CORSAIR_POWDER_DARK, flash))

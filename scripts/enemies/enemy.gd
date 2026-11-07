@@ -648,10 +648,9 @@ func motion_lunge(dir: Vector2, power: float) -> void:
 ## IV), a Shogunate kind's in shogunate/ (Act V), an Inferno kind's in inferno/
 ## (Act VI), a Sanguine Court kind's in court/ (Act VII), a Last Line kind's
 ## in city/ (Act VIII), a Concord of Stars kind's in concord/ (Act IX), a
-## Black Tide kind's in corsair/ (Act X): used
-## in city/ (Act VIII), a Concord of Stars kind's in concord/ (Act IX), a Hall
-## of the Slain kind's in norse/: used
-## Necropolis Dynasty kind's in dynasty/ (Act XII, temporary): used
+## Black Tide kind's in corsair/ (Act X), a Hall of the Slain kind's in
+## norse/ (Act XI) and a Necropolis Dynasty kind's in dynasty/ (Act XII; the
+## three numbers are temporary until the reorder): used
 ## when it has no enemies/ art (visual only;
 ## every Act I kind keeps its enemies/ key).
 func motion_sprite_key() -> String:

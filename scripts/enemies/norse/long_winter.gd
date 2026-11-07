@@ -498,3 +498,50 @@ func _build_frost() -> void:
 				tr.set_anchors_preset(Control.PRESET_RIGHT_WIDE)
 				tr.offset_left = -w
 		_frost.add_child(tr)
+	_add_frost_edges(w)
+
+
+## The art pass's frost edge (NorseRulesData.FROST_SPRITE) tiled along each
+## edge of the view over the gradient bands, as deep as the band (at most its
+## art height): flipped for the bottom, turned a quarter for the sides. Static
+## TextureRects rebuilt with the band (and when the view is resized); nothing
+## without the PNG (the plain bands stay). Visual only.
+func _add_frost_edges(w: float) -> void:
+	var tex := SpriteBank.texture(NorseRulesData.FROST_SPRITE)  # The frost edge strip, or null.
+	if tex == null:
+		return
+	var vp := get_viewport()
+	if not vp.size_changed.is_connected(_on_view_resized):
+		vp.size_changed.connect(_on_view_resized)
+	var view := vp.get_visible_rect().size  # Canvas-layer px.
+	var h := minf(w, float(tex.get_height()))  # Strip depth (px).
+	for side in 4:
+		var tr := TextureRect.new()
+		tr.texture = tex
+		tr.stretch_mode = TextureRect.STRETCH_TILE
+		tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		tr.modulate = Color(1.0, 1.0, 1.0, NorseRulesData.FROST_SPRITE_ALPHA)
+		tr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		match side:
+			0:  # Top: the strip as drawn (its frost edge on top).
+				tr.position = Vector2.ZERO
+				tr.size = Vector2(view.x, h)
+			1:  # Bottom: flipped.
+				tr.flip_v = true
+				tr.position = Vector2(0.0, view.y - h)
+				tr.size = Vector2(view.x, h)
+			2:  # Left: a quarter turn back, its top row on the left edge.
+				tr.position = Vector2(0.0, view.y)
+				tr.size = Vector2(view.y, h)
+				tr.rotation = -PI * 0.5
+			_:  # Right: a quarter turn, its top row on the right edge.
+				tr.position = Vector2(view.x, 0.0)
+				tr.size = Vector2(view.y, h)
+				tr.rotation = PI * 0.5
+		_frost.add_child(tr)
+
+
+## The view was resized: the side strips are laid out in px, so rebuild.
+func _on_view_resized() -> void:
+	if _frost != null and _frost_level > 0:
+		_build_frost()

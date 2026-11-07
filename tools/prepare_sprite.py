@@ -260,9 +260,9 @@ KEY_RAMPS = {
     # --- Act VI (final order): the Hall of the Slain ---
     "norse/berserker": (["crimson"], []),  # red fury eyes and blood
     # The three playable characters are NECROMANCERS of the act (owner note): violet, bone, soul teal, pale skin.
-    "norse/rune_seer": (["violet", "bone", "soul", "grey"], ["frost", "iron", "pine", "valk", "rune", "draugr"]),
-    "norse/shield_maiden_hero": (["violet", "bone", "soul", "grey"], ["frost", "iron", "pine", "valk", "rune", "draugr"]),
-    "norse/berserker_hero": (["violet", "bone", "soul", "grey"], ["frost", "iron", "pine", "valk", "rune", "draugr"]),
+    "player/rune_seer": (["skin", "brown"], ["moss", "arcane", "ice", "crimson", "gold", "flame"]),  # the Norse character (moved from norse/): the same ramps as before
+    "player/shield_maiden_hero": (["skin", "brown"], ["moss", "arcane", "ice", "crimson", "gold", "flame"]),  # the Norse character (moved from norse/): the same ramps as before
+    "player/berserker_hero": (["skin", "brown"], ["moss", "arcane", "ice", "crimson", "gold", "flame"]),  # the Norse character (moved from norse/): the same ramps as before
     "norse/fire_giant": (["hearth", "flame", "crimson"], ["frost", "draugr"]),  # black iron with amber fire cracks
     "norse/skald": (["hearth"], []),  # the lyre's warm gold-brown and the horn
     "norse/wolf_of_the_wastes": ([], ["skin", "valk", "pine"]),  # grey fur, ice-blue eyes

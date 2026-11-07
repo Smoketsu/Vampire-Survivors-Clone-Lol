@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://42t1gn74gnd1"
-path="res://.godot/imported/shield_maiden_hero.png-cdb085e3ee2c136a6fbd6085e64f23c4.ctex"
+uid="uid://dyqhg4udw2mo"
+path="res://.godot/imported/berserker_hero.png-7b900571ab0d4f2940340517c4d6d442.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/norse/shield_maiden_hero.png"
-dest_files=["res://.godot/imported/shield_maiden_hero.png-cdb085e3ee2c136a6fbd6085e64f23c4.ctex"]
+source_file="res://assets/sprites/player/berserker_hero.png"
+dest_files=["res://.godot/imported/berserker_hero.png-7b900571ab0d4f2940340517c4d6d442.ctex"]
 
 [params]
 

@@ -505,7 +505,7 @@ const VIGNETTES: Dictionary = {
 	# until each stage brings its own floor, props and boss; a missing sprite or
 	# tile is skipped) ---
 	"cutter": {
-		"tile": "tiles/corsair_deck",
+		"tile": "tiles/corsair_cutter",
 		"items": [
 			["corsair/deckhand", 196, 112, true], ["corsair/powder_runner", 232, 132, true], ["corsair/skiff", 214, 186, true],
 			["summons/warrior", 46, 214, false], ["summons/archer", 88, 224, false],
@@ -513,7 +513,7 @@ const VIGNETTES: Dictionary = {
 		"fx": "motes", "fx_color": Color8(242, 166, 58),
 	},  # TUNING (not in GDD) lantern-amber motes
 	"galleon": {
-		"tile": "tiles/corsair_deck",
+		"tile": "tiles/corsair_galleon",
 		"items": [
 			["corsair/swashbuckler", 204, 116, true], ["corsair/musketeer", 236, 150, true], ["corsair/longboat", 196, 196, true],
 			["summons/warrior", 46, 214, false], ["summons/mage", 90, 224, false],
@@ -521,7 +521,7 @@ const VIGNETTES: Dictionary = {
 		"fx": "motes", "fx_color": Color8(216, 233, 244),
 	},  # TUNING (not in GDD) sea-foam motes
 	"maelstrom": {
-		"tile": "tiles/corsair_deck",
+		"tile": "tiles/corsair_maelstrom",
 		"items": [
 			["corsair/kraken_arm", 206, 104, true], ["corsair/reef_shark", 170, 190, true], ["corsair/boarding_bruiser", 230, 182, true],
 			["summons/warrior", 46, 214, false], ["summons/archer", 88, 224, false],
@@ -534,14 +534,14 @@ const VIGNETTES: Dictionary = {
 	"barrow_fields": {
 		"tile": "tiles/norse_snow",
 		"items": [
-			["norse/draugr", 196, 112, true], ["norse/raider", 230, 128, true], ["norse/brazier", 160, 160, true],
+			["norse/draugr", 196, 112, true], ["norse/raider", 230, 128, true], ["norse/brazier_lit", 160, 160, true],
 			["norse/rune_stone", 214, 186, true],
 			["summons/warrior", 46, 214, false], ["summons/archer", 88, 224, false],
 		],
 		"fx": "motes", "fx_color": Color8(232, 238, 242),
 	},  # TUNING (not in GDD) falling-snow motes
 	"valgard": {
-		"tile": "tiles/norse_snow",
+		"tile": "tiles/norse_planks",
 		"items": [
 			["norse/valkyrie", 204, 100, true], ["norse/shield_maiden", 236, 184, true], ["norse/skald", 170, 196, true],
 			["summons/warrior", 46, 214, false], ["summons/mage", 90, 224, false],
@@ -549,7 +549,7 @@ const VIGNETTES: Dictionary = {
 		"fx": "motes", "fx_color": Color8(244, 217, 138),
 	},  # TUNING (not in GDD) valkyrie-gold motes
 	"vigrid": {
-		"tile": "tiles/norse_snow",
+		"tile": "tiles/norse_ash",
 		"items": [
 			["norse/frost_giant", 206, 110, true], ["norse/wolf_of_the_wastes", 170, 188, true], ["norse/berserker", 228, 196, true],
 			["summons/warrior", 46, 214, false], ["summons/archer", 88, 224, false],
@@ -560,7 +560,7 @@ const VIGNETTES: Dictionary = {
 	# from the shared kinds' art until each stage brings its own floor, props and
 	# boss; a missing sprite or tile is skipped) ---
 	"necropolis": {
-		"tile": "tiles/dynasty_sand",
+		"tile": "tiles/necropolis_dunes",
 		"items": [
 			["dynasty/mummy", 196, 112, true], ["dynasty/mummy_female", 230, 128, true], ["dynasty/canopic_jar", 160, 150, true],
 			["summons/warrior", 46, 214, false], ["summons/archer", 88, 224, false],
@@ -568,7 +568,7 @@ const VIGNETTES: Dictionary = {
 		"fx": "motes", "fx_color": Color8(210, 181, 116),
 	},  # TUNING (not in GDD) sand motes
 	"lioness_temple": {
-		"tile": "tiles/dynasty_sand",
+		"tile": "tiles/lioness_temple_avenue",
 		"items": [
 			["dynasty/khopesh_guard", 204, 116, true], ["dynasty/scarab_swarm", 236, 184, true], ["dynasty/mummy", 170, 196, true],
 			["summons/warrior", 46, 214, false], ["summons/mage", 90, 224, false],
@@ -576,7 +576,7 @@ const VIGNETTES: Dictionary = {
 		"fx": "motes", "fx_color": Color8(191, 59, 43),
 	},  # TUNING (not in GDD) carnelian motes
 	"two_truths": {
-		"tile": "tiles/dynasty_sand",
+		"tile": "tiles/two_truths_reeds",
 		"items": [
 			["dynasty/heka_priest", 206, 104, true], ["dynasty/embalmer", 170, 188, true], ["dynasty/mummy_female", 228, 196, true],
 			["summons/warrior", 46, 214, false], ["summons/archer", 88, 224, false],

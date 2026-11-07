@@ -1,10 +1,10 @@
 # Hall of the Slain: art and audio manifest
 
-Everything the stage agents load by name. Art made by `art_source/norse/gen.py` (prompts `art_source/norse/<key>.txt`, API sources `<key>.png`), `convert.sh` (pixelate + `prepare_sprite.py`), `tools/walk_cycle.py` (rigs in `RIGS`), `gen_icons.py` + `compose_icons.py` (icons), `tools/norse_tiles.py` (floors, obstacles, overlays). Heights are in `SpriteData.HEIGHTS` (`norse/<key>`). Sprite folder `assets/sprites/norse/`; boss and structure sprites live there too (not `bosses/` / `structures/`).
+Everything the stage agents load by name. Art made by `art_source/norse/gen.py` (prompts `art_source/norse/<key>.txt`, API sources `<key>.png`), `convert.sh` (pixelate + `prepare_sprite.py`), `tools/walk_cycle.py` (rigs in `RIGS`), `gen_icons.py` + `compose_icons.py` (icons), `tools/norse_tiles.py` (floors, obstacles, overlays). Heights are in `SpriteData.HEIGHTS` (`norse/<key>`). Sprite folder `assets/sprites/norse/`; boss and structure sprites live there too (not `bosses/` / `structures/`). The three playable characters live in `assets/sprites/player/` (moved at the wave 1 integration).
 
 ## Palette (`tools/palette.json`, folder `norse` in `prepare_sprite.py`)
 
-One hue per ramp, shared ink `norse_ink` #0B0F16: `frost` (#A9BBCC, #EAF2FA), `iron` (#2B3139, #5B6570, #8F99A3), `pine` (#12281F, #1F4A3A), `hearth` (#A24C1A, #F0902E, #FFC766; per key only), `valk` (#B08A3C, #F5D77A, #FFF3C4), `rune` (#3F72C4, #8FD0FF, #E0F4FF; clear of soul-teal #3DCC94), `draugr` (#34495A, #6C8CA0, #A6C0CE), and the ground ramp `norse_floor` (night snow, fjord ice, hall planks, hall slabs, Vigrid ash; floor group, tiles only). `scripts/data/palette.gd` constants are NOT added (the code agent owns them; names are `norse_<ramp>[_dark|_light|_glow]`).
+One hue per ramp, shared ink `norse_ink` #0B0F16: `frost` (#A9BBCC, #EAF2FA), `iron` (#2B3139, #5B6570, #8F99A3), `pine` (#12281F, #1F4A3A), `hearth` (#A24C1A, #F0902E, #FFC766; per key only), `valk` (#B08A3C, #F5D77A, #FFF3C4), `rune` (#3F72C4, #8FD0FF, #E0F4FF; clear of soul-teal #3DCC94), `draugr` (#34495A, #6C8CA0, #A6C0CE), and the ground ramp `norse_floor` (night snow, fjord ice, hall planks, hall slabs, Vigrid ash; floor group, tiles only). `scripts/data/palette.gd` has a `NORSE_<RAMP>[_DARK|_LIGHT|_GLOW]` constant for every unit / glow / ink colour (added or aligned to these hexes at the wave 1 integration; the floor colours are tiles only).
 
 ## Sprites (`assets/sprites/norse/`)
 
@@ -13,7 +13,7 @@ One hue per ramp, shared ink `norse_ink` #0B0F16: `frost` (#A9BBCC, #EAF2FA), `i
 | `norse/barrow_king` | 52x62 | barrow_king.png, barrow_king_walk.png | the Draugr Thane's evolution (walk) |
 | `norse/barrow_wight` | 56x56 | barrow_wight.png, barrow_wight_walk.png | miniboss, male draugr chieftain (walk) |
 | `norse/berserker` | 60x50 | berserker.png, berserker_walk.png | male elite in a bear pelt, red eyes (walk) |
-| `norse/berserker_hero` | 64x56 | berserker_hero.png, berserker_hero_walk.png | playable character (REDONE): male purple-hooded necromancer, bear-skull crest, one soul-teal axe held close (glide) |
+| `player/berserker_hero` | 64x56 | berserker_hero.png, berserker_hero_walk.png | playable character (REDONE): male purple-hooded necromancer, bear-skull crest, one soul-teal axe held close (glide) |
 | `norse/boss_barrow` | 64x56 | boss_barrow.png | Hrimgar's barrow, intact (still; the necromancer breaks it while he is down) |
 | `norse/boss_barrow_broken` | 60x56 | boss_barrow_broken.png | Hrimgar's barrow, broken (still) |
 | `norse/draugr` | 36x42 | draugr.png, draugr_walk.png | male barrow-dead soldier (walk) |
@@ -32,12 +32,12 @@ One hue per ramp, shared ink `norse_ink` #0B0F16: `frost` (#A9BBCC, #EAF2FA), `i
 | `norse/odin` | 48x72 | odin.png, odin_walk.png | boss, male All-Father: eyepatch, dark hooded cloak, no wizard hat, ravens, Gungnir (glide) |
 | `norse/raider` | 40x40 | raider.png, raider_walk.png | male fodder, axe and round shield (walk) |
 | `norse/raven` | 18x18 | raven.png | Odin's raven, small creature (still) |
-| `norse/rune_seer` | 38x56 | rune_seer.png, rune_seer_walk.png, rune_seer_idle.png | playable character (REDONE, owner note): FEMALE violet-robed volva necromancer, grey fur mantle, rune staff with a soul-teal rune (glide, bust, idle) |
+| `player/rune_seer` | 38x56 | rune_seer.png, rune_seer_walk.png, rune_seer_idle.png | playable character (REDONE, owner note): FEMALE violet-robed volva necromancer, grey fur mantle, rune staff with a soul-teal rune (glide, bust, idle) |
 | `norse/rune_stone` | 28x40 | rune_stone.png | structure, held: glowing runes (still; code draws the capture ring) |
 | `norse/rune_stone_taken` | 28x40 | rune_stone_taken.png | structure, taken: dead runes (still) |
 | `norse/seer` | 32x46 | seer.png, seer_walk.png, seer_idle.png | FEMALE support (volva), staff and rune (glide, bust, idle) |
 | `norse/shield_maiden` | 52x44 | shield_maiden.png, shield_maiden_walk.png, shield_maiden_idle.png | FEMALE soldier, spear and shield (walk, bust, idle) |
-| `norse/shield_maiden_hero` | 48x56 | shield_maiden_hero.png, shield_maiden_hero_walk.png, shield_maiden_hero_idle.png | playable character (REDONE): FEMALE purple-cloaked necromancer, bone-rimmed shield, soul-flame spear focus (glide, bust, idle) |
+| `player/shield_maiden_hero` | 48x56 | shield_maiden_hero.png, shield_maiden_hero_walk.png, shield_maiden_hero_idle.png | playable character (REDONE): FEMALE purple-cloaked necromancer, bone-rimmed shield, soul-flame spear focus (glide, bust, idle) |
 | `norse/sigrun` | 60x80 | sigrun.png, sigrun_walk.png, sigrun_idle.png | boss, FEMALE Shield-Queen, wings and shield (glide, bust, idle) |
 | `norse/skald` | 36x44 | skald.png, skald_walk.png | male support, war-horn and lyre (glide) |
 | `norse/valkyrie` | 46x52 | valkyrie.png, valkyrie_walk.png, valkyrie_idle.png | FEMALE flying elite, white-gold wings (glide + bust + idle; the Choosing; use with valkyrie_shadow) |

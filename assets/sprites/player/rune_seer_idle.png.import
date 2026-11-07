@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b4gus4e3uc8q"
-path="res://.godot/imported/rune_seer.png-1c784a7c2a5307b606abe06766222487.ctex"
+uid="uid://bh1d6cap0rn7s"
+path="res://.godot/imported/rune_seer_idle.png-ad11d7a6474276ed27b7bbc013bc7075.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/norse/rune_seer.png"
-dest_files=["res://.godot/imported/rune_seer.png-1c784a7c2a5307b606abe06766222487.ctex"]
+source_file="res://assets/sprites/player/rune_seer_idle.png"
+dest_files=["res://.godot/imported/rune_seer_idle.png-ad11d7a6474276ed27b7bbc013bc7075.ctex"]
 
 [params]
 

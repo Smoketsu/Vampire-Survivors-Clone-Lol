@@ -30,8 +30,9 @@
 class_name Heka
 extends Node2D
 
-## Sprite key of the sigil (assets/sprites/dynasty/heka_glyph.png).
-const SPRITE: String = "dynasty/heka_glyph"
+## Sprite key of the sigil (the art pass's marker
+## assets/sprites/markers/dyn_heka_glyph.png; wired at the wave 1 integration).
+const SPRITE: String = "markers/dyn_heka_glyph"
 
 ## Owning run.
 var game: Game

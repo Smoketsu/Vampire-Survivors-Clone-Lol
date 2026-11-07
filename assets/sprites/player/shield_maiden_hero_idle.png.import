@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bu0kroggy66g4"
-path="res://.godot/imported/shield_maiden_hero_walk.png-3f921ae4b8f94b0085e75bada1bd6859.ctex"
+uid="uid://cq8shu8nvqf51"
+path="res://.godot/imported/shield_maiden_hero_idle.png-018f4402b9e1ddd16d3c82facb4e859e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/norse/shield_maiden_hero_walk.png"
-dest_files=["res://.godot/imported/shield_maiden_hero_walk.png-3f921ae4b8f94b0085e75bada1bd6859.ctex"]
+source_file="res://assets/sprites/player/shield_maiden_hero_idle.png"
+dest_files=["res://.godot/imported/shield_maiden_hero_idle.png-018f4402b9e1ddd16d3c82facb4e859e.ctex"]
 
 [params]
 

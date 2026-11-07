@@ -197,5 +197,5 @@ const STAGE := {
 	# Music key "bronze" FOR NOW ("Hymn of Bronze", an ancient-world loop that
 	# exists): the Dynasty's own score comes from the art and audio pass and
 	# the lead switches this key at the merge.
-	"music": "bronze",
+	"music": "weighing",  # Wave 1 integration: the act's own score (SoundData.SCORES; its pack renders with it)
 }

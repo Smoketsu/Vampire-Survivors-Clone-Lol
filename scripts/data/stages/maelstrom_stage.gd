@@ -226,5 +226,5 @@ const STAGE := {
 	# Music key "tide" FOR NOW (Act II's "Below the Tide"): the parallel audio
 	# pass adds the act's own score (key "shanty", pack "corsair") and the lead
 	# switches this to "shanty" at the merge.
-	"music": "tide",
+	"music": "shanty",  # Wave 1 integration: the act's own score (SoundData.SCORES; its pack renders with it)
 }

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ehm6gse57kv2"
-path="res://.godot/imported/shield_maiden_hero_idle.png-fb41c6d27d72fbf33a74551fb425a512.ctex"
+uid="uid://b7ccxt06gbs5l"
+path="res://.godot/imported/shield_maiden_hero.png-a685d6b5e925a651a9f747df5614dde7.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/norse/shield_maiden_hero_idle.png"
-dest_files=["res://.godot/imported/shield_maiden_hero_idle.png-fb41c6d27d72fbf33a74551fb425a512.ctex"]
+source_file="res://assets/sprites/player/shield_maiden_hero.png"
+dest_files=["res://.godot/imported/shield_maiden_hero.png-a685d6b5e925a651a9f747df5614dde7.ctex"]
 
 [params]
 

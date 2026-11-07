@@ -15,7 +15,7 @@ Bishops, Shadow Reapers, Cathedral Horrors, Hellhounds, Keening Ladies and
 Ossuary Engines.
 
 This repository holds the game's campaign: nine acts of three stages each,
-27 playable stages (and the Black Tide, Act X for now, being built) from *The Desecrated Graveyard* (Act I) to *The Ark of the
+27 playable stages (and the Black Tide, the Hall of the Slain and the Necropolis Dynasty, Acts X-XII for now, being built) from *The Desecrated Graveyard* (Act I) to *The Ark of the
 Concord* (Act IX), each boss opening the next stage (Acts VI-IX went live in
 Nov 2026), built in Godot 4.3 with no addons. The art is true pixel art (PNGs in `assets/`; the code
 drawings remain as the fallback for any missing image), and the sound and
@@ -2485,7 +2485,7 @@ phase 2); defeating the Harvester opens the Cutter and each boss opens the next 
   overboard after 5 s unless you kill the arm while it is surfaced. Every strike hits both armies. At most 8 swimmers.
 - **The Black Tide.** At 0:00 every boat closes at once and the whole rail boards, the rail band is struck every 3 s,
   and every 20 s a great wave shoves everything toward the far rail (the boarders drown there).
-- **Music.** The stubs play "Below the Tide" for now; the act's own score and sounds come with the audio pass.
+- **Music.** "Dead Men's Shanty", the act's own score, with the Black Tide sound pack (wired at the wave 1 integration).
 
 The shared kinds so far: the **Deckhand** (cutlass fodder), the **Musketeer** (ordinary shot), the **Powder Runner**
 (a lit keg that blasts both sides and knocks everyone 60 px; it goes off when he falls, too), the **Swashbuckler** (a
@@ -2521,7 +2521,7 @@ playable ("Coming soon"); Captain Vandermere's fall in the Maelstrom opens the B
   take pays Soul Ash). Seers walk back to re-carve it. Taking a stone never buffs your army.
 - **Ragnarök.** At 0:00 the wolf swallows the sun and the arena goes dark red: the Einherjar of the hall march out at
   once (gold-lit elite warriors), fire-giants step out of the south edge, and every valkyrie dives at your ring.
-- **Music.** The stubs play "Hymn of Bronze" for now; the act's own score and sounds come with the audio pass.
+- **Music.** "Horns at the Last Feast", the act's own score, with the Norse sound pack (wired at the wave 1 integration).
 
 The shared kinds: the **Raider** (fodder in crowds), the **Shield-Maiden** (a shield bash that throws one summon back),
 the **Berserker** (always in the fury), the **Skald** (his war-song makes the warriors near him strike faster), the
@@ -2554,7 +2554,7 @@ Sand** (`necropolis`, Anubis), **the Temple of the Lioness** (`lioness_temple`, 
   or a **Warder's barrier** clears it, and so does the priest's death.
 - **The Devourer's Hour.** At 0:00 every sarcophagus opens: Rebirth has no limit, the Sandstorm never ends, and the
   Devourer's shadow runs down telegraphed lanes across the field, savaging your army and eating every Name in its path.
-- **Music.** The stubs play "Hymn of Bronze" for now; the Dynasty's own score and sounds come with the art and audio pass.
+- **Music.** "The Weighing of the Heart", the Dynasty's own score, with its sound pack (wired at the wave 1 integration).
 
 The shared kinds so far: the **Mummy** (male and female; slow, wrapped, Rebirth; fire hurts them half again), the
 **Scarab Swarm** (fast; its bites tear Warders' barriers), the **Khopesh Guard** (Rebirth; a telegraphed spinning slash),
@@ -4481,8 +4481,8 @@ the live build instead of about 30):
    (`--stage=crimson_march`), the Sanctum (`--stage=sanctum --policy=army`) and each stage of Acts II and IV-IX with the
    army policy (`--stage=harbour`, `archive`, `spire`, `ilion`, `olympus`, `underworld`, `province`, `kurogane`,
    `sun_road`, `burning_gate`, `silk_palace`, `pandemonium`, `ravensmoor`, `witchwood`, `castle_sanguis`, `skid_row`,
-   `fort_kessler`, `liberty_heights`, `crash_site`, `proving_moon`, `ark`; the Act XII stubs get their jobs in the
-   reorder pass) (`--quit-after 15000`, at most 10-15
+   `fort_kessler`, `liberty_heights`, `crash_site`, `proving_moon`, `ark`; the stubs of the last acts, Acts X-XII for
+   now, get their jobs in the reorder pass) (`--quit-after 15000`, at most 10-15
    wall-clock minutes per run).
    A job fails on any `SCRIPT ERROR`, `ERROR:` or `WARNING:` line, or if its run doesn't complete; one failure does
    not cancel the others. Logs: `test-logs-<id>`.
