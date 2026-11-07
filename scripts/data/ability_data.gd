@@ -110,7 +110,9 @@ const SPELL_ORDER := ["shadow_bolt", "orb_shield", "shadow_blast",
 	# --- Act IX: the Proving Moon ---
 	"soul_caster",
 	# --- Act IX: the Ark ---
-	"tractor_lift"]
+	"tractor_lift",
+	# --- Act X: the Treasure Galleon ---
+	"cannonade"]
 
 ## Spell definitions.
 ##   display_name — UI name.
@@ -939,6 +941,31 @@ const SPELLS := {
 			{"damage": 56.0, "cooldown": 2.9, "lift_time": 0.95, "slam_radius": 56.0, "slam_share": 0.51},  # TUNING (not in GDD)
 			{"damage": 66.0, "cooldown": 2.75, "lift_time": 0.95, "slam_radius": 60.0, "slam_share": 0.54},  # TUNING (not in GDD)
 			{"damage": 78.0, "cooldown": 2.6, "lift_time": 1.0, "slam_radius": 64.0, "slam_share": 0.57},  # TUNING (not in GDD) Hero's Fist Lv5 72 / 2.4 s
+		],
+	},
+	# --- Act X: the Treasure Galleon ---
+	# Cannonade (GDD §15.0 "Cannonade, Dead Men's Broadside, Black Powder and
+	# the Corsair Queen (Act X)"; owner-approved proposal: "spectral
+	# cannonballs arc down on three marked groups"; unlocked by slaying Admiral
+	# Marrec, UnlockData): every `cooldown` s it marks up to `marks` dense
+	# groups within `range` px, and a spectral ball lands on each after
+	# CannonadeData.FALL_TIME s: `damage` to every foe within `radius` px.
+	# Stat keys: damage, marks, radius (px), range (px), cooldown (s). Logic:
+	# Cannonade; fixed rules: CannonadeData; Black Powder (its paired passive)
+	# widens the blasts and knocks the foes outward. An area spell (Brimstone's
+	# numbers, three marks from the first level).
+	"cannonade": {
+		"display_name": "Cannonade",  # Owner-approved proposal
+		"icon": "cannonade",
+		"description": "Spectral cannonballs arc down on the three thickest groups of foes.",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Ball damage", "marks": "Groups marked", "radius": "Blast radius", "cooldown": "Cooldown (s)"},
+		"levels": [
+			{"damage": 14.0, "marks": 3, "radius": 30.0, "range": 340.0, "cooldown": 3.6},  # TUNING (not in GDD) owner-approved proposal: three marked groups; first pass 18 / 3.4 s
+			{"damage": 17.0, "marks": 3, "radius": 32.0, "range": 345.0, "cooldown": 3.4},  # TUNING (not in GDD)
+			{"damage": 21.0, "marks": 3, "radius": 34.0, "range": 350.0, "cooldown": 3.2},  # TUNING (not in GDD)
+			{"damage": 25.0, "marks": 4, "radius": 36.0, "range": 355.0, "cooldown": 3.0},  # TUNING (not in GDD)
+			{"damage": 30.0, "marks": 4, "radius": 38.0, "range": 360.0, "cooldown": 2.8},  # TUNING (not in GDD) first pass 38 / 2.7 s (the forced seed-7 run: 322k damage, far ahead of the army)
 		],
 	},
 }

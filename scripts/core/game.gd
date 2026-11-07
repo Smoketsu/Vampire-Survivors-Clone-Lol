@@ -501,6 +501,12 @@ func _ready() -> void:
 			csg.look = stage_def.get("floor", {})
 			csg.game = self
 			ground = csg
+		# --- Act X: the Treasure Galleon ---
+		"galleon":
+			var gag := GalleonGround.new()  # Act X: the galleon's deck and sea tiles, the four zones' looks (GalleonStage.ZONES).
+			gag.look = stage_def.get("floor", {})
+			gag.game = self
+			ground = gag
 		# --- Act XI (temporary): the Hall of the Slain ---
 		"norse":
 			var nog := NorseGround.new()  # The Norse stubs' placeholder floor (the STAGE's "floor").

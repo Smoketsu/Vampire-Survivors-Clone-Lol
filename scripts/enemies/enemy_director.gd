@@ -178,6 +178,10 @@
 ##     2)"): on a stage with a "proving_moon" config it owns the
 ##     ProvingMoonDirector (the Warbeast, the Last Trophy objective;
 ##     `proving_moon`) and hands it the "warbeast" events. Null elsewhere.
+##   * Act X, the Treasure Galleon (GDD §15.0 "The Treasure Galleon (Act X
+##     phase 2)"): on a stage with a "galleon" config it owns the
+##     GalleonDirector (the zones, the broadsides, the deck cannons, Old
+##     Hollow-Eye; `galleon`) and hands it the "hollow_eye" events. Null elsewhere.
 ##   * Online co-op (CoopSession; docs/coop/DESIGN.md): every enemy steps with
 ##     its NEAREST standing necromancer bound (CoopSession.bind_nearest()), so
 ##     it advances on, aims at and recycles around that one (bosses and kits
@@ -386,6 +390,10 @@ var proving_moon: ProvingMoonDirector = null
 ## Reactor's vents, the Luminous Archon; StageRegistry "ark"; null on every
 ## other stage).
 var ark: ArkDirector = null
+# --- Act X: the Treasure Galleon ---
+## The Treasure Galleon's mechanics (Act X: the zones, the broadsides, the
+## deck cannons, Old Hollow-Eye; StageRegistry "galleon"; null on every other stage).
+var galleon: GalleonDirector = null
 ## Sanctum kit bookkeeping: recent deaths, Confessor revivals, danger hints.
 var rites: CovenantRites
 ## The living miniboss shown on the HUD's miniboss bar (the Cathedral
@@ -590,6 +598,12 @@ func _ready() -> void:
 		ark.game = game
 		ark.config = stage_def["ark"]
 		add_child(ark)  # The Ark of the Concord's director.
+	# --- Act X: the Treasure Galleon ---
+	if not (stage_def.get("galleon", {}) as Dictionary).is_empty():
+		galleon = GalleonDirector.new()
+		galleon.game = game
+		galleon.config = stage_def["galleon"]
+		add_child(galleon)  # The Treasure Galleon's director.
 
 
 # =====================================================================================
@@ -740,6 +754,9 @@ func step(delta: float) -> void:
 	# --- Act IX: the Ark ---
 	if ark != null:
 		ark.step(delta)  # The tanks, the vents.
+	# --- Act X: the Treasure Galleon ---
+	if galleon != null:
+		galleon.step(delta)  # The zones, the broadsides, the deck cannons, Old Hollow-Eye.
 
 
 ## The Archive kinds' world hazards (ArchiveHazards), created on first use.
@@ -893,6 +910,9 @@ func objective_text() -> String:
 	# --- Act IX: the Ark ---
 	if ark != null and ark.objective_override() != "":
 		return ark.objective_override()  # The Luminous Archon, the Reaping.
+	# --- Act X: the Treasure Galleon ---
+	if galleon != null and galleon.objective_override() != "":
+		return galleon.objective_override()  # The Admiral's plank, a broadside, Old Hollow-Eye.
 	if boss != null and not boss.active:
 		return String(boss_info["dead_objective"])
 	return segments[segment_index]["objective"]
@@ -1158,6 +1178,12 @@ func _run_event(ev: Dictionary) -> void:
 				ark.start_event(ev)
 			game.stat_add("wave_events", 1.0)
 			return  # The Ark's miniboss (ArkDirector).
+		# --- Act X: the Treasure Galleon ---
+		"hollow_eye":
+			if galleon != null:
+				galleon.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return  # The Treasure Galleon's miniboss (GalleonDirector).
 	show_banner(ev["banner"])
 	var groups: Array = ev["groups"]
 	if game.shogunate != null:

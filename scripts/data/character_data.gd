@@ -96,7 +96,9 @@ const ORDER := ["gravecaller", "umbral_warden", "voidcaller", "bone_oracle", "fa
 	# --- Act IX: the Proving Moon ---
 	"blooded",
 	# --- Act IX: the Ark ---
-	"starborn"]
+	"starborn",
+	# --- Act X: the Treasure Galleon ---
+	"corsair_queen"]
 ## The default character (RunConfig, fresh saves, the autotest): today's game.
 const DEFAULT_ID: String = "gravecaller"
 ## Spell level that unlocks a character (owner rule: reach Lv 5 with its spell
@@ -164,6 +166,8 @@ const STAT_LABELS := {
 ##                           burst; Act IX)
 ##   soul_caster_extra_targets  SoulCaster._lock (extra targets each Soul
 ##                           Caster lock takes; Act IX)
+##   cannonade_extra_marks   Cannonade._volley (extra groups each Cannonade
+##                           volley marks; Act X, the Treasure Galleon)
 const INNATE_KEYS := ["orb_projectile_destroy", "blast_echo_delay", "blast_echo_damage", "spear_shard_max",
 	"spear_shard_cooldown", "summon_corpses", "grace_share", "grace_targets", "grace_range", "contagion_range",
 	"contagion_duration", "death_mark_slow", "bone_wall_duration", "soul_chains_extra_jumps", "wither_rot",
@@ -215,7 +219,9 @@ const INNATE_KEYS := ["orb_projectile_destroy", "blast_echo_delay", "blast_echo_
 	# --- Act IX: the Proving Moon ---
 	"soul_caster_extra_targets",
 	# --- Act IX: the Ark ---
-	"tractor_extra_lifts"]
+	"tractor_extra_lifts",
+	# --- Act X: the Treasure Galleon ---
+	"cannonade_extra_marks"]
 
 ## Orbit radius (px) of the Bone Oracle's Ossuary Ward shards around him.
 const SHARD_ORBIT_RADIUS: float = 27.0  # TUNING (not in GDD)
@@ -947,6 +953,32 @@ const CHARACTERS := {
 		"stats": {"max_hp": 5.0, "move_speed": 0.04},  # TUNING (not in GDD) a light, quick deserter
 		"sprite": "player/starborn",
 		"tint": Color(0.70, 0.86, 0.74),  # TUNING (not in GDD) a pale plasma green over the violet
+		"starts_unlocked": false,
+	},
+	# --- Act X: the Treasure Galleon ---
+	# The Corsair Queen (Cannonade's character; owner-approved proposal
+	# "Rewards": "Cannonade ... | the Corsair Queen (figure style)"; the art
+	# convention of Nov 7, 2026: a necromancer of the act's theme, never a
+	# member of the Brotherhood): FEMALE, in the figure-redesign style (clothed,
+	# chest and hips covered): pale undead-touched skin, a plumed tricorn and a
+	# long coat in the necromancer's violet with bone-white trim and soul-teal
+	# light, a glowing cutlass for her casting focus (player/corsair_queen,
+	# its walk strip, bust rig and idle strip). Cannonade must be unlocked
+	# (Admiral Marrec) before she can be earned, by the usual Lv 5 rule. Own
+	# decision on her innate (the proposal names none): Queen's Ransom, her
+	# Cannonade marks one more group (Cannonade._volley()).
+	"corsair_queen": {
+		"display_name": "The Corsair Queen",  # Owner-approved proposal
+		"title": "She took the Admiral's fleet for her dead, and the sea for her throne.",
+		"spell": "cannonade",
+		"innate": {
+			"id": "queens_ransom", "name": "Queen's Ransom",
+			"description": "Cannonade marks one more group.",
+			"values": {"cannonade_extra_marks": 1.0},  # TUNING (not in GDD) extra marks a volley
+		},
+		"stats": {"max_hp": -5.0, "move_speed": 0.05},  # TUNING (not in GDD) a quick, lightly armoured captain
+		"sprite": "player/corsair_queen",
+		"tint": Color(0.80, 0.66, 0.92),  # TUNING (not in GDD) her own violet (the art is already the necromancer's colours)
 		"starts_unlocked": false,
 	},
 }

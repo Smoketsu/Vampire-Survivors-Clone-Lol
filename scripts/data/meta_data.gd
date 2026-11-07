@@ -444,7 +444,9 @@ const ACHIEVEMENT_ORDER := ["bone_legion", "heretics_bane", "dread_sovereign", "
 	# --- Act IX: the Proving Moon ---
 	"the_hunter_hunted",
 	# --- Act IX: the Ark ---
-	"last_harvest"]
+	"last_harvest",
+	# --- Act X: the Treasure Galleon ---
+	"walked_the_plank"]
 
 ## Achievement definitions (GDD §9.4 "Example Achievement Unlocks"). Each
 ## achievement is tracked and recorded in the save and pays a one-time Soul
@@ -691,6 +693,14 @@ const ACHIEVEMENTS := {
 	# clear, with the title The Unharvested (UnlockData / TitleData).
 	"last_harvest": {"display_name": "The Last Harvest", "description": "Beat the Harvester on the Ark of the Concord",
 		"stat": "boss_kills", "stage": "ark", "goal": 1, "unlock": "The title The Unharvested", "bounty": 500},  # Owner-approved proposal; bounty TUNING (not in GDD) as Last Supper
+	# --- Act X: the Treasure Galleon ---
+	# Walked the Plank (brief: "push 200 enemies overboard in one run: the
+	# overboard_total stat"): a run in which at least GalleonData.WALKED_GOAL
+	# enemies drowned overboard (any Black Tide deck; MetaProgress counts the
+	# runs, lifetime walked_the_plank_runs). It unlocks the counter-passive Sea
+	# Legs (brief).
+	"walked_the_plank": {"display_name": "Walked the Plank", "description": "Send 200 foes overboard in one run",
+		"stat": "walked_the_plank_runs", "goal": 1, "unlock": "The Sea Legs passive", "bounty": 300},  # Brief; bounty TUNING (not in GDD) as The Hunter Hunted
 }
 
 # --- Content wave 2: B. Achievement rewards ---

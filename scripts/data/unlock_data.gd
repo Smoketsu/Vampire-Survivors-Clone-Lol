@@ -281,6 +281,15 @@ const UNLOCKS := {
 	"crop_circles": {"type": "passive", "boss": "harvester", "text": "Defeat the Harvester on the Ark of the Concord to unlock."},  # Its paired passive (own decision), unlocked with it
 	"the_unharvested": {"type": "title", "achievement": "last_harvest",
 		"text": "Earn The Last Harvest: beat the Harvester on the Ark of the Concord."},  # Own decision (the clear is recorded as a title, as Acts VI-VIII did)
+	# --- Act X: the Treasure Galleon ---
+	# Admiral Marrec's fall (owner-approved proposal "Rewards": Cannonade is
+	# unlocked by Marrec) with its paired passive, offered on every stage; the
+	# stage's achievement Walked the Plank earns the act's counter-passive Sea
+	# Legs (brief's pairing; offered only in the Black Tide through its card
+	# row's "act").
+	"cannonade": {"type": "spell", "boss": "marrec", "text": "Defeat Admiral Marrec on the Treasure Galleon to unlock."},  # Owner-approved proposal
+	"black_powder": {"type": "passive", "boss": "marrec", "text": "Defeat Admiral Marrec on the Treasure Galleon to unlock."},  # Cannonade's paired passive (owner-approved proposal), unlocked with it
+	"sea_legs": {"type": "passive", "achievement": "walked_the_plank", "text": "Earn Walked the Plank: send 200 foes overboard in one run."},  # Brief: Walked the Plank unlocks Sea Legs
 }
 
 ## End-screen plate heading of a newly unlocked item, by type.

@@ -368,4 +368,126 @@ const ENEMIES := {
 		"is_structure": true,
 		"hook": true,  # A boat's grapple (BoardingParty)
 	},  # The Grapple Hook.
+	# --- Act X: the Treasure Galleon --- (shared rows: any stage of the act may field them)
+	# Ranged soldier, FEMALE, figure style (owner-approved proposal: "Lobs grenadoes over the ring on a landing circle |
+	# Rogues, Gargoyles; move"). Brief: "arcing grenadoes on a landing circle that ignore the ring". Her ranged attack is
+	# a lob (GunneryMateKit.fire_ranged()): a landing circle shows for grenado "flight" s on the nearest necromancer in
+	# her "reach" (else her target), then THE POWDER BLAST (CorsairRules.powder_blast(): both sides, everyone knocked
+	# "push" px), so a grenado among her own crew at the rail drowns them.
+	"gunnery_mate": {
+		"display_name": "Gunnery Mate",
+		"max_hp": 30.0,  # TUNING (not in GDD)
+		"move_speed": 54.0,  # TUNING (not in GDD) px/s
+		"damage": 0.0,  # TUNING (not in GDD) her grenadoes deal the damage
+		"attack_interval": 3.6,  # TUNING (not in GDD) s between two lobs
+		"attack_range": 200.0,  # TUNING (not in GDD) px (she stops this far from her target)
+		"radius": 9.0,  # TUNING (not in GDD) px
+		"armor": 0.0,  # TUNING (not in GDD)
+		"xp": 4,  # TUNING (not in GDD)
+		"behavior": "ranged",
+		"projectile_speed": 200.0,  # TUNING (not in GDD) px/s (unused: the kit lobs)
+		"undead_damage_mult": 1.0,
+		"heal_amount": 0.0,
+		"heal_interval": 0.0,
+		"heal_radius": 0.0,
+		"target_priority": 0.55,  # TUNING (not in GDD) 0..1
+		"mass": 0.9,  # TUNING (not in GDD)
+		"faction": FACTION,
+		"kit": "gunnery_mate",
+		"crew": true,
+		"figure": true,  # Female, figure style (owner-approved proposal)
+		"grenado": {"reach": 260.0, "flight": 1.1, "radius": 46.0, "dmg_summon": 9.0, "dmg_player": 7.0, "dmg_enemy": 10.0, "push": 34.0},  # TUNING (not in GDD) the lob and its blast
+	},  # The Gunnery Mate.
+	# Support, FEMALE, figure style (owner-approved proposal: "Marks a spot on the ring; the sea strikes it 1.5 s later |
+	# Kill her first; the mark fails if she dies"). Brief: "marks a strike on the ring through SeaStrikes.strike(),
+	# cancelled if she dies". Every mark "every" s, while a necromancer stands within mark "reach" px, she marks a
+	# point on his ring (mark "ring" px from him, a seeded angle): an owned sea strike (SeaStrikes.strike() with her as
+	# its owner: it fizzles if she dies first) that lands after mark "telegraph" s. Her own blow is a weak hex bolt.
+	"voodoo_navigator": {
+		"display_name": "Voodoo Navigator",
+		"max_hp": 26.0,  # TUNING (not in GDD)
+		"move_speed": 56.0,  # TUNING (not in GDD) px/s
+		"damage": 3.0,  # TUNING (not in GDD) per hex bolt, before the time scaling
+		"attack_interval": 2.6,  # TUNING (not in GDD) s
+		"attack_range": 220.0,  # TUNING (not in GDD) px
+		"radius": 9.0,  # TUNING (not in GDD) px
+		"armor": 0.0,  # TUNING (not in GDD)
+		"xp": 5,  # TUNING (not in GDD)
+		"behavior": "ranged",
+		"projectile_speed": 180.0,  # TUNING (not in GDD) px/s
+		"undead_damage_mult": 1.0,
+		"heal_amount": 0.0,
+		"heal_interval": 0.0,
+		"heal_radius": 0.0,
+		"target_priority": 0.75,  # TUNING (not in GDD) 0..1: kill her first
+		"mass": 0.9,  # TUNING (not in GDD)
+		"faction": FACTION,
+		"kit": "voodoo_navigator",
+		"crew": true,
+		"figure": true,  # Female, figure style (owner-approved proposal)
+		"mark": {"every": 6.5, "first": 3.0, "reach": 360.0, "ring": 70.0, "telegraph": 1.5, "radius": 40.0, "dmg_summon": 11.0, "dmg_player": 9.0, "dmg_enemy": 12.0},  # Owner-approved proposal: 1.5 s; TUNING (not in GDD) the rest
+	},  # The Voodoo Navigator.
+	# A GUNBOAT (a structure in the water; owner-approved proposal: "Never boards; shells the deck in lines from range |
+	# Cannons, fliers, ranged"). Brief: "a boat row that never boards and shells the deck in lines". Not a crew boat:
+	# GunboatKit.launch() brings it alongside a seeded point of the straight rail (its hull over the rail line, like a
+	# boarding boat, so the army reaches it); every shell "every" s it shows shell "lines" lanes across the deck at the
+	# necromancer (shell "telegraph" s), then shells them (the army only). After shell "stay" s it casts off. At most
+	# shell "cap" gunboats alive. The timeline asks for it like any kind (CorsairRules.route_spawn() hands it to
+	# GunboatKit) and the Black Tide brings them (its "gunboat_every"). Barnacle Bones applies (CorsairKit.taken_mult()).
+	"gunboat": {
+		"display_name": "Gunboat",
+		"max_hp": 420.0,  # TUNING (not in GDD) between a longboat (300) and a raider ship (900)
+		"move_speed": 0.0,  # TUNING (not in GDD) px/s
+		"damage": 0.0,  # TUNING (not in GDD) its shells deal the damage
+		"attack_interval": 1.0,  # TUNING (not in GDD) s
+		"attack_range": 0.0,  # TUNING (not in GDD) px
+		"radius": 30.0,  # TUNING (not in GDD) px
+		"armor": 0.2,  # TUNING (not in GDD) iron-plated
+		"xp": 8,  # TUNING (not in GDD)
+		"behavior": "structure",
+		"projectile_speed": 0.0,  # TUNING (not in GDD) px/s (0 = none)
+		"undead_damage_mult": 1.0,
+		"heal_amount": 0.0,
+		"heal_interval": 0.0,
+		"heal_radius": 0.0,
+		"target_priority": 0.6,  # TUNING (not in GDD) 0..1
+		"mass": 60.0,  # TUNING (not in GDD)
+		"faction": FACTION,
+		"kit": "gunboat",
+		"is_structure": true,
+		"water": true,  # It lies in the water, its hull over the rail line
+		"boat": true,  # Drawn and hit like a boat (CorsairKit.is_boat()); NOT a boarding size (it never boards)
+		"gunboat": true,  # GunboatKit.launch() brings it (CorsairRules.route_spawn())
+		"shell": {"every": 7.5, "first": 3.0, "lines": 2, "telegraph": 1.4, "width": 34.0, "spread": 120.0, "jitter": 30.0,  # TUNING (not in GDD)
+			"dmg_summon": 10.0, "dmg_player": 8.0, "stay": 75.0, "cap": 2, "tide_cap": 3},  # TUNING (not in GDD)
+	},  # The Gunboat.
+	# Swimmer / climber, a creature (owner-approved proposal: "Climbs the hull and boards at the rail band; armour 4 |
+	# Area damage; push it back over"). Brief: "a giant swimmer that climbs the hull and boards at the rail band, armour
+	# 4: a new strike type". Its strike type "climb" (SeaStrikes, the Galleon's block): the hull point nearest its
+	# target shows a climbing circle for the telegraph, then it heaves itself over the rail into the rail band as an
+	# ORDINARY DECK ENEMY (CorsairKit.leave_water(); heavy, flat armour 4, so area blows and knockback answer it).
+	"hull_crab": {
+		"display_name": "Hull Crab",
+		"max_hp": 90.0,  # TUNING (not in GDD)
+		"move_speed": 40.0,  # TUNING (not in GDD) px/s
+		"damage": 7.0,  # TUNING (not in GDD) per pinch, before the time scaling
+		"attack_interval": 1.3,  # TUNING (not in GDD) s
+		"attack_range": 6.0,  # TUNING (not in GDD) px
+		"radius": 14.0,  # TUNING (not in GDD) px
+		"armor": 0.0,  # TUNING (not in GDD)
+		"xp": 6,  # TUNING (not in GDD)
+		"behavior": "melee",
+		"projectile_speed": 0.0,  # TUNING (not in GDD) px/s (0 = none)
+		"undead_damage_mult": 1.0,
+		"heal_amount": 0.0,
+		"heal_interval": 0.0,
+		"heal_radius": 0.0,
+		"target_priority": 0.5,  # TUNING (not in GDD) 0..1
+		"mass": 3.0,  # TUNING (not in GDD) heavy, but a hard blow still tips it over
+		"faction": FACTION,
+		"kit": "hull_crab",
+		"water": true,  # Starts as a swimmer (SeaStrikes); climbs aboard with its strike
+		"flat_armor": 4.0,  # Owner-approved proposal: armour 4
+		"strike": {"type": "climb", "telegraph": 1.4, "strike_every": 7.0, "radius": 30.0, "dmg_summon": 8.0, "dmg_player": 6.0},  # TUNING (not in GDD) its climb over the rail
+	},  # The Hull Crab.
 }
