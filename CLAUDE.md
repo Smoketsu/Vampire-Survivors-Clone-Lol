@@ -726,9 +726,12 @@ tiny tweaks.
    late fights on a real iPhone), the act's epilogue parts / closing cards (none until the act order is settled). The
    proposal to reorder the acts (Claude Doc "Necropathy: A New Act Order",
    https://claude.ai/artifact/B76vzD659dz2dAyy5P4bqh) is deferred until all content is added (owner, Nov 2, 2026).
-6e. **Proposed acts** (`docs/proposals/NEW_ACTS_AND_ORDER.md`): the Black Tide (pirates), the Age of Titans (prehistoric), the
-   Necropolis Dynasty (Egypt), and a Norse act on the docket; not scheduled; build the plan from `docs/act5/` again once
-   one starts.
+6e. **The last five acts and the final order** (owner, Nov 7, 2026; GDD §15.0 "The last five acts and the act order"; Claude
+   Doc https://claude.ai/artifact/CYA3oBNRr9xqMpnPVWipin, repo copy `docs/proposals/LAST_FIVE_ACTS.md`, details of three acts in
+   `docs/proposals/NEW_ACTS_AND_ORDER.md`): the Black Tide, the Hall of the Slain (Norse), the Necropolis Dynasty, the Age of
+   Titans and the Turning Year (the finale), fourteen acts in all. Waits on the owner's answers to the doc's open questions;
+   then wave 1 (Dynasty + Norse + a Black Tide deck spike), wave 2 (Black Tide + Titans), wave 3 (Turning Year), each with the
+   `docs/act5/` plan and tuned for its final slot, then the reorder in one pass.
 7. **Phase 4 polish:** accessibility, profiling on real hardware, and the **final balance pass**.
    The owner's Oct 2026 playtest balance pass is in (GDD §15.0 "Balance pass (Oct 2026 playtest)": Dread Rally raises the army, spells ×1.2, boss HP Alaric −35% / Vael −40% / Seraphine −30%, later level-up items weigh 0.5, Frost Wraith / Bone Hound / Banshee base damage raised; the earlier +5% global multiplier was removed); further value tweaks wait for this pass (naive-bot
    death rates above target on both stages and spell-only builds lacking single-target damage are
