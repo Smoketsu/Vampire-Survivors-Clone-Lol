@@ -1,16 +1,16 @@
-<!-- Repo copy of the Claude Doc "Necropathy: The Last Five Acts and the Final Order" (https://claude.ai/artifact/CYA3oBNRr9xqMpnPVWipin), exported Nov 7, 2026. The doc is the live version; the owner's answers land there first. -->
+<!-- Repo copy of the Claude Doc "Necropathy: The Last Six Acts and the Final Order" (https://claude.ai/artifact/CYA3oBNRr9xqMpnPVWipin), exported Nov 7, 2026. The doc is the live version; the owner's answers land there first. -->
 
-# Necropathy: The Last Five Acts and the Final Order
+# Necropathy: The Last Six Acts and the Final Order
 
 Nov 7, 2026 · @Nate DeMarino
 
-Five more acts finish the game's content: the Black Tide, the Hall of the Slain, the Necropolis Dynasty, the Age of Titans and the Turning Year. With them the campaign is fourteen acts and forty-two stages. The order is set now so each new act is tuned once for its slot; the built acts move in one pass at the end, as decided on Nov 2.
+Six more acts finish the game's content: the Black Tide, the Hall of the Slain, the Necropolis Dynasty, the Celestial Host, the Age of Titans and the Turning Year. With them the campaign is fifteen acts and forty-five stages. The order is set now so each new act is tuned once for its slot; the built acts move in one pass at the end, as decided on Nov 2.
 
 ## The final order
 
-Fourteen acts in two Parts. The throughline of the earlier order proposal is kept: the necromancer climbs from **who owns the dead in the living world** to **who owned them before the world began**. The Norse act takes slot VI, between the Shogunate and the Dynasty.
+Fifteen acts in two Parts. The throughline of the earlier order proposal is kept: the necromancer climbs from **who owns the dead in the living world** to **who owned them before the world began**. The Norse act takes slot VI, between the Shogunate and the Dynasty, and the Celestial Host takes slot X after the Inferno, so Part One now ends in heaven.
 
-*(The doc draws the order as two columns, Part One I–IX and Part Two X–XIV, the five new acts highlighted; Claude Doc: https://claude.ai/artifact/CYA3oBNRr9xqMpnPVWipin.)*
+*(The doc draws the order as two columns, Part One I–X and Part Two XI–XV, the six new acts highlighted; Claude Doc: https://claude.ai/artifact/CYA3oBNRr9xqMpnPVWipin.)*
 
 | Act | Why it sits there |
 | --- | --- |
@@ -22,12 +22,13 @@ Fourteen acts in two Parts. The throughline of the earlier order proposal is kep
 | VI Hall of the Slain | Men again, but chosen by a god's hall: valkyries, giants and Odin at the end. The cold north after the eastern sun |
 | VII Necropolis Dynasty | The oldest masters of the dead; its rule is about who owns a corpse (Rebirth) |
 | VIII Olympian Republic | A whole pantheon with legions; Hades's empty kingdom leads straight to hell |
-| IX Inferno | Hell collects what was owed and ends Part One |
-| X Ancient Eye | The first power from outside the world |
-| XI Electronic Empire | Saw the Eye's beacons and came, so the two stay a pair |
-| XII Concord of Stars | The ones who planted life to reap the dead |
-| XIII Age of Titans | The Concord's oldest harvest, the day the sky fell; here the necromancer calls the disaster |
-| XIV Turning Year | The world itself, the campaign finale; the cut Throne phase returns here as the last boss's final phase |
+| IX Inferno | Hell collects what was owed; the necromancer takes the throne below |
+| X Celestial Host | Heaven itself comes down to judge him, and ends Part One: heaven, earth and hell all answer to him |
+| XI Ancient Eye | The first power from outside the world |
+| XII Electronic Empire | Saw the Eye's beacons and came, so the two stay a pair |
+| XIII Concord of Stars | The ones who planted life to reap the dead |
+| XIV Age of Titans | The Concord's oldest harvest, the day the sky fell; here the necromancer calls the disaster |
+| XV Turning Year | The world itself, the campaign finale; the cut Throne phase returns here as the last boss's final phase |
 
 Only the Covenant (I) and the Shogunate (V) keep their numbers. Every rule is keyed to its stage, so moving the built acts is data and text, not code; the cost list is in the build plan below.
 
@@ -35,15 +36,15 @@ Only the Covenant (I) and the Shogunate (V) keep their numbers. Every rule is ke
 
 Three build waves, then the reorder in one pass. Each act follows the plan Acts IV–IX used (`docs/act5/`): a foundation that builds the act's three rules on stub stages and passes the same-seed gate, three stage agents in parallel, an integration merge, your art review rounds, bot playtest passes, then your "ship it".
 
-1. **Now: this doc.** Two new proposals (Norse, the Turning Year), short versions of the three written ones, concept art for all five, and the open questions at the end. Nothing is built until you answer them.
-2. **Wave 1: the Necropolis Dynasty and the Hall of the Slain, with a Black you**, structures), so they can run side by side. The spike is one small sloop, one boat and one swimmer with the Bone Ring on a 360 px beam, so you can see the ring on a deck before the pirate act is built.
-3. **Wave 2: the Black Tide and the Age of Titans.** The two acts with new arena systems (the deck and boarding; neutral herds, a mass raise and the meteor finale).
+1. **Now: this doc.** Three new proposals (Norse, the Celestial Host, the Turning Year), short versions of the three written ones, concept art for all six, and the open questions at the end. Nothing is built until you answer them.
+2. **Wave 1: the Necropolis Dynasty and the Hall of the Slain, with a Black Tide deck spike.** Egypt and Norse both reuse paths the game already has (corpses, ground slow, debuffs, structures), so they can run side by side. The spike is one small sloop, one boat and one swimmer with the Bone Ring on a 360 px beam, so you can see the ring on a deck before the pirate act is built.
+3. **Wave 2: the Black Tide, the Celestial Host and the Age of Titans.** The two acts with new arena systems (the deck and boarding; neutral herds, a mass raise and the meteor finale) beside the Host, whose rules reuse the meter, ground-hazard and shield paths (four acts ran side by side for Acts VI–IX).
 4. **Wave 3: the Turning Year, alone.** It is the finale and its last boss phase brings back one rule from every act, so it is built when every act exists.
-5. **The reorder pass.** One ordered act list from which every act and stage number is derived; the unlock chain; act tabs grouped by Part (14 tabs do not fit in one row at 1280 px); a save migration that keeps every stage a player has opened; the Soul Ash decision (below); a bot pass for each moved act; the CI job names; and the story text: a closing card and an epilogue part for every act, all written together once the order is final.
+5. **The reorder pass.** One ordered act list from which every act and stage number is derived; the unlock chain; act tabs grouped by Part (15 tabs do not fit in one row at 1280 px); a save migration that keeps every stage a player has opened; the Soul Ash decision (below); a bot pass for each moved act; the CI job names; and the story text: a closing card and an epilogue part for every act, all written together once the order is final.
 
 **Until the reorder, new acts sit after the Concord** in the stage select and the unlock chain, but each is tuned from the start for its final slot (the Dynasty and the Norse act as mid-campaign acts, the Titans and the Turning Year as the hardest). The reorder then moves the built acts around them without retuning the new ones.
 
-**Size of the five acts together:** 15 stages, 15 bosses and about 55 enemy kinds, 15 spells with their characters and paired passives, 5 summon classes, 10 counter-passives and 15 achievements. At the pace of Acts VI–IX (four acts in about three days), the build is roughly a week of agent work plus your art reviews and playtests.
+**Size of the six acts together:** 18 stages, 18 bosses and about 65 enemy kinds, 18 spells with their characters and paired passives, 6 summon classes, 12 counter-passives and 18 achievements. At the pace of Acts VI–IX (four acts in about three days), the build is roughly a week and a half of agent work plus your art reviews and playtests.
 
 ## II. The Black Tide (pirates)
 
@@ -198,7 +199,84 @@ Finale summon class **the Ushabti Sentinel** (a stone servant that reassembles o
 
 *Stage 19 in play:* Rebirth in every state at once: cartouches over fresh corpses, one mummy returning in gold, one raised in teal for the necromancer, and the Sandstorm wall rolling in from the right.
 
-## XIII. The Age of Titans (prehistoric)
+## X. The Celestial Host (your pick for the fifteenth act, new proposal)
+
+The throne below is taken. For the first time since the world began, heaven does not send a church or a saint: it comes down itself. The Host is not human. Its angels are the old, strange ones: wheels within wheels covered in eyes, four-faced cherubim, six-winged seraphim whose faces are never seen, and silver soldiers with mirror masks. It closes Part One: after it, heaven, earth and hell all answer to the necromancer. Stage key `host`.
+
+**Kept apart from the Covenant, Seraphine and the fallen angels.** The Covenant is a mortal church in crimson, ivory and warm gold; Seraphine is its inquisitor; Act VI's fallen angels burn. The Host uses **starlight white, pale silver, cerulean and dawn rose, with no crimson and no warm gold**, thin geometric halos instead of crowns, and inhuman shapes, so nothing in it reads as the Covenant.
+
+### Shared rules
+
+**1. Judgment (the headline).** A pair of scales on the HUD weighs the necromancer's sins. Every corpse he raises and every summon he replaces adds weight. At each third, a **Judge** descends: an elite angel who goes for the necromancer himself. When the scales are full, **the Verdict**: a pillar of light falls on the necromancer every 5 s for 20 s, then the scales reset. Killing Judges lightens them. One path, `Judgment`, like Act II's `DreadMeter` but read as a summons, never as damage taken.
+
+**2. Hallowed Light.** Shafts of white light sweep the arena on telegraphed paths (a thin line 1.5 s ahead) and burn the undead standing in them, summons and the necromancer alike; angels in the light are healed. The shadows of clouds and pillars are safe ground, Warder barriers and Orb Shields block a shaft, and the necromancer can lead the ring through the dark. One ground-hazard path, like Act VI's pits.
+
+**3. Grace.** Every angel arrives wearing a halo that shrugs off the first hit from each **kind** of damage: each summon class and each spell is its own kind. An army of one class chips through halos one hit at a time; a mixed army and a full spell bar break them at once. It rewards wide builds without punishing any one of them. One stat in `CombatResolver.damage_enemy()`.
+
+### Roster
+
+| Kind | Tier | What it does | How you beat it |
+| --- | --- | --- | --- |
+| Lesser Light | Fodder swarm | Small winged orbs of light in swarms of 12 | Anything |
+| Virtue (male) | Soldier | Silver spearman with a mirror mask and four wings | Blockers |
+| Power (female, figure style) | Soldier | A blade of white flame; a lunge that cuts two summons in a line | Rogues, Gargoyles |
+| Choir Angel (female, figure style) | Support | Her hymn heals angels within 200 px | Priority target |
+| Herald (male) | Support | A trumpet blast that calls a squad and pushes the ring back | Kill on arrival |
+| Dominion (male) | Elite | A sceptre of light rings: angels near him move faster and their halos come back after 10 s | Kill first |
+| Cherub | Elite (guardian) | Four faces, four wings full of eyes and a flaming sword that sweeps all around it | Siegecraft; stay out of reach |
+| Ophan | Heavy | A burning wheel within a wheel that rolls straight through the ring, then turns | Bone Wall; Grave Step |
+| Judge (male) | Elite (Judgment) | Comes for the necromancer with a sword and a set of scales | Kill it to lighten the scales |
+
+**Reckoning, the Last Trumpet:** at 0:00 seven trumpets sound one after another; each fills the scales, widens the light and doubles the Host, and the sky opens.
+
+### Stage 28: The Silver Stair
+
+A stair of light rising from hell's ashes into the clouds. Zones: the Ashen Foot, the Stair, the Cloud Shelf, the Gate of Pearl.
+
+- **The Stair:** each zone is a wider step; low cloud banks are the shadows that hide from the light.
+- **Miniboss, the Cherub of the Gate,** whose flaming sword turns in a full circle every 6 s.
+- **Boss, Seraiel, Warden of the Gate** (male, a four-winged archangel): **the Gate** (walls of light split the arena into lanes that close one by one), **the Sword** (sweeps of a flaming sword across the ring), **the Trial** (he fills the scales by a third with each phase he survives).
+
+### Stage 29: The Wheel of Thrones
+
+The turning spheres of heaven: rings of crystal that orbit through the arena. Zones: the Sphere of the Moon, the Sphere of the Sun, the Sphere of the Stars, the Wheel.
+
+- **Turning spheres:** crystal rings sweep slowly across the map as moving walls; the ring must flow through their gaps.
+- **Miniboss, the Dominion of the Spheres,** who keeps halos returning across the whole zone until he falls.
+- **Boss, the Throne** (a colossal wheel within a wheel, rims covered in eyes): **the Rolling** (it crosses the arena in straight lines and rebounds), **the Gaze** (every eye opens: beams from the rim toward the necromancer that only shadows stop), **the Core** (the wheels open and a burning eye at the centre can be hurt for 10 s at a time).
+
+### Stage 30: The Empyrean (the end of Part One)
+
+The highest heaven: a white rose of light, endless and silent. Zones: the Rose's Edge, the Petals, the Choir, the Heart of the Rose.
+
+- **The Choir:** the hymn of the whole Host can be heard; every Choir Angel alive adds to the light's width.
+- **Miniboss, the Herald of the Seventh Trumpet,** whose trumpets call the squads of all the earlier zones.
+- **Boss, the Voice** (a six-winged seraph of light; two wings hide its face, two its feet, two are spread): **the Holy** (the light at its strongest; the Voice never moves), **Be Not Afraid** (it lowers the wings from its face: the screen whitens and every summon in the open stops for 2 s; summons behind a barrier or in shadow are spared), **the Last Word** (the scales read the run's sins back: every raise of the run returns as a Judge, in waves, until the Voice falls).
+- **The ending:** the Voice folds its wings and is silent. Part One ends: heaven, earth and hell answer to the necromancer.
+
+### Rewards
+
+| Boss | Spell (paired passive) | Character |
+| --- | --- | --- |
+| Seraiel | **Flaming Sword**: a spectral sword sweeps a wide arc in front of the necromancer → *Sword at the Gate* (+ Fallen Light) | **The Fallen Herald** (male) |
+| The Throne | **Wheel of Eyes**: a burning wheel rolls out in a line and rebounds off walls → *Ophanim* (+ All-Seeing) | **The Blind Saint** (female, figure style) |
+| The Voice | **Revelation**: a flash that stuns every enemy on screen for 1 s and weakens them through the one debuff path → *Be Not Afraid* (+ Seventh Seal) | **The Unveiled** (female, figure style; an angel who looked on the necromancer and fell) |
+
+Finale summon class **the Bound Ophan**: a wheel of bone and eyes that orbits the Bone Ring and rolls through packs (evolution *Throne of Bones*). It is new, not the Fallen Seraph that Seraphine already gives. Counter-passives (this act only): *Absolution* (the scales fill 30% slower) and *Smoked Glass* (Hallowed Light burns summons for half). Achievements: *Without Sin* (clear the Silver Stair without the scales passing the first third), *The Wheel Breaks* (beat the Throne by its core alone), *The Last Word* (beat the Voice; opens the Part One epilogue part).
+
+![The Celestial Host lineup: lesser lights, a Virtue with a mirror mask, a Choir Angel, a Power with a flame blade, a Herald with a trumpet, a Dominion, a four-faced Cherub and an Ophan wheel](../../art_source/concepts/act15/host_lineup.png)
+
+*The lineup:* lesser lights, Virtue, Choir Angel, Power, Herald, Dominion, Cherub and Ophan, all silver and blue with geometric halos.
+
+![The Celestial Host bosses: Seraiel with a flaming sword before the pearl gate, the Throne as a wheel within a wheel of eyes, the Voice with its face hidden in a white rose of light](../../art_source/concepts/act15/host_bosses.png)
+
+*The three bosses:* Seraiel before the Gate of Pearl, the Throne, and the Voice in the white rose.
+
+![The Silver Stair in play: the Bone Ring on an ashen stair among clouds, shafts of light burning two skeletons, a dark cloud shadow as safe ground, angels with halo rings, one halo cracking, the scales at the top](../../art_source/concepts/act15/host_stage.png)
+
+*Stage 28 in play:* Hallowed Light burning two skeletons while the cloud's shadow stays safe, angels with their Grace halos (one cracking), and the scales of Judgment at the top of the stair.
+
+## XIV. The Age of Titans (prehistoric)
 
 The Ark's vault holds a log of every world the Harvesters reaped. The oldest entry is this one: they seeded the world, let it grow, then called down a meteor to clear the beasts. The necromancer takes their tractor-beam array, follows the log through a rift to the day before the impact, and takes the **Call** for himself (Framing A; the Concord is built now, so this framing is unblocked). No gods, no armies, no walls: only animals the size of houses, and every one that falls leaves a skeleton to raise. Look: fern green, volcanic orange, tar black, dust ochre and bone white, with a white streak in the sky that grows through the act. Full proposal: `docs/proposals/NEW_ACTS_AND_ORDER.md`, Part 2. Stage key `primeval`.
 
@@ -210,11 +288,11 @@ The Ark's vault holds a log of every world the Harvesters reaped. The oldest ent
 
 | Stage | Arena and set piece | Boss |
 | --- | --- | --- |
-| 37. The Fern Basin | Jungle river; tar seeps that trap longnecks as free kills; crocodiles in the tar | Scarmaw, the Great Raptor (female alpha; three packs, fern ambushes, Blood Up) |
-| 38. The Great Plain | Grassland; a watering hole where fights start stampedes; a canyon of narrow lanes | Old Ironbrow, the Horned Titan (male; leads the stampede, charges, breaks a horn) |
-| 39. The Last Day | The impact basin under a white sky; meteorites strike faster each zone | Old Gravejaw, the Tyrant King (male; the Roar, the Hunt, the Last Day) |
+| 40. The Fern Basin | Jungle river; tar seeps that trap longnecks as free kills; crocodiles in the tar | Scarmaw, the Great Raptor (female alpha; three packs, fern ambushes, Blood Up) |
+| 41. The Great Plain | Grassland; a watering hole where fights start stampedes; a canyon of narrow lanes | Old Ironbrow, the Horned Titan (male; leads the stampede, charges, breaks a horn) |
+| 42. The Last Day | The impact basin under a white sky; meteorites strike faster each zone | Old Gravejaw, the Tyrant King (male; the Roar, the Hunt, the Last Day) |
 
-**The meteor (recommended Option A):** on the Last Day the 20:00 clock still runs and the boss still comes at 3:00. At 0:00 the necromancer's meteor lands as the stage's Reckoning, **the Extinction**: a 5 s white-out under a one-time ward, every enemy on the map dies, every corpse rises as a temporary **Fossil Host**, and the run ends in victory. Only a Tyrant King killed before the impact gives his spell. Stages 37 and 38 keep a normal Reckoning, the Stampede of Ash.
+**The meteor (recommended Option A):** on the Last Day the 20:00 clock still runs and the boss still comes at 3:00. At 0:00 the necromancer's meteor lands as the stage's Reckoning, **the Extinction**: a 5 s white-out under a one-time ward, every enemy on the map dies, every corpse rises as a temporary **Fossil Host**, and the run ends in victory. Only a Tyrant King killed before the impact gives his spell. Stages 40 and 41 keep a normal Reckoning, the Stampede of Ash.
 
 | Boss | Spell (paired passive) | Character |
 | --- | --- | --- |
@@ -236,9 +314,9 @@ Finale summon class **the Bonehorn** (a skeletal horned charger that tramples th
 
 ![The Fern Basin in play: the Bone Ring circled by a raptor pack with a marked alpha, a longneck herd stampeding along one side, a pterosaur snatching crystals, tar pits and a meteor streak](../../art_source/concepts/final5/titans_stage.png)
 
-*Stage 37 in play:* a pack circling with its alpha marked, a longneck stampede on its dust line, a skyraider taking crystals, the tar seeps and the first streak in the sky.
+*Stage 40 in play:* a pack circling with its alpha marked, a longneck stampede on its dust line, a skyraider taking crystals, the tar seeps and the first streak in the sky.
 
-## XIV. The Turning Year (nature, the finale, new proposal)
+## XV. The Turning Year (nature, the finale, new proposal)
 
 A star fell once and the world buried everything under it. Now it remembers how to bury things. Death was always part of the world's cycle (a body becomes soil, soil becomes spring), and the necromancer broke it: nothing he raises goes back to the earth. After heaven, hell, the stars and the deep past, **the world itself** rises to take its dead back: the Wild, with its dryads and treants, the fae courts, the great beasts, the Wild Hunt and the spirits of the four seasons. The look is moss, bark, blossom pink, gold leaves and frost white, and each season repaints the arena. Stage key `wild`.
 
@@ -275,7 +353,7 @@ A star fell once and the world buried everything under it. Now it remembers how 
 | Winter Fae (female, figure style) | Ranged | Frost bolts that chill summons; winter only | Fire; Mages |
 | Corpse-Bloom | Structure | Eats corpses on the field and spawns thornlings | Break it |
 
-### Stage 40: The Greenwood
+### Stage 43: The Greenwood
 
 An old forest that has never been cut. Zones: the Glade, the Deep Wood, the Hunting Grounds, the Stag's Hollow.
 
@@ -283,7 +361,7 @@ An old forest that has never been cut. Zones: the Glade, the Deep Wood, the Hunt
 - **Miniboss, the Huntsman of the Wild Hunt,** who leads three riders in a sweeping line.
 - **Boss, the Stag King** (male, stag-headed, the antlered lord of the forest): **the Hunt** (he leads the Wild Hunt across the arena in sweeping lines), **the Rut** (charges that crack trees into new thickets), **the Antler Crown** (his antlers grow a thicket ring around him that must be burned through before he can be hurt).
 
-### Stage 41: The Fae Court
+### Stage 44: The Fae Court
 
 A court of endless summer under a sky that never sets. Zones: the Rose Maze, the Revel, the Mirror Lake, the Throne of Blossoms.
 
@@ -291,7 +369,7 @@ A court of endless summer under a sky that never sets. Zones: the Rose Maze, the
 - **Miniboss, the Winter Prince,** the Summer Queen's rival, who brings one minute of winter into her summer.
 - **Boss, the Summer Queen** (female, figure style): **the Masque** (glamour: she and her court change faces, and only hits reveal which is real), **the Bargain** (she offers the necromancer a bargain on screen, a real choice: a strong boon at a price, such as +30% army damage for 60 s while the army no longer heals; refuse and she attacks harder), **the Court in Bloom** (she floods the arena with blossoms and thorns until she falls).
 
-### Stage 42: The World-Tree (the campaign finale)
+### Stage 45: The World-Tree (the campaign finale)
 
 The tree at the centre of the world, its roots in the dead and its crown in the sky. Zones: the Roots, the Trunk Stair, the Crown, the Seed.
 
@@ -300,7 +378,7 @@ The tree at the centre of the world, its roots in the dead and its crown in the 
 - **Boss, the Green Mother** (female, figure style, a colossal goddess grown from the tree):
   1. **The Turning:** she casts one season after another, each a different attack (spring roots, summer fire, autumn rot, winter frost).
   2. **The Burial:** she pulls the summons into the earth one by one; each buried summon becomes a thicket until the ring cuts it free.
-  3. **The Last Claim** (the Morning Star's cut Throne phase, brought back as you decided): she remembers every power that ever claimed the dead, and the arena replays **one signature rule of every act** for about 10 s each, in campaign order: the Covenant's march, a boarding, the Blood Moon, the Wanted stars, the Draw, the Choosing, Rebirth, the Wrath of the Gods, the hell pits, the Claims, the Lock-On lines, the beams, a stampede. She can be hurt throughout. A boss rush of mechanics as the last fight of the game.
+  3. **The Last Claim** (the Morning Star's cut Throne phase, brought back as you decided): she remembers every power that ever claimed the dead, and the arena replays **one signature rule of every act** for about 10 s each, in campaign order: the Covenant's march, a boarding, the Blood Moon, the Judgment, the Wanted stars, the Draw, the Choosing, Rebirth, the Wrath of the Gods, the hell pits, the Claims, the Lock-On lines, the beams, a stampede. She can be hurt throughout. A boss rush of mechanics as the last fight of the game.
 - **The ending:** beaten, she does not die. She takes the necromancer's dead back into the soil and gives him the one claim left: the dead are no longer buried, they are **planted**, and in spring they rise to him. The campaign ends on the first spring.
 
 ### Rewards
@@ -323,21 +401,13 @@ Finale summon class **the Ossuary Oak**: a slow tree of bone that roots in place
 
 ![The Greenwood in play: the Bone Ring on a patch of grey blighted ground in a green forest, dryads planting seeds, thorn thickets closing a path, treants and a great stag advancing](../../art_source/concepts/final5/year_stage.png)
 
-*Stage 40 in play:* the blight under the ring against living ground all around, dryads at work, thickets closing the paths, treants and the great stag closing in. The blight should read stronger than this in the game (a darker grey with dead grass).
+*Stage 43 in play:* the blight under the ring against living ground all around, dryads at work, thickets closing the paths, treants and the great stag closing in. The blight should read stronger than this in the game (a darker grey with dead grass).
 
-## A fifteenth act: five candidates
+## The fifteenth act: the other candidates
 
-Recommended: **Death and the Four Horsemen as Act XV**, a new finale after the Turning Year. Every act so far is a power that claims the dead; the last claim is Death's own. Fifteen then reads as fourteen claims and the one that never had to ask. If the Turning Year should stay the finale, **Mictlan** (Aztec) is the strongest pick for a mid-campaign slot.
+**Decided (Nov 7): the Celestial Host**, written up in full above as Act X. The four candidates not chosen stay here on record, in case one is wanted later (a sixteenth act, or a bonus stage).
 
-| Candidate | Slot | What it adds | Overlap with built or planned acts |
-| --- | --- | --- | --- |
-| **Death and the Four Horsemen** | XV, the new finale (stages 43–45) | The last and largest claim: Death itself | Low |
-| **The Celestial Host** | X, closing Part One beside the Inferno | Heaven answers hell | High: the Covenant, Seraphine and Act VI's fallen angels already own the holy look |
-| **Mictlan, the Flower War** | VIII, between the Dynasty and Olympus | A third great pantheon of the dead | Medium: a sun cult near the Shogunate's sun goddess |
-| **The Jade Court of Diyu** | VIII, among the god acts | The bureaucracy of the dead | Medium: East Asian next to the Shogunate; hopping corpses next to the Court |
-| **The Plague Years** | III, early in the campaign | A second mortal act for the thin opening | Low in play; close to Act I's medieval tone |
-
-### 1. Death and the Four Horsemen (recommended)
+### Death and the Four Horsemen
 
 The Turning Year ends with the dead planted and rising each spring: death no longer ends anything. The one power that cannot allow that is Death, who has never had to ride before. The Four ride out. Look: bone white, ash grey, rust red, sickly green and pale gold under a black sun. Stage key `pale`.
 
@@ -351,21 +421,7 @@ The Turning Year ends with the dead planted and rising each spring: death no lon
 
 *Key art:* the Four on their horses, Death in the centre with his hourglass, and their servants in front.
 
-### 2. The Celestial Host
-
-With hell's throne taken, heaven itself comes down to judge the necromancer. It would close Part One with heaven and hell both answering to him. Look: white, pale gold, sky blue and dawn rose.
-
-- **Judgment.** Every raise adds sin to a meter; at each threshold an angel of judgment descends on the necromancer.
-- **Hallowed Light.** Beams of sunlight sweep the arena and burn the undead that stand in them, summons and necromancer alike.
-- **Choirs.** Angels sing in circles that make them untouchable while the hymn holds; break the circle to break the hymn.
-- **Bosses:** a Throne (a burning wheel of eyes), an Archangel captain, and a six-winged seraph whose face is never seen.
-- **Why not first:** the Covenant, Seraphine and her Fallen Seraph, and Act VI's fallen angels already wear this look, so it would need a very different palette to feel new.
-
-![The Celestial Host: an angelic legionary, a choir angel, a cherub, a burning wheel of eyes and a judge angel, under a six-winged seraph with a flaming sword](../../art_source/concepts/act15/host.png)
-
-*Key art:* the Host on the clouds under the six-winged seraph.
-
-### 3. Mictlan, the Flower War
+### Mictlan, the Flower War
 
 The dead of the western empire walk the nine levels of Mictlan to its Lord and Lady, and the fifth sun needs blood to keep burning. The necromancer has taken both the dead and the blood. Look: jade, obsidian, turquoise, gold and marigold.
 
@@ -378,7 +434,7 @@ The dead of the western empire walk the nine levels of Mictlan to its Lord and L
 
 *Key art:* the Lord and Lady of the Dead on the pyramid, the jaguar and eagle knights, a priestess, a xolo and a netter below.
 
-### 4. The Jade Court of Diyu
+### The Jade Court of Diyu
 
 The dead of the east are kept in ledgers, and the necromancer's army is entirely unregistered. The Ten Courts of the underworld send clerks, guards and King Yama himself to set the books straight. Look: lacquer red, black, jade, gold, paper white and ghost blue.
 
@@ -391,7 +447,7 @@ The dead of the east are kept in ledgers, and the necromancer's army is entirely
 
 *Key art:* King Yama's hall of judgment with his court in front.
 
-### 5. The Plague Years
+### The Plague Years
 
 The pirates bring the plague ashore, and a city of the living fights the necromancer and the sickness at once. A mortal act for the opening, where only the Covenant and the Black Tide sit today. Look: soot black, plague green, bone, ember orange.
 
@@ -408,15 +464,17 @@ The pirates bring the plague ashore, and a city of the living fights the necroma
 
 Each has a recommendation; answer inline or in a comment and wave 1 starts.
 
-- [ ] **The order:** fourteen acts as drawn above, with the Norse act at VI between the Shogunate and the Dynasty? Recommended. The alternative is the Norse act at VIII, just before Olympus, so the two pantheons sit side by side.
+- [ ] **The order:** fifteen acts as drawn above, with the Norse act at VI between the Shogunate and the Dynasty and the Host at X? Recommended. The alternative is the Norse act at VIII, just before Olympus, so the two pantheons sit side by side.
 - [ ] **Pirates second:** the Black Tide at II, as the first act that bends the arena while the enemies are still mortal? Recommended.
 - [ ] **The Titans' framing and meteor:** Framing A (the Harvesters' log, after the Concord) and Option A (the meteor is the finale's Reckoning, a victory, and the Fossil Host)? Recommended; the Concord now exists, so nothing blocks it.
 - [ ] **Real mythology names:** Anubis, Sekhmet, Osiris, Ammit, Odin and Fenrir, as the Greek and Japanese acts use theirs? Recommended.
 - [ ] **The Choosing:** melee kills feed the Norse hall, spell and ranged kills deny it. Is a rule that judges how you kill fun to you, or should the valkyries take every Norse death?
 - [ ] **The Summer Queen's Bargain:** a real choice on screen mid-fight (two cards, the run paused in solo, a lockstep pick in co-op)? Recommended; it is the only boss in the game that asks the player a question.
 - [ ] **The Last Claim:** the Green Mother's last phase replays one rule from each act for about 10 s each, roughly two and a half minutes. Keep it that long, or cut it to one rule per Part-Two act?
-- [ ] **Soul Ash with fourteen acts:** keep the per-act restart (×1 / ×1.25 / ×1.5 per stage, every act a fresh start), or add a gentle ladder for the later acts? Recommended: keep it, and look again in the reorder pass with the economy tool.
-- [ ] **The stage select:** a Part One / Part Two switch with the act tabs under it? Recommended (fourteen tabs do not fit in one row).
+- [ ] **Soul Ash with fifteen acts:** keep the per-act restart (×1 / ×1.25 / ×1.5 per stage, every act a fresh start), or add a gentle ladder for the later acts? Recommended: keep it, and look again in the reorder pass with the economy tool.
+- [ ] **The stage select:** a Part One / Part Two switch with the act tabs under it? Recommended (fifteen tabs do not fit in one row).
 - [ ] **Wave 1:** the Necropolis Dynasty and the Hall of the Slain together, with the Black Tide deck spike beside them? Recommended.
 - [ ] **Concept art:** any image to redo before sprites start? Two notes of mine: Odin could move further from a wizard silhouette, and the Turning Year's blight needs to read stronger in the game.
-- [ ] **The fifteenth act:** which of the five candidates above? Recommended: Death and the Four Horsemen as XV, the new finale after the Turning Year. It would join wave 3 (built after the Turning Year), and the order drawing and build plan update once you pick.
+- [x] **The fifteenth act:** decided Nov 7: the Celestial Host, Act X, closing Part One; built in wave 2.
+- [ ] **The Host's names:** original archangels (Seraiel, the Throne, the Voice), or the scriptural ones (Michael at the Gate, for one)? Recommended: original, like the Covenant's saints; Olympus, Egypt and the Norse act use real names because they are myth, but heaven is a living faith for many players.
+- [ ] **Grace:** every angel ignores the first hit from each kind of damage, so mixed armies break halos fastest. Keep it, or make halos break on any three hits regardless of kind?

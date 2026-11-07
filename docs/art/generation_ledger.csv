@@ -1326,3 +1326,6 @@ utc,key,model,quality,size,refs,text_in,image_in,image_out,usd_est,file
 2026-11-07 14:09,concepts/act15_host,gpt-image-2.5-flare,medium,1536x1024,2,289,952,343,0.0194,host.png
 2026-11-07 14:09,concepts/act15_diyu,gpt-image-2.5-flare,medium,1536x1024,2,307,952,343,0.0194,diyu.png
 2026-11-07 14:10,concepts/act15_plague,gpt-image-2.5-flare,medium,1536x1024,2,309,952,343,0.0195,plague.png
+2026-11-07 14:18,concepts/host_stage,gpt-image-2.5-flare,medium,1536x1024,2,350,952,343,0.0197,host_stage.png
+2026-11-07 14:18,concepts/host_lineup,gpt-image-2.5-flare,medium,1536x1024,2,409,952,343,0.0200,host_lineup.png
+2026-11-07 14:18,concepts/host_bosses,gpt-image-2.5-flare,medium,1536x1024,2,339,952,343,0.0196,host_bosses.png
