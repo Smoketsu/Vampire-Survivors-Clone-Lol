@@ -11,6 +11,7 @@ Outputs (assets/sprites/):
   tiles/norse_slabs.png      128 x 128 seamless hall slabs with joints and a carved rune border line (Valgard: Hall of Spears / Valkyries' Gate)
   tiles/norse_ash.png        128 x 128 seamless grey ash with ember specks (Vigrid: Ash Plain, Giants' March, the Field)
   obstacles/mound_s / mound_l (+ _v), barrow_closed, barrow_open, long_table_s / _l (+ _v), standing_shield_s / _l (+ _v), pine_s / pine_l
+  norse/brazier_lit.png / brazier_doused.png 32 x 32 (Long Winter braziers), norse/frost_creep.png 128 x 48 (vignette frost edge)
   norse/einherjar_overlay.png 48 x 48 dithered pale-gold aura ring (drawn additively under / over an Einherjar), norse/valkyrie_shadow.png 40 x 20
       dithered gold ellipse (the dive telegraph shadow)
 Usage (repo root):  python3 tools/norse_tiles.py [--out DIR]
@@ -207,6 +208,41 @@ def shadow(w, h):
     return im
 
 
+def brazier(lit):
+    """A 32 x 32 iron fire-bowl on three legs (the Long Winter's braziers): lit = hearth-amber flames, doused = cold ash and a smoke wisp."""
+    im = canvas(32, 32); d = ImageDraw.Draw(im)
+    for x in (9, 15, 22): d.rectangle((x, 22, x + 1, 30), fill=C("norse_iron_dark"))  # legs
+    d.rectangle((7, 29, 24, 30), fill=C("norse_iron_dark"))
+    d.polygon([(5, 17), (26, 17), (23, 24), (8, 24)], fill=C("norse_iron")); d.rectangle((5, 17, 26, 18), fill=C("norse_iron_light"))
+    d.rectangle((9, 21, 22, 22), fill=C("norse_iron_dark"))
+    if lit:
+        d.polygon([(8, 17), (11, 8), (14, 13), (16, 3), (19, 12), (22, 7), (24, 17)], fill=C("norse_hearth_dark"))
+        d.polygon([(11, 17), (13, 11), (16, 7), (19, 11), (21, 17)], fill=C("norse_hearth"))
+        d.polygon([(14, 17), (16, 11), (18, 17)], fill=C("norse_hearth_glow"))
+    else:
+        d.rectangle((8, 15, 23, 17), fill=C("norse_iron_dark")); d.rectangle((10, 14, 21, 15), fill=C("norse_ash"))
+        for x, y in ((12, 13), (16, 14), (19, 13)): d.point((x, y), fill=C("norse_ash_light"))
+        for y, x in ((10, 16), (7, 17), (4, 16), (2, 17)): d.rectangle((x, y, x + 1, y + 1), fill=C("norse_iron"))  # a thin smoke wisp
+    return outline(im)
+
+
+def frost_creep():
+    """128 x 48 tileable (horizontally) frost edge for the Long Winter's vignette: the top rows are solid frost, thinning into dithered
+    crystals toward the bottom. The code rotates it for each screen edge; drawn flat (no screen read)."""
+    w, h = 128, 48; rng = random.Random(77); im = canvas(w, h); px = im.load()
+    reach = [int(10 + 20 * wrapnoise(w, 16, rng)[0, x]) for x in range(w)]  # per-column reach of the frost (seamless, from one noise row)
+    for x in range(w):
+        for y in range(h):
+            if y < reach[x]:
+                t = y / max(1, reach[x])  # 0 at the edge, 1 at the frost's tip
+                keep = t < 0.35 or (t < 0.7 and (x + y) % 2 == 0) or (t < 1 and (x + 2 * y) % 5 == 0)
+                if keep: px[x, y] = C("norse_frost") if t < 0.2 else C("norse_frost_shade") if t < 0.6 else C("norse_rune")
+    for _ in range(14):  # ice spikes
+        x = rng.randrange(w); L = rng.randrange(6, 14)
+        for y in range(L): px[(x + (y // 5)) % w, min(h - 1, reach[x] + y - 4)] = C("norse_rune_glow") if y < 2 else C("norse_rune")
+    return im
+
+
 def main():
     ap = argparse.ArgumentParser(); ap.add_argument("--out", default=str(ROOT / "assets/sprites")); out = Path(ap.parse_args().out)
     for sub in ("tiles", "obstacles", "norse"): (out / sub).mkdir(parents=True, exist_ok=True)
@@ -219,6 +255,7 @@ def main():
     for k, im in dict(obs).items():
         if k.startswith(("mound", "long_table", "standing_shield")): obs[k + "_v"] = im.rotate(90, expand=True) if k.startswith("long_table") else im.transpose(Image.FLIP_LEFT_RIGHT)
     for k, im in obs.items(): im.save(out / f"obstacles/{k}.png")
+    brazier(True).save(out / "norse/brazier_lit.png"); brazier(False).save(out / "norse/brazier_doused.png"); frost_creep().save(out / "norse/frost_creep.png")
     aura(48, True).save(out / "norse/einherjar_overlay.png"); shadow(40, 20).save(out / "norse/valkyrie_shadow.png")
     print("wrote", len(obs), "obstacles, 5 tiles, 2 overlays to", out)
 

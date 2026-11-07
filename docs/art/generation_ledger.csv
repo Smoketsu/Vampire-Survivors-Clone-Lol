@@ -1361,3 +1361,6 @@ utc,key,model,quality,size,refs,text_in,image_in,image_out,usd_est,file
 2026-11-07 14:39,norse/icons_b,gpt-image-2.5-flare,medium,1536x1024,1,381,256,343,0.0142,icons_b.png
 2026-11-07 14:39,norse/icons_c,gpt-image-2.5-flare,medium,1536x1024,1,390,256,343,0.0143,icons_c.png
 2026-11-07 14:39,norse/icons_a,gpt-image-2.5-flare,medium,1536x1024,1,384,256,343,0.0143,icons_a.png
+2026-11-07 16:27,norse/rune_seer_necro,gpt-image-2.5-flare,medium,1024x1024,2,568,1232,439,0.0259,rune_seer.png
+2026-11-07 16:27,norse/berserker_hero_necro,gpt-image-2.5-flare,medium,1024x1024,2,551,1260,439,0.0260,berserker_hero.png
+2026-11-07 16:27,norse/shield_maiden_hero_necro,gpt-image-2.5-flare,medium,1024x1024,2,569,1232,439,0.0259,shield_maiden_hero.png

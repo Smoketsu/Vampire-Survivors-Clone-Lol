@@ -13,7 +13,7 @@ One hue per ramp, shared ink `norse_ink` #0B0F16: `frost` (#A9BBCC, #EAF2FA), `i
 | `norse/barrow_king` | 52x62 | barrow_king.png, barrow_king_walk.png | the Draugr Thane's evolution (walk) |
 | `norse/barrow_wight` | 56x56 | barrow_wight.png, barrow_wight_walk.png | miniboss, male draugr chieftain (walk) |
 | `norse/berserker` | 60x50 | berserker.png, berserker_walk.png | male elite in a bear pelt, red eyes (walk) |
-| `norse/berserker_hero` | 64x56 | berserker_hero.png, berserker_hero_walk.png | playable character, male Berserker (walk) |
+| `norse/berserker_hero` | 64x56 | berserker_hero.png, berserker_hero_walk.png | playable character (REDONE): male purple-hooded necromancer, bear-skull crest, one soul-teal axe held close (glide) |
 | `norse/boss_barrow` | 64x56 | boss_barrow.png | Hrimgar's barrow, intact (still; the necromancer breaks it while he is down) |
 | `norse/boss_barrow_broken` | 60x56 | boss_barrow_broken.png | Hrimgar's barrow, broken (still) |
 | `norse/draugr` | 36x42 | draugr.png, draugr_walk.png | male barrow-dead soldier (walk) |
@@ -21,6 +21,9 @@ One hue per ramp, shared ink `norse_ink` #0B0F16: `frost` (#A9BBCC, #EAF2FA), `i
 | `norse/draugr_thane` | 52x54 | draugr_thane.png, draugr_thane_walk.png | finale summon class, undead blocker (walk) |
 | `norse/einherjar` | 42x46 | einherjar.png, einherjar_walk.png | male gold-lit hero elite, base for the Einherjar kind and Risen Einherjar (walk) |
 | `norse/einherjar_champion` | 52x60 | einherjar_champion.png, einherjar_champion_walk.png | miniboss, male gold-lit hero (walk) |
+| `norse/brazier_lit` | 32x32 | brazier_lit.png | Long Winter brazier, lit: hearth-amber flames in an iron bowl (still) |
+| `norse/brazier_doused` | 32x32 | brazier_doused.png | the same brazier doused: cold ash, a smoke wisp (still) |
+| `norse/frost_creep` | 128x48 | frost_creep.png | tileable (horizontally) frost edge for the Long Winter vignette; flat overlay, the code rotates it per screen edge |
 | `norse/einherjar_overlay` | 48x48 | einherjar_overlay.png | 48x48 dithered pale-gold aura ring, draw additively around an Einherjar (the gold overlay) |
 | `norse/fenrir` | 100x80 | fenrir.png, fenrir_walk.png | boss creature, giant black wolf with a broken chain, ~100 px long (walk) |
 | `norse/fire_giant` | 64x80 | fire_giant.png, fire_giant_walk.png | miniboss, male fire-giant of the south (walk) |
@@ -29,12 +32,12 @@ One hue per ramp, shared ink `norse_ink` #0B0F16: `frost` (#A9BBCC, #EAF2FA), `i
 | `norse/odin` | 48x72 | odin.png, odin_walk.png | boss, male All-Father: eyepatch, dark hooded cloak, no wizard hat, ravens, Gungnir (glide) |
 | `norse/raider` | 40x40 | raider.png, raider_walk.png | male fodder, axe and round shield (walk) |
 | `norse/raven` | 18x18 | raven.png | Odin's raven, small creature (still) |
-| `norse/rune_seer` | 38x56 | rune_seer.png, rune_seer_walk.png, rune_seer_idle.png | playable character, FEMALE Rune-Seer (glide, bust, idle) |
+| `norse/rune_seer` | 38x56 | rune_seer.png, rune_seer_walk.png, rune_seer_idle.png | playable character (REDONE, owner note): FEMALE violet-robed volva necromancer, grey fur mantle, rune staff with a soul-teal rune (glide, bust, idle) |
 | `norse/rune_stone` | 28x40 | rune_stone.png | structure, held: glowing runes (still; code draws the capture ring) |
 | `norse/rune_stone_taken` | 28x40 | rune_stone_taken.png | structure, taken: dead runes (still) |
 | `norse/seer` | 32x46 | seer.png, seer_walk.png, seer_idle.png | FEMALE support (volva), staff and rune (glide, bust, idle) |
 | `norse/shield_maiden` | 52x44 | shield_maiden.png, shield_maiden_walk.png, shield_maiden_idle.png | FEMALE soldier, spear and shield (walk, bust, idle) |
-| `norse/shield_maiden_hero` | 48x56 | shield_maiden_hero.png, shield_maiden_hero_walk.png, shield_maiden_hero_idle.png | playable character, FEMALE Shield-Maiden (walk, bust, idle) |
+| `norse/shield_maiden_hero` | 48x56 | shield_maiden_hero.png, shield_maiden_hero_walk.png, shield_maiden_hero_idle.png | playable character (REDONE): FEMALE purple-cloaked necromancer, bone-rimmed shield, soul-flame spear focus (glide, bust, idle) |
 | `norse/sigrun` | 60x80 | sigrun.png, sigrun_walk.png, sigrun_idle.png | boss, FEMALE Shield-Queen, wings and shield (glide, bust, idle) |
 | `norse/skald` | 36x44 | skald.png, skald_walk.png | male support, war-horn and lyre (glide) |
 | `norse/valkyrie` | 46x52 | valkyrie.png, valkyrie_walk.png, valkyrie_idle.png | FEMALE flying elite, white-gold wings (glide + bust + idle; the Choosing; use with valkyrie_shadow) |
@@ -42,6 +45,8 @@ One hue per ramp, shared ink `norse_ink` #0B0F16: `frost` (#A9BBCC, #EAF2FA), `i
 | `norse/wolf_of_the_wastes` | 40x26 | wolf_of_the_wastes.png, wolf_of_the_wastes_walk.png | grey wolf, pack fodder (walk) |
 
 Strips: `_walk` 8 frames of the still's size (legs / glide / robe rigs), `_idle` 24 frames (bust rig, every female figure that has one). Frame 0 of each strip is the still.
+
+**The three playable characters follow the necromancer convention (owner note, Nov 2026):** violet dominant, bone and soul-teal accents, pale skin, a casting focus, 56 px tall, at most 40 px wide; converted with the violet / bone / soul / grey ramps added in `KEY_RAMPS`; sources `art_source/norse/gen_chars.py`.
 
 ## Tiles and obstacles (`assets/sprites/tiles/`, `obstacles/`)
 

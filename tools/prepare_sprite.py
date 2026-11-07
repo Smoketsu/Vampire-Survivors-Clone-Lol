@@ -248,7 +248,10 @@ KEY_RAMPS = {
     "concord/grey_drone": ([], ["lavender", "lumen", "vrask", "chitin"]),  # a silver grey with a plasma probe
     # --- Act VI (final order): the Hall of the Slain ---
     "norse/berserker": (["crimson"], []),  # red fury eyes and blood
-    "norse/berserker_hero": (["crimson"], []),
+    # The three playable characters are NECROMANCERS of the act (owner note): violet, bone, soul teal, pale skin.
+    "norse/rune_seer": (["violet", "bone", "soul", "grey"], ["frost", "iron", "pine", "valk", "rune", "draugr"]),
+    "norse/shield_maiden_hero": (["violet", "bone", "soul", "grey"], ["frost", "iron", "pine", "valk", "rune", "draugr"]),
+    "norse/berserker_hero": (["violet", "bone", "soul", "grey"], ["frost", "iron", "pine", "valk", "rune", "draugr"]),
     "norse/fire_giant": (["hearth", "flame", "crimson"], ["frost", "draugr"]),  # black iron with amber fire cracks
     "norse/skald": (["hearth"], []),  # the lyre's warm gold-brown and the horn
     "norse/wolf_of_the_wastes": ([], ["skin", "valk", "pine"]),  # grey fur, ice-blue eyes
