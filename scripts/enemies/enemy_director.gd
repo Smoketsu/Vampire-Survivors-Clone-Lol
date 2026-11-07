@@ -122,6 +122,15 @@
 ##     escalation, Armour, Supers, Civilians, Martial Law) live in CityRules
 ##     (Game.city). Civilians have their own alive cap: regular_alive() leaves
 ##     them out, and they are never recycled to the spawn ring (they flee off).
+##   * Act X, the Black Tide (GDD §15.0 "Act X foundation: the Black Tide
+##     (phase 1)"): its kinds are looked up through corsair_def() after the
+##     Concord's, its bosses load by name from CORSAIR_BOSS_DIR. On a corsair
+##     stage EVERY timeline spawn (the trickle, wave events, the Reckoning)
+##     goes through CorsairRules.route_spawn() instead of the spawn ring: a
+##     crew kind waits in BoardingParty's queue and comes aboard by boat
+##     (spawn_routed()), a swimmer comes from the sea (SeaStrikes);
+##     regular_alive() counts the waiting crew and leaves the boats and hooks
+##     out (CorsairRules.alive_adjust()), so the budget is unchanged.
 ##   * Act IX, the Concord of Stars (GDD §15.0 "Act IX foundation (phase 1)"):
 ##     its kinds are looked up through concord_def() (ConcordEnemyData, then
 ##     each Act IX stage's table) after the City's, and its bosses load by name
@@ -188,6 +197,9 @@ const CITY_BOSS_DIR: String = "res://scripts/enemies/city/"
 # --- Act IX: the Concord of Stars ---
 ## Folder of the Concord of Stars' boss scripts ("boss_<id>.gd", each a Boss; Act IX).
 const CONCORD_BOSS_DIR: String = "res://scripts/enemies/concord/"
+# --- Act X: the Black Tide ---
+## Folder of the Black Tide's boss scripts ("boss_<id>.gd", each a Boss; Act X).
+const CORSAIR_BOSS_DIR: String = "res://scripts/enemies/corsair/"
 
 ## The boss entered the arena.
 signal boss_spawned(boss: Boss)
@@ -763,6 +775,8 @@ func regular_alive() -> int:
 		n -= game.city.civilians.alive_count()  # Act VIII: civilians have their own cap.
 	if crash_site != null:
 		n -= crash_site.eggs_alive()  # Act IX, the Crash Site: Infestation's eggs have their own cap.
+	if game.corsair != null:
+		n += game.corsair.alive_adjust()  # Act X: crew waiting for a boat count; boats and hooks do not.
 	return n
 
 
@@ -909,6 +923,14 @@ func _spawn_trickle(delta: float) -> void:
 		var kind := _pick_kind(game.difficulty.trickle_weights(weights, game.elapsed))
 		var pos := _ring_point(randf() * TAU) if game.coop == null else _ring_point_at(game.coop.spawn_anchor(), randf() * TAU)  # Spawn point on the ring (co-op: each necromancer in turn).
 		var elite := elite_chance > 0.0 and randf() < elite_chance  # Promoted by the level.
+		# --- Act X: the Black Tide --- THE ONE SPAWN ROUTE on a corsair stage: by
+		# boat (BoardingParty) or from the sea (SeaStrikes); never at the ring.
+		if game.corsair != null and game.corsair.routes():
+			game.corsair.route_spawn(resolve_kind(kind), hp_mult, elite, 1.0, false, elite)
+			if elite:
+				game.stat_add("elites_promoted", 1.0)
+			alive += 1
+			continue
 		var e := _spawn_enemy(kind, pos, elite)  # The new soldier.
 		if elite:
 			# A threat, not a loot source: base XP, no elite chest / drop chance.
@@ -1186,7 +1208,10 @@ func _spawn_formation_here(formation: String, groups: Array) -> void:
 				var col := i % 8
 				pos = p + dir * (ring + float(row) * WaveData.LINE_SPACING) + perp * (float(col) - 3.5) * WaveData.LINE_SPACING
 		var m := members[i]
-		_spawn_enemy(m["kind"], pos, m["elite"])
+		if game.corsair != null and game.corsair.routes():
+			game.corsair.route_spawn(resolve_kind(m["kind"]), hp_mult, m["elite"], 1.0, false, false)  # Act X: by boat or from the sea.
+		else:
+			_spawn_enemy(m["kind"], pos, m["elite"])
 		alive += 1
 
 
@@ -1236,6 +1261,8 @@ func _spawn_boss() -> void:
 				path = CITY_BOSS_DIR + "boss_" + sid + ".gd"  # Act VIII: a Last Line boss script.
 			if not ResourceLoader.exists(path):
 				path = CONCORD_BOSS_DIR + "boss_" + sid + ".gd"  # Act IX: a Concord of Stars boss script.
+			if not ResourceLoader.exists(path):
+				path = CORSAIR_BOSS_DIR + "boss_" + sid + ".gd"  # Act X: a Black Tide boss script.
 			boss = (load(path) as Script).new() as Boss if ResourceLoader.exists(path) else BossAlaric.new()
 	add_child(boss)
 	boss.setup_boss(game, _ring_point(randf() * TAU), game.difficulty.boss_hp_mult() * float(stage_def["enemy_hp_mult"]), _next_slot)
@@ -1278,6 +1305,9 @@ func _reckoning_wave_here(r: Dictionary) -> void:
 	var rkind := resolve_kind(rk) if rk != "" else "inquisitor"  # Real kind of the main wave.
 	var rdef: Dictionary = enemy_def(rk) if rk != "" else EnemyData.RECKONING_ENEMY  # Its design row.
 	for i in count:
+		if game.corsair != null and game.corsair.routes():
+			game.corsair.route_spawn(rkind, hp_scale, false, dmg_scale, true, false)  # Act X: the Black Tide comes by boat.
+			continue
 		var e := _spawn_enemy_def(rkind, rdef, _ring_point(offset + TAU * float(i) / float(count)), hp_scale, false)
 		e.damage *= dmg_scale
 		e.is_reckoning = true
@@ -1287,6 +1317,9 @@ func _reckoning_wave_here(r: Dictionary) -> void:
 		var n := int(comp["count"]) + floori(float(reckoning_wave) * float(comp["growth"]))  # Companions this wave.
 		var kind := resolve_kind(String(comp["kind"]))  # Real kind of the companion.
 		for i in n:
+			if game.corsair != null and game.corsair.routes():
+				game.corsair.route_spawn(kind, hp_scale, false, dmg_scale, true, false)  # Act X: by boat (or from the sea).
+				continue
 			var c := _spawn_enemy_def(kind, enemy_def(kind), _ring_point(offset + TAU * (float(i) + 0.5) / float(maxi(1, n))), hp_scale, false)
 			c.damage *= dmg_scale
 			c.is_reckoning = true
@@ -1375,6 +1408,9 @@ func enemy_def(kind: String) -> Dictionary:
 	var concord := concord_def(kind)  # Act IX kinds ({} when not a Concord kind).
 	if not concord.is_empty():
 		return concord
+	var corsair := corsair_def(kind)  # Act X kinds ({} when not a Black Tide kind).
+	if not corsair.is_empty():
+		return corsair
 	return SanctumEnemyData.ENEMIES[kind]
 
 
@@ -1505,6 +1541,22 @@ static func concord_def(kind: String) -> Dictionary:
 	return {}
 
 
+# --- Act X: the Black Tide ---
+## Design row of Black Tide kind `kind` (real id), or {} when it is none:
+## CorsairEnemyData (the shared kinds, the boats and the hooks) first, then
+## each Act X stage's own table (phase 2 fills them).
+static func corsair_def(kind: String) -> Dictionary:
+	if CorsairEnemyData.ENEMIES.has(kind):
+		return CorsairEnemyData.ENEMIES[kind]
+	if CutterEnemyData.ENEMIES.has(kind):
+		return CutterEnemyData.ENEMIES[kind]
+	if GalleonEnemyData.ENEMIES.has(kind):
+		return GalleonEnemyData.ENEMIES[kind]
+	if MaelstromEnemyData.ENEMIES.has(kind):
+		return MaelstromEnemyData.ENEMIES[kind]
+	return {}
+
+
 ## True if `kind` is a spawnable enemy kind of any stage's data (real ids;
 ## stage aliases are not resolved here).
 static func is_known_kind(kind: String) -> bool:
@@ -1516,7 +1568,8 @@ static func is_known_kind(kind: String) -> bool:
 			or not inferno_def(kind).is_empty() \
 			or not court_def(kind).is_empty() \
 			or not city_def(kind).is_empty() \
-			or not concord_def(kind).is_empty()  # Act V, Act VI, Act VII, Act VIII, Act IX
+			or not concord_def(kind).is_empty() \
+			or not corsair_def(kind).is_empty()  # Act V, Act VI, Act VII, Act VIII, Act IX
 
 
 ## Registers `e` as the living miniboss (GuardianKit; the HUD shows its bar
@@ -1547,6 +1600,15 @@ func miniboss_alive() -> Enemy:
 ## "kind_aliases", e.g. the Sanctum's "sentinel"), else `kind` itself.
 func resolve_kind(kind: String) -> String:
 	return String(_kind_aliases.get(kind, kind))
+
+
+# --- Act X: the Black Tide ---
+## Spawns `kind` at `pos` (moved out of obstacles and onto the deck) with an
+## explicit HP multiplier, ignoring the caps: THE call BoardingParty (a crewman
+## stepping off his plank, a boat, its hooks) and SeaStrikes (a swimmer) use
+## once the timeline's spawn has waited its turn (CorsairRules.route_spawn()).
+func spawn_routed(kind: String, pos: Vector2, hp_scale: float, elite: bool) -> Enemy:
+	return _spawn_enemy_def(kind, enemy_def(kind), pos, hp_scale, elite)
 
 
 ## Takes an enemy from the pool (or creates one) and activates it.

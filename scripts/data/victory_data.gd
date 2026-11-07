@@ -55,6 +55,10 @@ const STAGES := {
 	"crash_site": {"title": "The Hatchery Burns", "boss_line": "The Hive Mother falls back into her crater."},  # TUNING (not in GDD) Act IX placeholder
 	"proving_moon": {"title": "The Hunt Is Over", "boss_line": "Vrask'Tal's last trophy is his own."},  # TUNING (not in GDD) Act IX placeholder
 	"ark": {"title": "The Harvest Ends", "boss_line": "The Harvester falls, and the stars go dark."},  # TUNING (not in GDD) Act IX placeholder
+	# --- Act X: the Black Tide (placeholders until each stage is built) ---
+	"cutter": {"title": "The Cutter Holds", "boss_line": "Captain Crow goes into the sea with his gulls."},  # TUNING (not in GDD) Act X placeholder
+	"galleon": {"title": "The Gold Is Yours", "boss_line": "Admiral Marrec's flagship burns to the waterline."},  # TUNING (not in GDD) Act X placeholder
+	"maelstrom": {"title": "The Sea Is Calm", "boss_line": "Vandermere's oath breaks, and the whirlpool closes."},  # TUNING (not in GDD) Act X placeholder
 }
 ## Title of a victory on a stage missing from STAGES.
 const DEFAULT_TITLE: String = "Victory"  # TUNING (not in GDD)
@@ -75,6 +79,8 @@ const ACT_LINES := {
 	8: "You outlasted the city. Martial Law ground you down at last.",  # TUNING (not in GDD) Act VIII
 	# --- Act IX: the Concord of Stars ---
 	9: "You outlasted the Concord. The Final Harvest reaped you at last.",  # TUNING (not in GDD) Act IX
+	# --- Act X: the Black Tide (temporary act number) ---
+	10: "You outlasted the Brotherhood. The Black Tide dragged you under at last.",  # TUNING (not in GDD) Act X
 }
 
 # --- The last stand (LastStand; seconds of real time from its start) ----------------

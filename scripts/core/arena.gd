@@ -47,6 +47,15 @@
 ## in view (CityGlyphs, textures), and free_point_toward() pulls a Bone Ring
 ## post inside a building back toward the necromancer (StanceFormations, on a
 ## blocks layout only). Null on every other stage, so nothing changes there.
+## Act X, the Black Tide (GDD §15.0 "The Deck"): when Game.deck (DeckBounds) is
+## set, the ship's deck is the arena through ONE rule: resolve_all() ends with
+## deck.contain_all() (the necromancer and the army stop at the rail, a deck
+## enemy knocked past it drowns, swimmers and boats stay in the water, fliers
+## keep within their band), and free_point() clamps every placement onto the
+## deck. A layout with a "fixed" list (the deck's furniture) generates exactly
+## those obstacles (_fixed_obstacle(); at most one per cell, each at least
+## ArenaData.CELL_MARGIN from its cell's edges) instead of the hashed scatter.
+## Without a deck and a fixed list (every other stage) nothing here changes.
 class_name Arena
 extends Node2D
 
@@ -190,6 +199,8 @@ func obstacle_at(pos: Vector2) -> Obstacle:
 
 ## Builds the (hash-chosen) obstacle of cell `key`, or `_empty`.
 func _generate(key: Vector2i) -> Obstacle:
+	if _layout.has("fixed"):
+		return _fixed_obstacle(key)  # Act X: the deck's authored furniture.
 	_rng.seed = hash(Vector3i(key.x, key.y, int(_layout["layout_seed"])))
 	if _rng.randf() >= float(_layout["density"]):
 		return _empty
@@ -257,6 +268,40 @@ func _generate(key: Vector2i) -> Obstacle:
 	return o
 
 
+# --- Act X: the Black Tide ---
+## The authored obstacle of cell `key` on a FIXED layout (the layout's "fixed"
+## list: each {kind, at (world px), size (index into the kind's sizes)}; a rect
+## kind lies along x unless the entry has "vertical": true), or `_empty`. The
+## first entry whose centre lies in the cell wins. No RNG: the furniture is
+## the same in every run.
+func _fixed_obstacle(key: Vector2i) -> Obstacle:
+	for f: Dictionary in _layout["fixed"]:
+		var at: Vector2 = f["at"]
+		if Vector2i(floori(at.x * _inv_cell), floori(at.y * _inv_cell)) != key:
+			continue
+		var kind := String(f["kind"])
+		var def: Dictionary = _kinds[kind]
+		var sizes: Array = def["sizes"]  # Circle radii or rect long sides (px), smallest first.
+		var o := Obstacle.new()
+		o.kind = kind
+		o.center = at.round()
+		o.variant = absi(hash(Vector3i(key.x, key.y, 1013)))  # Cosmetic only.
+		o.size_index = clampi(int(f.get("size", 0)), 0, sizes.size() - 1)
+		var size := float(sizes[o.size_index])  # This variant's radius / long side (px).
+		var vertical := bool(f.get("vertical", false))  # A rect laid out along y.
+		if String(def["shape"]) == "circle":
+			o.is_circle = true
+			o.radius = minf(size, ArenaData.MAX_HALF_EXTENT)
+		else:
+			o.is_circle = false
+			var long_half := minf(size * 0.5, ArenaData.MAX_HALF_EXTENT)
+			var short_half := float(def["short"]) * 0.5
+			o.half = Vector2(short_half, long_half) if vertical else Vector2(long_half, short_half)
+		o.art_key = EnvironmentArt.obstacle_key(kind, o.size_index, sizes.size(), vertical)
+		return o
+	return _empty
+
+
 ## Act III, the Assembly Halls (optional layout key "free_bands", GDD §15.0
 ## "The Assembly Halls (Act III phase 2)"): true when `p` lies within a band's
 ## half width plus `margin` px of the centre line of one of `bands` (repeating
@@ -312,6 +357,8 @@ func is_blocked(pos: Vector2, r: float) -> bool:
 ## the origin cannot round away in 32-bit floats.
 func free_point(pos: Vector2, r: float) -> Vector2:
 	var p := pos if shore == null else shore.clamp_point(pos, r)  # Ul-Thalos: never in the sea.
+	if game.deck != null:
+		p = game.deck.clamp_point(p, r)  # Act X: never over the water.
 	for _i in 3:
 		var o := obstacle_at(p)
 		if o == null:
@@ -320,6 +367,8 @@ func free_point(pos: Vector2, r: float) -> Vector2:
 		if push == Vector2.ZERO:
 			return p
 		p += push * 1.05 + push.normalized() * ArenaData.FREE_POINT_MARGIN
+	if game.deck != null:
+		return game.deck.clamp_point(p, r)  # Act X: still on the deck.
 	return p if shore == null else shore.clamp_point(p, r)
 
 
@@ -416,6 +465,8 @@ func resolve_all(delta: float) -> void:
 		shore.contain_all()  # Ul-Thalos: the sea is the edge of the world.
 	if citadel != null:
 		citadel.contain_all()  # Act III, the Iron Citadel: the Shield Gate walls.
+	if game.deck != null:
+		game.deck.contain_all()  # Act X, the Black Tide: the rail is the edge of the world (and drowns).
 
 
 # --- Act VIII: the Last Line ---
@@ -602,6 +653,9 @@ func _draw_obstacle(o: Obstacle) -> void:
 	# --- Act IX: the Concord of Stars ---
 	if ConcordGlyphs.draw_obstacle(self, o):
 		return  # An Act IX stub's placeholder obstacle kind.
+	# --- Act X: the Black Tide ---
+	if CorsairGlyphs.draw_obstacle(self, o):
+		return  # An Act X stub's placeholder deck furniture.
 	# --- Act IX: the Proving Moon ---
 	if ProvingMoonGlyphs.draw_obstacle(self, o):
 		return  # A Proving Moon obstacle kind (Act IX).

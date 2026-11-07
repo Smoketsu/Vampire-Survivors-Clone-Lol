@@ -88,6 +88,14 @@
 ## Final Harvest), stepped after the City's and before the obstacle push-out;
 ## null on Acts I to VIII unless a Concord kind forced there asks for it
 ## (concord_rules()).
+## Act X, the Black Tide (GDD §15.0 "Act X foundation: the Black Tide (phase
+## 1)"): `corsair` (CorsairRules) runs the pirate act's shared rules (Boarding,
+## the Deck, Strikes from the Sea, the Black Tide), stepped after the
+## Concord's and before the obstacle push-out; `deck` (DeckBounds) is its walkable
+## deck, read by Arena (the push-out ends with deck.contain_all(), free_point()
+## clamps onto it), StanceFormations (the ring posts) and the camera clamp.
+## Both null on Acts I to IX (a Black Tide kind forced elsewhere makes the rules
+## through corsair_rules(), never a deck).
 ## Online co-op (docs/coop/DESIGN.md): `coop` (CoopSession) holds two player
 ## slots in this one simulation; the per-player fields below (player, horde,
 ## abilities, grave_step, dread_rally, ultimates, stance, character, innates,
@@ -263,6 +271,14 @@ var city: CityRules = null
 ## stage's STAGE has "concord": true, or a Concord kind spawned on another stage
 ## asked for it through concord_rules(); Acts I to VIII never create it).
 var concord: ConcordRules = null
+# --- Act X: the Black Tide ---
+## Act X, the Black Tide's shared rules (CorsairRules; null unless the stage's
+## STAGE has "corsair": true, or a Black Tide kind spawned on another stage asked
+## for it through corsair_rules(); Acts I to IX never create it).
+var corsair: CorsairRules = null
+## Act X: the ship's deck, the arena of a corsair stage (DeckBounds; created by
+## CorsairRules on a stage with "corsair" and a "deck"; null everywhere else).
+var deck: DeckBounds = null
 ## Content wave 2: the run counters of the one-run achievements (RunRewards;
 ## never null once _ready ran; reads the run only, never changes gameplay).
 var rewards: RunRewards
@@ -459,6 +475,12 @@ func _ready() -> void:
 		# --- Act IX: the Ark ---
 		"ark":
 			ground = ArkGround.new()  # Act IX: the Ark of the Concord's four zone floors (ArkStage.ZONES).
+		# --- Act X: the Black Tide ---
+		"corsair":
+			var csg := CorsairGround.new()  # Act X placeholder: the sea and the deck (the STAGE's "floor").
+			csg.look = stage_def.get("floor", {})
+			csg.game = self
+			ground = csg
 		_:
 			ground = Ground.new()
 	add_child(ground)
@@ -551,6 +573,8 @@ func _ready() -> void:
 		city_rules()  # Act VIII: the Last Line's shared rules.
 	if bool(stage_def.get("concord", false)):
 		concord_rules()  # Act IX: the Concord of Stars' shared rules.
+	if bool(stage_def.get("corsair", false)):
+		corsair_rules()  # Act X: the Black Tide's shared rules (and the deck).
 
 	if autotest != null:
 		player.invulnerable = not GameState.autotest_mortal
@@ -858,6 +882,8 @@ func _physics_process(delta: float) -> void:
 		city.step(delta)  # Act VIII: the escalation, the civilians, wrecks and shells, Martial Law (pushed out of buildings next).
 	if concord != null:
 		concord.step(delta)  # Act IX: the Final Harvest, the beams, the lifted summons, the alien ground (pods pushed out next).
+	if corsair != null:
+		corsair.step(delta)  # Act X: the boats, the sea's strikes, the Black Tide (the deck clamp runs in the push-out next).
 	if pf != null:
 		tl = pf.lap(PerfProbe.SEC_ENEMIES, tl)
 	arena.resolve_all(delta)
@@ -929,9 +955,12 @@ func coop_sim_tick(delta: float) -> void:
 
 func _process(_delta: float) -> void:
 	# Camera follow + trauma-based screen shake (Juice autoload, cosmetic).
-	camera.position = player.position
+	var focus := player.position  # Where the camera looks.
+	if deck != null:
+		focus = deck.camera_point(player.position, view_size())  # Act X: the camera stays over the deck (visual only).
+	camera.position = focus
 	camera.offset = Juice.camera_offset()
-	ground.update_view(player.position)
+	ground.update_view(focus)
 	if perf != null:
 		perf.frame()  # --perf: rendered-frame times (the Web measurement).
 	if monitor != null:
@@ -1038,6 +1067,18 @@ func concord_rules() -> ConcordRules:
 		concord = ConcordRules.new(self)
 		add_child(concord)
 	return concord
+
+
+# --- Act X: the Black Tide ---
+## The Black Tide's shared rules (Act X), created on first use: at the start of
+## an Act X run (with its deck), or when a Black Tide kind forced onto another
+## stage is activated (CorsairKit.reset()), so its kit runs there (no deck, no
+## boats and no sea off Act X: that kind simply walks).
+func corsair_rules() -> CorsairRules:
+	if corsair == null:
+		corsair = CorsairRules.new(self)
+		add_child(corsair)
+	return corsair
 
 
 # --- Act IV: the Asphodel Underworld ---

@@ -23,7 +23,9 @@
 ## a LAST LINE kit (Act VIII): CITY_KIT_DIR + "<id>_kit.gd" (e.g. "blitz" ->
 ## BlitzKit), and an id with none of those is a CONCORD OF STARS kit (Act IX):
 ## CONCORD_KIT_DIR + "<id>_kit.gd" (e.g. "saucer" -> SaucerKit).
-## Kit ids must be unique across the eight folders.
+## An id with none of those is a BLACK TIDE kit (Act X): CORSAIR_KIT_DIR +
+## "<id>_kit.gd" (e.g. "reef_shark" -> ReefSharkKit).
+## Kit ids must be unique across the nine folders.
 ## Enemy only ever talks to this file and the CovenantKit base class.
 class_name CovenantKits
 extends RefCounted
@@ -50,6 +52,9 @@ const CITY_KIT_DIR: String = "res://scripts/enemies/city/"
 # --- Act IX: the Concord of Stars ---
 ## Folder of the Concord of Stars' kit scripts ("<id>_kit.gd", each a ConcordKit; Act IX).
 const CONCORD_KIT_DIR: String = "res://scripts/enemies/concord/"
+# --- Act X: the Black Tide ---
+## Folder of the Black Tide's kit scripts ("<id>_kit.gd", each a CorsairKit; Act X).
+const CORSAIR_KIT_DIR: String = "res://scripts/enemies/corsair/"
 
 ## Eye / Empire kit id -> its loaded Script (null when no file exists), filled on first use.
 static var _eye_scripts: Dictionary = {}
@@ -112,6 +117,8 @@ static func _eye_kit(id: String) -> CovenantKit:
 			path = CITY_KIT_DIR + id + "_kit.gd"  # Act VIII: a Last Line kit.
 		if not ResourceLoader.exists(path):
 			path = CONCORD_KIT_DIR + id + "_kit.gd"  # Act IX: a Concord of Stars kit.
+		if not ResourceLoader.exists(path):
+			path = CORSAIR_KIT_DIR + id + "_kit.gd"  # Act X: a Black Tide kit.
 		_eye_scripts[id] = load(path) if ResourceLoader.exists(path) else null
 	var scr: Script = _eye_scripts[id]
 	if scr == null:

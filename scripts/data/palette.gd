@@ -292,3 +292,85 @@ const CONCORD_LUMEN := Color(1.000, 0.914, 0.627)  # #FFE9A0
 const CONCORD_TURF_DARK := Color(0.102, 0.110, 0.133)  # #1A1C22
 ## Turf ("turf"): the alien flesh ground Terraforming spreads.
 const CONCORD_TURF := Color(0.353, 0.165, 0.416)  # #5A2A6A
+
+# --- Act X: the Black Tide ---
+# GDD §15.0 "Act X foundation: the Black Tide (phase 1)": the act's ramps as the parallel art pass names them in
+# tools/palette.json (oak, sail, brass, powder, sash, lantern, sea, foam, kraken, serpent, spectre, tan). Tarred
+# oak, sailcloth cream, brass, powder-smoke grey and sash red under a navy-black sea with white foam; lantern
+# amber marks every telegraph. Never soul-teal for water (the undead's colour), never Gullhaven's drowned green
+# or biolume (Act II). Gold keeps its meaning (evolution / chest / victory) and crimson stays danger.
+
+## Outline ink of the whole act (tools/palette.json "sea" ramp, darkest): navy-black night.
+const CORSAIR_INK := Color(0.039, 0.051, 0.094)  # #0A0D18
+## Tarred oak, darkest: hull planks in shadow, deck seams, barrels.
+const CORSAIR_OAK_DARK := Color(0.169, 0.114, 0.078)  # #2B1D14
+## Tarred oak: decks, hulls, barrels, boots and belts.
+const CORSAIR_OAK := Color(0.290, 0.196, 0.125)  # #4A3220
+## Tarred oak, lit: plank edges, rails, the deck's worn boards.
+const CORSAIR_OAK_LIGHT := Color(0.478, 0.337, 0.196)  # #7A5632
+## Sailcloth cream in shadow: shirts, sails, rope.
+const CORSAIR_SAIL_SHADE := Color(0.561, 0.518, 0.400)  # #8F8466
+## Sailcloth cream: shirts, sails, rope, canvas (the pirates' cream, never the undead's bone).
+const CORSAIR_SAIL := Color(0.839, 0.796, 0.643)  # #D6CBA4
+## Sailcloth cream, lit.
+const CORSAIR_SAIL_LIGHT := Color(0.941, 0.914, 0.808)  # #F0E9CE
+## Brass in shadow: buckles, cannon, lantern frames.
+const CORSAIR_BRASS_DARK := Color(0.478, 0.353, 0.110)  # #7A5A1C
+## Brass: hilts, cannon, coins (duller than the UI gold, which keeps its meaning).
+const CORSAIR_BRASS := Color(0.769, 0.569, 0.165)  # #C4912A
+## Brass, lit.
+const CORSAIR_BRASS_LIGHT := Color(0.922, 0.784, 0.353)  # #EBC85A
+## Powder-smoke grey, dark: iron, muskets, shark backs.
+const CORSAIR_POWDER_DARK := Color(0.180, 0.196, 0.224)  # #2E3239
+## Powder-smoke grey: iron, smoke, stone.
+const CORSAIR_POWDER := Color(0.369, 0.388, 0.424)  # #5E636C
+## Powder-smoke grey, lit.
+const CORSAIR_POWDER_LIGHT := Color(0.580, 0.596, 0.627)  # #9498A0
+## Sash red, dark (never the Covenant's crimson).
+const CORSAIR_SASH_DARK := Color(0.416, 0.086, 0.125)  # #6A1620
+## Sash red: bandanas, sashes, coats.
+const CORSAIR_SASH := Color(0.690, 0.165, 0.188)  # #B02A30
+## Sash red, lit.
+const CORSAIR_SASH_LIGHT := Color(0.886, 0.337, 0.247)  # #E2563F
+## Lantern amber, dark: every telegraph's rim, fuses.
+const CORSAIR_LANTERN_DARK := Color(0.690, 0.400, 0.110)  # #B0661C
+## Lantern amber: every telegraph (boat lanes, strike circles, fuses).
+const CORSAIR_LANTERN := Color(0.949, 0.651, 0.227)  # #F2A63A
+## Lantern amber, bright: a lit lantern's flame.
+const CORSAIR_LANTERN_LIGHT := Color(1.000, 0.875, 0.541)  # #FFDF8A
+## Navy sea, deepest: the water around the deck.
+const CORSAIR_SEA_DARK := Color(0.055, 0.102, 0.200)  # #0E1A33
+## Navy sea: the water's swell, hull shadow.
+const CORSAIR_SEA := Color(0.106, 0.208, 0.376)  # #1B3560
+## Navy sea, lit: wave faces.
+const CORSAIR_SEA_LIGHT := Color(0.184, 0.373, 0.588)  # #2F5F96
+## White foam in shadow.
+const CORSAIR_FOAM_SHADE := Color(0.561, 0.706, 0.824)  # #8FB4D2
+## White foam: wave lines, wakes, splashes.
+const CORSAIR_FOAM := Color(0.847, 0.914, 0.957)  # #D8E9F4
+## White foam, brightest crest.
+const CORSAIR_FOAM_LIGHT := Color(0.965, 0.984, 1.000)  # #F6FBFF
+## Kraken purple, dark: the arm's underside.
+const CORSAIR_KRAKEN_DARK := Color(0.227, 0.129, 0.314)  # #3A2150
+## Kraken purple: the kraken's arms.
+const CORSAIR_KRAKEN := Color(0.420, 0.235, 0.525)  # #6B3C86
+## Kraken purple, lit: the suckers.
+const CORSAIR_KRAKEN_LIGHT := Color(0.659, 0.467, 0.737)  # #A877BC
+## Sea-serpent green, dark.
+const CORSAIR_SERPENT_DARK := Color(0.075, 0.278, 0.267)  # #134744
+## Sea-serpent green.
+const CORSAIR_SERPENT := Color(0.149, 0.510, 0.494)  # #26827E
+## Sea-serpent green, lit.
+const CORSAIR_SERPENT_LIGHT := Color(0.400, 0.765, 0.729)  # #66C3BA
+## Ghost-crew green, dark (the Hollow Queen's crew).
+const CORSAIR_SPECTRE_DARK := Color(0.114, 0.310, 0.290)  # #1D4F4A
+## Ghost-crew green.
+const CORSAIR_SPECTRE := Color(0.275, 0.655, 0.561)  # #46A78F
+## Ghost-crew green, bright.
+const CORSAIR_SPECTRE_LIGHT := Color(0.718, 0.941, 0.863)  # #B7F0DC
+## Sun-browned skin, dark.
+const CORSAIR_TAN_DARK := Color(0.361, 0.220, 0.141)  # #5C3824
+## Sun-browned skin.
+const CORSAIR_TAN := Color(0.588, 0.384, 0.243)  # #96623E
+## Sun-browned skin, lit.
+const CORSAIR_TAN_LIGHT := Color(0.776, 0.545, 0.369)  # #C68B5E
