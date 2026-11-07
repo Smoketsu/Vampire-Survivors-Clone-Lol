@@ -191,6 +191,10 @@ const STAGE_LINES: Dictionary = {
 	"cutter": "Slip out of the burning harbour. The Brotherhood boards from the dark.",  # TUNING (not in GDD) Act X
 	"galleon": "Hold the treasure galleon against the Brotherhood's fleet.",  # TUNING (not in GDD) Act X
 	"maelstrom": "Board the ghost ship in the whirlpool and break the captain's oath.",  # TUNING (not in GDD) Act X
+	# --- Act XI (temporary): the Hall of the Slain ---
+	"barrow_fields": "The barrows crack open above the frozen fjord. Keep the fires lit.",  # TUNING (not in GDD) the Norse act
+	"valgard": "Climb to the hall at the edge of the sky, where the heroes feast.",  # TUNING (not in GDD) the Norse act
+	"vigrid": "The last field, under a sky going out. The god rides with his wolf.",  # TUNING (not in GDD) the Norse act
 }
 
 ## Size (px) of an act tab button on the stage select (Act I / Act II / Act III).
@@ -520,6 +524,34 @@ const VIGNETTES: Dictionary = {
 		],
 		"fx": "motes", "fx_color": Color8(70, 167, 143),
 	},  # TUNING (not in GDD) ghost-crew green motes
+	# --- Act XI (temporary): the Hall of the Slain (placeholder scenes from the
+	# shared kinds' art until each stage brings its own floor, props and boss; a
+	# missing sprite or tile is skipped) ---
+	"barrow_fields": {
+		"tile": "tiles/norse_snow",
+		"items": [
+			["norse/draugr", 196, 112, true], ["norse/raider", 230, 128, true], ["norse/brazier", 160, 160, true],
+			["norse/rune_stone", 214, 186, true],
+			["summons/warrior", 46, 214, false], ["summons/archer", 88, 224, false],
+		],
+		"fx": "motes", "fx_color": Color8(232, 238, 242),
+	},  # TUNING (not in GDD) falling-snow motes
+	"valgard": {
+		"tile": "tiles/norse_snow",
+		"items": [
+			["norse/valkyrie", 204, 100, true], ["norse/shield_maiden", 236, 184, true], ["norse/skald", 170, 196, true],
+			["summons/warrior", 46, 214, false], ["summons/mage", 90, 224, false],
+		],
+		"fx": "motes", "fx_color": Color8(244, 217, 138),
+	},  # TUNING (not in GDD) valkyrie-gold motes
+	"vigrid": {
+		"tile": "tiles/norse_snow",
+		"items": [
+			["norse/frost_giant", 206, 110, true], ["norse/wolf_of_the_wastes", 170, 188, true], ["norse/berserker", 228, 196, true],
+			["summons/warrior", 46, 214, false], ["summons/archer", 88, 224, false],
+		],
+		"fx": "motes", "fx_color": Color8(255, 106, 26),
+	},  # TUNING (not in GDD) ember motes
 }
 ## Ambient motes of a vignette: most at once, seconds between two (random in
 ## range), life (s), rise speed (px/s), sideways sway (px).

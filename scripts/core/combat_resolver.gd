@@ -191,6 +191,15 @@
 ## very end of damage_enemy(), a hit that dealt damage tells
 ## ConcordRules.on_enemy_hit(), which burns the alien ground around the enemy
 ## when the source is a SPELL (ConcordRules.burns_ground(), the one test).
+## The Hall of the Slain (the Norse act, temporarily Act XI; GDD §15.0
+## "Berserkergang" and "The Long Winter"; Game.norse is null on every other
+## act, so none of this runs there): BERSERKERGANG's one hook — at the very end
+## of damage_enemy(), a hit that dealt damage tells NorseRules.on_enemy_hit(),
+## which puts a wounded Norse warrior into the fury (Enemy.berserk); the fury
+## shrugs off stun_enemy() and freeze_enemy() here and Enemy.apply_slow()
+## there. damage_unit() tells NorseRules.on_unit_struck() after an enemy's
+## hit (the draugr's cold touch, through chill_unit(): THE one path of an
+## enemy's slow on a summon, writing the summon's existing slow fields).
 ##   the Crash Site (Act IX phase 2) — INFESTATION in damage_enemy(): an egg
 ##             (CrashSiteEnemyData "brood_egg") brought to 0 HP is cleared
 ##             without a kill (CrashSiteDirector.clear_egg(), before the kill
@@ -510,6 +519,10 @@ func damage_enemy(e: Enemy, amount: float, source: String, as_slot: int = -1, or
 	# the alien ground around the enemy it hit (only while Game.concord exists).
 	if game.concord != null and dealt > 0.0:
 		game.concord.on_enemy_hit(e, source)
+	# --- Act XI (temporary): the Hall of the Slain --- Berserkergang's one hook:
+	# a wounded Norse warrior goes berserk (only while Game.norse exists).
+	if game.norse != null and dealt > 0.0:
+		game.norse.on_enemy_hit(e, source)
 	return dealt
 
 
@@ -639,6 +652,8 @@ func damage_unit(u: SummonedUnit, amount: float, source: String, by: Enemy = nul
 	game.stat_add("summon_dmg_from_" + source, dealt)
 	if by != null and game.court != null:
 		game.court.feast.on_hit(by, dealt, u.position, true)  # Act VII: Bloodfeast (the one call on summons).
+	if by != null and game.norse != null:
+		game.norse.on_unit_struck(u, by, source, dealt)  # The Hall of the Slain: the draugr's cold touch.
 	if u.hp <= 0.0:
 		game.stat_add("death_" + u.unit_class + "_by_" + source, 1.0)
 		game.horde.colossi.on_unit_killed(u)  # Bone Colossus shrapnel burst.
@@ -949,6 +964,9 @@ func expose_enemy(e: Enemy, amp: float, from: float, duration: float) -> void:
 func freeze_enemy(e: Enemy, duration: float, boss_mult: float, elite_mult: float) -> float:
 	if not e.active or e.is_reckoning or e.is_structure or duration <= 0.0:
 		return 0.0
+	if e.berserk:
+		game.stat_add("berserk_shrugged_freezes", 1.0)
+		return 0.0  # The Hall of the Slain: Berserkergang (false for every other enemy).
 	var d := duration * cc_mult()  # Freeze time for this enemy (Spirit Binding lengthens it).
 	if e.is_boss or e.is_miniboss:
 		d *= boss_mult
@@ -972,6 +990,9 @@ func freeze_enemy(e: Enemy, duration: float, boss_mult: float, elite_mult: float
 func stun_enemy(e: Enemy, duration: float, boss_mult: float, elite_mult: float) -> float:
 	if not e.active or e.is_reckoning or e.is_structure or duration <= 0.0:
 		return 0.0
+	if e.berserk:
+		game.stat_add("berserk_shrugged_stuns", 1.0)
+		return 0.0  # The Hall of the Slain: Berserkergang (false for every other enemy).
 	var d := duration * cc_mult()  # Stun time for this enemy (Spirit Binding lengthens it).
 	if e.is_boss or e.is_miniboss:
 		d *= boss_mult
@@ -1002,6 +1023,26 @@ func stun_unit(u: SummonedUnit, duration: float, source: String) -> float:
 	game.stat_add("summon_stunned_seconds", duration)
 	game.stat_add("summon_stuns_" + source, 1.0)
 	return duration
+
+
+# --- Act XI (temporary): the Hall of the Slain ---
+## THE one path of an ENEMY's slow on a summon (the draugr's cold touch): slows
+## summon `u` by `fraction` (0..1) for at least `duration` s through the
+## summon's existing slow fields (SummonedUnit.holy_slow / holy_slow_timer,
+## read once in its movement; a stronger slow already running wins, no
+## stacking). Ground slows keep their own path (TerrainSlow). Airborne,
+## spawning and dead units are immune. An enemy effect on a unit: summons have
+## no act rule of their own. `source` tags the stats. Returns the fraction
+## applied (0 = immune). Stats: summon_chills, summon_chills_<source>.
+func chill_unit(u: SummonedUnit, fraction: float, duration: float, source: String) -> float:
+	if fraction <= 0.0 or duration <= 0.0 or not u.active or u.airborne \
+			or u.state == SummonedUnit.State.DEAD or u.state == SummonedUnit.State.SPAWNING:
+		return 0.0
+	u.holy_slow = maxf(u.holy_slow if u.holy_slow_timer > 0.0 else 0.0, fraction)
+	u.holy_slow_timer = maxf(u.holy_slow_timer, duration)
+	game.stat_add("summon_chills", 1.0)
+	game.stat_add("summon_chills_" + source, 1.0)
+	return fraction
 
 
 # --- Act V: the Burning Province ---

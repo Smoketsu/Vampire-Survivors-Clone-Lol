@@ -59,6 +59,10 @@ const STAGES := {
 	"cutter": {"title": "The Cutter Holds", "boss_line": "Captain Crow goes into the sea with his gulls."},  # TUNING (not in GDD) Act X placeholder
 	"galleon": {"title": "The Gold Is Yours", "boss_line": "Admiral Marrec's flagship burns to the waterline."},  # TUNING (not in GDD) Act X placeholder
 	"maelstrom": {"title": "The Sea Is Calm", "boss_line": "Vandermere's oath breaks, and the whirlpool closes."},  # TUNING (not in GDD) Act X placeholder
+	# --- Act XI (temporary): the Hall of the Slain (placeholders until each stage is built) ---
+	"barrow_fields": {"title": "The Barrows Are Silent", "boss_line": "Hrimgar sinks into his barrow and does not rise."},  # TUNING (not in GDD) placeholder
+	"valgard": {"title": "The Hall Stands Empty", "boss_line": "Sigrun falls, and the doors of the hall swing shut."},  # TUNING (not in GDD) placeholder
+	"vigrid": {"title": "The Twilight Ends", "boss_line": "Odin and Fenrir fall together on the last field."},  # TUNING (not in GDD) placeholder
 }
 ## Title of a victory on a stage missing from STAGES.
 const DEFAULT_TITLE: String = "Victory"  # TUNING (not in GDD)
@@ -81,6 +85,8 @@ const ACT_LINES := {
 	9: "You outlasted the Concord. The Final Harvest reaped you at last.",  # TUNING (not in GDD) Act IX
 	# --- Act X: the Black Tide (temporary act number) ---
 	10: "You outlasted the Brotherhood. The Black Tide dragged you under at last.",  # TUNING (not in GDD) Act X
+	# --- Act XI (temporary): the Hall of the Slain ---
+	11: "You outlasted the hall. Ragnarok took you at last.",  # TUNING (not in GDD) the Norse act
 }
 
 # --- The last stand (LastStand; seconds of real time from its start) ----------------

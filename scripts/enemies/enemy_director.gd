@@ -138,6 +138,13 @@
 ##     Abduction, Terraforming, the Final Harvest) live in ConcordRules
 ##     (Game.concord); this director hands it nothing (its pods spawn through
 ##     spawn_at()).
+##   * The Hall of the Slain (the Norse act, temporarily Act XI; GDD §15.0 "The
+##     Hall of the Slain foundation (phase 1)"): its kinds are looked up
+##     through norse_def() (NorseEnemyData, then each of its stages' tables)
+##     after the Black Tide's, and its bosses load by name from NORSE_BOSS_DIR
+##     after the Black Tide's folder. Its shared rules (the Long Winter,
+##     Berserkergang, the Rune-Stones, Ragnarok) live in NorseRules
+##     (Game.norse); this director hands it the "rune_stone" events.
 ##   * Act VII, Ravensmoor (GDD §15.0 "Ravensmoor (Act VII phase 2)"): on a
 ##     stage with a "ravensmoor" config it creates the RavensmoorDirector (the
 ##     sleeping coffins, Coffin Nails, the ghoul packs, Old Greymane;
@@ -200,6 +207,9 @@ const CONCORD_BOSS_DIR: String = "res://scripts/enemies/concord/"
 # --- Act X: the Black Tide ---
 ## Folder of the Black Tide's boss scripts ("boss_<id>.gd", each a Boss; Act X).
 const CORSAIR_BOSS_DIR: String = "res://scripts/enemies/corsair/"
+# --- Act XI (temporary): the Hall of the Slain ---
+## Folder of the Hall of the Slain's boss scripts ("boss_<id>.gd", each a Boss).
+const NORSE_BOSS_DIR: String = "res://scripts/enemies/norse/"
 
 ## The boss entered the arena.
 signal boss_spawned(boss: Boss)
@@ -1064,6 +1074,11 @@ func _run_event(ev: Dictionary) -> void:
 			game.inferno_rules().portals.start_event(ev)  # Demon portals (they show the event's banner).
 			game.stat_add("wave_events", 1.0)
 			return  # An Act VI portal event.
+		# --- Act XI (temporary): the Hall of the Slain ---
+		"rune_stone":
+			game.norse_rules().stones.start_event(ev)  # Rune-Stones (they show the event's banner).
+			game.stat_add("wave_events", 1.0)
+			return  # A Norse rune-stone event.
 		# --- Act VI: the Burning Gate ---
 		"gatekeeper":
 			if burning_gate != null:
@@ -1263,6 +1278,8 @@ func _spawn_boss() -> void:
 				path = CONCORD_BOSS_DIR + "boss_" + sid + ".gd"  # Act IX: a Concord of Stars boss script.
 			if not ResourceLoader.exists(path):
 				path = CORSAIR_BOSS_DIR + "boss_" + sid + ".gd"  # Act X: a Black Tide boss script.
+			if not ResourceLoader.exists(path):
+				path = NORSE_BOSS_DIR + "boss_" + sid + ".gd"  # The Hall of the Slain: a Norse boss script.
 			boss = (load(path) as Script).new() as Boss if ResourceLoader.exists(path) else BossAlaric.new()
 	add_child(boss)
 	boss.setup_boss(game, _ring_point(randf() * TAU), game.difficulty.boss_hp_mult() * float(stage_def["enemy_hp_mult"]), _next_slot)
@@ -1371,7 +1388,8 @@ func spawn_at(kind: String, pos: Vector2, elite: bool) -> Enemy:
 ## (Act IV: pantheon_def()), then the Shogunate's (Act V: shogunate_def()),
 ## then the Inferno's (Act VI: inferno_def()), then the Sanguine Court's
 ## (Act VII: court_def()), then the Last Line's (Act VIII: city_def()),
-## then the Concord of Stars' (Act IX: concord_def()),
+## then the Concord of Stars' (Act IX: concord_def()), then the Hall of the
+## Slain's (the Norse act: norse_def()),
 ## then SanctumEnemyData.ENEMIES (the Sanctum of Judgment's soldiers and the
 ## Cathedral Guardian).
 func enemy_def(kind: String) -> Dictionary:
@@ -1411,6 +1429,9 @@ func enemy_def(kind: String) -> Dictionary:
 	var corsair := corsair_def(kind)  # Act X kinds ({} when not a Black Tide kind).
 	if not corsair.is_empty():
 		return corsair
+	var norse := norse_def(kind)  # The Hall of the Slain's kinds ({} when not a Norse kind).
+	if not norse.is_empty():
+		return norse
 	return SanctumEnemyData.ENEMIES[kind]
 
 
@@ -1557,6 +1578,22 @@ static func corsair_def(kind: String) -> Dictionary:
 	return {}
 
 
+# --- Act XI (temporary): the Hall of the Slain ---
+## Design row of Hall of the Slain kind `kind` (real id), or {} when it is
+## none: NorseEnemyData (the shared kinds and the Rune-Stone) first, then each
+## of the act's stage tables (phase 2 fills them).
+static func norse_def(kind: String) -> Dictionary:
+	if NorseEnemyData.ENEMIES.has(kind):
+		return NorseEnemyData.ENEMIES[kind]
+	if BarrowFieldsEnemyData.ENEMIES.has(kind):
+		return BarrowFieldsEnemyData.ENEMIES[kind]
+	if ValgardEnemyData.ENEMIES.has(kind):
+		return ValgardEnemyData.ENEMIES[kind]
+	if VigridEnemyData.ENEMIES.has(kind):
+		return VigridEnemyData.ENEMIES[kind]
+	return {}
+
+
 ## True if `kind` is a spawnable enemy kind of any stage's data (real ids;
 ## stage aliases are not resolved here).
 static func is_known_kind(kind: String) -> bool:
@@ -1569,7 +1606,8 @@ static func is_known_kind(kind: String) -> bool:
 			or not court_def(kind).is_empty() \
 			or not city_def(kind).is_empty() \
 			or not concord_def(kind).is_empty() \
-			or not corsair_def(kind).is_empty()  # Act V, Act VI, Act VII, Act VIII, Act IX
+			or not corsair_def(kind).is_empty() \
+			or not norse_def(kind).is_empty()  # Act V to Act IX, the Black Tide, the Norse act
 
 
 ## Registers `e` as the living miniboss (GuardianKit; the HUD shows its bar

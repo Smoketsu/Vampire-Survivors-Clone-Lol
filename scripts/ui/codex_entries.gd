@@ -156,6 +156,15 @@ static func section_entries(section: String) -> Array:
 				var b := _boss(id)
 				b["section"] = section
 				out.append(b)  # Act X bosses.
+		# --- Act XI (temporary): the Hall of the Slain (grouped by group) ---
+		"norse_warriors", "norse_hall", "norse_wilds":
+			for id: String in _norse_list(section):
+				out.append(_covenant(id, section))  # The Norse kinds, by group.
+		"norse_bosses":
+			for id: String in CodexData.NORSE_BOSSES:
+				var b := _boss(id)
+				b["section"] = section
+				out.append(b)  # The Hall of the Slain's bosses.
 	return out
 
 
@@ -262,6 +271,17 @@ static func _concord_list(section: String) -> Array[String]:
 	return CodexData.CONCORD_LUMINOUS
 
 
+# --- Act XI (temporary): the Hall of the Slain ---
+## The Norse kinds of group section `section` (CodexData.NORSE_*).
+static func _norse_list(section: String) -> Array[String]:
+	match section:
+		"norse_warriors":
+			return CodexData.NORSE_WARRIORS
+		"norse_hall":
+			return CodexData.NORSE_HALL
+	return CodexData.NORSE_WILDS
+
+
 static func _covenant(id: String, section: String) -> Dictionary:
 	var d := CodexData.enemy_row(id)
 	var stats: Array = [[_t("hp"), num(float(d.get("max_hp", 0.0)))]]
@@ -290,6 +310,8 @@ static func _covenant(id: String, section: String) -> Dictionary:
 		sprite = "concord/" + id  # ...a Concord of Stars kind (Act IX)...
 	elif not SpriteBank.has(sprite) and SpriteBank.has("corsair/" + id):
 		sprite = "corsair/" + id  # ...a Black Tide kind (Act X)...
+	elif not SpriteBank.has(sprite) and SpriteBank.has("norse/" + id):
+		sprite = "norse/" + id  # ...a Hall of the Slain kind...
 	elif not SpriteBank.has(sprite):
 		sprite = "structures/" + id  # ...or a structure.
 	var kills := Meta.codex_kill_count(id)  # Lifetime kills of this kind.

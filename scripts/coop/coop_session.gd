@@ -429,6 +429,9 @@ func step(delta: float) -> void:
 	if game.corsair != null:
 		bind_primary()
 		game.corsair.step(delta)  # Act X: the boats, the sea's strikes, the Black Tide (before the push-out, as in solo).
+	if game.norse != null:
+		bind_primary()
+		game.norse.step(delta)  # The Hall of the Slain: Ragnarök, the Long Winter (each slot's cold), the Rune-Stones (before the push-out, as in solo).
 	if pf != null:
 		tl = pf.lap(PerfProbe.SEC_ENEMIES, tl)
 	bind_primary()

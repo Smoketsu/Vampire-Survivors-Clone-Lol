@@ -96,6 +96,11 @@
 ## clamps onto it), StanceFormations (the ring posts) and the camera clamp.
 ## Both null on Acts I to IX (a Black Tide kind forced elsewhere makes the rules
 ## through corsair_rules(), never a deck).
+## The Hall of the Slain (the Norse act, temporarily Act XI; GDD §15.0 "The
+## Hall of the Slain foundation (phase 1)"): `norse` (NorseRules) runs its
+## shared rules (the Long Winter, Berserkergang, the Rune-Stones, Ragnarök),
+## stepped after the Concord's and before the obstacle push-out; null on every
+## other act unless a Norse kind forced there asks for it (norse_rules()).
 ## Online co-op (docs/coop/DESIGN.md): `coop` (CoopSession) holds two player
 ## slots in this one simulation; the per-player fields below (player, horde,
 ## abilities, grave_step, dread_rally, ultimates, stance, character, innates,
@@ -279,6 +284,11 @@ var corsair: CorsairRules = null
 ## Act X: the ship's deck, the arena of a corsair stage (DeckBounds; created by
 ## CorsairRules on a stage with "corsair" and a "deck"; null everywhere else).
 var deck: DeckBounds = null
+# --- Act XI (temporary): the Hall of the Slain ---
+## The Hall of the Slain's shared rules (NorseRules; null unless the stage's
+## STAGE has "norse": true, or a Norse kind spawned on another stage asked for
+## it through norse_rules(); no other act ever creates it).
+var norse: NorseRules = null
 ## Content wave 2: the run counters of the one-run achievements (RunRewards;
 ## never null once _ready ran; reads the run only, never changes gameplay).
 var rewards: RunRewards
@@ -481,6 +491,11 @@ func _ready() -> void:
 			csg.look = stage_def.get("floor", {})
 			csg.game = self
 			ground = csg
+		# --- Act XI (temporary): the Hall of the Slain ---
+		"norse":
+			var nog := NorseGround.new()  # The Norse stubs' placeholder floor (the STAGE's "floor").
+			nog.look = stage_def.get("floor", {})
+			ground = nog
 		_:
 			ground = Ground.new()
 	add_child(ground)
@@ -575,6 +590,8 @@ func _ready() -> void:
 		concord_rules()  # Act IX: the Concord of Stars' shared rules.
 	if bool(stage_def.get("corsair", false)):
 		corsair_rules()  # Act X: the Black Tide's shared rules (and the deck).
+	if bool(stage_def.get("norse", false)):
+		norse_rules()  # The Hall of the Slain's shared rules.
 
 	if autotest != null:
 		player.invulnerable = not GameState.autotest_mortal
@@ -884,6 +901,8 @@ func _physics_process(delta: float) -> void:
 		concord.step(delta)  # Act IX: the Final Harvest, the beams, the lifted summons, the alien ground (pods pushed out next).
 	if corsair != null:
 		corsair.step(delta)  # Act X: the boats, the sea's strikes, the Black Tide (the deck clamp runs in the push-out next).
+	if norse != null:
+		norse.step(delta)  # The Hall of the Slain: Ragnarök, the Long Winter, the Rune-Stones (pushed out next).
 	if pf != null:
 		tl = pf.lap(PerfProbe.SEC_ENEMIES, tl)
 	arena.resolve_all(delta)
@@ -1079,6 +1098,16 @@ func corsair_rules() -> CorsairRules:
 		corsair = CorsairRules.new(self)
 		add_child(corsair)
 	return corsair
+# --- Act XI (temporary): the Hall of the Slain ---
+## The Hall of the Slain's shared rules, created on first use: at the start of
+## a Norse run, or when a Norse kind forced onto another stage is activated
+## (NorseKit.reset()), so the fury works there (the cold, the braziers, the
+## timeline's stones and Ragnarök stay off off the act).
+func norse_rules() -> NorseRules:
+	if norse == null:
+		norse = NorseRules.new(self)
+		add_child(norse)
+	return norse
 
 
 # --- Act IV: the Asphodel Underworld ---
