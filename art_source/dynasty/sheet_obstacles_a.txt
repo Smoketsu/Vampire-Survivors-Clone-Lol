@@ -1,0 +1,11 @@
+A sheet of 7 separate pixel-art game OBSTACLE sprites for a top-down 2D horde-survival game (three-quarter top-down view, camera above and slightly in front), laid out in one row, evenly spaced with wide empty gaps between them, on a FULLY TRANSPARENT background (real alpha). Ancient Egyptian necropolis, sandstone with lapis blue and dull bronze painted details. LOW-RESOLUTION pixel art, chunky simple shapes, crisp square pixels (nearest-neighbour), a clean 1-pixel dark outline, flat colours, at most 3 shades per material, light from the top-left. No ground under them, no cast shadows, no text, no hieroglyph writing.
+From left to right:
+1. a SMALL rock-cut TOMB: a low sandstone block with a dark doorway and a lapis lintel (about 30 px wide);
+2. a LARGE mortuary TOMB: a wide stepped sandstone mastaba with a dark doorway and bronze door bands (about 46 px wide);
+3. a SMALL OBELISK: a thin sandstone obelisk with a bronze pointed tip, standing (about 14 px wide, 40 px tall);
+4. a TALL OBELISK: a tall sandstone obelisk with a bronze tip on a stepped base (about 18 px wide, 58 px tall);
+5. a SHORT ROW of three dormant sandstone USHABTI STATUES standing side by side in a shallow niche (about 36 px wide, 34 px tall);
+6. a LONG ROW of five dormant sandstone USHABTI STATUES standing side by side in a shallow niche (about 56 px wide, 34 px tall);
+7. a SHORT COLONNADE: three round sandstone columns with lapis-painted capitals joined by a stone beam on top (about 44 px wide, 32 px tall).
+Colours: sandstone #8C6B3E #D2B574 #F0DDA6; lapis #16327C #2B54B8 #5F8BE6; dull bronze #6B5A22 #A38E3C #D2BB62; papyrus green #285A30 #4E8F40; night #1B2038 #2E3660; fire #BF3B2B #E87855 #FFDC66.
+Attached: a game sprite of this game for pixel size, outline weight and flat look.

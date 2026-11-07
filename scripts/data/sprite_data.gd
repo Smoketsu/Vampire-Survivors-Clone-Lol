@@ -639,6 +639,34 @@ const FLAT_SIZES: Dictionary = {
 	"concord/mothership_eye": 192.0,  # TUNING (not in GDD) the mothership's eye seen from below, a round 192 x 192 sky overlay with transparent corners (the Final Harvest fades it in; no screen read)
 	# --- Act IX: the Crash Site ---
 	"projectiles/bone_beetle": 10.0,  # TUNING (not in GDD) a Bone Beetles beetle from above, about 10 x 8, its head to the right
+	# --- Act VII slot: the Necropolis Dynasty (assets/sprites/dynasty/, markers/) ---
+	"dynasty/mummy": 40.0,  # TUNING (not in GDD) Dynasty fodder, male: a wrapped shambler (about 28 wide)
+	"dynasty/mummy_female": 40.0,  # TUNING (not in GDD) Dynasty fodder, female (figure redesign, wrappings cover chest and hips): a faster walker; bust rig, idle strip (about 24 wide)
+	"dynasty/scarab_swarm": 38.0,  # TUNING (not in GDD) Dynasty fodder swarm, creatures: a lapis-blue scarab cluster (about 34 wide)
+	"dynasty/khopesh_guard": 46.0,  # TUNING (not in GDD) Dynasty soldier, male: striped headcloth and a khopesh (about 28 wide)
+	"dynasty/nile_archer": 44.0,  # TUNING (not in GDD) Dynasty ranged, female (figure redesign): linen dress, bow; bust rig, idle strip (about 32 wide)
+	"dynasty/heka_priest": 46.0,  # TUNING (not in GDD) Dynasty support, male: leopard-skin sash, a glowing gold glyph staff (about 36 wide)
+	"dynasty/embalmer": 44.0,  # TUNING (not in GDD) Dynasty support, female (figure redesign): white wrap, a jar; bust rig, idle strip (about 22 wide)
+	"dynasty/jackal_warrior": 48.0,  # TUNING (not in GDD) Dynasty elite, male: jackal head, spear (about 30 wide)
+	"dynasty/bastet_hunter": 44.0,  # TUNING (not in GDD) Dynasty elite, female (figure redesign): black cat mask, twin daggers; bust rig, idle strip (about 28 wide)
+	"dynasty/crocodile_warden": 50.0,  # TUNING (not in GDD) Dynasty heavy, male: crocodile head, rising from sand (about 36 wide)
+	"dynasty/ushabti_statue": 46.0,  # TUNING (not in GDD) Dynasty heavy, a stone servant statue (no sex) (about 20 wide)
+	"dynasty/canopic_jar": 30.0,  # TUNING (not in GDD) Dynasty structure: a sandstone jar with a jackal-head lid (no walk strip) (about 18 wide)
+	"dynasty/canopic_jar_dead": 26.0,  # TUNING (not in GDD) the same jar shattered (no walk strip) (about 32 wide)
+	"dynasty/sand_colossus": 84.0,  # TUNING (not in GDD) Dynasty miniboss kind: a huge sandstone statue king (about 44 wide)
+	"dynasty/lion_warden": 80.0,  # TUNING (not in GDD) Necropolis / Temple miniboss, male: a stone lion-headed warrior with a slab shield (about 60 wide)
+	"dynasty/devourers_whelp": 36.0,  # TUNING (not in GDD) Hall of Two Truths miniboss, a creature: crocodile head, lion body, hippo rump (about 60 wide)
+	"dynasty/anubis": 90.0,  # TUNING (not in GDD) boss, male god: jackal head, crook staff (about 56 wide)
+	"dynasty/sekhmet": 92.0,  # TUNING (not in GDD) boss, female goddess (figure redesign): lioness head and sun disc, red gown; bust rig, idle strip (about 52 wide)
+	"dynasty/osiris": 96.0,  # TUNING (not in GDD) boss, male god seated on his throne (still only, no strip) (about 46 wide)
+	"dynasty/ammit": 44.0,  # TUNING (not in GDD) boss, a monster: crocodile jaws, lion front, hippo rump (about 76 wide)
+	"dynasty/the_embalmer": 56.0,  # TUNING (not in GDD) playable character, female (figure redesign): hooded linen wrap, a glowing bandage; bust rig, idle strip (about 30 wide)
+	"dynasty/lion_priestess": 56.0,  # TUNING (not in GDD) playable character, female (figure redesign): gold lion mask hood, a small sun; bust rig, idle strip (about 40 wide)
+	"dynasty/pharaohs_shade": 56.0,  # TUNING (not in GDD) playable character, male: a spectral pharaoh, teal ghost skin (about 46 wide)
+	"dynasty/ushabti_sentinel": 46.0,  # TUNING (not in GDD) summon class, the necromancer's stone servant (no sex) (about 20 wide)
+	"dynasty/eternal_guard": 58.0,  # TUNING (not in GDD) its evolution: a taller gold-trimmed stone guardian (about 32 wide)
+	"markers/dyn_cartouche": 20.0,  # TUNING (not in GDD) a gold cartouche floating over a fallen Dynasty body (Rebirth), 12 x 20
+	"markers/dyn_heka_glyph": 16.0,  # TUNING (not in GDD) the gold Heka glyph sigil over a cursed summon, 16 x 16
 }
 ## Longest side (px) for a flat sprite key missing from FLAT_SIZES.
 const DEFAULT_FLAT_SIZE: float = 20.0  # TUNING (not in GDD)

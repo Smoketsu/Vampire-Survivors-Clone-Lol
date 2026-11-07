@@ -3150,3 +3150,24 @@ the ring, the true form's glow over the base sprite when its art is missing.
 
 ### Act IX art review, round 1 (figures)
 The Hive Mother (all poses) was redrawn with wider hips and a bigger bust; the Broodbound is an alien insect woman in bright green and gold (base converted from `art_source/crash_site/raw/broodbound_flat.png`, thin trim lines removed before conversion; skins Hyper / Untouchable / Deathlord regenerated from her); the Starborn Deathlord wears a black half-mask visor. Rebuilt by `art_source/crash_site/make_art.py` (figures step) and `art_source/ark/make_art.py`. Rig lines in `tools/walk_cycle.py`.
+
+### Act VII slot: the Necropolis Dynasty (art, Nov 2026)
+
+<!-- --- the Necropolis Dynasty --- -->
+The Dynasty's look (GDD §15.0 "The Necropolis Dynasty art and audio"; `docs/proposals/LAST_SIX_ACTS.md` section VII; approved concepts
+`art_source/concepts/final5/dynasty_lineup.png`, `dynasty_bosses.png`, `dynasty_stage.png`): blue-black desert night with **lapis blue**,
+**sandstone**, **linen**, **carnelian red** and **papyrus green**, and a **dull bronze-gold** for every enemy collar, band and blade:
+true gold (`gold`) stays the player's reward colour and appears only on the mechanic markers (cartouche, Heka glyph), the Heka priest's
+staff glow and the player's own characters, Ushabti Sentinel evolution and gold-frame icons. Ink `#0A0B16` (`dyn_ink`) outlines the act.
+**Palette:** eight one-hue ramps (the Act VIII lesson), `night`, `bronze`, `lapis`, `sand`, `linen`, `carnelian`, `papyrus`, `dynskin`
+(Egyptian skin tones, its own ramp because the Covenant `skin` is a pale peach); `prepare_sprite.py` folder `dynasty/` takes night, bronze,
+lapis, linen, carnelian, papyrus, dynskin and brown; sandstone is added per call with `--ramps` (it sits beside linen and skin).
+**Sprites** (`assets/sprites/dynasty/`, heights in `SpriteData.HEIGHTS`; full list in `docs/dynasty/ART_MANIFEST.md`): one API image each
+(`tools/gen_image.py`, a game sprite plus the concept crop as references, prompts beside the raws in `art_source/dynasty/`), male figures
+converted straight (`--ink-l 0.15 --no-prune`), **female figures** (female mummy, Nile Archer, Embalmer, Bastet Hunter, Sekhmet and the
+Embalmer and Lion-Priestess characters) through `pixelate_source.py` first (it keeps the face, collar and hourglass), all with bust rigs and
+idle strips; Osiris (on his throne) and the canopic jars are stills. Rebuilt by `art_source/dynasty/make_art.py` (units, strips),
+`make_props.py` (obstacles, icon badges on the approved violet / gold frames, markers) and `dynasty_tiles.py` (13 dark seamless floors and
+the quicksand). Known soft spots: the mummy's green eyes fell below the cleanup threshold at 40 px; the pixelated women are noisy (as the
+Act IX women); the scarab swarm is drawn with `--no-cleanup` to keep its beetles apart. Rig lines in `tools/walk_cycle.py`
+("# --- Act VII slot: the Necropolis Dynasty ---"), boxes read by eye, not yet reviewed in game.

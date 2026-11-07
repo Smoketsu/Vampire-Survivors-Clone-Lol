@@ -103,6 +103,10 @@ const MUSIC_SIREN: StringName = &"siren"
 ## play_music() mode: the Act IX in-run loop "The Reaping Stars" (SoundData.STARSONG_SCORE;
 ## a stage whose STAGE has "music": "starsong").
 const MUSIC_STARSONG: StringName = &"starsong"
+# --- the Necropolis Dynasty (Act VII slot) ---
+## play_music() mode: the Dynasty in-run loop "The Weighing of the Heart" (SoundData.WEIGHING_SCORE;
+## a stage whose STAGE has "music": "weighing").
+const MUSIC_WEIGHING: StringName = &"weighing"
 ## play_music() mode: the epilogue's slow "Grave Lullaby" cue (content wave 2;
 ## MenuThemeData.EPILOGUE_VARIANT, rendered the first time the epilogue plays).
 const MUSIC_EPILOGUE: StringName = &"epilogue"
@@ -115,14 +119,15 @@ const SYNTH_SEED: int = 9001
 ## Fixed synth seed of each score loop (SoundData.SCORES id -> seed); the tide
 ## keeps the SYNTH_SEED - 2 it always had.
 const SCORE_SEEDS := {"tide": SYNTH_SEED - 2, "iron": SYNTH_SEED - 3, "bronze": SYNTH_SEED - 4, "sun": SYNTH_SEED - 5,
-	"brimstone": SYNTH_SEED - 6, "sanguine": SYNTH_SEED - 7, "siren": SYNTH_SEED - 8, "starsong": SYNTH_SEED - 9}
+	"brimstone": SYNTH_SEED - 6, "sanguine": SYNTH_SEED - 7, "siren": SYNTH_SEED - 8, "starsong": SYNTH_SEED - 9,
+	"weighing": SYNTH_SEED - 12}
 ## Seed base of the lazily rendered sound packs (pack sound i uses PACK_SEED + i).
 const PACK_SEED: int = SYNTH_SEED + 5000
 ## Seed offset of each lazily rendered pack (pack sound i of pack P uses
 ## PACK_SEED + PACK_SEED_OFFSETS[P] + i), so a pack's sounds never depend on
 ## which pack was asked for first. The Act III pack keeps offset 0 (its
 ## seeds are what they always were).
-const PACK_SEED_OFFSETS := {"empire": 0, "pantheon": 1000, "shogunate": 2000, "inferno": 3000, "court": 4000, "city": 5000, "concord": 6000}
+const PACK_SEED_OFFSETS := {"empire": 0, "pantheon": 1000, "shogunate": 2000, "inferno": 3000, "court": 4000, "city": 5000, "concord": 6000, "dynasty": 9000}
 ## A card_select within this many ms replaces the generic ui_confirm click.
 const CONFIRM_SUPPRESS_MSEC: int = 120  # TUNING (not in GDD)
 ## Sounds that replace the generic ui_confirm click of the same press when
@@ -555,6 +560,8 @@ func prepare_pack(pack: String) -> void:
 		defs = SoundData.CITY_SOUNDS  # Act VIII
 	elif pack == "concord":
 		defs = SoundData.CONCORD_SOUNDS  # Act IX
+	elif pack == "dynasty":
+		defs = SoundData.DYNASTY_SOUNDS  # the Necropolis Dynasty
 	var k := 0  # Index of the sound within its pack (its seed).
 	_mutex.lock()  # The worker reads the queue and recipes.
 	for id: String in defs:
