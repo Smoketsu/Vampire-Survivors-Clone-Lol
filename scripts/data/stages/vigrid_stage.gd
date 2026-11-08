@@ -189,16 +189,16 @@ const SEGMENTS := [
 		"weights": {"raider": 0.75, "wolf_of_the_wastes": 0.25},
 		"objective": "The Frozen Sea: the last battle begins in the cold. Keep near the braziers"},
 	{"start": 60.0, "rate": 1.7, "max_alive": 40,  # TUNING (not in GDD)
-		"weights": {"raider": 0.62, "wolf_of_the_wastes": 0.2, "shield_maiden": 0.17, "frost_giant": 0.007},
+		"weights": {"raider": 0.66, "wolf_of_the_wastes": 0.16, "shield_maiden": 0.17, "frost_giant": 0.007},
 		"objective": "Wolves run the ice. Your blockers hold their lunges"},
 	{"start": 150.0, "rate": 2.0, "max_alive": 50,  # TUNING (not in GDD)
-		"weights": {"raider": 0.5, "wolf_of_the_wastes": 0.18, "shield_maiden": 0.17, "draugr": 0.12, "frost_giant": 0.007},
+		"weights": {"raider": 0.54, "wolf_of_the_wastes": 0.14, "shield_maiden": 0.17, "draugr": 0.12, "frost_giant": 0.007},
 		"objective": "Draugr from the old barrows: armoured, and their touch is cold"},
 	{"start": 300.0, "rate": 2.3, "max_alive": 60,  # TUNING (not in GDD)
-		"weights": {"raider": 0.42, "wolf_of_the_wastes": 0.17, "shield_maiden": 0.16, "draugr": 0.13, "skald": 0.04, "seer": 0.04, "frost_giant": 0.007},
+		"weights": {"raider": 0.45, "wolf_of_the_wastes": 0.14, "shield_maiden": 0.16, "draugr": 0.13, "skald": 0.04, "seer": 0.04, "frost_giant": 0.007},
 		"objective": "The Ash Plain: the light fades, and the dark takes the farthest fire. Seers douse the rest"},
 	{"start": 480.0, "rate": 2.6, "max_alive": 70,  # TUNING (not in GDD)
-		"weights": {"raider": 0.4, "wolf_of_the_wastes": 0.17, "shield_maiden": 0.16, "draugr": 0.13, "skald": 0.04, "seer": 0.04, "berserker": 0.025, "valkyrie": 0.015, "frost_giant": 0.008},
+		"weights": {"raider": 0.43, "wolf_of_the_wastes": 0.14, "shield_maiden": 0.16, "draugr": 0.13, "skald": 0.04, "seer": 0.04, "berserker": 0.025, "valkyrie": 0.015, "frost_giant": 0.008},
 		"objective": "Wounded warriors go berserk: finish them in one blow"},
 	{"start": 600.0, "rate": 2.8, "max_alive": 76,  # TUNING (not in GDD)
 		"weights": {"raider": 0.36, "wolf_of_the_wastes": 0.2, "shield_maiden": 0.15, "draugr": 0.13, "skald": 0.04, "seer": 0.04, "berserker": 0.028, "valkyrie": 0.018, "frost_giant": 0.011},
@@ -221,15 +221,15 @@ const EVENTS := [
 	{"time": 45.0, "type": "rune_stone", "count": 1, "banner": "A rune-stone rises! Stand by it with your army to take it"},  # TUNING (not in GDD) rule 3
 	{"time": 95.0, "type": "wave", "banner": "Wolves of the wastes run the frozen sea!", "formation": "arc",  # TUNING (not in GDD)
 		"groups": [{"kind": "wolf_of_the_wastes", "count": 5, "elite": false}, {"kind": "wolf_of_the_wastes", "count": 5, "elite": false}]},
-	{"time": 170.0, "type": "wave", "banner": "A frost giant strides across the ice, his wolves before him!", "formation": "arc",  # TUNING (not in GDD) the giants and the wolves lead
-		"groups": [{"kind": "frost_giant", "count": 1, "elite": false}, {"kind": "wolf_of_the_wastes", "count": 5, "elite": false}]},
+	{"time": 170.0, "type": "wave", "banner": "A frost giant strides across the ice!", "formation": "arc",  # TUNING (not in GDD) the giants and the wolves lead (first pass brought a wolf pack with it)
+		"groups": [{"kind": "frost_giant", "count": 1, "elite": false}, {"kind": "raider", "count": 4, "elite": false}]},
 	{"time": 220.0, "type": "wave", "banner": "A shield line, and a skald to sing it on!", "formation": "line",  # TUNING (not in GDD)
 		"groups": [{"kind": "shield_maiden", "count": 4, "elite": false}, {"kind": "skald", "count": 1, "elite": false}, {"kind": "raider", "count": 6, "elite": false}]},
 	{"time": 270.0, "type": "rune_stone", "count": 1, "banner": "Another rune-stone is carved! Its horn will call the hall"},  # TUNING (not in GDD) rule 3
 	{"time": 330.0, "type": "wave", "banner": "A berserker! Wound him and he is already in the fury", "formation": "arc",  # TUNING (not in GDD)
 		"groups": [{"kind": "berserker", "count": 1, "elite": false}, {"kind": "raider", "count": 8, "elite": false}]},
-	{"time": 390.0, "type": "wave", "banner": "Three packs of wolves come out of the ash!", "formation": "ring",  # TUNING (not in GDD)
-		"groups": [{"kind": "wolf_of_the_wastes", "count": 5, "elite": false}, {"kind": "wolf_of_the_wastes", "count": 5, "elite": false}, {"kind": "wolf_of_the_wastes", "count": 5, "elite": false}]},
+	{"time": 400.0, "type": "wave", "banner": "Two packs of wolves come out of the ash!", "formation": "ring",  # TUNING (not in GDD) first pass three packs at 6:30 (the seed-7 naive bot fell at 7:19)
+		"groups": [{"kind": "wolf_of_the_wastes", "count": 5, "elite": false}, {"kind": "wolf_of_the_wastes", "count": 5, "elite": false}]},
 	{"time": 440.0, "type": "wave", "banner": "A valkyrie! Bring her down with arrows and spells", "formation": "arc",  # TUNING (not in GDD)
 		"groups": [{"kind": "valkyrie", "count": 1, "elite": false}, {"kind": "draugr", "count": 5, "elite": false}]},
 	{"time": 520.0, "type": "rune_stone", "count": 1, "banner": "A seer carves a new stone!"},  # TUNING (not in GDD) rule 3
