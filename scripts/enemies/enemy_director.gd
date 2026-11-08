@@ -386,6 +386,11 @@ var proving_moon: ProvingMoonDirector = null
 ## Reactor's vents, the Luminous Archon; StageRegistry "ark"; null on every
 ## other stage).
 var ark: ArkDirector = null
+# --- Act XI (temporary): Vigrid ---
+## Vigrid, the Last Field's mechanics (the Hall of the Slain's finale: the
+## Fading Light, the early dark's vanguard, the Fire-Giant of the south;
+## StageRegistry "vigrid"; null on every other stage).
+var vigrid: VigridDirector = null
 ## Sanctum kit bookkeeping: recent deaths, Confessor revivals, danger hints.
 var rites: CovenantRites
 ## The living miniboss shown on the HUD's miniboss bar (the Cathedral
@@ -590,6 +595,12 @@ func _ready() -> void:
 		ark.game = game
 		ark.config = stage_def["ark"]
 		add_child(ark)  # The Ark of the Concord's director.
+	# --- Act XI (temporary): Vigrid ---
+	if not (stage_def.get("vigrid", {}) as Dictionary).is_empty():
+		vigrid = VigridDirector.new()
+		vigrid.game = game
+		vigrid.config = stage_def["vigrid"]
+		add_child(vigrid)  # Vigrid's director.
 
 
 # =====================================================================================
@@ -740,6 +751,9 @@ func step(delta: float) -> void:
 	# --- Act IX: the Ark ---
 	if ark != null:
 		ark.step(delta)  # The tanks, the vents.
+	# --- Act XI (temporary): Vigrid ---
+	if vigrid != null:
+		vigrid.step(delta)  # The Fading Light, the vanguard.
 
 
 ## The Archive kinds' world hazards (ArchiveHazards), created on first use.
@@ -893,6 +907,9 @@ func objective_text() -> String:
 	# --- Act IX: the Ark ---
 	if ark != null and ark.objective_override() != "":
 		return ark.objective_override()  # The Luminous Archon, the Reaping.
+	# --- Act XI (temporary): Vigrid ---
+	if vigrid != null and vigrid.objective_override() != "":
+		return vigrid.objective_override()  # The Fire-Giant of the south, Odin's phases.
 	if boss != null and not boss.active:
 		return String(boss_info["dead_objective"])
 	return segments[segment_index]["objective"]
@@ -1158,6 +1175,12 @@ func _run_event(ev: Dictionary) -> void:
 				ark.start_event(ev)
 			game.stat_add("wave_events", 1.0)
 			return  # The Ark's miniboss (ArkDirector).
+		# --- Act XI (temporary): Vigrid ---
+		"muspel_giant":
+			if vigrid != null:
+				vigrid.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return  # Vigrid's miniboss (VigridDirector).
 	show_banner(ev["banner"])
 	var groups: Array = ev["groups"]
 	if game.shogunate != null:

@@ -183,6 +183,17 @@ func longest_out() -> float:
 	return m
 
 
+# --- Act XI (temporary): Vigrid ---
+## Vigrid's Fading Light (VigridDirector): the dark puts out brazier `i`
+## through the one douse path (`by` names it in the stats, as a douser's kind;
+## relit as any brazier). False when it is not lit.
+func put_out(i: int, by: String) -> bool:
+	if i < 0 or i >= braziers.size() or not braziers[i].lit:
+		return false
+	_douse(braziers[i], by)
+	return true
+
+
 ## Index of the nearest LIT brazier within `reach` px of `p` (a douser's
 ## detour, NorseKit.douse_step()), or -1.
 func nearest_lit(p: Vector2, reach: float) -> int:

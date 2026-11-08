@@ -163,9 +163,14 @@ func play_sound(event: String, pos: Vector2 = Vector2.INF, gap: float = 0.0) -> 
 
 ## The autotest autopilot's push away from the act's own telegraphs at `p`
 ## (the dives and boulders use the shared telegraph circles and the kits'
-## danger_push(), which the bot already reads): none of its own today.
-func danger_push(_p: Vector2) -> Vector2:
-	return Vector2.ZERO
+## danger_push(), which the bot already reads); each stage adds its own.
+func danger_push(p: Vector2) -> Vector2:
+	var push := Vector2.ZERO
+	# --- Act XI (temporary): Vigrid --- out of the burning ground (the
+	# Fire-Giant of the south's tracks, Ragnarok's rings of fire).
+	if game.enemies.vigrid != null:
+		push += game.enemies.vigrid.danger_push(p)
+	return push
 
 
 ## Autotest bot (the one cold behaviour): a brazier to warm up at or relight
