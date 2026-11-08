@@ -544,6 +544,9 @@ func _ready() -> void:
 		# --- Act XII (temporary number): the Temple of the Lioness ---
 		"lioness_temple":
 			ground = LionessTempleGround.new()  # The Temple of the Lioness's four zone floors (LionessTempleStage.ZONES).
+		# --- Act XII (temporary number): the Hall of Two Truths ---
+		"two_truths":
+			ground = TwoTruthsGround.new()  # The Hall of Two Truths' four zone floors (TwoTruthsStage.ZONES).
 		_:
 			ground = Ground.new()
 	add_child(ground)

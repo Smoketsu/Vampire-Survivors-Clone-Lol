@@ -112,7 +112,9 @@ const ORDER := ["gravecaller", "umbral_warden", "voidcaller", "bone_oracle", "fa
 	# --- Act XII (temporary number): the Necropolis of Sand ---
 	"the_embalmer",
 	# --- Act XII (temporary number): the Temple of the Lioness ---
-	"lion_priestess"]
+	"lion_priestess",
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	"pharaohs_shade"]
 ## The default character (RunConfig, fresh saves, the autotest): today's game.
 const DEFAULT_ID: String = "gravecaller"
 ## Spell level that unlocks a character (owner rule: reach Lv 5 with its spell
@@ -253,7 +255,9 @@ const INNATE_KEYS := ["orb_projectile_destroy", "blast_echo_delay", "blast_echo_
 	# --- Act XII (temporary number): the Necropolis of Sand ---
 	"linen_mummy_life",
 	# --- Act XII (temporary number): the Temple of the Lioness ---
-	"eye_reach_bonus"]
+	"eye_reach_bonus",
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	"verdict_execute_bonus"]
 
 ## Orbit radius (px) of the Bone Oracle's Ossuary Ward shards around him.
 const SHARD_ORBIT_RADIUS: float = 27.0  # TUNING (not in GDD)
@@ -1186,6 +1190,31 @@ const CHARACTERS := {
 		"stats": {"max_hp": -5.0, "spell_area": 0.05},  # TUNING (not in GDD) a priestess: a little frailer, her sun a little wider
 		"sprite": "player/lion_priestess",
 		"tint": Color(0.95, 0.78, 0.55),  # TUNING (not in GDD) a sun-warm sand over the violet
+		"starts_unlocked": false,
+	},
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	# The Pharaoh's Shade (Feather's Verdict's character; owner-approved
+	# proposal "Rewards": "Osiris and Ammit | Feather's Verdict ... | The
+	# Pharaoh's Shade (male)"; docs/last_acts/PLAN.md: every playable character
+	# is a necromancer of the act's theme, never one of the enemy faction):
+	# MALE, a violet-robed spectral pharaoh in a nemes, a crook staff with a soul
+	# flame (art player/pharaohs_shade). Feather's Verdict must be unlocked
+	# (Osiris and Ammit) before he can be earned, by the usual Lv 5 rule. Own
+	# decision on his innate (the proposal names none): the crook and flail of a
+	# king who once judged the dead himself: his feathers execute foes a little
+	# healthier (FeathersVerdict._land()).
+	"pharaohs_shade": {
+		"display_name": "The Pharaoh's Shade",  # Owner-approved proposal
+		"title": "He was weighed once. Now he weighs.",
+		"spell": "feathers_verdict",
+		"innate": {
+			"id": "crook_and_flail", "name": "Crook and Flail",
+			"description": "Feather's Verdict executes foes 5% healthier.",
+			"values": {"verdict_execute_bonus": 0.05},  # TUNING (not in GDD) share of max HP added to the execute line
+		},
+		"stats": {"max_hp": 10.0, "move_speed": -0.03},  # TUNING (not in GDD) a king's bearing: sturdier, a little slower
+		"sprite": "player/pharaohs_shade",
+		"tint": Color(0.84, 0.76, 0.52),  # TUNING (not in GDD) a dull royal gold over the violet
 		"starts_unlocked": false,
 	},
 }

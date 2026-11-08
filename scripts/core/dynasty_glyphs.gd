@@ -120,6 +120,9 @@ static func draw_obstacle(ci: CanvasItem, o: Arena.Obstacle) -> bool:
 	# --- Act XII (temporary number): the Temple of the Lioness ---
 	if LionessTempleGlyphs.draw_obstacle(ci, o):
 		return true  # The Temple's one-size kinds (braziers, sphinx heads, blocks).
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	if TwoTruthsGlyphs.draw_obstacle(ci, o):
+		return true  # A single-sprite obstacle of the hall (brazier, Scales, sphinx head, blocks).
 	var c := o.center
 	match o.kind:
 		# --- Act XII (temporary number): the Necropolis of Sand --- (their art is obstacles/dyn_*; these are the fallbacks)

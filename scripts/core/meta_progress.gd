@@ -456,6 +456,8 @@ func award_run(summary: Dictionary, mods: MetaModifiers) -> Dictionary:
 	_add_lifetime("no_jars_left_runs", 1.0 if float(st.get("necropolis_no_jars_left", 0.0)) > 0.0 else 0.0)  # No Jars Left (the Necropolis of Sand)
 	# --- Act XII (temporary number): the Temple of the Lioness ---
 	_add_lifetime("names_taken_runs", 1.0 if float(st.get("rebirth_stolen", 0.0)) >= DynastyRulesData.NAMES_TAKEN_RAISES else 0.0)  # Names Taken (the Dynasty's raises)
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	_add_lifetime(OsirisData.LIGHT_HEART_STAT, float(st.get(OsirisData.LIGHT_HEART_STAT, 0.0)))  # A Light Heart (the Weighing won toward the necromancer)
 	_add_run_counters(summary)  # Content wave 2: the one-run achievements' lifetime counters.
 	var slew_unlock_boss := bool(summary.get("boss_defeated", false)) and String(summary.get("boss_id", "")) == HyperData.UNLOCK_BOSS_ID  # Seraphine slain.
 	if slew_unlock_boss:

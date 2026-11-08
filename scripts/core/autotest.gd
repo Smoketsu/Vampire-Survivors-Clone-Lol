@@ -1734,6 +1734,8 @@ func finish(summary: Dictionary) -> void:
 	VigridReport.item_lines(game, st)  # Gungnir, Runecraft, the Draugr Thane, Cold Iron (only when used; the stage's own lines are NorseReport's).
 	# --- Act XII (temporary number): the Necropolis of Sand ---
 	NecropolisReport.item_lines(game, st)  # Linen Bind, Natron Salts, Embalmed Bones (only when taken; the stage's own lines are DynastyReport's).
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	TwoTruthsReport.item_lines(game, st)  # Feather's Verdict, Heavy Heart, the Ushabti Sentinel, Answering Words (only when used; the stage's own lines are DynastyReport's).
 	if game.enemies.boss is BossSeraphine:
 		print("[autotest] seraphine: %s" % BossSeraphine.summary_line(st))
 	var fired := game.enemies.stage.fired

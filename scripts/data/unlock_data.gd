@@ -359,6 +359,19 @@ const UNLOCKS := {
 	"burning_eye": {"type": "spell", "boss": "sekhmet", "text": "Slay Sekhmet at the Temple of the Lioness to unlock."},  # Proposal
 	"desert_fury": {"type": "passive", "boss": "sekhmet", "text": "Slay Sekhmet at the Temple of the Lioness to unlock."},  # Burning Eye's paired passive (proposal), unlocked with it
 	"dune_walkers": {"type": "passive", "achievement": "names_taken", "text": "Earn Names Taken: raise 100 of the Dynasty's dead before their Names return, in one run."},  # The Dynasty's second counter-passive (the integration's split: No Jars Left earns Embalmed Bones)
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	# Osiris and Ammit's fall (owner-approved proposal "Rewards": Feather's
+	# Verdict is unlocked by Osiris and Ammit; the finale grants the Ushabti
+	# Sentinel): the spell with its paired passive, and the summon class with
+	# its paired passive, offered on every stage (no card-row "act" key). The
+	# title Light of Heart is A Light Heart's reward (it only records the
+	# Weighing won until the reorder pass writes the epilogue parts).
+	"feathers_verdict": {"type": "spell", "boss": "osiris", "text": "Defeat Osiris and Ammit in the Hall of Two Truths to unlock."},  # Owner-approved proposal
+	"heavy_heart": {"type": "passive", "boss": "osiris", "text": "Defeat Osiris and Ammit in the Hall of Two Truths to unlock."},  # Feather's Verdict's paired passive (owner-approved proposal), unlocked with it
+	"ushabti_sentinel": {"type": "class", "boss": "osiris", "text": "Defeat Osiris and Ammit in the Hall of Two Truths to unlock."},  # Owner-approved proposal: the finale's reward
+	"answering_words": {"type": "passive", "boss": "osiris", "text": "Defeat Osiris and Ammit in the Hall of Two Truths to unlock."},  # Its paired passive (own decision), unlocked with it
+	"light_of_heart": {"type": "title", "achievement": "a_light_heart",
+		"text": "Earn A Light Heart: win the Weighing with the Scales on your side."},  # Own decision (the win is recorded as a title, as Acts VI-IX did)
 }
 
 ## End-screen plate heading of a newly unlocked item, by type.

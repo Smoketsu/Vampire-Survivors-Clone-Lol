@@ -70,7 +70,10 @@ const CLASS_ORDER := ["warrior", "archer", "mage", "mender", "warder", "bishop",
 		"powder_wraith",
 		# --- Act XI (temporary): Vigrid ---
 		# Unlockable (UnlockData: defeating Odin), so a fresh save never offers it.
-		"draugr_thane"]
+		"draugr_thane",
+		# --- Act XII (temporary number): the Hall of Two Truths ---
+		# Unlockable (UnlockData: defeating Osiris and Ammit), so a fresh save never offers it.
+		"ushabti_sentinel"]
 ## The four GDD §4.2 summon ROLES ("all 4 classes": the Dread Sovereign
 ## achievement), in SynergyManager.classes_met() format: an entry that is an
 ## Array means "any one of these", so after the priest split either priest
@@ -1497,6 +1500,59 @@ const UNITS := {
 			"cleave_trigger": 26.0,  # TUNING (not in GDD) px edge to edge: it sweeps when a foe is this close
 		},
 	},
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	# The Ushabti Sentinel (owner-approved proposal: "Finale summon class: the
+	# Ushabti Sentinel, a stone servant that reassembles once every 25 s when
+	# slain, at half health (evolution Eternal Guard). It is a class special, so
+	# it works everywhere"; GDD §15.0 "The Ushabti Sentinel, Eternal Guard and
+	# Answering Words"): a mummiform stone shabti, no sex, the necromancer's
+	# own servant (soul-teal eyes; art summons/ushabti_sentinel). A BLOCKER on
+	# the Bone Ring (formation "front", it physically blocks like a Warrior);
+	# its class special ("reassemble", UshabtiSentinelBehavior) answers the
+	# blow that would slay it: it falls to rubble for rubble_time s and stands
+	# again at reassemble_hp of its health with a stone shockwave, once every
+	# reassemble_cooldown s. Unlockable (UnlockData), then offered on every stage.
+	"ushabti_sentinel": {
+		"display_name": "Ushabti Sentinel",  # Owner-approved proposal
+		"plural": "Ushabti Sentinels",
+		"description": "A stone servant that holds the line and rises again from its rubble.",  # Card text: one short sentence (owner rule).
+		"max_hp": 110.0,  # TUNING (not in GDD) a stone blocker (Warrior 60, Abomination 260); it gets a second life every 25 s
+		"damage": 12.0,  # TUNING (not in GDD) a stone fist
+		"attack_interval": 1.3,  # TUNING (not in GDD) s
+		"attack_range": 18.0,  # TUNING (not in GDD) edge-to-edge melee reach (px)
+		"move_speed": 70.0,  # TUNING (not in GDD) px/s; stone is slower than bone (Warrior 85)
+		"radius": 11.0,  # TUNING (not in GDD) px (~46 px sprite)
+		"acquisition_range": 150.0,  # TUNING (not in GDD)
+		"replenish_interval": 14.0,  # TUNING (not in GDD) s; slow to carve again (it rebuilds itself instead)
+		"band_min": 35.0,  # TUNING (not in GDD) inner defense band, as the Warrior
+		"band_max": 85.0,  # TUNING (not in GDD)
+		"w_pursuit": 1.0,  # TUNING (not in GDD)
+		"w_formation": 0.4,  # TUNING (not in GDD)
+		"w_separation": 0.8,  # TUNING (not in GDD)
+		"w_threat": 0.0,  # TUNING (not in GDD) stone never shies away
+		"attack_profile": "melee",
+		"target_profile": "guard",
+		"windup": 0.25,  # TUNING (not in GDD) s
+		"projectile_speed": 0.0,
+		"splash_radius": 0.0,
+		"heal_amount": 0.0,
+		"kite_distance": 0.0,
+		"heal_role_priority": 0.9,  # TUNING (not in GDD) healers value a blocker
+		"block_radius": 13.0,  # TUNING (not in GDD) blocks like a Warrior (px)
+		"block_mass": 5.0,  # TUNING (not in GDD) heavier than a Warrior (3), lighter than an Abomination (8)
+		"engaged_speed_mult": 0.5,  # TUNING (not in GDD) touching enemies move at 50%
+		"formation": "front",  # A blocker's post on the Bone Ring.
+		"capacity_bonus_mult": 0.4,  # TUNING (not in GDD) Grave Dominion V: +2
+		"behavior": "reassemble",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"special": {
+			"reassemble_cooldown": 25.0,  # Owner-approved proposal: "reassembles once every 25 s" (Answering Words and special_haste shorten it)
+			"reassemble_hp": 0.5,  # Owner-approved proposal: "at half health"
+			"rubble_time": 1.2,  # TUNING (not in GDD) s it lies in rubble (no hit lands; it still blocks)
+			"reform_damage": 18.0,  # TUNING (not in GDD) the stone shockwave as it stands
+			"reform_radius": 50.0,  # TUNING (not in GDD) px round it
+		},
+	},
 }
 
 ## Summon-ability progression, one entry per skill level (index 0 = level 1).
@@ -1765,6 +1821,16 @@ const LEVELS := {
 		{"count": 2, "hp_bonus": 0.2, "special_bonus": 0.25, "special_duration": 0.2},
 		{"count": 2, "hp_bonus": 0.4, "special_bonus": 0.35, "special_area": 0.2, "special_duration": 0.2},
 		{"count": 3, "hp_bonus": 0.4, "damage_bonus": 0.2, "special_bonus": 0.5, "special_area": 0.2, "special_duration": 0.3},
+	],
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	# TUNING (not in GDD): 1 -> 3 Ushabti Sentinels; tougher stone, harder
+	# shockwaves, then quicker reassembly.
+	"ushabti_sentinel": [
+		{"count": 1},
+		{"count": 2},
+		{"count": 2, "hp_bonus": 0.2, "special_bonus": 0.25},
+		{"count": 3, "hp_bonus": 0.25, "special_bonus": 0.3, "special_area": 0.15},
+		{"count": 3, "hp_bonus": 0.3, "damage_bonus": 0.25, "special_bonus": 0.5, "special_area": 0.2, "special_haste": 0.2},
 	],
 }
 

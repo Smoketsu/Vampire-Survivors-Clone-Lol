@@ -96,6 +96,15 @@ var procession: bool = false
 var jars_placed: int = 0
 ## Jars broken.
 var jars_broken: int = 0
+# --- Act XII (temporary number): the Hall of Two Truths ---
+## Raises seen by on_raise() (every HordeDirector.raise_corpse() while the
+## rules exist; the Hall of Two Truths' Scales read it).
+var raises: int = 0
+## Seconds added to every cartouche's time, by who (set_duration_bonus(); the
+## Scales "scales", Osiris "osiris"); summed by duration().
+var _duration_bonus: Dictionary = {}
+## Shortest a cartouche's time may become (s).
+const MIN_DURATION: float = 1.5  # TUNING (not in GDD)
 
 
 ## Builds Rebirth for `p_game`; `p_enabled`: a Dynasty stage (the stub jars).
@@ -152,6 +161,7 @@ func on_death(e: Enemy) -> void:
 ## `pos` steals the Name of the nearest cartouche within steal_radius. True
 ## when one was stolen.
 func on_raise(pos: Vector2) -> bool:
+	raises += 1  # The Hall of Two Truths: every raise tips the Scales.
 	var best: Enemy = null
 	var best_d := float(cfg["steal_radius"])
 	for c in cartouches:
@@ -249,6 +259,26 @@ func jar_near(p: Vector2) -> Enemy:
 ## Live cartouches now.
 func alive_count() -> int:
 	return cartouches.size()
+
+
+# --- Act XII (temporary number): the Hall of Two Truths ---
+## THE one duration path: `secs` (negative = shorter) added to every
+## cartouche's time by `key` (the Scales' Dynasty favour, Osiris's "Rebirth at
+## speed"); 0 removes it.
+func set_duration_bonus(key: String, secs: float) -> void:
+	if secs == 0.0:
+		_duration_bonus.erase(key)
+	else:
+		_duration_bonus[key] = secs
+
+
+## A cartouche's time now (s): REBIRTH duration plus every bonus, never under
+## MIN_DURATION (CartoucheKit reads it).
+func duration() -> float:
+	var d := float(cfg["duration"])
+	for k: String in _duration_bonus:
+		d += float(_duration_bonus[k])
+	return maxf(MIN_DURATION, d)
 
 
 # =====================================================================================

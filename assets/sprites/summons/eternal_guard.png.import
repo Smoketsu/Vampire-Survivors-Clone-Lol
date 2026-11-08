@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://djubv83dxw53c"
-path="res://.godot/imported/eternal_guard.png-8df8a78d7fe0c9057472a21d48a5ae2f.ctex"
+uid="uid://ciiudctx6n1w1"
+path="res://.godot/imported/eternal_guard.png-00726c52a609ae7b2cca657dfea8e7aa.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/dynasty/eternal_guard.png"
-dest_files=["res://.godot/imported/eternal_guard.png-8df8a78d7fe0c9057472a21d48a5ae2f.ctex"]
+source_file="res://assets/sprites/summons/eternal_guard.png"
+dest_files=["res://.godot/imported/eternal_guard.png-00726c52a609ae7b2cca657dfea8e7aa.ctex"]
 
 [params]
 

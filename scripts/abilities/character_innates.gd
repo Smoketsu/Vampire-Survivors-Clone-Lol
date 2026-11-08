@@ -118,6 +118,9 @@
 ## Act XII (temporary number), the Temple of the Lioness:
 ##   Lion-Priestess   Lioness's Gaze  in BurningEye._length() (the beam
 ##                    reaches farther); stat eye_reach_bonus_px.
+## Act XII (temporary number), the Hall of Two Truths:
+##   Pharaoh's Shade  Crook and Flail    in FeathersVerdict._land() (a higher
+##                    execute line); stats as the spell's (verdict_executions).
 class_name CharacterInnates
 extends Node2D
 
@@ -502,6 +505,9 @@ func summary_line() -> String:
 		# --- Act XII (temporary number): the Temple of the Lioness --- (the Lioness's Gaze lives in BurningEye._length())
 		"lioness_gaze":
 			counters = "reach +%d%% (bonus px summed over sweeps %d, sweeps %d)" % [roundi(100.0 * game.character.innate_value(BurningEyeData.INNATE_KEY)), int(st.get("eye_reach_bonus_px", 0.0)), int(st.get("eye_sweeps", 0.0))]
+		# --- Act XII (temporary number): the Hall of Two Truths --- (Crook and Flail lives in FeathersVerdict._land())
+		"crook_and_flail":
+			counters = "execute line +%d%% (executions %d)" % [int(roundf(game.character.innate_value(FeathersVerdictData.INNATE_KEY) * 100.0)), int(st.get("verdict_executions", 0.0))]
 	out += " | innate: %s" % ("none" if _innate == "" else "%s: %s" % [ch.innate_name(), counters])
 	out += " | characters unlocked this run: %s" % (", ".join(ch.unlocked_this_run) if not ch.unlocked_this_run.is_empty() else "none")
 	var open := PackedStringArray()  # Characters unlocked in the Meta profile now.

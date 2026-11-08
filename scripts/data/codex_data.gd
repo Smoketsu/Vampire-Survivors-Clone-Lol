@@ -84,7 +84,9 @@ const SUMMON_ORDER: Array[String] = ["warrior", "archer", "mage", "mender", "war
 		# --- Act X: the Maelstrom --- (a silhouette naming its unlock until met)
 		"powder_wraith",
 		# --- Act XI (temporary): Vigrid --- (a silhouette naming its unlock until met)
-		"draugr_thane"]
+		"draugr_thane",
+		# --- Act XII (temporary number): the Hall of Two Truths --- (a silhouette naming its unlock until met)
+		"ushabti_sentinel"]
 
 ## Covenant soldiers (enemy kinds), in the order the stages bring them.
 const SOLDIERS: Array[String] = ["recruit", "footman", "archer", "chaplain", "purifier", "templar",
@@ -372,13 +374,17 @@ const NORSE_BOSSES: Array[String] = ["hrimgar", "sigrun", "odin"]
 ## entry).
 const DYNASTY_DEAD: Array[String] = ["mummy", "mummy_female"]
 ## The sacred beasts (group "beasts").
-const DYNASTY_BEASTS: Array[String] = ["scarab_swarm"]
+const DYNASTY_BEASTS: Array[String] = ["scarab_swarm",
+	# --- Act XII (temporary number): the Hall of Two Truths --- (the miniboss with its group)
+	"devourers_whelp"]
 ## The guard (group "guard").
 const DYNASTY_GUARD: Array[String] = ["khopesh_guard",
 	# --- Act XII (temporary number): the Necropolis of Sand ---
 	"nile_archer", "jackal_warrior",
 	# --- Act XII (temporary number): the Temple of the Lioness ---
-	"bastet_hunter"]
+	"bastet_hunter",
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	"crocodile_warden"]
 ## The priesthood (group "priests").
 const DYNASTY_PRIESTS: Array[String] = ["heka_priest", "embalmer"]
 ## Stone and jars (group "stone": the structures and, in phase 2, the statues).
@@ -718,6 +724,9 @@ const DESCRIPTIONS: Dictionary = {
 	"ushabti_statue": "A stone servant of the temple. Its row sleeps along the avenue until the eyes glow; then the stone walks, and weak blows barely chip it.",  # Proposal
 	"woken_colossus": "A great statue of the temple, woken from a long row. Its fists shake the flagstones: step out of the slam, and break it from range.",  # TUNING (not in GDD)
 	"lion_warden": "The Lion Warden: a stone lion-headed warrior who seals the hall and stands in its only door. Kill him to pass; his roar wakes the statues.",  # Proposal
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	"crocodile_warden": "A crocodile-headed warden of the river of the dead. He climbs out of the quicksand and drags your dead under.",  # Proposal
+	"devourers_whelp": "A young hippo-lion-crocodile beast that eats the Names of the dead before they can stand. Raise them before it reaches them.",  # Proposal
 }
 
 ## Sprite key of an entry whose art is not "<category folder>/<id>":
@@ -1037,6 +1046,8 @@ const ACHIEVEMENT_ICONS: Dictionary = {
 	"no_jars_left": "ach_no_jars_left",  # TUNING (not in GDD)
 	# --- Act XII (temporary number): the Temple of the Lioness ---
 	"names_taken": "ach_names_taken",  # TUNING (not in GDD)
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	"a_light_heart": "ach_a_light_heart",  # TUNING (not in GDD)
 }
 ## IconGlyph kind drawn when an achievement badge PNG is missing.
 const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
@@ -1114,6 +1125,8 @@ const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
 	"no_jars_left": "embalmed_bones",
 	# --- Act XII (temporary number): the Temple of the Lioness ---
 	"names_taken": "dune_walkers",
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	"a_light_heart": "feathers_verdict",
 }
 ## Screen title (TITLE tier).
 const TITLE: String = "Codex"  # TUNING (not in GDD)

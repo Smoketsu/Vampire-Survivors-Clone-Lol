@@ -35,7 +35,9 @@ const ORDER := ["heretics_bane", "master_of_the_drowned", "archnecromancer", "ex
 	# --- Act X: the Maelstrom ---
 	"captain_of_the_dead",  # owner-approved Proposal 2; Act III proposal; Act VI, Act VII and Act VIII (own decisions)
 	# --- Act XI (temporary): Vigrid ---
-	"doom_of_the_gods"]  # owner-approved Proposal 2; Act III proposal; Act VI, Act VII and Act VIII (own decisions)
+	"doom_of_the_gods",
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	"light_of_heart"]  # owner-approved Proposal 2; Act III proposal; Act VI, Act VII and Act VIII (own decisions)
 
 ## Title id -> row (keys above).
 const TITLES := {
@@ -57,6 +59,8 @@ const TITLES := {
 	"captain_of_the_dead": {"display_name": "Captain of the Dead", "achievement": "dead_men_tell_tales", "frame": ""},  # Own decision: Dead Men Tell Tales records the clear (no epilogue part until the reorder, docs/last_acts/PLAN.md)
 	# --- Act XI (temporary): Vigrid ---
 	"doom_of_the_gods": {"display_name": "Doom of the Gods", "achievement": "twilight_of_the_wolf", "frame": ""},  # Own decision: Twilight of the Wolf records the clear (no epilogue part until the reorder pass); "Ragnarok" is the doom of the gods
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	"light_of_heart": {"display_name": "Light of Heart", "achievement": "a_light_heart", "frame": ""},  # Own decision: A Light Heart records the Weighing won (no epilogue part until the reorder, PLAN.md)
 }
 
 ## Text of the "no title" choice on the setup screen's cycle row.

@@ -104,6 +104,9 @@
 ## and Act XII's (temporary: the Necropolis of Sand, NECROPOLIS_IDS: stepped,
 ## with a kill hook; its own autotest line, NecropolisReport.item_lines()):
 ##   Linen Bind       -> LinenBind        (evolves into Eternal Shroud)
+## and the Hall of Two Truths' (temporary Act XII, TWO_TRUTHS_IDS: stepped only;
+## its own autotest line, TwoTruthsReport.item_lines()):
+##   Feather's Verdict -> FeathersVerdict (evolves into Heart Devoured)
 ## Game calls after_physics() once per tick after obstacles are resolved
 ## (Bone Wall holds enemies there).
 ## Each spell node is created the first time its spell is learned and reads
@@ -261,6 +264,10 @@ const NECROPOLIS_IDS := ["linen_bind"]
 ## The Temple of the Lioness's unlockable spell (Sekhmet's reward): stepped
 ## only (no kill or after-physics hook), reported by LionessTempleReport.
 const LIONESS_TEMPLE_IDS := ["burning_eye"]
+# --- Act XII (temporary number): the Hall of Two Truths ---
+## The Hall of Two Truths' unlockable spell (Osiris and Ammit's reward):
+## stepped only (no kill or after-physics hook), reported by TwoTruthsReport.
+const TWO_TRUTHS_IDS := ["feathers_verdict"]
 ## Damage-source stat tags of each spell (CombatResolver "dmg_<tag>"), base
 ## spell first, then its evolution's. Used for the autotest summary.
 const SOURCES := {
@@ -337,6 +344,8 @@ const SOURCES := {
 	"linen_bind": ["linen_bind", "eternal_shroud"],
 	# --- Act XII (temporary number): the Temple of the Lioness ---
 	"burning_eye": ["burning_eye", "eye_of_retribution"],
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	"feathers_verdict": ["feathers_verdict", "feathers_verdict_execute", "heart_devoured", "heart_devoured_execute"],
 }
 
 ## Owning run.
@@ -592,6 +601,15 @@ func step(delta: float) -> void:
 			node = _create(id)
 		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
 		node.step(delta, ab.spell_stats(id))  # The Temple of the Lioness's spell.
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	for id: String in TWO_TRUTHS_IDS:
+		if ab.spell_level(id) <= 0:
+			continue
+		var node: NecroSpell = nodes.get(id)  # The spell's node (created lazily).
+		if node == null:
+			node = _create(id)
+		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
+		node.step(delta, ab.spell_stats(id))  # The Hall of Two Truths' spell.
 
 
 ## Content wave 2: the Bone Wall node, created when missing (the Ossuary
@@ -718,6 +736,9 @@ func _create(id: String) -> NecroSpell:
 		# --- Act XII (temporary number): the Temple of the Lioness ---
 		"burning_eye":
 			node = BurningEye.new()  # The Temple of the Lioness's spell.
+		# --- Act XII (temporary number): the Hall of Two Truths ---
+		"feathers_verdict":
+			node = FeathersVerdict.new()  # The Hall of Two Truths' spell.
 		_:
 			node = PlagueCloud.new()
 	node.game = game

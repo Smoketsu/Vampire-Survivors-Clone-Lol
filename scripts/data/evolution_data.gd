@@ -124,7 +124,9 @@ const ORDER := ["void_barrage", "eclipse_ward", "abyssal_detonation",
 	# --- Act XII (temporary number): the Necropolis of Sand ---
 	"eternal_shroud",
 	# --- Act XII (temporary number): the Temple of the Lioness ---
-	"eye_of_retribution"]
+	"eye_of_retribution",
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	"heart_devoured"]
 
 ## Evolution definitions.
 ##   base         — spell id that evolves (AbilityData.SPELLS key).
@@ -986,6 +988,26 @@ const EVOLUTIONS := {
 		"stats": {
 			"damage": 60.0, "arc": 140.0, "range": 320.0, "width": 18.0, "sweep_time": 0.6, "cooldown": 2.6,  # TUNING (not in GDD) two passes a sweep
 			"retribution": 1.6,  # TUNING (not in GDD) the evolution flag: least s between two sweeps called by a blow
+		},
+	},
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	# Heart Devoured (GDD §15.0 "Feather's Verdict, Heart Devoured, Heavy Heart
+	# and the Pharaoh's Shade"; owner-approved proposal "Feather's Verdict ->
+	# Heart Devoured (+ Heavy Heart)"): Feather's Verdict + Heavy Heart (a NEW
+	# passive, owner rule: at Lv 5). Two feathers a cast on the strongest foes
+	# in turn, a higher line and a wider ring, and every execution heals the
+	# necromancer devour_heal HP (at most devour_cap a cast). Detected by the
+	# "feathers" key.
+	"heart_devoured": {
+		"base": "feathers_verdict",
+		"passive": "heavy_heart",
+		"display_name": "Heart Devoured",  # Owner-approved proposal
+		"icon": "heart_devoured",
+		"description": "Two feathers fall, and every heart they find too light is devoured: each one heals you.",
+		"labels": {"damage": "Feather damage", "cooldown": "Cooldown (s)", "feathers": "Feathers", "execute": "Executes under", "ring": "Ring (px)", "devour_heal": "Heal per heart"},
+		"stats": {
+			"damage": 92.0, "cooldown": 2.6, "range": 320.0, "feathers": 2, "execute": 0.3, "ring": 88.0,  # TUNING (not in GDD)
+			"devour_heal": 0.5, "devour_cap": 6.0,  # TUNING (not in GDD) the evolution's heal (HP an execution, HP a cast at most)
 		},
 	},
 }

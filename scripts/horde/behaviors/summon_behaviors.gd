@@ -21,6 +21,7 @@
 ##   "saucer_lift" Ghost Saucer   GhostSaucerBehavior (Act IX, the Ark of the Concord)
 ##   "keg_burst" Powder Wraith    PowderWraithBehavior (Act X, the Maelstrom)
 ##   "frost_axe" Draugr Thane     DraugrThaneBehavior (Vigrid, the Hall of the Slain)
+##   "reassemble" Ushabti Sentinel UshabtiSentinelBehavior (Act XII, temporary: the Hall of Two Truths)
 ## It creates / reuses the per-unit instance and builds the class-specific
 ## level-up card lines (AbilityManager._summon_offer()), so the shared code
 ## only ever talks to this file and the SummonBehavior base class.
@@ -93,6 +94,9 @@ static func for_unit(current: SummonBehavior, kind: String) -> SummonBehavior:
 		# --- Act XI (temporary): Vigrid ---
 		"frost_axe":
 			b = DraugrThaneBehavior.new()  # The Draugr Thane.
+		# --- Act XII (temporary number): the Hall of Two Truths ---
+		"reassemble":
+			b = UshabtiSentinelBehavior.new()  # The Ushabti Sentinel.
 	if b != null:
 		b.kind = kind
 	return b
@@ -257,6 +261,14 @@ static func card_lines(cls: String, cur: Dictionary, nxt: Dictionary) -> PackedS
 			else:
 				_delta(out, "Cleave damage", a, b, "cleave_damage")
 				_delta(out, "Chill (s)", a, b, "cleave_slow_duration")
+		# --- Act XII (temporary number): the Hall of Two Truths ---
+		"reassemble":
+			if a.is_empty():
+				out.append("Holds the line on the Bone Ring")
+				out.append("Rises again from its rubble once every %d s" % int(b.get("reassemble_cooldown", 25.0)))
+			else:
+				_delta(out, "Reform damage", a, b, "reform_damage")
+				_delta(out, "Reassembly (s)", a, b, "reassemble_cooldown")
 	return out
 
 

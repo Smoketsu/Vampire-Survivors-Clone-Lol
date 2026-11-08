@@ -42,8 +42,8 @@ Palette constants for `palette.gd` (names `DYN_*`): ink `#0A0B16`; night `#1B203
 | `dynasty/sekhmet` | 52x92 | boss, female goddess (figure style) | walk, idle; robe glide, bust + idle |
 | `dynasty/osiris` | 46x96 | boss, male god on his throne (no strip; stationary) | none; still only |
 | `dynasty/ammit` | 76x44 | boss, monster (Ammit the Devourer) | walk; legs walk |
-| `dynasty/ushabti_sentinel` | 20x46 | finale summon class (the necromancer's, soul-teal eyes) | walk |
-| `dynasty/eternal_guard` | 32x58 | its evolution (true-gold trim) | walk |
+| `summons/ushabti_sentinel` | 20x46 | finale summon class (the necromancer's, soul-teal eyes); moved from `dynasty/` in phase 2 (a summon class finds its art in `summons/`) | walk |
+| `summons/eternal_guard` | 32x58 | its evolution (true-gold trim); moved from `dynasty/` in phase 2 | walk |
 
 Boss attack poses (cast / strike) are not drawn: the stage agents add them (BossPoseData) once the kits exist. 
 
@@ -140,3 +140,9 @@ About $0.57 of API images (25 unit images, 7 sheets; medium quality), ledger row
 - `prepare_sprite.py` erased the 1-px bandage gaps at 40 px, so the conversion is `art_source/dynasty/r3/convert.py` (box downscale, adaptive local-contrast threshold onto the `linen` ramp, gold to `dyn_bronze`, eyes to `papyrus`, outline). Canvas is now 30x40 (was 36x40); `SpriteData` height is unchanged (40), so nothing else changes.
 - `mummy_walk.png` rebuilt (8 frames of 30x40; rig in `tools/walk_cycle.py`: hip 34, legs split at col 11). `mummy_b.png` is an unused leftover of the 28x40 original and is left as is. Check sheet: `docs/last_acts/mummy_r4.png` (old r2 vs new, 4x, plus both walk strips).
 - Cost: three images, about $0.05 (ledger rows `dynasty/r3_mummy_*`).
+
+## Phase 2: the Hall of Two Truths (wiring)
+- `summons/ushabti_sentinel` and `summons/eternal_guard` (+ walk strips) moved from `dynasty/` so the summon class draws them (`SpriteData` keys follow).
+- `icons/answering_words` (32x32): Eternal Guard's paired passive badge, a small composite of `icons/ushabti_sentinel` recoloured soul-teal (no new generation).
+- Wired: `dynasty/crocodile_warden`, `dynasty/devourers_whelp`, `dynasty/osiris` (the Judge and the Weighing, and faded on the empty throne), `dynasty/ammit` (the Devourer), `player/pharaohs_shade`, the four `tiles/two_truths_*` floors, `obstacles/dyn_obelisk_*`, `dyn_colonnade_*` (+ `_v`), and the single sprites `dyn_brazier`, `dyn_great_scales` (also drawn beside Osiris during the Weighing with the heart and the feather), `dyn_sphinx_head`, `dyn_sandstone_blocks` through `TwoTruthsGlyphs`; badges `feathers_verdict`, `heart_devoured`, `heavy_heart`, `ushabti_sentinel`, `eternal_guard`, `ach_a_light_heart`.
+- Code-drawn: the gold feather of Feather's Verdict, the Ushabti's rubble, the Balance bar.

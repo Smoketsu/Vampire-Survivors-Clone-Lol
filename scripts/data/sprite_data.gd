@@ -729,8 +729,8 @@ const FLAT_SIZES: Dictionary = {
 	"dynasty/sekhmet": 92.0,  # TUNING (not in GDD) boss, female goddess (figure redesign): lioness head and sun disc, red gown; bust rig, idle strip (about 52 wide)
 	"dynasty/osiris": 96.0,  # TUNING (not in GDD) boss, male god seated on his throne (still only, no strip) (about 46 wide)
 	"dynasty/ammit": 44.0,  # TUNING (not in GDD) boss, a monster: crocodile jaws, lion front, hippo rump (about 76 wide)
-	"dynasty/ushabti_sentinel": 46.0,  # TUNING (not in GDD) summon class, the necromancer's stone servant (no sex) (about 20 wide)
-	"dynasty/eternal_guard": 58.0,  # TUNING (not in GDD) its evolution: a taller gold-trimmed stone guardian (about 32 wide)
+	"summons/ushabti_sentinel": 46.0,  # TUNING (not in GDD) summon class, the necromancer's stone servant (no sex) (about 20 wide)
+	"summons/eternal_guard": 58.0,  # TUNING (not in GDD) its evolution: a taller gold-trimmed stone guardian (about 32 wide)
 	# The Dynasty's playable necromancers (violet, owner note Nov 2026; assets/sprites/player/)
 	"summons/linen_mummy": 40.0,  # TUNING (not in GDD) Act XII (temporary), the Necropolis: Linen Bind's risen Mummy (the Dynasty mummy in the necromancer's bone and soul-teal)
 	"player/the_embalmer": 56.0,  # TUNING (not in GDD) female (figure redesign): violet linen-wrapped necromancer, a canopic-jar staff focus (about 32 wide); glide strip, bust rig, idle strip

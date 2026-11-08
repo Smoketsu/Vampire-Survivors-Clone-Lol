@@ -690,6 +690,15 @@ tiny tweaks.
   of the south, Odin and Fenrir; Gungnir + Runecraft, the Berserker, the Draugr Thane / Barrow King + Cold Iron, Twilight of the
   Wolf). One CI army job each (28 matrix jobs); bot pass `docs/norse/playtest/PASS1.md`; autotest `--keep-fires` (the
   fire-keeper bot). Stages 1–27 same-seed summaries unchanged.
+- **The Hall of Two Truths** (the Necropolis Dynasty's finale, phase 2; GDD §15.0 from "The Hall of Two Truths
+  (Necropolis Dynasty phase 2)"; still `"playable": false` until the lead's integration): four zones, **the Scales**
+  (`TruthScales` / `ScalesBar` in `TwoTruthsDirector`: every return tips them to the Dynasty, every raise and smash to
+  the necromancer; ±15% enemy damage past the marks through one `Enemy.hit_mult()` read, Names 2 s sooner through
+  `Rebirth.set_duration_bonus()` / `duration()`, the one duration path), the Crocodile Warden (shared row), the Devourer's
+  Whelp (miniboss, eats Names), **Osiris and Ammit** (`boss_osiris.gd`: the Judge, the Weighing, the Devourer), Feather's
+  Verdict / Heart Devoured + Heavy Heart, the Pharaoh's Shade, the **Ushabti Sentinel** / Eternal Guard + Answering Words
+  (reassembly through the one generic `SummonBehavior.on_lethal()` hook in `CombatResolver.damage_unit()`), achievement
+  A Light Heart (title Light of Heart). Stages 1–27 same-seed summaries unchanged.
 
 **Next, in priority order:**
 1. **Playtest feedback** from the owner and friends (actively playtesting); it outranks everything below.

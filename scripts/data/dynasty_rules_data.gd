@@ -226,6 +226,18 @@ const SOUNDS := {
 	"warden_roar": "boss_telegraph",  # Intended "warden_roar" (a stone lion's roar).
 	"bastet_ambush": "rogue_dash",  # Intended "bastet_ambush" (sand bursting, two blades).
 	"sekhmet_roar": "boss_arrive",  # Intended "sekhmet_roar" (a lioness's roar on the red wind).
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	"croc_drag": "rebirth_groan",  # Dynasty pack: the sand swallows (intended "croc_drag", a wet snap).
+	"whelp_roar": "boss_telegraph",  # Intended "whelp_roar" (a young beast's bellow).
+	"whelp_eat": "boss_impact",  # Intended "whelp_eat" (jaws on linen).
+	"scales_dynasty": "rebirth_groan",  # Dynasty pack: the Scales tip to the Dynasty.
+	"scales_maat": "cartouche_chime",  # Dynasty pack: the Scales tip your way (a light chime).
+	"osiris_rise": "boss_telegraph",  # Intended "osiris_rise" (a low horn under the hall).
+	"osiris_court": "heka_glyph",  # Dynasty pack: his court answers his word.
+	"osiris_judgment": "boss_impact",  # Intended "osiris_judgment" (a falling verdict).
+	"osiris_weighing": "cartouche_chime",  # Dynasty pack: the heart laid on the pan.
+	"ammit_roar": "boss_telegraph",  # Intended "ammit_roar".
+	"ammit_feast": "boss_impact",  # Intended "devourer_bite" (as the Devourer's lanes): Ammit's jaws.
 }
 
 # --- Act XII (temporary number): the Temple of the Lioness ---

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bu00l7jlcm6iq"
-path="res://.godot/imported/ushabti_sentinel.png-f54a48b0ccccbe06aa3fefdeddbe9a22.ctex"
+uid="uid://b5k3a77qhksrt"
+path="res://.godot/imported/answering_words.png-ac2d8904cb709d134aac651ebbd88aa5.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/dynasty/ushabti_sentinel.png"
-dest_files=["res://.godot/imported/ushabti_sentinel.png-f54a48b0ccccbe06aa3fefdeddbe9a22.ctex"]
+source_file="res://assets/sprites/icons/answering_words.png"
+dest_files=["res://.godot/imported/answering_words.png-ac2d8904cb709d134aac651ebbd88aa5.ctex"]
 
 [params]
 

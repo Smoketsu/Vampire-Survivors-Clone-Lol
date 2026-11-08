@@ -448,6 +448,11 @@ var necropolis: NecropolisDirector = null
 ## Warden's sealed hall; StageRegistry "lioness_temple"; null on every other
 ## stage).
 var lioness_temple: LionessTempleDirector = null
+# --- Act XII (temporary number): the Hall of Two Truths ---
+## The Hall of Two Truths' mechanics (temporary Act XII: the Scales, the
+## Devourer's Whelp, the Crocodile Wardens' rise; StageRegistry "two_truths";
+## null on every other stage).
+var two_truths: TwoTruthsDirector = null
 ## Sanctum kit bookkeeping: recent deaths, Confessor revivals, danger hints.
 var rites: CovenantRites
 ## The living miniboss shown on the HUD's miniboss bar (the Cathedral
@@ -700,6 +705,12 @@ func _ready() -> void:
 		lioness_temple.game = game
 		lioness_temple.config = stage_def["lioness_temple"]
 		add_child(lioness_temple)  # The Temple of the Lioness's director.
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	if not (stage_def.get("two_truths", {}) as Dictionary).is_empty():
+		two_truths = TwoTruthsDirector.new()
+		two_truths.game = game
+		two_truths.config = stage_def["two_truths"]
+		add_child(two_truths)  # The Hall of Two Truths' director.
 
 
 # =====================================================================================
@@ -874,6 +885,9 @@ func step(delta: float) -> void:
 	# --- Act XII (temporary number): the Temple of the Lioness ---
 	if lioness_temple != null:
 		lioness_temple.step(delta)  # The Awakening Statues, the Warden's seal.
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	if two_truths != null:
+		two_truths.step(delta)  # The Scales.
 
 
 ## The Archive kinds' world hazards (ArchiveHazards), created on first use.
@@ -1053,6 +1067,9 @@ func objective_text() -> String:
 	# --- Act XII (temporary number): the Temple of the Lioness ---
 	if lioness_temple != null and lioness_temple.objective_override() != "":
 		return lioness_temple.objective_override()  # The Lion Warden's sealed hall.
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	if two_truths != null and two_truths.objective_override() != "":
+		return two_truths.objective_override()  # The Whelp, the Weighing.
 	if boss != null and not boss.active:
 		return String(boss_info["dead_objective"])
 	return segments[segment_index]["objective"]
@@ -1366,6 +1383,12 @@ func _run_event(ev: Dictionary) -> void:
 				lioness_temple.start_event(ev)
 			game.stat_add("wave_events", 1.0)
 			return  # The Temple's Awakening Statues and miniboss (LionessTempleDirector).
+		# --- Act XII (temporary number): the Hall of Two Truths ---
+		"devourers_whelp", "crocodile_rise":
+			if two_truths != null:
+				two_truths.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return  # The Hall's miniboss and wardens (TwoTruthsDirector).
 	show_banner(ev["banner"])
 	var groups: Array = ev["groups"]
 	if game.shogunate != null:

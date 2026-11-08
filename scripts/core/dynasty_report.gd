@@ -22,7 +22,8 @@
 ##                     the necromancer and to summons, grouped by group
 ##   dynasty stage:    the Dynasty stage itself (stub status, boss, Soul Ash,
 ##                     the Reckoning)
-## Phase 2 adds one line per stage system here (each stage in its own block).
+## Phase 2 adds one line per stage system here (each stage in its own block):
+## the Hall of Two Truths' lines are TwoTruthsReport's.
 ## Read-only: it never changes the run.
 class_name DynastyReport
 extends RefCounted
@@ -57,6 +58,8 @@ static func print_lines(game: Game, st: Dictionary) -> void:
 	NecropolisReport.print_lines(game, st)  # The jars, No Jars Left, the Nile Archers and Jackal Warriors, the Sand Colossus, Anubis.
 	# --- Act XII (temporary number): the Temple of the Lioness --- (the Awakening Statues, the Warden, Sekhmet; LionessTempleReport)
 	LionessTempleReport.print_lines(game, st)
+	# --- Act XII (temporary number): the Hall of Two Truths --- (its stage, kinds and boss; TwoTruthsReport)
+	TwoTruthsReport.stage_lines(game, st)
 
 
 ## The "rebirth" line (Rebirth).

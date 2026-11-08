@@ -460,7 +460,9 @@ const ACHIEVEMENT_ORDER := ["bone_legion", "heretics_bane", "dread_sovereign", "
 	# --- Act XII (temporary number): the Necropolis of Sand ---
 	"no_jars_left",
 	# --- Act XII (temporary number): the Temple of the Lioness ---
-	"names_taken"]
+	"names_taken",
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	"a_light_heart"]
 
 ## Achievement definitions (GDD §9.4 "Example Achievement Unlocks"). Each
 ## achievement is tracked and recorded in the save and pays a one-time Soul
@@ -784,6 +786,15 @@ const ACHIEVEMENTS := {
 	# Embalmed Bones (own split, the lead's to confirm).
 	"names_taken": {"display_name": "Names Taken", "description": "Raise 100 of the Dynasty's dead before their Names return, in one run",
 		"stat": "names_taken_runs", "goal": 1, "unlock": "The Dune Walkers passive", "bounty": 300},  # Proposal; bounty TUNING (not in GDD) as The Hunter Hunted
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	# The finale of the Necropolis Dynasty (owner-approved proposal: "A Light
+	# Heart (win the Weighing with the Balance toward the necromancer; opens the
+	# act's epilogue part)"; docs/last_acts/PLAN.md: no epilogue part until the
+	# reorder pass, so it only records the win now): the lifetime count of
+	# Weighings won (BossOsiris, OsirisData.LIGHT_HEART_STAT; MetaProgress), with
+	# the title Light of Heart (UnlockData / TitleData).
+	"a_light_heart": {"display_name": "A Light Heart", "description": "Win Osiris's Weighing with the Scales on your side",
+		"stat": "light_heart_wins", "goal": 1, "unlock": "The title Light of Heart", "bounty": 500},  # Owner-approved proposal; bounty TUNING (not in GDD) as The Last Harvest
 }
 
 # --- Content wave 2: B. Achievement rewards ---

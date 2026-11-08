@@ -568,6 +568,9 @@ func _special_stats(base: Dictionary, row: Dictionary, dmg_mult: float) -> Dicti
 	var area := 1.0 + float(row.get("special_area", 0.0))  # Radius / length multiplier.
 	var haste := 1.0 + float(row.get("special_haste", 0.0))  # Cooldown divisor.
 	haste *= 1.0 + game.abilities.passive_value("fallen_grace", "special_haste")  # Fallen Grace (0 when not owned).
+	# --- Act XII (temporary number): the Hall of Two Truths --- Answering Words: every class
+	# special recharges sooner, its own category (0 when not owned, so every other run is unchanged).
+	haste *= 1.0 + game.abilities.passive_value(UshabtiSentinelBehavior.ANSWERING, UshabtiSentinelBehavior.ANSWERING_KEY)
 	# --- Act VIII: Liberty Heights --- Origin Story: every class special reaches
 	# wider, its own category (0 when not owned, so every other run is unchanged).
 	area *= 1.0 + game.abilities.passive_value(FallenHeroBehavior.ORIGIN, FallenHeroBehavior.ORIGIN_KEY)
