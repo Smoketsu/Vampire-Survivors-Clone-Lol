@@ -189,6 +189,7 @@ Autotest options (full table in the README):
 - `--volleys=on|off` (the bullet heaven pass, default on; `off` = none of the pass runs; the Bone Ring stays)
 - `--spawn=kind@T[xN],...` (force-spawn any enemy kind at T game seconds on any stage, e.g.
   `sanctified_sentinel@120x3,high_confessor@180x2,cathedral_guardian@300` or `battle_sister@60x6`)
+- `--keep-fires` (the Hall of the Slain: the bot walks to the brazier out longest first, Keep the Fires)
 - `--pact`
 - `--meta=none|mid|max`
 - `--oath=0-5`
@@ -679,6 +680,15 @@ tiny tweaks.
   Concord** (the Harvester; the Ghost Saucer). Stages 1–24 same-seed summaries unchanged.
 - **Acts VI–IX go live** (owner: "Ship it", Nov 2026; GDD §15.0 "Acts VI–IX go live"): the twelve stages playable, one CI
   army job each (25 matrix jobs), masteries for 24 classes (18,240 Soul Ash), Soul Ash ×1 / ×1.25 / ×1.5 per act.
+- **The Hall of the Slain, playable** (the Norse act, temporarily Act XI, final slot VI; GDD §15.0 from "The Hall of the Slain
+  foundation (phase 1)" to "Hall of the Slain integration"; `docs/norse/`): `game.norse`, `NorseRules` (the Long Winter: cold
+  levels, braziers doused by frost giants and seers and relit by the necromancer; Berserkergang; Rune-Stones; the Ragnarök
+  Reckoning); **the Barrow Fields** (open barrows, the Barrow-Wight, Hrimgar; Barrow Grasp + Grave Frost, the Rune-Seer, Keep
+  the Fires → Fur-Lined Bones), **Valgard** (the Feast, the Einherjar Champion, Sigrun's Charge / Holmgang / Doors of the Hall;
+  Valkyrie Spear + Einherjar's Oath, the Shield-Maiden, Holmgang → Calm Blood) and **Vigrid** (the Fading Light, the Fire-Giant
+  of the south, Odin and Fenrir; Gungnir + Runecraft, the Berserker, the Draugr Thane / Barrow King + Cold Iron, Twilight of the
+  Wolf). One CI army job each (28 matrix jobs); bot pass `docs/norse/playtest/PASS1.md`; autotest `--keep-fires` (the
+  fire-keeper bot). Stages 1–27 same-seed summaries unchanged.
 
 **Next, in priority order:**
 1. **Playtest feedback** from the owner and friends (actively playtesting); it outranks everything below.

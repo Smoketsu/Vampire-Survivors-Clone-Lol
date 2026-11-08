@@ -114,6 +114,12 @@ const BRAZIER_ANIM_SUFFIX: String = "_anim"
 const BRAZIER_ANIM_FRAMES: int = 8  # Art round 2 (docs/norse/ART_MANIFEST.md)
 ## Frames a second of a brazier's loop (on game time).
 const BRAZIER_ANIM_FPS: float = 8.0  # Art round 2 (docs/norse/ART_MANIFEST.md)
+# --- Hall of the Slain integration ---
+## Margin (px) beyond the visible world rect within which LongWinter._draw()
+## still draws a brazier and its rings (a brazier counts as on screen when its
+## warmth ring, warm_radius px, reaches within this of the view). Drawing only:
+## off-screen braziers cost nothing on the Web.
+const BRAZIER_DRAW_MARGIN: float = 48.0  # TUNING (not in GDD) visual only
 ## Frost vignette colour (drawing only; a flat tinted band, no screen read).
 const FROST_TINT: Color = Color(0.82, 0.92, 1.0, 0.55)  # TUNING (not in GDD) visual only
 ## Sprite key of the frost edge laid over the vignette's bands (a 128 x 48 strip,

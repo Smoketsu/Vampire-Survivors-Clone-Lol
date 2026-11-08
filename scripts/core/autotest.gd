@@ -268,7 +268,8 @@
 ##     fire_giant, rune_stone, brazier), --boss=hrimgar|sigrun|odin. The bot
 ##     drifts toward the nearest lit brazier while it stands in the cold and
 ##     relights a doused one when calm (NorseRules.warm_point(), the one cold
-##     behaviour), and takes a Rune-Stone the hall holds when its army holds
+##     behaviour; with --keep-fires it walks to the brazier out longest before
+##     anything else, LongWinter.keeper_point()), and takes a Rune-Stone the hall holds when its army holds
 ##     and it is calm (_stone_vector(), NorseRules.stone_point()). When the
 ##     Norse rules ran, the summary adds the "long winter", "berserkergang",
 ##     "rune-stones", "norse kinds", "ragnarok" (after 0:00) and (on a Norse
@@ -337,6 +338,8 @@ const NORSE_WARM_REACH: float = 900.0
 ## Crowd pressure (the flee vector's length) above which the bot stays put
 ## instead of walking to a brazier.
 const NORSE_WARM_PRESSURE: float = 0.8
+## Radius (px) in which the --keep-fires bot looks for a doused brazier.
+const NORSE_KEEP_REACH: float = 1400.0
 ## Radius (px) in which the bot looks for a Rune-Stone the hall holds.
 const NORSE_STONE_RADIUS: float = 600.0
 ## Summons the bot's army needs before it goes to take a stone (it must
@@ -1417,6 +1420,11 @@ func get_move_vector() -> Vector2:
 	# the nearest lit brazier (or a doused one to relight) unless pressed.
 	if goal == Vector2.INF and game.norse != null and away.length() < NORSE_WARM_PRESSURE:
 		goal = game.norse.warm_point(p, NORSE_WARM_REACH)
+	if game.norse != null and GameState.autotest_keep_fires:
+		# --keep-fires: the fire-keeper walks to the brazier out longest, first.
+		var keep := game.norse.winter.keeper_point(p, NORSE_KEEP_REACH)
+		if keep != Vector2.INF:
+			goal = keep
 	if game.enemies.boss is BossVhalneth and game.enemies.boss.active:
 		# Vhal'Neth never walks: go and fight her arms, then her face (every policy).
 		var at := (game.enemies.boss as BossVhalneth).approach_point(p)

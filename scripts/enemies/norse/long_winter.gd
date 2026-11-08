@@ -284,6 +284,18 @@ func bot_point(p: Vector2, reach: float) -> Vector2:
 	return best
 
 
+## Autotest --keep-fires bot (Hall of the Slain integration): the doused
+## brazier within `reach` px of `p` that has been out longest, else Vector2.INF.
+func keeper_point(p: Vector2, reach: float) -> Vector2:
+	var best := Vector2.INF
+	var best_since := INF  # Earliest out_since found.
+	for b in braziers:
+		if not b.lit and b.out_since < best_since and b.pos.distance_squared_to(p) <= reach * reach:
+			best_since = b.out_since
+			best = b.pos
+	return best
+
+
 # =====================================================================================
 # Per tick
 # =====================================================================================
@@ -473,12 +485,17 @@ func _busy() -> bool:
 
 ## Each brazier: its warmth ring while lit (faint amber dots), a flicker while
 ## it gutters, its relight ring with the progress while out, and the brazier
-## itself (its sprite, else its glyph).
+## itself (its sprite, else its glyph). Only the braziers whose warmth ring
+## reaches the view are drawn (Hall of the Slain integration: view culling, so
+## the animated strips cost nothing off screen on the Web).
 func _draw() -> void:
 	var n := NorseRulesData.CAPTURE_DOTS
 	var wr := float(cfg["warm_radius"])
 	var rr := float(cfg["relight_radius"])
+	var view := _view_rect().grow(wr + NorseRulesData.BRAZIER_DRAW_MARGIN)  # World rect a drawn brazier must stand in.
 	for b in braziers:
+		if not view.has_point(b.pos):
+			continue
 		if b.lit:
 			for i in n * 2:
 				var a := TAU * float(i) / float(n * 2)
@@ -500,6 +517,13 @@ func _draw() -> void:
 			continue
 		if not SpriteBank.draw(self, key, b.pos, false):
 			NorseGlyphs.draw_brazier(self, b.pos, float(cfg["brazier_radius"]), b.lit)
+
+
+# --- Hall of the Slain integration ---
+## The visible world rect (this node's local px = world px; drawing only).
+func _view_rect() -> Rect2:
+	var inv := get_global_transform_with_canvas().affine_inverse()  # Screen -> local.
+	return inv * get_viewport_rect()
 
 
 # --- Act XI (temporary): the Barrow Fields ---
