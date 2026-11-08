@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 """make_specs.py: writes tools/promo_specs/dayNN.json (the 16 daily TikTok clips) for tools/make_promo_clip.py.
 
+Style (owner, Nov 2026: a solo dev's voice, no ad-style captions): each clip opens with ONE lowercase hook line (HOOKS) for
+HOOK_SEC seconds, then plays clean gameplay with no text until the end card. The old per-shot captions stay in CLIPS and
+INTRO behind the CAPTIONS switch (empty by default).
+
 Each clip is a list of shots (stage, seed, start second, length, extra autotest args, caption). A caption is a list of
 (line, colour) pairs, one key line in gold; a caption repeated on the next shot is held across the cut. Every clip
 ends on the same end card (logo, FREE IN YOUR BROWSER, LINK IN BIO), recorded once and shared through the cache
@@ -13,11 +17,53 @@ from PIL import ImageFont
 HERE = os.path.dirname(os.path.abspath(__file__))
 FONT = ImageFont.truetype(os.path.join(HERE, "../../assets/fonts/Jersey10-Regular.ttf"), 57)
 CREAM, GOLD = "cream", "gold"
+# Hook line style (all of it burned in by make_promo_clip.py's text renderer).
+HOOK_FONT_SIZE = 38   # Jersey 10 native size (px): one of the game's type tiers (19 / 28 / 38 / 57)
+HOOK_SCALE = 2        # integer enlargement of the hook text: 38 x 2 = 76 px, about 60-65% of the old 57 x 2 captions
+HOOK_COLOR = "white"  # plain white (no gold key words); "white" is defined in make_promo_clip.py COLORS
+HOOK_Y = 250          # top of the hook block in the 1080x1920 video (px): the upper third, below TikTok's top bar
+HOOK_LINE_GAP = 84    # distance between the tops of the two hook lines (px): 38 x 2 plus a little air
+HOOK_MAX_WIDTH = 838  # widest a hook line may be in the video (px): the safe zone x 80..918, clear of TikTok's buttons
+HOOK_SEC = 2.2        # how long the hook line stays up from the start of the clip (s)
+# Day number -> the hook line (lowercase, no exclamation marks, at most about 50 characters; wrapped to 2 lines by width).
+HOOKS = {
+ 1: "my necromancer doesn't fight. his army does",
+ 2: "36 spells in my game. here are 5 of them",
+ 3: "made a whole act where hell comes to collect your souls",
+ 4: "every summon in my game evolves. here's 5 of them",
+ 5: "the sun sets mid-run and the ninjas come out",
+ 6: "every stage ends with a boss fight",
+ 7: "25 summon classes in my game. here's a few",
+ 8: "act 7 is all vampires, werewolves and witches",
+ 9: "every spell evolves too",
+ 10: "the living fight back. police, then army, then superheroes",
+ 11: "at 0:00 the game stops being fair",
+ 12: "the greek gods hit both armies",
+ 13: "36 characters, each starts with their own spell",
+ 14: "aliens show up to abduct your undead",
+ 15: "the tide rises, the island sinks, the machines take aim",
+ 16: "what a full horde looks like around minute 18",  # shots start at 16:40, 18:00 and 19:20 of the run
+}
 
 
 def cap(*lines):
     """Caption lines: a line starting with '*' is the gold key line."""
     return [(l[1:], GOLD) if l.startswith("*") else (l, CREAM) for l in lines]
+
+
+def hook(line, dur):
+    """Text entries for a clip's hook line: lowercase, plain white, wrapped to at most 2 lines by width, shown 0..dur (s)."""
+    font = ImageFont.truetype(os.path.join(HERE, "../../assets/fonts/Jersey10-Regular.ttf"), HOOK_FONT_SIZE)
+    width = lambda t: font.getbbox(t)[2] * HOOK_SCALE
+    assert line == line.lower() and "!" not in line, "hook must be lowercase without exclamation marks: " + line
+    lines = [line]
+    if width(line) > HOOK_MAX_WIDTH:  # split at the space that balances the two lines best
+        words = line.split(" ")
+        best = min(range(1, len(words)), key=lambda k: max(width(" ".join(words[:k])), width(" ".join(words[k:]))))
+        lines = [" ".join(words[:best]), " ".join(words[best:])]
+    assert len(lines) <= 2 and all(width(l) <= HOOK_MAX_WIDTH for l in lines), "hook too wide: " + line
+    return [{"text": l, "font": "jersey", "size": HOOK_FONT_SIZE, "scale": HOOK_SCALE, "color": HOOK_COLOR,
+             "y": HOOK_Y + HOOK_LINE_GAP * i, "from": 0.0, "to": dur} for i, l in enumerate(lines)]
 
 
 def texts(c, dur, t0=0.0):
@@ -39,10 +85,10 @@ INTRO = {2: (cap("*36 Spells", "to Master!"), 1.6),
          7: (cap("Meet the New", "*Undead Classes!"), 1.6),
          9: (cap("Every Spell Has", "*an Evolution!"), 1.6)}
 G = lambda *a: a
-# Clip numbers whose gameplay shots carry the burned-in captions (intro title and per-shot names). Owner, Nov 2026: the
-# big caption text looks cheesy, so Days 4, 7 and 9 are rendered with none (end card only); the captions stay in CLIPS
+# Clip numbers whose gameplay shots carry the old burned-in captions (intro title and per-shot names). Owner, Nov 2026: the
+# big caption text looks cheesy, so no clip uses them now (hook line and end card only); the captions stay in CLIPS
 # and INTRO, so a new caption style can be added later without re-picking shots: put the day number in this set.
-CAPTIONS = {1, 2, 3, 5, 6, 8, 10, 11, 12, 13, 14, 15, 16}
+CAPTIONS = set()  # was {1, 2, 3, 5, 6, 8, 10, 11, 12, 13, 14, 15, 16} for the old ad-style captions; the hook line (HOOKS) replaces them
 CLIPS = {
  1: [("graveyard", 7, 700, [], cap("Command an Army", "*of the Dead!")),
      ("graveyard", 7, 830, [], cap("Warriors Block,", "Priests Heal,", "*Archers Fire!")),
@@ -107,10 +153,11 @@ CLIPS = {
       ("crimson_march", 8, 1160, ["--policy=summon", "--classes=bone_hound,abomination,gargoyle,frost_wraith", "--passives=blood_scent,bone_plating,unholy_resilience,soul_recycling"], cap("Build the", "*Ultimate Horde!"))],
 }
 
+# End card: logo, then two lowercase white lines in the same quiet style as the hook (same size, tier and colour).
 END = {"id": "end", "stage": "graveyard", "seed": 3, "start": 900, "seconds": 3.2, "dim": 0.6,
        "logo": {"y": 520, "scale": 3, "from": 0.0, "to": 3.2},
-       "texts": [{"text": "FREE IN YOUR BROWSER", "font": "jersey", "size": 38, "scale": 3, "color": "gold", "y": 900, "from": 0.3, "to": 3.2},
-                 {"text": "LINK IN BIO", "font": "jersey", "size": 57, "scale": 3, "color": "teal", "y": 1080, "from": 0.7, "to": 3.2}]}
+       "texts": [{"text": "free in your browser", "font": "jersey", "size": HOOK_FONT_SIZE, "scale": HOOK_SCALE, "color": HOOK_COLOR, "y": 960, "from": 0.3, "to": 3.2},
+                 {"text": "link in bio", "font": "jersey", "size": HOOK_FONT_SIZE, "scale": HOOK_SCALE, "color": HOOK_COLOR, "y": 960 + HOOK_LINE_GAP, "from": 0.7, "to": 3.2}]}
 
 if __name__ == "__main__":
     for n, shots in CLIPS.items():
@@ -121,7 +168,7 @@ if __name__ == "__main__":
             if extra:
                 s["extra"] = extra
             if n not in CAPTIONS:
-                s["texts"] = []  # captions switched off for this clip (see CAPTIONS)
+                s["texts"] = hook(HOOKS[n], HOOK_SEC) if i == 0 else []  # captions off (see CAPTIONS): the hook line only
             elif i == 0 and n in INTRO:
                 intro, t_intro = INTRO[n]
                 s["texts"] = texts(intro, t_intro) + texts(c, sec, t_intro)

@@ -24,54 +24,24 @@
    ],
    "texts": [
     {
-     "text": "36 Spells",
+     "text": "36 spells in my game.",
      "font": "jersey",
-     "size": 57,
+     "size": 38,
      "scale": 2,
-     "color": "gold",
-     "y": 230,
+     "color": "white",
+     "y": 250,
      "from": 0.0,
-     "to": 1.6
+     "to": 2.2
     },
     {
-     "text": "to Master!",
+     "text": "here are 5 of them",
      "font": "jersey",
-     "size": 57,
+     "size": 38,
      "scale": 2,
-     "color": "cream",
-     "y": 352,
+     "color": "white",
+     "y": 334,
      "from": 0.0,
-     "to": 1.6
-    },
-    {
-     "text": "Bone Spear,",
-     "font": "jersey",
-     "size": 57,
-     "scale": 2,
-     "color": "cream",
-     "y": 230,
-     "from": 1.6,
-     "to": 4.6
-    },
-    {
-     "text": "Soul Chains,",
-     "font": "jersey",
-     "size": 57,
-     "scale": 2,
-     "color": "cream",
-     "y": 352,
-     "from": 1.6,
-     "to": 4.6
-    },
-    {
-     "text": "Corpse Explosion!",
-     "font": "jersey",
-     "size": 57,
-     "scale": 2,
-     "color": "gold",
-     "y": 474,
-     "from": 1.6,
-     "to": 4.6
+     "to": 2.2
     }
    ]
   },
@@ -85,38 +55,7 @@
     "--policy=evolve",
     "--spells=plague_cloud,wither,soul_siphon"
    ],
-   "texts": [
-    {
-     "text": "Plague Cloud,",
-     "font": "jersey",
-     "size": 57,
-     "scale": 2,
-     "color": "cream",
-     "y": 230,
-     "from": 0.0,
-     "to": 4.6
-    },
-    {
-     "text": "Wither,",
-     "font": "jersey",
-     "size": 57,
-     "scale": 2,
-     "color": "cream",
-     "y": 352,
-     "from": 0.0,
-     "to": 4.6
-    },
-    {
-     "text": "Soul Siphon!",
-     "font": "jersey",
-     "size": 57,
-     "scale": 2,
-     "color": "gold",
-     "y": 474,
-     "from": 0.0,
-     "to": 4.6
-    }
-   ]
+   "texts": []
   },
   {
    "id": "s2",
@@ -128,38 +67,7 @@
     "--policy=evolve",
     "--spells=undertow,forbidden_verse,call_of_the_drowned"
    ],
-   "texts": [
-    {
-     "text": "Undertow,",
-     "font": "jersey",
-     "size": 57,
-     "scale": 2,
-     "color": "cream",
-     "y": 230,
-     "from": 0.0,
-     "to": 4.6
-    },
-    {
-     "text": "Forbidden Verse,",
-     "font": "jersey",
-     "size": 57,
-     "scale": 2,
-     "color": "cream",
-     "y": 352,
-     "from": 0.0,
-     "to": 4.6
-    },
-    {
-     "text": "Call of the Drowned!",
-     "font": "jersey",
-     "size": 57,
-     "scale": 2,
-     "color": "gold",
-     "y": 474,
-     "from": 0.0,
-     "to": 4.6
-    }
-   ]
+   "texts": []
   },
   {
    "id": "s3",
@@ -171,38 +79,7 @@
     "--policy=evolve",
     "--spells=death_ray,stolen_thunder,scrap_swarm"
    ],
-   "texts": [
-    {
-     "text": "Death Ray,",
-     "font": "jersey",
-     "size": 57,
-     "scale": 2,
-     "color": "cream",
-     "y": 230,
-     "from": 0.0,
-     "to": 4.6
-    },
-    {
-     "text": "Stolen Thunder,",
-     "font": "jersey",
-     "size": 57,
-     "scale": 2,
-     "color": "cream",
-     "y": 352,
-     "from": 0.0,
-     "to": 4.6
-    },
-    {
-     "text": "Scrap Swarm!",
-     "font": "jersey",
-     "size": 57,
-     "scale": 2,
-     "color": "gold",
-     "y": 474,
-     "from": 0.0,
-     "to": 4.6
-    }
-   ]
+   "texts": []
   },
   {
    "id": "s4",
@@ -214,38 +91,7 @@
     "--policy=evolve",
     "--spells=moonfang,night_swarm,witch_circle"
    ],
-   "texts": [
-    {
-     "text": "Moonfang,",
-     "font": "jersey",
-     "size": 57,
-     "scale": 2,
-     "color": "cream",
-     "y": 230,
-     "from": 0.0,
-     "to": 4.6
-    },
-    {
-     "text": "Night Swarm,",
-     "font": "jersey",
-     "size": 57,
-     "scale": 2,
-     "color": "cream",
-     "y": 352,
-     "from": 0.0,
-     "to": 4.6
-    },
-    {
-     "text": "Witch Circle!",
-     "font": "jersey",
-     "size": 57,
-     "scale": 2,
-     "color": "gold",
-     "y": 474,
-     "from": 0.0,
-     "to": 4.6
-    }
-   ]
+   "texts": []
   },
   {
    "id": "end",
@@ -262,22 +108,22 @@
    },
    "texts": [
     {
-     "text": "FREE IN YOUR BROWSER",
+     "text": "free in your browser",
      "font": "jersey",
      "size": 38,
-     "scale": 3,
-     "color": "gold",
-     "y": 900,
+     "scale": 2,
+     "color": "white",
+     "y": 960,
      "from": 0.3,
      "to": 3.2
     },
     {
-     "text": "LINK IN BIO",
+     "text": "link in bio",
      "font": "jersey",
-     "size": 57,
-     "scale": 3,
-     "color": "teal",
-     "y": 1080,
+     "size": 38,
+     "scale": 2,
+     "color": "white",
+     "y": 1044,
      "from": 0.7,
      "to": 3.2
     }

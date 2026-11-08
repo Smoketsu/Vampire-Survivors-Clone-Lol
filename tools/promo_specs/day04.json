@@ -23,7 +23,28 @@
     "--classes=bone_hound",
     "--passives=blood_scent"
    ],
-   "texts": []
+   "texts": [
+    {
+     "text": "every summon in my game",
+     "font": "jersey",
+     "size": 38,
+     "scale": 2,
+     "color": "white",
+     "y": 250,
+     "from": 0.0,
+     "to": 2.2
+    },
+    {
+     "text": "evolves. here's 5 of them",
+     "font": "jersey",
+     "size": 38,
+     "scale": 2,
+     "color": "white",
+     "y": 334,
+     "from": 0.0,
+     "to": 2.2
+    }
+   ]
   },
   {
    "id": "s1",
@@ -92,22 +113,22 @@
    },
    "texts": [
     {
-     "text": "FREE IN YOUR BROWSER",
+     "text": "free in your browser",
      "font": "jersey",
      "size": 38,
-     "scale": 3,
-     "color": "gold",
-     "y": 900,
+     "scale": 2,
+     "color": "white",
+     "y": 960,
      "from": 0.3,
      "to": 3.2
     },
     {
-     "text": "LINK IN BIO",
+     "text": "link in bio",
      "font": "jersey",
-     "size": 57,
-     "scale": 3,
-     "color": "teal",
-     "y": 1080,
+     "size": 38,
+     "scale": 2,
+     "color": "white",
+     "y": 1044,
      "from": 0.7,
      "to": 3.2
     }

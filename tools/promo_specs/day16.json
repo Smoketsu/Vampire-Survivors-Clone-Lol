@@ -25,24 +25,24 @@
    ],
    "texts": [
     {
-     "text": "Build the",
+     "text": "what a full horde looks",
      "font": "jersey",
-     "size": 57,
+     "size": 38,
      "scale": 2,
-     "color": "cream",
-     "y": 230,
+     "color": "white",
+     "y": 250,
      "from": 0.0,
-     "to": 5.6
+     "to": 2.2
     },
     {
-     "text": "Ultimate Horde!",
+     "text": "like around minute 18",
      "font": "jersey",
-     "size": 57,
+     "size": 38,
      "scale": 2,
-     "color": "gold",
-     "y": 352,
+     "color": "white",
+     "y": 334,
      "from": 0.0,
-     "to": 5.6
+     "to": 2.2
     }
    ]
   },
@@ -57,28 +57,7 @@
     "--classes=bone_hound,abomination,gargoyle,frost_wraith",
     "--passives=blood_scent,bone_plating,unholy_resilience,soul_recycling"
    ],
-   "texts": [
-    {
-     "text": "Build the",
-     "font": "jersey",
-     "size": 57,
-     "scale": 2,
-     "color": "cream",
-     "y": 230,
-     "from": 0.0,
-     "to": 5.6
-    },
-    {
-     "text": "Ultimate Horde!",
-     "font": "jersey",
-     "size": 57,
-     "scale": 2,
-     "color": "gold",
-     "y": 352,
-     "from": 0.0,
-     "to": 5.6
-    }
-   ]
+   "texts": []
   },
   {
    "id": "s2",
@@ -91,28 +70,7 @@
     "--classes=bone_hound,abomination,gargoyle,frost_wraith",
     "--passives=blood_scent,bone_plating,unholy_resilience,soul_recycling"
    ],
-   "texts": [
-    {
-     "text": "Build the",
-     "font": "jersey",
-     "size": 57,
-     "scale": 2,
-     "color": "cream",
-     "y": 230,
-     "from": 0.0,
-     "to": 5.6
-    },
-    {
-     "text": "Ultimate Horde!",
-     "font": "jersey",
-     "size": 57,
-     "scale": 2,
-     "color": "gold",
-     "y": 352,
-     "from": 0.0,
-     "to": 5.6
-    }
-   ]
+   "texts": []
   },
   {
    "id": "end",
@@ -129,22 +87,22 @@
    },
    "texts": [
     {
-     "text": "FREE IN YOUR BROWSER",
+     "text": "free in your browser",
      "font": "jersey",
      "size": 38,
-     "scale": 3,
-     "color": "gold",
-     "y": 900,
+     "scale": 2,
+     "color": "white",
+     "y": 960,
      "from": 0.3,
      "to": 3.2
     },
     {
-     "text": "LINK IN BIO",
+     "text": "link in bio",
      "font": "jersey",
-     "size": 57,
-     "scale": 3,
-     "color": "teal",
-     "y": 1080,
+     "size": 38,
+     "scale": 2,
+     "color": "white",
+     "y": 1044,
      "from": 0.7,
      "to": 3.2
     }
