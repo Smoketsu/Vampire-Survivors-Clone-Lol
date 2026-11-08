@@ -24,7 +24,7 @@
 ## Four clock-driven zones (ZONES through MarchDirector): the Fog of Ships, the
 ## Gyre, the Eye of the Storm, the Drowned Helm. The boss arrives with 3:00
 ## left; the Reckoning, the Black Tide, at 0:00 (with the kraken).
-## "playable": false until the lead's merge (the brief keeps it for the lead).
+## Playable since the act went live (the lead's integration).
 ## Every rate, cap and weight is TUNING (not in GDD).
 class_name MaelstromStage
 extends RefCounted
@@ -295,7 +295,7 @@ const STAGE := {
 	"short_name": "Maelstrom",
 	"chapter": "Chapter XXX",
 	"act": 10,  # Act X (temporary): the Black Tide, final slot II after the reorder.
-	"playable": false,  # Left for the lead's merge (brief docs/tide/BRIEF_PHASE2.md: the stage agents keep it).
+	"playable": true,  # The Black Tide goes live (integration, GDD §15.0 "The Black Tide goes live (integration and balance)").
 	"description": "The ghost ship Hollow Queen, caught in a whirlpool at midnight, and the captain lashed to her wheel who has kept his oath to the sea for a hundred years.",
 	"unlock": {"stage": "galleon", "boss_kills": 1},  # Lead's plan: the chain runs Harvester -> Crow -> Marrec -> Vandermere
 	"unlock_text": "Defeat Admiral Marrec on the Treasure Galleon to unlock.",

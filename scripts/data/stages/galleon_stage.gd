@@ -23,7 +23,7 @@
 ## (CorsairEnemyData's Act X Galleon block): the Gunnery Mate, the Voodoo
 ## Navigator, the Gunboat and the Hull Crab; its own (GalleonEnemyData): Old
 ## Hollow-Eye and Marrec's cursed coin. Hidden from the stage select
-## ("playable": false) until the lead's integration flips the act live.
+## Playable since the act went live (the lead's integration).
 ## Tuned for the act's FINAL slot II (docs/last_acts/PLAN.md: easier than the
 ## Sanguine Court): pressure from boat traffic and the crews (more crew per
 ## second, bigger boats, five busy boarding points) rather than raw HP.
@@ -251,7 +251,7 @@ const STAGE := {
 	"short_name": "Galleon",
 	"chapter": "Chapter XXIX",
 	"act": 10,  # Act X (temporary): the Black Tide, final slot II after the reorder.
-	"playable": false,  # Phase 2 built: the lead's integration flips the act live.
+	"playable": true,  # The Black Tide goes live (integration, GDD §15.0 "The Black Tide goes live (integration and balance)").
 	"description": "A captured treasure galleon on open water at dawn, heavy with the gold of a hundred cathedrals, and the Brotherhood's whole fleet wants it back.",
 	"unlock": {"stage": "cutter", "boss_kills": 1},  # Lead's plan: the chain runs Harvester -> Crow -> Marrec -> Vandermere
 	"unlock_text": "Defeat Captain Crow on the Smuggler's Cutter to unlock.",

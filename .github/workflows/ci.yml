@@ -12,7 +12,8 @@
 #               olympus, underworld; army policy), the three Act V stages (--stage=province,
 #               kurogane, sun_road; army policy) and the twelve Act VI-IX stages (--stage=burning_gate,
 #               silk_palace, pandemonium, ravensmoor, witchwood, castle_sanguis, skid_row, fort_kessler,
-#               liberty_heights, crash_site, proving_moon, ark; army policy). Fails on any script error/warning or if a run
+#               liberty_heights, crash_site, proving_moon, ark; army policy) and the three Act X stages (--stage=cutter,
+#               galleon, maelstrom; army policy; the Black Tide, temporary act number). Fails on any script error/warning or if a run
 #               doesn't complete.
 #   2. export - builds single-file Windows (.exe) and Linux executables and the
 #               no-threads Web build (index.html + .js + .wasm + .pck, any static
@@ -111,6 +112,9 @@ jobs:
           - {id: crash_site, name: "Act IX Stage 25, the Crash Site", args: "--stage=crash_site --policy=army", timeout: 900}
           - {id: proving_moon, name: "Act IX Stage 26, the Proving Moon", args: "--stage=proving_moon --policy=army", timeout: 900}
           - {id: ark, name: "Act IX Stage 27, the Ark of the Concord", args: "--stage=ark --policy=army", timeout: 900}
+          - {id: cutter, name: "Act X Stage 28, the Smuggler's Cutter", args: "--stage=cutter --policy=army", timeout: 900}
+          - {id: galleon, name: "Act X Stage 29, the Treasure Galleon", args: "--stage=galleon --policy=army", timeout: 900}
+          - {id: maelstrom, name: "Act X Stage 30, the Maelstrom", args: "--stage=maelstrom --policy=army", timeout: 900}
     steps:
       - uses: actions/checkout@v4
 

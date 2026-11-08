@@ -2456,7 +2456,7 @@ achievement **The Last Harvest** (beat the Harvester: the title The Unharvested)
 `--spawn=grey_overseer@T`, `luminous_archon@T`, `specimen_tank@T`, `vault_beast@T`, `reactor_vent@T`,
 `reap_emitter@T`; lines `ark`, `ark events`, `ark kinds`, `harvester`, `tractor beam`, `ghost saucer`.
 
-### Act X: the Black Tide (foundation)
+### Act X: the Black Tide (live)
 
 <!-- --- Act X: the Black Tide --- -->
 The Covenant is ash and the only road out of the burning country is the sea. **The Corsair Brotherhood**, a loose fleet
@@ -2464,10 +2464,9 @@ of cutthroats, gunners and duellists under the black flag, wants the gold the ne
 and the secret of a crew that never dies; under the ship, the sea has sharks, crabs, serpents and a kraken (GDD §15.0
 "Act X foundation: the Black Tide (phase 1)" and the rows after it; owner-approved proposal
 `docs/proposals/NEW_ACTS_AND_ORDER.md` Part 1). The whole act is fought **on one ship's deck**. It is built as **Act X**
-for now (its final slot is II; the reorder pass moves it), with an **Act X** tab and three stages still marked *Coming
-soon*: **the Smuggler's Cutter** (960 x 360 deck), **the Treasure Galleon** (1,500 x 540) and **the Maelstrom** (the
-*Hollow Queen*, 1,300 x 500), bosses Captain Crow, Admiral Marrec and Captain Vandermere (placeholder boss scripts until
-phase 2); defeating the Harvester opens the Cutter and each boss opens the next stage. The act's shared rules:
+for now (its final slot is II; the reorder pass moves it), with an **Act X** tab and three playable stages (live since the
+integration, GDD §15.0 "The Black Tide goes live (integration and balance)"): **the Smuggler's Cutter** (960 x 360 deck), **the Treasure Galleon** (1,500 x 540) and **the Maelstrom** (the
+*Hollow Queen*, 1,300 x 500), bosses Captain Crow, Admiral Marrec and Captain Vandermere; defeating the Harvester opens the Cutter and each boss opens the next stage. The act's shared rules:
 
 - **Boarding.** Nobody walks in from the screen edge: every enemy the timeline sends comes **by boat**. A boat shows its
   lane 3 s ahead (a dotted wake and an amber lantern at the rail), hooks the rail with two grapple lines (40 HP each)
@@ -2496,6 +2495,8 @@ Autotest: `--stage=cutter|galleon|maelstrom`, `--boss=crow|marrec|vandermere`, `
 `docs/tide/deck_spike.png` and `docs/tide/deck_spike_rail.png`.
 
 <!-- --- Act X: the Smuggler's Cutter --- -->
+#### Stage 28: the Smuggler's Cutter (phase 2)
+
 **The Smuggler's Cutter** (`cutter`, built in phase 2; GDD §15.0 "The Smuggler's Cutter (Act X phase 2)" and the rows
 after it). A night-time sloop slips out of a ruined harbour with the Covenant's coast burning behind it. The deck is the
 art pass's night planks with a single mast, one hatch, two deck guns and lashed barrels; two boarding points a side,
@@ -2523,7 +2524,7 @@ that drags one of your dead to the rail) and **Boatswain** (a bellow that speeds
   `captain crow`; `act X spell` / `act X passives` on any stage when Chain Shot, Bosun's Whistle or Barnacle Bones was
   taken (`--spells=chain_shot`, `--character=marooned_quartermaster`).
 <!-- --- Act X: the Treasure Galleon --- -->
-#### The Treasure Galleon (phase 2)
+#### Stage 29: the Treasure Galleon (phase 2)
 
 A captured treasure galleon on open water at dawn (GDD §15.0 "The Treasure Galleon (Act X phase 2)" and the rows after
 it): a 1,500 x 540 deck that scrolls, a quarterdeck at the stern (its stair is a choke the ring flows round), a
@@ -2563,8 +2564,7 @@ passives` when taken.
 #### Stage 30: the Maelstrom (phase 2)
 
 <!-- --- Act X: the Maelstrom --- -->
-The act's finale (GDD §15.0 "The Maelstrom (Act X phase 2)" and the rows after it; still *Coming soon* until the lead's
-merge). The ghost ship *Hollow Queen*, caught in a whirlpool at midnight: a rotting 1,300 x 500 deck (the art pass's
+The act's finale (GDD §15.0 "The Maelstrom (Act X phase 2)" and the rows after it). The ghost ship *Hollow Queen*, caught in a whirlpool at midnight: a rotting 1,300 x 500 deck (the art pass's
 `tiles/corsair_maelstrom` over its `corsair_water`, tinted per zone, and its deck furniture: masts, hatches, barrels and
 dead guns, with the helm's wheel at the stern), boarded along the **whole rail** by the full roster, up to six boats at
 once. Four zones: **the Fog of Ships** (a gentle roll), **the Gyre**, **the Eye of the Storm** (the deck lies level and
@@ -4627,13 +4627,13 @@ uptime.
 time, and everything that ships waits for all of them (GDD §15.0 "Parallel CI and lean testing": about 8-10 minutes from a push to
 the live build instead of about 30):
 
-1. **test:** twenty-five parallel jobs, one per playthrough. Each imports the project with Godot 4.3 headless and runs
+1. **test:** twenty-eight parallel jobs, one per playthrough. Each imports the project with Godot 4.3 headless and runs
    one full 20-minute autotest: the Graveyard with the naive and the army policy, the Crimson March
-   (`--stage=crimson_march`), the Sanctum (`--stage=sanctum --policy=army`) and each stage of Acts II and IV-IX with the
+   (`--stage=crimson_march`), the Sanctum (`--stage=sanctum --policy=army`) and each stage of Acts II, IV-IX and X with the
    army policy (`--stage=harbour`, `archive`, `spire`, `ilion`, `olympus`, `underworld`, `province`, `kurogane`,
    `sun_road`, `burning_gate`, `silk_palace`, `pandemonium`, `ravensmoor`, `witchwood`, `castle_sanguis`, `skid_row`,
-   `fort_kessler`, `liberty_heights`, `crash_site`, `proving_moon`, `ark`; the stubs of the last acts, Acts X-XII for
-   now, get their jobs in the reorder pass) (`--quit-after 15000`, at most 10-15
+   `fort_kessler`, `liberty_heights`, `crash_site`, `proving_moon`, `ark`, and the Black Tide's `cutter`, `galleon`,
+   `maelstrom`; the stubs of the other last acts, Acts XI-XII for now, get their jobs in the reorder pass) (`--quit-after 15000`, at most 10-15
    wall-clock minutes per run).
    A job fails on any `SCRIPT ERROR`, `ERROR:` or `WARNING:` line, or if its run doesn't complete; one failure does
    not cancel the others. Logs: `test-logs-<id>`.

@@ -21,7 +21,7 @@
 ## ram staggers the whole army back), NOT ONE ABOARD. Its boss is Captain
 ## Ezekiel Crow, the Gull King (BossCrow: Broadside, the Duel, the Fire Ship).
 ## Its timeline adds the shared Grappler and Boatswain. The Black Tide is its
-## Reckoning. "playable" stays false until the lead flips the act live.
+## Reckoning. Playable since the act went live (integration).
 ## Zones (ZONES; clock-driven, MarchDirector; the camera does not move: the
 ## zones change the look and the timeline, not the map): the Harbour Mouth,
 ## Open Water, the Fog Bank, the Cove.
@@ -289,7 +289,7 @@ const STAGE := {
 	"short_name": "Cutter",
 	"chapter": "Chapter XXVIII",
 	"act": 10,  # Act X (temporary): the Black Tide, final slot II after the reorder.
-	"playable": false,  # Built (phase 2); the lead flips the act live after the integration.
+	"playable": true,  # The Black Tide goes live (integration, GDD §15.0 "The Black Tide goes live (integration and balance)").
 	"description": "A small night-time sloop slips out of a ruined harbour with the Covenant's coast burning behind it, and the Corsair Brotherhood comes for her in small boats.",
 	"unlock": {"stage": "ark", "boss_kills": 1},  # Lead's plan: the chain runs Harvester -> Crow -> Marrec -> Vandermere
 	"unlock_text": "Defeat the Harvester on the Ark of the Concord to unlock.",
