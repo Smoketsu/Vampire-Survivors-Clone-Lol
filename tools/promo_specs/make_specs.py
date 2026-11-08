@@ -33,7 +33,7 @@ HOOKS = {
  4: "every summon in my game evolves. here's 5 of them",
  5: "the sun sets mid-run and the ninjas come out",
  6: "every stage ends with a boss fight",
- 7: "25 summon classes in my game. here's a few",
+ 7: "24 summon classes in my game. here's a few",
  8: "act 7 is all vampires, werewolves and witches",
  9: "every spell evolves too",
  10: "the living fight back. police, then army, then superheroes",
