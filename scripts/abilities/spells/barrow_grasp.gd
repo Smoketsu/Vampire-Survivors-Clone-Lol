@@ -16,8 +16,9 @@
 ## owned). Evolved into BARROW-LORD'S EMBRACE (EvolutionData
 ## "barrow_lords_embrace", detected by the "linger" key): `rings` rings (each
 ## inner one at ring_step of the last), and every hand LINGERS `linger` s,
-## grabbing again every LINGER_TICK s for LINGER_SHARE of the damage, holding
-## what walks into it. Works the same on every stage (no act rule).
+## grabbing again every LINGER_TICK s for LINGER_SHARE of the damage and a
+## LINGER_SLOW clutch (CombatResolver.slow_enemy(): only the first grab holds,
+## so a foe is never held in a chain). Works the same on every stage (no act rule).
 ## Determinism: no RNG; foes in the spatial hash's order. Stats: grasp_casts,
 ## grasp_hands, grasp_extra_hands, grasp_grabs, grasp_holds,
 ## grasp_frost_bonus_dmg; damage as dmg_barrow_grasp / dmg_barrow_lords_embrace.
@@ -108,7 +109,11 @@ func _grab(h: Dictionary, again: bool) -> void:
 		if frost > 0.0 and dealt > 0.0:
 			game.stat_add("grasp_frost_bonus_dmg", dealt * frost / (1.0 + frost))
 		game.stat_add("grasp_grabs", 1.0)
-		if e.active and game.combat.stun_enemy(e, hold, BarrowGraspData.BOSS_HOLD_MULT, BarrowGraspData.ELITE_HOLD_MULT) > 0.0:
+		if not e.active:
+			pass
+		elif again:
+			game.combat.slow_enemy(e, BarrowGraspData.LINGER_SLOW, BarrowGraspData.LINGER_TICK * 2.0)  # A lingering hand's later grab clutches (no chain of holds).
+		elif game.combat.stun_enemy(e, hold, BarrowGraspData.BOSS_HOLD_MULT, BarrowGraspData.ELITE_HOLD_MULT) > 0.0:
 			game.stat_add("grasp_holds", 1.0)
 		seen += 1
 		if seen >= BarrowGraspData.GRAB_SAMPLES:

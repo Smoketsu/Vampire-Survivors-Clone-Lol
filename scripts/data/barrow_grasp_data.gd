@@ -30,6 +30,10 @@ const RISE_TIME: float = 0.12  # TUNING (not in GDD) drawing only
 const LINGER_TICK: float = 0.5  # TUNING (not in GDD)
 ## Share of `damage` a lingering hand's later grabs deal (the first grab is whole).
 const LINGER_SHARE: float = 0.35  # TUNING (not in GDD)
+## Slow share (0..1) a lingering hand's later grabs put on the foes in it (for
+## 2 x LINGER_TICK s; the hold is the first grab's only, so nothing is held in a
+## chain: the seed-7 forced run had a frost giant held 10 s on end).
+const LINGER_SLOW: float = 0.5  # TUNING (not in GDD)
 ## Hard cap of hands standing at once, whatever the level (the cost and the
 ## drawing stay flat).
 const MAX_HANDS: int = 40  # TUNING (not in GDD)
