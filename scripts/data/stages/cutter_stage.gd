@@ -42,7 +42,7 @@ const BOSS_TIME: float = 1020.0  # TUNING (not in GDD) 17:00, as on every stage
 ## Sanctum (1.1), well below the Sanguine Court (1.85): an early act.
 const ENEMY_HP_MULT: float = 1.3  # TUNING (not in GDD) placeholder for slot II, tuned in the balance pass
 ## Enemy damage multiplier of this stage on top of the shared time scaling.
-const ENEMY_DAMAGE_MULT: float = 1.15  # TUNING (not in GDD) placeholder for slot II (the Sanctum 1.1, Ravensmoor 1.5)
+const ENEMY_DAMAGE_MULT: float = 1.0  # TUNING (not in GDD) slot II, the act's first stage (the Sanctum 1.1, the Galleon 1.2, Ravensmoor 1.5); balance pass 1: 1.15 -> 1.0
 ## Elapsed game seconds from which the two multipliers apply to regular
 ## enemies (the boss always gets them).
 const ENEMY_MULT_FROM: float = 420.0  # TUNING (not in GDD) 7:00 (Acts III to IX)
@@ -132,7 +132,7 @@ const DECK := {"length": 960.0, "beam": 360.0, "bow": 150.0, "bow_tip": 46.0, "s
 ## from hooking to the first crewman (the Cutter's: the crew climbs the hooks,
 ## the window for a clean sink, Not One Aboard).
 const BOARDING := {"points": [[-200.0, -1], [160.0, -1], [-200.0, 1], [160.0, 1]], "boats": ["skiff", "longboat"],  # Owner-approved proposal: two boarding points per side; tier cap skiffs and longboats
-	"first_pour": 3.0,  # TUNING (not in GDD) s (the other stages: half a pour, 0.3 s); lead decision at the integration: 1 -> 3 s so a fast sink before the first crewman can earn Not One Aboard (GDD §15.0 "The Black Tide goes live")
+	"first_pour": 1.5,  # TUNING (not in GDD) s (the other stages: half a pour, 0.3 s); lead decision at the integration: 1 -> 3 s; balance pass 1: 3 -> 1.5 (crews cancelled in the empty window starved spell builds of XP), still a window so a fast sink before the first crewman can earn Not One Aboard (GDD §15.0 "The Black Tide goes live")
 	"leave_time": 1.0,  # TUNING (not in GDD) s an emptied boat takes to cast off (the shared 2.5): the next boat comes sooner
 	"min_crew": 4,  # TUNING (not in GDD) crew a queue gathers before a boat launches (fuller boats: more boarders at once)
 }
@@ -216,13 +216,13 @@ const SEGMENTS := [
 	{"start": 210.0, "rate": 2.4, "max_alive": 50,  # TUNING (not in GDD) first pass 2.8 / 58
 		"weights": {"deckhand": 0.68, "musketeer": 0.15, "grappler": 0.07, "powder_runner": 0.04, "reef_shark": 0.06},
 		"objective": "Knock them over the rail and they drown: knockback is your friend"},
-	{"start": 300.0, "rate": 2.9, "max_alive": 62,  # TUNING (not in GDD) first pass 3.1 / 66
+	{"start": 300.0, "rate": 3.3, "max_alive": 62,  # TUNING (not in GDD) first pass 3.1 / 66; balance pass 1: 2.9 -> 3.3 (spell builds were starved of XP: level 44 at 17:00, the Galleon 54)
 		"weights": {"deckhand": 0.53, "musketeer": 0.18, "grappler": 0.08, "boatswain": 0.05, "powder_runner": 0.07, "swashbuckler": 0.04, "reef_shark": 0.05},
 		"objective": "Boatswains bellow their crews on: cut them down first"},
-	{"start": 600.0, "rate": 3.4, "max_alive": 74,  # TUNING (not in GDD)
+	{"start": 600.0, "rate": 3.9, "max_alive": 74,  # TUNING (not in GDD) balance pass 1: 3.4 -> 3.9 (XP)
 		"weights": {"deckhand": 0.5, "musketeer": 0.17, "grappler": 0.09, "boatswain": 0.06, "powder_runner": 0.07, "swashbuckler": 0.05, "boarding_bruiser": 0.02, "reef_shark": 0.04},
 		"objective": "Watch the rail: the boats come out of the fog"},
-	{"start": 900.0, "rate": 3.7, "max_alive": 82,  # TUNING (not in GDD)
+	{"start": 900.0, "rate": 4.3, "max_alive": 82,  # TUNING (not in GDD) balance pass 1: 3.7 -> 4.3 (XP)
 		"weights": {"deckhand": 0.48, "musketeer": 0.17, "grappler": 0.09, "boatswain": 0.06, "powder_runner": 0.08, "swashbuckler": 0.06, "boarding_bruiser": 0.03, "reef_shark": 0.03},
 		"objective": "The whole Brotherhood is on the water"},
 	{"start": BOSS_TIME, "rate": 2.4, "max_alive": 60,  # TUNING (not in GDD) thinner during the boss fight (his own crew boards double)

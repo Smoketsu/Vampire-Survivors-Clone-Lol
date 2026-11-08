@@ -89,8 +89,8 @@ const BOSS := {
 	"display_name": "Captain Ezekiel Crow",
 	"max_hp": MAX_HP,
 	"move_speed": 66.0,  # TUNING (not in GDD) px/s; a lean duellist
-	"damage": 9.0,  # TUNING (not in GDD) his cutlass in reach (first pass 11: 152 to the forced Chain Shot run's necromancer)
-	"attack_interval": 0.9,  # TUNING (not in GDD) s
+	"damage": 7.0,  # TUNING (not in GDD) his cutlass in reach (first pass 11: 152 to the forced Chain Shot run's necromancer; balance pass 1: 9 -> 7, his Duel killed every spell build at 17:40)
+	"attack_interval": 1.2,  # TUNING (not in GDD) s (balance pass 1: 0.9 -> 1.2, below Admiral Marrec's cutlass: the act's first boss)
 	"attack_range": 12.0,  # TUNING (not in GDD) px
 	"radius": 20.0,  # TUNING (not in GDD) px (the sprite 88 px tall)
 	"armor": 0.15,  # TUNING (not in GDD)

@@ -101,7 +101,7 @@ const ENEMIES := {
 		"display_name": "Bosun Gorran",
 		"max_hp": 1250.0,  # TUNING (not in GDD) a slot II miniboss (the Brood Matriarch 1300 at x2.15; this x1.3)
 		"move_speed": 46.0,  # TUNING (not in GDD) px/s
-		"damage": 9.0,  # TUNING (not in GDD) the chain-hook in reach, before the time scaling
+		"damage": 6.0,  # TUNING (not in GDD) the chain-hook in reach, before the time scaling; balance pass 1: 9 -> 6 (~120 of his damage killed spell builds at 11:35)
 		"attack_interval": 1.3,  # TUNING (not in GDD) s
 		"attack_range": 12.0,  # TUNING (not in GDD) px
 		"radius": 18.0,  # TUNING (not in GDD) px (the 62 x 64 art)
@@ -126,7 +126,7 @@ const ENEMIES := {
 		"sweep_windup": 0.8,  # TUNING (not in GDD) s the chain whirls (the telegraph)
 		"sweep_radius": 74.0,  # TUNING (not in GDD) px
 		"sweep_damage": 10.0,  # TUNING (not in GDD) per summon hit, before the time scaling
-		"sweep_damage_player": 8.0,  # TUNING (not in GDD) before the time scaling
+		"sweep_damage_player": 4.0,  # TUNING (not in GDD) before the time scaling; balance pass 1: 8 -> 4 (his summon damage unchanged)
 		"sweep_push": 70.0,  # TUNING (not in GDD) px a summon is knocked (x Sea Legs)
 		"bellow_every": 10.0,  # TUNING (not in GDD) s
 		"bellow_radius": 220.0,  # TUNING (not in GDD) px

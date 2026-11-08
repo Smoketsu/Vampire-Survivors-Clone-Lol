@@ -1,0 +1,183 @@
+Godot Engine v4.3.stable.official.77dcf97d8 - https://godotengine.org
+
+[autotest] start: seed=7 speed=8x mortal=true timeout=1500s policy=evolve meta=none oath=0 pact=false classes=- spells=bone_spear,soul_siphon,corpse_explosion,plague_cloud
+[autotest] stage: cutter
+[autotest] difficulty: necromancer | modifiers: none
+[autotest] character: gravecaller (starting spell shadow_bolt)
+[audio] main-thread startup 8.8 ms; 59 sfx ready after 356 ms, music loop after 271 ms (worker threads); display: headless
+[metric] t=60 avg_horde=1.9 now=2 cap=2 w2/2 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=1 lvl=5 kills=111 enemies=9 hp=120 boss_hp=-1 crystals=2 xp=102
+[metric]    summon dmg taken this window: powder_blast=8 deckhand=103
+[metric]    alive by kind: { "boarding_hook": 4, "deckhand": 3, "skiff": 2 } within260=0
+[autotest] t=01:00 lvl=5 kills=111 enemies=9 summons=2/2 projectiles=0 hp=120 step_avg=0.49ms
+[autotest]    unit FSM: { "FOLLOWING": 2 }
+[metric] t=120 avg_horde=2.0 now=2 cap=2 w2/2 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=10 kills=259 enemies=13 hp=120 boss_hp=-1 crystals=4 xp=263
+[metric]    summon dmg taken this window: deckhand=19
+[metric]    alive by kind: { "deckhand": 4, "boarding_hook": 5, "longboat": 1, "skiff": 2, "musketeer": 1 } within260=5
+[autotest] t=02:00 lvl=10 kills=259 enemies=13 summons=2/2 projectiles=0 hp=120 step_avg=0.46ms
+[autotest]    unit FSM: { "FOLLOWING": 1, "ENGAGING": 1 }
+[metric] t=180 avg_horde=2.0 now=2 cap=2 w2/2 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=13 kills=429 enemies=6 hp=120 boss_hp=-1 crystals=21 xp=452
+[metric]    summon dmg taken this window: deckhand=6
+[metric]    alive by kind: { "longboat": 1, "boarding_hook": 2, "deckhand": 2, "skiff": 1 } within260=3
+[autotest] t=03:00 lvl=13 kills=429 enemies=6 summons=2/2 projectiles=1 hp=120 step_avg=0.46ms
+[autotest]    unit FSM: { "ENGAGING": 1, "CASTING": 1 }
+[metric] t=240 avg_horde=2.0 now=2 cap=2 w2/2 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=17 kills=591 enemies=9 hp=120 boss_hp=-1 crystals=0 xp=668
+[metric]    summon dmg taken this window: powder_blast=13 deckhand=6 grappler=4 sea_strike=21 archer_arrow=2 reef_shark=14
+[metric]    alive by kind: { "longboat": 1, "reef_shark": 3, "boarding_hook": 3, "skiff": 2 } within260=1
+[autotest] t=04:00 lvl=17 kills=591 enemies=9 summons=2/2 projectiles=0 hp=120 step_avg=0.47ms
+[autotest]    unit FSM: { "FOLLOWING": 2 }
+[metric] t=300 avg_horde=1.9 now=2 cap=2 w2/2 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=1 lvl=20 kills=742 enemies=15 hp=120 boss_hp=-1 crystals=0 xp=886
+[metric]    summon dmg taken this window: powder_blast=38 deckhand=7 grappler=5 sea_strike=22 reef_shark=5
+[metric]    alive by kind: { "longboat": 1, "powder_runner": 1, "reef_shark": 1, "skiff": 2, "musketeer": 1, "boarding_hook": 2, "deckhand": 1, "powder_barrel": 6 } within260=5
+[autotest] t=05:00 lvl=20 kills=742 enemies=15 summons=2/2 projectiles=0 hp=120 step_avg=0.47ms
+[autotest]    unit FSM: { "ENGAGING": 2 }
+[metric] t=360 avg_horde=2.0 now=2 cap=2 w2/2 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=1 lvl=23 kills=934 enemies=13 hp=120 boss_hp=-1 crystals=16 xp=1149
+[metric]    summon dmg taken this window: powder_blast=28 deckhand=3 sea_strike=27 archer_arrow=5 reef_shark=15 boatswain=3
+[metric]    alive by kind: { "reef_shark": 1, "deckhand": 3, "musketeer": 2, "longboat": 4, "swashbuckler": 1, "boarding_hook": 2 } within260=5
+[autotest] t=06:00 lvl=23 kills=934 enemies=13 summons=2/2 projectiles=2 hp=120 step_avg=0.48ms
+[autotest]    unit FSM: { "FOLLOWING": 1, "ENGAGING": 1 }
+[metric] t=420 avg_horde=1.8 now=2 cap=2 w2/2 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=1 lvl=26 kills=1106 enemies=10 hp=120 boss_hp=-1 crystals=4 xp=1427
+[metric]    summon dmg taken this window: deckhand=4 sea_strike=72 archer_arrow=5 reef_shark=10 swashbuckler=8
+[metric]    alive by kind: { "kraken_arm": 1, "longboat": 2, "musketeer": 1, "boarding_hook": 2, "deckhand": 2, "grappler": 1, "powder_runner": 1 } within260=4
+[autotest] t=07:00 lvl=26 kills=1106 enemies=10 summons=2/2 projectiles=1 hp=120 step_avg=0.49ms
+[autotest]    unit FSM: { "FOLLOWING": 2 }
+[metric] t=480 avg_horde=1.7 now=2 cap=2 w2/2 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=2 lvl=29 kills=1301 enemies=16 hp=120 boss_hp=-1 crystals=5 xp=1735
+[metric]    summon dmg taken this window: powder_blast=49 deckhand=2 grappler=9 sea_strike=66 archer_arrow=3 reef_shark=12 swashbuckler=23
+[metric]    alive by kind: { "kraken_arm": 1, "reef_shark": 1, "deckhand": 3, "longboat": 3, "boarding_hook": 5, "skiff": 1, "grappler": 1, "musketeer": 1 } within260=5
+[autotest] t=08:00 lvl=29 kills=1301 enemies=16 summons=2/2 projectiles=1 hp=120 step_avg=0.51ms
+[autotest]    unit FSM: { "ENGAGING": 1, "FOLLOWING": 1 }
+[metric] t=540 avg_horde=1.8 now=2 cap=2 w2/2 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=2 lvl=32 kills=1490 enemies=19 hp=120 boss_hp=-1 crystals=3 xp=2056
+[metric]    summon dmg taken this window: powder_blast=34 deckhand=4 grappler=13 sea_strike=84 archer_arrow=19 reef_shark=51 boatswain=4
+[metric]    alive by kind: { "reef_shark": 4, "boarding_hook": 4, "longboat": 3, "powder_runner": 1, "deckhand": 4, "musketeer": 2, "skiff": 1 } within260=4
+[autotest] t=09:00 lvl=32 kills=1490 enemies=19 summons=2/2 projectiles=1 hp=120 step_avg=0.51ms
+[autotest]    unit FSM: { "ENGAGING": 1, "FOLLOWING": 1 }
+[metric] t=600 avg_horde=1.7 now=2 cap=2 w2/2 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=3 lvl=34 kills=1670 enemies=21 hp=120 boss_hp=-1 crystals=1 xp=2335
+[metric]    summon dmg taken this window: powder_blast=18 deckhand=20 sea_strike=63 archer_arrow=6 reef_shark=34 boatswain=5
+[metric]    alive by kind: { "reef_shark": 3, "longboat": 4, "boarding_hook": 6, "boatswain": 1, "deckhand": 1, "powder_barrel": 6 } within260=5
+[autotest] t=10:00 lvl=34 kills=1670 enemies=21 summons=2/2 projectiles=1 hp=120 step_avg=0.51ms
+[autotest]    unit FSM: { "ENGAGING": 2 }
+[metric] t=660 avg_horde=2.0 now=2 cap=2 w2/2 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=36 kills=1861 enemies=17 hp=120 boss_hp=-1 crystals=3 xp=2635
+[metric]    summon dmg taken this window: sea_strike=16 reef_shark=14 boatswain=5
+[metric]    alive by kind: { "reef_shark": 1, "longboat": 3, "boarding_hook": 7, "musketeer": 1, "deckhand": 4, "powder_runner": 1 } within260=3
+[autotest] t=11:00 lvl=36 kills=1861 enemies=17 summons=2/2 projectiles=1 hp=120 step_avg=0.52ms
+[autotest]    unit FSM: { "FOLLOWING": 1, "ENGAGING": 1 }
+[metric] t=720 avg_horde=1.8 now=2 cap=2 w2/2 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=2 lvl=39 kills=2029 enemies=14 hp=120 boss_hp=-1 crystals=40 xp=3043
+[metric]    summon dmg taken this window: deckhand=5 sea_strike=83 hull_ram=15 bosun_gorran=165
+[metric]    alive by kind: { "reef_shark": 3, "boarding_hook": 6, "longboat": 4, "deckhand": 1 } within260=3
+[autotest] t=12:00 lvl=39 kills=2029 enemies=14 summons=2/2 projectiles=0 hp=120 step_avg=0.53ms
+[autotest]    unit FSM: { "FOLLOWING": 1, "CASTING": 1 }
+[metric] t=780 avg_horde=2.0 now=2 cap=2 w2/2 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=40 kills=2184 enemies=15 hp=120 boss_hp=-1 crystals=130 xp=3159
+[metric]    summon dmg taken this window: sea_strike=70 archer_arrow=4 reef_shark=16 boarding_bruiser=19
+[metric]    alive by kind: { "reef_shark": 1, "deckhand": 4, "kraken_arm": 2, "musketeer": 1, "boarding_hook": 4, "longboat": 2, "boatswain": 1 } within260=3
+[autotest] t=13:00 lvl=40 kills=2184 enemies=15 summons=2/2 projectiles=0 hp=120 step_avg=0.55ms
+[autotest]    unit FSM: { "FOLLOWING": 2 }
+[metric] t=840 avg_horde=1.9 now=2 cap=2 w2/2 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=41 kills=2350 enemies=9 hp=120 boss_hp=-1 crystals=178 xp=3326
+[metric]    summon dmg taken this window: powder_blast=25 sea_strike=117 reef_shark=37 boatswain=7
+[metric]    alive by kind: { "boarding_hook": 3, "reef_shark": 1, "musketeer": 1, "deckhand": 2, "longboat": 2 } within260=2
+[autotest] t=14:00 lvl=41 kills=2350 enemies=9 summons=2/2 projectiles=0 hp=120 step_avg=0.56ms
+[autotest]    unit FSM: { "FOLLOWING": 2 }
+[metric] t=900 avg_horde=2.0 now=2 cap=2 w2/2 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=41 kills=2496 enemies=21 hp=120 boss_hp=-1 crystals=247 xp=3433
+[metric]    summon dmg taken this window: powder_blast=27 sea_strike=43
+[metric]    alive by kind: { "boarding_hook": 6, "longboat": 4, "reef_shark": 1, "powder_runner": 2, "deckhand": 1, "musketeer": 1, "powder_barrel": 6 } within260=6
+[autotest] t=15:00 lvl=41 kills=2496 enemies=21 summons=2/2 projectiles=0 hp=120 step_avg=0.57ms
+[autotest]    unit FSM: { "FOLLOWING": 1, "ENGAGING": 1 }
+[metric] t=960 avg_horde=1.9 now=1 cap=2 w1/2 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=1 lvl=42 kills=2667 enemies=8 hp=120 boss_hp=-1 crystals=249 xp=3596
+[metric]    summon dmg taken this window: powder_blast=30 sea_strike=96 reef_shark=32 boatswain=8 boarding_bruiser=46
+[metric]    alive by kind: { "reef_shark": 4, "longboat": 2, "boarding_hook": 2 } within260=4
+[autotest] t=16:00 lvl=42 kills=2667 enemies=8 summons=1/2 projectiles=0 hp=120 step_avg=0.59ms
+[autotest]    unit FSM: { "ENGAGING": 1 }
+[autotest] boss spawned at 1020.0 s
+[autotest] Shadow Bolt aim switched to Strongest
+[metric] t=1020 avg_horde=1.9 now=2 cap=2 w2/2 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=1 lvl=43 kills=2820 enemies=11 hp=120 boss_hp=19500 crystals=250 xp=3720
+[metric]    summon dmg taken this window: grappler=11 sea_strike=125 reef_shark=11 boatswain=8 boarding_bruiser=26
+[metric]    alive by kind: { "deckhand": 2, "reef_shark": 3, "boarding_hook": 2, "longboat": 2, "crow_sloop": 1, "boss": 1 } within260=6
+[autotest] t=17:00 lvl=43 kills=2820 enemies=11 summons=2/2 projectiles=0 hp=120 step_avg=0.60ms
+[autotest]    unit FSM: { "FOLLOWING": 1, "ENGAGING": 1 }
+[autotest] ===== NECROPATHY AUTOTEST SUMMARY =====
+[autotest] result: NOT COMPLETED (defeat)
+[autotest] time reached: 17:55 elapsed (1075.2 s game time, 81.4 s real time); past 0:00: 0.0 s; Reckoning waves: 0
+[autotest] kills: 2966 | level: 44
+[autotest] level pacing: 01:00=L5 03:00=L13 05:00=L20 10:00=L34 15:00=L41 17:00=L43 | reached: L2@00:19 L5@00:50 L10@01:58 L15@03:13 L20@04:49 L25@06:22 L30@08:05 L35@10:10 L40@12:47
+[autotest] build complete: no
+[autotest] horde: 2 alive / capacity 2 (warrior 2/2, archer 0/0, mage 0/0, mender 0/0, warder 0/0, bishop 0/0, abomination 0/0, rogue 0/0, gargoyle 0/0, frost_wraith 0/0, bone_hound 0/0, banshee 0/0, corpse_catapult 0/0)
+[autotest] summons spawned: 22, died: 16, hard recalls: 0 (stall recalls: 0)
+[autotest] boss spawned: yes at 1020.0 s | boss defeated: no | boss HP left: 16954 / 19500
+[autotest] player HP: 0 / 120 (invulnerable: false)
+[autotest] picks (46): necrotic_expanse 1, corpse_explosion 1, soul_siphon 1, soul_siphon 2, vampiric_rite 1, corpse_explosion 2, necrotic_expanse 2, plague_cloud 1, vampiric_rite 2, soul_siphon 3, necrotic_expanse 3, vampiric_rite 3, shade_stride 1, shade_stride 2, bone_spear 1, bone_spear 2, plague_cloud 2, vampiric_rite 4, lingering_malediction 1, bone_spear 3, lingering_malediction 2, corpse_explosion 3, plague_cloud 3, necrotic_expanse 4, shade_stride 3, lingering_malediction 3, corpse_explosion 4, plague_cloud 4, soul_siphon 4, bone_spear 4, shade_stride 4, bone_spear 5, corpse_explosion 5, lingering_malediction 4, soul_siphon 5, vampiric_rite 5, EVOLVE soul_rapture, shade_stride 5, lingering_malediction 5, EVOLVE ossuary_lance, plague_cloud 5, necrotic_expanse 5, warding_ritual 1, abyssal_focus 1, shadow_bolt 2, shadow_bolt 3
+[autotest] wards on you: 0 total, absorbed 0 dmg | 0 wards in 0 s with 2+ Warders/Bishops alive (0.0 / min) | heal casts: 0 | ally barriers: 0, barrier dmg absorbed: 0
+[autotest] evolutions: soul_rapture@10:36, ossuary_lance@11:30
+[autotest] evolutions by type: spell: soul_rapture@10:36, ossuary_lance@11:30 | summon: none
+[autotest] summon evolutions: lich raised 0 (capped 0) | merge converted 0, dissolved 0 | aura pulses 0 | merged classes: none
+[autotest] winter revenant: shatters 0 (capped 0), shatter hits 0, shatter dmg 0 | death novas 0, nova hits 0, nova freezes 0, nova dmg 0
+[autotest] summon output by source (dmg/heal/shield): warrior=2647/0/0 bash=537/0/0
+[autotest] summon output by class (dmg/heal/shield): warrior=3184/0/0
+[autotest] recipe book: 2 / 63 discovered (ossuary_lance, soul_rapture) | Recipes view rows built: 63 (saved: false)
+[autotest] codex: 20 entries met this run (spell 5, summon 1, enemy 13, boss 1) | new to the save 20 | save: spell 5/39, summon 1/25, enemy 13/200, boss 1/36, evolutions 2/63
+[autotest] epilogue: parts=5 open=0 seen=0 panels=19 autoplay_pending=false
+[autotest] volleys: shots 11979 | hits 5723 | dmg 65614 | peak 55/320 | capped volleys 0 | boss hits capped 182 | barrages 17 | soul_siphon 40605, bone_spear 23156, corpse_explosion 1153, plague_cloud 484, warrior 109, shadow_bolt 104
+[visual] adaptive quality: level 0, peak 0, steps down 0, up 0
+[autotest] boarding: boats 359 (skiff 102, longboat 257) | hooked 358 | repelled 178 | sunk 10 | emptied 174 | crew aboard 2346, cancelled 1282, drowned with their boat 0 | queue peak 72, refused 105, waiting at the end 43 | peak boats 4 | hooks cut 413
+[autotest] deck: overboard 18 (boarding_bruiser 1, boatswain 3, deckhand 4, grappler 2, musketeer 5, reef_shark 1, swashbuckler 2) | ring posts 8226, slid inboard 12 (0%) | clamps: you 0, summons 13967, enemies 48 | fliers pulled back 0 | drops moved 43 | powder blasts 157 (fuses 2, enemy dmg 7616) | swashbuckler lunges 1
+[autotest] sea strikes: swimmers 164 (refused at the cap 0, peak alive 7) | strikes: leap 155, tentacle 9, sea 0 | leaps landed 136 | grabs 4, rescued 0, dragged overboard 4 | hits on summons 58 (dmg 938), on you 1 (dmg 11) | enemy dmg 754
+[autotest] corsair kinds (spawned/killed): deckhand 1476/1470 first 0:07 (dmg to you 0, to summons 185) | musketeer 380/375 first 1:01 (dmg to you 0, to summons 0) | powder_runner 134/149 first 3:43 (dmg to you 0, to summons 0) | swashbuckler 81/80 first 5:19 (dmg to you 0, to summons 31) | boarding_bruiser 20/20 first 10:21 (dmg to you 0, to summons 92) | reef_shark 161/156 first 3:10 (dmg to you 17, to summons 256) | kraken_arm 3/3 first 6:40 (dmg to you 0, to summons 0) | skiff 102/6 first 0:05 (dmg to you 0, to summons 0) | longboat 256/4 first 0:23 (dmg to you 0, to summons 0) | boarding_hook 716/413 first 0:05 (dmg to you 0, to summons 0) | grappler 168/166 first 2:10 (dmg to you 0, to summons 44) | boatswain 99/99 first 5:19 (dmg to you 0, to summons 43) | powder_barrel 24/24 first 0:00 (dmg to you 0, to summons 0) | bosun_gorran 1/1 first 11:04 (dmg to you 35, to summons 165) | ram_longboat 1/0 first 11:03 (dmg to you 0, to summons 0) | crow_sloop 1/0 first 17:00 (dmg to you 0, to summons 0)
+[autotest] corsair stage: cutter (The Smuggler's Cutter) | playable true | deck 960 x 360 | boss crow (script crow) | enemy x1.30 HP / x1.00 dmg from 7:00 | soul ash x1.00 | reckoning kind boarding_bruiser, black tide true
+[autotest] cutter: barrels placed 24, blown 24 | fog boats 97 | ram 1 (summons staggered 2, crew 13, drowned with the boat 0, sunk 0) | gorran spawned 1, killed 1 at 11:30 | fire patches 0 | clean sinks 1 / 5, not one aboard no | events: 0:00 barrels 6, 5:00 barrels 6, 10:00 barrels 6, 10:00 fog, 11:00 ram, 11:03 gorran, 11:30 gorran down, 15:00 barrels 6
+[autotest] cutter crew: grapplers 168 (throws 12, bites 2, dragged 142 px, lines cut 1) | boatswains 99 (bellows 3, crew buffed 1)
+[autotest] bosun gorran: spawned 1, chain sweeps 4 (summons hit 7), bellows 3, killed 1 (ttk 27 s) | dmg to you 35, to summons 165
+[autotest] captain crow: broadside: 3 broadsides (9 lines; hits on summons 1, on you 0, on enemies 1), crew sent 32, sloop sunk no | the duel 17:44: leaps 1 (hits 1), pistol 2 | the fire ship not reached | killed no | dmg to you 133, to summons 66
+[autotest] gravebow / bone colossus: gravebow volleys 0, splits 0 (+0 arrows), pierce hits 0, dmg 0 | curses applied 0 (refreshed 0), curse bonus dmg 0 | colossus dmg 0, stomps 0 | taunted enemies 0 | shrapnel bursts 0, hits 0, dmg 0
+[autotest] necro spells: bone_spear: Lv5 EVOLVED dmg=106001 (evolved 69646) boss=687 volleys=955 | soul_siphon: Lv5 EVOLVED dmg=90707 (evolved 75236) boss=508 healed=133 summon_heal=730 bursts=470 | corpse_explosion: Lv5 dmg=64351 (evolved 0) boss=144 bursts=955 chain=0 | plague_cloud: Lv5 dmg=14258 (evolved 0) boss=16 clouds=260 novas=0 rot_bonus_dmg=19825
+[autotest] later spells: death_mark: not taken | bone_wall: not taken | soul_chains: not taken | wither: not taken | raise_dead: not taken
+[autotest] later spell passives: grim_ledger Lv0 bonus_dmg=0 | spirit_binding Lv0 | restless_dead Lv0 | temporary summons spawned=0
+[autotest] horde passives: bone_plating Lv 0 (dmg prevented 0) | unholy_precision Lv 0 (crits 0, crit bonus dmg 0) | unholy_resilience Lv 0 (dmg prevented 0: area 0, holy 0) | bound_souls Lv 0 (soft recalls 0, hard recalls 0)
+[autotest] class passives: blood_scent Lv 0 (fast: Archers, Rogues, Gargoyles, Bone Hounds, Grave Drones, Succubi, Blood Spawn, Fallen Heroes, Ghost Saucers, Powder Wraiths) | mournsong Lv 0 (extra debuff s 0) | siegecraft Lv 0 (siege bonus dmg 0) | summon dmg to structures 1161 (catapults 0)
+[autotest] synergies active at end: none | activations: none
+[autotest] synergy bonus: flesh_rampart hits=0 dmg=0 | killing_field hits=0 dmg=0 | death_from_above hits=0 dmg=0 | wild_hunt hits=0 dmg=0 | cold_blood hits=0 dmg=0 | shatterfall hits=0 dmg=0 | requiem hits=0 dmg=0 | charnel_menagerie hits=0 dmg=0 | baying frenzies=0 | marks staggered=0 swooped=0 | dash resets=0 | requiem +0s
+[autotest] level-up offers: hands 45, new-item cards 36, later items 15 (42%) in 12 hands (27%), distinct later items offered 11
+[autotest] level-up actions: rerolls used 0/2, banishes used 2/2 (banished: soul_recycling, necrotic_vigor), skips 0
+[autotest] shadow bolt: 14663 dmg in Nearest mode, 1588 dmg in Strongest mode; to boss: 255 of 2545 total boss dmg
+[autotest] stats: boarding_refused=105 boats_emptied=174 boats_hooked=358 boats_launched=359 boats_longboat=257 boats_repelled=178 boats_skiff=102 boats_sunk=10 boats_sunk_clean=1 boatswain_bellows=3 boatswain_buffed=1 boss_atk_broadside=3 boss_atk_crew=8 boss_atk_leap=1 boss_atk_pistol=2 boss_atk_swing_aboard=1 bossdmg_bolt=255 bossdmg_bone_spear=262 bossdmg_corpse=144 bossdmg_corpse_explosion=64 bossdmg_lance=687 bossdmg_plague=16 bossdmg_plague_cloud=19 bossdmg_rapture=443 bossdmg_rapture_burst=65 bossdmg_shadow_bolt=86 bossdmg_soul_siphon=357 bossdmg_warrior=142 bot_dash_hit=1 bot_dash_telegraph=63 chest_count_1=3 chest_evolutions=2 chest_items=3 chests_opened=3 chests_pity=5 chests_spawned=6 corpse_bursts=955 crew_aboard=2346 crew_cancelled=1282 crew_drowned=0 crow_broadsides=3 crow_crew_sent=32 crow_duel_at=1064 crow_leap_hits=1 crow_leaps=1 crow_line_enemy_hits=1 crow_line_hits_summons=1 crow_lines=9 crow_pistol=2 cutter_barrels_blown=24 cutter_barrels_placed=24 cutter_fog_boats=97 cutter_ram_crew=13 cutter_ram_staggers=2 cutter_rams=1 damage_dealt=372662 damage_to_player=309 damage_to_summons=2195 dash_distance=7040 dash_hits_avoided=1 dashes=64 death_warrior_by_bosun_gorran=1 death_warrior_by_crow_broadside=1 death_warrior_by_deckhand=4 death_warrior_by_grappler=1 death_warrior_by_powder_blast=1 death_warrior_by_reef_shark=2 death_warrior_by_sea_strike=6 deck_clamps_enemies=48 deck_clamps_summons=13967 deck_drops_moved=43 dmg_bash=537 dmg_bolt=16251 dmg_bone_spear=23156 dmg_corpse=64351 dmg_corpse_explosion=1153 dmg_crow_broadside=86 dmg_lance=69646 dmg_nova=2267 dmg_overboard=1642 dmg_plague=14258 dmg_plague_cloud=484 dmg_powder_blast=7653 dmg_rapture=41688 dmg_rapture_burst=33548 dmg_resisted_boss=285 dmg_sea_strike=754 dmg_shadow_bolt=104 dmg_siphon=15470 dmg_soul_siphon=40605 dmg_spear=36355 dmg_warrior=2647 elite_kills=1 evolutions=2 flat_armor_absorbed_boarding_bruiser=2398 flat_armor_absorbed_bosun_gorran=698 gorran_bellows=3 gorran_kills=1 gorran_spawned=1 gorran_sweep_hits=7 gorran_sweeps=4 gorran_ttk=26 grapple_bites=2 grapple_cut=1 grapple_dragged_px=142 grapple_throws=12 hooks_cut=413 kill_boarding_bruiser=20 kill_boarding_hook=413 kill_boatswain=99 kill_bosun_gorran=1 kill_deckhand=1470 kill_grappler=166 kill_kraken_arm=3 kill_longboat=4 kill_musketeer=375 kill_powder_barrel=24 kill_powder_runner=149 kill_reef_shark=156 kill_skiff=6 kill_swashbuckler=80 kills_by_bash=16 kills_by_bolt=298 kills_by_bone_spear=117 kills_by_corpse=740 kills_by_corpse_explosion=5 kills_by_crow_broadside=1 kills_by_lance=177 kills_by_nova=9 kills_by_overboard=18 kills_by_plague=55 kills_by_plague_cloud=7 kills_by_powder_blast=143 kills_by_rapture=113 kills_by_rapture_burst=135 kills_by_sea_strike=4 kills_by_siphon=210 kills_by_soul_siphon=561 kills_by_spear=301 kills_by_warrior=56 levelup_banishes=2 march_zones_entered=3 miniboss_chests=1 minibossdmg_bash=7 minibossdmg_bolt=340 minibossdmg_bone_spear=390 minibossdmg_corpse=555 minibossdmg_corpse_explosion=86 minibossdmg_plague=35 minibossdmg_plague_cloud=8 minibossdmg_rapture=940 minibossdmg_rapture_burst=459 minibossdmg_sea_strike=96 minibossdmg_soul_siphon=664 minibossdmg_spear=977 minibossdmg_warrior=243 nova_kills=9 overboard_boarding_bruiser=1 overboard_boatswain=3 overboard_deckhand=4 overboard_grappler=2 overboard_musketeer=5 overboard_reef_shark=1 overboard_swashbuckler=2 overboard_total=18 plague_clouds=260 player_dmg_from_archer_arrow=81 player_dmg_from_boss=133 player_dmg_from_bosun_gorran=35 player_dmg_from_powder_blast=30 player_dmg_from_reef_shark=17 player_dmg_from_sea_strike=11 player_healing=133 powder_blasts=157 powder_enemy_dmg=7616 powder_fuses=2 priest_heals=0 priest_wards=0 pu_collected_feast=2 pu_collected_frenzy=2 pu_collected_hyper=1 pu_collected_nova=1 pu_collected_stasis=2 pu_expired_feast=2 pu_expired_hyper=3 pu_expired_stasis=1 pu_pity_drops=5 pu_spawned_feast=4 pu_spawned_frenzy=2 pu_spawned_hyper=4 pu_spawned_nova=1 pu_spawned_stasis=3 pu_uptime_frenzy=23 pu_uptime_hyper=10 pu_uptime_stasis=10 rallies=17 rally_buff_time=130 rally_heal=406 rally_knockbacks=10 rally_meter_fills=17 rally_minion_dmg=741 rally_raised=3 rally_recalled=5 rapture_bursts=470 replacements=17 rot_bonus_dmg=19825 rot_kills=1084 sea_dragged=4 sea_grabs=4 sea_leaps_landed=136 sea_strike_enemy_dmg=754 sea_strike_hits_summons=58 sea_strike_hits_you=1 sea_strikes_leap=155 sea_strikes_tentacle=9 sea_swimmers=164 siphon_healed=133 siphon_summon_heal=730 spawned_boarding_bruiser=20 spawned_boarding_hook=716 spawned_boatswain=99 spawned_bosun_gorran=1 spawned_crow_sloop=1 spawned_deckhand=1476 spawned_grappler=168 spawned_kraken_arm=3 spawned_longboat=256 spawned_musketeer=380 spawned_powder_barrel=24 spawned_powder_runner=134 spawned_ram_longboat=1 spawned_reef_shark=161 spawned_skiff=102 spawned_swashbuckler=81 spear_volleys=955 structdmg_bash=17 structdmg_bolt=8763 structdmg_bone_spear=10126 structdmg_corpse=30651 structdmg_corpse_explosion=527 structdmg_lance=47046 structdmg_nova=1692 structdmg_plague=8337 structdmg_plague_cloud=220 structdmg_powder_blast=3006 structdmg_rapture=28458 structdmg_rapture_burst=20377 structdmg_shadow_bolt=12 structdmg_siphon=5462 structdmg_soul_siphon=5849 structdmg_spear=22190 structdmg_warrior=1143 summon_dmg_from_archer_arrow=47 summon_dmg_from_boarding_bruiser=92 summon_dmg_from_boatswain=43 summon_dmg_from_bosun_gorran=165 summon_dmg_from_crow_broadside=35 summon_dmg_from_crow_leap=31 summon_dmg_from_deckhand=185 summon_dmg_from_grappler=44 summon_dmg_from_hull_ram=15 summon_dmg_from_powder_blast=308 summon_dmg_from_reef_shark=256 summon_dmg_from_sea_strike=938 summon_dmg_from_swashbuckler=31 summon_healing=1137 summon_stunned_seconds=24 summon_stuns=8 summon_stuns_grapple=2 summon_stuns_ram=2 summon_stuns_tentacle_grab=4 swashbuckler_lunges=1 volley_barrages=17 ward_absorbed=0 warrior_bashes=106 warrior_kills=72 wave_events=15 xp_collected=4008 xp_dropped=4388
+[autotest] boss attacks: broadside=3 crew=8 swing_aboard=1 leap=1 pistol=2 fire_ship=0 | wrath: no | hammer soaked by undead: 0 | charges stopped by undead: 0 (shielding the player: 0) | judgment hits: 0 | call soldiers: 0 | holy zones boss/grave: 0/0
+[autotest] crimson march: zones entered 3 (final: Zone IV  -  The Cove) | placed/destroyed/escaped: outposts 0/0/0 generators 0/0/0 carts 0/0/0 standards 0/0/0 | outpost reinforcements 0 | ward zones 0
+[autotest] march enemies: aura buff pulses 0 | halberd cleave hits 0 | dmg resisted: shieldbearer 0, boss 285 | kills: shieldbearer=0 banner_bearer=0 halberdier=0
+[autotest] marshal vael: last stand no | cleave summon hits 0, soaked for the player 0 | command soldiers 0
+[autotest] march events (3): 5:00 zone_II, 10:00 zone_III, 15:00 zone_IV
+[autotest] stage events fired (0): 
+[autotest] templar charges: 0 (body-blocked by warriors: 0) | temporary summons spawned: 0
+[autotest] obstacle collisions resolved: player=226 summons=3675 enemies=16940
+[autotest] class abomination: Lv 0, alive 0/0, deaths 0 | dmg 0 (abomination=0 abom_stomp=0) | abom_stomps=0 abom_stomp_hits=0
+[autotest] class rogue: Lv 0, alive 0/0, deaths 0 | dmg 0 (rogue=0 rogue_dash=0 rogue_bleed=0) | rogue_dashes=0 rogue_dash_hits=0
+[autotest] class gargoyle: Lv 0, alive 0/0, deaths 0 | dmg 0 (gargoyle=0 gargoyle_swoop=0) | gargoyle_swoops=0 gargoyle_swoop_hits=0
+[autotest] class frost_wraith: Lv 0, alive 0/0, deaths 0 | dmg 0 (frost_wraith=0) | frost_deep_freezes=0 frost_freezes=0 frost_boss_freezes=0 frost_frozen_seconds=0 frost_chills=0
+[autotest] class bone_hound: Lv 0, alive 0/0, deaths 0 | dmg 0 (bone_hound=0 hellhound=0 hellhound_burn=0 hellhound_trail=0) | hound_bites=0 hound_pack_bites=0 hound_pack_bonus_dmg=0 hellhound_burns=0 hellhound_trail_patches=0
+[autotest] class banshee: Lv 0, alive 0/0, deaths 0 | dmg 0 (banshee=0 keening_lady=0) | banshee_dirges=0 banshee_dirge_hits=0 dirge_debuff_seconds=0 keening_waves=0 keening_silenced=0 keening_heals_silenced=0
+[autotest] class corpse_catapult: Lv 0, alive 0/0, deaths 0 | dmg 0 (corpse_catapult=0 ossuary_engine=0 ossuary_shards=0) | catapult_volleys=0 catapult_boulders=0 catapult_boulder_hits=0 catapult_structure_dmg=0 ossuary_shard_fields=0 hazards_dropped=0
+[autotest] class specials: cancelled by recall 0 | ended inside an obstacle 0
+[autotest] special evolutions: shadow reaper: chain dashes 0, cooldown resets 0, bleed stacks added 0, max stacks 0, rogue bleed dmg (all) 0 | cathedral horror: stuns 0 (boss 0), stunned s 0.0, stone forms 0, stone s 0.0, dmg prevented by stone 0
+[autotest] grave step: dashes 64 (bot: crowd 0, hit 1, telegraph 63) | hits avoided in dash i-frames 1 | blocked 0, shortened by obstacles 0, ended inside an obstacle 0, avg length 110 px | charges 1, cooldown 5.00 s
+[autotest] dread rally: rallies 17 | meter fills 17, fill times s [95 58 50 38 38 38 41 46 41 39 39 32 35 37 39 44 45] (avg 44 s), meter now 0% | knockbacks 10 | summons called back 5 | heal 406 | minion dmg under buff 741 (est. +dmg part 211) | buff time 130 s
+[autotest] army formation: bone_ring: 1075s kills 2966 army_dmg 2195 recalls 0 spread max 367 mean 89
+[autotest] character: gravecaller (The Gravecaller) | starting spell shadow_bolt Lv 3 | Baseline stats (Max HP 120, move speed 110) | innate: none | characters unlocked this run: bone_oracle, carrion_lord, fallen_confessor, plague_scholar | unlocked in the profile: gravecaller, bone_oracle, fallen_confessor, carrion_lord, plague_scholar (saved: false)
+[autotest] stuck_units=0 (touching an obstacle: 0) {  }
+[metric] boss_hp_at_0=-1 min_hp_before_0=13
+[autotest] peaks: enemies=33 summons=2 projectiles=5 effects=22 crystals=250
+[autotest] nodes created (pools): enemies=33 summons=2 projectiles=5 effects=25 crystals=250
+[autotest] simulation step: avg 0.62 ms, worst 33.66 ms
+[autotest] power-ups: spawned 14 (magnet=0 feast=4 hyper=4 stasis=3 frenzy=2 nova=1) | collected 8 (magnet=0 feast=2 hyper=1 stasis=2 frenzy=2 nova=1) | expired (magnet=0 feast=2 hyper=3 stasis=1 frenzy=0 nova=0) | lost at cap 0 | pity drops 5 | crystals pulled by Soul Magnet 0
+[autotest] buff uptime: hyper=10s (0.9%, refreshed 0) stasis=10s (0.9%, refreshed 0) frenzy=24s (2.2%, refreshed 0) | soul nova kills: 9
+[autotest] chests: spawned 6, opened 3 (x1=3 x3=0 x5=0), items granted 3 (evolutions 2), pity 5, lost at cap 0, left on ground 3
+[autotest]    chest 06:01 x1: plague_cloud 3
+[autotest]    chest 10:36 x1: EVOLVE soul_rapture
+[autotest]    chest 11:30 x1: EVOLVE ossuary_lance
+[autotest] chest beacon: chests marked 6, seen on screen 6 | max off-screen arrows at once 0 | ticks with an arrow 0 (0.0 s)
+[autotest] profane pact: taken no (final Lv 0; never offered or never picked) | oath tier 0 | extra XP from pact 0, from oath 0 | extra soul ash from pact 0, from oath 0
+[autotest] meta upgrades (--meta=none): none | revivals used: 0
+[autotest] soul ash: +226 (time 134 [17:55] + kills 88 [2966] + elites 4 [1] + boss 0 + reckoning 0 [0.0 s] = 226, bonus +0% = +0, pact +0, oath +0) | bounty 0 | new total 226 | saved: false
+[autotest] difficulty: Necromancer (necromancer) | modifiers: none | foes: HP x0.800 (growth x1.00), dmg x1.000 (growth x1.00), spawn x1.250, speed x1.00, elite chance 0.000, boss HP x1.000 | XP x1.000 | soul ash: difficulty +0%, modifiers +0%, total x1.00
+[autotest] difficulty results: soul ash difficulty +0, modifiers +0 | trickle elites promoted: 0 | holy retribution bursts: 0 (dmg to you 0, to summons 0) | player max HP at start: 120
+[autotest] stage: The Smuggler's Cutter | soul ash stage bonus +0 (x1.00) | stages unlocked by this run: none
+[autotest] hyper: off (Necromancer) | foes: HP growth x1.00, dmg growth x1.00, boss HP x1.000 | at 0:00 vs the standard game: HP x1.00, dmg x1.00 | soul ash hyper +0 (+0%) | Reckoning lasted 0.0 s past 0:00 | unlocked: false (by this run: false) | hyper clear recorded: no
+[autotest] skins: character gravecaller, worn default | this run: rot kills 1084, high confessors slain 0, seraphine slain with all 4 roles 0 | lifetime: rot 1084/5000, confessors 0/50, seraphine full army 0/1 | unlocked 39/160 (new: none) | setup row cards 6
+[autotest] rewards: achievements=0 (none) titles=0 unlocks=none | run: temp raised 0, min HP before 0:00 11%, evolutions 2, boss slain never after arrival | one-run achievements met: none (not checked: --rewards=on) | worn title: none | title row choices 1
+[autotest] demo: on=false | acts=1 | stages=graveyard,crimson_march,sanctum | save=user://save.cfg | full_game_offers=0
+[autotest] feedback: url_set=true | report_chars=122/220/304 (main menu / pause / results samples built, max 1500) | url_chars=595 | opened=never (autotest)
+exit 1
