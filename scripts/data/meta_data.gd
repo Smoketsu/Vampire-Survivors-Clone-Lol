@@ -783,7 +783,7 @@ const ACHIEVEMENTS := {
 	# .NAMES_TAKEN_RAISES Names stolen by a raise (Rebirth.on_raise(), the run
 	# stat rebirth_stolen), on any Dynasty stage; MetaProgress counts the runs
 	# (lifetime names_taken_runs). It unlocks the Dynasty's counter-passive
-	# Embalmed Bones (own split, the lead's to confirm).
+	# Dune Walkers (the integration's split: No Jars Left earns Embalmed Bones).
 	"names_taken": {"display_name": "Names Taken", "description": "Raise 100 of the Dynasty's dead before their Names return, in one run",
 		"stat": "names_taken_runs", "goal": 1, "unlock": "The Dune Walkers passive", "bounty": 300},  # Proposal; bounty TUNING (not in GDD) as The Hunter Hunted
 	# --- Act XII (temporary number): the Hall of Two Truths ---
