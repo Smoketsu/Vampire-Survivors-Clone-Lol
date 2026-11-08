@@ -130,7 +130,7 @@ const ENEMIES := {
 		"display_name": "Raider",
 		"max_hp": 15.0,  # TUNING (not in GDD) fodder (Ashigaru 13, Recruit 14)
 		"move_speed": 58.0,  # TUNING (not in GDD) px/s
-		"damage": 3.0,  # TUNING (not in GDD) an axe blow, before the time scaling
+		"damage": 2.5,  # TUNING (not in GDD) an axe blow, before the time scaling (balance pass 1: 3 -> 2.5, the Ashigaru's; the top damage to both armies, half of them in the fury)
 		"attack_interval": 1.1,  # TUNING (not in GDD) s
 		"attack_range": 8.0,  # TUNING (not in GDD) px
 		"radius": 8.0,  # TUNING (not in GDD) px (~36 px sprite)
@@ -156,7 +156,7 @@ const ENEMIES := {
 		"display_name": "Shield-Maiden",
 		"max_hp": 44.0,  # TUNING (not in GDD) a soldier (Samurai 42)
 		"move_speed": 52.0,  # TUNING (not in GDD) px/s
-		"damage": 4.0,  # TUNING (not in GDD) a spear thrust, before the time scaling (foundation pass: 5 -> 4; a wounded maiden goes berserk)
+		"damage": 3.5,  # TUNING (not in GDD) a spear thrust, before the time scaling (balance pass 1: 4 -> 3.5; foundation pass: 5 -> 4; a wounded maiden goes berserk)
 		"attack_interval": 1.15,  # TUNING (not in GDD) s
 		"attack_range": 13.0,  # TUNING (not in GDD) px; the spear outreaches an axe
 		"radius": 9.0,  # TUNING (not in GDD) px (~42 px sprite)
@@ -361,7 +361,7 @@ const ENEMIES := {
 		"lunge_range": 90.0,  # TUNING (not in GDD) px from its target's edge
 		"lunge_windup": 0.35,  # TUNING (not in GDD) s (it crouches)
 		"lunge_time": 0.22,  # TUNING (not in GDD) s in the air
-		"lunge_damage": 4.0,  # TUNING (not in GDD) before the time scaling
+		"lunge_damage": 3.0,  # TUNING (not in GDD) before the time scaling (balance pass 1: 4 -> 3; packs of 5 leap the ring, a top-3 source in the flanker builds' deaths)
 	},  # The wolf of the wastes.
 	# Wilds, heavy (male): throws boulders on a landing circle; a stomp
 	# (owner-approved proposal: "Siegecraft, Wither").

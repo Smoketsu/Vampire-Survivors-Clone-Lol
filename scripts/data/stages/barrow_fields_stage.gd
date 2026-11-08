@@ -46,7 +46,7 @@ const BOSS_TIME: float = 1020.0  # TUNING (not in GDD) 17:00, as on every stage
 const ENEMY_HP_MULT: float = 1.6  # TUNING (not in GDD) placeholder, tuned in the act's bot passes
 ## Enemy damage multiplier of this stage on top of the shared time scaling
 ## (between Olympus's 1.3 and the Shogunate's 1.5).
-const ENEMY_DAMAGE_MULT: float = 1.4  # TUNING (not in GDD) placeholder, tuned in the act's bot passes
+const ENEMY_DAMAGE_MULT: float = 1.2  # balance pass 1: 1.4 -> 1.2 (the act's first stage stays the easiest); TUNING (not in GDD) placeholder, tuned in the act's bot passes
 ## Elapsed game seconds from which the two multipliers apply to regular
 ## enemies (the boss always gets them).
 const ENEMY_MULT_FROM: float = 420.0  # TUNING (not in GDD) 7:00, as Acts III to IX

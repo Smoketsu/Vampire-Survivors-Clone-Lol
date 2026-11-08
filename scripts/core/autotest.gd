@@ -894,6 +894,10 @@ func _summon_wants_move(u: SummonedUnit) -> bool:
 func _enemy_wants_move(e: Enemy) -> bool:
 	if e.engaged_timer > 0.0 or (e.kit != null and e.kit.is_busy()):
 		return false  # Fighting a blocker, or standing in a Sanctum windup / cast.
+	var sig := game.enemies.boss as BossSigrun  # Valgard's boss, else null.
+	if sig != null and not e.is_boss and sig.holmgang != null and sig.holmgang.active \
+			and sig.holmgang.overlaps(e.position, e.radius + Holmgang.ENEMY_BAND + Holmgang.OUT_GAP + 4.0):
+		return false  # Held at the Holmgang's verge (15 s duel keep-out): a world rule, not a pathing fault.
 	var pl := game.nearest_player(e.position)  # (Co-op: the one it advances on.)
 	if e.is_boss:
 		var b := e as Boss
