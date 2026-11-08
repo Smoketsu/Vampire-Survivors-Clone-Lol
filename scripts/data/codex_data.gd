@@ -80,7 +80,9 @@ const SUMMON_ORDER: Array[String] = ["warrior", "archer", "mage", "mender", "war
 		# --- Act VIII: Liberty Heights --- (a silhouette naming its unlock until met)
 		"fallen_hero",
 		# --- Act IX: the Ark --- (a silhouette naming its unlock until met)
-		"ghost_saucer"]
+		"ghost_saucer",
+		# --- Act X: the Maelstrom --- (a silhouette naming its unlock until met)
+		"powder_wraith"]
 
 ## Covenant soldiers (enemy kinds), in the order the stages bring them.
 const SOLDIERS: Array[String] = ["recruit", "footman", "archer", "chaplain", "purifier", "templar",
@@ -313,17 +315,23 @@ const CORSAIR_CREW: Array[String] = ["deckhand", "musketeer", "powder_runner", "
 	# --- Act X: the Smuggler's Cutter --- (the shared Grappler and Boatswain; the miniboss with the crews, as Act VIII placed Mammoth with the army)
 	"grappler", "boatswain", "bosun_gorran",
 	# --- Act X: the Treasure Galleon ---
-	"gunnery_mate", "voodoo_navigator"]
+	"gunnery_mate", "voodoo_navigator",
+	# --- Act X: the Maelstrom --- (the Hollow Queen's ghost crew and the miniboss with them)
+	"ghost_deckhand", "ghost_gunner", "ghost_bosun"]
 ## The sea's beasts (rows "water").
 const CORSAIR_SEA: Array[String] = ["reef_shark", "kraken_arm",
 	# --- Act X: the Treasure Galleon --- (the miniboss with the sea's beasts, as Act IX placed its minibosses with their races)
-	"hull_crab", "old_hollow_eye"]
+	"hull_crab", "old_hollow_eye",
+	# --- Act X: the Maelstrom ---
+	"corsair_serpent"]
 ## The boats and their grapple hooks (structures BoardingParty brings).
 const CORSAIR_BOATS: Array[String] = ["skiff", "longboat", "raider_ship", "boarding_hook",
 	# --- Act X: the Smuggler's Cutter --- (Gorran's ram longboat; the powder barrel and Crow's sloop have no entry: never a Codex kill)
 	"ram_longboat",
 	# --- Act X: the Treasure Galleon --- (the gunboat, and Marrec's cursed coin with the Brotherhood's gear)
-	"gunboat", "cursed_coin"]
+	"gunboat", "cursed_coin",
+	# --- Act X: the Maelstrom ---
+	"ghost_longboat"]
 ## Black Tide stage bosses (StageRegistry.BOSS_ARRIVALS ids).
 const CORSAIR_BOSSES: Array[String] = ["crow", "marrec", "vandermere"]
 # --- Act XI (temporary): the Hall of the Slain ---
@@ -623,6 +631,12 @@ const DESCRIPTIONS: Dictionary = {
 	"hull_crab": "It climbs the hull and comes over the rail with armour 4. Area blows crack it; a hard knock sends it back in.",  # Owner-approved Act X proposal
 	"old_hollow_eye": "The old kraken itself, blind in one eye: every tentacle it lifts grabs one of your dead. Strike it while it is above the water.",  # Owner-approved Act X proposal (miniboss)
 	"cursed_coin": "Admiral Marrec's cursed gold: a barrier round her marines and her own guard. Any blow clears a coin; area blows clear them all.",  # Owner-approved Act X proposal (Gold Fever)
+	# --- Act X: the Maelstrom ---
+	"ghost_deckhand": "A drowned deckhand of the Hollow Queen. Cut him down near you and he rises for you instead.",  # Owner-approved Act X proposal
+	"ghost_gunner": "A drowned gunner who still fires from the deck. His fall near you raises him for you.",  # Owner-approved Act X proposal
+	"ghost_bosun": "The Hollow Queen's drowned bosun: every blast of his whistle calls a spectral longboat to the rail.",  # Owner-approved Act X proposal
+	"corsair_serpent": "A serpent of the deep that breaches in a line across the rail band. Step out of its line.",  # Owner-approved Act X proposal
+	"ghost_longboat": "A spectral longboat of the Hollow Queen's crew, called up by a whistle or the captain himself.",  # Owner-approved Act X proposal
 	# --- Act XI (temporary): the Hall of the Slain ---
 	"raider": "Raiders with axe and round shield, come south in crowds. Anything cuts them down.",  # Owner-approved proposal (LAST_SIX_ACTS.md)
 	"shield_maiden": "A shield-maiden: her shield bash throws one of your dead out of the ring. Flank her.",  # Owner-approved proposal
@@ -678,6 +692,10 @@ const SPRITE_KEYS: Dictionary = {
 	# --- Act IV: the Asphodel Underworld --- (the Underworld's dead wear the Hoplite's art)
 	"shade_hoplite": "pantheon/hoplite",
 	"tartarus_warden": "pantheon/hoplite",
+	# --- Act X: the Maelstrom --- (the ghost crew wears the roster's art)
+	"ghost_deckhand": "corsair/deckhand",
+	"ghost_gunner": "corsair/musketeer",
+	"corsair_serpent": "corsair/sea_serpent",
 }
 
 ## Stat labels and record lines of the detail panel (format strings use
@@ -959,6 +977,8 @@ const ACHIEVEMENT_ICONS: Dictionary = {
 	"not_one_aboard": "ach_not_one_aboard",  # TUNING (not in GDD)
 	# --- Act X: the Treasure Galleon ---
 	"walked_the_plank": "ach_walked_the_plank",  # TUNING (not in GDD) the art pass's badge
+	# --- Act X: the Maelstrom ---
+	"dead_men_tell_tales": "ach_dead_men_tell_tales",  # TUNING (not in GDD)
 }
 ## IconGlyph kind drawn when an achievement badge PNG is missing.
 const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
@@ -1024,6 +1044,8 @@ const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
 	"not_one_aboard": "barnacle_bones",
 	# --- Act X: the Treasure Galleon ---
 	"walked_the_plank": "sea_legs",
+	# --- Act X: the Maelstrom ---
+	"dead_men_tell_tales": "anchor_drop",
 }
 ## Screen title (TITLE tier).
 const TITLE: String = "Codex"  # TUNING (not in GDD)

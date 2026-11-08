@@ -58,6 +58,8 @@ static func print_lines(game: Game, st: Dictionary) -> void:
 	CutterReport.print_lines(game, st)  # The barrels, fog, Gorran's ram, the Fire Ship; the Grappler and Boatswain; Gorran; Crow.
 	# --- Act X: the Treasure Galleon --- (zones, broadsides, deck cannons, gunboats, Old Hollow-Eye, Marrec; GalleonReport)
 	GalleonReport.print_lines(game, st)
+	# --- Act X: the Maelstrom --- (its stage, kinds and boss; MaelstromReport)
+	MaelstromReport.stage_lines(game, st)
 
 
 ## The "boarding" line (BoardingParty).

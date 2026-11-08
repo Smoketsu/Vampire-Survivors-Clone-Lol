@@ -404,6 +404,11 @@ var ark: ArkDirector = null
 ## The Treasure Galleon's mechanics (Act X: the zones, the broadsides, the
 ## deck cannons, Old Hollow-Eye; StageRegistry "galleon"; null on every other stage).
 var galleon: GalleonDirector = null
+# --- Act X: the Maelstrom ---
+## The Maelstrom's mechanics (Act X: the Heave, the raised ghost crew, the
+## Ghost Bosun, Vandermere's crew; StageRegistry "maelstrom"; null on every
+## other stage).
+var maelstrom: MaelstromDirector = null
 ## Sanctum kit bookkeeping: recent deaths, Confessor revivals, danger hints.
 var rites: CovenantRites
 ## The living miniboss shown on the HUD's miniboss bar (the Cathedral
@@ -620,6 +625,12 @@ func _ready() -> void:
 		galleon.game = game
 		galleon.config = stage_def["galleon"]
 		add_child(galleon)  # The Treasure Galleon's director.
+	# --- Act X: the Maelstrom ---
+	if not (stage_def.get("maelstrom", {}) as Dictionary).is_empty():
+		maelstrom = MaelstromDirector.new()
+		maelstrom.game = game
+		maelstrom.config = stage_def["maelstrom"]
+		add_child(maelstrom)  # The Maelstrom's director.
 
 
 # =====================================================================================
@@ -776,6 +787,9 @@ func step(delta: float) -> void:
 	# --- Act X: the Treasure Galleon ---
 	if galleon != null:
 		galleon.step(delta)  # The zones, the broadsides, the deck cannons, Old Hollow-Eye.
+	# --- Act X: the Maelstrom ---
+	if maelstrom != null:
+		maelstrom.step(delta)  # The Heave, the raised ghosts, the Ghost Bosun.
 
 
 ## The Archive kinds' world hazards (ArchiveHazards), created on first use.
@@ -937,6 +951,9 @@ func objective_text() -> String:
 	# --- Act X: the Treasure Galleon ---
 	if galleon != null and galleon.objective_override() != "":
 		return galleon.objective_override()  # The Admiral's plank, a broadside, Old Hollow-Eye.
+	# --- Act X: the Maelstrom ---
+	if maelstrom != null and maelstrom.objective_override() != "":
+		return maelstrom.objective_override()  # The Ghost Bosun, the Heave's arrow (the HUD arrow, owner-approved proposal).
 	if boss != null and not boss.active:
 		return String(boss_info["dead_objective"])
 	return segments[segment_index]["objective"]
@@ -1214,6 +1231,12 @@ func _run_event(ev: Dictionary) -> void:
 				galleon.start_event(ev)
 			game.stat_add("wave_events", 1.0)
 			return  # The Treasure Galleon's miniboss (GalleonDirector).
+		# --- Act X: the Maelstrom ---
+		"ghost_bosun":
+			if maelstrom != null:
+				maelstrom.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return  # The Maelstrom's miniboss (MaelstromDirector).
 	show_banner(ev["banner"])
 	var groups: Array = ev["groups"]
 	if game.shogunate != null:

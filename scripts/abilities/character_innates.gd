@@ -103,6 +103,9 @@
 ## Act X, the Smuggler's Cutter:
 ##   Marooned Quartermaster  Spare Shot  in ChainShot._cast() (one more
 ##                    chain-shot a cast); stat chain_extra.
+## Act X, the Maelstrom:
+##   Ghost Helmsman   Second Anchor  in AnchorDrop.step() (one more anchor a
+##                    cast); stats as the spell's (anchor_slams).
 class_name CharacterInnates
 extends Node2D
 
@@ -472,6 +475,9 @@ func summary_line() -> String:
 		# --- Act X: the Treasure Galleon --- (Queen's Ransom lives in Cannonade._volley())
 		"queens_ransom":
 			counters = "extra marks %d (balls %d)" % [int(st.get("cannonade_extra_marks", 0.0)), int(st.get("cannonade_balls", 0.0))]
+		# --- Act X: the Maelstrom --- (Second Anchor lives in AnchorDrop.step())
+		"second_anchor":
+			counters = "extra anchors %d (slams %d)" % [int(game.character.innate_value(AnchorDropData.EXTRA_KEY)), int(st.get("anchor_slams", 0.0))]
 	out += " | innate: %s" % ("none" if _innate == "" else "%s: %s" % [ch.innate_name(), counters])
 	out += " | characters unlocked this run: %s" % (", ".join(ch.unlocked_this_run) if not ch.unlocked_this_run.is_empty() else "none")
 	var open := PackedStringArray()  # Characters unlocked in the Meta profile now.

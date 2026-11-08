@@ -64,7 +64,10 @@ const CLASS_ORDER := ["warrior", "archer", "mage", "mender", "warder", "bishop",
 		"fallen_hero",
 		# --- Act IX: the Ark ---
 		# Unlockable (UnlockData: defeating the Harvester), so a fresh save never offers it.
-		"ghost_saucer"]
+		"ghost_saucer",
+		# --- Act X: the Maelstrom ---
+		# Unlockable (UnlockData: defeating Vandermere), so a fresh save never offers it.
+		"powder_wraith"]
 ## The four GDD §4.2 summon ROLES ("all 4 classes": the Dread Sovereign
 ## achievement), in SynergyManager.classes_met() format: an entry that is an
 ## Array means "any one of these", so after the priest split either priest
@@ -1376,6 +1379,64 @@ const UNITS := {
 			"hover_lift": 16.0,  # TUNING (not in GDD) px the hull hovers above its shadow (drawing only)
 		},
 	},
+	# --- Act X: the Maelstrom ---
+	# The Powder Wraith (owner-approved proposal: "Finale summon class: the
+	# Powder Wraith, a skeleton carrying a lit keg that walks into a pack and
+	# bursts (area damage and a 60 px knockback), then reforms at the ring after
+	# 12 s (evolution Magazine Lord). It is a class special, so it works on every
+	# stage"; GDD §15.0 "The Powder Wraith, Magazine Lord and Slow Match"): an
+	# undead skeleton (no sex) with a lit powder keg on its shoulder. It fights
+	# with a short blade on the Bone Ring's front posts between kegs; its
+	# special (PowderWraithBehavior, "keg_burst") marches it into the densest
+	# pack and bursts it there, and it reforms at the ring reform_time s later.
+	# Unlockable (UnlockData), then offered on every stage.
+	"powder_wraith": {
+		"display_name": "Powder Wraith",  # Owner-approved proposal
+		"plural": "Powder Wraiths",
+		"description": "Skeletons with lit kegs that march into a pack, burst, and reform at your ring.",  # Card text: one short sentence (owner rule).
+		"max_hp": 60.0,  # TUNING (not in GDD) a skeleton (Warrior 90)
+		"damage": 7.0,  # TUNING (not in GDD) a short blade (melee) between kegs
+		"attack_interval": 1.1,  # TUNING (not in GDD) s
+		"attack_range": 8.0,  # TUNING (not in GDD) edge-to-edge reach (px)
+		"move_speed": 96.0,  # TUNING (not in GDD) px/s
+		"radius": 10.0,  # TUNING (not in GDD) px
+		"acquisition_range": 200.0,  # TUNING (not in GDD) px
+		"replenish_interval": 12.0,  # TUNING (not in GDD) s (a fallen one; a burst one reforms on its own clock)
+		"band_min": 50.0,  # TUNING (not in GDD) px, with the front
+		"band_max": 110.0,  # TUNING (not in GDD)
+		"w_pursuit": 1.0,  # TUNING (not in GDD)
+		"w_formation": 0.4,  # TUNING (not in GDD)
+		"w_separation": 0.8,  # TUNING (not in GDD)
+		"w_threat": 0.05,  # TUNING (not in GDD)
+		"attack_profile": "melee",
+		"target_profile": "skirmisher",
+		"windup": 0.15,  # TUNING (not in GDD) s
+		"projectile_speed": 0.0,
+		"splash_radius": 0.0,
+		"heal_amount": 0.0,
+		"kite_distance": 0.0,
+		"heal_role_priority": 0.6,  # TUNING (not in GDD)
+		"formation": "front",  # It marches out from the ring's front posts.
+		"capacity_bonus_mult": 0.5,  # TUNING (not in GDD) Grave Dominion V: +2
+		"behavior": "keg_burst",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"special": {
+			"keg_damage": 40.0,  # TUNING (not in GDD) AoE damage of the burst
+			"keg_radius": 64.0,  # TUNING (not in GDD) px (the Powder Runner's keg 64)
+			"keg_knockback": 60.0,  # Owner-approved proposal: a 60 px knockback (px pushed; Slow Match lengthens it)
+			"keg_cooldown": 3.0,  # TUNING (not in GDD) s after it reforms before it lights the next keg
+			"keg_range": 260.0,  # TUNING (not in GDD) px from its necromancer it looks for a pack
+			"keg_min_enemies": 3,  # TUNING (not in GDD) foes around the pick (an elite / boss alone also counts)
+			"keg_speed": 150.0,  # TUNING (not in GDD) px/s it marches with the fuse lit
+			"keg_trigger": 20.0,  # TUNING (not in GDD) px from the pack's foe it bursts
+			"keg_march": 2.2,  # TUNING (not in GDD) s at most it marches (it bursts wherever it is then)
+			"reform_time": 12.0,  # Owner-approved proposal: it reforms at the ring after 12 s (not a *_duration key: nothing lengthens it)
+			"kegs": 1,  # Bursts a keg (Magazine Lord 2: a second blast at the next pack)
+			"chain_range": 130.0,  # TUNING (not in GDD) px from a burst Magazine Lord looks for its next pack
+			"keg_shake": 2.0,  # TUNING (not in GDD) screen-shake request (px, Juice)
+			"cluster_bonus": 0.4,  # TUNING (not in GDD) target-score bonus x cluster fullness while the keg is ready
+		},
+	},
 }
 
 ## Summon-ability progression, one entry per skill level (index 0 = level 1).
@@ -1624,6 +1685,16 @@ const LEVELS := {
 		{"count": 2, "hp_bonus": 0.2, "special_bonus": 0.25},
 		{"count": 3, "hp_bonus": 0.25, "special_bonus": 0.3, "special_area": 0.15},
 		{"count": 3, "hp_bonus": 0.3, "damage_bonus": 0.25, "special_bonus": 0.5, "special_area": 0.2, "special_haste": 0.2},
+	],
+	# --- Act X: the Maelstrom ---
+	# TUNING (not in GDD): 2 -> 4 Powder Wraiths (a burst one is away 12 s);
+	# harder, wider kegs, then sooner.
+	"powder_wraith": [
+		{"count": 2},
+		{"count": 3},
+		{"count": 3, "hp_bonus": 0.2, "special_bonus": 0.25},
+		{"count": 4, "hp_bonus": 0.25, "special_bonus": 0.3, "special_area": 0.15},
+		{"count": 4, "hp_bonus": 0.3, "damage_bonus": 0.25, "special_bonus": 0.5, "special_area": 0.2, "special_haste": 0.2},
 	],
 }
 

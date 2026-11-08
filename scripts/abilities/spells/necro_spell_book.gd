@@ -89,6 +89,9 @@
 ## and Act X's (the Treasure Galleon, GALLEON_IDS: stepped only; its own
 ## autotest line, GalleonReport.item_lines()):
 ##   Cannonade        -> Cannonade        (evolves into Dead Men's Broadside)
+## and Act X's (the Maelstrom, MAELSTROM_IDS: stepped only; its own autotest
+## line, MaelstromReport.item_lines()):
+##   Anchor Drop      -> AnchorDrop       (evolves into Abyssal Mooring)
 ## Game calls after_physics() once per tick after obstacles are resolved
 ## (Bone Wall holds enemies there).
 ## Each spell node is created the first time its spell is learned and reads
@@ -220,6 +223,10 @@ const CUTTER_IDS := ["chain_shot"]
 ## The Treasure Galleon's unlockable spell (Admiral Marrec's reward): stepped
 ## only (no kill or after-physics hook), reported by GalleonReport.
 const GALLEON_IDS := ["cannonade"]
+# --- Act X: the Maelstrom ---
+## The Maelstrom's unlockable spell (Vandermere's reward): stepped only (no kill
+## or after-physics hook), reported by MaelstromReport.
+const MAELSTROM_IDS := ["anchor_drop"]
 ## Damage-source stat tags of each spell (CombatResolver "dmg_<tag>"), base
 ## spell first, then its evolution's. Used for the autotest summary.
 const SOURCES := {
@@ -284,6 +291,8 @@ const SOURCES := {
 	"chain_shot": ["chain_shot", "keelhauler"],
 	# --- Act X: the Treasure Galleon ---
 	"cannonade": ["cannonade", "dead_mens_broadside"],
+	# --- Act X: the Maelstrom ---
+	"anchor_drop": ["anchor_drop", "anchor_drop_shock", "abyssal_mooring", "abyssal_mooring_shock"],
 }
 
 ## Owning run.
@@ -485,6 +494,15 @@ func step(delta: float) -> void:
 			node = _create(id)
 		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
 		node.step(delta, ab.spell_stats(id))  # The Treasure Galleon's spell.
+	# --- Act X: the Maelstrom ---
+	for id: String in MAELSTROM_IDS:
+		if ab.spell_level(id) <= 0:
+			continue
+		var node: NecroSpell = nodes.get(id)  # The spell's node (created lazily).
+		if node == null:
+			node = _create(id)
+		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
+		node.step(delta, ab.spell_stats(id))  # The Maelstrom's spell.
 
 
 ## Content wave 2: the Bone Wall node, created when missing (the Ossuary
@@ -593,6 +611,9 @@ func _create(id: String) -> NecroSpell:
 		# --- Act X: the Treasure Galleon ---
 		"cannonade":
 			node = Cannonade.new()  # The Treasure Galleon's spell.
+		# --- Act X: the Maelstrom ---
+		"anchor_drop":
+			node = AnchorDrop.new()  # The Maelstrom's spell.
 		_:
 			node = PlagueCloud.new()
 	node.game = game

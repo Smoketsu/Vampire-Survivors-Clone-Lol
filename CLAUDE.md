@@ -744,6 +744,12 @@ tiny tweaks.
    phase 2)"): broadsides, the deck cannons (a world rule), the Gunnery Mate, Voodoo Navigator, Gunboat and Hull Crab,
    Old Hollow-Eye, Admiral Marrec, Cannonade / Dead Men's Broadside + Black Powder, the Corsair Queen, Walked the Plank →
    Sea Legs; still `"playable": false` until the lead's integration.
+   Black Tide phase 2, **the Maelstrom** (branch `tide-maelstrom`, GDD §15.0 "The Maelstrom (Act X phase 2)" and the rows
+   after it): the Heave (`MaelstromDirector`), the ghost crew raised for the necromancer, the Sea Serpent
+   (`corsair_serpent`: Act IV owns `sea_serpent`), the Ghost Bosun, Captain Vandermere and Dead Men's Oath, Anchor Drop /
+   Abyssal Mooring + Dead Reckoning, the Ghost Helmsman, the Powder Wraith / Magazine Lord + Slow Match, Dead Men Tell
+   Tales (title only); autotest `--boss=vandermere`, `--spells=anchor_drop`, `--classes=powder_wraith`; still
+   "playable": false until the lead's merge.
 7. **Phase 4 polish:** accessibility, profiling on real hardware, and the **final balance pass**.
    The owner's Oct 2026 playtest balance pass is in (GDD §15.0 "Balance pass (Oct 2026 playtest)": Dread Rally raises the army, spells ×1.2, boss HP Alaric −35% / Vael −40% / Seraphine −30%, later level-up items weigh 0.5, Frost Wraith / Bone Hound / Banshee base damage raised; the earlier +5% global multiplier was removed); further value tweaks wait for this pass (naive-bot
    death rates above target on both stages and spell-only builds lacking single-target damage are

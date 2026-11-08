@@ -513,6 +513,12 @@ func _ready() -> void:
 			gag.look = stage_def.get("floor", {})
 			gag.game = self
 			ground = gag
+		# --- Act X: the Maelstrom ---
+		"maelstrom":
+			var mg := MaelstromGround.new()  # Act X: the Hollow Queen's deck and the whirlpool's sea (the art pass's tiles).
+			mg.look = stage_def.get("floor", {})
+			mg.game = self
+			ground = mg
 		# --- Act XI (temporary): the Hall of the Slain ---
 		"norse":
 			var nog := NorseGround.new()  # The Norse stubs' placeholder floor (the STAGE's "floor").

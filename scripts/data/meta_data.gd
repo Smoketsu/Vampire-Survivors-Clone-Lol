@@ -448,7 +448,9 @@ const ACHIEVEMENT_ORDER := ["bone_legion", "heretics_bane", "dread_sovereign", "
 	# --- Act X: the Smuggler's Cutter ---
 	"not_one_aboard",
 	# --- Act X: the Treasure Galleon ---
-	"walked_the_plank"]
+	"walked_the_plank",
+	# --- Act X: the Maelstrom ---
+	"dead_men_tell_tales"]
 
 ## Achievement definitions (GDD §9.4 "Example Achievement Unlocks"). Each
 ## achievement is tracked and recorded in the save and pays a one-time Soul
@@ -714,6 +716,16 @@ const ACHIEVEMENTS := {
 	# Legs (brief).
 	"walked_the_plank": {"display_name": "Walked the Plank", "description": "Send 200 foes overboard in one run",
 		"stat": "walked_the_plank_runs", "goal": 1, "unlock": "The Sea Legs passive", "bounty": 300},  # Brief; bounty TUNING (not in GDD) as The Hunter Hunted
+	# --- Act X: the Maelstrom ---
+	# The Black Tide's finale (owner-approved proposal: "Dead Men Tell Tales
+	# (beat Vandermere with the Oath broken three times; opens the act's
+	# epilogue part)"; the lead's plan: no epilogue part until the reorder, so
+	# it only records the clear, with the title Captain of the Dead): a run in
+	# which Vandermere fell with his Oath broken at least three times (run stat
+	# vandermere_tales_kills, set by MaelstromDirector; MetaProgress counts it,
+	# lifetime dead_men_tales_kills).
+	"dead_men_tell_tales": {"display_name": "Dead Men Tell Tales", "description": "Beat Vandermere in the Maelstrom with his Oath broken three times",
+		"stat": "dead_men_tales_kills", "goal": 1, "unlock": "The title Captain of the Dead", "bounty": 500},  # Owner-approved proposal; bounty TUNING (not in GDD) as The Last Harvest
 }
 
 # --- Content wave 2: B. Achievement rewards ---

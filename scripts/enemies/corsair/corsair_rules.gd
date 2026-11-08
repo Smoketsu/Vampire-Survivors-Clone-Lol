@@ -207,6 +207,9 @@ func danger_push(p: Vector2) -> Vector2:
 	push += lob_danger(p)  # Act X, the Treasure Galleon: out of the grenadoes' landing circles.
 	if game.enemies.galleon != null:
 		push += game.enemies.galleon.danger_push(p)  # Act X, the Treasure Galleon: out of the broadside lanes.
+	# --- Act X: the Maelstrom --- the Heave: lean uphill, off the low rail.
+	if game.enemies.maelstrom != null:
+		push += game.enemies.maelstrom.danger_push(p)
 	return push
 
 

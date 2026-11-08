@@ -112,7 +112,9 @@ const ORDER := ["void_barrage", "eclipse_ward", "abyssal_detonation",
 	# --- Act X: the Smuggler's Cutter ---
 	"keelhauler",
 	# --- Act X: the Treasure Galleon ---
-	"dead_mens_broadside"]
+	"dead_mens_broadside",
+	# --- Act X: the Maelstrom ---
+	"abyssal_mooring"]
 
 ## Evolution definitions.
 ##   base         — spell id that evolves (AbilityData.SPELLS key).
@@ -846,6 +848,26 @@ const EVOLUTIONS := {
 			"damage": 30.0, "marks": 5, "radius": 42.0, "range": 380.0, "cooldown": 2.8,  # TUNING (not in GDD) first pass 40 / 2.6 s (the forced seed-7 run: 261k from the evolution alone)
 			"salvo": 0.45,  # TUNING (not in GDD) the evolution flag: s between the two balls of a mark
 			"salvo_share": 0.5,  # TUNING (not in GDD) x the damage of the second ball
+		},
+	},
+	# --- Act X: the Maelstrom ---
+	# Abyssal Mooring (GDD §15.0 "Anchor Drop, Abyssal Mooring, Dead Reckoning
+	# and the Ghost Helmsman"; owner-approved proposal "Anchor Drop -> Abyssal
+	# Mooring (+ Dead Reckoning)"): Anchor Drop + Dead Reckoning (a NEW passive,
+	# owner rule: at Lv 5). Two anchors a cast, harder, a wider shock and a
+	# longer stun, and each anchor stays MOORED `moor` s where it fell, shocking
+	# the foes within moor_radius px every moor_every s for moor_share x the
+	# damage (no pull). Detected by the "moor" key.
+	"abyssal_mooring": {
+		"base": "anchor_drop",
+		"passive": "dead_reckoning",
+		"display_name": "Abyssal Mooring",  # Owner-approved proposal
+		"icon": "abyssal_mooring",
+		"description": "Two anchors fall from the abyss; each stays moored where it lands, shocking all around it.",
+		"labels": {"damage": "Slam damage", "cooldown": "Cooldown (s)", "anchors": "Anchors", "anchor_stun": "Stun (s)", "ring_radius": "Shock (px)", "ring_share": "Shock damage", "moor": "Moored (s)", "moor_share": "Mooring pulse"},
+		"stats": {
+			"damage": 90.0, "cooldown": 2.5, "anchors": 2, "anchor_stun": 1.5, "ring_radius": 70.0, "ring_share": 0.3,  # TUNING (not in GDD) first passes 74 px / 0.55, then 0.42 (404k in the forced seed-7 Maelstrom run)
+			"moor": 2.0, "moor_every": 0.6, "moor_share": 0.08, "moor_radius": 64.0,  # TUNING (not in GDD) the evolution flag: the moored anchor's pulses (first pass 2.4 s / 0.18 / 70 px: 437k damage in the forced seed-7 Maelstrom run)
 		},
 	},
 }

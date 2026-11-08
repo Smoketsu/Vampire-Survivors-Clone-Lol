@@ -58,6 +58,11 @@ var _next_gunboat: float = INF
 var _wave_hit: bool = false
 ## Overboard count when the current wave started (the report's wave drownings).
 var _drowned_before: int = 0
+# --- Act X: the Maelstrom ---
+## Game time (s) the next kraken arm surfaces (-1 = not scheduled yet).
+var _next_kraken: float = -1.0
+## Kraken arms that surfaced in the Black Tide (the report).
+var krakens: int = 0
 
 
 ## Builds the Black Tide for `p_game`; `p_enabled` false off Act X.
@@ -112,6 +117,7 @@ func step(delta: float) -> void:
 			_next_wave = now + float(cfg["wave_every"]) - float(cfg["wave_telegraph"])
 			_side = -_side
 			game.stat_add("black_tide_drowned", float(game.deck.drowned - _drowned_before))
+	_kraken(now)  # --- Act X: the Maelstrom --- the kraken surfaces.
 
 
 ## One ownerless strike on the rail band beside a standing necromancer.
@@ -186,3 +192,23 @@ func draw(ci: CanvasItem) -> void:
 	var x1 := deck.center.x + deck.half_length
 	ci.draw_rect(Rect2(Vector2(x0, y - 4.0), Vector2(x1 - x0, 8.0)), Color(Palette.CORSAIR_SEA_LIGHT, 0.3 + 0.3 * k))
 	ci.draw_line(Vector2(x0, y), Vector2(x1, y), Color(Palette.CORSAIR_FOAM_LIGHT, 0.5 + 0.5 * k), 2.0)
+
+
+# --- Act X: the Maelstrom ---
+## "The kraken surfaces" (owner-approved proposal): every kraken_every s (the
+## first kraken_first s after 0:00; 0 = off) a kraken arm comes up out of the
+## sea through SeaStrikes.spawn_swimmer() (the Reckoning's flag; the swimmer cap
+## holds), at the director's HP scaling.
+func _kraken(now: float) -> void:
+	var every := float(cfg.get("kraken_every", 0.0))
+	if every <= 0.0:
+		return
+	if _next_kraken < 0.0:
+		_next_kraken = started_at + float(cfg.get("kraken_first", every))
+	if now < _next_kraken:
+		return
+	_next_kraken = now + every
+	if game.corsair.sea.spawn_swimmer("kraken_arm", game.enemies.hp_mult, false, 1.0, true):
+		krakens += 1
+		game.stat_add("black_tide_krakens", 1.0)
+		game.corsair.play_sound("kraken_rise", game.player.position, 1.0)

@@ -114,7 +114,9 @@ const SPELL_ORDER := ["shadow_bolt", "orb_shield", "shadow_blast",
 	# --- Act X: the Smuggler's Cutter ---
 	"chain_shot",
 	# --- Act X: the Treasure Galleon ---
-	"cannonade"]
+	"cannonade",
+	# --- Act X: the Maelstrom ---
+	"anchor_drop"]
 
 ## Spell definitions.
 ##   display_name — UI name.
@@ -994,6 +996,31 @@ const SPELLS := {
 			{"damage": 30.0, "marks": 4, "radius": 38.0, "range": 360.0, "cooldown": 2.8},  # TUNING (not in GDD) first pass 38 / 2.7 s (the forced seed-7 run: 322k damage, far ahead of the army)
 		],
 	},
+	# --- Act X: the Maelstrom ---
+	# Anchor Drop (GDD §15.0 "Anchor Drop, Abyssal Mooring, Dead Reckoning and
+	# the Ghost Helmsman"; owner-approved proposal: "a spectral anchor slams the
+	# strongest enemy, stuns it and shocks a ring around it (no pull)"; unlocked
+	# by defeating Vandermere, UnlockData): every `cooldown` s a spectral anchor
+	# falls on the strongest foe within AnchorDropData.AIM_RANGE px: `damage`, a
+	# stun of anchor_stun s (CombatResolver.stun_enemy(); bosses a quarter), and
+	# ring_share x the damage to the foes within ring_radius px. Logic:
+	# AnchorDrop; fixed rules: AnchorDropData. A single-target blow with a stun
+	# and a splash, the act's answer to a heavy (no pull: the act's spells
+	# knock, chain and bombard).
+	"anchor_drop": {
+		"display_name": "Anchor Drop",  # Owner-approved proposal
+		"icon": "anchor_drop",
+		"description": "A spectral anchor slams the strongest foe, stuns it and shocks the ring around it.",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Slam damage", "cooldown": "Cooldown (s)", "anchor_stun": "Stun (s)", "ring_radius": "Shock (px)", "ring_share": "Shock damage"},
+		"levels": [
+			{"damage": 34.0, "cooldown": 3.4, "anchor_stun": 0.8, "ring_radius": 48.0, "ring_share": 0.3},  # TUNING (not in GDD)
+			{"damage": 42.0, "cooldown": 3.25, "anchor_stun": 0.9, "ring_radius": 52.0, "ring_share": 0.32},  # TUNING (not in GDD)
+			{"damage": 51.0, "cooldown": 3.1, "anchor_stun": 1.0, "ring_radius": 56.0, "ring_share": 0.34},  # TUNING (not in GDD)
+			{"damage": 61.0, "cooldown": 2.95, "anchor_stun": 1.1, "ring_radius": 60.0, "ring_share": 0.37},  # TUNING (not in GDD)
+			{"damage": 72.0, "cooldown": 2.8, "anchor_stun": 1.2, "ring_radius": 64.0, "ring_share": 0.4},  # TUNING (not in GDD) Tractor Beam Lv5 78 / 2.6 s; the stun is its edge (first pass shock 0.54 at 68 px: the shock ring dealt most of its damage)
+		],
+	},
 }
 
 ## Stat keys shown as a percentage on cards (fractions: 0.25 -> 25%).
@@ -1028,7 +1055,9 @@ const PERCENT_KEYS := ["lifesteal", "rot", "burst", "zone_damage", "zone_slow", 
 	# --- Act VIII: Liberty Heights ---
 	"fling_share", "crater_share",
 	# --- Act IX: the Ark ---
-	"slam_share", "quake_share"]
+	"slam_share", "quake_share",
+	# --- Act X: the Maelstrom ---
+	"ring_share", "moor_share"]
 ## Stat keys that are spell durations (s): the Lingering Malediction passive
 ## lengthens them (AbilityManager.apply_spell_mods()).
 const DURATION_KEYS := ["duration", "zone_duration", "slow_duration"]

@@ -2560,6 +2560,47 @@ Autotest: `--stage=galleon`, `--boss=marrec`, `--spells=cannonade`, `--character
 `gunnery_mate`, `voodoo_navigator`, `gunboat`, `hull_crab`, `old_hollow_eye`; lines `galleon`, `broadsides`, `deck
 cannons`, `galleon kinds`, `old hollow-eye`, `galleon threats`, `marrec`, and on any stage `act X spell` / `act X
 passives` when taken.
+#### Stage 30: the Maelstrom (phase 2)
+
+<!-- --- Act X: the Maelstrom --- -->
+The act's finale (GDD §15.0 "The Maelstrom (Act X phase 2)" and the rows after it; still *Coming soon* until the lead's
+merge). The ghost ship *Hollow Queen*, caught in a whirlpool at midnight: a rotting 1,300 x 500 deck (the art pass's
+`tiles/corsair_maelstrom` over its `corsair_water`, tinted per zone, and its deck furniture: masts, hatches, barrels and
+dead guns, with the helm's wheel at the stern), boarded along the **whole rail** by the full roster, up to six boats at
+once. Four zones: **the Fog of Ships** (a gentle roll), **the Gyre**, **the Eye of the Storm** (the deck lies level and
+the sea comes up to look: serpents and the kraken) and **the Drowned Helm**.
+
+- **The Heave.** The whirlpool tilts the deck toward a low side: you, your army and every boarder slide toward that rail
+  at 30 px/s, and the low side flips every 12 s after a 3 s creak; the HUD objective line is the arrow ("The deck heaves:
+  sliding DOWN v v v", "The hull creaks: the deck tips UP ^ ^ ^"), with chevrons along the low rail. Enemies slide by
+  their knockback, so a blow at the low rail tips them overboard.
+- **The Brotherhood's own dead.** The *Hollow Queen*'s **ghost crew** (Ghost Deckhands and Ghost Gunners: the roster's
+  art in a spectre green) boards with the living. A ghost crewman cut down on the deck near you **rises for you** for 7 s
+  (at most 5 at once); one that drowns stays in the sea.
+- **The Sea Serpent** (`corsair_serpent`, a shared swimmer heavy) breaches in a line across the rail band: step out of
+  the lane.
+- **The Ghost Bosun** (miniboss, 8:30) climbs over the rail; each blast of his whistle calls a **spectral longboat** with
+  his drowned crew.
+- **Captain Cornelius Vandermere** (17:00) drifts at you lashed to his wheel, behind **Dead Men's Oath**: while it holds
+  he takes 35% of every hit. Every ghost crewman you raise chips it 2%; broken, he takes 150% for 15 s, then it refills
+  and his crew returns. **The Crew**: spectral longboats on a clock; a fan of lantern shots. **The Maelstrom** (below
+  55% HP): the tilt doubles (the low rail drowns what is pressed on it), the kraken surfaces and strikes the low rail.
+  When he falls the whirlpool closes and the sea is calm (the deck lies level).
+- **The Black Tide** here also brings the kraken up every 24 s (every stage of the act: every 30 s).
+
+Rewards (unlocked by defeating Vandermere, offered on every stage): the spell **Anchor Drop** (a spectral anchor slams
+the strongest foe, stuns it and shocks the ring round it; no pull) evolving into **Abyssal Mooring** (two anchors that
+stay moored and keep shocking) with **Dead Reckoning**; the character **the Ghost Helmsman** (male; innate Second
+Anchor: one more anchor); the summon class **the Powder Wraith** (a skeleton that marches a lit keg into a pack, bursts
+for area damage and a 60 px knockback, and reforms at your ring 12 s later) evolving into **Magazine Lord** (two kegs a
+march, reforms in 8 s) with the new passive **Slow Match** (every summon special knocks farther). Achievement **Dead Men
+Tell Tales** (beat Vandermere with his Oath broken three times): the title *Captain of the Dead* (no epilogue part until
+the act reorder).
+
+Autotest: `--stage=maelstrom`, `--boss=vandermere`, `--spells=anchor_drop`, `--classes=powder_wraith`,
+`--character=ghost_helmsman`, `--spawn=` with `ghost_deckhand`, `ghost_gunner`, `ghost_bosun`, `corsair_serpent`; lines
+`maelstrom` (the Heave, raises, longboats, the Bosun, the event log), `maelstrom kinds`, `vandermere`, `black tide
+kraken`, and on any stage `anchor drop` / `powder wraith` when used.
 ### The Hall of the Slain (foundation, not yet playable)
 
 <!-- --- Act XI (temporary): the Hall of the Slain --- -->
@@ -3381,6 +3422,10 @@ scripts/
                             quarterdeck and forecastle, the hatches and barrels as floor dressing (Act X)
     galleon_report.gd       The autotest's Galleon lines (galleon, broadsides, deck cannons, galleon kinds, old
                             hollow-eye, galleon threats, marrec) and its items (Cannonade, Black Powder, Sea Legs)
+    maelstrom_report.gd     The autotest's Maelstrom lines (maelstrom, maelstrom kinds, vandermere, black tide
+                            kraken) and the Anchor Drop / Powder Wraith item lines (Act X)
+    maelstrom_ground.gd     The Maelstrom's floor: tiles/corsair_water (tinted per zone) and the Hollow Queen's
+                            tiles/corsair_maelstrom on the deck outline (Act X)
     fort_kessler_report.gd  The autotest's Fort Kessler lines (the stage, its kinds, Mammoth, the threats, Harrow) and
                             its items (Bone Mines, Tripwire, Armour-Piercing Bones)
     fort_kessler_ground.gd  Fort Kessler's floor: CityGround with each zone's look (checkpoints, minefields, aprons,
@@ -3486,6 +3531,8 @@ scripts/
     behaviors/blood_spawn_behavior.gd  Act VII: the Blood Spawn's Bloodthirst (Nosferatu's spill; Thirst Eternal's key)
     behaviors/fallen_hero_behavior.gd  Act VIII: the Fallen Hero's Hero's Slam (the orbit, the dive on the densest pack;
                             Black Paragon's stun and chain; Origin Story's key)
+    behaviors/powder_wraith_behavior.gd  Act X: the Powder Wraith's keg burst and reform; Magazine Lord's
+                            second keg; Slow Match keys
     behaviors/ghost_saucer_behavior.gd  Act IX: the Ghost Saucer's short beams and lifts (EnemyLift); Black
                             Mothership's three beams and two lifts; Crop Circles' key
     golem_kit.gd            Content wave 2: Ossuary Hunger, the Ossuary Titan's heal, barrier and
@@ -3726,7 +3773,9 @@ scripts/
       corsair_kit.gd        CorsairKit: the water state, surfacing, the submerged look, Barnacle Bones' read
       *_kit.gd              deckhand, musketeer, powder_runner (the keg), swashbuckler (the lunge),
                             boarding_bruiser, reef_shark, kraken_arm, corsair_boat, boarding_hook; grappler (the
-                            hook line's drag to the rail), boatswain (the bellow: bellow_at())
+                            hook line's drag to the rail), boatswain (the bellow: bellow_at()); the
+                            Maelstrom's corsair_serpent (the breach), ghost_crew (base) / ghost_deckhand /
+                            ghost_gunner, ghost_bosun (the whistle)
       cutter_director.gd    The Smuggler's Cutter: powder barrels restocked per zone, the Fog Bank's hidden lanes,
                             Bosun Gorran's ram longboat (the hull stagger, ram_stagger()), the Fire Ship's patches
                             (HellPits.open_pit()), Not One Aboard (Act X)
@@ -3739,6 +3788,9 @@ scripts/
       boss_marrec.gd        Admiral Marrec: the Fleet, the Boarding (the plank and its hooks), the duel, Gold Fever
       *_kit.gd (Galleon)    gunnery_mate (grenadoes), voodoo_navigator (marks), gunboat (shells in lines, launch()),
                             hull_crab (the climb), old_hollow_eye (the miniboss), cursed_coin, marrec
+      maelstrom_director.gd The Maelstrom: the Heave, the raised ghost crew, the Ghost Bosun, the spectral
+                            longboats (BoardingParty.launch_boat()), the ghost boats circling (Act X)
+      boss_vandermere.gd    Captain Vandermere: Dead Men's Oath, the Crew, the lantern volley, the Maelstrom
     concord/                The Concord of Stars (Act IX): its kits ("<id>_kit.gd", loaded by name after the
                             City's) and bosses ("boss_<id>.gd", phase 2), and the act's shared rules:
       concord_rules.gd      Game.concord: owns the beams, Abduction, Terraforming and the Final Harvest;
@@ -4121,7 +4173,12 @@ scripts/
     stages/cutter_stage.gd         Act X: the Smuggler's Cutter (built: zones, the "cutter" config), the Treasure Galleon and the Maelstrom; act 10
     stages/galleon_stage.gd        (temporary; final slot II), "corsair": true, "deck", "boarding", "sea", a FIXED
     stages/maelstrom_stage.gd      furniture layout ("fixed"), a timeline of the shared kinds, the Black Tide,
-                                   placeholder look / bosses
+                                   placeholder look / bosses (the Maelstrom is built: zones, MAELSTROM, the
+                                   timeline with the ghost crew, the deck furniture art)
+    maelstrom_enemy_data.gd The Maelstrom's table: the ghost crew, the Ghost Bosun, the spectral longboat (Act X)
+    vandermere_data.gd      Vandermere's arrival and fight: the Oath, the Crew, the volley, the Maelstrom (Act X)
+    anchor_drop_data.gd     Anchor Drop / Abyssal Mooring rules, Dead Reckoning keys, Second Anchor key (Act X; the
+                            spell node is abilities/spells/anchor_drop.gd)
     proving_moon_enemy_data.gd  The Proving Moon's table: the Warbeast (Act IX)
     norse_enemy_data.gd     The Hall of the Slain's shared kinds (raider, shield_maiden, berserker, skald, valkyrie,
                             seer, draugr, wolf_of_the_wastes, frost_giant, fire_giant) and the rune_stone / brazier

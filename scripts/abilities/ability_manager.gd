@@ -305,6 +305,12 @@ func apply_spell_mods(row: Dictionary, conduit_lvl: int = -1, focus_lvl: int = -
 	if out.has("lift_time"):
 		out["cooldown"] = float(out["cooldown"]) * (1.0 - passive_value(TractorLiftData.STARSEED, TractorLiftData.HASTE_KEY))
 		out["slam_radius"] = float(out.get("slam_radius", 50.0)) * (1.0 + passive_value(TractorLiftData.STARSEED, TractorLiftData.REACH_KEY))
+	# --- Act X: the Maelstrom --- Dead Reckoning: Anchor Drop falls sooner and
+	# its stun holds longer (its keys exist only in the Anchor Drop / Abyssal
+	# Mooring rows; the passive's values are 0 while not owned).
+	if out.has("anchor_stun"):
+		out["cooldown"] = float(out["cooldown"]) * (1.0 - passive_value(AnchorDropData.DEAD_RECKONING, AnchorDropData.HASTE_KEY))
+		out["anchor_stun"] = float(out["anchor_stun"]) * (1.0 + passive_value(AnchorDropData.DEAD_RECKONING, AnchorDropData.STUN_KEY))
 	return out
 
 
