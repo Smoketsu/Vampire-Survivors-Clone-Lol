@@ -28,8 +28,8 @@
 ## Retribution (BossSekhmet, SekhmetData) arrives with 3:00 left: the Hunt, the
 ## Red Wind, the Feast; the Reckoning at 0:00.
 ## Tuned for the act's FINAL slot VII (docs/last_acts/PLAN.md: the Shogunate /
-## Olympus level), not its temporary number. Hidden from the stage select
-## ("playable": false) until the lead's integration. Every rate, cap and weight
+## Olympus level), not its temporary number. Playable since the act went
+## live (the lead's integration). Every rate, cap and weight
 ## is TUNING (not in GDD).
 class_name LionessTempleStage
 extends RefCounted
@@ -300,7 +300,7 @@ const STAGE := {
 	"short_name": "Lioness Temple",
 	"chapter": "Chapter XXXV",  # Temporary (the reorder pass renumbers; final stage 20).
 	"act": 12,  # Temporary Act XII, the Necropolis Dynasty (final slot VII; docs/last_acts/PLAN.md).
-	"playable": false,  # Hidden from the stage select until the lead's integration.
+	"playable": true,  # The Necropolis Dynasty goes live (integration, GDD §15.0 "The Necropolis Dynasty goes live (integration)").
 	"description": "A sun-baked temple of colonnades and statue-lined courts, sacred to the goddess of war and plague: here the stone itself walks.",
 	"unlock": {"stage": "necropolis", "boss_kills": 1},  # Brief: each stage opens the next
 	"unlock_text": "Defeat Anubis at the Necropolis of Sand to unlock.",

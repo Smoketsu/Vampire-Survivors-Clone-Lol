@@ -176,7 +176,7 @@ Autotest options (full table in the README):
   graveyard; stage locks are ignored; `cutter|galleon|maelstrom` are the Black Tide, Act X until the reorder;
   `barrow_fields|valgard|vigrid` the Hall of the Slain, Act XI (`--boss=hrimgar|sigrun|odin`, `--character=rune_seer|shield_maiden_hero|berserker_hero`,
   `--spawn=muspel_giant|fenrir|odin_raven@T`); `necropolis|lioness_temple|two_truths` the
-  Necropolis Dynasty, Act XII: `necropolis` built in phase 2, hidden until the act ships; `--boss=anubis`)
+  Necropolis Dynasty, Act XII (`--boss=anubis|sekhmet|osiris`, `--character=the_embalmer|lion_priestess|pharaohs_shade`))
 - `--unlocks=all|none` (Act II's lockable spells / passives / classes in the card pool; forced items
   are open either way)
 - `--boss=alaric|vael|seraphine` (puts that boss in the stage's slot, e.g. test Seraphine on the Graveyard)
@@ -210,10 +210,10 @@ Autotest options (full table in the README):
 the autotests for the area a change touches plus one default run; run the full "Done" set (every stage,
 the same-seed gates) once per batch of changes, before `main` moves; multi-seed batches only for balance.
 
-CI (`.github/workflows/ci.yml`) runs the import and, as twenty-eight **parallel** matrix jobs, the Graveyard
+CI (`.github/workflows/ci.yml`) runs the import and, as thirty-four **parallel** matrix jobs, the Graveyard
 autotest with the naive and army policies, a Crimson March autotest, a Sanctum of Judgment autotest (army
-policy) and one army autotest per Act II, Act IV, V, VI, VII, VIII, IX and X (the Black Tide) stage; beside them, the Windows/Linux/Web exports (artifacts
-policy) and one army autotest per Act II, Act IV, V, VI, VII, VIII, IX and Hall of the Slain (Act XI for now) stage; beside them, the Windows/Linux/Web exports (artifacts
+policy) and one army autotest per Act II, Act IV, V, VI, VII, VIII, IX, X (the Black Tide), XI (the Hall of the Slain) and XII (the
+Necropolis Dynasty) stage; beside them, the Windows/Linux/Web exports (artifacts
 `Necropathy-windows` / `-linux` / `-web`) and an exported-build smoke test; also the co-op jobs `coop-net` (relay
 protocol + two-process transport test) and `coop-lockstep` (the two-process full-run determinism gate, ~10 min, not
 waited on by the publish jobs) and, on `main` pushes, `deploy-relay` (the Worker, secrets `CLOUDFLARE_API_TOKEN` /
@@ -688,10 +688,10 @@ tiny tweaks.
   the Fires → Fur-Lined Bones), **Valgard** (the Feast, the Einherjar Champion, Sigrun's Charge / Holmgang / Doors of the Hall;
   Valkyrie Spear + Einherjar's Oath, the Shield-Maiden, Holmgang → Calm Blood) and **Vigrid** (the Fading Light, the Fire-Giant
   of the south, Odin and Fenrir; Gungnir + Runecraft, the Berserker, the Draugr Thane / Barrow King + Cold Iron, Twilight of the
-  Wolf). One CI army job each (28 matrix jobs); bot pass `docs/norse/playtest/PASS1.md`; autotest `--keep-fires` (the
+  Wolf). One CI army job each (31 matrix jobs); bot pass `docs/norse/playtest/PASS1.md`; autotest `--keep-fires` (the
   fire-keeper bot). Stages 1–27 same-seed summaries unchanged.
 - **The Hall of Two Truths** (the Necropolis Dynasty's finale, phase 2; GDD §15.0 from "The Hall of Two Truths
-  (Necropolis Dynasty phase 2)"; still `"playable": false` until the lead's integration): four zones, **the Scales**
+  (Necropolis Dynasty phase 2)"; playable since the integration below): four zones, **the Scales**
   (`TruthScales` / `ScalesBar` in `TwoTruthsDirector`: every return tips them to the Dynasty, every raise and smash to
   the necromancer; ±15% enemy damage past the marks through one `Enemy.hit_mult()` read, Names 2 s sooner through
   `Rebirth.set_duration_bonus()` / `duration()`, the one duration path), the Crocodile Warden (shared row), the Devourer's
@@ -699,6 +699,13 @@ tiny tweaks.
   Verdict / Heart Devoured + Heavy Heart, the Pharaoh's Shade, the **Ushabti Sentinel** / Eternal Guard + Answering Words
   (reassembly through the one generic `SummonBehavior.on_lethal()` hook in `CombatResolver.damage_unit()`), achievement
   A Light Heart (title Light of Heart). Stages 1–27 same-seed summaries unchanged.
+- **The Necropolis Dynasty, playable** (temporarily Act XII, final slot VII; GDD §15.0 from "The Necropolis Dynasty foundation
+  (phase 1)" to "The Necropolis Dynasty goes live (integration)"; `docs/dynasty/`): `game.dynasty`, `DynastyRules` (Rebirth and
+  the Names, the Black Land and the Sandstorm, Heka; the Devourer's Hour Reckoning); **the Necropolis of Sand** (the Canopic
+  Jars beside the tombs, the Sand Colossus, Anubis; Linen Bind / Eternal Shroud + Natron Salts, the Embalmer, No Jars Left →
+  Embalmed Bones), **the Temple of the Lioness** (the Awakening Statues, the Lion Warden, Sekhmet; Burning Eye / Eye of
+  Retribution + Desert Fury, the Lion-Priestess, Names Taken → Dune Walkers) and **the Hall of Two Truths** (above). One CI
+  army job each (34 matrix jobs). Stages 1–33 same-seed summaries unchanged.
 
 **Next, in priority order:**
 1. **Playtest feedback** from the owner and friends (actively playtesting); it outranks everything below.
@@ -770,7 +777,8 @@ tiny tweaks.
    Wave 1b: the Dynasty's first stage, **the Necropolis of
    Sand**, is built (GDD §15.0 "The Necropolis of Sand (Act XII phase 2)" and the five rows after it: the Canopic Jars beside
    the tombs, the Nile Archer, the Jackal Warrior, the Sand Colossus, Anubis, Linen Bind / Eternal Shroud + Natron Salts,
-   the Embalmer, No Jars Left → Embalmed Bones), hidden until the act ships.
+   the Embalmer, No Jars Left → Embalmed Bones); then the Temple and the Hall, and **the Dynasty is live** (GDD §15.0 "The
+   Necropolis Dynasty goes live (integration)"; one CI army job each). Still Act XII until the reorder (final slot VII).
 7. **Phase 4 polish:** accessibility, profiling on real hardware, and the **final balance pass**.
    The owner's Oct 2026 playtest balance pass is in (GDD §15.0 "Balance pass (Oct 2026 playtest)": Dread Rally raises the army, spells ×1.2, boss HP Alaric −35% / Vael −40% / Seraphine −30%, later level-up items weigh 0.5, Frost Wraith / Bone Hound / Banshee base damage raised; the earlier +5% global multiplier was removed); further value tweaks wait for this pass (naive-bot
    death rates above target on both stages and spell-only builds lacking single-target damage are

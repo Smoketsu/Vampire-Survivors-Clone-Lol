@@ -8,8 +8,8 @@
 ## to the run as `Game.stage_def` (the STAGE dictionary at the bottom; its keys
 ## are documented in StageRegistry).
 ##
-## STATUS: BUILT (phase 2), hidden from the stage select ("playable": false)
-## until the lead ships the act. Unlocked in the campaign chain (Odin's fall on
+## STATUS: BUILT (phase 2), playable since the act went live (the lead's
+## integration). Unlocked in the campaign chain (Odin's fall on
 ## Vigrid opens it); it runs the Dynasty's three shared rules ("dynasty": true:
 ## Rebirth, the Black Land, Heka) and its own systems (NecropolisDirector,
 ## STAGE "necropolis"): THE CANOPIC JARS beside the tombs (the stage mechanic
@@ -302,7 +302,7 @@ const STAGE := {
 	"short_name": "Necropolis",
 	"chapter": "Chapter XXXIV",  # Temporary (the reorder pass renumbers; final stage 19).
 	"act": 12,  # Temporary Act XII, the Necropolis Dynasty (final slot VII; docs/last_acts/PLAN.md).
-	"playable": false,  # Built (phase 2); the lead ships the act.
+	"playable": true,  # The Necropolis Dynasty goes live (integration, GDD §15.0 "The Necropolis Dynasty goes live (integration)").
 	"description": "The tomb road at dusk, where the dunes meet the rock-cut tombs: the Dynasty has come to take its dead back, and every mummy it raises knows its name.",
 	"unlock": {"stage": "vigrid", "boss_kills": 1},  # PLAN.md: after the Norse act's last boss (odin, stage vigrid; set at the wave 1 integration)
 	"unlock_text": "Defeat Odin and Fenrir on Vigrid to unlock.",

@@ -15,7 +15,7 @@ Bishops, Shadow Reapers, Cathedral Horrors, Hellhounds, Keening Ladies and
 Ossuary Engines.
 
 This repository holds the game's campaign: nine acts of three stages each,
-33 playable stages (the Black Tide and the Hall of the Slain, temporarily Acts X and XI, went live in Nov 2026; the Necropolis Dynasty, Act XII for now, is being built) from *The Desecrated Graveyard* (Act I) to *The Ark of the
+36 playable stages (the Black Tide, the Hall of the Slain and the Necropolis Dynasty, temporarily Acts X, XI and XII, went live in Nov 2026) from *The Desecrated Graveyard* (Act I) to *The Ark of the
 Concord* (Act IX), each boss opening the next stage (Acts VI-IX went live in
 Nov 2026), built in Godot 4.3 with no addons. The art is true pixel art (PNGs in `assets/`; the code
 drawings remain as the fallback for any missing image), and the sound and
@@ -2738,7 +2738,7 @@ The oldest empire of the dead comes to take its dead back, and the necromancer's
 `docs/proposals/NEW_ACTS_AND_ORDER.md` Part 3; final slot VII of the fifteen-act order, temporary act number 12 until the
 reorder pass, `docs/last_acts/PLAN.md`). Three stub stages are registered under an **Act XII** tab: **the Necropolis of
 Sand** (`necropolis`, Anubis), **the Temple of the Lioness** (`lioness_temple`, Sekhmet) and **the Hall of Two Truths**
-(`two_truths`, Osiris), "Coming soon" until phase 2 builds them (Odin's fall on Vigrid opens them). Every Dynasty stage runs three shared rules (`Game.dynasty`, `DynastyRules`):
+(`two_truths`, Osiris), all three playable since the act went live (Odin's fall on Vigrid opens the first, each boss the next). Every Dynasty stage runs three shared rules (`Game.dynasty`, `DynastyRules`):
 - **Rebirth.** A fallen mummy or tomb guard leaves its **Name**: a small bronze cartouche over the corpse that fills over
   6 s. **Smash** it (any hit: a summon's blow, a spell, a volley) or **raise** the body (any raise: the Lich, Death Mark's
   Risen, Grave Tide, Call of the Drowned) before it fills, or the body stands again at 70% health and hits 20% harder (at
@@ -2763,7 +2763,7 @@ tab. Autotest: `--stage=necropolis|lioness_temple|two_truths`, `--boss=anubis|se
 `heka`, `devourer's hour`, `dynasty kinds`, `dynasty stage`.
 
 <!-- --- Act XII (temporary number): the Necropolis of Sand --- -->
-**The Necropolis of Sand** (`necropolis`, built in phase 2, still hidden until the lead ships the act; GDD §15.0 "The
+**The Necropolis of Sand** (`necropolis`, built in phase 2, playable since the act went live; GDD §15.0 "The
 Necropolis of Sand (Act XII phase 2)" and the rows after it). The tomb road at dusk, four zones (the Dunes, the Tomb Road,
 the Sandstorm Pass, the Mortuary Temple; their own floors and the art pass's tombs, obelisks, sphinx heads and fallen
 blocks):
@@ -2791,6 +2791,28 @@ Autotest: `--stage=necropolis`, `--boss=anubis`, `--spawn=` also takes `nile_arc
 `sand_colossus`, `--spells=linen_bind`, `--character=the_embalmer`; lines `necropolis`, `necropolis kinds`, `sand
 colossus`, `anubis`, and on any stage `act XII spell` / `act XII passives` when Linen Bind, Natron Salts or Embalmed Bones
 were taken.
+
+#### The Temple of the Lioness (phase 2)
+
+<!-- --- Act XII (temporary number): the Temple of the Lioness --- -->
+The act's second stage (`lioness_temple`, opened by Anubis; GDD §15.0 "The Temple of the Lioness (Dynasty phase 2)"
+and the rows after it): a sun-baked temple of colonnades in four zones, the Avenue of Statues, the Courtyard, the
+Hypostyle Hall and the Sanctuary.
+- **The Awakening Statues.** The statue rows are walls until a zone change, an event or the Lion Warden's roar wakes
+  them: their eyes glow 2 s, the row leaves the map and its stone walks as **Ushabti Statues** or a **Woken Colossus**.
+- **The Bastet Hunter** (elite) runs under the sand at your ranged summons, bursts out and duels; a spell hit reveals her.
+- **The Lion Warden** (miniboss, 11:00): the Hypostyle Hall seals round you with one doorway, and he stands in it. Kill
+  him to pass (the seal falls on its own after a while).
+- **Sekhmet, the Lioness of Retribution** (17:00): **the Hunt** (leaps from pillar to pillar onto your ring and rakes),
+  **the Red Wind** (an early Sandstorm, Heka glyphs at double speed), **the Feast** (unstoppable; break her three wine
+  jars while she drinks and she stumbles for 4 s, the only window she can be hurt).
+- **Rewards:** the spell **Burning Eye** (a solar eye sweeps a beam across an arc) → **Eye of Retribution** with **Desert
+  Fury**; the character **the Lion-Priestess** (innate Lioness's Gaze: the beam reaches farther). The achievement **Names
+  Taken** (raise 100 of the Dynasty's dead before their Names return, in one run) unlocks the counter-passive **Dune
+  Walkers** (quicksand slows your summons less, and the Sandstorm steals less of their reach; offered only in this act).
+  Autotest: `--stage=lioness_temple`, `--boss=sekhmet`, `--spawn=` with `bastet_hunter`, `ushabti_statue`,
+  `woken_colossus`, `lion_warden`; lines `temple`, `temple kinds`, `lion warden`, `temple threats`, and on any stage
+  `temple spell` / `temple passives` when Burning Eye, Desert Fury or Dune Walkers were taken.
 
 #### The Hall of Two Truths (phase 2)
 
@@ -3561,6 +3583,10 @@ scripts/
     necropolis_ground.gd    The Necropolis of Sand's four zone floors (tiles/necropolis_<style>; Act XII, temporary)
     necropolis_report.gd    The autotest's Necropolis lines (necropolis, necropolis kinds, sand colossus, anubis) and
                             its items (Linen Bind, Natron Salts, Embalmed Bones; Act XII, temporary)
+    lioness_temple_ground.gd  The Temple of the Lioness's four zone floors (Act XII, temporary)
+    lioness_temple_glyphs.gd  The Temple's obstacles (statue rows, braziers), Sekhmet and the Warden's fallbacks (Act XII)
+    lioness_temple_report.gd  The autotest's Temple lines (temple, kinds, lion warden, threats) and the Burning Eye /
+                            Desert Fury / Dune Walkers item lines (Act XII)
     two_truths_ground.gd    The Hall of Two Truths' four zone floors (tiles/two_truths_<style>; Act XII, temporary)
     two_truths_glyphs.gd    The Hall's single-sprite obstacles, the Weighing's Scales and the feather, Osiris / Ammit
                             fallbacks (Act XII)
@@ -4036,6 +4062,10 @@ scripts/
       rebirth.gd            REBIRTH: on_death() (the cartouche), on_raise() (HordeDirector.raise_corpse() steals the
                             Name), smash() (CombatResolver, no kill), return_body(), the Canopic Jars, place_jar()
       quicksand.gd          THE BLACK LAND's ground: fixed hashed patches, add_patch(), the slow (FenWater.wade())
+      lioness_temple_director.gd The Temple of the Lioness's director: the Awakening Statues (wake_rows()), the Lion
+                            Warden's sealed hall
+      boss_sekhmet.gd       Sekhmet: the Hunt, the Red Wind, the Feast and its wine jars (sekhmet_data.gd, wine_jar_kit.gd)
+      bastet_hunter_kit.gd, lion_warden_kit.gd, woken_colossus_kit.gd, ushabti_statue_kit.gd  The Temple's kinds
       two_truths_director.gd The Hall of Two Truths' director: the Scales (truth_scales.gd, the HUD's scales_bar.gd),
                             the Devourer's Whelp and the Crocodile Wardens' events, Osiris watching from the empty throne
       boss_osiris.gd        Osiris and Ammit the Devourer: the Judge, the Weighing, the Devourer (osiris_data.gd)
@@ -4346,6 +4376,8 @@ scripts/
     anubis_data.gd          Anubis, Opener of the Way: his row, phases and numbers (Act XII, temporary)
     tractor_lift_data.gd    Tractor Beam / Abduction rules, Starseed keys, Deserter's Signal key (Act IX; the
                             spell node is abilities/spells/tractor_lift.gd, the lift helper abilities/enemy_lift.gd)
+    burning_eye_data.gd     Burning Eye / Eye of Retribution rules, Desert Fury keys, Lioness's Gaze key (Act XII,
+                            temporary; the spell node is abilities/spells/burning_eye.gd)
     feathers_verdict_data.gd  Feather's Verdict / Heart Devoured rules, Heavy Heart keys, Crook and Flail key (Act XII,
                             temporary; the spell node is abilities/spells/feathers_verdict.gd)
     concord_rules_data.gd   Act IX's shared rules: RACES, BEAMS and BEAM_STYLES, ABDUCTION, TERRAFORMING,
@@ -4411,7 +4443,7 @@ scripts/
                             Necropolis's holds the Sand Colossus)
     dynasty_rules_data.gd   Act XII's shared rules: REBIRTH, JARS, QUICKSAND, SANDSTORM, HEKA, DEVOURER, FIRE_SOURCES,
                             the SOUNDS map, the Embalmed Bones / Dune Walkers keys
-    stages/necropolis_stage.gd     Act XII stubs: the Necropolis of Sand, the Temple of the Lioness and the Hall of Two
+    stages/necropolis_stage.gd     Act XII (built, playable): the Necropolis of Sand, the Temple of the Lioness and the Hall of Two
     stages/lioness_temple_stage.gd Truths; act 12, "dynasty": true, zones, the rule overrides, a timeline of the shared
     stages/two_truths_stage.gd     kinds, the Devourer's Hour, placeholder floors / bosses
                                    (the Hall of Two Truths built: four zones, the Scales, the Whelp, Osiris and Ammit;
@@ -4660,7 +4692,7 @@ Options (after `--`):
 | `--spells=a,b,...` | Any policy first takes these spells (ids from `AbilityData.SPELL_ORDER`, e.g. `bone_spear,soul_siphon,corpse_explosion,plague_cloud` or the later `death_mark,bone_wall,soul_chains` / `wither,raise_dead`) and their evolution passives, which also get ×8 card weight in hands and chests so they are offered reliably (a test-only hook; without `--spells` the draw is unchanged), never banishes them, and stops taking other new actives (or passives) once the free slots are down to the forced spells (or passives) still missing plus one spare, because chests can fill slots too (a hand with nothing else is rerolled or skipped). The `army`, `evolve` and `summon` bots never take a new item that is not on their build list (they reroll or skip), so the newer spells and the later summon classes do not change those baselines (`--classes` / `--spells` items are exempt); the `summon` and `army` bots also keep active slots free for the core classes they still lack (summon: Warriors, Mages, Menders, Warders; army: those plus Archers). Use it to exercise a spell and reach its evolution. |
 | `--passives=a,b,...` | Any policy first takes these passives (ids from `PassiveData.ORDER` except the Pact, e.g. `unholy_precision,unholy_resilience` or `blood_scent,mournsong,siegecraft`) exactly like the `--spells` items (score, ×8 card weight, slot reservation, never banished), so a passive's effect can be exercised. |
 | Bone Golem (content wave 2) | `--classes=bone_golem,...` and `--passives=grave_masonry` force the locked Golem and its passive. A run that had either prints a `bone golem` line: `absorbed=<n> max_growth=<%> bulwarks=<n> titan=<bool> bone_bastion_prevented=<dmg>`, then its level, alive / capacity, deaths, damage by source (slams with their volleys, splash, the Titan's wall), slams and slam hits, planted seconds, taunts, Grave Masonry's level and damage prevented, the Titan's heal, barriers and walls, and whether Bone Bastion was active. |
-| `--stage=ID` | Stage to play: `graveyard` (default), `crimson_march`, `sanctum`, the Act II stages `harbour`, `archive` and `spire`, the Act III stages `wastes`, `assembly` and `citadel`, the Act IV stages `ilion`, `olympus` and `underworld`, the Act V stages `province`, `kurogane` and `sun_road`, the Act VI stages `burning_gate`, `silk_palace` and `pandemonium`, the Act VII stages `ravensmoor`, `witchwood` and `castle_sanguis` (the summary adds the `bloodfeast`, `night wings`, `blood moon`, `court kinds`, `endless feast` and `court stage` lines; `--boss=vargr\|isolde\|carmilla`), the Act VIII stages `skid_row`, `fort_kessler` and `liberty_heights` (city blocks; the summary adds the `city blocks`, `armour`, `supers`, `civilians`, `escalation`, `city kinds`, `martial law` and `city stage` lines; `--boss=don_marrow\|harrow\|paragon`; `--spawn=` takes `civilian`, `street_thug`, `gang_gunner`, `riot_cop`, `squad_car`, `swat_breacher`, `field_medic`, `rifleman`, `tank`, `blitz` and `city_wreck`, Skid Row's `armoured_limo`, `big_sal` and `bounty_board`, and Fort Kessler's `machine_gunner`, `attack_helicopter` and `mammoth`; Skid Row adds `skid row` (Big Sal, the Bounty, No Witnesses), `tear gas`, `big sal` and `don marrow` lines, Fort Kessler adds the `fort kessler`, `fort kessler kinds`, `mammoth`, `fort kessler threats` (top summon-damage and summon-death sources) and `harrow` lines, and on any stage `act VIII spell` / `act VIII passives` when Hearse Run, Black Car, Kevlar Bones, Bone Mines, Tripwire or Armour-Piercing Bones were taken), the Act IX stages `crash_site`, `proving_moon` and `ark` (see *Act IX* above), the Act X stages `cutter`, `galleon` and `maelstrom` (see *Act X: the Black Tide* above), the Hall of the Slain's stages `barrow_fields`, `valgard` and `vigrid` (temporarily Act XI; see *The Hall of the Slain* above), or the temporary Act XII stubs `necropolis`, `lioness_temple` and `two_truths` (see *Act XII: the Necropolis Dynasty* above). Stage locks are ignored. Act II runs print a `dread` line (peak, average, end, Dread calmed by kills, seconds per 25-Dread step, Dread by source) and a `claims` line (claims, Thralls freed, expired, still risen at the end, refusals by the cap, claims by class). Gullhaven adds `tide` (level, seawall, High Water, surges and shoves, seconds in water for you / summons / enemies / swimmers), `harbour` and `harbour events` (buoys sunk and when, tolls, wave and trickle size, caches and chests, the Harbourmaster), `harbour kinds` / `harbour tricks` (also on any stage where a Harbour kind spawned, e.g. `--spawn=deep_kin@60x3`), `merrow` (when he is the boss, also `--boss=merrow`), `act II spell` (Undertow when learned) and `act II passives` (Salt of the Deep, Brinewalker). |
+| `--stage=ID` | Stage to play: `graveyard` (default), `crimson_march`, `sanctum`, the Act II stages `harbour`, `archive` and `spire`, the Act III stages `wastes`, `assembly` and `citadel`, the Act IV stages `ilion`, `olympus` and `underworld`, the Act V stages `province`, `kurogane` and `sun_road`, the Act VI stages `burning_gate`, `silk_palace` and `pandemonium`, the Act VII stages `ravensmoor`, `witchwood` and `castle_sanguis` (the summary adds the `bloodfeast`, `night wings`, `blood moon`, `court kinds`, `endless feast` and `court stage` lines; `--boss=vargr\|isolde\|carmilla`), the Act VIII stages `skid_row`, `fort_kessler` and `liberty_heights` (city blocks; the summary adds the `city blocks`, `armour`, `supers`, `civilians`, `escalation`, `city kinds`, `martial law` and `city stage` lines; `--boss=don_marrow\|harrow\|paragon`; `--spawn=` takes `civilian`, `street_thug`, `gang_gunner`, `riot_cop`, `squad_car`, `swat_breacher`, `field_medic`, `rifleman`, `tank`, `blitz` and `city_wreck`, Skid Row's `armoured_limo`, `big_sal` and `bounty_board`, and Fort Kessler's `machine_gunner`, `attack_helicopter` and `mammoth`; Skid Row adds `skid row` (Big Sal, the Bounty, No Witnesses), `tear gas`, `big sal` and `don marrow` lines, Fort Kessler adds the `fort kessler`, `fort kessler kinds`, `mammoth`, `fort kessler threats` (top summon-damage and summon-death sources) and `harrow` lines, and on any stage `act VIII spell` / `act VIII passives` when Hearse Run, Black Car, Kevlar Bones, Bone Mines, Tripwire or Armour-Piercing Bones were taken), the Act IX stages `crash_site`, `proving_moon` and `ark` (see *Act IX* above), the Act X stages `cutter`, `galleon` and `maelstrom` (see *Act X: the Black Tide* above), the Hall of the Slain's stages `barrow_fields`, `valgard` and `vigrid` (temporarily Act XI; see *The Hall of the Slain* above), or the temporary Act XII stages `necropolis`, `lioness_temple` and `two_truths` (see *Act XII: the Necropolis Dynasty* above). Stage locks are ignored. Act II runs print a `dread` line (peak, average, end, Dread calmed by kills, seconds per 25-Dread step, Dread by source) and a `claims` line (claims, Thralls freed, expired, still risen at the end, refusals by the cap, claims by class). Gullhaven adds `tide` (level, seawall, High Water, surges and shoves, seconds in water for you / summons / enemies / swimmers), `harbour` and `harbour events` (buoys sunk and when, tolls, wave and trickle size, caches and chests, the Harbourmaster), `harbour kinds` / `harbour tricks` (also on any stage where a Harbour kind spawned, e.g. `--spawn=deep_kin@60x3`), `merrow` (when he is the boss, also `--boss=merrow`), `act II spell` (Undertow when learned) and `act II passives` (Salt of the Deep, Brinewalker). |
 | (the Hollow Archive) | `--stage=archive` adds `archive` (tomes burned and when, Nothing Unwritten, seconds in ink / spores, the orrery's risings, turns and pushes, the Librarian), `archive rifts` (opened and when, closed early, closed by themselves, cultists spat out) and `archive events` lines; any Archive kind adds `archive enemies` (spawned / killed per kind), `archive kits` (curses, wraith rises and dives, spore clouds and their summon damage, mass splits, Librarian beams, summons turned, lashes, kills) and `archive hazards`; the Archivist adds `archivist` (phase times, kill time, pages and their hits, Footnotes and the damage wasted on copies, Erasure steps and pushes); Forbidden Verse adds `act ii spells`, Marginalia / Iron Mind `act ii passives`. `--spawn=` takes `scribe`, `ink_wraith`, `spore_pilgrim`, `gibbering_mass`, `librarian`, `archive_rift`, `unwritten_one`; `--boss=archivist`; `--character=heretic_scribe`. |
 | (Act III) | `--stage=wastes\|assembly\|citadel` (the Act III stubs) prints `line of fire` (shots fired, rails, arcs; stopped by summons, absorbed by barriers, stopped by Bone Walls, Orb intercepts; reached you and the damage; expired, capped, peak), `lock-on` (lines painted on you / on summons, refused at the cap, fired, cancelled by a slain Spotter, rails stopped by summons or reaching you, most lines at once), `steel` (machine and cyborg kills, Grave Gunners raised per raising effect, their damage and kills), `purge protocol` (orbital salvos and strikes, hits), `empire kinds` (spawned / killed and damage per kind), `empire stage` and `ranged share` (the share of Empire spawns that attack from range; every Act III stage). The Empire's lines also print on any stage where an Empire kind was forced: `--spawn=scout_drone@60x10,line_trooper@90x6,spotter@120`. Grave Gunners need a raising effect, e.g. `--spells=death_mark` or `--ultimate=grave_tide`; `--boss=kestrel\|motherboard\|deus_ex_machina`. The Scrap Wastes (`--stage=wastes`) adds `wastes` (pylons raised / destroyed and when, the share of shooter reach samples boosted, shrunk or storm-halved, storms, the Trojan Horse, objective Soul Ash), `wastes kinds` (Aegis shield blocks and breaks, mortar shells, rockets launched / intercepted / hitting you / shot down, decoys; also wherever a Wastes kind was forced, e.g. `--spawn=aegis_bot@60x6,mortar_walker@90x2,trojan_horse@120`), `trojan horse` and `kestrel` (when she is the boss, also `--boss=kestrel`). On any stage, `act III spell` (Death Ray when learned, e.g. `--spells=death_ray`) and `act III passives` (Conductive Marrow, Lead-Lined Bones, e.g. `--passives=lead_lined_bones`). |
 | (Act IV) | `--stage=ilion\|olympus\|underworld` (the Act IV stubs) prints `divine wrath` (the stage's kind; salvos and strikes per kind: waves, bolts, fissures; damage to enemies with the kills, to summons and to you; fodder drowned, lightning chains, corpses swallowed, shades spat, capped strikes, whether the Twilight began), `phalanx` (walls formed, bodies locked, front hits by shots and melee with the damage prevented, flank breaks, most bodies locked at once), `glory` (stacks gained, the peak, heroes killed and with how many stacks, chests and Soul Ash bounty), `pantheon kinds` (spawned / killed and damage per kind) and `pantheon stage`. The lines also print on any stage where a Pantheon kind was forced: `--spawn=hoplite@60x8,hero@90,shade_of_dead@30x12,bronze_titan@120`; `--boss=achilles\|zeus\|hades` (placeholder boss scripts until phase 2). |
@@ -4842,15 +4874,14 @@ uptime.
 time, and everything that ships waits for all of them (GDD §15.0 "Parallel CI and lean testing": about 8-10 minutes from a push to
 the live build instead of about 30):
 
-1. **test:** twenty-eight parallel jobs, one per playthrough. Each imports the project with Godot 4.3 headless and runs
+1. **test:** thirty-four parallel jobs, one per playthrough. Each imports the project with Godot 4.3 headless and runs
    one full 20-minute autotest: the Graveyard with the naive and the army policy, the Crimson March
-   (`--stage=crimson_march`), the Sanctum (`--stage=sanctum --policy=army`) and each stage of Acts II, IV-IX and X with the
-   army policy (`--stage=harbour`, `archive`, `spire`, `ilion`, `olympus`, `underworld`, `province`, `kurogane`,
+   (`--stage=crimson_march`), the Sanctum (`--stage=sanctum --policy=army`) and each stage of Acts II, IV-IX and X-XII with
+   the army policy (`--stage=harbour`, `archive`, `spire`, `ilion`, `olympus`, `underworld`, `province`, `kurogane`,
    `sun_road`, `burning_gate`, `silk_palace`, `pandemonium`, `ravensmoor`, `witchwood`, `castle_sanguis`, `skid_row`,
-   `fort_kessler`, `liberty_heights`, `crash_site`, `proving_moon`, `ark`, and the Black Tide's `cutter`, `galleon`,
-   `maelstrom`; the stubs of the other last acts, Acts XI-XII for now, get their jobs in the reorder pass) (`--quit-after 15000`, at most 10-15
-   `fort_kessler`, `liberty_heights`, `crash_site`, `proving_moon`, `ark`, and the Hall of the Slain's `barrow_fields`,
-   `valgard`, `vigrid`; the other last acts get theirs as they go live) (`--quit-after 15000`, at most 10-15
+   `fort_kessler`, `liberty_heights`, `crash_site`, `proving_moon`, `ark`, the Black Tide's `cutter`, `galleon`,
+   `maelstrom`, the Hall of the Slain's `barrow_fields`, `valgard`, `vigrid` and the Necropolis Dynasty's `necropolis`,
+   `lioness_temple`, `two_truths`; the other last acts get theirs as they go live) (`--quit-after 15000`, at most 10-15
    wall-clock minutes per run).
    A job fails on any `SCRIPT ERROR`, `ERROR:` or `WARNING:` line, or if its run doesn't complete; one failure does
    not cancel the others. Logs: `test-logs-<id>`.

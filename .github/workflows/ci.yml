@@ -12,10 +12,10 @@
 #               olympus, underworld; army policy), the three Act V stages (--stage=province,
 #               kurogane, sun_road; army policy) and the twelve Act VI-IX stages (--stage=burning_gate,
 #               silk_palace, pandemonium, ravensmoor, witchwood, castle_sanguis, skid_row, fort_kessler,
-#               liberty_heights, crash_site, proving_moon, ark; army policy) and the three Act X stages (--stage=cutter,
-#               galleon, maelstrom; army policy; the Black Tide, temporary act number). Fails on any script error/warning or if a run
-#               liberty_heights, crash_site, proving_moon, ark,
-#               and the three Hall of the Slain stages (barrow_fields, valgard, vigrid); army policy). Fails on any script error/warning or if a run
+#               liberty_heights, crash_site, proving_moon, ark; army policy), the three Act X stages (--stage=cutter,
+#               galleon, maelstrom; army policy; the Black Tide, temporary act number), the three Hall of the Slain
+#               stages (barrow_fields, valgard, vigrid) and the three Necropolis Dynasty stages (necropolis,
+#               lioness_temple, two_truths); army policy. Fails on any script error/warning or if a run
 #               doesn't complete.
 #   2. export - builds single-file Windows (.exe) and Linux executables and the
 #               no-threads Web build (index.html + .js + .wasm + .pck, any static
@@ -121,6 +121,9 @@ jobs:
           - {id: barrow_fields, name: "Act XI Stage 31, the Barrow Fields", args: "--stage=barrow_fields --policy=army", timeout: 900}
           - {id: valgard, name: "Act XI Stage 32, Valgard", args: "--stage=valgard --policy=army", timeout: 900}
           - {id: vigrid, name: "Act XI Stage 33, Vigrid, the Last Field", args: "--stage=vigrid --policy=army", timeout: 900}
+          - {id: necropolis, name: "Act XII Stage 34, the Necropolis of Sand", args: "--stage=necropolis --policy=army", timeout: 900}
+          - {id: lioness_temple, name: "Act XII Stage 35, the Temple of the Lioness", args: "--stage=lioness_temple --policy=army", timeout: 900}
+          - {id: two_truths, name: "Act XII Stage 36, the Hall of Two Truths", args: "--stage=two_truths --policy=army", timeout: 900}
     steps:
       - uses: actions/checkout@v4
 

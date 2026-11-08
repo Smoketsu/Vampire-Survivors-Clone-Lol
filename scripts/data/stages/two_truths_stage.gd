@@ -22,8 +22,7 @@
 ##   IV  THE THRONE OF OSIRIS (15:00): the whole Dynasty before the throne.
 ## Osiris and Ammit (OsirisData, boss_osiris.gd: the Judge, the Weighing, the
 ## Devourer) arrive with 3:00 left; the Reckoning, the Devourer's Hour, at 0:00.
-## Still hidden from the stage select ("playable": false) until the lead's
-## integration. Tuned for the act's FINAL slot VII (docs/last_acts/PLAN.md:
+## Playable since the act went live (the lead's integration). Tuned for the act's FINAL slot VII (docs/last_acts/PLAN.md:
 ## the Shogunate / Olympus level), not its temporary number. Every rate, cap
 ## and weight is TUNING (not in GDD).
 ## The other stages' Dynasty kinds (the Nile Archer, the Jackal Warrior, the
@@ -263,7 +262,7 @@ const STAGE := {
 	"short_name": "Two Truths",
 	"chapter": "Chapter XXXVI",  # Temporary (the reorder pass renumbers; final stage 21).
 	"act": 12,  # Temporary Act XII, the Necropolis Dynasty (final slot VII; docs/last_acts/PLAN.md).
-	"playable": false,  # Phase 2 built; the lead switches it on at the integration.
+	"playable": true,  # The Necropolis Dynasty goes live (integration, GDD §15.0 "The Necropolis Dynasty goes live (integration)").
 	"description": "The judgment hall of the dead: past the gate of reeds and the river of fire the great scales wait, and Osiris on his throne.",
 	"unlock": {"stage": "lioness_temple", "boss_kills": 1},  # Brief: each stage opens the next
 	"unlock_text": "Defeat Sekhmet at the Temple of the Lioness to unlock.",
