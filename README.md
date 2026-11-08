@@ -2543,7 +2543,8 @@ Hollow-Eye) and **the Gun Deck** (gunboats, faster broadsides).
   after 75 s) and the **Hull Crab** (climbs the hull and comes over the rail with armour 4). Any Black Tide stage may
   field them.
 - **Old Hollow-Eye** (the miniboss): the kraken itself. It circles the hull under the water, surfaces to grab your dead
-  with boss-sized tentacles and raises kraken arms beside it; hit it while it is up.
+  with boss-sized tentacles and raises kraken arms beside it; hit it while it is up. After 75 s it tires: it comes up
+  beside you and stays up, striking no more, until it dies.
 - **Admiral Isabeau Marrec, the Sea Wolf** (the boss): **the Fleet** (from her flagship alongside she fires a broadside
   every 30 s and a raider ship's worth of her crew boards), **the Boarding** (she crosses a plank with her marines:
   cut both of its hooks first and the plank falls, her marines drown and she pays for the swim; after two falls she

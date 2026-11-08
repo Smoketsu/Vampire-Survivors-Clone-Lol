@@ -115,7 +115,7 @@ const ENEMIES := {
 		"display_name": "Musketeer",
 		"max_hp": 18.0,  # TUNING (not in GDD)
 		"move_speed": 52.0,  # TUNING (not in GDD) px/s
-		"damage": 3.0,  # TUNING (not in GDD) per hit, before the time scaling (integration balance: 4; with the kegs, 70-80% of the naive bot's damage taken on a deck it cannot kite)
+		"damage": 2.0,  # TUNING (not in GDD) per hit, before the time scaling (integration balance: 4 -> 3 -> 2; with the kegs, 70-80% of the naive bot's damage taken on a deck it cannot kite)
 		"attack_interval": 3.4,  # TUNING (not in GDD) s (integration balance: 2.8)
 		"attack_range": 190.0,  # TUNING (not in GDD) px
 		"radius": 9.0,  # TUNING (not in GDD) px
@@ -159,7 +159,7 @@ const ENEMIES := {
 		"kit": "powder_runner",
 		"crew": true,
 		"fodder": true,
-		"keg": {"fuse_range": 26.0, "fuse": 1.0, "radius": 64.0, "dmg_summon": 11.0, "dmg_player": 5.0, "dmg_enemy": 18.0, "push": 60.0},  # Owner-approved proposal: 1 s fuse, both sides, 60 px; TUNING (not in GDD) the rest (integration balance: dmg_summon 14, dmg_player 10: the kegs and the musket shots dealt 70-80% of the naive bot's damage)
+		"keg": {"fuse_range": 26.0, "fuse": 1.0, "radius": 64.0, "dmg_summon": 11.0, "dmg_player": 4.0, "dmg_enemy": 18.0, "push": 60.0},  # Owner-approved proposal: 1 s fuse, both sides, 60 px; TUNING (not in GDD) the rest (integration balance: dmg_summon 14 -> 11, dmg_player 10 -> 5 -> 4: the kegs and the musket shots dealt 70-80% of the naive bot's damage)
 	},  # The Powder Runner.
 	# Soldier, FEMALE, figure style (owner-approved proposal: "Rapier lunge that jumps the first blocker and duels the
 	# nearest summon | Rogues, Gargoyles, area damage").
