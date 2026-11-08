@@ -208,7 +208,9 @@ const ORDER := ["grave_dominion", "necrotic_vigor", "dark_command", "soul_recycl
 	# --- Act IX: the Proving Moon ---
 	"trophy_rack", "mirror_bones",
 	# --- Act IX: the Ark ---
-	"starseed", "crop_circles"]
+	"starseed", "crop_circles",
+	# --- Act XI (temporary): Valgard ---
+	"einherjars_oath", "calm_blood"]
 
 ## Passives that only help summons (a "dead" level-up card while no summon
 ## class is owned, see AbilityManager.build_offers()).
@@ -258,7 +260,9 @@ const ARMY_PASSIVES := ["grave_dominion", "necrotic_vigor", "dark_command", "sou
 	# --- Act IX: the Proving Moon ---
 	"mirror_bones",
 	# --- Act IX: the Ark ---
-	"crop_circles"]
+	"crop_circles",
+	# --- Act XI (temporary): Valgard ---
+	"calm_blood"]
 
 # --- Act III: the Assembly Halls ---
 ## Overclock (paired with the Grave Drone): a summon class is "ranged" (and
@@ -1902,6 +1906,50 @@ const PASSIVES := {
 			{"special_hold": 0.18},  # TUNING (not in GDD)
 			{"special_hold": 0.24},  # TUNING (not in GDD)
 			{"special_hold": 0.30},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act XI (temporary): Valgard ---
+	# Einherjar's Oath (Valkyrie Spear's paired passive; owner-approved
+	# proposal: "Chooser of the Slain (+ Einherjar's Oath)"; unlocked with the
+	# spell by Sigrun and offered on every stage). Own decision on its effect:
+	# the spear swears the hall's oath: oath_jumps more leaps and +oath_damage
+	# on every strike (ValkyrieSpear._cast(), the one read). Read only by
+	# ValkyrieSpear: exactly nothing without the spell.
+	"einherjars_oath": {
+		"display_name": "Einherjar's Oath",  # Owner-approved proposal
+		"icon": "einherjars_oath",
+		"description": "Your Valkyrie Spear swears the hall's oath: it leaps to more foes and strikes harder.",
+		"labels": {"oath_jumps": ["Valkyrie Spear leaps", "num"], "oath_damage": ["Valkyrie Spear damage", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"oath_jumps": 0, "oath_damage": 0.06},  # TUNING (not in GDD)
+			{"oath_jumps": 1, "oath_damage": 0.08},  # TUNING (not in GDD)
+			{"oath_jumps": 1, "oath_damage": 0.12},  # TUNING (not in GDD)
+			{"oath_jumps": 1, "oath_damage": 0.16},  # TUNING (not in GDD)
+			{"oath_jumps": 2, "oath_damage": 0.2},  # TUNING (not in GDD)
+		],
+	},
+	# The Hall of the Slain's counter-passive Calm Blood (owner-approved
+	# proposal: "Calm Blood (berserk enemies deal 20% less damage to
+	# summons)"; unlocked by Valgard's achievement Holmgang and offered only in
+	# the act through its card row's "act"). Its one read is
+	# NorseRules.calm_blood_mult() in CombatResolver.damage_unit(): a BERSERK
+	# enemy's own blow on a summon deals 1 - fury_cut (exactly 1 while not
+	# owned, and off the act, where no enemy is ever berserk). Keys
+	# NorseRulesData.CALM_BLOOD / CALM_BLOOD_KEY.
+	"calm_blood": {
+		"display_name": "Calm Blood",  # Owner-approved proposal
+		"icon": "calm_blood",
+		"description": "Your dead meet the fury without fear: berserk foes strike them softer.",
+		"labels": {"fury_cut": ["Berserk damage to summons", "neg_pct"]},
+		"act": 11,  # Owner-approved: the act's counter-passives are offered only in the Hall of the Slain (temporary act number; Unlocks.act_allows())
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"fury_cut": 0.06},  # TUNING (not in GDD)
+			{"fury_cut": 0.09},  # TUNING (not in GDD)
+			{"fury_cut": 0.12},  # TUNING (not in GDD)
+			{"fury_cut": 0.16},  # TUNING (not in GDD)
+			{"fury_cut": 0.2},  # Owner-approved proposal: "20% less damage to summons"
 		],
 	},
 }

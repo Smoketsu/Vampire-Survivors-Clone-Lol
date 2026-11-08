@@ -444,7 +444,9 @@ const ACHIEVEMENT_ORDER := ["bone_legion", "heretics_bane", "dread_sovereign", "
 	# --- Act IX: the Proving Moon ---
 	"the_hunter_hunted",
 	# --- Act IX: the Ark ---
-	"last_harvest"]
+	"last_harvest",
+	# --- Act XI (temporary): Valgard ---
+	"holmgang"]
 
 ## Achievement definitions (GDD §9.4 "Example Achievement Unlocks"). Each
 ## achievement is tracked and recorded in the save and pays a one-time Soul
@@ -691,6 +693,14 @@ const ACHIEVEMENTS := {
 	# clear, with the title The Unharvested (UnlockData / TitleData).
 	"last_harvest": {"display_name": "The Last Harvest", "description": "Beat the Harvester on the Ark of the Concord",
 		"stat": "boss_kills", "stage": "ark", "goal": 1, "unlock": "The title The Unharvested", "bounty": 500},  # Owner-approved proposal; bounty TUNING (not in GDD) as Last Supper
+	# --- Act XI (temporary): Valgard ---
+	# Owner-approved achievement "Holmgang" ("win Sigrun's duel without Grave
+	# Step"): a run in which a Holmgang was won (Sigrun yielded) with no Grave
+	# Step taken in the square (BossSigrun sets the run stat
+	# valgard_holmgang_clean; MetaProgress counts the runs, lifetime
+	# holmgang_runs). It unlocks the counter-passive Calm Blood (brief).
+	"holmgang": {"display_name": "Holmgang", "description": "Win Sigrun's duel in Valgard without a single Grave Step",
+		"stat": "holmgang_runs", "goal": 1, "unlock": "The Calm Blood passive", "bounty": 300},  # Owner-approved proposal; bounty TUNING (not in GDD) as The Hunter Hunted
 }
 
 # --- Content wave 2: B. Achievement rewards ---

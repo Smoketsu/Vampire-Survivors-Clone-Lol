@@ -281,6 +281,15 @@ const UNLOCKS := {
 	"crop_circles": {"type": "passive", "boss": "harvester", "text": "Defeat the Harvester on the Ark of the Concord to unlock."},  # Its paired passive (own decision), unlocked with it
 	"the_unharvested": {"type": "title", "achievement": "last_harvest",
 		"text": "Earn The Last Harvest: beat the Harvester on the Ark of the Concord."},  # Own decision (the clear is recorded as a title, as Acts VI-VIII did)
+	# --- Act XI (temporary): Valgard ---
+	# Sigrun's fall (owner-approved proposal "Rewards": Valkyrie Spear is
+	# unlocked by Sigrun) with its paired passive, offered on every stage; the
+	# stage's achievement Holmgang earns the act's counter-passive Calm Blood
+	# (brief: Holmgang is Valgard's; offered only in the act through its card
+	# row's "act").
+	"valkyrie_spear": {"type": "spell", "boss": "sigrun", "text": "Slay Sigrun, the Shield-Queen, in Valgard to unlock."},  # Owner-approved proposal
+	"einherjars_oath": {"type": "passive", "boss": "sigrun", "text": "Slay Sigrun, the Shield-Queen, in Valgard to unlock."},  # Valkyrie Spear's paired passive, unlocked with it
+	"calm_blood": {"type": "passive", "achievement": "holmgang", "text": "Earn Holmgang: win Sigrun's duel without a Grave Step."},  # Brief: Holmgang unlocks Calm Blood
 }
 
 ## End-screen plate heading of a newly unlocked item, by type.

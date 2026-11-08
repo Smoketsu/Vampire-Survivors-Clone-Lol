@@ -96,7 +96,9 @@ const ORDER := ["gravecaller", "umbral_warden", "voidcaller", "bone_oracle", "fa
 	# --- Act IX: the Proving Moon ---
 	"blooded",
 	# --- Act IX: the Ark ---
-	"starborn"]
+	"starborn",
+	# --- Act XI (temporary): Valgard ---
+	"shield_maiden_hero"]
 ## The default character (RunConfig, fresh saves, the autotest): today's game.
 const DEFAULT_ID: String = "gravecaller"
 ## Spell level that unlocks a character (owner rule: reach Lv 5 with its spell
@@ -215,7 +217,9 @@ const INNATE_KEYS := ["orb_projectile_destroy", "blast_echo_delay", "blast_echo_
 	# --- Act IX: the Proving Moon ---
 	"soul_caster_extra_targets",
 	# --- Act IX: the Ark ---
-	"tractor_extra_lifts"]
+	"tractor_extra_lifts",
+	# --- Act XI (temporary): Valgard ---
+	"valkyrie_spear_extra_jumps"]
 
 ## Orbit radius (px) of the Bone Oracle's Ossuary Ward shards around him.
 const SHARD_ORBIT_RADIUS: float = 27.0  # TUNING (not in GDD)
@@ -947,6 +951,32 @@ const CHARACTERS := {
 		"stats": {"max_hp": 5.0, "move_speed": 0.04},  # TUNING (not in GDD) a light, quick deserter
 		"sprite": "player/starborn",
 		"tint": Color(0.70, 0.86, 0.74),  # TUNING (not in GDD) a pale plasma green over the violet
+		"starts_unlocked": false,
+	},
+	# --- Act XI (temporary): Valgard ---
+	# The Shield-Maiden (Valkyrie Spear's character; owner-approved proposal
+	# "Rewards": "Valkyrie Spear ... | The Shield-Maiden (female, figure
+	# style)"; owner note Nov 2026: every playable character is a purple
+	# necromancer of the act's theme): FEMALE, in the figure-redesign style
+	# (clothed), a purple-cloaked necromancer with a bone-rimmed shield and a
+	# soul-flame spear for her focus (the art pass's player/shield_maiden_hero,
+	# with glide and idle strips). Id shield_maiden_hero: "shield_maiden" is the
+	# enemy kind. Valkyrie Spear must be unlocked (Sigrun) before she can be
+	# earned, by the usual Lv 5 rule. Own decision on her innate (the proposal
+	# names none): Shield-Sister, her spear leaps once more
+	# (ValkyrieSpear._cast()).
+	"shield_maiden_hero": {
+		"display_name": "The Shield-Maiden",  # Owner-approved proposal
+		"title": "She stood in the shield wall until it fell. She raised it again.",
+		"spell": "valkyrie_spear",
+		"innate": {
+			"id": "shield_sister", "name": "Shield-Sister",
+			"description": "Valkyrie Spear leaps to one more foe.",
+			"values": {"valkyrie_spear_extra_jumps": 1.0},  # TUNING (not in GDD) extra leaps a cast
+		},
+		"stats": {"max_hp": 10.0, "move_speed": -0.03},  # TUNING (not in GDD) behind her shield: sturdier, a little slower
+		"sprite": "player/shield_maiden_hero",
+		"tint": Color(0.80, 0.70, 0.95),  # TUNING (not in GDD) a pale violet over the violet (her art replaces it)
 		"starts_unlocked": false,
 	},
 }

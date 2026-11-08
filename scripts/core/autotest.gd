@@ -1683,6 +1683,8 @@ func finish(summary: Dictionary) -> void:
 	ProvingMoonReport.item_lines(game, st)  # Soul Caster, Trophy Rack, Mirror Bones (only when taken; the stage's own lines are ConcordReport's).
 	# --- Act IX: the Ark ---
 	ArkReport.item_lines(game, st)  # Tractor Beam, Starseed, the Ghost Saucer, Crop Circles (only when used; the stage's own lines are ConcordReport's).
+	# --- Act XI (temporary): Valgard ---
+	ValgardReport.item_lines(game, st)  # Valkyrie Spear, Einherjar's Oath, Calm Blood (only when taken; the stage's own lines are NorseReport's).
 	if game.enemies.boss is BossSeraphine:
 		print("[autotest] seraphine: %s" % BossSeraphine.summary_line(st))
 	var fired := game.enemies.stage.fired

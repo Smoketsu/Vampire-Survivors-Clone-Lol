@@ -269,3 +269,11 @@ const SOUNDS := {
 	"skald_song": "banshee_wail",  # Startup bank (a chant); intended a drum and a chant.
 }
 
+
+# --- Act XI (temporary): Valgard ---
+## Calm Blood, the act's counter-passive (owner-approved proposal: "berserk
+## enemies deal 20% less damage to summons"; Valgard's achievement Holmgang
+## unlocks it): its PassiveData id, read by NorseRules.calm_blood_mult().
+const CALM_BLOOD: String = "calm_blood"
+## Calm Blood's value key: share (0..1) cut from a berserk enemy's blow on a summon.
+const CALM_BLOOD_KEY: String = "fury_cut"

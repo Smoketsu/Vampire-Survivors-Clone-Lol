@@ -178,3 +178,16 @@ func warm_point(p: Vector2, reach: float) -> Vector2:
 ## holds within `reach` px of `p`, or Vector2.INF (RuneStones.seek_point()).
 func stone_point(p: Vector2, reach: float) -> Vector2:
 	return stones.seek_point(p, reach)
+
+
+# --- Act XI (temporary): Valgard ---
+## CALM BLOOD (the act's counter-passive; owner-approved proposal: "berserk
+## enemies deal 20% less damage to summons"): the share of berserk enemy
+## `by`'s own blow a summon of the BOUND slot takes (1 - the passive's
+## fury_cut). Read once, in CombatResolver.damage_unit() (the one path of
+## damage to summons, its slot bound), where the attacker's fury is known;
+## exactly 1 for a calm attacker and while the passive is not owned.
+func calm_blood_mult(by: Enemy) -> float:
+	if by == null or not by.berserk:
+		return 1.0
+	return clampf(1.0 - game.abilities.passive_value(NorseRulesData.CALM_BLOOD, NorseRulesData.CALM_BLOOD_KEY), 0.0, 1.0)
