@@ -354,11 +354,13 @@ func _step_duel(delta: float) -> void:
 	super.physics_step(delta)
 
 
-## A leap onto a landing circle at the nearest necromancer.
+## A leap onto a landing circle leap_short px short of the nearest
+## necromancer (over the ring, into it).
 func _start_leap() -> void:
 	var pl := game.nearest_player(position)
 	_leap_from = position
-	_leap_to = pl.position
+	var away := position - pl.position
+	_leap_to = pl.position + (away.normalized() if away.length() > 1.0 else Vector2.UP) * minf(float(boss_def["leap_short"]), away.length())  # Over the ring, short of him.
 	if game.deck != null:
 		_leap_to = game.deck.clamp_point(_leap_to, radius)
 	flies = true

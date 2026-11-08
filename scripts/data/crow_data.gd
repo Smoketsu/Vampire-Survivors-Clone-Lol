@@ -27,7 +27,8 @@
 ##     spawn route (CorsairRules.route_spawn(): by boat), under the hard cap.
 ##     The Broadside ends when the sloop sinks or after broadside_time s.
 ##   * THE DUEL: he swings aboard: a LEAP onto a landing circle (leap_radius
-##     px) at the nearest necromancer (telegraph leap_time s; on landing every
+##     px) leap_short px short of the nearest necromancer, on his side
+##     (telegraph leap_time s; on landing every
 ##     grounded summon in it takes leap_damage_summon and is knocked leap_push
 ##     px out, x Sea Legs, a necromancer leap_damage_player). The sloop casts
 ##     off. He fights with the shared melee AI (the cutlass in reach), fires
@@ -118,7 +119,7 @@ const BOSS := {
 	"line_half": 18.0,  # TUNING (not in GDD) px half width of a line
 	"line_telegraph": 1.5,  # TUNING (not in GDD) s (the Galleon's broadsides' 1.5 s)
 	"line_stagger": 0.25,  # TUNING (not in GDD) s between the three lines' shots (a rolling broadside)
-	"line_damage_summon": 22.0,  # TUNING (not in GDD) before the time scaling
+	"line_damage_summon": 12.0,  # TUNING (not in GDD) before the time scaling (first pass 22: the lines cut the forced Chain Shot run's army from 45 to 7 in his first minute; undead do not dodge)
 	"line_damage_player": 14.0,  # TUNING (not in GDD) before the time scaling
 	"line_damage_enemy": 40.0,  # TUNING (not in GDD) x the HP scaling (his own crew too)
 	"line_push": 140.0,  # TUNING (not in GDD) px a deck enemy is knocked toward the far rail
@@ -129,16 +130,17 @@ const BOSS := {
 	"leap_time": 1.0,  # TUNING (not in GDD) s in the air (the landing circle shows as long)
 	"leap_height": 60.0,  # TUNING (not in GDD) px of the arc drawn (visual only)
 	"leap_radius": 54.0,  # TUNING (not in GDD) px
-	"leap_damage_summon": 16.0,  # TUNING (not in GDD) before the time scaling
+	"leap_short": 70.0,  # TUNING (not in GDD) px short of the necromancer the circle lands (over the ring, into it: his blade does not land on top of him; first pass 0, the forced Chain Shot runs fell to his Duel at 18:00)
+	"leap_damage_summon": 10.0,  # TUNING (not in GDD) before the time scaling (first pass 16: his landings killed 37 summons in the forced seed-7 run)
 	"leap_damage_player": 9.0,  # TUNING (not in GDD) before the time scaling (first pass 12)
 	"leap_push": 60.0,  # TUNING (not in GDD) px summons are knocked out of the circle (x Sea Legs)
 	"leap_every": 9.0,  # TUNING (not in GDD) s between two leaps in the Duel
 	"leap_min": 90.0,  # TUNING (not in GDD) px: no leap when he already stands this close to the necromancer
 	"pistol_every": 3.2,  # TUNING (not in GDD) s
 	"pistol_min": 70.0,  # TUNING (not in GDD) px: closer than this he uses the cutlass
-	"pistol_damage": 9.0,  # TUNING (not in GDD) before the time scaling
+	"pistol_damage": 7.0,  # TUNING (not in GDD) before the time scaling (first pass 9)
 	"pistol_speed": 300.0,  # TUNING (not in GDD) px/s
 	"recover_time": 0.5,  # TUNING (not in GDD) s he stands after a landing
 	# The Fire Ship.
-	"fire_leap_every": 6.5,  # TUNING (not in GDD) s between two leaps once his ship burns
+	"fire_leap_every": 8.0,  # TUNING (not in GDD) s between two leaps once his ship burns (first pass 6.5)
 }
