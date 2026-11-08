@@ -206,6 +206,10 @@ const PROVING_MOON_IDS := ["soul_caster"]
 ## only (no kill or after-physics hook), reported by ArkReport. Its id is
 ## "tractor_lift" (never the Concord's "tractor_beam" sound / event).
 const ARK_IDS := ["tractor_lift"]
+# --- Act XII (temporary number): the Temple of the Lioness ---
+## The Temple of the Lioness's unlockable spell (Sekhmet's reward): stepped
+## only (no kill or after-physics hook), reported by LionessTempleReport.
+const LIONESS_TEMPLE_IDS := ["burning_eye"]
 ## Damage-source stat tags of each spell (CombatResolver "dmg_<tag>"), base
 ## spell first, then its evolution's. Used for the autotest summary.
 const SOURCES := {
@@ -266,6 +270,8 @@ const SOURCES := {
 	"soul_caster": ["soul_caster", "apex_predator"],
 	# --- Act IX: the Ark ---
 	"tractor_lift": ["tractor_lift", "star_abduction", "star_abduction_quake"],
+	# --- Act XII (temporary number): the Temple of the Lioness ---
+	"burning_eye": ["burning_eye", "eye_of_retribution"],
 }
 
 ## Owning run.
@@ -449,6 +455,15 @@ func step(delta: float) -> void:
 			node = _create(id)
 		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
 		node.step(delta, ab.spell_stats(id))  # The Ark's spell.
+	# --- Act XII (temporary number): the Temple of the Lioness ---
+	for id: String in LIONESS_TEMPLE_IDS:
+		if ab.spell_level(id) <= 0:
+			continue
+		var node: NecroSpell = nodes.get(id)  # The spell's node (created lazily).
+		if node == null:
+			node = _create(id)
+		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
+		node.step(delta, ab.spell_stats(id))  # The Temple of the Lioness's spell.
 
 
 ## Content wave 2: the Bone Wall node, created when missing (the Ossuary
@@ -551,6 +566,9 @@ func _create(id: String) -> NecroSpell:
 		# --- Act IX: the Ark ---
 		"tractor_lift":
 			node = TractorLift.new()  # The Ark's spell.
+		# --- Act XII (temporary number): the Temple of the Lioness ---
+		"burning_eye":
+			node = BurningEye.new()  # The Temple of the Lioness's spell.
 		_:
 			node = PlagueCloud.new()
 	node.game = game

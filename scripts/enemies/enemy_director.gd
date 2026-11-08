@@ -178,6 +178,11 @@
 ##     2)"): on a stage with a "proving_moon" config it owns the
 ##     ProvingMoonDirector (the Warbeast, the Last Trophy objective;
 ##     `proving_moon`) and hands it the "warbeast" events. Null elsewhere.
+##   * Act XII (temporary number), the Temple of the Lioness (GDD §15.0 "The
+##     Temple of the Lioness (Dynasty phase 2)"): on a stage with a
+##     "lioness_temple" config it owns the LionessTempleDirector (the Awakening
+##     Statues, the Lion Warden's sealed hall; `lioness_temple`) and hands it
+##     the "statues_wake" and "lion_warden" events. Null elsewhere.
 ##   * Online co-op (CoopSession; docs/coop/DESIGN.md): every enemy steps with
 ##     its NEAREST standing necromancer bound (CoopSession.bind_nearest()), so
 ##     it advances on, aims at and recycles around that one (bosses and kits
@@ -386,6 +391,11 @@ var proving_moon: ProvingMoonDirector = null
 ## Reactor's vents, the Luminous Archon; StageRegistry "ark"; null on every
 ## other stage).
 var ark: ArkDirector = null
+# --- Act XII (temporary number): the Temple of the Lioness ---
+## The Temple of the Lioness's mechanics (the Awakening Statues, the Lion
+## Warden's sealed hall; StageRegistry "lioness_temple"; null on every other
+## stage).
+var lioness_temple: LionessTempleDirector = null
 ## Sanctum kit bookkeeping: recent deaths, Confessor revivals, danger hints.
 var rites: CovenantRites
 ## The living miniboss shown on the HUD's miniboss bar (the Cathedral
@@ -590,6 +600,12 @@ func _ready() -> void:
 		ark.game = game
 		ark.config = stage_def["ark"]
 		add_child(ark)  # The Ark of the Concord's director.
+	# --- Act XII (temporary number): the Temple of the Lioness ---
+	if not (stage_def.get("lioness_temple", {}) as Dictionary).is_empty():
+		lioness_temple = LionessTempleDirector.new()
+		lioness_temple.game = game
+		lioness_temple.config = stage_def["lioness_temple"]
+		add_child(lioness_temple)  # The Temple of the Lioness's director.
 
 
 # =====================================================================================
@@ -740,6 +756,9 @@ func step(delta: float) -> void:
 	# --- Act IX: the Ark ---
 	if ark != null:
 		ark.step(delta)  # The tanks, the vents.
+	# --- Act XII (temporary number): the Temple of the Lioness ---
+	if lioness_temple != null:
+		lioness_temple.step(delta)  # The Awakening Statues, the Warden's seal.
 
 
 ## The Archive kinds' world hazards (ArchiveHazards), created on first use.
@@ -893,6 +912,9 @@ func objective_text() -> String:
 	# --- Act IX: the Ark ---
 	if ark != null and ark.objective_override() != "":
 		return ark.objective_override()  # The Luminous Archon, the Reaping.
+	# --- Act XII (temporary number): the Temple of the Lioness ---
+	if lioness_temple != null and lioness_temple.objective_override() != "":
+		return lioness_temple.objective_override()  # The Lion Warden's sealed hall.
 	if boss != null and not boss.active:
 		return String(boss_info["dead_objective"])
 	return segments[segment_index]["objective"]
@@ -1158,6 +1180,12 @@ func _run_event(ev: Dictionary) -> void:
 				ark.start_event(ev)
 			game.stat_add("wave_events", 1.0)
 			return  # The Ark's miniboss (ArkDirector).
+		# --- Act XII (temporary number): the Temple of the Lioness ---
+		"statues_wake", "lion_warden":
+			if lioness_temple != null:
+				lioness_temple.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return  # The Temple's Awakening Statues and miniboss (LionessTempleDirector).
 	show_banner(ev["banner"])
 	var groups: Array = ev["groups"]
 	if game.shogunate != null:

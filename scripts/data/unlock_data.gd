@@ -281,6 +281,14 @@ const UNLOCKS := {
 	"crop_circles": {"type": "passive", "boss": "harvester", "text": "Defeat the Harvester on the Ark of the Concord to unlock."},  # Its paired passive (own decision), unlocked with it
 	"the_unharvested": {"type": "title", "achievement": "last_harvest",
 		"text": "Earn The Last Harvest: beat the Harvester on the Ark of the Concord."},  # Own decision (the clear is recorded as a title, as Acts VI-VIII did)
+	# --- Act XII (temporary number): the Temple of the Lioness ---
+	# Sekhmet's fall (proposal "Rewards": Burning Eye is Sekhmet's) with its
+	# paired passive, offered on every stage; the achievement Names Taken earns
+	# the Dynasty's counter-passive Embalmed Bones (own split, the lead's to
+	# confirm; offered only in the act through its card row's "act").
+	"burning_eye": {"type": "spell", "boss": "sekhmet", "text": "Slay Sekhmet at the Temple of the Lioness to unlock."},  # Proposal
+	"desert_fury": {"type": "passive", "boss": "sekhmet", "text": "Slay Sekhmet at the Temple of the Lioness to unlock."},  # Burning Eye's paired passive (proposal), unlocked with it
+	"embalmed_bones": {"type": "passive", "achievement": "names_taken", "text": "Earn Names Taken: raise 100 of the Dynasty's dead before their Names return, in one run."},  # Own split (the lead's to confirm)
 }
 
 ## End-screen plate heading of a newly unlocked item, by type.

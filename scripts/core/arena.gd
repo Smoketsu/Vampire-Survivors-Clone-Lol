@@ -83,6 +83,12 @@ class Obstacle:
 
 ## Owning run.
 var game: Game
+# --- Act XII (temporary number): the Temple of the Lioness ---
+## Obstacles taken out of the layout (the Temple's Awakening Statues,
+## remove_obstacle()): Vector3i(cell x, cell y, layout seed) -> true, so a cell
+## looked at again (a redraw, a cache drop) never rebuilds what woke. Empty on
+## every other stage, so nothing changes there.
+var _removed: Dictionary = {}
 ## Bodies pushed out of an obstacle this run, by body type (autotest stat).
 var resolved_player: int = 0
 ## Summon/obstacle overlaps resolved this run.
@@ -199,6 +205,8 @@ func obstacle_at(pos: Vector2) -> Obstacle:
 
 ## Builds the (hash-chosen) obstacle of cell `key`, or `_empty`.
 func _generate(key: Vector2i) -> Obstacle:
+	if not _removed.is_empty() and _removed.has(Vector3i(key.x, key.y, int(_layout.get("layout_seed", 0)))):
+		return _empty  # Act XII (temporary): a statue row that woke and walked off.
 	if _layout.has("fixed"):
 		return _fixed_obstacle(key)  # Act X: the deck's authored furniture.
 	_rng.seed = hash(Vector3i(key.x, key.y, int(_layout["layout_seed"])))
@@ -266,6 +274,21 @@ func _generate(key: Vector2i) -> Obstacle:
 		o.half = Vector2(short_half, long_half) if vertical else Vector2(long_half, short_half)
 	o.art_key = EnvironmentArt.obstacle_key(kind, o.size_index, sizes.size(), vertical)
 	return o
+
+
+# --- Act XII (temporary number): the Temple of the Lioness ---
+## Takes obstacle `o` out of the layout for good (THE removal path; the
+## Temple's Awakening Statues): its cell is empty from now on and stays so
+## under this layout (recorded in `_removed`), and the layer is redrawn.
+## False when `o` is no longer this cell's obstacle (a zone change rebuilt it).
+func remove_obstacle(o: Obstacle) -> bool:
+	var key := Vector2i(floori(o.center.x * _inv_cell), floori(o.center.y * _inv_cell))
+	if _cells.get(key) != o:
+		return false
+	_cells[key] = _empty
+	_removed[Vector3i(key.x, key.y, int(_layout.get("layout_seed", 0)))] = true
+	queue_redraw()
+	return true
 
 
 # --- Act X: the Black Tide ---

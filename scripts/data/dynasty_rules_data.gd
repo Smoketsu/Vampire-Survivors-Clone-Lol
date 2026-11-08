@@ -173,7 +173,9 @@ const DEVOURER_SOURCE: String = "devourer"
 ## one of these (DynastyKit.taken_mult()). The mages' blasts, the Lich's, the
 ## Hellhounds' burns and trails, Brimstone, the plague's rotting fog.
 const FIRE_SOURCES: Array[String] = ["mage", "lich", "hellhound_burn", "hellhound_trail", "brimstone", "plague_cloud",
-	"pestilence"]  # TUNING (not in GDD)
+	"pestilence",  # TUNING (not in GDD)
+	# --- Act XII (temporary number): the Temple of the Lioness --- (GDD §15.0: Burning Eye is a solar beam: fire)
+	"burning_eye", "eye_of_retribution"]
 
 # --- Counter-passive hooks (not built in phase 1) ------------------------------------------
 ## Passive id of EMBALMED BONES (proposal: "summons shed a curse glyph faster
@@ -216,4 +218,17 @@ const SOUNDS := {
 	"devourer_lane": "boss_telegraph",  # Intended "devourer_growl" (a low growl from below).
 	"devourer_eat": "boss_impact",  # Intended "devourer_bite" (a huge snap of jaws).
 	"khopesh_spin": "warrior_bash",  # Intended "khopesh_spin" (a whirling double blade).
+	# --- Act XII (temporary number): the Temple of the Lioness ---
+	"statue_wake": "rebirth_groan",  # Dynasty pack (intended "statue_wake": stone grinding as the eyes open).
+	"colossus_slam": "abom_stomp",  # Intended "colossus_slam" (a stone fist on flagstones).
+	"warden_roar": "boss_telegraph",  # Intended "warden_roar" (a stone lion's roar).
+	"bastet_ambush": "rogue_dash",  # Intended "bastet_ambush" (sand bursting, two blades).
+	"sekhmet_roar": "boss_arrive",  # Intended "sekhmet_roar" (a lioness's roar on the red wind).
 }
+
+# --- Act XII (temporary number): the Temple of the Lioness ---
+## Raises of the Dynasty's dead (Names stolen by a raise, Rebirth.on_raise():
+## the run stat rebirth_stolen) in ONE run that earn the achievement NAMES
+## TAKEN (proposal: "raise 100 Dynasty dead before their cartouches expire in
+## one run"; MetaProgress counts the runs, lifetime names_taken_runs).
+const NAMES_TAKEN_RAISES: float = 100.0  # Owner-approved proposal: 100

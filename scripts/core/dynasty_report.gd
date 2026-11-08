@@ -53,6 +53,8 @@ static func print_lines(game: Game, st: Dictionary) -> void:
 			EmpireReport._clock(float(sd.get("enemy_mult_from", 0.0))), float(sd["ash_mult"]),
 			String((sd["reckoning"] as Dictionary).get("kind", "inquisitor")), str(not dy.devourer.cfg.is_empty())])
 	# Phase 2: each Dynasty stage's own lines go here (its stage, kinds and boss).
+	# --- Act XII (temporary number): the Temple of the Lioness --- (the Awakening Statues, the Warden, Sekhmet; LionessTempleReport)
+	LionessTempleReport.print_lines(game, st)
 
 
 ## The "rebirth" line (Rebirth).

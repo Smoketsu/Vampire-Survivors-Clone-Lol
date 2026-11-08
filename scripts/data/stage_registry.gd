@@ -380,6 +380,13 @@
 ##   sandstorm          — any key of DynastyRulesData.SANDSTORM ({} = defaults).
 ##   heka               — any key of DynastyRulesData.HEKA ({} = defaults).
 ##   zones              — the Dynasty stubs too: the planned zones.
+## --- Act XII (temporary number): the Temple of the Lioness ---
+##   lioness_temple     — LionessTempleDirector config (LionessTempleStage
+##                        .LIONESS_TEMPLE: the Awakening Statues' wakes and
+##                        rows, the Lion Warden's sealed hall; the
+##                        "statues_wake" and "lion_warden" events); ground
+##                        "lioness_temple" is its LionessTempleGround (the four
+##                        zone floors).
 class_name StageRegistry
 extends RefCounted
 

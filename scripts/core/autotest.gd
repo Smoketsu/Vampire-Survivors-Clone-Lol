@@ -1681,6 +1681,8 @@ func finish(summary: Dictionary) -> void:
 	CrashSiteReport.item_lines(game, st)  # Bone Beetles, Chitin, Anchored (only when taken; the stage's own lines are ConcordReport's).
 	# --- Act IX: the Proving Moon ---
 	ProvingMoonReport.item_lines(game, st)  # Soul Caster, Trophy Rack, Mirror Bones (only when taken; the stage's own lines are ConcordReport's).
+	# --- Act XII (temporary number): the Temple of the Lioness ---
+	LionessTempleReport.item_lines(game, st)  # Burning Eye, Desert Fury, Embalmed Bones (only when taken; the stage's own lines are DynastyReport's).
 	# --- Act IX: the Ark ---
 	ArkReport.item_lines(game, st)  # Tractor Beam, Starseed, the Ghost Saucer, Crop Circles (only when used; the stage's own lines are ConcordReport's).
 	if game.enemies.boss is BossSeraphine:

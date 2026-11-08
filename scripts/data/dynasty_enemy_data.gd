@@ -90,6 +90,11 @@ const CANOPIC_JAR: String = "canopic_jar"
 const CARTOUCHE: String = DynastyRulesData.CARTOUCHE
 ## Sprite folder of the Dynasty's kinds (assets/sprites/dynasty/).
 const SPRITE_DIR: String = "dynasty/"
+# --- Act XII (temporary number): the Temple of the Lioness ---
+## Kind id of the Bastet Hunter (a shared elite row; the Temple fields it first).
+const BASTET_HUNTER: String = "bastet_hunter"
+## Kind id of the Ushabti Statue (a shared heavy row; the Temple's statues wake as it).
+const USHABTI_STATUE: String = "ushabti_statue"
 
 ## The Devourer's Hour's heavy (the RECKONING "kind" of every Dynasty stage):
 ## the guard of the opened tombs.
@@ -338,4 +343,77 @@ const ENEMIES := {
 		"faction": FACTION,
 		"kit": "cartouche",
 	},  # The cartouche.
+	# --- Act XII (temporary number): the Temple of the Lioness ---
+	# The BASTET HUNTER (female, figure style, cat-masked; owner-approved
+	# proposal: "Elite | A fast duellist; vanishes into the sand and ambushes a
+	# ranged summon | Area damage reveals her"). Elite tier by her numbers.
+	# BastetHunterKit: in the sand she runs under the ring at the nearest
+	# ranged summon (hits on her cut, a spell hit reveals her), bursts out and
+	# strikes it with both daggers, duels, then dives again. No Rebirth (a
+	# hunter of the living goddess, not one of the wrapped dead).
+	"bastet_hunter": {
+		"display_name": "Bastet Hunter",
+		"max_hp": 80.0,  # TUNING (not in GDD) an elite (the Vrask Hunter 70)
+		"move_speed": 82.0,  # TUNING (not in GDD) px/s; "a fast duellist"
+		"damage": 5.0,  # TUNING (not in GDD) a dagger in the duel, before the time scaling
+		"attack_interval": 0.8,  # TUNING (not in GDD) s
+		"attack_range": 6.0,  # TUNING (not in GDD) px
+		"radius": 9.0,  # TUNING (not in GDD) px (~44 px sprite)
+		"armor": 0.1,  # TUNING (not in GDD)
+		"xp": 6,  # TUNING (not in GDD) an elite
+		"behavior": "melee",
+		"projectile_speed": 0.0,
+		"undead_damage_mult": 1.0,
+		"heal_amount": 0.0,
+		"heal_interval": 0.0,
+		"heal_radius": 0.0,
+		"target_priority": 0.7,  # TUNING (not in GDD) 0..1
+		"mass": 1.0,  # TUNING (not in GDD)
+		"faction": FACTION,
+		"kit": "bastet_hunter",
+		"group": "guard",  # A temple duellist (the Codex's guard)
+		"figure": true,  # Owner rule: every female kind in the figure-redesign style
+		"stalk": {
+			"speed_mult": 1.4,  # TUNING (not in GDD) x her speed in the sand
+			"prey_reach": 640.0,  # TUNING (not in GDD) px: the ranged summon she hunts is within this of her
+			"ranged_reach": 60.0,  # TUNING (not in GDD) px: a summon whose attack range is at least this is "ranged"
+			"strike_reach": 26.0,  # TUNING (not in GDD) px edge to edge: she bursts out this near her prey
+			"strike_radius": 30.0,  # TUNING (not in GDD) px of the ambush circle
+			"windup": 0.35,  # TUNING (not in GDD) s of the burst (the circle shows)
+			"damage": 12.0,  # TUNING (not in GDD) to the ambushed summon, before the time scaling (first pass 22: Bastet killed ~300 summons in the seed-7 army run)
+			"damage_player": 8.0,  # TUNING (not in GDD) to a necromancer in the circle, before the time scaling
+			"hidden_taken": 0.5,  # TUNING (not in GDD) share of a non-spell hit she takes in the sand
+			"duel_time": 7.0,  # TUNING (not in GDD) s of the duel after an ambush or a reveal
+			"vanish_every": 12.0,  # TUNING (not in GDD) s of each later duel before she dives again (first pass 7)
+		},
+	},  # The Bastet Hunter.
+	# The USHABTI STATUE (a stone servant, no sex; owner-approved proposal:
+	# "Heavy | A stone servant; wakes from an alcove; no Rebirth; armour 5 |
+	# Siegecraft"). On the Temple the Awakening Statues wake it out of a
+	# statue row (LionessTempleDirector); UshabtiStatueKit adds nothing to the
+	# shared walk. Flat armour 5 (the existing path in
+	# CombatResolver.damage_enemy()); no Rebirth (stone does not return).
+	"ushabti_statue": {
+		"display_name": "Ushabti Statue",
+		"max_hp": 90.0,  # TUNING (not in GDD) a heavy (the khopesh guard 44)
+		"move_speed": 34.0,  # TUNING (not in GDD) px/s; slow stone
+		"damage": 8.0,  # TUNING (not in GDD) a stone fist, before the time scaling
+		"attack_interval": 1.5,  # TUNING (not in GDD) s
+		"attack_range": 6.0,  # TUNING (not in GDD) px
+		"radius": 9.0,  # TUNING (not in GDD) px (~46 px sprite, 20 wide)
+		"armor": 0.1,  # TUNING (not in GDD)
+		"flat_armor": 5.0,  # Owner-approved proposal: "armour 5" (flat, as the Sanctified Sentinel's 6)
+		"xp": 4,  # TUNING (not in GDD)
+		"behavior": "melee",
+		"projectile_speed": 0.0,
+		"undead_damage_mult": 1.0,
+		"heal_amount": 0.0,
+		"heal_interval": 0.0,
+		"heal_radius": 0.0,
+		"target_priority": 0.55,  # TUNING (not in GDD) 0..1
+		"mass": 3.0,  # TUNING (not in GDD) stone
+		"faction": FACTION,
+		"kit": "ushabti_statue",
+		"group": "stone",
+	},  # The Ushabti Statue.
 }

@@ -511,6 +511,9 @@ func _ready() -> void:
 			var dyg := DynastyGround.new()  # The Dynasty stubs' placeholder floor (the STAGE's "floor").
 			dyg.look = stage_def.get("floor", {})
 			ground = dyg
+		# --- Act XII (temporary number): the Temple of the Lioness ---
+		"lioness_temple":
+			ground = LionessTempleGround.new()  # The Temple of the Lioness's four zone floors (LionessTempleStage.ZONES).
 		_:
 			ground = Ground.new()
 	add_child(ground)

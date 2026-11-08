@@ -175,7 +175,11 @@ func play_sound(event: String, pos: Vector2 = Vector2.INF, gap: float = 0.0) -> 
 ## The autotest autopilot's push away from every live Dynasty telegraph at
 ## `p`: the Devourer's lanes.
 func danger_push(p: Vector2) -> Vector2:
-	return devourer.danger_push(p)
+	var push := devourer.danger_push(p)
+	# --- Act XII (temporary number): the Temple of the Lioness --- the sealed hall's edge.
+	if game.enemies != null and game.enemies.lioness_temple != null:
+		push += game.enemies.lioness_temple.danger_push(p)
+	return push
 
 
 # =====================================================================================

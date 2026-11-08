@@ -110,7 +110,9 @@ const SPELL_ORDER := ["shadow_bolt", "orb_shield", "shadow_blast",
 	# --- Act IX: the Proving Moon ---
 	"soul_caster",
 	# --- Act IX: the Ark ---
-	"tractor_lift"]
+	"tractor_lift",
+	# --- Act XII (temporary number): the Temple of the Lioness ---
+	"burning_eye"]
 
 ## Spell definitions.
 ##   display_name — UI name.
@@ -939,6 +941,31 @@ const SPELLS := {
 			{"damage": 56.0, "cooldown": 2.9, "lift_time": 0.95, "slam_radius": 56.0, "slam_share": 0.51},  # TUNING (not in GDD)
 			{"damage": 66.0, "cooldown": 2.75, "lift_time": 0.95, "slam_radius": 60.0, "slam_share": 0.54},  # TUNING (not in GDD)
 			{"damage": 78.0, "cooldown": 2.6, "lift_time": 1.0, "slam_radius": 64.0, "slam_share": 0.57},  # TUNING (not in GDD) Hero's Fist Lv5 72 / 2.4 s
+		],
+	},
+	# --- Act XII (temporary number): the Temple of the Lioness ---
+	# Burning Eye (GDD §15.0 "Burning Eye, Eye of Retribution, Desert Fury and
+	# the Lion-Priestess (Dynasty phase 2)"; proposal: "a solar eye fires a beam
+	# that sweeps a 90° arc"; unlocked by slaying Sekhmet, UnlockData): every
+	# `cooldown` s a solar eye over the necromancer fires a beam `range` px long
+	# and `width` px wide at the nearest foe and sweeps it across `arc` degrees
+	# in `sweep_time` s; every foe it crosses takes `damage` once a pass. A FIRE
+	# source (DynastyRulesData.FIRE_SOURCES: mummies take x1.5). Its "range" is a
+	# spell range like any other (the Sandstorm halves it). Logic: BurningEye;
+	# fixed rules: BurningEyeData. A sweeping crowd spell between Death Ray (a
+	# full circle) and Shadow Blast.
+	"burning_eye": {
+		"display_name": "Burning Eye",  # Owner-approved proposal
+		"icon": "burning_eye",
+		"description": "A solar eye opens over you and sweeps its burning beam across the foes before you.",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Beam damage", "arc": "Arc (deg)", "range": "Range (px)", "cooldown": "Cooldown (s)"},
+		"levels": [
+			{"damage": 22.0, "arc": 90.0, "range": 230.0, "width": 12.0, "sweep_time": 0.55, "cooldown": 2.8},  # TUNING (not in GDD) owner-approved proposal: a 90° arc
+			{"damage": 28.0, "arc": 90.0, "range": 245.0, "width": 12.0, "sweep_time": 0.55, "cooldown": 2.65},  # TUNING (not in GDD)
+			{"damage": 35.0, "arc": 100.0, "range": 260.0, "width": 13.0, "sweep_time": 0.6, "cooldown": 2.5},  # TUNING (not in GDD)
+			{"damage": 43.0, "arc": 100.0, "range": 275.0, "width": 14.0, "sweep_time": 0.6, "cooldown": 2.35},  # TUNING (not in GDD)
+			{"damage": 52.0, "arc": 110.0, "range": 290.0, "width": 15.0, "sweep_time": 0.65, "cooldown": 2.2},  # TUNING (not in GDD) Death Ray Lv5 for comparison
 		],
 	},
 }

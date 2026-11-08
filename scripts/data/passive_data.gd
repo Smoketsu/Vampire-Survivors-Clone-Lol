@@ -208,7 +208,9 @@ const ORDER := ["grave_dominion", "necrotic_vigor", "dark_command", "soul_recycl
 	# --- Act IX: the Proving Moon ---
 	"trophy_rack", "mirror_bones",
 	# --- Act IX: the Ark ---
-	"starseed", "crop_circles"]
+	"starseed", "crop_circles",
+	# --- Act XII (temporary number): the Temple of the Lioness ---
+	"desert_fury", "embalmed_bones"]
 
 ## Passives that only help summons (a "dead" level-up card while no summon
 ## class is owned, see AbilityManager.build_offers()).
@@ -258,7 +260,9 @@ const ARMY_PASSIVES := ["grave_dominion", "necrotic_vigor", "dark_command", "sou
 	# --- Act IX: the Proving Moon ---
 	"mirror_bones",
 	# --- Act IX: the Ark ---
-	"crop_circles"]
+	"crop_circles",
+	# --- Act XII (temporary number): the Temple of the Lioness ---
+	"embalmed_bones"]
 
 # --- Act III: the Assembly Halls ---
 ## Overclock (paired with the Grave Drone): a summon class is "ranged" (and
@@ -1902,6 +1906,53 @@ const PASSIVES := {
 			{"special_hold": 0.18},  # TUNING (not in GDD)
 			{"special_hold": 0.24},  # TUNING (not in GDD)
 			{"special_hold": 0.30},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act XII (temporary number): the Temple of the Lioness ---
+	# Desert Fury (Burning Eye's paired passive; owner-approved proposal: "Eye
+	# of Retribution (+ Desert Fury)"; unlocked with the spell by Sekhmet and
+	# offered on every stage). Own decision on its effect: the desert's anger
+	# in the eye: Burning Eye's beam deals fury_dmg more and sweeps fury_arc
+	# degrees wider (BurningEye, the one read: exactly nothing without the
+	# spell).
+	"desert_fury": {
+		"display_name": "Desert Fury",  # Owner-approved proposal
+		"icon": "desert_fury",
+		"description": "Your Burning Eye burns hotter, and its beam sweeps wider.",
+		"labels": {"fury_dmg": ["Burning Eye damage", "pct"], "fury_arc": ["Burning Eye arc (deg)", "num"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"fury_dmg": 0.06, "fury_arc": 4},  # TUNING (not in GDD)
+			{"fury_dmg": 0.12, "fury_arc": 8},  # TUNING (not in GDD)
+			{"fury_dmg": 0.18, "fury_arc": 12},  # TUNING (not in GDD)
+			{"fury_dmg": 0.24, "fury_arc": 16},  # TUNING (not in GDD)
+			{"fury_dmg": 0.30, "fury_arc": 20},  # TUNING (not in GDD)
+		],
+	},
+	# The Dynasty's counter-passive Embalmed Bones (owner-approved proposal:
+	# "summons shed a curse glyph faster and take less damage while cursed";
+	# unlocked by the achievement Names Taken (own split with the lead's
+	# decision pending: the Temple's achievement earns this one, the
+	# Necropolis's No Jars Left the other, Dune Walkers) and offered only in
+	# the Dynasty's act through its card row's "act"). The foundation's hooks
+	# read it: DynastyRules.embalmed_shed_mult() (Heka.write(): a glyph on the
+	# bound player's summon lasts 1 - glyph_shed of its time) and
+	# DynastyRules.embalmed_taken_mult() (CombatResolver.damage_unit(), only on
+	# a summon under a glyph: 1 - cursed_damage_cut of the hit). Keys
+	# DynastyRulesData.EMBALMED_SHED_KEY and EMBALMED_TAKEN_KEY.
+	"embalmed_bones": {
+		"display_name": "Embalmed Bones",  # Owner-approved proposal
+		"icon": "embalmed_bones",
+		"description": "Your dead are wrapped against the priests' words: glyphs fall off sooner, and a cursed summon takes less harm.",
+		"labels": {"glyph_shed": ["Glyph time on summons", "neg_pct"], "cursed_damage_cut": ["Damage to cursed summons", "neg_pct"]},
+		"act": 12,  # Owner-approved: the act's counter-passives are offered only in its own act (Unlocks.act_allows(); temporary number, the reorder renumbers)
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"glyph_shed": 0.12, "cursed_damage_cut": 0.08},  # TUNING (not in GDD)
+			{"glyph_shed": 0.22, "cursed_damage_cut": 0.15},  # TUNING (not in GDD)
+			{"glyph_shed": 0.32, "cursed_damage_cut": 0.22},  # TUNING (not in GDD)
+			{"glyph_shed": 0.41, "cursed_damage_cut": 0.29},  # TUNING (not in GDD)
+			{"glyph_shed": 0.50, "cursed_damage_cut": 0.35},  # TUNING (not in GDD) proposal: "shed a curse glyph faster" (half as long at full)
 		],
 	},
 }
