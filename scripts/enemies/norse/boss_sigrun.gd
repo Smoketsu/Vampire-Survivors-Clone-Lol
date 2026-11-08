@@ -58,7 +58,7 @@ var _duel_hp0: float = 0.0
 var _duel_dashes0: int = 0
 ## Game time until which her guard is down after yielding a duel.
 var guard_down_until: float = 0.0
-## The Holmgang's square (child of the EnemyDirector, created at setup).
+## The Holmgang's square (child of the Game, created at setup).
 var holmgang: Holmgang = null
 ## Her valkyrie wing (generation-checked against `_wing_gen`).
 var _wing: Array[Enemy] = []
@@ -99,7 +99,7 @@ func setup_boss(p_game: Game, pos: Vector2, hp_mult: float, slot: int) -> void:
 	game.norse_rules()  # The act's rules exist wherever she fights (--boss=sigrun elsewhere).
 	if holmgang == null:
 		holmgang = Holmgang.new(game)
-		game.enemies.add_child(holmgang)
+		game.add_child(holmgang)  # On the Game (not the y-sorted EnemyDirector): its z_index lays it on the ground.
 	_wing.clear()
 	_wing_gen.clear()
 	var n := int(boss_def["wing_count"])

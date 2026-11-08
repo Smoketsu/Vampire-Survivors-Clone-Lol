@@ -73,6 +73,10 @@ var _hearth_cd: float = 0.0
 var _listening: bool = false
 ## True when this build draws (never headless).
 var _draws: bool = false
+## The seated heroes' drawing layer (a child of the Game, not of the y-sorted
+## EnemyDirector, so its z_index puts it between the floor and the tables;
+## null headless and before the first step).
+var _layer: Node2D = null
 ## Arena redraw cell the seats were last drawn around.
 var _drawn_cell: Vector2i = Vector2i(1 << 30, 1 << 30)
 ## Zone the seats were last drawn for.
@@ -81,8 +85,6 @@ var _drawn_zone: int = -1
 
 func _ready() -> void:
 	name = "ValgardDirector"
-	z_index = -7  # The seated heroes sit between the floor (-10) and the tables (-6): the table hides their legs.
-	z_as_relative = false
 	_draws = DisplayServer.get_name() != "headless"
 
 
@@ -101,12 +103,19 @@ func step(_delta: float) -> void:
 		game.stat_add("valgard_champion_killed", 1.0)
 		champion_time = _clock()
 		_log("champion_down")
+	if _draws and _layer == null:
+		_layer = Node2D.new()
+		_layer.name = "FeastSeats"
+		_layer.z_index = -7  # The seated heroes sit between the floor (-10) and the tables (-6): the table hides their legs.
+		_layer.z_as_relative = false
+		_layer.draw.connect(_draw_seats)
+		game.add_child(_layer)
 	if _draws:
 		var c := Vector2i(floori(game.player.position.x / ArenaData.REDRAW_CELL), floori(game.player.position.y / ArenaData.REDRAW_CELL))
 		if c != _drawn_cell or _zone() != _drawn_zone:
 			_drawn_cell = c
 			_drawn_zone = _zone()
-			queue_redraw()
+			_layer.queue_redraw()
 
 
 ## THE HALL'S HEARTHS around world point `p` (see the header): each lattice
@@ -197,8 +206,8 @@ func wake_feast(at: Vector2, n: int, cause: String) -> int:
 			game.norse.play_sound("einherjar_march", at, 1.5)
 		if cause == "horn" and game.stats.get("feast_wakes", 0.0) <= 1.0:
 			game.enemies.show_banner("The horn wakes the Feast: the Einherjar rise from the long tables!")
-		if _draws:
-			queue_redraw()
+		if _layer != null:
+			_layer.queue_redraw()
 	return woken
 
 
@@ -307,8 +316,9 @@ func _clock() -> String:
 ## The seated heroes at every full table near the necromancer: the head and
 ## chest of the art's Einherjar behind the table (the table, one layer up,
 ## hides the rest), a dim gold light at each seat. Co-op drawing never fills
-## the arena's gameplay cache (Arena._peek()).
-func _draw() -> void:
+## the arena's gameplay cache (Arena._peek()). Drawn on `_layer`.
+func _draw_seats() -> void:
+	var ci := _layer
 	var tex := SpriteBank.texture(SEAT_SPRITE)
 	var p := game.player.position
 	var reach := float(config["seat_scan"])
@@ -332,12 +342,13 @@ func _draw() -> void:
 			var vertical := o.half.y > o.half.x
 			for s in n:
 				var spread := (float(s) - float(n - 1) * 0.5) * (o.half.y if vertical else o.half.x) * 0.9
-				var seat := o.center + (Vector2(0.0, spread) if vertical else Vector2(spread, -2.0))
-				draw_texture_rect(SpriteBank.disc(), Rect2(seat - Vector2(14.0, 18.0), Vector2(28.0, 28.0)), false, Color(Palette.NORSE_VALKYRIE_GOLD, 0.16))
+				var side := -1.0 if s % 2 == 0 else 1.0  # A vertical table's benches: one hero each side.
+				var seat := o.center + (Vector2(side * (o.half.x + 4.0), spread * 0.5 + 8.0) if vertical else Vector2(spread, -2.0))
+				ci.draw_texture_rect(SpriteBank.disc(), Rect2(seat - Vector2(14.0, 18.0), Vector2(28.0, 28.0)), false, Color(Palette.NORSE_VALKYRIE_GOLD, 0.16))
 				if tex == null:
-					SpriteBank.draw_disc(self, seat + Vector2(0.0, -12.0), 6.0, Palette.NORSE_VALKYRIE_GOLD.darkened(0.3))
+					SpriteBank.draw_disc(ci, seat + Vector2(0.0, -12.0), 6.0, Palette.NORSE_VALKYRIE_GOLD.darkened(0.3))
 					continue
 				var w := float(tex.get_width())
 				var crop := minf(SEAT_CROP, float(tex.get_height()))
-				SpriteBank.apply_sharp(self)
-				draw_texture_rect_region(tex, Rect2((seat - Vector2(w * 0.5, crop)).round(), Vector2(w, crop)), Rect2(0.0, 0.0, w, crop), SEAT_TINT)
+				SpriteBank.apply_sharp(ci)
+				ci.draw_texture_rect_region(tex, Rect2((seat - Vector2(w * 0.5, crop)).round(), Vector2(w, crop)), Rect2(0.0, 0.0, w, crop), SEAT_TINT)

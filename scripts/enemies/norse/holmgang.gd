@@ -3,7 +3,7 @@
 ## "Sigrun, the Shield-Queen (the Hall of the Slain)"; owner-approved proposal:
 ## "a square of hazel rods closes around the two of them for 15 s, and summons
 ## cannot enter; spells and Grave Step only"). Owned by BossSigrun (a child of
-## the EnemyDirector, created once per boss), opened by open() and enforced by
+## the Game, created once per boss), opened by open() and enforced by
 ## enforce() every tick of the duel, AFTER the summons and the necromancer have
 ## moved (BossSigrun.physics_step(), inside EnemyDirector.step(); the obstacle
 ## push-out runs after it):
