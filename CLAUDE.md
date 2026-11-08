@@ -740,6 +740,10 @@ tiny tweaks.
    longboat, the Fire Ship through `HellPits.open_pit()`), the shared Grappler and Boatswain, Captain Crow (`boss_crow.gd`),
    Chain Shot / Keelhauler + Bosun's Whistle, the Marooned Quartermaster, Not One Aboard → Barnacle Bones; `"playable"`
    stays false until the lead flips the act).
+   Wave 1b, the Black Tide's **Treasure Galleon** (branch `tide-galleon`; GDD §15.0 from "The Treasure Galleon (Act X
+   phase 2)"): broadsides, the deck cannons (a world rule), the Gunnery Mate, Voodoo Navigator, Gunboat and Hull Crab,
+   Old Hollow-Eye, Admiral Marrec, Cannonade / Dead Men's Broadside + Black Powder, the Corsair Queen, Walked the Plank →
+   Sea Legs; still `"playable": false` until the lead's integration.
 7. **Phase 4 polish:** accessibility, profiling on real hardware, and the **final balance pass**.
    The owner's Oct 2026 playtest balance pass is in (GDD §15.0 "Balance pass (Oct 2026 playtest)": Dread Rally raises the army, spells ×1.2, boss HP Alaric −35% / Vael −40% / Seraphine −30%, later level-up items weigh 0.5, Frost Wraith / Bone Hound / Banshee base damage raised; the earlier +5% global multiplier was removed); further value tweaks wait for this pass (naive-bot
    death rates above target on both stages and spell-only builds lacking single-target damage are

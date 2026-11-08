@@ -343,6 +343,13 @@
 ##                        (the tier cap).
 ##   sea                — the stage's sea strikes (SeaStrikes): any key of
 ##                        CorsairRulesData.SEA ({} = the defaults).
+## --- Act X: the Treasure Galleon ---
+##   galleon            — GalleonDirector config (GalleonStage.GALLEON, Act X,
+##                        the Treasure Galleon: the zones' banners and
+##                        broadside rhythm from "zones", the broadsides, the
+##                        deck cannons, the "hollow_eye" event, the HUD
+##                        objectives); ground "galleon" is its GalleonGround
+##                        (the deck and sea tiles under the zones' looks).
 ##   zones              — Act X stubs too: the planned zones (names and starts).
 ## --- Act X: the Smuggler's Cutter ---
 ##   cutter             — CutterDirector config (CutterStage.CUTTER, Act X, the

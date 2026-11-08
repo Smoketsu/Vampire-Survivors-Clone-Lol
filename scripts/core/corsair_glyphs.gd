@@ -45,6 +45,23 @@ static func draw_enemy(ci: CanvasItem, kind: String, o: Vector2, r: float, flash
 		"bosun_gorran":
 			_crewman(ci, o, r, flash, Palette.CORSAIR_SEA_DARK, false)
 			return true
+	# --- Act X: the Treasure Galleon --- (its kinds all have art; these are the fallbacks)
+		"gunnery_mate", "voodoo_navigator":
+			_swashbuckler(ci, o, r, flash)
+			return true
+		"gunboat":
+			_boat(ci, o, r, flash, true)
+			return true
+		"hull_crab":
+			SpriteBank.draw_disc(ci, o, r, Glyphs._c(INK, flash))
+			SpriteBank.draw_disc(ci, o, r * 0.85, Glyphs._c(Palette.CORSAIR_SASH, flash))  # The shell.
+			SpriteBank.draw_disc(ci, o + Vector2(-r * 0.9, -r * 0.6), r * 0.35, Glyphs._c(Palette.CORSAIR_SASH_LIGHT, flash))  # Claws.
+			SpriteBank.draw_disc(ci, o + Vector2(r * 0.9, -r * 0.6), r * 0.35, Glyphs._c(Palette.CORSAIR_SASH_LIGHT, flash))
+			return true
+		"old_hollow_eye":
+			_kraken_arm(ci, o, r, flash)
+			SpriteBank.draw_disc(ci, o + Vector2(0.0, -r * 0.2), r * 0.22, Palette.CORSAIR_FOAM_LIGHT)  # The hollow eye.
+			return true
 	match kind:
 		"musketeer":
 			_crewman(ci, o, r, flash, Palette.CORSAIR_SEA, true)
@@ -148,6 +165,9 @@ static func draw_obstacle(ci: CanvasItem, o: Arena.Obstacle) -> bool:
 	var kind := o.kind
 	if not (kind.begins_with("cutter_") or kind.begins_with("galleon_") or kind.begins_with("maelstrom_") or kind.begins_with("deck_")):
 		return false
+	if kind == "galleon_steps":
+		_steps(ci, o)  # Act X, the Treasure Galleon: the quarterdeck stair.
+		return true
 	var ghost := kind.begins_with("maelstrom_")  # The Hollow Queen: rotten, green-washed.
 	var wood := Palette.CORSAIR_OAK_LIGHT if not ghost else Palette.CORSAIR_SPECTRE_DARK
 	var dark := Palette.CORSAIR_OAK_DARK
@@ -179,3 +199,25 @@ static func draw_obstacle(ci: CanvasItem, o: Arena.Obstacle) -> bool:
 			ci.draw_line(Vector2(x, rect.position.y + 2.0), Vector2(x, rect.end.y - 2.0), wood, 1.0)
 			x += 5.0
 	return true
+
+
+# --- Act X: the Treasure Galleon ---
+## The quarterdeck stair (obstacle "galleon_steps", the Galleon's fixed
+## layout; no sprite: code-drawn): oak treads rising toward the stern with a
+## rope rail along each side.
+static func _steps(ci: CanvasItem, o: Arena.Obstacle) -> void:
+	var rect := Rect2(o.center - o.half, o.half * 2.0)
+	ci.draw_rect(Rect2(rect.position + Vector2(3, 4), rect.size), Color(0, 0, 0, 0.35))
+	ci.draw_rect(rect, INK)
+	ci.draw_rect(rect.grow(-1.5), Palette.CORSAIR_OAK)
+	var vertical := o.half.y > o.half.x
+	var n := 7
+	for i in n:
+		var k := (float(i) + 0.5) / float(n)
+		if vertical:
+			var y := rect.position.y + rect.size.y * k
+			ci.draw_line(Vector2(rect.position.x + 2.0, y), Vector2(rect.end.x - 2.0, y), Palette.CORSAIR_OAK_LIGHT, 2.0)
+		else:
+			var x := rect.position.x + rect.size.x * k
+			ci.draw_line(Vector2(x, rect.position.y + 2.0), Vector2(x, rect.end.y - 2.0), Palette.CORSAIR_OAK_LIGHT, 2.0)
+	ci.draw_rect(rect, Palette.CORSAIR_SAIL_SHADE, false, 1.0)  # The rope rails.

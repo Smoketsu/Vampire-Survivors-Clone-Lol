@@ -469,6 +469,9 @@ func summary_line() -> String:
 		# --- Act X: the Smuggler's Cutter --- (Spare Shot lives in ChainShot._cast())
 		"spare_shot":
 			counters = "extra chain-shots %d (casts %d)" % [int(st.get("chain_extra", 0.0)), int(st.get("chain_casts", 0.0))]
+		# --- Act X: the Treasure Galleon --- (Queen's Ransom lives in Cannonade._volley())
+		"queens_ransom":
+			counters = "extra marks %d (balls %d)" % [int(st.get("cannonade_extra_marks", 0.0)), int(st.get("cannonade_balls", 0.0))]
 	out += " | innate: %s" % ("none" if _innate == "" else "%s: %s" % [ch.innate_name(), counters])
 	out += " | characters unlocked this run: %s" % (", ".join(ch.unlocked_this_run) if not ch.unlocked_this_run.is_empty() else "none")
 	var open := PackedStringArray()  # Characters unlocked in the Meta profile now.

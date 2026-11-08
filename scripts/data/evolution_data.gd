@@ -110,7 +110,9 @@ const ORDER := ["void_barrage", "eclipse_ward", "abyssal_detonation",
 	# --- Act IX: the Ark ---
 	"star_abduction",
 	# --- Act X: the Smuggler's Cutter ---
-	"keelhauler"]
+	"keelhauler",
+	# --- Act X: the Treasure Galleon ---
+	"dead_mens_broadside"]
 
 ## Evolution definitions.
 ##   base         — spell id that evolves (AbilityData.SPELLS key).
@@ -824,6 +826,26 @@ const EVOLUTIONS := {
 		"stats": {
 			"damage": 16.0, "shots": 3, "range": 320.0, "speed": 440.0, "width": 22.0, "cooldown": 2.4,  # TUNING (not in GDD) first pass 27 / 2.2 s (185k in the forced seed-7 run, 3.4x the Death Knights), then 19 (177k, 1.7x the Mages: its knocks drown more)
 			"knock": 80.0,  # TUNING (not in GDD) the evolution flag: px each struck foe is knocked off the line
+		},
+	},
+	# --- Act X: the Treasure Galleon ---
+	# Dead Men's Broadside (GDD §15.0 "Cannonade, Dead Men's Broadside, Black
+	# Powder and the Corsair Queen (Act X)"; owner-approved proposal "Cannonade
+	# -> Dead Men's Broadside (+ Black Powder)"): Cannonade + Black Powder (a NEW
+	# passive, owner rule: at Lv 5). Own decision on its kit: five marks,
+	# wider blasts, and every mark takes a second ball `salvo` s later dealing
+	# `salvo_share` of the damage (a double broadside). Detected by the "salvo" key.
+	"dead_mens_broadside": {
+		"base": "cannonade",
+		"passive": "black_powder",
+		"display_name": "Dead Men's Broadside",  # Owner-approved proposal
+		"icon": "dead_mens_broadside",
+		"description": "Five groups marked at once, and a second ghostly ball follows every first.",
+		"labels": {"damage": "Ball damage", "marks": "Groups marked", "salvo": "Second ball after (s)", "cooldown": "Cooldown (s)"},
+		"stats": {
+			"damage": 30.0, "marks": 5, "radius": 42.0, "range": 380.0, "cooldown": 2.8,  # TUNING (not in GDD) first pass 40 / 2.6 s (the forced seed-7 run: 261k from the evolution alone)
+			"salvo": 0.45,  # TUNING (not in GDD) the evolution flag: s between the two balls of a mark
+			"salvo_share": 0.5,  # TUNING (not in GDD) x the damage of the second ball
 		},
 	},
 }

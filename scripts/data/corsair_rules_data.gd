@@ -127,7 +127,9 @@ const SEA := {
 ## The strike types (a kind's row "strike" "type"): "leap" (a shark breaches
 ## onto the deck: a shadow, then it lands as an ordinary deck enemy) and
 ## "tentacle" (a kraken arm grabs one summon, holds it, drags it overboard).
-const STRIKE_TYPES: Array[String] = ["leap", "tentacle"]
+const STRIKE_TYPES: Array[String] = ["leap", "tentacle",
+	# --- Act X: the Treasure Galleon --- (the Hull Crab's climb over the rail)
+	"climb"]
 ## The tentacle (owner-approved proposal: "grabs one summon, holds it 5 s with
 ## the existing held_until hook, then drags it overboard (lost until the next
 ## replenish). Kill the tentacle (200 HP, surfaced 3 s) to free it").
@@ -143,6 +145,14 @@ const TENTACLE := {
 const LEAP := {
 	"telegraph": 0.8,  # Owner-approved proposal: a 0.8 s shadow
 	"inset": 40.0,  # TUNING (not in GDD) px inside the rail the landing is at least
+}
+
+# --- Act X: the Treasure Galleon ---
+## THE CLIMB (the Hull Crab's strike type "climb"; owner-approved proposal:
+## "climbs the hull and boards at the rail band"): at most `inset` px inside
+## the rail it lands.
+const CLIMB := {
+	"inset": 36.0,  # TUNING (not in GDD) px inside the rail (in the rail band)
 }
 
 # --- The Reckoning: the Black Tide ---------------------------------------------------
@@ -164,6 +174,8 @@ const BLACK_TIDE := {
 	"wave_knock": 260.0,  # TUNING (not in GDD) px/s knockback on deck enemies (the far rail drowns them)
 	"wave_damage": 6.0,  # TUNING (not in GDD) to every summon and the necromancer it reaches, x the damage scaling
 	"strike_radius": 40.0,  # TUNING (not in GDD) px
+	# --- Act X: the Treasure Galleon --- (the gunboats shell in lines: GunboatKit)
+	"gunboat_every": 0.0,  # TUNING (not in GDD) s between two gunboats the Black Tide brings (0 = none; the Galleon sets it)
 }
 
 # --- Sounds --------------------------------------------------------------------------
@@ -193,6 +205,9 @@ const SOUNDS := {
 	"cutlass_slash": "cutlass_slash",  # Corsair pack: Crow's cutlass, Gorran's chain sweep.
 	"bosun_whistle": "bosun_whistle",  # Corsair pack: a Boatswain's bellow, Gorran's bellow.
 	"plank_drop": "plank_drop",  # Corsair pack: Crow lands from his leap; the ram longboat's crew boards.
+	# --- Act X: the Treasure Galleon ---
+	"crab_climb": "hull_creak",  # Corsair pack: a hull crab heaves itself over the rail.
+	"coin_chime": "coin_chime",  # Corsair pack: Gold Fever's cursed coins.
 }
 
 # --- Counter-passive hooks (not built) -------------------------------------------------

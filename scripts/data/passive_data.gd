@@ -210,7 +210,9 @@ const ORDER := ["grave_dominion", "necrotic_vigor", "dark_command", "soul_recycl
 	# --- Act IX: the Ark ---
 	"starseed", "crop_circles",
 	# --- Act X: the Smuggler's Cutter ---
-	"bosuns_whistle", "barnacle_bones"]
+	"bosuns_whistle", "barnacle_bones",
+	# --- Act X: the Treasure Galleon ---
+	"black_powder", "sea_legs"]
 
 ## Passives that only help summons (a "dead" level-up card while no summon
 ## class is owned, see AbilityManager.build_offers()).
@@ -262,7 +264,9 @@ const ARMY_PASSIVES := ["grave_dominion", "necrotic_vigor", "dark_command", "sou
 	# --- Act IX: the Ark ---
 	"crop_circles",
 	# --- Act X: the Smuggler's Cutter ---
-	"barnacle_bones"]
+	"barnacle_bones",
+	# --- Act X: the Treasure Galleon ---
+	"sea_legs"]
 
 # --- Act III: the Assembly Halls ---
 ## Overclock (paired with the Grave Drone): a summon class is "ranged" (and
@@ -1949,6 +1953,51 @@ const PASSIVES := {
 			{"sea_damage": 0.45},  # TUNING (not in GDD)
 			{"sea_damage": 0.60},  # TUNING (not in GDD)
 			{"sea_damage": 0.75},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act X: the Treasure Galleon ---
+	# Black Powder (Cannonade's paired passive; owner-approved proposal:
+	# "Dead Men's Broadside (+ Black Powder)"; unlocked with the spell by
+	# Admiral Marrec and offered on every stage). Own decision on its effect:
+	# every Cannonade blast is powder_blast_radius wider and knocks the foes it
+	# hits powder_knock px outward (their knockback; on a deck a blast at the
+	# rail drowns them). Read only by Cannonade (CannonadeData.BLAST_KEY /
+	# KNOCK_KEY): exactly nothing without the spell.
+	"black_powder": {
+		"display_name": "Black Powder",  # Owner-approved proposal
+		"icon": "black_powder",
+		"description": "Your Cannonade's balls are packed with black powder: wider blasts that throw foes back.",
+		"labels": {"powder_blast_radius": ["Cannonade blast radius", "pct"], "powder_knock": ["Knockback (px)", "num"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"powder_blast_radius": 0.08, "powder_knock": 20.0},  # TUNING (not in GDD)
+			{"powder_blast_radius": 0.12, "powder_knock": 28.0},  # TUNING (not in GDD)
+			{"powder_blast_radius": 0.16, "powder_knock": 36.0},  # TUNING (not in GDD)
+			{"powder_blast_radius": 0.20, "powder_knock": 44.0},  # TUNING (not in GDD)
+			{"powder_blast_radius": 0.25, "powder_knock": 52.0},  # TUNING (not in GDD)
+		],
+	},
+	# The Black Tide's counter-passive Sea Legs (owner-approved proposal: "Sea
+	# Legs (the Heave drift and grapple pulls are halved for the army)";
+	# unlocked by the Treasure Galleon's achievement Walked the Plank and
+	# offered only in Act X through its card row's "act"; the act number is
+	# the temporary 10 until the reorder). The foundation's hook reads it,
+	# nothing else: CorsairRules.sea_legs_mult(u) (x 1 - drift_cut on every
+	# drift and pull the army takes: the powder blasts' push, the Black Tide's
+	# wave, the Heave and the Grappler's pull). Key CorsairRulesData.SEA_LEGS_KEY.
+	"sea_legs": {
+		"display_name": "Sea Legs",  # Owner-approved proposal
+		"icon": "sea_legs",
+		"description": "Your dead have found their sea legs: the deck's heave, the waves and the blasts barely move them.",
+		"labels": {"drift_cut": ["Drift and pulls on summons", "neg_pct"]},
+		"act": 10,  # Owner-approved: the act's counter-passives are offered only in the Black Tide (temporary act number 10; Unlocks.act_allows())
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"drift_cut": 0.15},  # TUNING (not in GDD)
+			{"drift_cut": 0.25},  # TUNING (not in GDD)
+			{"drift_cut": 0.35},  # TUNING (not in GDD)
+			{"drift_cut": 0.43},  # TUNING (not in GDD)
+			{"drift_cut": 0.50},  # TUNING (not in GDD) owner-approved proposal: halved at full
 		],
 	},
 }

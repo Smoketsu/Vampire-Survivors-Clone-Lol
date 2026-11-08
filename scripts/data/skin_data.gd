@@ -119,6 +119,8 @@ const HYPER_NAMES := {
 	"starborn": "The Gilded Deserter",  # TUNING (not in GDD)
 	# --- Act X: the Smuggler's Cutter ---
 	"marooned_quartermaster": "The Gilded Castaway",  # TUNING (not in GDD)
+	# --- Act X: the Treasure Galleon ---
+	"corsair_queen": "The Gilded Queen",  # TUNING (not in GDD)
 }
 ## Sprite-multiply tint of each Hyper skin (gilded; the Eclipsed Gravecaller
 ## and the Sunless / Starless pair are darkened with a gold corona instead).
@@ -185,6 +187,8 @@ const HYPER_TINTS := {
 	"starborn": Color(1.2, 1.05, 0.62),  # TUNING (not in GDD) gilded (the drawn skin replaces the tint)
 	# --- Act X: the Smuggler's Cutter ---
 	"marooned_quartermaster": Color(1.2, 1.05, 0.62),  # TUNING (not in GDD) gilded (no drawn Hyper skin yet: the tint)
+	# --- Act X: the Treasure Galleon ---
+	"corsair_queen": Color(1.2, 1.05, 0.62),  # TUNING (not in GDD) gilded (no skin art yet: the tint is the skin)
 }
 ## Emblem and accent shared by every Hyper skin: a gold sun corona.
 const HYPER_ACCENT := Color(1.0, 0.82, 0.3)  # TUNING (not in GDD) Palette.GOLD

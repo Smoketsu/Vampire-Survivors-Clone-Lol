@@ -289,6 +289,15 @@ const UNLOCKS := {
 	"chain_shot": {"type": "spell", "boss": "crow", "text": "Defeat Captain Crow on the Smuggler's Cutter to unlock."},  # Owner-approved Act X proposal
 	"bosuns_whistle": {"type": "passive", "boss": "crow", "text": "Defeat Captain Crow on the Smuggler's Cutter to unlock."},  # Chain Shot's paired passive (owner-approved proposal), unlocked with it
 	"barnacle_bones": {"type": "passive", "achievement": "not_one_aboard", "text": "Earn Not One Aboard: sink five boats before any of their crew climbs aboard, on the Smuggler's Cutter."},  # Brief: Not One Aboard unlocks Barnacle Bones
+	# --- Act X: the Treasure Galleon ---
+	# Admiral Marrec's fall (owner-approved proposal "Rewards": Cannonade is
+	# unlocked by Marrec) with its paired passive, offered on every stage; the
+	# stage's achievement Walked the Plank earns the act's counter-passive Sea
+	# Legs (brief's pairing; offered only in the Black Tide through its card
+	# row's "act").
+	"cannonade": {"type": "spell", "boss": "marrec", "text": "Defeat Admiral Marrec on the Treasure Galleon to unlock."},  # Owner-approved proposal
+	"black_powder": {"type": "passive", "boss": "marrec", "text": "Defeat Admiral Marrec on the Treasure Galleon to unlock."},  # Cannonade's paired passive (owner-approved proposal), unlocked with it
+	"sea_legs": {"type": "passive", "achievement": "walked_the_plank", "text": "Earn Walked the Plank: send 200 foes overboard in one run."},  # Brief: Walked the Plank unlocks Sea Legs
 }
 
 ## End-screen plate heading of a newly unlocked item, by type.

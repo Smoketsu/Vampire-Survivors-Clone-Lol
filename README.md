@@ -2522,6 +2522,44 @@ that drags one of your dead to the rail) and **Boatswain** (a bellow that speeds
 - Autotest lines: `cutter` (barrels, fog boats, the ram, the fire patches, clean sinks), `cutter crew`, `bosun gorran`,
   `captain crow`; `act X spell` / `act X passives` on any stage when Chain Shot, Bosun's Whistle or Barnacle Bones was
   taken (`--spells=chain_shot`, `--character=marooned_quartermaster`).
+<!-- --- Act X: the Treasure Galleon --- -->
+#### The Treasure Galleon (phase 2)
+
+A captured treasure galleon on open water at dawn (GDD §15.0 "The Treasure Galleon (Act X phase 2)" and the rows after
+it): a 1,500 x 540 deck that scrolls, a quarterdeck at the stern (its stair is a choke the ring flows round), a
+forecastle, three masts and **eight deck cannons**, five boarding points (one boat at each), boats up to raider ships.
+Four zones change the light and the mix: **the Convoy Lane**, **the Reef** (hull crabs and sharks), **the Storm** (Old
+Hollow-Eye) and **the Gun Deck** (gunboats, faster broadsides).
+
+- **Broadsides.** Every 55-80 s (by zone) an enemy galleon comes alongside and fires a **6-line broadside** straight
+  across the deck: the lanes show for 1.5 s, then hit both armies; the Brotherhood's crew in a lane is thrown toward
+  the far rail and drowns there. The lanes never centre on you: step into a gap.
+- **The deck cannons.** Stand at one (you or any summon) for 3 s and it fires once at the nearest boat, gunboat or
+  surfaced beast, and the splash throws the boarders at that rail into the sea. A world rule: no class or spell owns it.
+- **New kinds:** the **Gunnery Mate** (lobs grenadoes over the ring onto you: a landing circle, then a powder blast
+  that hurts both sides), the **Voodoo Navigator** (marks a spot on your ring for the sea to strike 1.5 s later; kill
+  her and the mark fails), the **Gunboat** (never boards: it shells the deck in lines from the water, and sails off
+  after 75 s) and the **Hull Crab** (climbs the hull and comes over the rail with armour 4). Any Black Tide stage may
+  field them.
+- **Old Hollow-Eye** (the miniboss): the kraken itself. It circles the hull under the water, surfaces to grab your dead
+  with boss-sized tentacles and raises kraken arms beside it; hit it while it is up.
+- **Admiral Isabeau Marrec, the Sea Wolf** (the boss): **the Fleet** (from her flagship alongside she fires a broadside
+  every 30 s and a raider ship's worth of her crew boards), **the Boarding** (she crosses a plank with her marines:
+  cut both of its hooks first and the plank falls, her marines drown and she pays for the swim; after two falls she
+  swings across on a rope), then a cutlass, pistol and rapier-lunge duel, and **Gold Fever** (cursed coins that keep
+  barriers on her marines and guard her while she stands near them; any blow clears a coin) with a last stand on the
+  quarterdeck.
+- **Rewards:** Marrec unlocks the spell **Cannonade** (spectral cannonballs arc down on the three thickest groups;
+  evolves into **Dead Men's Broadside** with the passive **Black Powder**: wider blasts that throw foes back) and with
+  it the playable **Corsair Queen** (innate Queen's Ransom: one more group marked). The achievement **Walked the Plank**
+  (200 foes overboard in one run) unlocks the counter-passive **Sea Legs** (the army shrugs off drift and pulls; the
+  Black Tide only).
+- **The Black Tide** here also brings a gunboat every 18 s.
+
+Autotest: `--stage=galleon`, `--boss=marrec`, `--spells=cannonade`, `--character=corsair_queen`, `--spawn=` with
+`gunnery_mate`, `voodoo_navigator`, `gunboat`, `hull_crab`, `old_hollow_eye`; lines `galleon`, `broadsides`, `deck
+cannons`, `galleon kinds`, `old hollow-eye`, `galleon threats`, `marrec`, and on any stage `act X spell` / `act X
+passives` when taken.
 ### The Hall of the Slain (foundation, not yet playable)
 
 <!-- --- Act XI (temporary): the Hall of the Slain --- -->
@@ -3339,6 +3377,10 @@ scripts/
                             outline, a look per zone (the burning coast, the fog's grey, the cove's cliffs; Act X)
     cutter_report.gd        The autotest's Cutter lines (cutter, cutter crew, bosun gorran, captain crow) and the
                             Chain Shot / Bosun's Whistle / Barnacle Bones lines (Act X)
+    galleon_ground.gd       The Treasure Galleon's floor: the sea and deck tiles under each zone's look, the
+                            quarterdeck and forecastle, the hatches and barrels as floor dressing (Act X)
+    galleon_report.gd       The autotest's Galleon lines (galleon, broadsides, deck cannons, galleon kinds, old
+                            hollow-eye, galleon threats, marrec) and its items (Cannonade, Black Powder, Sea Legs)
     fort_kessler_report.gd  The autotest's Fort Kessler lines (the stage, its kinds, Mammoth, the threats, Harrow) and
                             its items (Bone Mines, Tripwire, Armour-Piercing Bones)
     fort_kessler_ground.gd  Fort Kessler's floor: CityGround with each zone's look (checkpoints, minefields, aprons,
@@ -3692,6 +3734,11 @@ scripts/
                             (the chain sweep, the bellow)
       boss_crow.gd          Captain Crow: Broadside (his sloop, the cannon lines, his crew), the Duel (leaps,
                             pistol, cutlass), the Fire Ship
+      galleon_director.gd   The Treasure Galleon: its zones, the broadsides (also Marrec's), the deck cannons (a
+                            world rule), Old Hollow-Eye's event, the HUD objectives
+      boss_marrec.gd        Admiral Marrec: the Fleet, the Boarding (the plank and its hooks), the duel, Gold Fever
+      *_kit.gd (Galleon)    gunnery_mate (grenadoes), voodoo_navigator (marks), gunboat (shells in lines, launch()),
+                            hull_crab (the climb), old_hollow_eye (the miniboss), cursed_coin, marrec
     concord/                The Concord of Stars (Act IX): its kits ("<id>_kit.gd", loaded by name after the
                             City's) and bosses ("boss_<id>.gd", phase 2), and the act's shared rules:
       concord_rules.gd      Game.concord: owns the beams, Abduction, Terraforming and the Final Harvest;
@@ -4069,6 +4116,8 @@ scripts/
                             node is abilities/spells/chain_shot.gd)
     corsair_rules_data.gd   Act X's shared rules: DECK, BOARDING (BOAT_CREW, BOAT_PLANKS), SEA (TENTACLE, LEAP),
                             BLACK_TIDE, the SOUNDS map, the Sea Legs / Barnacle Bones keys
+    galleon_data.gd         The Treasure Galleon's systems: BROADSIDE, CANNONS, the floor dressing, Walked the
+                            Plank's goal; marrec_data.gd: Admiral Marrec; cannonade_data.gd: Cannonade's fixed rules
     stages/cutter_stage.gd         Act X: the Smuggler's Cutter (built: zones, the "cutter" config), the Treasure Galleon and the Maelstrom; act 10
     stages/galleon_stage.gd        (temporary; final slot II), "corsair": true, "deck", "boarding", "sea", a FIXED
     stages/maelstrom_stage.gd      furniture layout ("fixed"), a timeline of the shared kinds, the Black Tide,

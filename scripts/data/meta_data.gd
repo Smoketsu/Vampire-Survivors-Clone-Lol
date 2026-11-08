@@ -446,7 +446,9 @@ const ACHIEVEMENT_ORDER := ["bone_legion", "heretics_bane", "dread_sovereign", "
 	# --- Act IX: the Ark ---
 	"last_harvest",
 	# --- Act X: the Smuggler's Cutter ---
-	"not_one_aboard"]
+	"not_one_aboard",
+	# --- Act X: the Treasure Galleon ---
+	"walked_the_plank"]
 
 ## Achievement definitions (GDD §9.4 "Example Achievement Unlocks"). Each
 ## achievement is tracked and recorded in the save and pays a one-time Soul
@@ -704,6 +706,14 @@ const ACHIEVEMENTS := {
 	# counter-passive Barnacle Bones (the brief's pairing).
 	"not_one_aboard": {"display_name": "Not One Aboard", "description": "On the Smuggler's Cutter, sink five boats before any of their crew climbs aboard",
 		"stat": "not_one_aboard_runs", "goal": 1, "unlock": "The Barnacle Bones passive", "bounty": 300},  # Owner-approved Act X proposal; bounty TUNING (not in GDD) as Nothing Hatched
+	# --- Act X: the Treasure Galleon ---
+	# Walked the Plank (brief: "push 200 enemies overboard in one run: the
+	# overboard_total stat"): a run in which at least GalleonData.WALKED_GOAL
+	# enemies drowned overboard (any Black Tide deck; MetaProgress counts the
+	# runs, lifetime walked_the_plank_runs). It unlocks the counter-passive Sea
+	# Legs (brief).
+	"walked_the_plank": {"display_name": "Walked the Plank", "description": "Send 200 foes overboard in one run",
+		"stat": "walked_the_plank_runs", "goal": 1, "unlock": "The Sea Legs passive", "bounty": 300},  # Brief; bounty TUNING (not in GDD) as The Hunter Hunted
 }
 
 # --- Content wave 2: B. Achievement rewards ---

@@ -21,8 +21,10 @@
 ##     knockback (kept at wave_knock px/s outward), so the far rail drowns
 ##     them (DeckBounds); bosses, minibosses and structures stand. It deals
 ##     wave_damage once to every summon and necromancer.
-##   * Gunboats' shelling and the kraken's surfacing are phase 2 (the
-##     Gunboat kind, the Maelstrom's kraken).
+##   * THE GUNBOATS (Act X, the Treasure Galleon's block): with a
+##     "gunboat_every" > 0 (the Galleon's RECKONING) a gunboat comes alongside
+##     every gunboat_every s (GunboatKit.launch(), capped) and shells the deck
+##     in lines. The kraken's surfacing is the Maelstrom's.
 ## Determinism: the seeded gameplay RNG only (the strike points, the first
 ## wave's side). Stats: black_tide_strikes, black_tide_waves,
 ## black_tide_wave_pushes (enemies shoved), black_tide_drowned (overboard
@@ -50,6 +52,8 @@ var _wave_at: float = -1.0
 var strikes: int = 0
 ## Waves rolled so far (the report).
 var waves: int = 0
+## Game time (s) of the next gunboat (Act X, the Treasure Galleon; INF = none).
+var _next_gunboat: float = INF
 ## True once the current wave's start (its damage) has run.
 var _wave_hit: bool = false
 ## Overboard count when the current wave started (the report's wave drownings).
@@ -85,6 +89,12 @@ func step(delta: float) -> void:
 		_next_strike = now + float(cfg["strike_every"])
 		_next_wave = now + float(cfg["wave_every"]) - float(cfg["wave_telegraph"])
 		_side = 1 if randf() < 0.5 else -1
+		if float(cfg.get("gunboat_every", 0.0)) > 0.0:
+			_next_gunboat = now + float(cfg["gunboat_every"]) * 0.5  # Act X, the Treasure Galleon: the gunboats.
+	if now >= _next_gunboat:
+		_next_gunboat = now + float(cfg["gunboat_every"])
+		if GunboatKit.launch(game, game.enemies.hp_mult, 1.0, true) != null:
+			game.stat_add("black_tide_gunboats", 1.0)
 	if now >= _next_strike:
 		_rail_strike()
 		var mins := (now - started_at) / 60.0

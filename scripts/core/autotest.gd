@@ -1693,6 +1693,8 @@ func finish(summary: Dictionary) -> void:
 	ArkReport.item_lines(game, st)  # Tractor Beam, Starseed, the Ghost Saucer, Crop Circles (only when used; the stage's own lines are ConcordReport's).
 	# --- Act X: the Smuggler's Cutter ---
 	CutterReport.item_lines(game, st)  # Chain Shot, Bosun's Whistle, Barnacle Bones (only when taken; the stage's own lines are CorsairReport's).
+	# --- Act X: the Treasure Galleon ---
+	GalleonReport.item_lines(game, st)  # Cannonade, Black Powder, Sea Legs, the Corsair Queen (only when used; the stage's own lines are CorsairReport's).
 	if game.enemies.boss is BossSeraphine:
 		print("[autotest] seraphine: %s" % BossSeraphine.summary_line(st))
 	var fired := game.enemies.stage.fired
