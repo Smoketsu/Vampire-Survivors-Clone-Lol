@@ -119,10 +119,10 @@ const BOSS := {
 	"gungnir_speed": 950.0,  # TUNING (not in GDD) px/s; it homes on its mark ("the spear that never misses")
 	"gungnir_range": 560.0,  # TUNING (not in GDD) px: summons this close may be its mark
 	"gungnir_damage_summon": 46.0,  # TUNING (not in GDD) before the time scaling
-	"gungnir_damage_player": 9.0,  # TUNING (not in GDD) before the time scaling (first pass 14: two hits took 60 of the seed-7 bot's 120 HP)
+	"gungnir_damage_player": 7.0,  # TUNING (not in GDD) before the time scaling (first pass 14: two hits took 60 of the seed-7 bot's 120 HP; 9 still took 74 on seed 2)
 	"gungnir_push": 30.0,  # TUNING (not in GDD) px a struck summon is thrown
 	"raven_first": 4.0,  # TUNING (not in GDD) s after the All-Father begins
-	"raven_every": 12.0,  # TUNING (not in GDD) s
+	"raven_every": 14.0,  # TUNING (not in GDD) s (first pass 12)
 	"ravens": 2,  # Owner-approved proposal ("his ravens"): Huginn and Muninn
 	"raven_spread": 30.0,  # TUNING (not in GDD) px apart as they leave him
 	# Ragnarok.

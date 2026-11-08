@@ -10,7 +10,7 @@ One hue per ramp, shared ink `norse_ink` #0B0F16: `frost` (#A9BBCC, #EAF2FA), `i
 
 | Key | Size (art px) | Files | What it is |
 |---|---|---|---|
-| `norse/barrow_king` | 52x62 | barrow_king.png, barrow_king_walk.png | the Draugr Thane's evolution (walk) |
+| `summons/barrow_king` | 52x62 | barrow_king.png, barrow_king_walk.png | the Draugr Thane's evolution (walk); moved to `assets/sprites/summons/` by the Vigrid stage agent (summons draw from summons/) |
 | `norse/barrow_wight` | 56x56 | barrow_wight.png, barrow_wight_walk.png | miniboss, male draugr chieftain (walk) |
 | `norse/berserker` | 60x50 | berserker.png, berserker_walk.png | male elite in a bear pelt, red eyes (walk) |
 | `player/berserker_hero` | 64x56 | berserker_hero.png, berserker_hero_walk.png | playable character (REDONE): male purple-hooded necromancer, bear-skull crest, one soul-teal axe held close (glide) |
@@ -18,7 +18,7 @@ One hue per ramp, shared ink `norse_ink` #0B0F16: `frost` (#A9BBCC, #EAF2FA), `i
 | `norse/boss_barrow_broken` | 60x56 | boss_barrow_broken.png | Hrimgar's barrow, broken (still) |
 | `norse/draugr` | 36x42 | draugr.png, draugr_walk.png | male barrow-dead soldier (walk) |
 | `norse/draugr_female` | 32x42 | draugr_female.png, draugr_female_walk.png, draugr_female_idle.png | FEMALE barrow-dead soldier (walk, bust, idle) |
-| `norse/draugr_thane` | 52x54 | draugr_thane.png, draugr_thane_walk.png | finale summon class, undead blocker (walk) |
+| `summons/draugr_thane` | 52x54 | draugr_thane.png, draugr_thane_walk.png | finale summon class, undead blocker (walk); moved to `assets/sprites/summons/` (Vigrid stage agent) |
 | `norse/einherjar` | 42x46 | einherjar.png, einherjar_walk.png | male gold-lit hero elite, base for the Einherjar kind and Risen Einherjar (walk) |
 | `norse/einherjar_champion` | 52x60 | einherjar_champion.png, einherjar_champion_walk.png | miniboss, male gold-lit hero (walk) |
 | `norse/brazier_lit` | 32x32 | brazier_lit.png | Long Winter brazier, lit: hearth-amber flames in an iron bowl (still) |

@@ -2532,6 +2532,32 @@ braziers) and the **Fire-Giant** (Ragnarök's heavy). The Codex has a **Hall** t
 `--stage=barrow_fields|valgard|vigrid`, `--boss=hrimgar|sigrun|odin`, `--spawn=` with the kinds above
 (`rune_stone@T` raises a stone, `brazier@T` places a brazier); lines `long winter`, `berserkergang`, `rune-stones`,
 `norse kinds`, `ragnarok`, `norse stage`.
+
+<!-- --- Act XI (temporary): Vigrid --- -->
+#### Vigrid, the Last Field (phase 2 built; "playable" waits on the lead)
+
+The plain where the last battle is fought, under a sky going out (GDD §15.0 "Vigrid, the Last Field (phase 2)" and the
+rows after it). Four zones: **the Frozen Sea** (fjord ice), **the Ash Plain**, **the Giants' March** and **the Field of
+Vigrid** (shields planted in the ash). Giants and wolves lead. The six braziers stand by the map (two by the start, four
+farther out), and **the war-camp moves with the battle**: at each new zone the fires are set up again round you, lit or
+dark as they were. **The Fading Light:** the light fades zone by zone (a darkness over the screen with pools of light at
+the lit braziers and round you), and at every zone change from the Ash Plain on **the dark takes the farthest lit
+brazier** (relight it, or hold the fires you have). **The early dark:** from 15:15 the darkness turns Ragnarök's red and
+a fire-giant of the south steps out of the dark every 75 s until the boss. **Miniboss, the Fire-Giant of the South**
+(12:00): a stomp, and his footprints burn (and his stomp sets the ground alight); keep your ring out of the fire. **Boss,
+Odin and Fenrir:** *the Wolf* (Fenrir breaks his chain and hunts your ring; he swallows one of your dead whole and spits
+it out 4 s later, hurt, while Odin watches out of reach), *the All-Father* (the wolf chained at his side, Odin throws
+**Gungnir**, a homing spear at your strongest summon, or at you while **his ravens** have marked you: only a Bone Wall
+across its path or Grave Step turns it; shoot the ravens down), *Ragnarök* (both at once, rings of fire round you; when
+one falls, the other follows within 30 s). Rewards for Odin's fall, offered on every stage: the spell **Gungnir** (a
+spear of soul-light at the strongest foe on screen that pierces everything in its line) → **Spear of the Hanged** (two
+spears that come back to your hand) with **Runecraft**; the playable **Berserker** (male; Bear-Shirt: one more spear);
+the summon class **the Draugr Thane** (a heavy blocker; every axe blow chills, and its frost cleave chills all before
+it) → **the Barrow King** (the cleave freezes) with **Cold Iron** (your dead strike slowed foes harder); the achievement
+**Twilight of the Wolf** (beat Odin and Fenrir; the title Doom of the Gods). Autotest: `--stage=vigrid`, `--boss=odin`,
+`--spawn=muspel_giant|fenrir|odin_raven@T`, `--spells=gungnir`, `--classes=draugr_thane`, `--character=berserker_hero`;
+lines `vigrid` (the lowest HP before 0:00 and when, the dark, the camp moves, how far the nearest fire was, the
+vanguard, the miniboss), `vigrid events`, `vigrid kinds`, `odin`, and on any stage `gungnir` / `draugr thane` when used.
 ### Act XII (temporary number): the Necropolis Dynasty (foundation)
 
 <!-- --- Act XII (temporary number): the Necropolis Dynasty --- -->
@@ -3284,6 +3310,9 @@ scripts/
                             obstacles (barrows, pines, boulders, long tables, pillars, ash rocks)
     norse_report.gd         The autotest's Hall of the Slain lines (long winter, berserkergang, rune-stones, ragnarok,
                             norse kinds, norse stage)
+    vigrid_report.gd        The autotest's Vigrid lines (vigrid, vigrid events, vigrid kinds, odin) and the Gungnir /
+                            Draugr Thane item lines
+    vigrid_ground.gd        Vigrid's four zone floors (tiles/norse_ice, tiles/norse_ash; the Hall of the Slain)
     crash_site_report.gd    The autotest's Crash Site lines (crash site, burrowers, acid, brood matriarch, hive
                             mother) and its items (Bone Beetles, Chitin, Anchored; Act IX)
     crash_site_ground.gd    The Crash Site's four zone floors (tiles/crash_site_<style>, Act IX)
@@ -3699,6 +3728,10 @@ scripts/
                             song, the Einherjar) and its shared rules:
       norse_rules.gd        Game.norse: owns the Long Winter, the Rune-Stones and Ragnarök; BERSERKERGANG
                             (enter_fury(), the one writer of Enemy.berserk); the draugr's cold touch
+      vigrid_director.gd, vigrid_light.gd  Vigrid: the Fading Light (the dark takes a brazier per zone, the
+                            war-camp moves, the darkness look), the early dark's vanguard, the miniboss event
+      boss_odin.gd, fenrir_kit.gd, odin_raven_kit.gd, muspel_giant_kit.gd  Odin and Fenrir (the Wolf, the
+                            All-Father's Gungnir and ravens, Ragnarök), the Fire-Giant of the South's burning tracks
       long_winter.gd        THE LONG WINTER: the cold level, the braziers (place()), the slow (TerrainSlow) and
                             frostbite out of warmth, the douse and the relight, the frost vignette
       rune_stones.gd        THE RUNE-STONES: raise_stone(), the ward, the horn (horn_blown), the capture, the carving
@@ -4035,6 +4068,10 @@ scripts/
                             until phase 2)
     norse_rules_data.gd     The Hall of the Slain's shared rules: LONG_WINTER, EINHERJAR, BERSERK, RUNE_STONES,
                             RAGNAROK, the SOUNDS map, the Fur-Lined Bones / Keep the Fires keys
+    vigrid_enemy_data.gd    Vigrid's own kinds: the Fire-Giant of the South, Fenrir, Odin's ravens
+    odin_data.gd            Odin and Fenrir's arrival, phases and numbers
+    gungnir_data.gd         Gungnir / Spear of the Hanged rules, Runecraft keys, Bear-Shirt key (the spell node is
+                            abilities/spells/gungnir.gd; the Draugr Thane is horde/behaviors/draugr_thane_behavior.gd)
     stages/barrow_fields_stage.gd  The Hall of the Slain stubs (temporarily act 11, final slot VI): "norse": true,
     stages/valgard_stage.gd        zones, the "long_winter" / "rune_stones" overrides, a timeline of the shared kinds
     stages/vigrid_stage.gd         with four "rune_stone" events, Ragnarök, placeholder floors / bosses

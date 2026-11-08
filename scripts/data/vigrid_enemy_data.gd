@@ -158,7 +158,7 @@ const ENEMIES := {
 		"group": "hall",
 		"flies": true,  # The Night Wings test (Enemy.flies; over obstacles).
 		"phases": true,  # It flies over the obstacles.
-		"flight_melee_taken": 0.5,  # TUNING (not in GDD) a grounded blow still clips a low bird
+		"flight_melee_taken": 1.0,  # TUNING (not in GDD) it flies low over the ring: every blow reaches it (first pass 0.5: the army bot shot down 1 of 8)
 		"mark_reach": 14.0,  # TUNING (not in GDD) px edge to edge: it marks the necromancer this close
 		"mark_time": 9.0,  # TUNING (not in GDD) s the mark lasts (BossOdin reads it)
 		"life": 14.0,  # TUNING (not in GDD) s before it flies home unmarked
