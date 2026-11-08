@@ -386,6 +386,11 @@ var proving_moon: ProvingMoonDirector = null
 ## Reactor's vents, the Luminous Archon; StageRegistry "ark"; null on every
 ## other stage).
 var ark: ArkDirector = null
+# --- Act XII (temporary number): the Necropolis of Sand ---
+## The Necropolis of Sand's mechanics (the Canopic Jars beside the tombs, No
+## Jars Left, the Sandstorm Pass's storm, the Sand Colossus; StageRegistry
+## "necropolis"; null on every other stage).
+var necropolis: NecropolisDirector = null
 ## Sanctum kit bookkeeping: recent deaths, Confessor revivals, danger hints.
 var rites: CovenantRites
 ## The living miniboss shown on the HUD's miniboss bar (the Cathedral
@@ -590,6 +595,12 @@ func _ready() -> void:
 		ark.game = game
 		ark.config = stage_def["ark"]
 		add_child(ark)  # The Ark of the Concord's director.
+	# --- Act XII (temporary number): the Necropolis of Sand ---
+	if not (stage_def.get("necropolis", {}) as Dictionary).is_empty():
+		necropolis = NecropolisDirector.new()
+		necropolis.game = game
+		necropolis.config = stage_def["necropolis"]
+		add_child(necropolis)  # The Necropolis of Sand's director.
 
 
 # =====================================================================================
@@ -740,6 +751,9 @@ func step(delta: float) -> void:
 	# --- Act IX: the Ark ---
 	if ark != null:
 		ark.step(delta)  # The tanks, the vents.
+	# --- Act XII (temporary number): the Necropolis of Sand ---
+	if necropolis != null:
+		necropolis.step(delta)  # The jars beside the tombs, the Pass's storm, the Sand Colossus.
 
 
 ## The Archive kinds' world hazards (ArchiveHazards), created on first use.
@@ -893,6 +907,9 @@ func objective_text() -> String:
 	# --- Act IX: the Ark ---
 	if ark != null and ark.objective_override() != "":
 		return ark.objective_override()  # The Luminous Archon, the Reaping.
+	# --- Act XII (temporary number): the Necropolis of Sand ---
+	if necropolis != null and necropolis.objective_override() != "":
+		return necropolis.objective_override()  # The Sand Colossus, a jar standing near.
 	if boss != null and not boss.active:
 		return String(boss_info["dead_objective"])
 	return segments[segment_index]["objective"]
@@ -1158,6 +1175,12 @@ func _run_event(ev: Dictionary) -> void:
 				ark.start_event(ev)
 			game.stat_add("wave_events", 1.0)
 			return  # The Ark's miniboss (ArkDirector).
+		# --- Act XII (temporary number): the Necropolis of Sand ---
+		"colossus":
+			if necropolis != null:
+				necropolis.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return  # The Necropolis's miniboss (NecropolisDirector).
 	show_banner(ev["banner"])
 	var groups: Array = ev["groups"]
 	if game.shogunate != null:

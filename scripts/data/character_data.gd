@@ -96,7 +96,9 @@ const ORDER := ["gravecaller", "umbral_warden", "voidcaller", "bone_oracle", "fa
 	# --- Act IX: the Proving Moon ---
 	"blooded",
 	# --- Act IX: the Ark ---
-	"starborn"]
+	"starborn",
+	# --- Act XII (temporary number): the Necropolis of Sand ---
+	"the_embalmer"]
 ## The default character (RunConfig, fresh saves, the autotest): today's game.
 const DEFAULT_ID: String = "gravecaller"
 ## Spell level that unlocks a character (owner rule: reach Lv 5 with its spell
@@ -164,6 +166,8 @@ const STAT_LABELS := {
 ##                           burst; Act IX)
 ##   soul_caster_extra_targets  SoulCaster._lock (extra targets each Soul
 ##                           Caster lock takes; Act IX)
+##   linen_mummy_life        LinenBind._raise_pending (s more each risen Mummy
+##                           lasts; Act XII, temporary)
 const INNATE_KEYS := ["orb_projectile_destroy", "blast_echo_delay", "blast_echo_damage", "spear_shard_max",
 	"spear_shard_cooldown", "summon_corpses", "grace_share", "grace_targets", "grace_range", "contagion_range",
 	"contagion_duration", "death_mark_slow", "bone_wall_duration", "soul_chains_extra_jumps", "wither_rot",
@@ -215,7 +219,9 @@ const INNATE_KEYS := ["orb_projectile_destroy", "blast_echo_delay", "blast_echo_
 	# --- Act IX: the Proving Moon ---
 	"soul_caster_extra_targets",
 	# --- Act IX: the Ark ---
-	"tractor_extra_lifts"]
+	"tractor_extra_lifts",
+	# --- Act XII (temporary number): the Necropolis of Sand ---
+	"linen_mummy_life"]
 
 ## Orbit radius (px) of the Bone Oracle's Ossuary Ward shards around him.
 const SHARD_ORBIT_RADIUS: float = 27.0  # TUNING (not in GDD)
@@ -947,6 +953,31 @@ const CHARACTERS := {
 		"stats": {"max_hp": 5.0, "move_speed": 0.04},  # TUNING (not in GDD) a light, quick deserter
 		"sprite": "player/starborn",
 		"tint": Color(0.70, 0.86, 0.74),  # TUNING (not in GDD) a pale plasma green over the violet
+		"starts_unlocked": false,
+	},
+	# --- Act XII (temporary number): the Necropolis of Sand ---
+	# The Embalmer (Linen Bind's character; owner-approved proposal "Rewards":
+	# "Linen Bind ... | The Embalmer (female, figure style)"): FEMALE, in the
+	# figure-redesign style (clothed: chest and hips covered), a necromancer of
+	# the act's theme, never one of the Dynasty (docs/last_acts/PLAN.md: the
+	# art convention): a violet linen robe with bandage wraps, bone and
+	# soul-teal accents, a canopic-jar staff as her casting focus
+	# (player/the_embalmer, 56 px, walk and idle strips). Linen Bind must be
+	# unlocked (Anubis) before she can be earned, by the usual Lv 5 rule. Own
+	# decision on her innate (the proposal names none): Linen Ward, her
+	# Mummies last longer (LinenBind._raise_pending()).
+	"the_embalmer": {
+		"display_name": "The Embalmer",  # Owner-approved proposal
+		"title": "She wrapped the dead of a hundred tombs. Now they rise for her.",
+		"spell": "linen_bind",
+		"innate": {
+			"id": "linen_ward", "name": "Linen Ward",
+			"description": "Linen Bind's Mummies last 4 s longer.",
+			"values": {"linen_mummy_life": 4.0},  # TUNING (not in GDD) s more a risen Mummy lasts
+		},
+		"stats": {"max_hp": 5.0, "spell_area": 0.05},  # TUNING (not in GDD) wrapped in linen; her bandages reach a little wider
+		"sprite": "player/the_embalmer",
+		"tint": Color(0.86, 0.82, 0.92),  # TUNING (not in GDD) pale linen over the violet (her art replaces it)
 		"starts_unlocked": false,
 	},
 }

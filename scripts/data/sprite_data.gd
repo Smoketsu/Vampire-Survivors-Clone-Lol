@@ -728,6 +728,7 @@ const FLAT_SIZES: Dictionary = {
 	"dynasty/ushabti_sentinel": 46.0,  # TUNING (not in GDD) summon class, the necromancer's stone servant (no sex) (about 20 wide)
 	"dynasty/eternal_guard": 58.0,  # TUNING (not in GDD) its evolution: a taller gold-trimmed stone guardian (about 32 wide)
 	# The Dynasty's playable necromancers (violet, owner note Nov 2026; assets/sprites/player/)
+	"summons/linen_mummy": 40.0,  # TUNING (not in GDD) Act XII (temporary), the Necropolis: Linen Bind's risen Mummy (the Dynasty mummy in the necromancer's bone and soul-teal)
 	"player/the_embalmer": 56.0,  # TUNING (not in GDD) female (figure redesign): violet linen-wrapped necromancer, a canopic-jar staff focus (about 32 wide); glide strip, bust rig, idle strip
 	"player/lion_priestess": 56.0,  # TUNING (not in GDD) female (figure redesign): violet priestess in a lioness-head hood, a sun-disc staff focus (about 38 wide); glide strip, bust rig, idle strip
 	"player/pharaohs_shade": 56.0,  # TUNING (not in GDD) male: a violet-robed spectral pharaoh in a nemes, a crook staff with a soul flame (about 40 wide); glide strip

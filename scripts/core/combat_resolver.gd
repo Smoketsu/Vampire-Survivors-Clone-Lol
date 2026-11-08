@@ -651,6 +651,15 @@ func damage_unit(u: SummonedUnit, amount: float, source: String, by: Enemy = nul
 		if kev < 1.0:
 			game.stat_add("kevlar_dmg_prevented", amount * (1.0 - kev))
 			amount *= kev
+	# --- Act XII (temporary number): the Necropolis of Sand ---
+	# Embalmed Bones (the Dynasty's counter-passive): a CURSED summon (a Heka
+	# glyph on it) takes less (DynastyRules.embalmed_taken_mult(); exactly 1
+	# while the passive is not owned, and off the Dynasty).
+	if game.dynasty != null and u.heka_until > game.elapsed:
+		var emb := game.dynasty.embalmed_taken_mult(u)  # Share of the hit kept.
+		if emb < 1.0:
+			game.stat_add("embalmed_dmg_prevented", amount * (1.0 - emb))
+			amount *= emb
 	var plate := ab.passive_value("bone_plating", "flat_reduction")  # Flat damage off this hit.
 	if plate > 0.0 and not source in PassiveData.PLATING_EXEMPT_SOURCES:
 		var cut := minf(plate, amount * (1.0 - PassiveData.PLATING_MIN_FRACTION))  # Damage actually removed.

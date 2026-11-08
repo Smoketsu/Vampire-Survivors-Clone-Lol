@@ -8,9 +8,10 @@
 ## its row's barrier_gnaw HP more (x the time scaling), so Warders must recast.
 ## The bite is seen the tick after it lands (its attack cooldown jumped back
 ## up), on the target it bit. No Rebirth (its row has none: beasts do not
-## return). Phase 2: the Orb Shield gnaw (one charge of
-## AbilityManager.try_intercept()) if playtests want it. Determinism: game
-## state only. Stats: scarab_barrier_gnawed (barrier HP torn).
+## return). THE ORB SHIELD GNAW (the Necropolis of Sand, phase 2): a bite by a
+## swarm that touches a charged Orb Shield orb spends that orb's charge
+## (AbilityManager.try_intercept()). Determinism: game state only. Stats:
+## scarab_barrier_gnawed (barrier HP torn), scarab_orbs_gnawed.
 class_name ScarabSwarmKit
 extends DynastyKit
 
@@ -32,5 +33,27 @@ func physics(e: Enemy, delta: float) -> bool:
 			u.barrier_hp -= torn
 			u.queue_redraw()
 			e.game.stat_add("scarab_barrier_gnawed", torn)
+	# --- Act XII (temporary number): the Necropolis of Sand ---
+	# THE ORB SHIELD GNAW: a bite (on anything) by a swarm that touches a
+	# charged Orb Shield orb spends that orb's charge (OrbShield.try_intercept(),
+	# the orbs' own one path: it recharges as after a blocked shot).
+	if e.attack_cd > _last_cd + 0.01:
+		_gnaw_orbs(e)
 	_last_cd = e.attack_cd
 	return false
+
+
+# --- Act XII (temporary number): the Necropolis of Sand ---
+## A bite's Orb Shield gnaw: the first charged orb of any necromancer's
+## shield that touches the swarm loses its charge (try_intercept(): co-op,
+## every slot's shield).
+func _gnaw_orbs(e: Enemy) -> void:
+	var g := e.game
+	if g.coop != null:
+		for s in g.coop.slots:
+			if s.abilities != null and s.abilities.try_intercept(e.position, e.radius):
+				g.stat_add("scarab_orbs_gnawed", 1.0)
+				return
+		return
+	if g.abilities.try_intercept(e.position, e.radius):
+		g.stat_add("scarab_orbs_gnawed", 1.0)

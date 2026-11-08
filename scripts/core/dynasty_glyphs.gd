@@ -119,7 +119,8 @@ static func draw_obstacle(ci: CanvasItem, o: Arena.Obstacle) -> bool:
 	# Phase 2: each Dynasty stage's own obstacle kinds go first here.
 	var c := o.center
 	match o.kind:
-		"dynasty_dune_rock", "dynasty_column":
+		# --- Act XII (temporary number): the Necropolis of Sand --- (their art is obstacles/dyn_*; these are the fallbacks)
+		"dynasty_dune_rock", "dynasty_column", "dyn_sandstone_blocks", "dyn_sphinx_head", "dyn_obelisk":
 			var r := o.radius
 			var face := Palette.DYN_SAND_DARK  # A wind-worn rock.
 			var hi := Palette.DYN_SAND
@@ -133,7 +134,7 @@ static func draw_obstacle(ci: CanvasItem, o: Arena.Obstacle) -> bool:
 			if o.kind == "dynasty_column":
 				SpriteBank.draw_disc(ci, c, r * 0.55, Color(Palette.DYN_LAPIS, 0.6))  # A painted band.
 				SpriteBank.draw_disc(ci, c, r * 0.4, face)
-		"dynasty_tomb", "dynasty_statue", "dynasty_obelisk":
+		"dynasty_tomb", "dynasty_statue", "dynasty_obelisk", "dyn_tomb":
 			var rect := Rect2(c - o.half, o.half * 2.0)
 			var face := Palette.DYN_SAND_DARK  # A rock-cut tomb front.
 			var line := Palette.DYN_INK

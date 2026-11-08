@@ -175,7 +175,7 @@ Autotest options (full table in the README):
   `proving_moon|ark|cutter|galleon|maelstrom|barrow_fields|valgard|vigrid|necropolis|lioness_temple|two_truths` (default
   graveyard; stage locks are ignored; `cutter|galleon|maelstrom` are the Black Tide, Act X until the reorder;
   `barrow_fields|valgard|vigrid` the Hall of the Slain's stubs, Act XI; `necropolis|lioness_temple|two_truths` the
-  Necropolis Dynasty's stubs, Act XII)
+  Necropolis Dynasty, Act XII: `necropolis` built in phase 2, hidden until the act ships; `--boss=anubis`)
 - `--unlocks=all|none` (Act II's lockable spells / passives / classes in the card pool; forced items
   are open either way)
 - `--boss=alaric|vael|seraphine` (puts that boss in the stage's slot, e.g. test Seraphine on the Graveyard)

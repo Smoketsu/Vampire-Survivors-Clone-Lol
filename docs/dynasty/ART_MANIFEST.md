@@ -99,8 +99,8 @@ Source: `art_source/dynasty/gen_chars.py` (raws in `chars/`). The earlier enemy-
 | `obstacles/dyn_colonnade_l` | 72x49 | long colonnade + _v |
 | `obstacles/dyn_great_scales` | 66x75 | the great Scales of the hall (stage 21 set piece) |
 | `obstacles/dyn_brazier` | 20x44 | stone brazier with fire |
-| `obstacles/dyn_sphinx_head` | 36x29 | half-buried sphinx head |
-| `obstacles/dyn_sandstone_blocks` | 36x31 | broken blocks and a snapped column |
+| `obstacles/dyn_sphinx_head_m` | 36x29 | half-buried sphinx head (`_m`: a one-size kind, EnvironmentArtData; renamed in phase 2) |
+| `obstacles/dyn_sandstone_blocks_m` | 36x31 | broken blocks and a snapped column (`_m`, renamed in phase 2) |
 
 ## Floors (`assets/sprites/tiles/`, 128x128 seamless, dark and flat; drawn by `dynasty_tiles.py`)
 

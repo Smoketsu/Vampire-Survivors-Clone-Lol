@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bbqweqg878jmq"
-path="res://.godot/imported/dyn_sphinx_head.png-3328a113f105340c924f1945027dd6e7.ctex"
+uid="uid://x5pfcc82nqsx"
+path="res://.godot/imported/linen_mummy_walk.png-0a95ca8b73149b26a6335cb34a7ec516.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/obstacles/dyn_sphinx_head.png"
-dest_files=["res://.godot/imported/dyn_sphinx_head.png-3328a113f105340c924f1945027dd6e7.ctex"]
+source_file="res://assets/sprites/summons/linen_mummy_walk.png"
+dest_files=["res://.godot/imported/linen_mummy_walk.png-0a95ca8b73149b26a6335cb34a7ec516.ctex"]
 
 [params]
 

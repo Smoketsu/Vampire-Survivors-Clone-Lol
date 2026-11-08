@@ -444,7 +444,9 @@ const ACHIEVEMENT_ORDER := ["bone_legion", "heretics_bane", "dread_sovereign", "
 	# --- Act IX: the Proving Moon ---
 	"the_hunter_hunted",
 	# --- Act IX: the Ark ---
-	"last_harvest"]
+	"last_harvest",
+	# --- Act XII (temporary number): the Necropolis of Sand ---
+	"no_jars_left"]
 
 ## Achievement definitions (GDD §9.4 "Example Achievement Unlocks"). Each
 ## achievement is tracked and recorded in the save and pays a one-time Soul
@@ -691,6 +693,15 @@ const ACHIEVEMENTS := {
 	# clear, with the title The Unharvested (UnlockData / TitleData).
 	"last_harvest": {"display_name": "The Last Harvest", "description": "Beat the Harvester on the Ark of the Concord",
 		"stat": "boss_kills", "stage": "ark", "goal": 1, "unlock": "The title The Unharvested", "bounty": 500},  # Owner-approved proposal; bounty TUNING (not in GDD) as Last Supper
+	# --- Act XII (temporary number): the Necropolis of Sand ---
+	# The Dynasty's achievement "No Jars Left" (owner-approved proposal:
+	# "break every Canopic Jar on the Necropolis"): a Necropolis run in which
+	# Anubis fell with every jar that rose on the stage broken
+	# (NecropolisDirector sets the run stat necropolis_no_jars_left;
+	# MetaProgress counts the runs, lifetime no_jars_left_runs). It unlocks
+	# the counter-passive Embalmed Bones.
+	"no_jars_left": {"display_name": "No Jars Left", "description": "Break every Canopic Jar on the Necropolis of Sand, then slay Anubis",
+		"stat": "no_jars_left_runs", "goal": 1, "unlock": "The Embalmed Bones passive", "bounty": 300},  # Owner-approved proposal; bounty TUNING (not in GDD) as Nothing Hatched
 }
 
 # --- Content wave 2: B. Achievement rewards ---

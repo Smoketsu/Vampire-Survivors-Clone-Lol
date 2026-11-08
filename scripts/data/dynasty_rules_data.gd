@@ -136,6 +136,8 @@ const HEKA := {
 	"heal_priority": 0.12,  # TUNING (not in GDD) heal score a cursed summon adds for a Mender (priests seek the glyphs out, but not before the badly hurt; first pass 0.45 cleansed in under a second, so the glyph never ran)
 	"sigil_rise": 12.0,  # TUNING (not in GDD) drawing only: px above the head
 	"sigil_size": 9.0,  # TUNING (not in GDD) drawing only: px half-size of the sigil
+	# --- Act XII (temporary number): the Necropolis of Sand ---
+	"cleanse_after": 0.0,  # TUNING (not in GDD) s a glyph must run (since its writing) before a cleanse takes; 0 = at once (the Necropolis sets 4: the foundation's flag)
 }
 
 # --- The Reckoning: the Devourer's Hour (DevourersHour) -----------------------------------
