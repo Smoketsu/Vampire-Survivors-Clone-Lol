@@ -163,7 +163,7 @@ const ENEMIES := {
 	# open barrow's). HrimgarBarrowKit.
 	"hrimgar_barrow": {
 		"display_name": "Hrimgar's Barrow",
-		"max_hp": 1300.0,  # TUNING (not in GDD) x the stage HP multiplier: the army's 20 s of work, not a free win
+		"max_hp": 2600.0,  # TUNING (not in GDD) x the time and stage HP scaling: the army's 20 s of work, not a free win (first pass 1300: the army bot broke it at his first fall on 2 of 4 runs, killing him 43-85 s after he came)
 		"move_speed": 0.0,
 		"damage": 0.0,
 		"attack_interval": 1.0,

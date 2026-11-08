@@ -1428,6 +1428,12 @@ func get_move_vector() -> Vector2:
 		var at := (game.enemies.boss as BossDeusExMachina).approach_point(p)
 		if at != Vector2.INF and p.distance_to(at) > 200.0 and away.length() < 0.6:
 			goal = at
+	# --- Act XI (temporary): the Barrow Fields ---
+	if game.enemies.boss is BossHrimgar and game.enemies.boss.active and policy() in SANCTUM_SEEK_POLICIES:
+		# Hrimgar lies in his barrow: bring the army to it and break it (the objective policies).
+		var at := (game.enemies.boss as BossHrimgar).approach_point(p)
+		if at != Vector2.INF and p.distance_to(at) > 120.0 and away.length() < 0.6:
+			goal = at
 	if game.enemies.sinking != null:
 		danger += game.enemies.sinking.danger_push(p) * 0.5  # Ul-Thalos: keep off the shore the sea is about to take.
 	if goal != Vector2.INF:

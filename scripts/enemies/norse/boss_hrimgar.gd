@@ -520,6 +520,14 @@ func danger_push(p: Vector2) -> Vector2:
 	return push
 
 
+## Autotest autopilot: his barrow while he lies in it (bring the army to it and
+## break it), else Vector2.INF.
+func approach_point(_p: Vector2) -> Vector2:
+	if (act == Act.SINK or act == Act.DOWN) and _barrow != null and _barrow.active and _barrow.generation == _barrow_gen:
+		return _barrow.position
+	return Vector2.INF
+
+
 ## Body layer on `ci`: sinking into / rising out of the ground, nothing while
 ## he lies in his barrow (the barrow is drawn), else his sprite.
 func _draw_body(ci: CanvasItem) -> void:

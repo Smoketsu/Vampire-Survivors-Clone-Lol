@@ -114,7 +114,7 @@ const BOSS := {
 	"slow_resist": 0.5,  # TUNING (not in GDD) like every boss
 	"recover_time": 0.5,  # TUNING (not in GDD) s he stands after a special
 	"advance_range": 420.0,  # TUNING (not in GDD) px; farther than this he strides faster
-	"advance_speed_mult": 1.8,  # TUNING (not in GDD)
+	"advance_speed_mult": 2.4,  # TUNING (not in GDD) first pass 1.8: risen at his barrow far behind, he spent 88 s walking after the seed-7 necromancer
 	# His falls and risings.
 	"fall1_hp": 0.67,  # TUNING (not in GDD) the Grave ends here (his first fall)
 	"fall2_hp": 0.34,  # TUNING (not in GDD) the Barrow Lord ends here (his second fall)
