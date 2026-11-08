@@ -826,7 +826,7 @@ const EVOLUTIONS := {
 		"description": "Barnacled chain-shots tear through the line and back, throwing every foe they strike aside.",
 		"labels": {"damage": "Hit damage", "shots": "Chain-shots", "knock": "Knockback (px)", "cooldown": "Cooldown (s)"},
 		"stats": {
-			"damage": 16.0, "shots": 3, "range": 320.0, "speed": 440.0, "width": 22.0, "cooldown": 2.4,  # TUNING (not in GDD) first pass 27 / 2.2 s (185k in the forced seed-7 run, 3.4x the Death Knights), then 19 (177k, 1.7x the Mages: its knocks drown more)
+			"damage": 12.0, "shots": 3, "range": 320.0, "speed": 440.0, "width": 22.0, "cooldown": 2.4,  # TUNING (not in GDD) integration balance 16 -> 12 (159k with the base in the forced seed-7 Cutter run, 2.5x the top summon class); first pass 27 / 2.2 s (185k in the forced seed-7 run, 3.4x the Death Knights), then 19 (177k, 1.7x the Mages: its knocks drown more)
 			"knock": 80.0,  # TUNING (not in GDD) the evolution flag: px each struck foe is knocked off the line
 		},
 	},
@@ -845,7 +845,7 @@ const EVOLUTIONS := {
 		"description": "Five groups marked at once, and a second ghostly ball follows every first.",
 		"labels": {"damage": "Ball damage", "marks": "Groups marked", "salvo": "Second ball after (s)", "cooldown": "Cooldown (s)"},
 		"stats": {
-			"damage": 30.0, "marks": 5, "radius": 42.0, "range": 380.0, "cooldown": 2.8,  # TUNING (not in GDD) first pass 40 / 2.6 s (the forced seed-7 run: 261k from the evolution alone)
+			"damage": 26.0, "marks": 5, "radius": 42.0, "range": 380.0, "cooldown": 2.8,  # TUNING (not in GDD) integration balance 30 -> 26 (232k with the base, above the Death Knights); first pass 40 / 2.6 s (the forced seed-7 run: 261k from the evolution alone)
 			"salvo": 0.45,  # TUNING (not in GDD) the evolution flag: s between the two balls of a mark
 			"salvo_share": 0.5,  # TUNING (not in GDD) x the damage of the second ball
 		},
@@ -866,8 +866,8 @@ const EVOLUTIONS := {
 		"description": "Two anchors fall from the abyss; each stays moored where it lands, shocking all around it.",
 		"labels": {"damage": "Slam damage", "cooldown": "Cooldown (s)", "anchors": "Anchors", "anchor_stun": "Stun (s)", "ring_radius": "Shock (px)", "ring_share": "Shock damage", "moor": "Moored (s)", "moor_share": "Mooring pulse"},
 		"stats": {
-			"damage": 90.0, "cooldown": 2.5, "anchors": 2, "anchor_stun": 1.5, "ring_radius": 70.0, "ring_share": 0.3,  # TUNING (not in GDD) first passes 74 px / 0.55, then 0.42 (404k in the forced seed-7 Maelstrom run)
-			"moor": 2.0, "moor_every": 0.6, "moor_share": 0.08, "moor_radius": 64.0,  # TUNING (not in GDD) the evolution flag: the moored anchor's pulses (first pass 2.4 s / 0.18 / 70 px: 437k damage in the forced seed-7 Maelstrom run)
+			"damage": 80.0, "cooldown": 2.5, "anchors": 2, "anchor_stun": 1.5, "ring_radius": 70.0, "ring_share": 0.18,  # TUNING (not in GDD) integration balance 90 / 0.3 -> 80 / 0.18 (345k in the forced seed-7 Maelstrom run, 1.5x the top summon class); first passes 74 px / 0.55, then 0.42 (404k in the forced seed-7 Maelstrom run)
+			"moor": 2.0, "moor_every": 0.6, "moor_share": 0.06, "moor_radius": 64.0,  # TUNING (not in GDD) integration balance 0.08 -> 0.06; the evolution flag: the moored anchor's pulses (first pass 2.4 s / 0.18 / 70 px: 437k damage in the forced seed-7 Maelstrom run)
 		},
 	},
 }

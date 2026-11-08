@@ -964,11 +964,11 @@ const SPELLS := {
 		"shared_card_pool": true,  # TUNING (not in GDD) an unlocked Act X spell: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
 		"labels": {"damage": "Hit damage", "shots": "Chain-shots", "range": "Range (px)", "cooldown": "Cooldown (s)"},
 		"levels": [
-			{"damage": 10.0, "shots": 1, "range": 230.0, "speed": 380.0, "width": 14.0, "cooldown": 2.8},  # TUNING (not in GDD) every foe in the line is hit twice (first pass 11)
-			{"damage": 12.0, "shots": 1, "range": 240.0, "speed": 390.0, "width": 15.0, "cooldown": 2.7},  # TUNING (not in GDD) first pass 13
-			{"damage": 13.0, "shots": 2, "range": 250.0, "speed": 400.0, "width": 16.0, "cooldown": 2.6},  # TUNING (not in GDD) first pass 15
-			{"damage": 15.0, "shots": 2, "range": 265.0, "speed": 410.0, "width": 17.0, "cooldown": 2.5},  # TUNING (not in GDD) first pass 18
-			{"damage": 18.0, "shots": 3, "range": 280.0, "speed": 420.0, "width": 18.0, "cooldown": 2.4},  # TUNING (not in GDD) Hearse Run Lv5 26 / 2.8 s (one hit a foe); first pass 21
+			{"damage": 8.0, "shots": 1, "range": 230.0, "speed": 380.0, "width": 14.0, "cooldown": 2.8},  # TUNING (not in GDD) every foe in the line is hit twice (first pass 11)
+			{"damage": 10.0, "shots": 1, "range": 240.0, "speed": 390.0, "width": 15.0, "cooldown": 2.7},  # TUNING (not in GDD) first pass 13
+			{"damage": 10.0, "shots": 2, "range": 250.0, "speed": 400.0, "width": 16.0, "cooldown": 2.6},  # TUNING (not in GDD) first pass 15
+			{"damage": 12.0, "shots": 2, "range": 265.0, "speed": 410.0, "width": 17.0, "cooldown": 2.5},  # TUNING (not in GDD) first pass 18
+			{"damage": 14.0, "shots": 3, "range": 280.0, "speed": 420.0, "width": 18.0, "cooldown": 2.4},  # TUNING (not in GDD) Hearse Run Lv5 26 / 2.8 s (one hit a foe); first pass 21; integration balance 10/12/13/15/18 -> 8/10/10/12/14 (the forced seed-7 Cutter run: 159k, 2.5x the top summon class)
 		],
 	},
 	# --- Act X: the Treasure Galleon ---
@@ -989,11 +989,11 @@ const SPELLS := {
 		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
 		"labels": {"damage": "Ball damage", "marks": "Groups marked", "radius": "Blast radius", "cooldown": "Cooldown (s)"},
 		"levels": [
-			{"damage": 14.0, "marks": 3, "radius": 30.0, "range": 340.0, "cooldown": 3.6},  # TUNING (not in GDD) owner-approved proposal: three marked groups; first pass 18 / 3.4 s
-			{"damage": 17.0, "marks": 3, "radius": 32.0, "range": 345.0, "cooldown": 3.4},  # TUNING (not in GDD)
-			{"damage": 21.0, "marks": 3, "radius": 34.0, "range": 350.0, "cooldown": 3.2},  # TUNING (not in GDD)
-			{"damage": 25.0, "marks": 4, "radius": 36.0, "range": 355.0, "cooldown": 3.0},  # TUNING (not in GDD)
-			{"damage": 30.0, "marks": 4, "radius": 38.0, "range": 360.0, "cooldown": 2.8},  # TUNING (not in GDD) first pass 38 / 2.7 s (the forced seed-7 run: 322k damage, far ahead of the army)
+			{"damage": 13.0, "marks": 3, "radius": 30.0, "range": 340.0, "cooldown": 3.6},  # TUNING (not in GDD) owner-approved proposal: three marked groups; first pass 18 / 3.4 s
+			{"damage": 15.0, "marks": 3, "radius": 32.0, "range": 345.0, "cooldown": 3.4},  # TUNING (not in GDD)
+			{"damage": 19.0, "marks": 3, "radius": 34.0, "range": 350.0, "cooldown": 3.2},  # TUNING (not in GDD)
+			{"damage": 22.0, "marks": 4, "radius": 36.0, "range": 355.0, "cooldown": 3.0},  # TUNING (not in GDD)
+			{"damage": 26.0, "marks": 4, "radius": 38.0, "range": 360.0, "cooldown": 2.8},  # TUNING (not in GDD) first pass 38 / 2.7 s (the forced seed-7 run: 322k damage, far ahead of the army); integration balance 14/17/21/25/30 -> 13/15/19/22/26 (232k beside the Death Knights' 214k)
 		],
 	},
 	# --- Act X: the Maelstrom ---
@@ -1014,11 +1014,11 @@ const SPELLS := {
 		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
 		"labels": {"damage": "Slam damage", "cooldown": "Cooldown (s)", "anchor_stun": "Stun (s)", "ring_radius": "Shock (px)", "ring_share": "Shock damage"},
 		"levels": [
-			{"damage": 34.0, "cooldown": 3.4, "anchor_stun": 0.8, "ring_radius": 48.0, "ring_share": 0.3},  # TUNING (not in GDD)
-			{"damage": 42.0, "cooldown": 3.25, "anchor_stun": 0.9, "ring_radius": 52.0, "ring_share": 0.32},  # TUNING (not in GDD)
-			{"damage": 51.0, "cooldown": 3.1, "anchor_stun": 1.0, "ring_radius": 56.0, "ring_share": 0.34},  # TUNING (not in GDD)
-			{"damage": 61.0, "cooldown": 2.95, "anchor_stun": 1.1, "ring_radius": 60.0, "ring_share": 0.37},  # TUNING (not in GDD)
-			{"damage": 72.0, "cooldown": 2.8, "anchor_stun": 1.2, "ring_radius": 64.0, "ring_share": 0.4},  # TUNING (not in GDD) Tractor Beam Lv5 78 / 2.6 s; the stun is its edge (first pass shock 0.54 at 68 px: the shock ring dealt most of its damage)
+			{"damage": 34.0, "cooldown": 3.4, "anchor_stun": 0.8, "ring_radius": 48.0, "ring_share": 0.2},  # TUNING (not in GDD)
+			{"damage": 42.0, "cooldown": 3.25, "anchor_stun": 0.9, "ring_radius": 52.0, "ring_share": 0.21},  # TUNING (not in GDD)
+			{"damage": 51.0, "cooldown": 3.1, "anchor_stun": 1.0, "ring_radius": 56.0, "ring_share": 0.22},  # TUNING (not in GDD)
+			{"damage": 61.0, "cooldown": 2.95, "anchor_stun": 1.1, "ring_radius": 60.0, "ring_share": 0.23},  # TUNING (not in GDD)
+			{"damage": 72.0, "cooldown": 2.8, "anchor_stun": 1.2, "ring_radius": 64.0, "ring_share": 0.25},  # TUNING (not in GDD) integration balance: ring_share 0.3-0.4 -> 0.2-0.25 (the shock ring dealt 148k of the forced seed-7 Maelstrom run's 345k, 1.5x the top summon class); Tractor Beam Lv5 78 / 2.6 s; the stun is its edge (first pass shock 0.54 at 68 px: the shock ring dealt most of its damage)
 		],
 	},
 }
