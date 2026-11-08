@@ -222,7 +222,9 @@ const ORDER := ["grave_dominion", "necrotic_vigor", "dark_command", "soul_recycl
 	# --- Act XI (temporary): Vigrid ---
 	"runecraft", "cold_iron",
 	# --- Act XII (temporary number): the Necropolis of Sand ---
-	"natron_salts", "embalmed_bones"]
+	"natron_salts", "embalmed_bones",
+	# --- Act XII (temporary number): the Temple of the Lioness ---
+	"desert_fury", "dune_walkers"]
 
 ## Passives that only help summons (a "dead" level-up card while no summon
 ## class is owned, see AbilityManager.build_offers()).
@@ -286,7 +288,9 @@ const ARMY_PASSIVES := ["grave_dominion", "necrotic_vigor", "dark_command", "sou
 	# --- Act XI (temporary): Vigrid ---
 	"cold_iron",
 	# --- Act XII (temporary number): the Necropolis of Sand ---
-	"embalmed_bones"]
+	"embalmed_bones",
+	# --- Act XII (temporary number): the Temple of the Lioness ---
+	"dune_walkers"]
 
 # --- Act III: the Assembly Halls ---
 ## Overclock (paired with the Grave Drone): a summon class is "ranged" (and
@@ -2224,6 +2228,27 @@ const PASSIVES := {
 			{"bind_bonus": 0.30, "hold_bonus": 0.5},  # TUNING (not in GDD)
 		],
 	},
+	# --- Act XII (temporary number): the Temple of the Lioness ---
+	# Desert Fury (Burning Eye's paired passive; owner-approved proposal: "Eye
+	# of Retribution (+ Desert Fury)"; unlocked with the spell by Sekhmet and
+	# offered on every stage). Own decision on its effect: the desert's anger
+	# in the eye: Burning Eye's beam deals fury_dmg more and sweeps fury_arc
+	# degrees wider (BurningEye, the one read: exactly nothing without the
+	# spell).
+	"desert_fury": {
+		"display_name": "Desert Fury",  # Owner-approved proposal
+		"icon": "desert_fury",
+		"description": "Your Burning Eye burns hotter, and its beam sweeps wider.",
+		"labels": {"fury_dmg": ["Burning Eye damage", "pct"], "fury_arc": ["Burning Eye arc (deg)", "num"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"fury_dmg": 0.06, "fury_arc": 4},  # TUNING (not in GDD)
+			{"fury_dmg": 0.12, "fury_arc": 8},  # TUNING (not in GDD)
+			{"fury_dmg": 0.18, "fury_arc": 12},  # TUNING (not in GDD)
+			{"fury_dmg": 0.24, "fury_arc": 16},  # TUNING (not in GDD)
+			{"fury_dmg": 0.30, "fury_arc": 20},  # TUNING (not in GDD)
+		],
+	},
 	# The Dynasty's counter-passive Embalmed Bones (owner-approved proposal:
 	# "summons shed a curse glyph faster and take less damage while cursed";
 	# unlocked by the Necropolis achievement No Jars Left and offered only on
@@ -2245,6 +2270,32 @@ const PASSIVES := {
 			{"glyph_shed": 0.3, "cursed_damage_cut": 0.24},  # TUNING (not in GDD)
 			{"glyph_shed": 0.4, "cursed_damage_cut": 0.32},  # TUNING (not in GDD)
 			{"glyph_shed": 0.5, "cursed_damage_cut": 0.40},  # TUNING (not in GDD) half the glyph's time at full
+		],
+	},
+	# --- Act XII (temporary number): the Temple of the Lioness ---
+	# The Dynasty's second counter-passive Dune Walkers (owner-approved
+	# proposal: "quicksand slows summons by half as much and Sandstorm range
+	# loss is smaller for the army"; unlocked by the Temple's achievement Names
+	# Taken: the integration's split, as the Necropolis's No Jars Left earns
+	# Embalmed Bones; offered only on the Dynasty through its card row's
+	# "act"). The foundation's hooks read it: DynastyRules.dune_slow_mult()
+	# (x the quicksand slow on the bound player's summons, 1 - sand_slow_cut,
+	# in Quicksand) and dune_reach_kept() (the share 0..1 of the Sandstorm's
+	# reach loss the army keeps, in army_reach_mult()). Keys
+	# DynastyRulesData.DUNE_SLOW_KEY and DUNE_REACH_KEY.
+	"dune_walkers": {
+		"display_name": "Dune Walkers",  # Owner-approved proposal
+		"icon": "dune_walkers",
+		"description": "Your dead walk the sand as if born to it: quicksand slows them less, and the Sandstorm steals less of their reach.",
+		"labels": {"sand_slow_cut": ["Quicksand slow on summons", "neg_pct"], "storm_reach_kept": ["Storm reach kept", "pct"]},
+		"act": 12,  # Owner-approved: the act's counter-passives are offered only in its own act (Unlocks.act_allows(); temporary number, the reorder renumbers)
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"sand_slow_cut": 0.1, "storm_reach_kept": 0.1},  # TUNING (not in GDD)
+			{"sand_slow_cut": 0.2, "storm_reach_kept": 0.2},  # TUNING (not in GDD)
+			{"sand_slow_cut": 0.3, "storm_reach_kept": 0.3},  # TUNING (not in GDD)
+			{"sand_slow_cut": 0.4, "storm_reach_kept": 0.4},  # TUNING (not in GDD)
+			{"sand_slow_cut": 0.5, "storm_reach_kept": 0.5},  # TUNING (not in GDD) proposal: "half as much" at full
 		],
 	},
 }

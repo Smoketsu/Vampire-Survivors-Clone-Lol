@@ -122,7 +122,9 @@ const ORDER := ["void_barrage", "eclipse_ward", "abyssal_detonation",
 	# --- Act XI (temporary): Vigrid ---
 	"spear_of_the_hanged",
 	# --- Act XII (temporary number): the Necropolis of Sand ---
-	"eternal_shroud"]
+	"eternal_shroud",
+	# --- Act XII (temporary number): the Temple of the Lioness ---
+	"eye_of_retribution"]
 
 ## Evolution definitions.
 ##   base         — spell id that evolves (AbilityData.SPELLS key).
@@ -963,6 +965,27 @@ const EVOLUTIONS := {
 		"stats": {
 			"damage": 44.0, "targets": 7, "hold": 1.5, "mark": 4.0, "range": 330.0, "cooldown": 2.2, "life": 12.0, "cap": 10,  # TUNING (not in GDD)
 			"burst_wraps": 2, "burst_reach": 90.0,  # TUNING (not in GDD) the evolution flag: foes a falling Mummy's bandages wrap, within px
+		},
+	},
+	# --- Act XII (temporary number): the Temple of the Lioness ---
+	# Eye of Retribution (GDD §15.0 "Burning Eye, Eye of Retribution, Desert
+	# Fury and the Lion-Priestess (Dynasty phase 2)"; owner-approved proposal
+	# "Burning Eye -> Eye of Retribution (+ Desert Fury)"): Burning Eye + Desert
+	# Fury (a NEW passive, owner rule: at Lv 5). Own decision on its kit: the
+	# beam sweeps a wider arc THERE AND BACK (each pass strikes), and whenever
+	# the necromancer is hurt the eye opens again at once, at most every
+	# `retribution` s (the goddess of retribution). Detected by the
+	# "retribution" key.
+	"eye_of_retribution": {
+		"base": "burning_eye",
+		"passive": "desert_fury",
+		"display_name": "Eye of Retribution",  # Owner-approved proposal
+		"icon": "eye_of_retribution",
+		"description": "The eye sweeps there and back, and every blow you take opens it again.",
+		"labels": {"damage": "Beam damage", "arc": "Arc (deg)", "range": "Range (px)", "cooldown": "Cooldown (s)", "retribution": "Answers a blow every (s)"},
+		"stats": {
+			"damage": 60.0, "arc": 140.0, "range": 320.0, "width": 18.0, "sweep_time": 0.6, "cooldown": 2.6,  # TUNING (not in GDD) two passes a sweep
+			"retribution": 1.6,  # TUNING (not in GDD) the evolution flag: least s between two sweeps called by a blow
 		},
 	},
 }

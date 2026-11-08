@@ -197,6 +197,11 @@
 ##     (the Hall of the Slain phase 2)"): on a stage with a "valgard" config it
 ##     owns the ValgardDirector (the Feast, the Einherjar Champion; `valgard`)
 ##     and hands it the "einherjar_champion" events. Null elsewhere.
+##   * Act XII (temporary number), the Temple of the Lioness (GDD §15.0 "The
+##     Temple of the Lioness (Dynasty phase 2)"): on a stage with a
+##     "lioness_temple" config it owns the LionessTempleDirector (the Awakening
+##     Statues, the Lion Warden's sealed hall; `lioness_temple`) and hands it
+##     the "statues_wake" and "lion_warden" events. Null elsewhere.
 ##   * Online co-op (CoopSession; docs/coop/DESIGN.md): every enemy steps with
 ##     its NEAREST standing necromancer bound (CoopSession.bind_nearest()), so
 ##     it advances on, aims at and recycles around that one (bosses and kits
@@ -438,6 +443,11 @@ var vigrid: VigridDirector = null
 ## Jars Left, the Sandstorm Pass's storm, the Sand Colossus; StageRegistry
 ## "necropolis"; null on every other stage).
 var necropolis: NecropolisDirector = null
+# --- Act XII (temporary number): the Temple of the Lioness ---
+## The Temple of the Lioness's mechanics (the Awakening Statues, the Lion
+## Warden's sealed hall; StageRegistry "lioness_temple"; null on every other
+## stage).
+var lioness_temple: LionessTempleDirector = null
 ## Sanctum kit bookkeeping: recent deaths, Confessor revivals, danger hints.
 var rites: CovenantRites
 ## The living miniboss shown on the HUD's miniboss bar (the Cathedral
@@ -684,6 +694,12 @@ func _ready() -> void:
 		necropolis.game = game
 		necropolis.config = stage_def["necropolis"]
 		add_child(necropolis)  # The Necropolis of Sand's director.
+	# --- Act XII (temporary number): the Temple of the Lioness ---
+	if not (stage_def.get("lioness_temple", {}) as Dictionary).is_empty():
+		lioness_temple = LionessTempleDirector.new()
+		lioness_temple.game = game
+		lioness_temple.config = stage_def["lioness_temple"]
+		add_child(lioness_temple)  # The Temple of the Lioness's director.
 
 
 # =====================================================================================
@@ -855,6 +871,9 @@ func step(delta: float) -> void:
 	# --- Act XII (temporary number): the Necropolis of Sand ---
 	if necropolis != null:
 		necropolis.step(delta)  # The jars beside the tombs, the Pass's storm, the Sand Colossus.
+	# --- Act XII (temporary number): the Temple of the Lioness ---
+	if lioness_temple != null:
+		lioness_temple.step(delta)  # The Awakening Statues, the Warden's seal.
 
 
 ## The Archive kinds' world hazards (ArchiveHazards), created on first use.
@@ -1031,6 +1050,9 @@ func objective_text() -> String:
 	# --- Act XII (temporary number): the Necropolis of Sand ---
 	if necropolis != null and necropolis.objective_override() != "":
 		return necropolis.objective_override()  # The Sand Colossus, a jar standing near.
+	# --- Act XII (temporary number): the Temple of the Lioness ---
+	if lioness_temple != null and lioness_temple.objective_override() != "":
+		return lioness_temple.objective_override()  # The Lion Warden's sealed hall.
 	if boss != null and not boss.active:
 		return String(boss_info["dead_objective"])
 	return segments[segment_index]["objective"]
@@ -1338,6 +1360,12 @@ func _run_event(ev: Dictionary) -> void:
 				necropolis.start_event(ev)
 			game.stat_add("wave_events", 1.0)
 			return  # The Necropolis's miniboss (NecropolisDirector).
+		# --- Act XII (temporary number): the Temple of the Lioness ---
+		"statues_wake", "lion_warden":
+			if lioness_temple != null:
+				lioness_temple.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return  # The Temple's Awakening Statues and miniboss (LionessTempleDirector).
 	show_banner(ev["banner"])
 	var groups: Array = ev["groups"]
 	if game.shogunate != null:

@@ -376,13 +376,17 @@ const DYNASTY_BEASTS: Array[String] = ["scarab_swarm"]
 ## The guard (group "guard").
 const DYNASTY_GUARD: Array[String] = ["khopesh_guard",
 	# --- Act XII (temporary number): the Necropolis of Sand ---
-	"nile_archer", "jackal_warrior"]
+	"nile_archer", "jackal_warrior",
+	# --- Act XII (temporary number): the Temple of the Lioness ---
+	"bastet_hunter"]
 ## The priesthood (group "priests").
 const DYNASTY_PRIESTS: Array[String] = ["heka_priest", "embalmer"]
 ## Stone and jars (group "stone": the structures and, in phase 2, the statues).
 const DYNASTY_STONE: Array[String] = ["canopic_jar",
 	# --- Act XII (temporary number): the Necropolis of Sand --- (the miniboss)
-	"sand_colossus"]
+	"sand_colossus",
+	# --- Act XII (temporary number): the Temple of the Lioness --- (the woken statues and the miniboss)
+	"ushabti_statue", "woken_colossus", "lion_warden"]
 ## Dynasty stage bosses (StageRegistry.BOSS_ARRIVALS ids).
 const DYNASTY_BOSSES: Array[String] = ["anubis", "sekhmet", "osiris"]
 
@@ -709,6 +713,11 @@ const DESCRIPTIONS: Dictionary = {
 	"anubis": "Anubis, Opener of the Way: he leads the procession of the dead, embalms the fallen, then duels you as the jackal.",  # Proposal
 	"sekhmet": "Sekhmet, the Lioness of Retribution: she leaps between the pillars, calls the Red Wind, and feasts in her fury.",  # Proposal
 	"osiris": "Osiris, Lord of the Dead, judges you on the great scales; Ammit the Devourer waits at his feet.",  # Proposal
+	# --- Act XII (temporary number): the Temple of the Lioness ---
+	"bastet_hunter": "A cat-masked hunter of Bastet. She swims through the sand under your ring to your archers and mages, then bursts out with both daggers. A spell throws her out of the sand.",  # Proposal
+	"ushabti_statue": "A stone servant of the temple. Its row sleeps along the avenue until the eyes glow; then the stone walks, and weak blows barely chip it.",  # Proposal
+	"woken_colossus": "A great statue of the temple, woken from a long row. Its fists shake the flagstones: step out of the slam, and break it from range.",  # TUNING (not in GDD)
+	"lion_warden": "The Lion Warden: a stone lion-headed warrior who seals the hall and stands in its only door. Kill him to pass; his roar wakes the statues.",  # Proposal
 }
 
 ## Sprite key of an entry whose art is not "<category folder>/<id>":
@@ -733,6 +742,8 @@ const SPRITE_KEYS: Dictionary = {
 	"corsair_serpent": "corsair/sea_serpent",
 	# --- Act XI (temporary): Valgard --- (Sigrun's wing wears the shared valkyrie's art)
 	"wing_valkyrie": "norse/valkyrie",
+	# --- Act XII (temporary number): the Temple of the Lioness ---
+	"woken_colossus": "dynasty/sand_colossus",  # It wears the Sand Colossus's art (LionessTempleEnemyData)
 }
 
 ## Stat labels and record lines of the detail panel (format strings use
@@ -1024,6 +1035,8 @@ const ACHIEVEMENT_ICONS: Dictionary = {
 	"twilight_of_the_wolf": "ach_twilight_of_the_wolf",  # TUNING (not in GDD) (no badge PNG yet: the fallback icon shows)
 	# --- Act XII (temporary number): the Necropolis of Sand ---
 	"no_jars_left": "ach_no_jars_left",  # TUNING (not in GDD)
+	# --- Act XII (temporary number): the Temple of the Lioness ---
+	"names_taken": "ach_names_taken",  # TUNING (not in GDD)
 }
 ## IconGlyph kind drawn when an achievement badge PNG is missing.
 const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
@@ -1099,6 +1112,8 @@ const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
 	"twilight_of_the_wolf": "gungnir",
 	# --- Act XII (temporary number): the Necropolis of Sand ---
 	"no_jars_left": "embalmed_bones",
+	# --- Act XII (temporary number): the Temple of the Lioness ---
+	"names_taken": "dune_walkers",
 }
 ## Screen title (TITLE tier).
 const TITLE: String = "Codex"  # TUNING (not in GDD)

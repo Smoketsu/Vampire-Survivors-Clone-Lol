@@ -541,6 +541,9 @@ func _ready() -> void:
 		# --- Act XII (temporary number): the Necropolis of Sand ---
 		"necropolis":
 			ground = NecropolisGround.new()  # The Necropolis of Sand's four zone floors (NecropolisStage.ZONES).
+		# --- Act XII (temporary number): the Temple of the Lioness ---
+		"lioness_temple":
+			ground = LionessTempleGround.new()  # The Temple of the Lioness's four zone floors (LionessTempleStage.ZONES).
 		_:
 			ground = Ground.new()
 	add_child(ground)

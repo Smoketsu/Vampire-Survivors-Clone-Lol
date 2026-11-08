@@ -458,7 +458,9 @@ const ACHIEVEMENT_ORDER := ["bone_legion", "heretics_bane", "dread_sovereign", "
 	# --- Act XI (temporary): Vigrid ---
 	"twilight_of_the_wolf",
 	# --- Act XII (temporary number): the Necropolis of Sand ---
-	"no_jars_left"]
+	"no_jars_left",
+	# --- Act XII (temporary number): the Temple of the Lioness ---
+	"names_taken"]
 
 ## Achievement definitions (GDD §9.4 "Example Achievement Unlocks"). Each
 ## achievement is tracked and recorded in the save and pays a one-time Soul
@@ -773,6 +775,15 @@ const ACHIEVEMENTS := {
 	# the counter-passive Embalmed Bones.
 	"no_jars_left": {"display_name": "No Jars Left", "description": "Break every Canopic Jar on the Necropolis of Sand, then slay Anubis",
 		"stat": "no_jars_left_runs", "goal": 1, "unlock": "The Embalmed Bones passive", "bounty": 300},  # Owner-approved proposal; bounty TUNING (not in GDD) as Nothing Hatched
+	# --- Act XII (temporary number): the Temple of the Lioness ---
+	# Names Taken (proposal: "raise 100 Dynasty dead before their cartouches
+	# expire in one run"): a run with at least DynastyRulesData
+	# .NAMES_TAKEN_RAISES Names stolen by a raise (Rebirth.on_raise(), the run
+	# stat rebirth_stolen), on any Dynasty stage; MetaProgress counts the runs
+	# (lifetime names_taken_runs). It unlocks the Dynasty's counter-passive
+	# Embalmed Bones (own split, the lead's to confirm).
+	"names_taken": {"display_name": "Names Taken", "description": "Raise 100 of the Dynasty's dead before their Names return, in one run",
+		"stat": "names_taken_runs", "goal": 1, "unlock": "The Dune Walkers passive", "bounty": 300},  # Proposal; bounty TUNING (not in GDD) as The Hunter Hunted
 }
 
 # --- Content wave 2: B. Achievement rewards ---

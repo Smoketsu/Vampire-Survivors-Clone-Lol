@@ -55,6 +55,8 @@ static func print_lines(game: Game, st: Dictionary) -> void:
 	# Phase 2: each Dynasty stage's own lines go here (its stage, kinds and boss).
 	# --- Act XII (temporary number): the Necropolis of Sand ---
 	NecropolisReport.print_lines(game, st)  # The jars, No Jars Left, the Nile Archers and Jackal Warriors, the Sand Colossus, Anubis.
+	# --- Act XII (temporary number): the Temple of the Lioness --- (the Awakening Statues, the Warden, Sekhmet; LionessTempleReport)
+	LionessTempleReport.print_lines(game, st)
 
 
 ## The "rebirth" line (Rebirth).

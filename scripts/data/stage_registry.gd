@@ -419,6 +419,13 @@
 ##                        Jars Left, the Sandstorm Pass's storm, the Sand
 ##                        Colossus's "colossus" event); ground "necropolis" is
 ##                        its NecropolisGround (the four zone floors).
+## --- Act XII (temporary number): the Temple of the Lioness ---
+##   lioness_temple     — LionessTempleDirector config (LionessTempleStage
+##                        .LIONESS_TEMPLE: the Awakening Statues' wakes and
+##                        rows, the Lion Warden's sealed hall; the
+##                        "statues_wake" and "lion_warden" events); ground
+##                        "lioness_temple" is its LionessTempleGround (the four
+##                        zone floors).
 class_name StageRegistry
 extends RefCounted
 

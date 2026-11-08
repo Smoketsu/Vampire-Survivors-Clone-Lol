@@ -454,6 +454,8 @@ func award_run(summary: Dictionary, mods: MetaModifiers) -> Dictionary:
 	_add_lifetime("holmgang_runs", 1.0 if float(st.get(SigrunData.HOLMGANG_STAT, 0.0)) > 0.0 else 0.0)  # Holmgang (Valgard)
 	# --- Act XII (temporary number): the Necropolis of Sand ---
 	_add_lifetime("no_jars_left_runs", 1.0 if float(st.get("necropolis_no_jars_left", 0.0)) > 0.0 else 0.0)  # No Jars Left (the Necropolis of Sand)
+	# --- Act XII (temporary number): the Temple of the Lioness ---
+	_add_lifetime("names_taken_runs", 1.0 if float(st.get("rebirth_stolen", 0.0)) >= DynastyRulesData.NAMES_TAKEN_RAISES else 0.0)  # Names Taken (the Dynasty's raises)
 	_add_run_counters(summary)  # Content wave 2: the one-run achievements' lifetime counters.
 	var slew_unlock_boss := bool(summary.get("boss_defeated", false)) and String(summary.get("boss_id", "")) == HyperData.UNLOCK_BOSS_ID  # Seraphine slain.
 	if slew_unlock_boss:
@@ -1682,6 +1684,8 @@ static func _default_lifetime() -> Dictionary:
 		"holmgang_runs": 0.0,  # runs in which Sigrun yielded a Holmgang won without a Grave Step (Holmgang)
 		# --- Act XII (temporary number): the Necropolis of Sand ---
 		"no_jars_left_runs": 0.0,  # Necropolis runs that slew Anubis with every Canopic Jar broken (No Jars Left)
+		# --- Act XII (temporary number): the Temple of the Lioness ---
+		"names_taken_runs": 0.0,  # runs with at least 100 Names stolen by a raise on the Dynasty's stages (Names Taken)
 		# --- Content wave 2: B. Achievement rewards (MetaProgress.run_counters()) ---
 		"best_temp_raised": 0.0,  # most temporary undead raised in one run (Mass Grave)
 		"untouchable_runs": 0.0,  # runs that reached 0:00 never below half HP (Untouchable)

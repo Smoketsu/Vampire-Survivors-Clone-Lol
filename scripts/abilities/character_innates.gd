@@ -115,6 +115,9 @@
 ## Vigrid (the Hall of the Slain's finale):
 ##   Berserker        Bear-Shirt         in Gungnir.step() (one more spear a
 ##                    cast); stats as the spell's (gungnir_spell_spears).
+## Act XII (temporary number), the Temple of the Lioness:
+##   Lion-Priestess   Lioness's Gaze  in BurningEye._length() (the beam
+##                    reaches farther); stat eye_reach_bonus_px.
 class_name CharacterInnates
 extends Node2D
 
@@ -496,6 +499,9 @@ func summary_line() -> String:
 		# --- Act XI (temporary): Vigrid --- (Bear-Shirt lives in Gungnir.step())
 		"bear_shirt":
 			counters = "extra spears %d (spears %d)" % [int(game.character.innate_value(GungnirData.EXTRA_KEY)), int(st.get("gungnir_spell_spears", 0.0))]
+		# --- Act XII (temporary number): the Temple of the Lioness --- (the Lioness's Gaze lives in BurningEye._length())
+		"lioness_gaze":
+			counters = "reach +%d%% (bonus px summed over sweeps %d, sweeps %d)" % [roundi(100.0 * game.character.innate_value(BurningEyeData.INNATE_KEY)), int(st.get("eye_reach_bonus_px", 0.0)), int(st.get("eye_sweeps", 0.0))]
 	out += " | innate: %s" % ("none" if _innate == "" else "%s: %s" % [ch.innate_name(), counters])
 	out += " | characters unlocked this run: %s" % (", ".join(ch.unlocked_this_run) if not ch.unlocked_this_run.is_empty() else "none")
 	var open := PackedStringArray()  # Characters unlocked in the Meta profile now.

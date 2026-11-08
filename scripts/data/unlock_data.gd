@@ -351,6 +351,14 @@ const UNLOCKS := {
 	"linen_bind": {"type": "spell", "boss": "anubis", "text": "Slay Anubis on the Necropolis of Sand to unlock."},  # Owner-approved proposal
 	"natron_salts": {"type": "passive", "boss": "anubis", "text": "Slay Anubis on the Necropolis of Sand to unlock."},  # Linen Bind's paired passive (owner-approved proposal), unlocked with it
 	"embalmed_bones": {"type": "passive", "achievement": "no_jars_left", "text": "Earn No Jars Left: break every Canopic Jar on the Necropolis of Sand and slay Anubis."},  # No Jars Left unlocks Embalmed Bones (own pairing)
+	# --- Act XII (temporary number): the Temple of the Lioness ---
+	# Sekhmet's fall (proposal "Rewards": Burning Eye is Sekhmet's) with its
+	# paired passive, offered on every stage; the achievement Names Taken earns
+	# the Dynasty's counter-passive Dune Walkers (the integration's split: the
+	# Necropolis's No Jars Left earns Embalmed Bones; offered only in the act through its card row's "act").
+	"burning_eye": {"type": "spell", "boss": "sekhmet", "text": "Slay Sekhmet at the Temple of the Lioness to unlock."},  # Proposal
+	"desert_fury": {"type": "passive", "boss": "sekhmet", "text": "Slay Sekhmet at the Temple of the Lioness to unlock."},  # Burning Eye's paired passive (proposal), unlocked with it
+	"dune_walkers": {"type": "passive", "achievement": "names_taken", "text": "Earn Names Taken: raise 100 of the Dynasty's dead before their Names return, in one run."},  # The Dynasty's second counter-passive (the integration's split: No Jars Left earns Embalmed Bones)
 }
 
 ## End-screen plate heading of a newly unlocked item, by type.

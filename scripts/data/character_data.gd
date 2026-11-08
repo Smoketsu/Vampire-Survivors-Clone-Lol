@@ -110,7 +110,9 @@ const ORDER := ["gravecaller", "umbral_warden", "voidcaller", "bone_oracle", "fa
 	# --- Act XI (temporary): Vigrid ---
 	"berserker_hero",
 	# --- Act XII (temporary number): the Necropolis of Sand ---
-	"the_embalmer"]
+	"the_embalmer",
+	# --- Act XII (temporary number): the Temple of the Lioness ---
+	"lion_priestess"]
 ## The default character (RunConfig, fresh saves, the autotest): today's game.
 const DEFAULT_ID: String = "gravecaller"
 ## Spell level that unlocks a character (owner rule: reach Lv 5 with its spell
@@ -249,7 +251,9 @@ const INNATE_KEYS := ["orb_projectile_destroy", "blast_echo_delay", "blast_echo_
 	# --- Act XI (temporary): Vigrid ---
 	"gungnir_extra_spears",
 	# --- Act XII (temporary number): the Necropolis of Sand ---
-	"linen_mummy_life"]
+	"linen_mummy_life",
+	# --- Act XII (temporary number): the Temple of the Lioness ---
+	"eye_reach_bonus"]
 
 ## Orbit radius (px) of the Bone Oracle's Ossuary Ward shards around him.
 const SHARD_ORBIT_RADIUS: float = 27.0  # TUNING (not in GDD)
@@ -1157,6 +1161,31 @@ const CHARACTERS := {
 		"stats": {"max_hp": 5.0, "spell_area": 0.05},  # TUNING (not in GDD) wrapped in linen; her bandages reach a little wider
 		"sprite": "player/the_embalmer",
 		"tint": Color(0.86, 0.82, 0.92),  # TUNING (not in GDD) pale linen over the violet (her art replaces it)
+		"starts_unlocked": false,
+	},
+	# --- Act XII (temporary number): the Temple of the Lioness ---
+	# The Lion-Priestess (Burning Eye's character; proposal "Rewards": "Burning
+	# Eye ... | The Lion-Priestess (female, figure style)"): FEMALE, in the
+	# figure-redesign style (clothed), a necromancer of the act's theme, never a
+	# member of the Dynasty (docs/last_acts/PLAN.md): a violet priestess dress
+	# under a cream lioness-head head-dress with a violet mane, bone and
+	# soul-teal accents, a sun-disc staff as her focus (assets/sprites/player/
+	# lion_priestess.png, its walk and idle strips). Burning Eye must be
+	# unlocked (Sekhmet) before she can be earned, by the usual Lv 5 rule. Own
+	# decision on her innate (the proposal names none): the Lioness's Gaze, her
+	# eye's beam reaches farther (BurningEye._length()).
+	"lion_priestess": {
+		"display_name": "The Lion-Priestess",  # Owner-approved proposal
+		"title": "She served the lioness. Now the lioness's eye serves the dead.",
+		"spell": "burning_eye",
+		"innate": {
+			"id": "lioness_gaze", "name": "Lioness's Gaze",
+			"description": "Burning Eye's beam reaches a fifth farther.",
+			"values": {"eye_reach_bonus": 0.2},  # TUNING (not in GDD) x 1 + this on the beam's length
+		},
+		"stats": {"max_hp": -5.0, "spell_area": 0.05},  # TUNING (not in GDD) a priestess: a little frailer, her sun a little wider
+		"sprite": "player/lion_priestess",
+		"tint": Color(0.95, 0.78, 0.55),  # TUNING (not in GDD) a sun-warm sand over the violet
 		"starts_unlocked": false,
 	},
 }

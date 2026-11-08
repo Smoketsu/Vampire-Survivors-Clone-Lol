@@ -124,7 +124,9 @@ const SPELL_ORDER := ["shadow_bolt", "orb_shield", "shadow_blast",
 	# --- Act XI (temporary): Vigrid ---
 	"gungnir",
 	# --- Act XII (temporary number): the Necropolis of Sand ---
-	"linen_bind"]
+	"linen_bind",
+	# --- Act XII (temporary number): the Temple of the Lioness ---
+	"burning_eye"]
 
 ## Spell definitions.
 ##   display_name — UI name.
@@ -1126,6 +1128,31 @@ const SPELLS := {
 			{"damage": 24.0, "targets": 4, "hold": 1.2, "mark": 3.2, "range": 270.0, "cooldown": 2.85, "life": 9.0, "cap": 5},  # TUNING (not in GDD)
 			{"damage": 29.0, "targets": 4, "hold": 1.2, "mark": 3.4, "range": 285.0, "cooldown": 2.7, "life": 9.0, "cap": 6},  # TUNING (not in GDD)
 			{"damage": 34.0, "targets": 5, "hold": 1.2, "mark": 3.5, "range": 300.0, "cooldown": 2.5, "life": 10.0, "cap": 7},  # TUNING (not in GDD) owner-approved proposal: "up to 5 enemies"
+		],
+	},
+	# --- Act XII (temporary number): the Temple of the Lioness ---
+	# Burning Eye (GDD §15.0 "Burning Eye, Eye of Retribution, Desert Fury and
+	# the Lion-Priestess (Dynasty phase 2)"; proposal: "a solar eye fires a beam
+	# that sweeps a 90° arc"; unlocked by slaying Sekhmet, UnlockData): every
+	# `cooldown` s a solar eye over the necromancer fires a beam `range` px long
+	# and `width` px wide at the nearest foe and sweeps it across `arc` degrees
+	# in `sweep_time` s; every foe it crosses takes `damage` once a pass. A FIRE
+	# source (DynastyRulesData.FIRE_SOURCES: mummies take x1.5). Its "range" is a
+	# spell range like any other (the Sandstorm halves it). Logic: BurningEye;
+	# fixed rules: BurningEyeData. A sweeping crowd spell between Death Ray (a
+	# full circle) and Shadow Blast.
+	"burning_eye": {
+		"display_name": "Burning Eye",  # Owner-approved proposal
+		"icon": "burning_eye",
+		"description": "A solar eye opens over you and sweeps its burning beam across the foes before you.",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Beam damage", "arc": "Arc (deg)", "range": "Range (px)", "cooldown": "Cooldown (s)"},
+		"levels": [
+			{"damage": 22.0, "arc": 90.0, "range": 230.0, "width": 12.0, "sweep_time": 0.55, "cooldown": 2.8},  # TUNING (not in GDD) owner-approved proposal: a 90° arc
+			{"damage": 28.0, "arc": 90.0, "range": 245.0, "width": 12.0, "sweep_time": 0.55, "cooldown": 2.65},  # TUNING (not in GDD)
+			{"damage": 35.0, "arc": 100.0, "range": 260.0, "width": 13.0, "sweep_time": 0.6, "cooldown": 2.5},  # TUNING (not in GDD)
+			{"damage": 43.0, "arc": 100.0, "range": 275.0, "width": 14.0, "sweep_time": 0.6, "cooldown": 2.35},  # TUNING (not in GDD)
+			{"damage": 52.0, "arc": 110.0, "range": 290.0, "width": 15.0, "sweep_time": 0.65, "cooldown": 2.2},  # TUNING (not in GDD) Death Ray Lv5 for comparison
 		],
 	},
 }
