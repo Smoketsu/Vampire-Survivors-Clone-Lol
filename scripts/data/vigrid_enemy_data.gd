@@ -102,7 +102,7 @@ const ENEMIES := {
 	# (this row's max_hp x the boss's HP scaling), shown on the miniboss bar.
 	"fenrir": {
 		"display_name": "Fenrir",
-		"max_hp": 6200.0,  # TUNING (not in GDD) before the boss's HP scaling (x the stage HP, x the difficulty's boss HP)
+		"max_hp": 8500.0,  # TUNING (not in GDD) a --spawn=fenrir alone (BossOdin sets his HP from OdinData "fenrir_hp")
 		"move_speed": 74.0,  # TUNING (not in GDD) px/s; the great wolf runs the ring down
 		"damage": 10.0,  # TUNING (not in GDD) a bite in reach, before the time scaling
 		"attack_interval": 1.0,  # TUNING (not in GDD) s

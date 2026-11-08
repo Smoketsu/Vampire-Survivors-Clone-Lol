@@ -27,8 +27,9 @@
 ## pose (BossPoseData, when the art has one): pose 1 while he aims Gungnir.
 ## Determinism: no RNG (fixed turns for the rings of fire and the ravens).
 ## Stats: boss_atk_<special>, odin_wolf_time, odin_allfather_at,
-## odin_ragnarok_at, gungnir_throws, gungnir_at_you, gungnir_hits,
-## gungnir_hits_you, gungnir_walled, gungnir_dodged, odin_marks,
+## odin_ragnarok_at, odin_gungnir_throws, odin_gungnir_at_you,
+## odin_gungnir_hits, odin_gungnir_hits_you, odin_gungnir_walled,
+## odin_gungnir_dodged, odin_ravens, odin_marks,
 ## odin_doomed (he followed the wolf), fenrir_doomed (FenrirKit),
 ## odin_kill_time.
 class_name BossOdin
@@ -363,7 +364,7 @@ func _aim_gungnir() -> bool:
 		t = pl
 	if t is Necromancer:
 		_clear_mark(t as Necromancer)
-		game.stat_add("gungnir_at_you", 1.0)
+		game.stat_add("odin_gungnir_at_you", 1.0)
 	_spear_target = t
 	_spear = 1
 	_spear_t = 0.0
@@ -373,7 +374,7 @@ func _aim_gungnir() -> bool:
 	game.effects.telegraph_line(position, t.position, w, float(boss_def["gungnir_windup"]), self)
 	motion_lunge(-(t.position - position).normalized(), MotionData.POWER_CAST)
 	game.stat_add("boss_atk_gungnir", 1.0)
-	game.stat_add("gungnir_throws", 1.0)
+	game.stat_add("odin_gungnir_throws", 1.0)
 	queue_redraw()
 	return true
 
@@ -422,7 +423,7 @@ func _step_spear(delta: float) -> void:
 	var wt := EmpireShots.wall_block_t(game, _spear_pos, nxt, 3.0)  # THE wall loop: a Bone Wall across its path.
 	if wt < INF:
 		var at := _spear_pos.lerp(nxt, clampf(wt, 0.0, 1.0))
-		game.stat_add("gungnir_walled", 1.0)
+		game.stat_add("odin_gungnir_walled", 1.0)
 		game.effects.impact(at, 26.0, Palette.NORSE_VALKYRIE_GOLD)
 		game.shake(2.0)
 		_spear = 0
@@ -446,15 +447,15 @@ func _strike() -> void:
 	if t is Necromancer:
 		var pl := t as Necromancer
 		if pl.iframes > 0.0:
-			game.stat_add("gungnir_dodged", 1.0)  # Grave Step's i-frames (or a hit's): it passes through his shadow.
+			game.stat_add("odin_gungnir_dodged", 1.0)  # Grave Step's i-frames (or a hit's): it passes through his shadow.
 			return
 		game.combat.damage_player(float(boss_def["gungnir_damage_player"]) * mult, OdinData.SRC_GUNGNIR, pl, self)
-		game.stat_add("gungnir_hits_you", 1.0)
+		game.stat_add("odin_gungnir_hits_you", 1.0)
 		game.shake(4.0)
 		return
 	var u := t as SummonedUnit
 	game.combat.damage_unit(u, float(boss_def["gungnir_damage_summon"]) * mult * undead_damage_mult, OdinData.SRC_GUNGNIR, self)
-	game.stat_add("gungnir_hits", 1.0)
+	game.stat_add("odin_gungnir_hits", 1.0)
 	if u.active and u.state != SummonedUnit.State.DEAD and not u.airborne:
 		var dir := (u.position - position).normalized() if u.position.distance_to(position) > 1.0 else Vector2.RIGHT
 		u.position += dir * game.arena.clear_length(u.position, dir, float(boss_def["gungnir_push"]), u.radius)
@@ -597,9 +598,9 @@ static func summary_line(st: Dictionary) -> String:
 	var rg := float(st.get("odin_ragnarok_at", -1.0))
 	return "the wolf %ds (fenrir lunges %d, swallows %d, spat %d, died inside %d) | the all-father %s (gungnir %d: at summons %d, at you %d, hits %d / on you %d, walled %d, dodged %d; ravens %d, marks %d) | ragnarok %s (rings of fire %d) | doom: odin %d, fenrir %d | killed in %ds | dmg to you %d (gungnir %d, fire %d, fenrir %d, touch %d), to summons %d (gungnir %d, maw %d, fire %d)" % [
 		int(st.get("odin_wolf_time", 0.0)), int(st.get("fenrir_lunges", 0.0)), int(st.get("fenrir_swallows", 0.0)), int(st.get("fenrir_spat", 0.0)), int(st.get("fenrir_digested", 0.0)),
-		EmpireReport._clock(af) if af >= 0.0 else "not reached", int(st.get("gungnir_throws", 0.0)),
-		int(st.get("gungnir_throws", 0.0)) - int(st.get("gungnir_at_you", 0.0)), int(st.get("gungnir_at_you", 0.0)),
-		int(st.get("gungnir_hits", 0.0)), int(st.get("gungnir_hits_you", 0.0)), int(st.get("gungnir_walled", 0.0)), int(st.get("gungnir_dodged", 0.0)),
+		EmpireReport._clock(af) if af >= 0.0 else "not reached", int(st.get("odin_gungnir_throws", 0.0)),
+		int(st.get("odin_gungnir_throws", 0.0)) - int(st.get("odin_gungnir_at_you", 0.0)), int(st.get("odin_gungnir_at_you", 0.0)),
+		int(st.get("odin_gungnir_hits", 0.0)), int(st.get("odin_gungnir_hits_you", 0.0)), int(st.get("odin_gungnir_walled", 0.0)), int(st.get("odin_gungnir_dodged", 0.0)),
 		int(st.get("odin_ravens", 0.0)), int(st.get("odin_marks", 0.0)),
 		EmpireReport._clock(rg) if rg >= 0.0 else "not reached", int(st.get("boss_atk_burning", 0.0)),
 		int(st.get("odin_doomed", 0.0)), int(st.get("fenrir_doomed", 0.0)), int(st.get(OdinData.KILL_TIME_STAT, 0.0)),

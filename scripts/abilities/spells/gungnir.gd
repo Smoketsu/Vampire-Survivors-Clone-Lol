@@ -17,8 +17,8 @@
 ## x the damage. RUNECRAFT (the paired passive): its cooldown share and its
 ## width are applied by AbilityManager.apply_spell_mods() on the spell's own
 ## keys. Determinism: no RNG; the strongest foes by HP, ties in the spatial
-## hash's order. Stats: gungnir_casts, gungnir_spears, gungnir_hits,
-## gungnir_returns; damage as dmg_gungnir / dmg_spear_of_the_hanged.
+## hash's order. Stats: gungnir_spell_casts, gungnir_spell_spears, gungnir_spell_hits,
+## gungnir_spell_returns; damage as dmg_gungnir / dmg_spear_of_the_hanged.
 class_name Gungnir
 extends NecroSpell
 
@@ -59,8 +59,8 @@ func step(delta: float, stats: Dictionary) -> void:
 			th.back_at = INF
 			th.t = game.elapsed  # Drawn again on its way back.
 			var hits := _strike_line(th.to, th.from, th.width, th.back_dmg, GungnirData.EVOLVED_SOURCE)
-			game.stat_add("gungnir_returns", 1.0)
-			game.stat_add("gungnir_hits", float(hits))
+			game.stat_add("gungnir_spell_returns", 1.0)
+			game.stat_add("gungnir_spell_hits", float(hits))
 		if th.back_at == INF and game.elapsed - th.t > GungnirData.STREAK_TIME:
 			throws.remove_at(i)
 			continue
@@ -106,9 +106,9 @@ func _cast(n: int, stats: Dictionary) -> bool:
 			th.back_dmg = dmg * float(stats["return_share"])
 		throws.append(th)
 		var hits := _strike_line(th.from, th.to, width, dmg, src)
-		game.stat_add("gungnir_spears", 1.0)
-		game.stat_add("gungnir_hits", float(hits))
-	game.stat_add("gungnir_casts", 1.0)
+		game.stat_add("gungnir_spell_spears", 1.0)
+		game.stat_add("gungnir_spell_hits", float(hits))
+	game.stat_add("gungnir_spell_casts", 1.0)
 	return true
 
 
@@ -134,8 +134,8 @@ func _strike_line(a: Vector2, b: Vector2, w: float, dmg: float, src: String) -> 
 ## Autotest counters (the Gungnir line of VigridReport).
 func summary_extra() -> String:
 	var st := game.stats
-	return "casts=%d spears=%d hits=%d returns=%d" % [int(st.get("gungnir_casts", 0.0)), int(st.get("gungnir_spears", 0.0)),
-		int(st.get("gungnir_hits", 0.0)), int(st.get("gungnir_returns", 0.0))]
+	return "casts=%d spears=%d hits=%d returns=%d" % [int(st.get("gungnir_spell_casts", 0.0)), int(st.get("gungnir_spell_spears", 0.0)),
+		int(st.get("gungnir_spell_hits", 0.0)), int(st.get("gungnir_spell_returns", 0.0))]
 
 
 ## The spears' streaks: a long soft line of soul-light with a bright head,

@@ -820,8 +820,8 @@ const EVOLUTIONS := {
 		"description": "Two spears fly at the strongest foes and come back to your hand through everything in their line.",
 		"labels": {"damage": "Damage", "cooldown": "Cooldown (s)", "spears": "Spears", "spear_width": "Width (px)", "length": "Reach (px)", "return_share": "Return damage"},
 		"stats": {
-			"damage": 84.0, "cooldown": 2.2, "spears": 2, "spear_width": 15.0, "length": 760.0,  # TUNING (not in GDD)
-			"return_share": 0.5, "return_delay": 0.35,  # TUNING (not in GDD) the evolution flag: the spear comes back
+			"damage": 74.0, "cooldown": 2.3, "spears": 2, "spear_width": 14.0, "length": 740.0,  # TUNING (not in GDD) first pass 84 / 2.2 / 15
+			"return_share": 0.4, "return_delay": 0.35,  # TUNING (not in GDD) the evolution flag: the spear comes back (first pass 0.5: 331k evolved damage in the forced seed-7 run)
 		},
 	},
 }

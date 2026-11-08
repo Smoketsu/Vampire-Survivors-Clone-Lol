@@ -80,7 +80,7 @@ const LATE_ANNOUNCE := ["TWILIGHT OF THE WOLF", "The All-Father falls.", "Even a
 ## Its design row.
 const BOSS := {
 	"display_name": "Odin",
-	"max_hp": 8200.0,  # TUNING (not in GDD) before the stage / co-op scaling (x1.65 on Vigrid = 13,530; Fenrir beside him)
+	"max_hp": 11500.0,  # TUNING (not in GDD) before the stage / co-op scaling (x1.65 on Vigrid = 18,975; Fenrir beside him); first pass 8,200 fell in 64 s on seed 7
 	"move_speed": 50.0,  # TUNING (not in GDD) px/s, an old god's stride
 	"damage": 10.0,  # TUNING (not in GDD) a blow of the spear-shaft in melee, before the time scaling
 	"attack_interval": 1.3,  # TUNING (not in GDD) s
@@ -103,7 +103,7 @@ const BOSS := {
 	"advance_range": 380.0,  # TUNING (not in GDD) px beyond which he strides faster
 	"advance_speed_mult": 2.0,  # TUNING (not in GDD)
 	# Fenrir.
-	"fenrir_hp": 6200.0,  # TUNING (not in GDD) Fenrir's max HP before the boss's HP scaling (x1.65 = 10,230)
+	"fenrir_hp": 8500.0,  # TUNING (not in GDD) Fenrir's max HP before the boss's HP scaling (x1.65 = 14,025); first pass 6,200
 	"fenrir_offset": 70.0,  # TUNING (not in GDD) px beside Odin he comes in / is chained
 	# The Wolf.
 	"watch_dist": 330.0,  # TUNING (not in GDD) px from the necromancer Odin stands watch
@@ -119,7 +119,7 @@ const BOSS := {
 	"gungnir_speed": 950.0,  # TUNING (not in GDD) px/s; it homes on its mark ("the spear that never misses")
 	"gungnir_range": 560.0,  # TUNING (not in GDD) px: summons this close may be its mark
 	"gungnir_damage_summon": 46.0,  # TUNING (not in GDD) before the time scaling
-	"gungnir_damage_player": 14.0,  # TUNING (not in GDD) before the time scaling
+	"gungnir_damage_player": 9.0,  # TUNING (not in GDD) before the time scaling (first pass 14: two hits took 60 of the seed-7 bot's 120 HP)
 	"gungnir_push": 30.0,  # TUNING (not in GDD) px a struck summon is thrown
 	"raven_first": 4.0,  # TUNING (not in GDD) s after the All-Father begins
 	"raven_every": 12.0,  # TUNING (not in GDD) s

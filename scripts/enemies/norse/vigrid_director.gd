@@ -44,6 +44,10 @@ var _next_vanguard: float = INF
 ## Report only: px from the nearest brazier beyond which the necromancer
 ## counts as far from every fire (the army bot's warmth reach).
 const FIRELESS_PX: float = 900.0
+## Report only: the necromancer's lowest HP before 0:00 and when (game s).
+var _low_hp: float = INF
+## Report only: game time (s) of `_low_hp`.
+var _low_at: float = 0.0
 ## The darkness layer (null headless).
 var light: VigridLight = null
 
@@ -66,6 +70,9 @@ func step(delta: float) -> void:
 		_move_camp()
 		_dark_takes()
 	_sample_warmth(delta)
+	if not game.countdown_finished() and game.player.hp < _low_hp:
+		_low_hp = game.player.hp
+		_low_at = game.elapsed
 	if light != null:
 		light.zone = _zone
 		light.early_dark = game.elapsed >= float((config.get("vanguard", {}) as Dictionary).get("from", INF))
@@ -198,7 +205,8 @@ func danger_push(p: Vector2) -> Vector2:
 func summary_line() -> String:
 	var st := game.stats
 	var lw := game.norse.winter if game.norse != null else null
-	return "the dark took %d braziers (lit at the end %d/%d), camp moves %d | nearest fire avg %d px, beyond reach %ds | vanguard fire-giants %d | miniboss %s, burning footprints %d, burning stomps %d, burns on you %d / on summons %d" % [
+	return "lowest HP before 0:00 %d at %s | the dark took %d braziers (lit at the end %d/%d), camp moves %d | nearest fire avg %d px, beyond reach %ds | vanguard fire-giants %d | miniboss %s, burning footprints %d, burning stomps %d, burns on you %d / on summons %d" % [
+		int(_low_hp) if _low_hp < INF else -1, EmpireReport._clock(_low_at),
 		int(st.get("vigrid_dark_took", 0.0)), lw.lit_count() if lw != null else 0, lw.braziers.size() if lw != null else 0,
 		int(st.get("braziers_moved", 0.0)), int(float(st.get("vigrid_fire_px_s", 0.0)) / maxf(game.elapsed, 1.0)), int(st.get("vigrid_fireless_s", 0.0)),
 		int(st.get("vigrid_vanguard", 0.0)),
