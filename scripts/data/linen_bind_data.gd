@@ -50,8 +50,9 @@ const WAIT_RETRY: float = 0.3  # TUNING (not in GDD)
 const MAX_MARKS: int = 48  # TUNING (not in GDD)
 
 # --- The hold (CombatResolver.stun_enemy(), the one enemy stun path) ---
-## x the hold on bosses and minibosses (they shrug the linen off).
-const BOSS_HOLD_MULT: float = 0.25  # TUNING (not in GDD)
+## x the hold on bosses and minibosses (they shrug the linen off: struck and
+## wrapped, never held).
+const BOSS_HOLD_MULT: float = 0.0  # TUNING (not in GDD) first pass 0.25: the bandages held Anubis a fifth of his fight
 ## x the hold on elites.
 const ELITE_HOLD_MULT: float = 0.6  # TUNING (not in GDD)
 

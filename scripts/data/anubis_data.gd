@@ -62,7 +62,7 @@ const ENDING_ANNOUNCE := ["THE WAY IS SHUT", "Anubis, Opener of the Way, falls."
 const LATE_ANNOUNCE := ["THE WAY IS SHUT", "Anubis falls as the sarcophagi open.", "The dead he led wander the dunes without a master, and the Devourer eats its fill."]  # TUNING (not in GDD) the words
 
 ## Anubis's base max HP (x the boss HP multiplier and the stage's HP multiplier).
-const MAX_HP: float = 26000.0  # TUNING (not in GDD) first pass 12000: the seed-7 army bot slew him 41 s after he arrived, every phase in 15 s (x the stage's 1.5: 39,000)
+const MAX_HP: float = 30000.0  # TUNING (not in GDD) first pass 12000: the seed-7 army bot slew him 41 s after he arrived, every phase in 15 s; 26000: 73 s with Linen Bind (x the stage's 1.5: 45,000)
 
 ## Anubis's design row.
 const BOSS := {
