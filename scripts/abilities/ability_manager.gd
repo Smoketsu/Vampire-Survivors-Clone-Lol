@@ -305,6 +305,12 @@ func apply_spell_mods(row: Dictionary, conduit_lvl: int = -1, focus_lvl: int = -
 	if out.has("lift_time"):
 		out["cooldown"] = float(out["cooldown"]) * (1.0 - passive_value(TractorLiftData.STARSEED, TractorLiftData.HASTE_KEY))
 		out["slam_radius"] = float(out.get("slam_radius", 50.0)) * (1.0 + passive_value(TractorLiftData.STARSEED, TractorLiftData.REACH_KEY))
+	# --- Act XII (temporary number): the Hall of Two Truths --- Heavy Heart: Feather's
+	# Verdict's execute line rises and its ring widens (its keys exist only in
+	# the Feather's Verdict / Heart Devoured rows; 0 while not owned).
+	if out.has("execute"):
+		out["execute"] = float(out["execute"]) + passive_value(FeathersVerdictData.HEAVY_HEART, FeathersVerdictData.LINE_KEY)
+		out["ring"] = float(out.get("ring", 60.0)) * (1.0 + passive_value(FeathersVerdictData.HEAVY_HEART, FeathersVerdictData.REACH_KEY))
 	return out
 
 

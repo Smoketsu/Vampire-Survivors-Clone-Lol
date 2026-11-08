@@ -100,6 +100,9 @@
 ## Act IX, the Ark of the Concord:
 ##   Starborn         Deserter's Signal  in TractorLift.step() (one more foe
 ##                    lifted a cast); stats as the spell's (tractor_lifts).
+## Act XII (temporary number), the Hall of Two Truths:
+##   Pharaoh's Shade  Crook and Flail    in FeathersVerdict._land() (a higher
+##                    execute line); stats as the spell's (verdict_executions).
 class_name CharacterInnates
 extends Node2D
 
@@ -463,6 +466,9 @@ func summary_line() -> String:
 		# --- Act IX: the Ark --- (Deserter's Signal lives in TractorLift.step())
 		"deserters_signal":
 			counters = "extra lifts %d (lifts %d)" % [int(game.character.innate_value(TractorLiftData.EXTRA_KEY)), int(st.get("tractor_lifts", 0.0))]
+		# --- Act XII (temporary number): the Hall of Two Truths --- (Crook and Flail lives in FeathersVerdict._land())
+		"crook_and_flail":
+			counters = "execute line +%d%% (executions %d)" % [int(roundf(game.character.innate_value(FeathersVerdictData.INNATE_KEY) * 100.0)), int(st.get("verdict_executions", 0.0))]
 	out += " | innate: %s" % ("none" if _innate == "" else "%s: %s" % [ch.innate_name(), counters])
 	out += " | characters unlocked this run: %s" % (", ".join(ch.unlocked_this_run) if not ch.unlocked_this_run.is_empty() else "none")
 	var open := PackedStringArray()  # Characters unlocked in the Meta profile now.

@@ -31,7 +31,9 @@ const ORDER := ["heretics_bane", "master_of_the_drowned", "archnecromancer", "ex
 	# --- Act VIII: Liberty Heights ---
 	"bane_of_heroes",
 	# --- Act IX: the Ark ---
-	"the_unharvested"]  # owner-approved Proposal 2; Act III proposal; Act VI, Act VII and Act VIII (own decisions)
+	"the_unharvested",
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	"light_of_heart"]  # owner-approved Proposal 2; Act III proposal; Act VI, Act VII and Act VIII (own decisions)
 
 ## Title id -> row (keys above).
 const TITLES := {
@@ -49,6 +51,8 @@ const TITLES := {
 	"bane_of_heroes": {"display_name": "Bane of Heroes", "achievement": "no_more_heroes", "frame": ""},  # Own decision: No More Heroes records the clear (no epilogue, owner Oct 31; brief Nov 2)
 	# --- Act IX: the Ark ---
 	"the_unharvested": {"display_name": "The Unharvested", "achievement": "last_harvest", "frame": ""},  # Own decision: The Last Harvest records the clear (no epilogue, owner Oct 31; brief Nov 3)
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	"light_of_heart": {"display_name": "Light of Heart", "achievement": "a_light_heart", "frame": ""},  # Own decision: A Light Heart records the Weighing won (no epilogue part until the reorder, PLAN.md)
 }
 
 ## Text of the "no title" choice on the setup screen's cycle row.

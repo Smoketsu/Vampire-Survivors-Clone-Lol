@@ -921,6 +921,8 @@ func hit_mult() -> float:
 		m *= 1.0 + float(NorseRulesData.BERSERK["damage"])  # The Hall of the Slain: Berserkergang.
 	if reborn > 0 and game.dynasty != null:
 		m *= pow(float(game.dynasty.rebirth.cfg["damage_mult"]), float(reborn))  # Act XII (temporary): Rebirth's stamp.
+	if game.enemies.two_truths != null and (kit is DynastyKit or is_boss):
+		m *= game.enemies.two_truths.scales.enemy_mult()  # Act XII (temporary), the Hall of Two Truths: the Scales' favour.
 	return m
 
 

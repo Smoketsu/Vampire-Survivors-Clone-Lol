@@ -93,7 +93,7 @@ func physics(e: Enemy, delta: float) -> bool:
 		embalmed = true
 		g.stat_add("rebirth_embalmed", 1.0)
 	progress += delta * rate
-	var dur := float(g.dynasty.rebirth.cfg["duration"])
+	var dur := g.dynasty.rebirth.duration()  # Rebirth's one duration path (the Hall's Scales, Osiris).
 	if progress >= dur:
 		g.dynasty.rebirth.return_body(e)
 		return true
@@ -126,7 +126,7 @@ func draw_body(e: Enemy, ci: CanvasItem) -> void:
 	var cfg: Dictionary = g.dynasty.rebirth.cfg if g.dynasty != null else DynastyRulesData.REBIRTH
 	var from := int(cfg["icon_shrink_from"])
 	var sc := 1.0 if count <= from else maxf(float(cfg["icon_min_scale"]), float(from) / float(count))  # Icon scale.
-	var dur := float(cfg["duration"])
+	var dur := g.dynasty.rebirth.duration() if g.dynasty != null else float(cfg["duration"])
 	var k := clampf(progress / dur, 0.0, 1.0)  # Share of its time run.
 	var w := 6.0 * sc  # Icon half-width (px).
 	var h := 9.0 * sc  # Icon half-height (px).

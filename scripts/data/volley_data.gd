@@ -209,6 +209,9 @@ const CLASSES := {
 	# --- Act IX: the Ark ---
 	"ghost_saucer": {"trigger": "special", "every": 1, "pattern": "ring", "counts": [5, 7], "speed": 260.0,
 		"life": 0.45, "share": 0.3, "pierce": 1, "radius": 3.5, "style": "orb", "color": Color(0.70, 0.92, 0.86)},  # TUNING (not in GDD) a ring of soul-light where a lifted foe falls
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	"ushabti_sentinel": {"trigger": "special", "every": 1, "pattern": "ring", "counts": [6, 8], "speed": 260.0,
+		"life": 0.45, "share": 0.3, "pierce": 1, "radius": 4.0, "style": "orb", "color": Color(0.70, 0.92, 0.86)},  # TUNING (not in GDD) a ring of stone shards as it reassembles
 }
 
 ## Summon evolution id -> its showpiece volley (replaces the class volley once evolved;
@@ -272,6 +275,9 @@ const EVOLVED := {
 	# --- Act IX: the Ark ---
 	"black_mothership": {"trigger": "special", "every": 1, "pattern": "ring", "counts": [10], "speed": 300.0,
 		"life": 0.5, "share": 0.3, "pierce": 2, "radius": 4.0, "style": "orb", "color": Color(0.70, 0.92, 0.86)},  # TUNING (not in GDD) a full ring of soul-light where each lifted foe falls
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	"eternal_guard": {"trigger": "special", "every": 1, "pattern": "ring", "counts": [12], "speed": 300.0,
+		"life": 0.5, "share": 0.3, "pierce": 2, "radius": 4.5, "style": "orb", "color": Color(0.70, 0.92, 0.86)},  # TUNING (not in GDD) a full ring of stone shards as it reassembles
 }
 
 # --- Spell echoes (every owned spell from LEVEL_ON) --------------------------------------
@@ -376,6 +382,9 @@ const SPELLS := {
 	# --- Act IX: the Ark ---
 	"tractor_lift": {"every": 2, "clock": "cooldown", "aim": "strongest", "pattern": "ring", "counts": [5, 6, 8], "speed": 240.0,
 		"life": 0.5, "share": 0.35, "pierce": 1, "radius": 3.5, "style": "orb", "color": Color(0.70, 0.92, 0.86)},  # TUNING (not in GDD) a ring of soul-light with every other lift
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	"feathers_verdict": {"every": 2, "clock": "cooldown", "aim": "strongest", "pattern": "ring", "counts": [5, 6, 8], "speed": 240.0,
+		"life": 0.5, "share": 0.35, "pierce": 1, "radius": 3.5, "style": "orb", "color": Color(0.70, 0.92, 0.86)},  # TUNING (not in GDD) a ring of soul-light with every other feather
 }
 ## Range (px) within which a spell echo looks for its target (no target, no echo).
 const SPELL_RANGE: float = 340.0  # TUNING (not in GDD)

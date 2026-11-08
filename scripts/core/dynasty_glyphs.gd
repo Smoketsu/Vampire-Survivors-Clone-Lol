@@ -117,6 +117,9 @@ static func draw_jar(ci: CanvasItem, o: Vector2, r: float, flash: bool) -> void:
 ## Draws obstacle `o` when it is a Dynasty placeholder kind; false otherwise.
 static func draw_obstacle(ci: CanvasItem, o: Arena.Obstacle) -> bool:
 	# Phase 2: each Dynasty stage's own obstacle kinds go first here.
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	if TwoTruthsGlyphs.draw_obstacle(ci, o):
+		return true  # A single-sprite obstacle of the hall (brazier, Scales, sphinx head, blocks).
 	var c := o.center
 	match o.kind:
 		"dynasty_dune_rock", "dynasty_column":

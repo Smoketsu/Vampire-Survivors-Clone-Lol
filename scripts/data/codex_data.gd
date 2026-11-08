@@ -80,7 +80,9 @@ const SUMMON_ORDER: Array[String] = ["warrior", "archer", "mage", "mender", "war
 		# --- Act VIII: Liberty Heights --- (a silhouette naming its unlock until met)
 		"fallen_hero",
 		# --- Act IX: the Ark --- (a silhouette naming its unlock until met)
-		"ghost_saucer"]
+		"ghost_saucer",
+		# --- Act XII (temporary number): the Hall of Two Truths --- (a silhouette naming its unlock until met)
+		"ushabti_sentinel"]
 
 ## Covenant soldiers (enemy kinds), in the order the stages bring them.
 const SOLDIERS: Array[String] = ["recruit", "footman", "archer", "chaplain", "purifier", "templar",
@@ -340,9 +342,13 @@ const NORSE_BOSSES: Array[String] = ["hrimgar", "sigrun", "odin"]
 ## entry).
 const DYNASTY_DEAD: Array[String] = ["mummy", "mummy_female"]
 ## The sacred beasts (group "beasts").
-const DYNASTY_BEASTS: Array[String] = ["scarab_swarm"]
+const DYNASTY_BEASTS: Array[String] = ["scarab_swarm",
+	# --- Act XII (temporary number): the Hall of Two Truths --- (the miniboss with its group)
+	"devourers_whelp"]
 ## The guard (group "guard").
-const DYNASTY_GUARD: Array[String] = ["khopesh_guard"]
+const DYNASTY_GUARD: Array[String] = ["khopesh_guard",
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	"crocodile_warden"]
 ## The priesthood (group "priests").
 const DYNASTY_PRIESTS: Array[String] = ["heka_priest", "embalmer"]
 ## Stone and jars (group "stone": the structures and, in phase 2, the statues).
@@ -640,6 +646,9 @@ const DESCRIPTIONS: Dictionary = {
 	"anubis": "Anubis, Opener of the Way: he leads the procession of the dead, embalms the fallen, then duels you as the jackal.",  # Proposal
 	"sekhmet": "Sekhmet, the Lioness of Retribution: she leaps between the pillars, calls the Red Wind, and feasts in her fury.",  # Proposal
 	"osiris": "Osiris, Lord of the Dead, judges you on the great scales; Ammit the Devourer waits at his feet.",  # Proposal
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	"crocodile_warden": "A crocodile-headed warden of the river of the dead. He climbs out of the quicksand and drags your dead under.",  # Proposal
+	"devourers_whelp": "A young hippo-lion-crocodile beast that eats the Names of the dead before they can stand. Raise them before it reaches them.",  # Proposal
 }
 
 ## Sprite key of an entry whose art is not "<category folder>/<id>":
@@ -933,6 +942,8 @@ const ACHIEVEMENT_ICONS: Dictionary = {
 	"the_hunter_hunted": "ach_the_hunter_hunted",  # TUNING (not in GDD)
 	# --- Act IX: the Ark ---
 	"last_harvest": "ach_last_harvest",  # TUNING (not in GDD)
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	"a_light_heart": "ach_a_light_heart",  # TUNING (not in GDD)
 }
 ## IconGlyph kind drawn when an achievement badge PNG is missing.
 const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
@@ -994,6 +1005,8 @@ const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
 	"the_hunter_hunted": "mirror_bones",
 	# --- Act IX: the Ark ---
 	"last_harvest": "tractor_lift",
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	"a_light_heart": "feathers_verdict",
 }
 ## Screen title (TITLE tier).
 const TITLE: String = "Codex"  # TUNING (not in GDD)

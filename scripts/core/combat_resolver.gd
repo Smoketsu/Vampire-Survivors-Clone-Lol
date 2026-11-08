@@ -674,6 +674,11 @@ func damage_unit(u: SummonedUnit, amount: float, source: String, by: Enemy = nul
 	if by != null and game.norse != null:
 		game.norse.on_unit_struck(u, by, source, dealt)  # The Hall of the Slain: the draugr's cold touch.
 	if u.hp <= 0.0:
+		# --- Act XII (temporary number): the Hall of Two Truths --- a class special that answers
+		# the lethal blow (the Ushabti Sentinel reassembles; SummonBehavior
+		# .on_lethal() is false for every other class, so nothing changes).
+		if u.behavior != null and u.behavior.on_lethal(u):
+			return
 		game.stat_add("death_" + u.unit_class + "_by_" + source, 1.0)
 		game.horde.colossi.on_unit_killed(u)  # Bone Colossus shrapnel burst.
 		if by != null and game.pantheon != null:

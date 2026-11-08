@@ -81,7 +81,9 @@ const ORDER := ["death_knight", "lich", "profane_bishop",
 	# --- Act VIII: Liberty Heights ---
 	"black_paragon",
 	# --- Act IX: the Ark ---
-	"black_mothership"]
+	"black_mothership",
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	"eternal_guard"]
 
 ## Summon skill level every base class needs (user rule: Lv 5).
 const BASE_LEVEL_REQUIRED: int = 5  # TUNING (not in GDD) user rule
@@ -987,6 +989,42 @@ const EVOLUTIONS := {
 		"special_set": {
 			"beams": 3,  # TUNING (not in GDD)
 			"lifts": 2,  # TUNING (not in GDD)
+		},
+	},
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	# Eternal Guard (owner-approved proposal: "the Ushabti Sentinel ... (evolution
+	# Eternal Guard)"; GDD §15.0 "The Ushabti Sentinel, Eternal Guard and
+	# Answering Words"): Ushabti Sentinel Lv 5 + Answering Words Lv 5 (a NEW
+	# passive, own decision, owner rule: maxed). A taller stone guardian with
+	# true-gold trim (the necromancer's own: art summons/eternal_guard). It
+	# reassembles more often and stands again stronger, with a wider shockwave.
+	# UshabtiSentinelBehavior reads these special_set keys (final):
+	#   reassemble_cooldown / reassemble_hp — its reassembly;
+	#   eternal — the evolution flag (its shockwave's source tag).
+	"eternal_guard": {
+		"mode": "transform",
+		"bases": ["ushabti_sentinel"],
+		"passive": "answering_words",
+		"passive_level": 5,  # Owner rule: every evolution needs its paired passive maxed
+		"display_name": "Eternal Guard",  # Owner-approved proposal
+		"plural": "Eternal Guards",
+		"icon": "eternal_guard",
+		"description": "Stone that will not stay broken: it rises every 15 s at three quarters of its strength.",
+		"mult": {
+			"max_hp": 1.5,  # TUNING (not in GDD)
+			"damage": 1.3,  # TUNING (not in GDD)
+		},
+		"set": {
+			"radius": 13.0,  # TUNING (not in GDD) Ushabti Sentinel 11
+		},
+		"special_mult": {
+			"reform_radius": 1.3,  # TUNING (not in GDD)
+			"reform_damage": 1.4,  # TUNING (not in GDD)
+		},
+		"special_set": {
+			"reassemble_cooldown": 15.0,  # TUNING (not in GDD) Ushabti Sentinel 25
+			"reassemble_hp": 0.75,  # TUNING (not in GDD) Ushabti Sentinel 0.5
+			"eternal": 1,  # The evolution flag (its shockwave's source tag).
 		},
 	},
 }

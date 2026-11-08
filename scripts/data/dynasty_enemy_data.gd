@@ -88,6 +88,8 @@ const EMBALMER: String = "embalmer"
 const CANOPIC_JAR: String = "canopic_jar"
 ## Kind id of the cartouche (a 1-hit structure row; Rebirth lays it).
 const CARTOUCHE: String = DynastyRulesData.CARTOUCHE
+## Kind id of the Crocodile Warden (the Hall of Two Truths' shared kind).
+const CROCODILE_WARDEN: String = "crocodile_warden"
 ## Sprite folder of the Dynasty's kinds (assets/sprites/dynasty/).
 const SPRITE_DIR: String = "dynasty/"
 
@@ -338,4 +340,55 @@ const ENEMIES := {
 		"faction": FACTION,
 		"kit": "cartouche",
 	},  # The cartouche.
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	# The CROCODILE WARDEN (male; owner-approved proposal: "Heavy | Rises from
+	# quicksand; armour 3; drags a summon in | Wither; avoid the quicksand"): a
+	# crocodile-headed warden of the river of the dead, a guardian (Rebirth).
+	# Where he is activated a quicksand patch opens (Quicksand.add_patch(): rise
+	# patch_radius px for patch_life s) and he climbs out of it for rise_time s;
+	# every drag "every" s he seizes the nearest summon within drag "reach" px
+	# (the shared compel hold), opens the sand at his feet (sink_radius px for
+	# sink_life s), drags it in at drag "speed" px/s for at most drag "hold" s
+	# and pulls it under for drag "damage" (CrocodileWardenKit). Flat armour 3
+	# (the shared "flat_armor" stat). A shared row, so any Dynasty stage may use
+	# him (the Hall of Two Truths brings him).
+	"crocodile_warden": {
+		"display_name": "Crocodile Warden",  # Owner-approved proposal
+		"max_hp": 120.0,  # TUNING (not in GDD) a heavy (the khopesh guard 44, the oni 140)
+		"move_speed": 38.0,  # TUNING (not in GDD) px/s; heavy
+		"damage": 9.0,  # TUNING (not in GDD) a jaw snap, before the time scaling
+		"attack_interval": 1.4,  # TUNING (not in GDD) s
+		"attack_range": 6.0,  # TUNING (not in GDD) px
+		"radius": 13.0,  # TUNING (not in GDD) px (~50 px sprite)
+		"armor": 0.1,  # TUNING (not in GDD) a hide over his linen
+		"flat_armor": 3.0,  # Owner-approved proposal: "armour 3"
+		"xp": 8,  # TUNING (not in GDD)
+		"behavior": "melee",
+		"projectile_speed": 0.0,
+		"undead_damage_mult": 1.0,
+		"heal_amount": 0.0,
+		"heal_interval": 0.0,
+		"heal_radius": 0.0,
+		"target_priority": 0.7,  # TUNING (not in GDD) 0..1
+		"mass": 3.0,  # TUNING (not in GDD)
+		"faction": FACTION,
+		"kit": "crocodile_warden",
+		"group": "guard",
+		"rebirth": true,  # A guardian of the dead: he returns (own decision: the roster names no exception)
+		"rise": {
+			"patch_radius": 54.0,  # TUNING (not in GDD) px of the quicksand he climbs out of
+			"patch_life": 30.0,  # TUNING (not in GDD) s it stays
+			"rise_time": 1.0,  # TUNING (not in GDD) s he climbs out (holding still)
+		},
+		"drag": {
+			"first": 3.0,  # TUNING (not in GDD) s before his first drag
+			"every": 9.0,  # TUNING (not in GDD) s between two drags
+			"reach": 70.0,  # TUNING (not in GDD) px from his body edge to the summon he seizes
+			"hold": 1.6,  # TUNING (not in GDD) s at most he drags
+			"speed": 80.0,  # TUNING (not in GDD) px/s
+			"damage": 20.0,  # TUNING (not in GDD) the pull under, before the time scaling
+			"sink_radius": 34.0,  # TUNING (not in GDD) px of the sand that opens at his feet
+			"sink_life": 6.0,  # TUNING (not in GDD) s it stays
+		},
+	},  # The Crocodile Warden.
 }

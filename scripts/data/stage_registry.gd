@@ -327,6 +327,11 @@
 ##                        Reactor's vents as structure windows, the wrecks;
 ##                        the "luminous_archon" event); ground "ark" is its
 ##                        ArkGround (four zone floors).
+## --- Act XII (temporary number): the Hall of Two Truths ---
+##   two_truths         — TwoTruthsDirector config (TwoTruthsStage.TWO_TRUTHS:
+##                        the Scales' Balance, the "crocodile_rise" and
+##                        "devourers_whelp" events); ground "two_truths" is its
+##                        TwoTruthsGround (four zone floors).
 ## --- Act X: the Black Tide ---
 ##   corsair            — true: the Black Tide's shared rules (Act X, CorsairRules
 ##                        as Game.corsair: Boarding, the Deck, Strikes from the

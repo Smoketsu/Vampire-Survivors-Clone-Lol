@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bhf37gdjy3hsv"
-path="res://.godot/imported/eternal_guard_walk.png-80335957e4a9fde0b96332103cea3b0a.ctex"
+uid="uid://b2tvg5li04onl"
+path="res://.godot/imported/ushabti_sentinel.png-34c7f8932879232469bb20eee9881437.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/dynasty/eternal_guard_walk.png"
-dest_files=["res://.godot/imported/eternal_guard_walk.png-80335957e4a9fde0b96332103cea3b0a.ctex"]
+source_file="res://assets/sprites/summons/ushabti_sentinel.png"
+dest_files=["res://.godot/imported/ushabti_sentinel.png-34c7f8932879232469bb20eee9881437.ctex"]
 
 [params]
 

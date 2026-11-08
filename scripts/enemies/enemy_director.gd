@@ -386,6 +386,11 @@ var proving_moon: ProvingMoonDirector = null
 ## Reactor's vents, the Luminous Archon; StageRegistry "ark"; null on every
 ## other stage).
 var ark: ArkDirector = null
+# --- Act XII (temporary number): the Hall of Two Truths ---
+## The Hall of Two Truths' mechanics (temporary Act XII: the Scales, the
+## Devourer's Whelp, the Crocodile Wardens' rise; StageRegistry "two_truths";
+## null on every other stage).
+var two_truths: TwoTruthsDirector = null
 ## Sanctum kit bookkeeping: recent deaths, Confessor revivals, danger hints.
 var rites: CovenantRites
 ## The living miniboss shown on the HUD's miniboss bar (the Cathedral
@@ -590,6 +595,12 @@ func _ready() -> void:
 		ark.game = game
 		ark.config = stage_def["ark"]
 		add_child(ark)  # The Ark of the Concord's director.
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	if not (stage_def.get("two_truths", {}) as Dictionary).is_empty():
+		two_truths = TwoTruthsDirector.new()
+		two_truths.game = game
+		two_truths.config = stage_def["two_truths"]
+		add_child(two_truths)  # The Hall of Two Truths' director.
 
 
 # =====================================================================================
@@ -740,6 +751,9 @@ func step(delta: float) -> void:
 	# --- Act IX: the Ark ---
 	if ark != null:
 		ark.step(delta)  # The tanks, the vents.
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	if two_truths != null:
+		two_truths.step(delta)  # The Scales.
 
 
 ## The Archive kinds' world hazards (ArchiveHazards), created on first use.
@@ -893,6 +907,9 @@ func objective_text() -> String:
 	# --- Act IX: the Ark ---
 	if ark != null and ark.objective_override() != "":
 		return ark.objective_override()  # The Luminous Archon, the Reaping.
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	if two_truths != null and two_truths.objective_override() != "":
+		return two_truths.objective_override()  # The Whelp, the Weighing.
 	if boss != null and not boss.active:
 		return String(boss_info["dead_objective"])
 	return segments[segment_index]["objective"]
@@ -1158,6 +1175,12 @@ func _run_event(ev: Dictionary) -> void:
 				ark.start_event(ev)
 			game.stat_add("wave_events", 1.0)
 			return  # The Ark's miniboss (ArkDirector).
+		# --- Act XII (temporary number): the Hall of Two Truths ---
+		"devourers_whelp", "crocodile_rise":
+			if two_truths != null:
+				two_truths.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return  # The Hall's miniboss and wardens (TwoTruthsDirector).
 	show_banner(ev["banner"])
 	var groups: Array = ev["groups"]
 	if game.shogunate != null:

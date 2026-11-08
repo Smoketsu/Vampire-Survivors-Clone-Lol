@@ -208,7 +208,9 @@ const ORDER := ["grave_dominion", "necrotic_vigor", "dark_command", "soul_recycl
 	# --- Act IX: the Proving Moon ---
 	"trophy_rack", "mirror_bones",
 	# --- Act IX: the Ark ---
-	"starseed", "crop_circles"]
+	"starseed", "crop_circles",
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	"heavy_heart", "answering_words"]
 
 ## Passives that only help summons (a "dead" level-up card while no summon
 ## class is owned, see AbilityManager.build_offers()).
@@ -258,7 +260,9 @@ const ARMY_PASSIVES := ["grave_dominion", "necrotic_vigor", "dark_command", "sou
 	# --- Act IX: the Proving Moon ---
 	"mirror_bones",
 	# --- Act IX: the Ark ---
-	"crop_circles"]
+	"crop_circles",
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	"answering_words"]
 
 # --- Act III: the Assembly Halls ---
 ## Overclock (paired with the Grave Drone): a summon class is "ranged" (and
@@ -329,7 +333,9 @@ const MINION_SPECIAL_SOURCES := ["bash", "abom_stomp", "rogue_dash", "gargoyle_s
 	# what lets Armour-Piercing Bones, Armour.pierce_share(), count them as summon hits)
 	"fallen_hero_slam", "black_paragon_slam",
 	# --- Act IX: the Ark --- (the Ghost Saucer's and Black Mothership's dropped foes, GhostSaucerBehavior)
-	"ghost_saucer_lift", "black_mothership_lift"]
+	"ghost_saucer_lift", "black_mothership_lift",
+	# --- Act XII (temporary number): the Hall of Two Truths --- (the Ushabti Sentinel's and Eternal Guard's shockwaves, UshabtiSentinelBehavior)
+	"ushabti_reform", "eternal_guard_reform"]
 ## Unholy Resilience: enemy damage-source tags (CombatResolver.damage_unit
 ## `source`) that count as AREA or HOLY damage, tag -> category ("area" |
 ## "holy"; the category only splits the summary stats). Every other source
@@ -1902,6 +1908,51 @@ const PASSIVES := {
 			{"special_hold": 0.18},  # TUNING (not in GDD)
 			{"special_hold": 0.24},  # TUNING (not in GDD)
 			{"special_hold": 0.30},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	# Heavy Heart (owner-approved proposal: Heart Devoured's paired passive; own
+	# decision on its rule; GDD §15.0 "Feather's Verdict, Heart Devoured, Heavy
+	# Heart and the Pharaoh's Shade"; unlocked by defeating Osiris and Ammit,
+	# UnlockData): the heart on the scale weighs more: Feather's Verdict executes
+	# foes heavy_line more of their health and its ring reaches heavy_reach
+	# wider (AbilityManager.apply_spell_mods() on the spell rows' own keys, like
+	# Starseed). Pairs with Feather's Verdict -> Heart Devoured.
+	"heavy_heart": {
+		"display_name": "Heavy Heart",  # Owner-approved proposal
+		"icon": "heavy_heart",
+		"description": "Feather's Verdict executes healthier foes, in a wider ring.",
+		"labels": {"heavy_line": ["Execute line", "pct"], "heavy_reach": ["Ring reach", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"heavy_line": 0.02, "heavy_reach": 0.05},  # TUNING (not in GDD)
+			{"heavy_line": 0.04, "heavy_reach": 0.10},  # TUNING (not in GDD)
+			{"heavy_line": 0.06, "heavy_reach": 0.15},  # TUNING (not in GDD)
+			{"heavy_line": 0.08, "heavy_reach": 0.20},  # TUNING (not in GDD)
+			{"heavy_line": 0.10, "heavy_reach": 0.25},  # TUNING (not in GDD)
+		],
+	},
+	# Answering Words (own decision: Eternal Guard's paired passive, its name
+	# and rule, after the shabti's spell "here I am, I will answer"; GDD §15.0
+	# "The Ushabti Sentinel, Eternal Guard and Answering Words"; unlocked by
+	# defeating Osiris and Ammit): every class special recharges answer_haste
+	# sooner (its *_cooldown keys: the Sentinel's reassembly, the stomps,
+	# swoops, lifts...; HordeDirector._special_stats(), THE one path of summon
+	# special numbers, its own category beside Fallen Grace and the level row's
+	# special_haste; 0 when not owned, so every other run is unchanged). Works
+	# the same on every stage. Pairs with the Ushabti Sentinel -> Eternal Guard.
+	"answering_words": {
+		"display_name": "Answering Words",
+		"icon": "answering_words",
+		"description": "Every summon's special comes back sooner.",
+		"labels": {"answer_haste": ["Special recharge", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"answer_haste": 0.05},  # TUNING (not in GDD)
+			{"answer_haste": 0.10},  # TUNING (not in GDD)
+			{"answer_haste": 0.15},  # TUNING (not in GDD)
+			{"answer_haste": 0.20},  # TUNING (not in GDD)
+			{"answer_haste": 0.25},  # TUNING (not in GDD)
 		],
 	},
 }

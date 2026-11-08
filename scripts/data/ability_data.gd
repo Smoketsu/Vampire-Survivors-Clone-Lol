@@ -110,7 +110,9 @@ const SPELL_ORDER := ["shadow_bolt", "orb_shield", "shadow_blast",
 	# --- Act IX: the Proving Moon ---
 	"soul_caster",
 	# --- Act IX: the Ark ---
-	"tractor_lift"]
+	"tractor_lift",
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	"feathers_verdict"]
 
 ## Spell definitions.
 ##   display_name — UI name.
@@ -941,6 +943,30 @@ const SPELLS := {
 			{"damage": 78.0, "cooldown": 2.6, "lift_time": 1.0, "slam_radius": 64.0, "slam_share": 0.57},  # TUNING (not in GDD) Hero's Fist Lv5 72 / 2.4 s
 		],
 	},
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	# Feather's Verdict (GDD §15.0 "Feather's Verdict, Heart Devoured, Heavy
+	# Heart and the Pharaoh's Shade"; owner-approved proposal: "a gold feather
+	# lands on the strongest enemy and executes weak enemies in a ring around
+	# it"; unlocked by defeating Osiris and Ammit, UnlockData): every `cooldown`
+	# s a gold feather falls on the strongest open foe within `range` px (the
+	# Sandstorm halves it) for `damage`, and every other foe within `ring` px at
+	# or under `execute` of its max HP is executed (never a boss, a miniboss or a
+	# structure). Logic: FeathersVerdict; fixed rules: FeathersVerdictData. A
+	# single-target blow that also clears the wounded round it.
+	"feathers_verdict": {
+		"display_name": "Feather's Verdict",  # Owner-approved proposal
+		"icon": "feathers_verdict",
+		"description": "A gold feather falls on the strongest foe, and the weak around it are judged.",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Feather damage", "cooldown": "Cooldown (s)", "execute": "Executes under", "ring": "Ring (px)"},
+		"levels": [
+			{"damage": 34.0, "cooldown": 3.4, "range": 300.0, "execute": 0.15, "ring": 56.0},  # TUNING (not in GDD)
+			{"damage": 42.0, "cooldown": 3.25, "range": 300.0, "execute": 0.17, "ring": 60.0},  # TUNING (not in GDD)
+			{"damage": 52.0, "cooldown": 3.1, "range": 300.0, "execute": 0.19, "ring": 64.0},  # TUNING (not in GDD)
+			{"damage": 62.0, "cooldown": 2.95, "range": 300.0, "execute": 0.21, "ring": 68.0},  # TUNING (not in GDD)
+			{"damage": 74.0, "cooldown": 2.8, "range": 300.0, "execute": 0.24, "ring": 74.0},  # TUNING (not in GDD) Tractor Beam Lv5 78 / 2.6 s
+		],
+	},
 }
 
 ## Stat keys shown as a percentage on cards (fractions: 0.25 -> 25%).
@@ -975,7 +1001,9 @@ const PERCENT_KEYS := ["lifesteal", "rot", "burst", "zone_damage", "zone_slow", 
 	# --- Act VIII: Liberty Heights ---
 	"fling_share", "crater_share",
 	# --- Act IX: the Ark ---
-	"slam_share", "quake_share"]
+	"slam_share", "quake_share",
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	"execute"]
 ## Stat keys that are spell durations (s): the Lingering Malediction passive
 ## lengthens them (AbilityManager.apply_spell_mods()).
 const DURATION_KEYS := ["duration", "zone_duration", "slow_duration"]

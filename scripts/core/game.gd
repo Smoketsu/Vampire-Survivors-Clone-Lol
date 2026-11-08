@@ -511,6 +511,9 @@ func _ready() -> void:
 			var dyg := DynastyGround.new()  # The Dynasty stubs' placeholder floor (the STAGE's "floor").
 			dyg.look = stage_def.get("floor", {})
 			ground = dyg
+		# --- Act XII (temporary number): the Hall of Two Truths ---
+		"two_truths":
+			ground = TwoTruthsGround.new()  # The Hall of Two Truths' four zone floors (TwoTruthsStage.ZONES).
 		_:
 			ground = Ground.new()
 	add_child(ground)

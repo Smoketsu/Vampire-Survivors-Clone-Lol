@@ -444,7 +444,9 @@ const ACHIEVEMENT_ORDER := ["bone_legion", "heretics_bane", "dread_sovereign", "
 	# --- Act IX: the Proving Moon ---
 	"the_hunter_hunted",
 	# --- Act IX: the Ark ---
-	"last_harvest"]
+	"last_harvest",
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	"a_light_heart"]
 
 ## Achievement definitions (GDD §9.4 "Example Achievement Unlocks"). Each
 ## achievement is tracked and recorded in the save and pays a one-time Soul
@@ -691,6 +693,15 @@ const ACHIEVEMENTS := {
 	# clear, with the title The Unharvested (UnlockData / TitleData).
 	"last_harvest": {"display_name": "The Last Harvest", "description": "Beat the Harvester on the Ark of the Concord",
 		"stat": "boss_kills", "stage": "ark", "goal": 1, "unlock": "The title The Unharvested", "bounty": 500},  # Owner-approved proposal; bounty TUNING (not in GDD) as Last Supper
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	# The finale of the Necropolis Dynasty (owner-approved proposal: "A Light
+	# Heart (win the Weighing with the Balance toward the necromancer; opens the
+	# act's epilogue part)"; docs/last_acts/PLAN.md: no epilogue part until the
+	# reorder pass, so it only records the win now): the lifetime count of
+	# Weighings won (BossOsiris, OsirisData.LIGHT_HEART_STAT; MetaProgress), with
+	# the title Light of Heart (UnlockData / TitleData).
+	"a_light_heart": {"display_name": "A Light Heart", "description": "Win Osiris's Weighing with the Scales on your side",
+		"stat": "light_heart_wins", "goal": 1, "unlock": "The title Light of Heart", "bounty": 500},  # Owner-approved proposal; bounty TUNING (not in GDD) as The Last Harvest
 }
 
 # --- Content wave 2: B. Achievement rewards ---

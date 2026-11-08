@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ihhphxhdn4of"
-path="res://.godot/imported/ushabti_sentinel_walk.png-0ccb6d478976e15a1e43cff4516da764.ctex"
+uid="uid://bkgytlplatard"
+path="res://.godot/imported/ushabti_sentinel_walk.png-e2b791838d07b901ca8387956e27655a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/dynasty/ushabti_sentinel_walk.png"
-dest_files=["res://.godot/imported/ushabti_sentinel_walk.png-0ccb6d478976e15a1e43cff4516da764.ctex"]
+source_file="res://assets/sprites/summons/ushabti_sentinel_walk.png"
+dest_files=["res://.godot/imported/ushabti_sentinel_walk.png-e2b791838d07b901ca8387956e27655a.ctex"]
 
 [params]
 

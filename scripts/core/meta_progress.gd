@@ -442,6 +442,8 @@ func award_run(summary: Dictionary, mods: MetaModifiers) -> Dictionary:
 	_add_lifetime("nothing_hatched_runs", 1.0 if float(st.get("crash_site_nothing_hatched", 0.0)) > 0.0 else 0.0)  # Nothing Hatched (Act IX, the Crash Site)
 	# --- Act IX: the Proving Moon ---
 	_add_lifetime("hunter_hunted_runs", 1.0 if float(st.get(VraskTalData.HUNTED_STAT, 0.0)) > 0.0 else 0.0)  # The Hunter Hunted (Act IX, the Proving Moon)
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	_add_lifetime(OsirisData.LIGHT_HEART_STAT, float(st.get(OsirisData.LIGHT_HEART_STAT, 0.0)))  # A Light Heart (the Weighing won toward the necromancer)
 	_add_run_counters(summary)  # Content wave 2: the one-run achievements' lifetime counters.
 	var slew_unlock_boss := bool(summary.get("boss_defeated", false)) and String(summary.get("boss_id", "")) == HyperData.UNLOCK_BOSS_ID  # Seraphine slain.
 	if slew_unlock_boss:

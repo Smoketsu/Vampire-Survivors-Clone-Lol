@@ -281,6 +281,19 @@ const UNLOCKS := {
 	"crop_circles": {"type": "passive", "boss": "harvester", "text": "Defeat the Harvester on the Ark of the Concord to unlock."},  # Its paired passive (own decision), unlocked with it
 	"the_unharvested": {"type": "title", "achievement": "last_harvest",
 		"text": "Earn The Last Harvest: beat the Harvester on the Ark of the Concord."},  # Own decision (the clear is recorded as a title, as Acts VI-VIII did)
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	# Osiris and Ammit's fall (owner-approved proposal "Rewards": Feather's
+	# Verdict is unlocked by Osiris and Ammit; the finale grants the Ushabti
+	# Sentinel): the spell with its paired passive, and the summon class with
+	# its paired passive, offered on every stage (no card-row "act" key). The
+	# title Light of Heart is A Light Heart's reward (it only records the
+	# Weighing won until the reorder pass writes the epilogue parts).
+	"feathers_verdict": {"type": "spell", "boss": "osiris", "text": "Defeat Osiris and Ammit in the Hall of Two Truths to unlock."},  # Owner-approved proposal
+	"heavy_heart": {"type": "passive", "boss": "osiris", "text": "Defeat Osiris and Ammit in the Hall of Two Truths to unlock."},  # Feather's Verdict's paired passive (owner-approved proposal), unlocked with it
+	"ushabti_sentinel": {"type": "class", "boss": "osiris", "text": "Defeat Osiris and Ammit in the Hall of Two Truths to unlock."},  # Owner-approved proposal: the finale's reward
+	"answering_words": {"type": "passive", "boss": "osiris", "text": "Defeat Osiris and Ammit in the Hall of Two Truths to unlock."},  # Its paired passive (own decision), unlocked with it
+	"light_of_heart": {"type": "title", "achievement": "a_light_heart",
+		"text": "Earn A Light Heart: win the Weighing with the Scales on your side."},  # Own decision (the win is recorded as a title, as Acts VI-IX did)
 }
 
 ## End-screen plate heading of a newly unlocked item, by type.
