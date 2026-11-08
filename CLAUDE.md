@@ -734,7 +734,10 @@ tiny tweaks.
    the Slain (Norse), the Necropolis Dynasty, the Celestial Host (slot X, ends Part One), the Age of Titans and the Turning Year
    (the finale), fifteen acts in all. Waits on the owner's answers to the doc's open questions; then wave 1 (Dynasty + Norse + a
    Black Tide deck spike), wave 2 (Black Tide + Celestial Host + Titans), wave 3 (Turning Year), each with the `docs/act5/` plan
-   and tuned for its final slot, then the reorder in one pass.
+   and tuned for its final slot, then the reorder in one pass. Wave 1b: the Dynasty's first stage, **the Necropolis of
+   Sand**, is built (GDD §15.0 "The Necropolis of Sand (Act XII phase 2)" and the five rows after it: the Canopic Jars beside
+   the tombs, the Nile Archer, the Jackal Warrior, the Sand Colossus, Anubis, Linen Bind / Eternal Shroud + Natron Salts,
+   the Embalmer, No Jars Left → Embalmed Bones), hidden until the act ships.
 7. **Phase 4 polish:** accessibility, profiling on real hardware, and the **final balance pass**.
    The owner's Oct 2026 playtest balance pass is in (GDD §15.0 "Balance pass (Oct 2026 playtest)": Dread Rally raises the army, spells ×1.2, boss HP Alaric −35% / Vael −40% / Seraphine −30%, later level-up items weigh 0.5, Frost Wraith / Bone Hound / Banshee base damage raised; the earlier +5% global multiplier was removed); further value tweaks wait for this pass (naive-bot
    death rates above target on both stages and spell-only builds lacking single-target damage are
