@@ -1035,7 +1035,7 @@ RIGS = {
     # swaying; the scarab swarm scuttles, Ammit and the Devourer's Whelp prowl on four legs; the Pharaoh's Shade floats. Every
     # female figure (figure redesign) has a `bust` box (art px, [start, end)) and an idle strip. Osiris (on his throne) and the
     # canopic jar have no strip. Boxes read from each still.
-    "dynasty/mummy": dict(mode="legs", hip=25, back=(0, 16), front=(16, 36), rigid=[], spread=1, lift=1, dip=1),  # R2: redrawn (wrapped head to toe, 36x40).
+    "dynasty/mummy": dict(mode="legs", hip=34, back=(0, 11), front=(11, 30), rigid=[], spread=1, lift=1, dip=1),  # R3: redrawn again (banded bandages, 30x40; the legs split at col 11 from row 34).
     "dynasty/mummy_female": dict(mode="legs", hip=24, back=(0, 12), front=(12, 24), rigid=[], spread=1, lift=1, dip=1,
                                  bust=(8, 17, 10, 16, 1), bust_exclude=[(0, 8, 8, 24), (17, 24, 8, 24)]),  # R2: rows 10-15 (the chest under the face).
     "dynasty/scarab_swarm": dict(mode="legs", hip=26, back=(0, 17), front=(17, 34), rigid=[], spread=1, lift=1, dip=1),

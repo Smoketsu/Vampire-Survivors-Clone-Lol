@@ -22,7 +22,7 @@ Palette constants for `palette.gd` (names `DYN_*`): ink `#0A0B16`; night `#1B203
 
 | Key | Size (art px) | What it is | Strips |
 |---|---|---|---|
-| `dynasty/mummy` | 28x40 | male fodder | walk; Rebirth; legs walk |
+| `dynasty/mummy` | 30x40 (round 3) | male fodder | walk; Rebirth; legs walk |
 | `dynasty/mummy_female` | 24x40 | female fodder (figure style) | walk, idle; bust rig + idle |
 | `dynasty/scarab_swarm` | 34x38 | creature swarm fodder (no Rebirth) | walk |
 | `dynasty/khopesh_guard` | 28x46 | male soldier | walk |
@@ -133,3 +133,10 @@ About $0.57 of API images (25 unit images, 7 sheets; medium quality), ledger row
 ## Round 2 of the owner's art review (Nov 7, 2026)
 - Bust boxes refit: `bastet_hunter` (the cream chest, rows 12-16), `embalmer` (cols 9-15, rows 11-16), `mummy_female` (rows 10-15); `player/the_embalmer` box 4 px further right. Idle and walk strips rebuilt; sheets in `docs/last_acts/bust_check/`.
 - Redrawn (prompts and raw images: `art_source/dynasty/r2/`, `gen.py`): `khopesh_guard` (a real khopesh: straight grip, hooked sickle blade), `mummy` (28 -> 36x40: wrapped head to toe, arms forward, hunched, trailing bandages, faint green eyes), `ushabti_sentinel` (a clean mummiform stone shabti, striped headdress, hieroglyph bands in lapis and dull gold, soul-teal eyes; still 20x46, the height `SpriteData` has), `player/lion_priestess` (a cream lioness head-dress with round ears and fangs over a violet mane, 34x56, violet and bone, box on the chest: cols 13-23, rows 20-26). Walk strips rebuilt (new hips in `walk_cycle.py`); `ushabti_sentinel` ramps now grey, lapis, dyn_bronze, soul, sand (`make_art.py`).
+
+## Round 3 redo: the male mummy (owner, Nov 8, 2026)
+
+- The round-2 `mummy` was rejected again ("not enough of a mummy vibe": no visible banding). Redrawn from a new prompt (`art_source/dynasty/r3/gen.py`, three candidates a/b/c, c kept as `mummy_c.png`; a and b deleted): bold alternating light / dark bandage stripes over head, torso, arms and legs, a round wrapped head with two green eye points, stiff arms straight forward, stooped, trailing ends, a dull-gold collar scrap.
+- `prepare_sprite.py` erased the 1-px bandage gaps at 40 px, so the conversion is `art_source/dynasty/r3/convert.py` (box downscale, adaptive local-contrast threshold onto the `linen` ramp, gold to `dyn_bronze`, eyes to `papyrus`, outline). Canvas is now 30x40 (was 36x40); `SpriteData` height is unchanged (40), so nothing else changes.
+- `mummy_walk.png` rebuilt (8 frames of 30x40; rig in `tools/walk_cycle.py`: hip 34, legs split at col 11). `mummy_b.png` is an unused leftover of the 28x40 original and is left as is. Check sheet: `docs/last_acts/mummy_r4.png` (old r2 vs new, 4x, plus both walk strips).
+- Cost: three images, about $0.05 (ledger rows `dynasty/r3_mummy_*`).

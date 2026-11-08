@@ -705,7 +705,7 @@ const FLAT_SIZES: Dictionary = {
 	# --- Act IX: the Crash Site ---
 	"projectiles/bone_beetle": 10.0,  # TUNING (not in GDD) a Bone Beetles beetle from above, about 10 x 8, its head to the right
 	# --- Act VII slot: the Necropolis Dynasty (assets/sprites/dynasty/, markers/) ---
-	"dynasty/mummy": 40.0,  # TUNING (not in GDD) Dynasty fodder, male: a wrapped shambler (about 28 wide)
+	"dynasty/mummy": 40.0,  # TUNING (not in GDD) Dynasty fodder, male: a wrapped shambler (about 30 wide)
 	"dynasty/mummy_female": 40.0,  # TUNING (not in GDD) Dynasty fodder, female (figure redesign, wrappings cover chest and hips): a faster walker; bust rig, idle strip (about 24 wide)
 	"dynasty/scarab_swarm": 38.0,  # TUNING (not in GDD) Dynasty fodder swarm, creatures: a lapis-blue scarab cluster (about 34 wide)
 	"dynasty/khopesh_guard": 46.0,  # TUNING (not in GDD) Dynasty soldier, male: striped headcloth and a khopesh (about 28 wide)

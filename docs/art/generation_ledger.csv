@@ -1495,3 +1495,6 @@ utc,key,model,quality,size,refs,text_in,image_in,image_out,usd_est,file
 2026-11-07 20:24,dynasty/r2_lion_priestess,gpt-image-2.5-flare,medium,1024x1024,2,724,24,439,0.0170,lion_priestess_v3.png
 2026-11-07 20:26,dynasty/r2_lion_priestess,gpt-image-2.5-flare,medium,1024x1024,2,786,24,439,0.0173,lion_priestess_v4.png
 2026-11-07 20:26,dynasty/r2_lion_priestess,gpt-image-2.5-flare,medium,1024x1024,2,786,24,439,0.0173,lion_priestess_v5.png
+2026-11-08 05:33,dynasty/r3_mummy_a,gpt-image-2.5-flare,medium,1024x1024,2,543,12,439,0.0160,mummy_a.png
+2026-11-08 05:33,dynasty/r3_mummy_b,gpt-image-2.5-flare,medium,1024x1024,2,570,12,439,0.0161,mummy_b.png
+2026-11-08 05:34,dynasty/r3_mummy_c,gpt-image-2.5-flare,medium,1024x1024,2,567,12,439,0.0161,mummy_c.png
