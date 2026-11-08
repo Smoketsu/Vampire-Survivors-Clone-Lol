@@ -110,7 +110,9 @@ const SPELL_ORDER := ["shadow_bolt", "orb_shield", "shadow_blast",
 	# --- Act IX: the Proving Moon ---
 	"soul_caster",
 	# --- Act IX: the Ark ---
-	"tractor_lift"]
+	"tractor_lift",
+	# --- Act XI (temporary): Vigrid ---
+	"gungnir"]
 
 ## Spell definitions.
 ##   display_name — UI name.
@@ -941,6 +943,30 @@ const SPELLS := {
 			{"damage": 78.0, "cooldown": 2.6, "lift_time": 1.0, "slam_radius": 64.0, "slam_share": 0.57},  # TUNING (not in GDD) Hero's Fist Lv5 72 / 2.4 s
 		],
 	},
+	# --- Act XI (temporary): Vigrid ---
+	# Gungnir (GDD §15.0 "Gungnir, Spear of the Hanged, Runecraft and the
+	# Berserker"; owner-approved proposal: "a spear thrown at the strongest
+	# enemy on screen that pierces everything in its line"; unlocked by
+	# defeating Odin, UnlockData): every `cooldown` s a spear of soul-light is
+	# thrown at the strongest foe within GungnirData.AIM_RANGE px and strikes
+	# every foe within `spear_width` px of its `length` px line for `damage`. Logic:
+	# Gungnir; fixed rules: GungnirData. A single-target opener that also cuts a
+	# lane through the crowd behind its mark (the spell-only build's missing
+	# single-target damage, with a line's reach).
+	"gungnir": {
+		"display_name": "Gungnir",  # Owner-approved proposal
+		"icon": "gungnir",
+		"description": "A spear of soul-light flies at the strongest foe on screen and pierces everything in its line.",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Damage", "cooldown": "Cooldown (s)", "spear_width": "Width (px)", "length": "Reach (px)"},
+		"levels": [
+			{"damage": 32.0, "cooldown": 3.0, "spear_width": 9.0, "length": 600.0},  # TUNING (not in GDD)
+			{"damage": 40.0, "cooldown": 2.85, "spear_width": 10.0, "length": 620.0},  # TUNING (not in GDD)
+			{"damage": 48.0, "cooldown": 2.7, "spear_width": 11.0, "length": 640.0},  # TUNING (not in GDD)
+			{"damage": 58.0, "cooldown": 2.55, "spear_width": 12.0, "length": 660.0},  # TUNING (not in GDD)
+			{"damage": 68.0, "cooldown": 2.4, "spear_width": 13.0, "length": 680.0},  # TUNING (not in GDD) Tractor Beam Lv5 78 / 2.6 s, on a whole line
+		],
+	},
 }
 
 ## Stat keys shown as a percentage on cards (fractions: 0.25 -> 25%).
@@ -975,7 +1001,9 @@ const PERCENT_KEYS := ["lifesteal", "rot", "burst", "zone_damage", "zone_slow", 
 	# --- Act VIII: Liberty Heights ---
 	"fling_share", "crater_share",
 	# --- Act IX: the Ark ---
-	"slam_share", "quake_share"]
+	"slam_share", "quake_share",
+	# --- Act XI (temporary): Vigrid ---
+	"return_share"]
 ## Stat keys that are spell durations (s): the Lingering Malediction passive
 ## lengthens them (AbilityManager.apply_spell_mods()).
 const DURATION_KEYS := ["duration", "zone_duration", "slow_duration"]

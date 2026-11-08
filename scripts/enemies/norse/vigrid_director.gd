@@ -41,6 +41,9 @@ var fired: Array[String] = []
 var _zone: int = 0
 ## Game time (s) of the vanguard's next march (INF = none left).
 var _next_vanguard: float = INF
+## Report only: px from the nearest brazier beyond which the necromancer
+## counts as far from every fire (the army bot's warmth reach).
+const FIRELESS_PX: float = 900.0
 ## The darkness layer (null headless).
 var light: VigridLight = null
 
@@ -55,12 +58,14 @@ func _ready() -> void:
 
 
 ## Per-tick update (EnemyDirector.step()): the zone changes, the vanguard.
-func step(_delta: float) -> void:
+func step(delta: float) -> void:
 	var march := game.enemies.march
 	var z := march.zone_index if march != null else 0
 	while _zone < z:
 		_zone += 1
+		_move_camp()
 		_dark_takes()
+	_sample_warmth(delta)
 	if light != null:
 		light.zone = _zone
 		light.early_dark = game.elapsed >= float((config.get("vanguard", {}) as Dictionary).get("from", INF))
@@ -71,6 +76,34 @@ func step(_delta: float) -> void:
 		else:
 			_next_vanguard = game.elapsed + float(v["every"])
 			_march_vanguard(v)
+
+
+## The war-camp moves with the battle: every brazier is set up again at its
+## map point (the STAGE long_winter "points") round the necromancer where the
+## new zone begins, burning or out as it was (LongWinter.move_to()).
+func _move_camp() -> void:
+	if game.norse == null or not game.norse.winter.enabled:
+		return
+	var w := game.norse.winter
+	var pts: Array = w.cfg.get("points", [])
+	var p := game.player.position
+	for i in mini(pts.size(), w.braziers.size()):
+		w.move_to(i, p + (pts[i] as Vector2))
+	_log("camp_moves")
+
+
+## Report only: how far the necromancer stands from the nearest brazier
+## (vigrid_fire_px_s: px x s, for the average) and the seconds he is beyond
+## the army bot's warmth reach from every one (vigrid_fireless_s).
+func _sample_warmth(delta: float) -> void:
+	if game.norse == null or game.norse.winter.braziers.is_empty():
+		return
+	var best := INF
+	for b in game.norse.winter.braziers:
+		best = minf(best, b.pos.distance_to(game.player.position))
+	game.stat_add("vigrid_fire_px_s", best * delta)
+	if best > FIRELESS_PX:
+		game.stat_add("vigrid_fireless_s", delta)
 
 
 ## The dark takes the lit brazier farthest from the necromancer.
@@ -165,8 +198,9 @@ func danger_push(p: Vector2) -> Vector2:
 func summary_line() -> String:
 	var st := game.stats
 	var lw := game.norse.winter if game.norse != null else null
-	return "the dark took %d braziers (lit at the end %d/%d) | vanguard fire-giants %d | miniboss %s, burning footprints %d, burning stomps %d, burns on you %d / on summons %d" % [
+	return "the dark took %d braziers (lit at the end %d/%d), camp moves %d | nearest fire avg %d px, beyond reach %ds | vanguard fire-giants %d | miniboss %s, burning footprints %d, burning stomps %d, burns on you %d / on summons %d" % [
 		int(st.get("vigrid_dark_took", 0.0)), lw.lit_count() if lw != null else 0, lw.braziers.size() if lw != null else 0,
+		int(st.get("braziers_moved", 0.0)), int(float(st.get("vigrid_fire_px_s", 0.0)) / maxf(game.elapsed, 1.0)), int(st.get("vigrid_fireless_s", 0.0)),
 		int(st.get("vigrid_vanguard", 0.0)),
 		("killed in %ds" % int(st.get("muspel_kill_time", 0.0))) if st.has("muspel_kill_time") else ("spawned, not killed" if float(st.get("muspel_spawned", 0.0)) > 0.0 else "not met"),
 		int(st.get("muspel_tracks", 0.0)), int(st.get("muspel_stomp_fires", 0.0)),

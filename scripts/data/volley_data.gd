@@ -209,6 +209,9 @@ const CLASSES := {
 	# --- Act IX: the Ark ---
 	"ghost_saucer": {"trigger": "special", "every": 1, "pattern": "ring", "counts": [5, 7], "speed": 260.0,
 		"life": 0.45, "share": 0.3, "pierce": 1, "radius": 3.5, "style": "orb", "color": Color(0.70, 0.92, 0.86)},  # TUNING (not in GDD) a ring of soul-light where a lifted foe falls
+	# --- Act XI (temporary): Vigrid ---
+	"draugr_thane": {"trigger": "special", "every": 1, "pattern": "fan", "counts": [5, 7], "spread": 40.0, "speed": 260.0,
+		"life": 0.4, "share": 0.3, "pierce": 1, "radius": 3.5, "style": "shard", "color": Color(0.72, 0.88, 1.0)},  # TUNING (not in GDD) a fan of frost shards off each cleave
 }
 
 ## Summon evolution id -> its showpiece volley (replaces the class volley once evolved;
@@ -272,6 +275,9 @@ const EVOLVED := {
 	# --- Act IX: the Ark ---
 	"black_mothership": {"trigger": "special", "every": 1, "pattern": "ring", "counts": [10], "speed": 300.0,
 		"life": 0.5, "share": 0.3, "pierce": 2, "radius": 4.0, "style": "orb", "color": Color(0.70, 0.92, 0.86)},  # TUNING (not in GDD) a full ring of soul-light where each lifted foe falls
+	# --- Act XI (temporary): Vigrid ---
+	"barrow_king": {"trigger": "special", "every": 1, "pattern": "fan", "counts": [11], "spread": 60.0, "speed": 300.0,
+		"life": 0.45, "share": 0.3, "pierce": 2, "radius": 4.0, "style": "shard", "color": Color(0.72, 0.88, 1.0)},  # TUNING (not in GDD) a wide fan of frost shards off each cleave
 }
 
 # --- Spell echoes (every owned spell from LEVEL_ON) --------------------------------------
@@ -376,6 +382,9 @@ const SPELLS := {
 	# --- Act IX: the Ark ---
 	"tractor_lift": {"every": 2, "clock": "cooldown", "aim": "strongest", "pattern": "ring", "counts": [5, 6, 8], "speed": 240.0,
 		"life": 0.5, "share": 0.35, "pierce": 1, "radius": 3.5, "style": "orb", "color": Color(0.70, 0.92, 0.86)},  # TUNING (not in GDD) a ring of soul-light with every other lift
+	# --- Act XI (temporary): Vigrid ---
+	"gungnir": {"every": 2, "clock": "cooldown", "aim": "strongest", "pattern": "fan", "counts": [3, 4, 6], "spread": 20.0, "speed": 340.0,
+		"life": 0.55, "share": 0.3, "pierce": 2, "radius": 3.0, "style": "shard", "color": Color(0.62, 0.95, 0.86)},  # TUNING (not in GDD) a fan of rune-shards after every other spear (GungnirData.COLOR)
 }
 ## Range (px) within which a spell echo looks for its target (no target, no echo).
 const SPELL_RANGE: float = 340.0  # TUNING (not in GDD)

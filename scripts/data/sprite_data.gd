@@ -520,8 +520,8 @@ const HEIGHTS: Dictionary = {
 	"player/rune_seer": 56.0,  # TUNING (not in GDD) Hall of the Slain art (playable character; moved from norse/ at the wave 1 integration), on-screen height in px
 	"player/shield_maiden_hero": 56.0,  # TUNING (not in GDD) Hall of the Slain art (playable character), on-screen height in px
 	"player/berserker_hero": 56.0,  # TUNING (not in GDD) Hall of the Slain art (playable character), on-screen height in px
-	"norse/draugr_thane": 54.0,  # TUNING (not in GDD) Hall of the Slain art, on-screen height in px
-	"norse/barrow_king": 62.0,  # TUNING (not in GDD) Hall of the Slain art, on-screen height in px
+	"summons/draugr_thane": 54.0,  # TUNING (not in GDD) Hall of the Slain art (the finale summon class; moved from norse/ by the Vigrid stage agent: summons draw from summons/), on-screen height in px
+	"summons/barrow_king": 62.0,  # TUNING (not in GDD) Hall of the Slain art (its evolution; moved from norse/), on-screen height in px
 	# --- Act IX: the Concord of Stars (the shared kinds; assets/sprites/concord/, structures/, bosses/) ---
 	"concord/broodling": 22.0,  # TUNING (not in GDD) Brood fodder, a creature: a hunched green-black insect, about 24 wide; walk strip
 	"concord/grey_drone": 28.0,  # TUNING (not in GDD) Harvester fodder, sex unmarked: a small grey with a probe held out (about 30 wide with it); walk strip

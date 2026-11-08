@@ -57,6 +57,8 @@ static func print_lines(game: Game, st: Dictionary) -> void:
 			EmpireReport._clock(float(sd.get("enemy_mult_from", 0.0))), float(sd["ash_mult"]),
 			String((sd["reckoning"] as Dictionary).get("kind", "inquisitor")), str(not n.ragnarok.cfg.is_empty())])
 	# Phase 2: each Norse stage's own lines go here (its stage, kinds and boss).
+	# --- Act XI (temporary): Vigrid --- (its stage, kinds and boss; VigridReport)
+	VigridReport.stage_lines(game, st)
 
 
 ## The "long winter" line (LongWinter).

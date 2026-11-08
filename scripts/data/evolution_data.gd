@@ -108,7 +108,9 @@ const ORDER := ["void_barrage", "eclipse_ward", "abyssal_detonation",
 	# --- Act IX: the Proving Moon ---
 	"apex_predator",
 	# --- Act IX: the Ark ---
-	"star_abduction"]
+	"star_abduction",
+	# --- Act XI (temporary): Vigrid ---
+	"spear_of_the_hanged"]
 
 ## Evolution definitions.
 ##   base         — spell id that evolves (AbilityData.SPELLS key).
@@ -801,6 +803,25 @@ const EVOLUTIONS := {
 		"stats": {
 			"damage": 88.0, "cooldown": 2.4, "lifts": 3, "lift_time": 1.2, "slam_radius": 70.0, "slam_share": 0.5,  # TUNING (not in GDD) first pass 96 / 0.55
 			"pull": 120.0, "pull_force": 260.0, "quake_share": 0.18,  # TUNING (not in GDD) the evolution flag: the pull round each slam (first pass 0.3: 244k damage, 95k of it quake, in the forced seed-7 Graveyard run)
+		},
+	},
+	# --- Act XI (temporary): Vigrid ---
+	# Spear of the Hanged (GDD §15.0 "Gungnir, Spear of the Hanged, Runecraft
+	# and the Berserker"; owner-approved proposal "Gungnir -> Spear of the
+	# Hanged (+ Runecraft)"): Gungnir + Runecraft (a NEW passive, owner rule: at
+	# Lv 5). The god hung nine nights on his own spear for the runes: two spears
+	# a cast, wider and longer, and each RETURNS along its line return_delay s
+	# later for return_share x the damage. Detected by the "return_share" key.
+	"spear_of_the_hanged": {
+		"base": "gungnir",
+		"passive": "runecraft",
+		"display_name": "Spear of the Hanged",  # Owner-approved proposal
+		"icon": "spear_of_the_hanged",
+		"description": "Two spears fly at the strongest foes and come back to your hand through everything in their line.",
+		"labels": {"damage": "Damage", "cooldown": "Cooldown (s)", "spears": "Spears", "spear_width": "Width (px)", "length": "Reach (px)", "return_share": "Return damage"},
+		"stats": {
+			"damage": 84.0, "cooldown": 2.2, "spears": 2, "spear_width": 15.0, "length": 760.0,  # TUNING (not in GDD)
+			"return_share": 0.5, "return_delay": 0.35,  # TUNING (not in GDD) the evolution flag: the spear comes back
 		},
 	},
 }

@@ -13,10 +13,12 @@
 ##     through the existing hooks (SummonedUnit.held_until renewed each tick,
 ##     THE one place that moves it is _step_maw(), one
 ##     CombatResolver.stun_unit() for swallow_hold s, so it neither walks nor
-##     strikes, and it is hidden from sight). Inside it loses maw_share of its
-##     max HP a second (CombatResolver.damage_unit(), MAW_SOURCE); after
-##     swallow_hold s he SPITS IT OUT spit_dist px in front of him, toward the
-##     necromancer. One summon at a time. With no summon in reach the lunge
+##     strikes; it is hidden and out of every fight inside him, through the
+##     summon's own out-of-reach flag SummonedUnit.airborne, as a Gargoyle's
+##     swoop: nothing targets or hits it there). After swallow_hold s he SPITS
+##     IT OUT spit_dist px in front of him, toward the necromancer, and it
+##     takes spit_share of its max HP (CombatResolver.damage_unit(),
+##     MAW_SOURCE). One summon at a time. With no summon in reach the lunge
 ##     goes at the necromancer (a bite, lunge_damage_player).
 ##   * THE CHAIN: while `leashed` (BossOdin: the All-Father's phase) he is
 ##     bound at his master's side: untargetable, unharmed, idle; whatever he
@@ -32,9 +34,6 @@ extends NorseKit
 const WINDUP: int = 1
 ## Phase: the lunge in the air.
 const LUNGE: int = 2
-## Seconds between two bites of the maw on a swallowed summon.
-const MAW_TICK: float = 0.5  # TUNING (not in GDD)
-
 ## True while BossOdin keeps him chained at his side.
 var leashed: bool = false
 ## Where his chain holds him while leashed (world px; BossOdin writes it).
@@ -65,8 +64,6 @@ var _maw: SummonedUnit = null
 var _maw_gen: int = 0
 ## Game time (s) he spits it out.
 var _maw_until: float = 0.0
-## Seconds until the maw's next bite.
-var _maw_tick: float = 0.0
 ## Scratch for the grid queries.
 var _tmp: Array = []
 
@@ -217,11 +214,11 @@ func _swallow(e: Enemy, u: SummonedUnit) -> void:
 	_maw = u
 	_maw_gen = u.generation
 	_maw_until = g.elapsed + hold_s
-	_maw_tick = MAW_TICK
 	g.combat.stun_unit(u, hold_s, VigridEnemyData.MAW_SOURCE)
 	u.held_until = maxf(u.held_until, g.elapsed + 0.1)
 	u.position = e.position
 	u.velocity = Vector2.ZERO
+	u.airborne = true  # Out of reach inside him (out of the ally grid, unharmed), as a swooping Gargoyle.
 	u.visible = false
 	g.stat_add("fenrir_swallows", 1.0)
 	g.effects.impact(e.position, e.radius * 1.4, Palette.NORSE_IRON)
@@ -229,9 +226,9 @@ func _swallow(e: Enemy, u: SummonedUnit) -> void:
 	e.queue_redraw()
 
 
-## THE one place that moves a swallowed summon: held at his maw, bitten every
-## MAW_TICK s, spat out when its time is up. A summon that died inside is let go.
-func _step_maw(e: Enemy, delta: float) -> void:
+## THE one place that moves a swallowed summon: held at his maw, spat out
+## when its time is up. A summon gone meanwhile (a recall to the pool) is let go.
+func _step_maw(e: Enemy, _delta: float) -> void:
 	if _maw == null:
 		return
 	var u := _maw
@@ -244,10 +241,6 @@ func _step_maw(e: Enemy, delta: float) -> void:
 	u.position = e.position
 	u.velocity = Vector2.ZERO
 	u.held_until = maxf(u.held_until, g.elapsed + 0.1)
-	_maw_tick -= delta
-	if _maw_tick <= 0.0:
-		_maw_tick += MAW_TICK
-		g.combat.damage_unit(u, u.max_hp * float(d.get("maw_share", 0.05)) * MAW_TICK, VigridEnemyData.MAW_SOURCE, e)
 	if g.elapsed >= _maw_until and _maw != null:
 		spit(e)
 
@@ -265,8 +258,10 @@ func spit(e: Enemy) -> void:
 	var dir := to.normalized() if to.length() > 1.0 else Vector2.DOWN
 	u.position = g.arena.free_point(e.position + dir * (e.radius + float(d.get("spit_dist", 80.0))), u.radius)
 	u.held_until = minf(u.held_until, g.elapsed)
+	u.airborne = false
 	u.visible = not u.charmed
 	g.stat_add("fenrir_spat", 1.0)
+	g.combat.damage_unit(u, u.max_hp * float(d.get("spit_share", 0.18)), VigridEnemyData.MAW_SOURCE, e)
 	g.effects.ring(u.position, u.radius * 2.0, Palette.NORSE_FROST, 0.3)
 	e.queue_redraw()
 

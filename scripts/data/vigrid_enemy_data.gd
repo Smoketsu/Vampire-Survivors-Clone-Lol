@@ -17,8 +17,9 @@
 ##                  boss fight, BossOdin, shown on the HUD's miniboss bar): he
 ##                  hunts the ring and SWALLOWS a summon whole (an enemy hold
 ##                  through the existing hooks: SummonedUnit.held_until renewed
-##                  each tick and one CombatResolver.stun_unit()), spitting it
-##                  out swallow_hold s later (FenrirKit). Spawned only by
+##                  each tick, one CombatResolver.stun_unit(), out of reach
+##                  inside him), spitting it out swallow_hold s later, hurt
+##                  (FenrirKit). Spawned only by
 ##                  BossOdin (or --spawn=fenrir: then he hunts alone).
 ##   odin_raven   — ODIN'S RAVENS (Huginn and Muninn; birds): fliers that make
 ##                  for the necromancer and MARK him on touch (BossOdin
@@ -46,7 +47,7 @@ const MUSPEL_SPRITE: String = "norse/fire_giant"
 const RAVEN_SPRITE: String = "norse/raven"
 ## Damage tag of the miniboss's burning tracks and burning stomp ground.
 const TRACK_SOURCE: String = "muspel_tracks"
-## Damage tag of Fenrir's maw (the summon he has swallowed).
+## Damage tag of Fenrir's maw (the summon he spits out).
 const MAW_SOURCE: String = "fenrir_maw"
 ## Damage tag of Fenrir's lunge (the bite that swallows, or a bite on the
 ## necromancer when no summon is in reach).
@@ -129,7 +130,7 @@ const ENEMIES := {
 		"swallow_windup": 0.7,  # TUNING (not in GDD) s (a line to his prey)
 		"swallow_time": 0.35,  # TUNING (not in GDD) s of the lunge
 		"swallow_hold": 4.0,  # Owner-approved proposal: "spits it out 4 s later"
-		"maw_share": 0.05,  # TUNING (not in GDD) share of the swallowed summon's max HP lost per s inside
+		"spit_share": 0.18,  # TUNING (not in GDD) share of its max HP a summon loses when he spits it out
 		"spit_dist": 80.0,  # TUNING (not in GDD) px he spits it out in front of him
 		"lunge_damage_player": 9.0,  # TUNING (not in GDD) a lunge that finds the necromancer, before the time scaling
 	},  # Fenrir (Vigrid, Odin's wolf).

@@ -100,6 +100,9 @@
 ## Act IX, the Ark of the Concord:
 ##   Starborn         Deserter's Signal  in TractorLift.step() (one more foe
 ##                    lifted a cast); stats as the spell's (tractor_lifts).
+## Vigrid (the Hall of the Slain's finale):
+##   Berserker        Bear-Shirt         in Gungnir.step() (one more spear a
+##                    cast); stats as the spell's (gungnir_spears).
 class_name CharacterInnates
 extends Node2D
 
@@ -463,6 +466,9 @@ func summary_line() -> String:
 		# --- Act IX: the Ark --- (Deserter's Signal lives in TractorLift.step())
 		"deserters_signal":
 			counters = "extra lifts %d (lifts %d)" % [int(game.character.innate_value(TractorLiftData.EXTRA_KEY)), int(st.get("tractor_lifts", 0.0))]
+		# --- Act XI (temporary): Vigrid --- (Bear-Shirt lives in Gungnir.step())
+		"bear_shirt":
+			counters = "extra spears %d (spears %d)" % [int(game.character.innate_value(GungnirData.EXTRA_KEY)), int(st.get("gungnir_spears", 0.0))]
 	out += " | innate: %s" % ("none" if _innate == "" else "%s: %s" % [ch.innate_name(), counters])
 	out += " | characters unlocked this run: %s" % (", ".join(ch.unlocked_this_run) if not ch.unlocked_this_run.is_empty() else "none")
 	var open := PackedStringArray()  # Characters unlocked in the Meta profile now.

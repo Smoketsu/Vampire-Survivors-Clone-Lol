@@ -208,7 +208,9 @@ const ORDER := ["grave_dominion", "necrotic_vigor", "dark_command", "soul_recycl
 	# --- Act IX: the Proving Moon ---
 	"trophy_rack", "mirror_bones",
 	# --- Act IX: the Ark ---
-	"starseed", "crop_circles"]
+	"starseed", "crop_circles",
+	# --- Act XI (temporary): Vigrid ---
+	"runecraft", "cold_iron"]
 
 ## Passives that only help summons (a "dead" level-up card while no summon
 ## class is owned, see AbilityManager.build_offers()).
@@ -258,7 +260,9 @@ const ARMY_PASSIVES := ["grave_dominion", "necrotic_vigor", "dark_command", "sou
 	# --- Act IX: the Proving Moon ---
 	"mirror_bones",
 	# --- Act IX: the Ark ---
-	"crop_circles"]
+	"crop_circles",
+	# --- Act XI (temporary): Vigrid ---
+	"cold_iron"]
 
 # --- Act III: the Assembly Halls ---
 ## Overclock (paired with the Grave Drone): a summon class is "ranged" (and
@@ -329,7 +333,9 @@ const MINION_SPECIAL_SOURCES := ["bash", "abom_stomp", "rogue_dash", "gargoyle_s
 	# what lets Armour-Piercing Bones, Armour.pierce_share(), count them as summon hits)
 	"fallen_hero_slam", "black_paragon_slam",
 	# --- Act IX: the Ark --- (the Ghost Saucer's and Black Mothership's dropped foes, GhostSaucerBehavior)
-	"ghost_saucer_lift", "black_mothership_lift"]
+	"ghost_saucer_lift", "black_mothership_lift",
+	# --- Act XI (temporary): Vigrid --- (the Draugr Thane's and Barrow King's frost cleave, DraugrThaneBehavior)
+	"thane_cleave", "barrow_king_cleave"]
 ## Unholy Resilience: enemy damage-source tags (CombatResolver.damage_unit
 ## `source`) that count as AREA or HOLY damage, tag -> category ("area" |
 ## "holy"; the category only splits the summary stats). Every other source
@@ -1902,6 +1908,50 @@ const PASSIVES := {
 			{"special_hold": 0.18},  # TUNING (not in GDD)
 			{"special_hold": 0.24},  # TUNING (not in GDD)
 			{"special_hold": 0.30},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act XI (temporary): Vigrid ---
+	# Runecraft (owner-approved proposal: Spear of the Hanged's paired passive;
+	# own decision on its rule; GDD §15.0 "Gungnir, Spear of the Hanged,
+	# Runecraft and the Berserker"; unlocked by defeating Odin, UnlockData): the
+	# runes the god won on his own spear: Gungnir recharges runecraft_haste
+	# sooner and its line is runecraft_width wider (AbilityManager
+	# .apply_spell_mods() on the spell rows' own keys, like Starseed). Pairs
+	# with Gungnir -> Spear of the Hanged.
+	"runecraft": {
+		"display_name": "Runecraft",  # Owner-approved proposal
+		"icon": "runecraft",
+		"description": "Your Gungnir flies sooner, and its line cuts wider.",
+		"labels": {"runecraft_haste": ["Gungnir cooldown", "neg_pct"], "runecraft_width": ["Spear width", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"runecraft_haste": 0.04, "runecraft_width": 0.08},  # TUNING (not in GDD)
+			{"runecraft_haste": 0.08, "runecraft_width": 0.16},  # TUNING (not in GDD)
+			{"runecraft_haste": 0.12, "runecraft_width": 0.24},  # TUNING (not in GDD)
+			{"runecraft_haste": 0.16, "runecraft_width": 0.32},  # TUNING (not in GDD)
+			{"runecraft_haste": 0.20, "runecraft_width": 0.40},  # TUNING (not in GDD)
+		],
+	},
+	# Cold Iron (own decision: Barrow King's paired passive, its name and rule;
+	# GDD §15.0 "The Draugr Thane, the Barrow King and Cold Iron"; unlocked by
+	# defeating Odin): the barrow-iron of the old jarls bites deeper into the
+	# slowed: every summon blow on a SLOWED foe deals iron_damage more
+	# (CombatResolver.damage_enemy(), its own category beside Crushing Depths;
+	# 0 when not owned, so every other run is unchanged). Works the same on every
+	# stage; pairs with the Draugr Thane (whose frost-axe slows what it hits) ->
+	# Barrow King.
+	"cold_iron": {
+		"display_name": "Cold Iron",
+		"icon": "cold_iron",
+		"description": "Your dead strike slowed foes harder.",
+		"labels": {"iron_damage": ["Summon damage to slowed foes", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"iron_damage": 0.04},  # TUNING (not in GDD)
+			{"iron_damage": 0.08},  # TUNING (not in GDD)
+			{"iron_damage": 0.12},  # TUNING (not in GDD)
+			{"iron_damage": 0.16},  # TUNING (not in GDD)
+			{"iron_damage": 0.20},  # TUNING (not in GDD)
 		],
 	},
 }
