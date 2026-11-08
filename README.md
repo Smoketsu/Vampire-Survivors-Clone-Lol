@@ -2532,6 +2532,42 @@ braziers) and the **Fire-Giant** (Ragnarök's heavy). The Codex has a **Hall** t
 `--stage=barrow_fields|valgard|vigrid`, `--boss=hrimgar|sigrun|odin`, `--spawn=` with the kinds above
 (`rune_stone@T` raises a stone, `brazier@T` places a brazier); lines `long winter`, `berserkergang`, `rune-stones`,
 `norse kinds`, `ragnarok`, `norse stage`.
+
+### The Hall of the Slain: the Barrow Fields (Stage 16 in the final order)
+
+<!-- --- Act XI (temporary): the Barrow Fields --- -->
+Snowfields of burial mounds above a frozen fjord, and the barrows are cracking open (GDD §15.0 "The Barrow Fields (the
+Hall of the Slain phase 2)" and the rows after it; `docs/norse/BRIEF_PHASE2.md` Agent A). Built; the lead switches it to
+playable after the act's integration. The draugr lead here, men and women, with the living warriors of the hall beside
+them. Four zones on the clock: **the Longshore** (snow down to the fjord, pines), **the Barrows** (5:00, a field of burial
+mounds), **the Frozen Fjord** (10:00, open ice and drifts of deep snow that slow everyone in them, you, your army and
+the enemy alike) and **the Jarl's Hall** (15:00, long tables, shields on posts and two rows of hearths).
+
+- **Braziers by the map.** The Longshore's five fires stand in a loose ring just beyond where you start; each later zone
+  lights its own set around you (four among the mounds, four on the fjord's banks, six hearths in the hall), and the
+  fires left far behind go out of the map. Warmth is near the fight, and fought over: the barrows crack open beside the
+  fires. The braziers flicker and smoke (8-frame loops) on every Norse stage.
+- **Open barrows.** A mound cracks open (2 s, a ring of frost closing on it), then lets a draugr out every 5 s (three of
+  its own at most) until you break it. At most six stand at once.
+- **The Barrow-Wight** (10:30, the miniboss): a draugr chieftain whose howl stuns your whole ring for a second (a frost
+  ring grows for 1 s first) and cracks a barrow near you.
+- **Hrimgar the Draugr-King** (17:00): he rises three times on one health bar. **The Grave**: frost mist bursts on your
+  ring (telegraphed circles that strike and chill) and draugr pour from every mound while new barrows crack. At two
+  thirds of his health he **falls** and sinks; his barrow rises where he fell, and draugr climb out of it. **Break it
+  within 20 s and he never rises again.** Otherwise he climbs out stronger as **the Barrow Lord** (a telegraphed cleave of
+  his greatsword that throws your summons) and, after a second fall, **the Last Rising** (he drags the summons nearest him
+  into the mound at his feet, holding and crushing them). His fall shows a short ending text.
+- **Rewards.** Slaying Hrimgar unlocks **Barrow Grasp** (cold hands burst from the ground in a ring around you and hold
+  your foes; it evolves into **Barrow-Lord's Embrace** with its paired passive **Grave Frost**: two rings of hands that
+  linger and seize what walks into them) and with it **the Rune-Seer** (a volva necromancer; her innate Rune of Binding
+  raises two more hands in every ring). The achievement **Keep the Fires** (reach 0:00 on the Barrow Fields with no
+  brazier ever out for more than 30 s) unlocks the act's counter-passive **Fur-Lined Bones** (the cold slows your summons
+  less, half at Lv 5; offered in this act only).
+
+Autotest: `--stage=barrow_fields`, `--boss=hrimgar`, `--spawn=` with `draugr_female`, `open_barrow`, `barrow_wight`,
+`hrimgar_barrow`; lines `barrow fields` (braziers by zone, barrows, drifts, Keep the Fires, the lowest HP and when),
+`barrow wight`, `hrimgar`, and `norse spell` / `norse passives` when Barrow Grasp, Grave Frost or Fur-Lined Bones was
+taken. The army bot brings its ring to Hrimgar's barrow while he lies in it.
 ### Act XII (temporary number): the Necropolis Dynasty (foundation)
 
 <!-- --- Act XII (temporary number): the Necropolis Dynasty --- -->
@@ -3284,6 +3320,9 @@ scripts/
                             obstacles (barrows, pines, boulders, long tables, pillars, ash rocks)
     norse_report.gd         The autotest's Hall of the Slain lines (long winter, berserkergang, rune-stones, ragnarok,
                             norse kinds, norse stage)
+    barrow_fields_ground.gd The Barrow Fields' zone floors (tiles/norse_snow, tiles/norse_ice)
+    barrow_fields_report.gd The autotest's Barrow Fields lines (barrow fields, barrow wight, hrimgar) and its items
+                            (Barrow Grasp, Grave Frost, Fur-Lined Bones)
     crash_site_report.gd    The autotest's Crash Site lines (crash site, burrowers, acid, brood matriarch, hive
                             mother) and its items (Bone Beetles, Chitin, Anchored; Act IX)
     crash_site_ground.gd    The Crash Site's four zone floors (tiles/crash_site_<style>, Act IX)
@@ -3707,6 +3746,11 @@ scripts/
       draugr_kit.gd, wolf_of_the_wastes_kit.gd, frost_giant_kit.gd, fire_giant_kit.gd, rune_stone_kit.gd,
       brazier_kit.gd        The shared kinds (the bash, the song, the dive, the carving and curse, the lunge, the
                             boulder and stomp; the two structure bodies hand their spot to the rules)
+      barrow_fields_director.gd  The Barrow Fields: braziers by the map, THE ONE BARROW PATH (open_barrow()), the
+                            Frozen Fjord's drifts, Keep the Fires, the Barrow-Wight
+      open_barrow_kit.gd, hrimgar_barrow_kit.gd, barrow_wight_kit.gd  The open barrow, Hrimgar's barrow, the miniboss
+      boss_hrimgar.gd       Hrimgar the Draugr-King: the Grave, his falls into the barrow, the Barrow Lord, the Last
+                            Rising (the drag)
     dynasty/                The Necropolis Dynasty (Act XII, temporary number): its kits ("<id>_kit.gd", loaded by
                             name after the Concord's) and bosses ("boss_<id>.gd", phase 2), and the act's shared rules:
       dynasty_rules.gd      Game.dynasty: owns Rebirth, the quicksand, the Sandstorm, Heka and the Devourer's Hour;
@@ -4031,8 +4075,11 @@ scripts/
     proving_moon_enemy_data.gd  The Proving Moon's table: the Warbeast (Act IX)
     norse_enemy_data.gd     The Hall of the Slain's shared kinds (raider, shield_maiden, berserker, skald, valkyrie,
                             seer, draugr, wolf_of_the_wastes, frost_giant, fire_giant) and the rune_stone / brazier
-                            structure rows (barrow_fields_ / valgard_ / vigrid_enemy_data.gd: each stage's own, empty
-                            until phase 2)
+                            structure rows (barrow_fields_ / valgard_ / vigrid_enemy_data.gd: each stage's own;
+                            the Barrow Fields': draugr_female, open_barrow, barrow_wight, hrimgar_barrow)
+    hrimgar_data.gd         Hrimgar's arrival and numbers (the Grave, the Barrow Lord, the Last Rising, his falls)
+    barrow_grasp_data.gd    Barrow Grasp / Barrow-Lord's Embrace rules, Grave Frost and Rune of Binding keys (the
+                            spell node is abilities/spells/barrow_grasp.gd)
     norse_rules_data.gd     The Hall of the Slain's shared rules: LONG_WINTER, EINHERJAR, BERSERK, RUNE_STONES,
                             RAGNAROK, the SOUNDS map, the Fur-Lined Bones / Keep the Fires keys
     stages/barrow_fields_stage.gd  The Hall of the Slain stubs (temporarily act 11, final slot VI): "norse": true,
