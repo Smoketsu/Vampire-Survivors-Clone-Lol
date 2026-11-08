@@ -341,6 +341,16 @@ const UNLOCKS := {
 	"cold_iron": {"type": "passive", "boss": "odin", "text": "Defeat Odin and Fenrir on Vigrid, the Last Field, to unlock."},  # Its paired passive (own decision), unlocked with it
 	"doom_of_the_gods": {"type": "title", "achievement": "twilight_of_the_wolf",
 		"text": "Earn Twilight of the Wolf: beat Odin and Fenrir on Vigrid, the Last Field."},  # Own decision (the clear is recorded as a title, as Act IX did)
+	# --- Act XII (temporary number): the Necropolis of Sand ---
+	# Anubis's fall (owner-approved proposal "Rewards": Linen Bind is unlocked
+	# by Anubis) with its paired passive, offered on every stage; the stage's
+	# achievement No Jars Left earns the Dynasty's counter-passive Embalmed
+	# Bones (own pairing, the brief left it to the lead: the Necropolis teaches
+	# the embalmers' rule; offered only in this act through its card row's
+	# "act").
+	"linen_bind": {"type": "spell", "boss": "anubis", "text": "Slay Anubis on the Necropolis of Sand to unlock."},  # Owner-approved proposal
+	"natron_salts": {"type": "passive", "boss": "anubis", "text": "Slay Anubis on the Necropolis of Sand to unlock."},  # Linen Bind's paired passive (owner-approved proposal), unlocked with it
+	"embalmed_bones": {"type": "passive", "achievement": "no_jars_left", "text": "Earn No Jars Left: break every Canopic Jar on the Necropolis of Sand and slay Anubis."},  # No Jars Left unlocks Embalmed Bones (own pairing)
 }
 
 ## End-screen plate heading of a newly unlocked item, by type.

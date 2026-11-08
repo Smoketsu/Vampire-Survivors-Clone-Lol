@@ -1428,6 +1428,9 @@ func get_move_vector() -> Vector2:
 	# --- Act IV: the Shores of Ilion ---
 	if goal == Vector2.INF and game.enemies.ilion != null and away.length() < 0.2 and policy() in SANCTUM_SEEK_POLICIES:
 		goal = game.enemies.ilion.seek_point(p, OBJECTIVE_SEEK_RADIUS)  # The Shores of Ilion: burn the siege towers when calm.
+	# --- Act XII (temporary number): the Necropolis of Sand ---
+	if goal == Vector2.INF and game.enemies.necropolis != null and away.length() < 0.3 and policy() in SANCTUM_SEEK_POLICIES:
+		goal = game.enemies.necropolis.seek_point(p, OBJECTIVE_SEEK_RADIUS)  # The Necropolis: break the Canopic Jars when calm.
 	# --- Act XI (temporary): the Hall of the Slain --- out of the cold: toward
 	# the nearest lit brazier (or a doused one to relight) unless pressed.
 	if goal == Vector2.INF and game.norse != null and away.length() < NORSE_WARM_PRESSURE:
@@ -1727,6 +1730,8 @@ func finish(summary: Dictionary) -> void:
 	ValgardReport.item_lines(game, st)  # Valkyrie Spear, Einherjar's Oath, Calm Blood (only when taken; the stage's own lines are NorseReport's).
 	# --- Act XI (temporary): Vigrid ---
 	VigridReport.item_lines(game, st)  # Gungnir, Runecraft, the Draugr Thane, Cold Iron (only when used; the stage's own lines are NorseReport's).
+	# --- Act XII (temporary number): the Necropolis of Sand ---
+	NecropolisReport.item_lines(game, st)  # Linen Bind, Natron Salts, Embalmed Bones (only when taken; the stage's own lines are DynastyReport's).
 	if game.enemies.boss is BossSeraphine:
 		print("[autotest] seraphine: %s" % BossSeraphine.summary_line(st))
 	var fired := game.enemies.stage.fired

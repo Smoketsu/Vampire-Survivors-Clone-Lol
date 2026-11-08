@@ -374,11 +374,15 @@ const DYNASTY_DEAD: Array[String] = ["mummy", "mummy_female"]
 ## The sacred beasts (group "beasts").
 const DYNASTY_BEASTS: Array[String] = ["scarab_swarm"]
 ## The guard (group "guard").
-const DYNASTY_GUARD: Array[String] = ["khopesh_guard"]
+const DYNASTY_GUARD: Array[String] = ["khopesh_guard",
+	# --- Act XII (temporary number): the Necropolis of Sand ---
+	"nile_archer", "jackal_warrior"]
 ## The priesthood (group "priests").
 const DYNASTY_PRIESTS: Array[String] = ["heka_priest", "embalmer"]
 ## Stone and jars (group "stone": the structures and, in phase 2, the statues).
-const DYNASTY_STONE: Array[String] = ["canopic_jar"]
+const DYNASTY_STONE: Array[String] = ["canopic_jar",
+	# --- Act XII (temporary number): the Necropolis of Sand --- (the miniboss)
+	"sand_colossus"]
 ## Dynasty stage bosses (StageRegistry.BOSS_ARRIVALS ids).
 const DYNASTY_BOSSES: Array[String] = ["anubis", "sekhmet", "osiris"]
 
@@ -698,6 +702,10 @@ const DESCRIPTIONS: Dictionary = {
 	"heka_priest": "He writes a glyph on one of your dead, and it runs around your ring. A Mender's heal or a Warder's barrier clears it.",  # Proposal (Heka)
 	"embalmer": "She heals the Dynasty's soldiers and hastens every Name near her. Kill her first.",  # Proposal (Rebirth)
 	"canopic_jar": "A jar that holds the Names of the dead near it: no blow reaches them. Break it, and they return no more.",  # Proposal (Rebirth)
+	# --- Act XII (temporary number): the Necropolis of Sand ---
+	"nile_archer": "An archer of the tombs' watch. Her arrows find your ring from the dunes, but she falls silent when the sand blows.",  # Owner-approved proposal
+	"jackal_warrior": "A jackal-headed guardian who hunts in pairs and lunges over your ring. He returns unless you take his Name.",  # Owner-approved proposal (Rebirth)
+	"sand_colossus": "A walking statue of the old kings. His slam breaks the ground round him: burst him, and stay at range.",  # Owner-approved proposal (miniboss)
 	"anubis": "Anubis, Opener of the Way: he leads the procession of the dead, embalms the fallen, then duels you as the jackal.",  # Proposal
 	"sekhmet": "Sekhmet, the Lioness of Retribution: she leaps between the pillars, calls the Red Wind, and feasts in her fury.",  # Proposal
 	"osiris": "Osiris, Lord of the Dead, judges you on the great scales; Ammit the Devourer waits at his feet.",  # Proposal
@@ -1014,6 +1022,8 @@ const ACHIEVEMENT_ICONS: Dictionary = {
 	"holmgang": "ach_holmgang",  # TUNING (not in GDD) (no badge PNG yet: the fallback icon draws)
 	# --- Act XI (temporary): Vigrid ---
 	"twilight_of_the_wolf": "ach_twilight_of_the_wolf",  # TUNING (not in GDD) (no badge PNG yet: the fallback icon shows)
+	# --- Act XII (temporary number): the Necropolis of Sand ---
+	"no_jars_left": "ach_no_jars_left",  # TUNING (not in GDD)
 }
 ## IconGlyph kind drawn when an achievement badge PNG is missing.
 const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
@@ -1087,6 +1097,8 @@ const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
 	"holmgang": "calm_blood",
 	# --- Act XI (temporary): Vigrid ---
 	"twilight_of_the_wolf": "gungnir",
+	# --- Act XII (temporary number): the Necropolis of Sand ---
+	"no_jars_left": "embalmed_bones",
 }
 ## Screen title (TITLE tier).
 const TITLE: String = "Codex"  # TUNING (not in GDD)

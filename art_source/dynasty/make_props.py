@@ -18,7 +18,7 @@ OBSTACLES = {
                               ("obstacles/dyn_obelisk_l", 18), ("obstacles/dyn_statue_row_s", 36), ("obstacles/dyn_statue_row_l", 56),
                               ("obstacles/dyn_colonnade_s", 44)],
     "sheet_obstacles_b.png": [("obstacles/dyn_colonnade_l", 70), ("obstacles/dyn_great_scales", 64), ("obstacles/dyn_brazier", 16),
-                              ("obstacles/dyn_sphinx_head", 34), ("obstacles/dyn_sandstone_blocks", 36)],
+                              ("obstacles/dyn_sphinx_head_m", 34), ("obstacles/dyn_sandstone_blocks_m", 36)],
 }
 VERTICAL = ["obstacles/dyn_statue_row_s", "obstacles/dyn_statue_row_l", "obstacles/dyn_colonnade_s", "obstacles/dyn_colonnade_l"]
 # Badge sheets: file -> symbols left to right ("" = skipped extra symbol): (icon id, frame icon). Violet frame = spells, passives,

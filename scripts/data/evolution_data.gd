@@ -120,7 +120,9 @@ const ORDER := ["void_barrage", "eclipse_ward", "abyssal_detonation",
 	# --- Act XI (temporary): Valgard ---
 	"chooser_of_the_slain",
 	# --- Act XI (temporary): Vigrid ---
-	"spear_of_the_hanged"]
+	"spear_of_the_hanged",
+	# --- Act XII (temporary number): the Necropolis of Sand ---
+	"eternal_shroud"]
 
 ## Evolution definitions.
 ##   base         — spell id that evolves (AbilityData.SPELLS key).
@@ -940,6 +942,27 @@ const EVOLUTIONS := {
 		"stats": {
 			"damage": 74.0, "cooldown": 2.3, "spears": 2, "spear_width": 14.0, "length": 740.0,  # TUNING (not in GDD) first pass 84 / 2.2 / 15
 			"return_share": 0.4, "return_delay": 0.35,  # TUNING (not in GDD) the evolution flag: the spear comes back (first pass 0.5: 331k evolved damage in the forced seed-7 run)
+		},
+	},
+	# --- Act XII (temporary number): the Necropolis of Sand ---
+	# Eternal Shroud (GDD §15.0 "Linen Bind, Eternal Shroud, Natron Salts and
+	# the Embalmer (Act XII)"; owner-approved proposal "Linen Bind -> Eternal
+	# Shroud (+ Natron Salts)"): Linen Bind + Natron Salts (a NEW passive,
+	# owner rule: at Lv 5). Own decision on its kit: more foes, longer holds
+	# and Mummies, and every risen Mummy that falls bursts into bandages that
+	# wrap burst_wraps foes within burst_reach px (half the bind damage; held
+	# and wrapped the same, so the shroud feeds itself). Detected by the
+	# "burst_wraps" key.
+	"eternal_shroud": {
+		"base": "linen_bind",
+		"passive": "natron_salts",
+		"display_name": "Eternal Shroud",  # Owner-approved proposal
+		"icon": "eternal_shroud",
+		"description": "The shroud never ends: more foes wrapped, and every Mummy that falls bursts into bandages that bind the next.",
+		"labels": {"damage": "Bind damage", "targets": "Foes wrapped", "hold": "Hold (s)", "burst_wraps": "Wraps when a Mummy falls", "cap": "Mummies at most"},
+		"stats": {
+			"damage": 44.0, "targets": 7, "hold": 1.5, "mark": 4.0, "range": 330.0, "cooldown": 2.2, "life": 12.0, "cap": 10,  # TUNING (not in GDD)
+			"burst_wraps": 2, "burst_reach": 90.0,  # TUNING (not in GDD) the evolution flag: foes a falling Mummy's bandages wrap, within px
 		},
 	},
 }

@@ -2762,6 +2762,36 @@ tab. Autotest: `--stage=necropolis|lioness_temple|two_truths`, `--boss=anubis|se
 `mummy_female`, `scarab_swarm`, `khopesh_guard`, `heka_priest`, `embalmer`, `canopic_jar`; lines `rebirth`, `black land`,
 `heka`, `devourer's hour`, `dynasty kinds`, `dynasty stage`.
 
+<!-- --- Act XII (temporary number): the Necropolis of Sand --- -->
+**The Necropolis of Sand** (`necropolis`, built in phase 2, still hidden until the lead ships the act; GDD §15.0 "The
+Necropolis of Sand (Act XII phase 2)" and the rows after it). The tomb road at dusk, four zones (the Dunes, the Tomb Road,
+the Sandstorm Pass, the Mortuary Temple; their own floors and the art pass's tombs, obelisks, sphinx heads and fallen
+blocks):
+- **Canopic Jars beside the tombs** (the stage mechanic that teaches Rebirth): from 1:40, every 80 s, a jar rises at the
+  foot of a tomb near you (at most three standing). While it stands, every Name within 300 px is sealed: no blow reaches
+  it, only a raise. Break the jar and its Names crumble. **No Jars Left** (the achievement): slay Anubis with every jar
+  that rose on the stage broken; it unlocks **Embalmed Bones** (the Dynasty's counter-passive: Heka glyphs leave your
+  summons sooner and a cursed summon takes less damage).
+- **Heka runs here:** a glyph must run round the ring for 4 s before a Mender's heal or a Warder's barrier can clear it.
+  **Scarabs** also gnaw your **Orb Shield**: a bite next to a charged orb spends its charge.
+- **The Sandstorm Pass** blows a second storm at 12:30.
+- New kinds: the **Nile Archer** (female; a bow from the dunes, silent while the sand blows) and the **Jackal Warrior**
+  (male, jackal-headed; an elite that hunts in pairs, lunges over your ring and returns). The miniboss at 10:30 is the
+  **Sand Colossus**, a walking statue whose ground slam stuns the summons round him and leaves quicksand: burst him and
+  stay at range.
+- **Anubis, Opener of the Way** (17:00): **the Procession** (four Canopic Jars rise round you and every fallen Name on the
+  map is held while one stands: break them all to end Rebirth; columns of mummies march in behind him), **the Embalmer**
+  (every Name stands again in 3 s anywhere on the map, and he wraps more dead out of the sand), **the Jackal** (he casts off
+  his wrappings and duels you with dashing, afterimage lunges that cut through your ring).
+- His reward: **Linen Bind** (spectral bandages wrap the nearest foes, up to five, and hold them 1.2 s; a wrapped foe that
+  dies rises as your Mummy for a few seconds, stealing its Name) → **Eternal Shroud** with **Natron Salts** (its bindings
+  hit harder and hold longer); evolved, every Mummy that falls bursts into bandages that bind two more foes. Its character
+  is **the Embalmer** (female; innate Linen Ward: her Mummies last 4 s longer).
+Autotest: `--stage=necropolis`, `--boss=anubis`, `--spawn=` also takes `nile_archer`, `jackal_warrior` and
+`sand_colossus`, `--spells=linen_bind`, `--character=the_embalmer`; lines `necropolis`, `necropolis kinds`, `sand
+colossus`, `anubis`, and on any stage `act XII spell` / `act XII passives` when Linen Bind, Natron Salts or Embalmed Bones
+were taken.
+
 ### The illustrated epilogue
 
 The campaign epilogue (content wave 2, GDD §15.0 "Illustrated epilogue (content wave 2)") is a short
@@ -3501,6 +3531,9 @@ scripts/
     dynasty_glyphs.gd       Code-drawn fallbacks of the Dynasty's kinds and the stubs' obstacles (Act XII)
     dynasty_report.gd       The autotest's Dynasty lines (rebirth, black land, heka, devourer's hour, dynasty kinds,
                             dynasty stage; Act XII)
+    necropolis_ground.gd    The Necropolis of Sand's four zone floors (tiles/necropolis_<style>; Act XII, temporary)
+    necropolis_report.gd    The autotest's Necropolis lines (necropolis, necropolis kinds, sand colossus, anubis) and
+                            its items (Linen Bind, Natron Salts, Embalmed Bones; Act XII, temporary)
     proving_moon_glyphs.gd  Code fallbacks of the Warbeast, Vrask'Tal and his skull belt, and the stage's obstacles (Act IX)
     proving_moon_report.gd  The autotest's Proving Moon lines (proving moon, warbeast, threats, vrask'tal; the Soul Caster
                             and passives' item lines; Act IX)
@@ -3975,6 +4008,12 @@ scripts/
       dynasty_kit.gd        Base kit: returns, the storm on a ranged kind's bow, the fire weakness, registration
       mummy_kit.gd, mummy_female_kit.gd, scarab_swarm_kit.gd, khopesh_guard_kit.gd, heka_priest_kit.gd,
       embalmer_kit.gd, canopic_jar_kit.gd, cartouche_kit.gd  The shared kinds, the jar and the cartouche
+      nile_archer_kit.gd, jackal_warrior_kit.gd  The Necropolis's shared kinds (the storm-silenced bow, the lunge)
+      sand_colossus_kit.gd  The Necropolis's miniboss: the ground slam (stun, quicksand), the miniboss bar
+      necropolis_director.gd The Necropolis of Sand: THE CANOPIC JARS beside the tombs (place_jar_near(), the one
+                            jar placer), NO JARS LEFT, the Sandstorm Pass's storm, the Sand Colossus event
+      boss_anubis.gd        Anubis, Opener of the Way: the Procession (Rebirth.set_procession()), the Embalmer
+                            (DynastyRules.embalm_all), the Jackal (afterimage lunges)
     pantheon/               The Olympian Republic (Act IV): its kits ("<id>_kit.gd", loaded by name after the
                             Eye's and the Empire's) and bosses ("boss_<id>.gd"), and the act's shared rules:
       pantheon_rules.gd     Game.pantheon: owns the wrath, the Phalanx and Glory, the one front test
@@ -4264,6 +4303,9 @@ scripts/
     ark_enemy_data.gd       The Ark's own kinds: the Luminous Archon, the specimen tank, the freed beast, the
                             reactor vent, the Reaping emitter (Act IX; the Grey Overseer is a shared row)
     harvester_data.gd       The Harvester's arrival, phases and numbers (Act IX)
+    linen_bind_data.gd      Linen Bind / Eternal Shroud rules, Natron Salts keys, Linen Ward key (Act XII,
+                            temporary; the spell node is abilities/spells/linen_bind.gd)
+    anubis_data.gd          Anubis, Opener of the Way: his row, phases and numbers (Act XII, temporary)
     tractor_lift_data.gd    Tractor Beam / Abduction rules, Starseed keys, Deserter's Signal key (Act IX; the
                             spell node is abilities/spells/tractor_lift.gd, the lift helper abilities/enemy_lift.gd)
     concord_rules_data.gd   Act IX's shared rules: RACES, BEAMS and BEAM_STYLES, ABDUCTION, TERRAFORMING,
@@ -4324,8 +4366,9 @@ scripts/
     dynasty_enemy_data.gd   The Necropolis Dynasty's shared kinds (Mummy, female Mummy, Scarab Swarm, Khopesh Guard,
                             Heka Priest, Embalmer), the Canopic Jar and the cartouche; the group / rebirth /
                             fire_taken / embalms / holds_names / storm_silenced keys; the Devourer's Hour's kind and
-                            companions (Act XII, temporary; necropolis_ / lioness_temple_ / two_truths_enemy_data.gd:
-                            each stage's own, empty until phase 2)
+                            companions, and the Necropolis's Nile Archer and Jackal Warrior (Act XII, temporary;
+                            necropolis_ / lioness_temple_ / two_truths_enemy_data.gd: each stage's own; the
+                            Necropolis's holds the Sand Colossus)
     dynasty_rules_data.gd   Act XII's shared rules: REBIRTH, JARS, QUICKSAND, SANDSTORM, HEKA, DEVOURER, FIRE_SOURCES,
                             the SOUNDS map, the Embalmed Bones / Dune Walkers keys
     stages/necropolis_stage.gd     Act XII stubs: the Necropolis of Sand, the Temple of the Lioness and the Hall of Two

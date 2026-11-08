@@ -220,7 +220,9 @@ const ORDER := ["grave_dominion", "necrotic_vigor", "dark_command", "soul_recycl
 	# --- Act XI (temporary): Valgard ---
 	"einherjars_oath", "calm_blood",
 	# --- Act XI (temporary): Vigrid ---
-	"runecraft", "cold_iron"]
+	"runecraft", "cold_iron",
+	# --- Act XII (temporary number): the Necropolis of Sand ---
+	"natron_salts", "embalmed_bones"]
 
 ## Passives that only help summons (a "dead" level-up card while no summon
 ## class is owned, see AbilityManager.build_offers()).
@@ -282,7 +284,9 @@ const ARMY_PASSIVES := ["grave_dominion", "necrotic_vigor", "dark_command", "sou
 	# --- Act XI (temporary): Valgard ---
 	"calm_blood",
 	# --- Act XI (temporary): Vigrid ---
-	"cold_iron"]
+	"cold_iron",
+	# --- Act XII (temporary number): the Necropolis of Sand ---
+	"embalmed_bones"]
 
 # --- Act III: the Assembly Halls ---
 ## Overclock (paired with the Grave Drone): a summon class is "ranged" (and
@@ -328,7 +332,9 @@ const MINION_EXTRA_TAGS := ["lich_risen", "death_mark_risen", "raised_dead",
 	# --- Act III: the Electronic Empire --- (a raised cyborg's Grave Gunner, EmpireRulesData.STEEL)
 	"grave_gunner",
 	# --- Act III: the Assembly Halls --- (a Hollow Puppet, PuppetData.SOURCE)
-	"hollow_puppet"]
+	"hollow_puppet",
+	# --- Act XII (temporary number): the Necropolis of Sand --- (Linen Bind's risen Mummy, LinenBindData.RISEN_TAG)
+	"linen_mummy"]
 ## Unholy Precision: the other minion damage sources that can crit: the
 ## basic warrior shield bash and the later classes' specials (and the Bone
 ## Colossus's death shrapnel). The Rogue's
@@ -2194,6 +2200,51 @@ const PASSIVES := {
 			{"iron_damage": 0.12},  # TUNING (not in GDD)
 			{"iron_damage": 0.16},  # TUNING (not in GDD)
 			{"iron_damage": 0.20},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act XII (temporary number): the Necropolis of Sand ---
+	# Natron Salts (Linen Bind's paired passive; owner-approved proposal:
+	# "Eternal Shroud (+ Natron Salts)"; unlocked with the spell by Anubis and
+	# offered on every stage). Own decision on its effect: the bandages are
+	# packed with natron: every binding deals bind_bonus more and holds
+	# hold_bonus s longer (LinenBind._cast(), the one read; stat
+	# linen_natron_bonus_dmg). Read only by LinenBind: exactly nothing without
+	# the spell.
+	"natron_salts": {
+		"display_name": "Natron Salts",  # Owner-approved proposal
+		"icon": "natron_salts",
+		"description": "Your bandages are packed with natron: Linen Bind hits harder and holds longer.",
+		"labels": {"bind_bonus": ["Linen Bind damage", "pct"], "hold_bonus": ["Linen Bind hold (s)", "num"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"bind_bonus": 0.06, "hold_bonus": 0.1},  # TUNING (not in GDD)
+			{"bind_bonus": 0.12, "hold_bonus": 0.2},  # TUNING (not in GDD)
+			{"bind_bonus": 0.18, "hold_bonus": 0.3},  # TUNING (not in GDD)
+			{"bind_bonus": 0.24, "hold_bonus": 0.4},  # TUNING (not in GDD)
+			{"bind_bonus": 0.30, "hold_bonus": 0.5},  # TUNING (not in GDD)
+		],
+	},
+	# The Dynasty's counter-passive Embalmed Bones (owner-approved proposal:
+	# "summons shed a curse glyph faster and take less damage while cursed";
+	# unlocked by the Necropolis achievement No Jars Left and offered only on
+	# the Dynasty through its card row's "act"). The foundation's hooks read
+	# it: DynastyRules.embalmed_shed_mult() (x a glyph's time on the summon,
+	# 1 - glyph_shed, in Heka.write()) and embalmed_taken_mult() (x a hit on a
+	# CURSED summon, 1 - cursed_damage_cut, in CombatResolver.damage_unit();
+	# stat embalmed_dmg_prevented).
+	"embalmed_bones": {
+		"display_name": "Embalmed Bones",  # Owner-approved proposal
+		"icon": "embalmed_bones",
+		"description": "Your dead are wrapped in your own linen: glyphs leave them sooner, and a cursed summon takes less.",
+		"labels": {"glyph_shed": ["Heka glyph time", "neg_pct"], "cursed_damage_cut": ["Damage to cursed summons", "neg_pct"]},
+		"act": 12,  # Owner-approved: the act's counter-passives are offered only in this act (Unlocks.act_allows(); temporary number, the reorder renumbers)
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"glyph_shed": 0.1, "cursed_damage_cut": 0.08},  # TUNING (not in GDD)
+			{"glyph_shed": 0.2, "cursed_damage_cut": 0.16},  # TUNING (not in GDD)
+			{"glyph_shed": 0.3, "cursed_damage_cut": 0.24},  # TUNING (not in GDD)
+			{"glyph_shed": 0.4, "cursed_damage_cut": 0.32},  # TUNING (not in GDD)
+			{"glyph_shed": 0.5, "cursed_damage_cut": 0.40},  # TUNING (not in GDD) half the glyph's time at full
 		],
 	},
 }

@@ -129,6 +129,8 @@ const HYPER_NAMES := {
 	"shield_maiden_hero": "The Gilded Shield",  # TUNING (not in GDD)
 	# --- Act XI (temporary): Vigrid ---
 	"berserker_hero": "The Gilded Bear",  # TUNING (not in GDD)
+	# --- Act XII (temporary number): the Necropolis of Sand ---
+	"the_embalmer": "The Gilded Embalmer",  # TUNING (not in GDD)
 }
 ## Sprite-multiply tint of each Hyper skin (gilded; the Eclipsed Gravecaller
 ## and the Sunless / Starless pair are darkened with a gold corona instead).
@@ -205,6 +207,8 @@ const HYPER_TINTS := {
 	"shield_maiden_hero": Color(1.2, 1.05, 0.62),  # TUNING (not in GDD) gilded
 	# --- Act XI (temporary): Vigrid ---
 	"berserker_hero": Color(1.2, 1.02, 0.6),  # TUNING (not in GDD) gilded (no Hyper skin art yet: the tint carries it)
+	# --- Act XII (temporary number): the Necropolis of Sand ---
+	"the_embalmer": Color(1.2, 1.05, 0.62),  # TUNING (not in GDD) gilded (no drawn skin yet)
 }
 ## Emblem and accent shared by every Hyper skin: a gold sun corona.
 const HYPER_ACCENT := Color(1.0, 0.82, 0.3)  # TUNING (not in GDD) Palette.GOLD

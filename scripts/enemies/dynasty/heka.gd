@@ -119,11 +119,15 @@ func has_glyph_of(priest: Enemy) -> bool:
 
 ## A CLEANSE (a Mender's heal, a Profane Bishop's aura, a Warder's barrier):
 ## the glyph on summon `u` ends; `by` (the cleanser's source) tags the stats.
-## True when one ended.
+## A glyph younger than HEKA cleanse_after s (since its writing; 0 = none)
+## holds on (counted). True when one ended.
 func cleanse(u: SummonedUnit, by: String) -> bool:
 	for i in glyphs.size():
 		var gl: Array = glyphs[i]
 		if gl[0] == u and int(gl[1]) == u.generation:
+			if game.elapsed - float(gl[4]) < float(cfg.get("cleanse_after", 0.0)):
+				game.stat_add("heka_cleanse_too_soon", 1.0)  # Act XII (temporary), the Necropolis: the glyph must run first.
+				return false
 			_end(i, by)
 			game.effects.pop(u.position + Vector2(0.0, -u.radius - 8.0), Palette.NECRO_GREEN, 10.0)
 			game.dynasty.play_sound("heka_cleanse", u.position, 0.3)

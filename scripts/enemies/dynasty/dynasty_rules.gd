@@ -60,6 +60,11 @@ var embalmers: Array[Enemy] = []
 var first_seen: Dictionary = {}
 ## Sound event -> game time (s) it last played (rate limits).
 var _sound_at: Dictionary = {}
+# --- Act XII (temporary number): the Necropolis of Sand ---
+## x the cartouche timer EVERYWHERE while Anubis embalms (BossAnubis, the
+## Embalmer: "the cartouche timer is 3 s while he does"); 1 = off. Read only
+## by embalm_rate(), so it never stacks with an Embalmer's haste.
+var embalm_all: float = 1.0
 
 
 ## Builds the rules for `p_game` (call before add_child; Game does both).
@@ -121,9 +126,12 @@ func note_gone(e: Enemy) -> void:
 	heka.on_priest_gone(e)
 
 
-## x the cartouche timer at `p`: REBIRTH embalm_speed while a live Embalmer
-## stands within embalm_radius, else 1.
+## x the cartouche timer at `p`: Anubis's embalm_all while he embalms (the
+## whole map), else REBIRTH embalm_speed while a live Embalmer stands within
+## embalm_radius, else 1.
 func embalm_rate(p: Vector2) -> float:
+	if embalm_all > 1.0:
+		return embalm_all  # Act XII (temporary), the Necropolis: Anubis embalms the whole map.
 	var r := float(rebirth.cfg["embalm_radius"])
 	for m in embalmers:
 		if m.active and m.position.distance_to(p) <= r:

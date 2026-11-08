@@ -433,6 +433,11 @@ var valgard: ValgardDirector = null
 ## Fading Light, the early dark's vanguard, the Fire-Giant of the south;
 ## StageRegistry "vigrid"; null on every other stage).
 var vigrid: VigridDirector = null
+# --- Act XII (temporary number): the Necropolis of Sand ---
+## The Necropolis of Sand's mechanics (the Canopic Jars beside the tombs, No
+## Jars Left, the Sandstorm Pass's storm, the Sand Colossus; StageRegistry
+## "necropolis"; null on every other stage).
+var necropolis: NecropolisDirector = null
 ## Sanctum kit bookkeeping: recent deaths, Confessor revivals, danger hints.
 var rites: CovenantRites
 ## The living miniboss shown on the HUD's miniboss bar (the Cathedral
@@ -673,6 +678,12 @@ func _ready() -> void:
 		vigrid.game = game
 		vigrid.config = stage_def["vigrid"]
 		add_child(vigrid)  # Vigrid's director.
+	# --- Act XII (temporary number): the Necropolis of Sand ---
+	if not (stage_def.get("necropolis", {}) as Dictionary).is_empty():
+		necropolis = NecropolisDirector.new()
+		necropolis.game = game
+		necropolis.config = stage_def["necropolis"]
+		add_child(necropolis)  # The Necropolis of Sand's director.
 
 
 # =====================================================================================
@@ -841,6 +852,9 @@ func step(delta: float) -> void:
 	# --- Act XI (temporary): Vigrid ---
 	if vigrid != null:
 		vigrid.step(delta)  # The Fading Light, the vanguard.
+	# --- Act XII (temporary number): the Necropolis of Sand ---
+	if necropolis != null:
+		necropolis.step(delta)  # The jars beside the tombs, the Pass's storm, the Sand Colossus.
 
 
 ## The Archive kinds' world hazards (ArchiveHazards), created on first use.
@@ -1014,6 +1028,9 @@ func objective_text() -> String:
 	# --- Act XI (temporary): Vigrid ---
 	if vigrid != null and vigrid.objective_override() != "":
 		return vigrid.objective_override()  # The Fire-Giant of the south, Odin's phases.
+	# --- Act XII (temporary number): the Necropolis of Sand ---
+	if necropolis != null and necropolis.objective_override() != "":
+		return necropolis.objective_override()  # The Sand Colossus, a jar standing near.
 	if boss != null and not boss.active:
 		return String(boss_info["dead_objective"])
 	return segments[segment_index]["objective"]
@@ -1315,6 +1332,12 @@ func _run_event(ev: Dictionary) -> void:
 				vigrid.start_event(ev)
 			game.stat_add("wave_events", 1.0)
 			return  # Vigrid's miniboss (VigridDirector).
+		# --- Act XII (temporary number): the Necropolis of Sand ---
+		"colossus":
+			if necropolis != null:
+				necropolis.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return  # The Necropolis's miniboss (NecropolisDirector).
 	show_banner(ev["banner"])
 	var groups: Array = ev["groups"]
 	if game.shogunate != null:

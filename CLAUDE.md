@@ -176,7 +176,7 @@ Autotest options (full table in the README):
   graveyard; stage locks are ignored; `cutter|galleon|maelstrom` are the Black Tide, Act X until the reorder;
   `barrow_fields|valgard|vigrid` the Hall of the Slain, Act XI (`--boss=hrimgar|sigrun|odin`, `--character=rune_seer|shield_maiden_hero|berserker_hero`,
   `--spawn=muspel_giant|fenrir|odin_raven@T`); `necropolis|lioness_temple|two_truths` the
-  Necropolis Dynasty's stubs, Act XII)
+  Necropolis Dynasty, Act XII: `necropolis` built in phase 2, hidden until the act ships; `--boss=anubis`)
 - `--unlocks=all|none` (Act II's lockable spells / passives / classes in the card pool; forced items
   are open either way)
 - `--boss=alaric|vael|seraphine` (puts that boss in the stage's slot, e.g. test Seraphine on the Graveyard)
@@ -758,6 +758,10 @@ tiny tweaks.
    `sea_serpent`), the Ghost Bosun, Captain Vandermere and Dead Men's Oath, Anchor Drop / Abyssal Mooring + Dead Reckoning,
    the Ghost Helmsman, the Powder Wraith / Magazine Lord + Slow Match, Dead Men Tell Tales); `"playable": true`, one CI army
    job each. Still Act X until the reorder (final slot II); no epilogue part or closing card yet.
+   Wave 1b: the Dynasty's first stage, **the Necropolis of
+   Sand**, is built (GDD §15.0 "The Necropolis of Sand (Act XII phase 2)" and the five rows after it: the Canopic Jars beside
+   the tombs, the Nile Archer, the Jackal Warrior, the Sand Colossus, Anubis, Linen Bind / Eternal Shroud + Natron Salts,
+   the Embalmer, No Jars Left → Embalmed Bones), hidden until the act ships.
 7. **Phase 4 polish:** accessibility, profiling on real hardware, and the **final balance pass**.
    The owner's Oct 2026 playtest balance pass is in (GDD §15.0 "Balance pass (Oct 2026 playtest)": Dread Rally raises the army, spells ×1.2, boss HP Alaric −35% / Vael −40% / Seraphine −30%, later level-up items weigh 0.5, Frost Wraith / Bone Hound / Banshee base damage raised; the earlier +5% global multiplier was removed); further value tweaks wait for this pass (naive-bot
    death rates above target on both stages and spell-only builds lacking single-target damage are

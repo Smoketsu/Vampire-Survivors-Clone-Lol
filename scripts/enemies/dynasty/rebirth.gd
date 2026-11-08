@@ -88,6 +88,10 @@ var capped: int = 0
 var unheld: int = 0
 ## Most cartouches at once.
 var peak: int = 0
+# --- Act XII (temporary number): the Necropolis of Sand ---
+## True during Anubis's PROCESSION (set_procession()): every live jar holds
+## every Name on the map and only a held body gets a cartouche.
+var procession: bool = false
 ## Jars that stood up (stub clock and place_jar()).
 var jars_placed: int = 0
 ## Jars broken.
@@ -129,7 +133,7 @@ func on_death(e: Enemy) -> void:
 		capped += 1
 		return
 	var jar := jar_near(e.position)  # The jar that holds this Name (null = none).
-	if bool(cfg["jars_required"]) and jar == null:
+	if (bool(cfg["jars_required"]) or procession) and jar == null:
 		unheld += 1
 		return
 	var c := game.enemies.spawn_at(DynastyRulesData.CARTOUCHE, e.position, false)
@@ -227,11 +231,11 @@ func place_jar(at: Vector2) -> Enemy:
 	return j
 
 
-## The live jar that holds a Name at `p` (the nearest within jar_radius;
-## null = none).
+## The live jar that holds a Name at `p` (the nearest within jar_radius, or
+## the nearest anywhere during Anubis's Procession; null = none).
 func jar_near(p: Vector2) -> Enemy:
 	var best: Enemy = null
-	var best_d := float(cfg["jar_radius"])
+	var best_d := INF if procession else float(cfg["jar_radius"])  # The Procession: every jar holds every Name.
 	for j in jars:
 		if not j.active:
 			continue
@@ -334,3 +338,16 @@ func _announce_jar() -> void:
 	var warn := float(jars_cfg["warn"])
 	_rising.append([at, game.elapsed + warn])
 	game.effects.telegraph_circle(at, r * 2.0, warn)
+
+
+# --- Act XII (temporary number): the Necropolis of Sand ---
+## ANUBIS'S PROCESSION (BossAnubis, the brief's "one Rebirth method of
+## yours": "every jar must be broken to end Rebirth"): while `on`, jar_near()
+## finds the nearest live jar ANYWHERE (every jar holds every Name, sealed:
+## no blow smashes it) and a body no jar holds gets no cartouche (as
+## jars_required), so once every jar is broken Rebirth ends until it is
+## switched off. Off: the rule's own jar radius again.
+func set_procession(on: bool) -> void:
+	if procession != on:
+		procession = on
+		game.stat_add("rebirth_procession_on" if on else "rebirth_procession_off", 1.0)

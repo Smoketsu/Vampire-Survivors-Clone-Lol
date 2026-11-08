@@ -26,6 +26,11 @@
 ##                    object). Not a roster kind: no Codex entry.
 ## The Reckoning, the Devourer's Hour, has no kind of its own: its heavy is the
 ## khopesh guard (RECKONING_KIND) with the shared kinds as companions.
+## The Necropolis of Sand's block at the end of ENEMIES adds two shared kinds:
+##   nile_archer    — the guard (female, figure style): a ranged archer the
+##                    Sandstorm silences ("storm_silenced"); no Rebirth.
+##   jackal_warrior — the guard (male, jackal-headed): an ELITE in pairs, a
+##                    telegraphed lunge (JackalWarriorKit); REBIRTH.
 ## Each stage's own kinds live in its own file (NecropolisEnemyData,
 ## LionessTempleEnemyData, TwoTruthsEnemyData; empty until phase 2: the Nile
 ## Archer, the Jackal Warrior, the Bastet Hunter, the Crocodile Warden, the
@@ -338,4 +343,87 @@ const ENEMIES := {
 		"faction": FACTION,
 		"kit": "cartouche",
 	},  # The cartouche.
+	# --- Act XII (temporary number): the Necropolis of Sand ---
+	# The guard (female, figure style): a Nile Archer of the tombs' watch, a
+	# linen dress and a recurve bow (owner-approved proposal: "Arrows;
+	# silenced by sandstorms | Kill early; wait out the storm"). The shared
+	# hostile shot ("ranged"); DynastyKit halves her reach while the Sandstorm
+	# blows and her row's "storm_silenced" holds her shot then. No Rebirth: she
+	# is the living guard of the dead, not one of them (proposal: "mummies and
+	# guardians only" return; she is neither wrapped nor a tomb guardian).
+	"nile_archer": {
+		"display_name": "Nile Archer",
+		"max_hp": 24.0,  # TUNING (not in GDD) ranged (Teppo Gunner 26)
+		"move_speed": 46.0,  # TUNING (not in GDD) px/s
+		"damage": 4.5,  # TUNING (not in GDD) one arrow, before the time scaling (first pass 6: her arrows were 60% of the seed-7 army run's damage to the necromancer)
+		"attack_interval": 2.8,  # TUNING (not in GDD) s (first pass 2.4)
+		"attack_range": 260.0,  # TUNING (not in GDD) px (x0.5 while the Sandstorm blows, and silent then)
+		"radius": 8.0,  # TUNING (not in GDD) px (~44 px sprite)
+		"armor": 0.05,  # TUNING (not in GDD) linen
+		"xp": 3,  # TUNING (not in GDD)
+		"behavior": "ranged",
+		"projectile_speed": 390.0,  # TUNING (not in GDD) px/s
+		"undead_damage_mult": 1.0,
+		"heal_amount": 0.0,
+		"heal_interval": 0.0,
+		"heal_radius": 0.0,
+		"target_priority": 0.6,  # TUNING (not in GDD) 0..1; "kill early"
+		"mass": 0.9,  # TUNING (not in GDD)
+		"faction": FACTION,
+		"kit": "nile_archer",
+		"group": "guard",
+		"storm_silenced": true,  # Owner-approved proposal: "silenced by sandstorms"
+		"figure": true,  # Owner rule: every female kind in the figure-redesign style
+	},  # The Nile Archer.
+	# The guard (male, jackal-headed): an ELITE tomb guardian with a spear who
+	# hunts in packs of two (the timeline sends them in pairs) and LUNGES
+	# (JackalWarriorKit: a telegraphed leap onto his target, the werewolf's
+	# model without the turning); RETURNS (owner-approved proposal: "Fast
+	# lunge; Rebirth; pack of two | Blockers; raise it").
+	"jackal_warrior": {
+		"display_name": "Jackal Warrior",
+		"max_hp": 96.0,  # TUNING (not in GDD) an elite (Kunoichi 64, Werewolf beast 90): its numbers are final
+		"move_speed": 72.0,  # TUNING (not in GDD) px/s; fast
+		"damage": 7.0,  # TUNING (not in GDD) a spear thrust, before the time scaling
+		"attack_interval": 1.0,  # TUNING (not in GDD) s
+		"attack_range": 10.0,  # TUNING (not in GDD) px (a spear)
+		"radius": 11.0,  # TUNING (not in GDD) px (~48 px sprite)
+		"armor": 0.15,  # TUNING (not in GDD) bronze scale
+		"xp": 7,  # TUNING (not in GDD) an elite's XP
+		"behavior": "melee",
+		"projectile_speed": 0.0,
+		"undead_damage_mult": 1.0,
+		"heal_amount": 0.0,
+		"heal_interval": 0.0,
+		"heal_radius": 0.0,
+		"target_priority": 0.75,  # TUNING (not in GDD) 0..1
+		"mass": 1.8,  # TUNING (not in GDD)
+		"always_elite": true,  # Owner-approved proposal: "Jackal Warrior | Elite"
+		"faction": FACTION,
+		"kit": "jackal_warrior",
+		"group": "guard",
+		"rebirth": true,  # Owner-approved proposal: Rebirth
+		# The lunge (JackalWarriorKit): when its target is lunge_min..
+		# lunge_trigger px away (edge to edge) and the lunge is ready, it
+		# crouches lunge_windup s (a bronze line to where it lands; the army
+		# bot steps off it), leaps there in lunge_time s and strikes its target
+		# for lunge_damage (x the time scaling and its own hit multiplier) if
+		# it is still within reach. Every lunge_every s.
+		"lunge": {
+			"every": 5.0,  # TUNING (not in GDD) s
+			"windup": 0.45,  # TUNING (not in GDD) s
+			"time": 0.22,  # TUNING (not in GDD) s in the air
+			"min": 28.0,  # TUNING (not in GDD) px
+			"trigger": 140.0,  # TUNING (not in GDD) px
+			"damage": 9.0,  # TUNING (not in GDD) before the time scaling
+		},
+	},  # The Jackal Warrior.
 }
+
+# --- Act XII (temporary number): the Necropolis of Sand ---
+## Kind id of the Nile Archer (female, figure style; ranged, silenced by the storm).
+const NILE_ARCHER: String = "nile_archer"
+## Kind id of the Jackal Warrior (male, jackal-headed; elite, lunges, returns).
+const JACKAL_WARRIOR: String = "jackal_warrior"
+## Damage tag of the Jackal Warrior's lunge (stats, the death line).
+const LUNGE_SOURCE: String = "jackal_lunge"

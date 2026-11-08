@@ -413,6 +413,12 @@
 ##   sandstorm          — any key of DynastyRulesData.SANDSTORM ({} = defaults).
 ##   heka               — any key of DynastyRulesData.HEKA ({} = defaults).
 ##   zones              — the Dynasty stubs too: the planned zones.
+## --- Act XII (temporary number): the Necropolis of Sand ---
+##   necropolis         — NecropolisDirector config (NecropolisStage
+##                        .NECROPOLIS: the Canopic Jars beside the tombs, No
+##                        Jars Left, the Sandstorm Pass's storm, the Sand
+##                        Colossus's "colossus" event); ground "necropolis" is
+##                        its NecropolisGround (the four zone floors).
 class_name StageRegistry
 extends RefCounted
 

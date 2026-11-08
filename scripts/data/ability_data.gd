@@ -122,7 +122,9 @@ const SPELL_ORDER := ["shadow_bolt", "orb_shield", "shadow_blast",
 	# --- Act XI (temporary): Valgard ---
 	"valkyrie_spear",
 	# --- Act XI (temporary): Vigrid ---
-	"gungnir"]
+	"gungnir",
+	# --- Act XII (temporary number): the Necropolis of Sand ---
+	"linen_bind"]
 
 ## Spell definitions.
 ##   display_name — UI name.
@@ -1100,6 +1102,30 @@ const SPELLS := {
 			{"damage": 48.0, "cooldown": 2.7, "spear_width": 11.0, "length": 640.0},  # TUNING (not in GDD)
 			{"damage": 58.0, "cooldown": 2.55, "spear_width": 12.0, "length": 660.0},  # TUNING (not in GDD)
 			{"damage": 68.0, "cooldown": 2.4, "spear_width": 13.0, "length": 680.0},  # TUNING (not in GDD) Tractor Beam Lv5 78 / 2.6 s, on a whole line
+		],
+	},
+	# --- Act XII (temporary number): the Necropolis of Sand ---
+	# Linen Bind (GDD §15.0 "Linen Bind, Eternal Shroud, Natron Salts and the
+	# Embalmer (Act XII)"; owner-approved proposal: "spectral bandages wrap up
+	# to 5 enemies and hold them 1.2 s; wrapped enemies that die rise as
+	# temporary Mummies"; unlocked by slaying Anubis, then offered on every
+	# stage). Every `cooldown` s it wraps up to `targets` foes within `range`
+	# px (the nearest first): `damage` each, held `hold` s, wrapped `mark` s;
+	# a wrapped foe that dies rises as a Mummy for `life` s, at most `cap`
+	# alive. Logic: LinenBind; fixed rules: LinenBindData. Natron Salts (its
+	# paired passive) makes every binding hit harder and hold longer.
+	"linen_bind": {
+		"display_name": "Linen Bind",  # Owner-approved proposal
+		"icon": "linen_bind",
+		"description": "Spectral bandages wrap the nearest foes and hold them; the wrapped who die rise as your Mummies.",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Bind damage", "targets": "Foes wrapped", "hold": "Hold (s)", "cooldown": "Cooldown (s)", "cap": "Mummies at most"},
+		"levels": [
+			{"damage": 16.0, "targets": 3, "hold": 1.2, "mark": 3.0, "range": 250.0, "cooldown": 3.2, "life": 8.0, "cap": 3},  # TUNING (not in GDD) owner-approved proposal: a 1.2 s hold
+			{"damage": 20.0, "targets": 3, "hold": 1.2, "mark": 3.0, "range": 260.0, "cooldown": 3.0, "life": 8.0, "cap": 4},  # TUNING (not in GDD)
+			{"damage": 24.0, "targets": 4, "hold": 1.2, "mark": 3.2, "range": 270.0, "cooldown": 2.85, "life": 9.0, "cap": 5},  # TUNING (not in GDD)
+			{"damage": 29.0, "targets": 4, "hold": 1.2, "mark": 3.4, "range": 285.0, "cooldown": 2.7, "life": 9.0, "cap": 6},  # TUNING (not in GDD)
+			{"damage": 34.0, "targets": 5, "hold": 1.2, "mark": 3.5, "range": 300.0, "cooldown": 2.5, "life": 10.0, "cap": 7},  # TUNING (not in GDD) owner-approved proposal: "up to 5 enemies"
 		],
 	},
 }

@@ -101,6 +101,9 @@
 ## and Vigrid's (the Hall of the Slain's finale, VIGRID_IDS: stepped only; its
 ## own autotest line, VigridReport.item_lines()):
 ##   Gungnir          -> Gungnir          (evolves into Spear of the Hanged)
+## and Act XII's (temporary: the Necropolis of Sand, NECROPOLIS_IDS: stepped,
+## with a kill hook; its own autotest line, NecropolisReport.item_lines()):
+##   Linen Bind       -> LinenBind        (evolves into Eternal Shroud)
 ## Game calls after_physics() once per tick after obstacles are resolved
 ## (Bone Wall holds enemies there).
 ## Each spell node is created the first time its spell is learned and reads
@@ -249,6 +252,11 @@ const VALGARD_IDS := ["valkyrie_spear"]
 ## after-physics hook), reported by VigridReport. Its id is "gungnir" (never
 ## Odin's own "odin_gungnir" damage tag).
 const VIGRID_IDS := ["gungnir"]
+# --- Act XII (temporary number): the Necropolis of Sand ---
+## The Necropolis of Sand's unlockable spell (Anubis's reward): stepped, with a
+## kill hook (a wrapped foe that dies rises as a Mummy), reported by
+## NecropolisReport.
+const NECROPOLIS_IDS := ["linen_bind"]
 ## Damage-source stat tags of each spell (CombatResolver "dmg_<tag>"), base
 ## spell first, then its evolution's. Used for the autotest summary.
 const SOURCES := {
@@ -321,6 +329,8 @@ const SOURCES := {
 	"valkyrie_spear": ["valkyrie_spear", "chooser_of_the_slain"],
 	# --- Act XI (temporary): Vigrid ---
 	"gungnir": ["gungnir", "spear_of_the_hanged"],
+	# --- Act XII (temporary number): the Necropolis of Sand ---
+	"linen_bind": ["linen_bind", "eternal_shroud"],
 }
 
 ## Owning run.
@@ -558,6 +568,15 @@ func step(delta: float) -> void:
 			node = _create(id)
 		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
 		node.step(delta, ab.spell_stats(id))  # Vigrid's spell.
+	# --- Act XII (temporary number): the Necropolis of Sand ---
+	for id: String in NECROPOLIS_IDS:
+		if ab.spell_level(id) <= 0:
+			continue
+		var node: NecroSpell = nodes.get(id)  # The spell node (created lazily).
+		if node == null:
+			node = _create(id)
+		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
+		node.step(delta, ab.spell_stats(id))  # The Necropolis's spell.
 
 
 ## Content wave 2: the Bone Wall node, created when missing (the Ossuary
@@ -678,6 +697,9 @@ func _create(id: String) -> NecroSpell:
 		# --- Act XI (temporary): Vigrid ---
 		"gungnir":
 			node = Gungnir.new()  # Vigrid's spell.
+		# --- Act XII (temporary number): the Necropolis of Sand ---
+		"linen_bind":
+			node = LinenBind.new()  # The Necropolis's spell.
 		_:
 			node = PlagueCloud.new()
 	node.game = game
@@ -737,6 +759,11 @@ func on_enemy_killed(e: Enemy) -> void:
 		var node: NecroSpell = nodes.get(id)  # The Crash Site's spell node, if learned.
 		if node != null:
 			node.on_enemy_killed(e)  # Bone Beetles: a slain foe bursts into beetles.
+	# --- Act XII (temporary number): the Necropolis of Sand ---
+	for id: String in NECROPOLIS_IDS:
+		var node: NecroSpell = nodes.get(id)  # The Necropolis's spell node, if learned.
+		if node != null:
+			node.on_enemy_killed(e)  # Linen Bind: a wrapped foe rises as a Mummy.
 
 
 ## Post-movement hook (Game._physics_process, after Arena.resolve_all()):
