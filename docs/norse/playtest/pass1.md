@@ -88,3 +88,26 @@ multiplier at 1.45, 1.3 and 1.2 alike):
 
 Suggested next levers, one each: berserker `damage` 5 -> 4, valkyrie `dive_damage` 7 -> 5 (on the necromancer), the
 frost giant's stomp, Hrimgar's HP.
+
+## Pass 3 (the burst levers, one iteration)
+
+| file | value | old | new |
+|---|---|---|---|
+| `scripts/data/norse_enemy_data.gd` | berserker `damage` | 5.0 | 4.0 |
+| `scripts/data/norse_enemy_data.gd` | valkyrie `dive_damage` (necromancer and summons) | 7.0 | 5.0 |
+| `scripts/data/norse_enemy_data.gd` | frost_giant `stomp_damage` | 5.0 | 3.75 |
+| `scripts/data/hrimgar_data.gd` | `MAX_HP` | 12,000 | 10,200 |
+
+Table `pass3_report.md`, logs `pass3_logs/` (45 runs, five builds). Cells: died / boss slain / mean min HP.
+
+| build | barrow_fields | valgard | vigrid |
+|---|---|---|---|
+| army | 0/2/114 | 0/3/88 | 0/3/105 |
+| evolve | 0/0/116 | 0/3/80 | 1/2/78 |
+| newclasses | 1/1/59 | 1/2/35 | 3/0/31 |
+| newspells | 1/2/96 | 0/3/108 | 2/1/67 |
+| naive | 2/1/70 | 3/0/53 | 3/0/26 |
+
+Every run: 0 `SCRIPT ERROR` / `ERROR:` / `WARNING:` lines, `stuck_units=0`. Non-naive deaths 2 / 1 / 6 of 12. The army bot
+never dies and Sigrun and Odin fall in every army run. The rest is left to the owner's own playtests: Vigrid's flanker
+(newclasses) and spell builds, and Hrimgar on the evolve build (0 of 3).

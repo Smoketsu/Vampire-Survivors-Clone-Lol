@@ -187,7 +187,7 @@ const ENEMIES := {
 		"display_name": "Berserker",
 		"max_hp": 150.0,  # TUNING (not in GDD) an elite (Ninja 30 x elite; Vrask hunter 150)
 		"move_speed": 60.0,  # TUNING (not in GDD) px/s before the fury's +30%
-		"damage": 5.0,  # TUNING (not in GDD) per axe, before the fury and the time scaling (foundation pass: 8 -> 5, the fury and a skald's song stack on it; the seed-7 Vigrid bot died to berserkers)
+		"damage": 4.0,  # TUNING (not in GDD) per axe, before the fury and the time scaling (balance pass 2: 5 -> 4, the Barrow Fields' bursts; foundation pass: 8 -> 5, the fury and a skald's song stack on it; the seed-7 Vigrid bot died to berserkers)
 		"attack_interval": 0.9,  # TUNING (not in GDD) s: two axes (foundation pass: 0.8 -> 0.9)
 		"attack_range": 9.0,  # TUNING (not in GDD) px
 		"radius": 12.0,  # TUNING (not in GDD) px (~48 px sprite)
@@ -271,7 +271,7 @@ const ENEMIES := {
 		"dive_rise": 0.8,  # TUNING (not in GDD) s (the telegraph circle)
 		"dive_fall": 0.25,  # TUNING (not in GDD) s
 		"dive_radius": 36.0,  # TUNING (not in GDD) px
-		"dive_damage": 7.0,  # TUNING (not in GDD) before the time scaling (foundation pass: 9 -> 7)
+		"dive_damage": 5.0,  # TUNING (not in GDD) before the time scaling (balance pass 2: 7 -> 5, Valgard's bursts on the necromancer; foundation pass: 9 -> 7)
 		"dive_push": 24.0,  # TUNING (not in GDD) px
 		"landed_time": 1.3,  # TUNING (not in GDD) s on the ground after a dive (every blow lands)
 	},  # The valkyrie.
@@ -397,7 +397,7 @@ const ENEMIES := {
 		"stomp_every": 6.0,  # TUNING (not in GDD) s (foundation pass: 5 -> 6)
 		"stomp_radius": 52.0,  # TUNING (not in GDD) px (foundation pass: 60 -> 52)
 		"stomp_windup": 0.7,  # TUNING (not in GDD) s
-		"stomp_damage": 5.0,  # TUNING (not in GDD) before the time scaling (foundation pass: 9 -> 5)
+		"stomp_damage": 3.75,  # TUNING (not in GDD) before the time scaling (balance pass 2: 5 -> 3.75, Vigrid's bursts; foundation pass: 9 -> 5)
 		"stomp_push": 30.0,  # TUNING (not in GDD) px
 	},  # The frost giant.
 	# Wilds, heavy (male): the fire-giants of the south, Ragnarök's heavy

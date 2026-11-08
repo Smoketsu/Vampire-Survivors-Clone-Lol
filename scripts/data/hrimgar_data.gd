@@ -86,7 +86,7 @@ const LATE_ANNOUNCE := ["THE BARROW IS SEALED", "Hrimgar falls as the sun goes o
 const BROKEN_ANNOUNCE := ["THE BARROW IS BROKEN", "Hrimgar does not rise again.", "You broke the king's mound while he lay in it. The barrow-dead lie down in the snow."]  # TUNING (not in GDD) the words
 ## Hrimgar's base max HP (x the boss HP multiplier and the stage's 1.6), all
 ## three lives together (Achilles 12,000 on Ilion x1.4, Kage 11,000 x1.55).
-const MAX_HP: float = 12000.0  # TUNING (not in GDD) three lives on one bar, and 40 s down between them
+const MAX_HP: float = 10200.0  # TUNING (not in GDD) balance pass 2: 12,000 -> 10,200 (he outlived 2 of 3 army bots by a hair); three lives on one bar, and 40 s down between them
 ## Hrimgar's design row.
 const BOSS := {
 	"display_name": "Hrimgar the Draugr-King",
