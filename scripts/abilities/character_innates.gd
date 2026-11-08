@@ -103,6 +103,9 @@
 ## The Hall of the Slain (temporarily Act XI), the Barrow Fields:
 ##   Rune-Seer        Rune of Binding  in BarrowGrasp._cast() (two more hands in
 ##                    every ring); stat grasp_extra_hands.
+## The Hall of the Slain (temporarily Act XI), Valgard:
+##   Shield-Maiden    Shield-Sister   in ValkyrieSpear._cast() (one more leap a
+##                    spear); stat valkyrie_spear_extra.
 class_name CharacterInnates
 extends Node2D
 
@@ -469,6 +472,9 @@ func summary_line() -> String:
 		# --- Act XI (temporary): the Barrow Fields --- (Rune of Binding lives in BarrowGrasp._cast())
 		"rune_of_binding":
 			counters = "extra hands %d (casts %d)" % [int(st.get("grasp_extra_hands", 0.0)), int(st.get("grasp_casts", 0.0))]
+		# --- Act XI (temporary): Valgard --- (Shield-Sister lives in ValkyrieSpear._cast())
+		"shield_sister":
+			counters = "extra leaps %d (spears %d)" % [int(st.get("valkyrie_spear_extra", 0.0)), int(st.get("valkyrie_spears", 0.0))]
 	out += " | innate: %s" % ("none" if _innate == "" else "%s: %s" % [ch.innate_name(), counters])
 	out += " | characters unlocked this run: %s" % (", ".join(ch.unlocked_this_run) if not ch.unlocked_this_run.is_empty() else "none")
 	var open := PackedStringArray()  # Characters unlocked in the Meta profile now.

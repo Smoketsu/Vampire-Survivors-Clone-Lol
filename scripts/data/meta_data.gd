@@ -446,7 +446,9 @@ const ACHIEVEMENT_ORDER := ["bone_legion", "heretics_bane", "dread_sovereign", "
 	# --- Act IX: the Ark ---
 	"last_harvest",
 	# --- Act XI (temporary): the Barrow Fields ---
-	"keep_the_fires"]
+	"keep_the_fires",
+	# --- Act XI (temporary): Valgard ---
+	"holmgang"]
 
 ## Achievement definitions (GDD §9.4 "Example Achievement Unlocks"). Each
 ## achievement is tracked and recorded in the save and pays a one-time Soul
@@ -703,6 +705,14 @@ const ACHIEVEMENTS := {
 	# the counter-passive Fur-Lined Bones.
 	"keep_the_fires": {"display_name": "Keep the Fires", "description": "Finish the Barrow Fields with no brazier ever out for more than 30 s",
 		"stat": "keep_the_fires_runs", "goal": 1, "unlock": "The Fur-Lined Bones passive", "bounty": 300},  # Owner decision Nov 7, 2026; bounty TUNING (not in GDD) as Nothing Hatched
+	# --- Act XI (temporary): Valgard ---
+	# Owner-approved achievement "Holmgang" ("win Sigrun's duel without Grave
+	# Step"): a run in which a Holmgang was won (Sigrun yielded) with no Grave
+	# Step taken in the square (BossSigrun sets the run stat
+	# valgard_holmgang_clean; MetaProgress counts the runs, lifetime
+	# holmgang_runs). It unlocks the counter-passive Calm Blood (brief).
+	"holmgang": {"display_name": "Holmgang", "description": "Win Sigrun's duel in Valgard without a single Grave Step",
+		"stat": "holmgang_runs", "goal": 1, "unlock": "The Calm Blood passive", "bounty": 300},  # Owner-approved proposal; bounty TUNING (not in GDD) as The Hunter Hunted
 }
 
 # --- Content wave 2: B. Achievement rewards ---

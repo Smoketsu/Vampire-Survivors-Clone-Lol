@@ -444,6 +444,8 @@ func award_run(summary: Dictionary, mods: MetaModifiers) -> Dictionary:
 	_add_lifetime("hunter_hunted_runs", 1.0 if float(st.get(VraskTalData.HUNTED_STAT, 0.0)) > 0.0 else 0.0)  # The Hunter Hunted (Act IX, the Proving Moon)
 	# --- Act XI (temporary): the Barrow Fields ---
 	_add_lifetime("keep_the_fires_runs", 1.0 if float(st.get("barrow_fields_keep_the_fires", 0.0)) > 0.0 else 0.0)  # Keep the Fires (the Hall of the Slain, the Barrow Fields)
+	# --- Act XI (temporary): Valgard ---
+	_add_lifetime("holmgang_runs", 1.0 if float(st.get(SigrunData.HOLMGANG_STAT, 0.0)) > 0.0 else 0.0)  # Holmgang (Valgard)
 	_add_run_counters(summary)  # Content wave 2: the one-run achievements' lifetime counters.
 	var slew_unlock_boss := bool(summary.get("boss_defeated", false)) and String(summary.get("boss_id", "")) == HyperData.UNLOCK_BOSS_ID  # Seraphine slain.
 	if slew_unlock_boss:
@@ -1662,6 +1664,8 @@ static func _default_lifetime() -> Dictionary:
 		"hunter_hunted_runs": 0.0,  # runs in which Vrask'Tal fell to anything but his own Last Trophy bomb (The Hunter Hunted)
 		# --- Act XI (temporary): the Barrow Fields ---
 		"keep_the_fires_runs": 0.0,  # Barrow Fields runs that reached 0:00 with no brazier out for more than 30 s (Keep the Fires)
+		# --- Act XI (temporary): Valgard ---
+		"holmgang_runs": 0.0,  # runs in which Sigrun yielded a Holmgang won without a Grave Step (Holmgang)
 		# --- Content wave 2: B. Achievement rewards (MetaProgress.run_counters()) ---
 		"best_temp_raised": 0.0,  # most temporary undead raised in one run (Mass Grave)
 		"untouchable_runs": 0.0,  # runs that reached 0:00 never below half HP (Untouchable)

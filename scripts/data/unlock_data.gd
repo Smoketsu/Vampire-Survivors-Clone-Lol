@@ -290,6 +290,15 @@ const UNLOCKS := {
 	"barrow_grasp": {"type": "spell", "boss": "hrimgar", "text": "Defeat Hrimgar the Draugr-King in the Barrow Fields to unlock."},  # Owner-approved proposal
 	"grave_frost": {"type": "passive", "boss": "hrimgar", "text": "Defeat Hrimgar the Draugr-King in the Barrow Fields to unlock."},  # Barrow Grasp's paired passive (owner-approved proposal), unlocked with it
 	"fur_lined_bones": {"type": "passive", "achievement": "keep_the_fires", "text": "Earn Keep the Fires: finish the Barrow Fields with no brazier out for more than 30 s."},  # Owner decision Nov 7, 2026: Keep the Fires unlocks Fur-Lined Bones
+	# --- Act XI (temporary): Valgard ---
+	# Sigrun's fall (owner-approved proposal "Rewards": Valkyrie Spear is
+	# unlocked by Sigrun) with its paired passive, offered on every stage; the
+	# stage's achievement Holmgang earns the act's counter-passive Calm Blood
+	# (brief: Holmgang is Valgard's; offered only in the act through its card
+	# row's "act").
+	"valkyrie_spear": {"type": "spell", "boss": "sigrun", "text": "Slay Sigrun, the Shield-Queen, in Valgard to unlock."},  # Owner-approved proposal
+	"einherjars_oath": {"type": "passive", "boss": "sigrun", "text": "Slay Sigrun, the Shield-Queen, in Valgard to unlock."},  # Valkyrie Spear's paired passive, unlocked with it
+	"calm_blood": {"type": "passive", "achievement": "holmgang", "text": "Earn Holmgang: win Sigrun's duel without a Grave Step."},  # Brief: Holmgang unlocks Calm Blood
 }
 
 ## End-screen plate heading of a newly unlocked item, by type.

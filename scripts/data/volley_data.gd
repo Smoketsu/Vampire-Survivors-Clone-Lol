@@ -376,6 +376,9 @@ const SPELLS := {
 	# --- Act IX: the Ark ---
 	"tractor_lift": {"every": 2, "clock": "cooldown", "aim": "strongest", "pattern": "ring", "counts": [5, 6, 8], "speed": 240.0,
 		"life": 0.5, "share": 0.35, "pierce": 1, "radius": 3.5, "style": "orb", "color": Color(0.70, 0.92, 0.86)},  # TUNING (not in GDD) a ring of soul-light with every other lift
+	# --- Act XI (temporary): Valgard ---
+	"valkyrie_spear": {"every": 2, "clock": "cooldown", "aim": "strongest", "pattern": "fan", "counts": [3, 4, 6], "spread": 20.0, "speed": 300.0,
+		"life": 0.55, "share": 0.3, "pierce": 1, "radius": 3.0, "style": "orb", "color": Color(0.80, 0.95, 0.98)},  # TUNING (not in GDD) a fan of spectral spear-points with every other spear (ValkyrieSpearData.SPEAR_COLOR)
 }
 ## Range (px) within which a spell echo looks for its target (no target, no echo).
 const SPELL_RANGE: float = 340.0  # TUNING (not in GDD)

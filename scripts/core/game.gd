@@ -509,6 +509,9 @@ func _ready() -> void:
 		# --- Act XI (temporary): the Barrow Fields ---
 		"barrow_fields":
 			ground = BarrowFieldsGround.new()  # The Barrow Fields' zone floors (BarrowFieldsStage.ZONES).
+		# --- Act XI (temporary): Valgard ---
+		"valgard":
+			ground = ValgardGround.new()  # Valgard's four zone floors (ValgardStage.ZONES).
 		# --- Act XII (temporary number): the Necropolis Dynasty ---
 		"dynasty":
 			var dyg := DynastyGround.new()  # The Dynasty stubs' placeholder floor (the STAGE's "floor").

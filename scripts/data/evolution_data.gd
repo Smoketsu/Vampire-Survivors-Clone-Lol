@@ -110,7 +110,9 @@ const ORDER := ["void_barrage", "eclipse_ward", "abyssal_detonation",
 	# --- Act IX: the Ark ---
 	"star_abduction",
 	# --- Act XI (temporary): the Barrow Fields ---
-	"barrow_lords_embrace"]
+	"barrow_lords_embrace",
+	# --- Act XI (temporary): Valgard ---
+	"chooser_of_the_slain"]
 
 ## Evolution definitions.
 ##   base         — spell id that evolves (AbilityData.SPELLS key).
@@ -822,6 +824,34 @@ const EVOLUTIONS := {
 		"stats": {
 			"damage": 32.0, "hands": 11, "ring": 170.0, "radius": 33.0, "hold": 1.7, "cooldown": 3.4,  # TUNING (not in GDD)
 			"rings": 2, "ring_step": 0.55, "linger": 2.2,  # TUNING (not in GDD) the evolution flag: two rings, lingering hands
+		},
+	},
+	# --- Act XI (temporary): Valgard ---
+	# Chooser of the Slain (GDD §15.0 "Valkyrie Spear, Chooser of the Slain,
+	# Einherjar's Oath and the Shield-Maiden (Valgard)"; owner-approved
+	# proposal "Valkyrie Spear -> Chooser of the Slain (+ Einherjar's Oath)"):
+	# Valkyrie Spear + Einherjar's Oath (a NEW passive, owner rule: at Lv 5).
+	# Own decision on its kit: more leaps and damage, x elite_mult on elites,
+	# minibosses and bosses, and the spear CHOOSES THE SLAIN: every
+	# chosen_every-th foe it kills (that leaves a corpse) rises for risen_time s
+	# as a temporary Warrior of the army (HordeDirector.spawn_temporary(), the
+	# one temporary-summon path: Restless Dead applies), at most risen_cap at
+	# once. Detected by the "risen_time" key.
+	"chooser_of_the_slain": {
+		"base": "valkyrie_spear",
+		"passive": "einherjars_oath",
+		"display_name": "Chooser of the Slain",  # Owner-approved proposal
+		"icon": "chooser_of_the_slain",
+		"description": "More leaps and harder strikes, and the foes it slays rise to fight for you.",
+		"labels": {"damage": "Spear damage", "jumps": "Leaps", "elite_mult": "Vs elites and bosses", "risen_time": "Chosen rise (s)", "cooldown": "Cooldown (s)"},
+		"stats": {
+			"damage": 62.0, "jumps": 5, "falloff": 0.84, "chain": 210.0, "range": 390.0, "cooldown": 2.0,  # TUNING (not in GDD)
+			"elite_mult": 1.35,  # TUNING (not in GDD) x on elites, minibosses and bosses
+			"chosen_every": 4,  # TUNING (not in GDD) every 4th kill of the spear rises
+			"risen_time": 12.0,  # TUNING (not in GDD) the evolution flag: s a chosen warrior fights
+			"risen_cap": 4,  # TUNING (not in GDD) chosen warriors at once
+			"risen_hp": 0.8,  # TUNING (not in GDD) x the Warrior's HP
+			"risen_damage": 0.8,  # TUNING (not in GDD) x the Warrior's damage
 		},
 	},
 }

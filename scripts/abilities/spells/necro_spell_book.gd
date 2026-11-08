@@ -86,6 +86,9 @@
 ## and Act IX's (the Ark, ARK_IDS: stepped only; its own autotest line,
 ## ArkReport.item_lines()):
 ##   Tractor Beam     -> TractorLift      (evolves into Abduction)
+## and the Hall of the Slain's (temporarily Act XI; Valgard, VALGARD_IDS:
+## stepped only; its own autotest line, ValgardReport.item_lines()):
+##   Valkyrie Spear   -> ValkyrieSpear    (evolves into Chooser of the Slain)
 ## Game calls after_physics() once per tick after obstacles are resolved
 ## (Bone Wall holds enemies there).
 ## Each spell node is created the first time its spell is learned and reads
@@ -213,6 +216,10 @@ const ARK_IDS := ["tractor_lift"]
 ## The Barrow Fields' unlockable spell (Hrimgar's reward): stepped only (no
 ## kill or after-physics hook), reported by BarrowFieldsReport.
 const BARROW_FIELDS_IDS := ["barrow_grasp"]
+# --- Act XI (temporary): Valgard ---
+## Valgard's unlockable spell (Sigrun's reward): stepped only (no kill or
+## after-physics hook; it sees its own kills), reported by ValgardReport.
+const VALGARD_IDS := ["valkyrie_spear"]
 ## Damage-source stat tags of each spell (CombatResolver "dmg_<tag>"), base
 ## spell first, then its evolution's. Used for the autotest summary.
 const SOURCES := {
@@ -275,6 +282,8 @@ const SOURCES := {
 	"tractor_lift": ["tractor_lift", "star_abduction", "star_abduction_quake"],
 	# --- Act XI (temporary): the Barrow Fields ---
 	"barrow_grasp": ["barrow_grasp", "barrow_lords_embrace"],
+	# --- Act XI (temporary): Valgard ---
+	"valkyrie_spear": ["valkyrie_spear", "chooser_of_the_slain"],
 }
 
 ## Owning run.
@@ -467,6 +476,15 @@ func step(delta: float) -> void:
 			node = _create(id)
 		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
 		node.step(delta, ab.spell_stats(id))  # The Barrow Fields' spell.
+	# --- Act XI (temporary): Valgard ---
+	for id: String in VALGARD_IDS:
+		if ab.spell_level(id) <= 0:
+			continue
+		var node: NecroSpell = nodes.get(id)  # The spell's node (created lazily).
+		if node == null:
+			node = _create(id)
+		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
+		node.step(delta, ab.spell_stats(id))  # Valgard's spell.
 
 
 ## Content wave 2: the Bone Wall node, created when missing (the Ossuary
@@ -572,6 +590,9 @@ func _create(id: String) -> NecroSpell:
 		# --- Act XI (temporary): the Barrow Fields ---
 		"barrow_grasp":
 			node = BarrowGrasp.new()  # The Barrow Fields' spell.
+		# --- Act XI (temporary): Valgard ---
+		"valkyrie_spear":
+			node = ValkyrieSpear.new()  # Valgard's spell.
 		_:
 			node = PlagueCloud.new()
 	node.game = game

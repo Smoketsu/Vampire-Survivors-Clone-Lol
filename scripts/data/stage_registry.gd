@@ -367,6 +367,12 @@
 ##                        Fires' banner, the "barrow" and "wight" events);
 ##                        ground "barrow_fields" is its BarrowFieldsGround (the
 ##                        zone floors).
+## --- Act XI (temporary): Valgard ---
+##   valgard            — ValgardDirector config (ValgardStage.VALGARD: the
+##                        Feast at the long tables, the hall's hearths on a
+##                        lattice, the Einherjar Champion objective; the
+##                        "einherjar_champion" event); ground "valgard" is its
+##                        ValgardGround (the four zone floors).
 ## --- Act XII (temporary number): the Necropolis Dynasty ---
 ##   dynasty            — true: the Necropolis Dynasty's shared rules
 ##                        (DynastyRules as Game.dynasty: Rebirth, the Black

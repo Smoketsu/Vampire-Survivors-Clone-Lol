@@ -112,7 +112,9 @@ const SPELL_ORDER := ["shadow_bolt", "orb_shield", "shadow_blast",
 	# --- Act IX: the Ark ---
 	"tractor_lift",
 	# --- Act XI (temporary): the Barrow Fields ---
-	"barrow_grasp"]
+	"barrow_grasp",
+	# --- Act XI (temporary): Valgard ---
+	"valkyrie_spear"]
 
 ## Spell definitions.
 ##   display_name — UI name.
@@ -966,6 +968,32 @@ const SPELLS := {
 			{"damage": 20.0, "hands": 8, "ring": 160.0, "radius": 28.0, "hold": 1.2, "cooldown": 4.0},  # TUNING (not in GDD)
 			{"damage": 24.0, "hands": 9, "ring": 165.0, "radius": 30.0, "hold": 1.4, "cooldown": 3.7},  # TUNING (not in GDD)
 			{"damage": 28.0, "hands": 10, "ring": 165.0, "radius": 32.0, "hold": 1.6, "cooldown": 3.4},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act XI (temporary): Valgard ---
+	# Valkyrie Spear (GDD §15.0 "Valkyrie Spear, Chooser of the Slain,
+	# Einherjar's Oath and the Shield-Maiden (Valgard)"; owner-approved
+	# proposal: "a spectral spear dives on the strongest enemy and chains to the
+	# next"; unlocked by slaying Sigrun, UnlockData): every `cooldown` s a
+	# spectral spear falls on the enemy with the most HP left within `range`
+	# px of the necromancer, strikes it for `damage`, then leaps to the nearest
+	# enemy it has not struck within `chain` px, `jumps` times, each strike x
+	# `falloff` of the last. Stat keys: damage, jumps, falloff, chain (px),
+	# range (px), cooldown (s). Logic: ValkyrieSpear; fixed rules:
+	# ValkyrieSpearData; Einherjar's Oath (its paired passive) adds jumps and
+	# damage. A strong single-target opener with a short chain.
+	"valkyrie_spear": {
+		"display_name": "Valkyrie Spear",  # Owner-approved proposal
+		"icon": "valkyrie_spear",
+		"description": "A spectral spear dives on the strongest foe, then leaps to the next.",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Spear damage", "jumps": "Leaps", "falloff": "Kept per leap", "cooldown": "Cooldown (s)"},
+		"levels": [
+			{"damage": 26.0, "jumps": 2, "falloff": 0.75, "chain": 150.0, "range": 360.0, "cooldown": 2.8},  # TUNING (not in GDD) Soul Caster Lv1 20 x 3 / 2.6 s
+			{"damage": 32.0, "jumps": 2, "falloff": 0.76, "chain": 160.0, "range": 365.0, "cooldown": 2.65},  # TUNING (not in GDD)
+			{"damage": 38.0, "jumps": 3, "falloff": 0.77, "chain": 170.0, "range": 370.0, "cooldown": 2.5},  # TUNING (not in GDD)
+			{"damage": 45.0, "jumps": 3, "falloff": 0.78, "chain": 180.0, "range": 375.0, "cooldown": 2.35},  # TUNING (not in GDD)
+			{"damage": 52.0, "jumps": 3, "falloff": 0.8, "chain": 190.0, "range": 380.0, "cooldown": 2.2},  # TUNING (not in GDD) ~70 dps over a full chain, as Soul Caster Lv5
 		],
 	},
 }

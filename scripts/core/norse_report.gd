@@ -61,6 +61,8 @@ static func print_lines(game: Game, st: Dictionary) -> void:
 	# Phase 2: each Norse stage's own lines go here (its stage, kinds and boss).
 	# --- Act XI (temporary): the Barrow Fields ---
 	BarrowFieldsReport.print_lines(game, st)  # The braziers by the map, the barrows, the drifts, Keep the Fires, the Wight, Hrimgar.
+	# --- Act XI (temporary): Valgard --- (the Feast, the Champion, Sigrun; ValgardReport)
+	ValgardReport.print_lines(game, st)
 
 
 ## The "long winter" line (LongWinter).

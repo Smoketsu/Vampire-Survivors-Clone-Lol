@@ -2568,6 +2568,33 @@ Autotest: `--stage=barrow_fields`, `--boss=hrimgar`, `--spawn=` with `draugr_fem
 `hrimgar_barrow`; lines `barrow fields` (braziers by zone, barrows, drifts, Keep the Fires, the lowest HP and when),
 `barrow wight`, `hrimgar`, and `norse spell` / `norse passives` when Barrow Grasp, Grave Frost or Fur-Lined Bones was
 taken. The army bot brings its ring to Hrimgar's barrow while he lies in it.
+
+<!-- --- Act XI (temporary): Valgard --- -->
+**Valgard, the Hall of Heroes** (phase 2; GDD §15.0 "Valgard, the Hall of Heroes (the Hall of the Slain phase 2)" and
+the rows after it; still `"playable": false` until the lead opens it). A vast feast hall at the edge of the sky. Warriors
+and valkyries lead. Four zones on the art's hall planks and slabs: **the Shield Yard** (shields on posts), **the Mead
+Hall** (long tables without end), **the Hall of Spears** and **the Valkyries' Gate**. The braziers stand by the map: the
+Mead Hall's long hearth either side of the start, the yard fires, and beyond them **the hall's hearths** on a ~900 px
+lattice, lit as you come near (about six in reach at a time), so warmth is a place to hold.
+- **The Feast.** Gold-lit **Einherjar** sit asleep at the long tables. Every horn of a Rune-Stone the hall holds wakes
+  the heroes at the nearest tables (two to four, by zone), who step out and fight; an emptied table fills again after
+  2:30. Take the stones and the horns stop.
+- **The Einherjar Champion** (miniboss, 11:00): a gold-lit hero of a thousand years. His **sweep** (a circle around
+  him) throws your ring back, and his **horn** wakes the tables; below 40% he goes berserk.
+- **Sigrun, the Shield-Queen** (17:00, with her valkyrie wing): **the Charge** (she and her wing mark lines across your
+  ring, then dive along them), **the Holmgang** (from 70%: a square of hazel rods closes around you and her for 15 s;
+  your summons and every other foe are kept out, you cannot leave, and only your **spells** reach her; take 6% of her
+  health and she yields, staggered with her guard down; fail and she heals; a duel every ~30 s), **the Doors of the
+  Hall** (from 35%: ten Einherjar march out of the doors at her side and the tables wake).
+- **Rewards:** **Valkyrie Spear** (a spectral spear dives on the strongest foe and leaps to the next) → **Chooser of the
+  Slain** (+ **Einherjar's Oath**: more leaps and damage; evolved, every fourth foe it slays rises as a Warrior for 12 s),
+  unlocked by Sigrun; **the Shield-Maiden** (Shield-Sister: one more leap); the counter-passive **Calm Blood** (berserk
+  blows on your summons deal up to 20% less; the act only), earned by the achievement **Holmgang** (win Sigrun's duel
+  without a Grave Step).
+- Autotest: `--stage=valgard`, `--boss=sigrun`, `--spawn=einherjar|einherjar_champion|wing_valkyrie@T`,
+  `--character=shield_maiden_hero`, `--spells=valkyrie_spear`, `--passives=calm_blood`; lines `valgard` (the Feast, the
+  hearths, the Champion), `einherjar champion`, `valgard threats`, `sigrun`, and on any stage `norse spell` / `norse
+  passives` when taken.
 ### Act XII (temporary number): the Necropolis Dynasty (foundation)
 
 <!-- --- Act XII (temporary number): the Necropolis Dynasty --- -->
@@ -3323,6 +3350,9 @@ scripts/
     barrow_fields_ground.gd The Barrow Fields' zone floors (tiles/norse_snow, tiles/norse_ice)
     barrow_fields_report.gd The autotest's Barrow Fields lines (barrow fields, barrow wight, hrimgar) and its items
                             (Barrow Grasp, Grave Frost, Fur-Lined Bones)
+    valgard_ground.gd       Valgard's four zone floors (tiles/norse_planks, norse_slabs and code decorations)
+    valgard_report.gd       The autotest's Valgard lines (valgard, einherjar champion, valgard threats, sigrun) and
+                            its items (Valkyrie Spear, Einherjar's Oath, Calm Blood)
     crash_site_report.gd    The autotest's Crash Site lines (crash site, burrowers, acid, brood matriarch, hive
                             mother) and its items (Bone Beetles, Chitin, Anchored; Act IX)
     crash_site_ground.gd    The Crash Site's four zone floors (tiles/crash_site_<style>, Act IX)
@@ -3751,6 +3781,12 @@ scripts/
       open_barrow_kit.gd, hrimgar_barrow_kit.gd, barrow_wight_kit.gd  The open barrow, Hrimgar's barrow, the miniboss
       boss_hrimgar.gd       Hrimgar the Draugr-King: the Grave, his falls into the barrow, the Barrow Lord, the Last
                             Rising (the drag)
+      valgard_director.gd   Valgard: THE FEAST (seated Einherjar at the long tables, wake_feast() on every horn),
+                            the hall's hearths on a lattice (LongWinter.place()), the Einherjar Champion's event
+      einherjar_kit.gd, einherjar_champion_kit.gd, wing_valkyrie_kit.gd  Valgard's kinds (the woken heroes; the
+                            miniboss's sweep and horn; Sigrun's wing and its charge lanes, the one charge hit lane())
+      boss_sigrun.gd        Sigrun, the Shield-Queen: the Charge, the Holmgang (the spell-only rule), the Doors of
+                            the Hall; holmgang.gd is the square of hazel rods (the one keep-out path)
     dynasty/                The Necropolis Dynasty (Act XII, temporary number): its kits ("<id>_kit.gd", loaded by
                             name after the Concord's) and bosses ("boss_<id>.gd", phase 2), and the act's shared rules:
       dynasty_rules.gd      Game.dynasty: owns Rebirth, the quicksand, the Sandstorm, Heka and the Devourer's Hour;
@@ -4076,14 +4112,20 @@ scripts/
     norse_enemy_data.gd     The Hall of the Slain's shared kinds (raider, shield_maiden, berserker, skald, valkyrie,
                             seer, draugr, wolf_of_the_wastes, frost_giant, fire_giant) and the rune_stone / brazier
                             structure rows (barrow_fields_ / valgard_ / vigrid_enemy_data.gd: each stage's own;
-                            the Barrow Fields': draugr_female, open_barrow, barrow_wight, hrimgar_barrow)
+                            the Barrow Fields': draugr_female, open_barrow, barrow_wight, hrimgar_barrow;
+                            Valgard's: einherjar, einherjar_champion, wing_valkyrie)
     hrimgar_data.gd         Hrimgar's arrival and numbers (the Grave, the Barrow Lord, the Last Rising, his falls)
     barrow_grasp_data.gd    Barrow Grasp / Barrow-Lord's Embrace rules, Grave Frost and Rune of Binding keys (the
                             spell node is abilities/spells/barrow_grasp.gd)
+    sigrun_data.gd          Sigrun's arrival and numbers (the Charge, the Holmgang, the Doors of the Hall; Valgard)
+    valkyrie_spear_data.gd  Valkyrie Spear / Chooser of the Slain rules, Einherjar's Oath keys, Shield-Sister key
+                            (Valgard; the spell node is abilities/spells/valkyrie_spear.gd)
     norse_rules_data.gd     The Hall of the Slain's shared rules: LONG_WINTER, EINHERJAR, BERSERK, RUNE_STONES,
                             RAGNAROK, the SOUNDS map, the Fur-Lined Bones / Keep the Fires keys
     stages/barrow_fields_stage.gd  The Hall of the Slain stubs (temporarily act 11, final slot VI): "norse": true,
     stages/valgard_stage.gd        zones, the "long_winter" / "rune_stones" overrides, a timeline of the shared kinds
+                                   (Valgard, phase 2: four zones, the braziers by the map, VALGARD for its director,
+                                   Sigrun)
     stages/vigrid_stage.gd         with four "rune_stone" events, Ragnarök, placeholder floors / bosses
     vrask_tal_data.gd       Vrask'Tal's arrival and numbers (the Stalk, the Duel, the Last Trophy and its bomb)
     soul_caster_data.gd     Soul Caster / Apex Predator rules, Trophy Rack keys, First Blood key (Act IX; the spell
