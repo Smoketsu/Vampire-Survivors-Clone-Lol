@@ -290,9 +290,12 @@ func _mist_burst(at: Vector2) -> void:
 ## out at once, and call_new new barrows crack around the ring.
 func _call_mounds(pl: Necromancer) -> void:
 	var made := 0
+	var mounds: Array[Enemy] = []  # The standing open barrows (collected first: a release adds enemies to the active list).
 	for e: Enemy in game.enemies.active:
 		if e.active and e.kit is OpenBarrowKit and not (e.kit is HrimgarBarrowKit):
-			made += (e.kit as OpenBarrowKit).release(e, int(boss_def["call_per_barrow"]), true)
+			mounds.append(e)
+	for e: Enemy in mounds:
+		made += (e.kit as OpenBarrowKit).release(e, int(boss_def["call_per_barrow"]), true)
 	var n := int(boss_def["call_new"])
 	for k in n:
 		var a := float(_waves) * 0.8 + TAU * float(k) / float(maxi(1, n)) + 0.5
