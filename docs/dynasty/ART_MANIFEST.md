@@ -42,8 +42,8 @@ Palette constants for `palette.gd` (names `DYN_*`): ink `#0A0B16`; night `#1B203
 | `dynasty/sekhmet` | 52x92 | boss, female goddess (figure style) | walk, idle; robe glide, bust + idle |
 | `dynasty/osiris` | 46x96 | boss, male god on his throne (no strip; stationary) | none; still only |
 | `dynasty/ammit` | 76x44 | boss, monster (Ammit the Devourer) | walk; legs walk |
-| `dynasty/ushabti_sentinel` | 20x46 | finale summon class (the necromancer's, soul-teal eyes) | walk |
-| `dynasty/eternal_guard` | 32x58 | its evolution (true-gold trim) | walk |
+| `summons/ushabti_sentinel` | 20x46 | finale summon class (the necromancer's, soul-teal eyes); moved from `dynasty/` in phase 2 (a summon class finds its art in `summons/`) | walk |
+| `summons/eternal_guard` | 32x58 | its evolution (true-gold trim); moved from `dynasty/` in phase 2 | walk |
 
 Boss attack poses (cast / strike) are not drawn: the stage agents add them (BossPoseData) once the kits exist. 
 
@@ -133,3 +133,9 @@ About $0.57 of API images (25 unit images, 7 sheets; medium quality), ledger row
 ## Round 2 of the owner's art review (Nov 7, 2026)
 - Bust boxes refit: `bastet_hunter` (the cream chest, rows 12-16), `embalmer` (cols 9-15, rows 11-16), `mummy_female` (rows 10-15); `player/the_embalmer` box 4 px further right. Idle and walk strips rebuilt; sheets in `docs/last_acts/bust_check/`.
 - Redrawn (prompts and raw images: `art_source/dynasty/r2/`, `gen.py`): `khopesh_guard` (a real khopesh: straight grip, hooked sickle blade), `mummy` (28 -> 36x40: wrapped head to toe, arms forward, hunched, trailing bandages, faint green eyes), `ushabti_sentinel` (a clean mummiform stone shabti, striped headdress, hieroglyph bands in lapis and dull gold, soul-teal eyes; still 20x46, the height `SpriteData` has), `player/lion_priestess` (a cream lioness head-dress with round ears and fangs over a violet mane, 34x56, violet and bone, box on the chest: cols 13-23, rows 20-26). Walk strips rebuilt (new hips in `walk_cycle.py`); `ushabti_sentinel` ramps now grey, lapis, dyn_bronze, soul, sand (`make_art.py`).
+
+## Phase 2: the Hall of Two Truths (wiring)
+- `summons/ushabti_sentinel` and `summons/eternal_guard` (+ walk strips) moved from `dynasty/` so the summon class draws them (`SpriteData` keys follow).
+- `icons/answering_words` (32x32): Eternal Guard's paired passive badge, a small composite of `icons/ushabti_sentinel` recoloured soul-teal (no new generation).
+- Wired: `dynasty/crocodile_warden`, `dynasty/devourers_whelp`, `dynasty/osiris` (the Judge and the Weighing, and faded on the empty throne), `dynasty/ammit` (the Devourer), `player/pharaohs_shade`, the four `tiles/two_truths_*` floors, `obstacles/dyn_obelisk_*`, `dyn_colonnade_*` (+ `_v`), and the single sprites `dyn_brazier`, `dyn_great_scales` (also drawn beside Osiris during the Weighing with the heart and the feather), `dyn_sphinx_head`, `dyn_sandstone_blocks` through `TwoTruthsGlyphs`; badges `feathers_verdict`, `heart_devoured`, `heavy_heart`, `ushabti_sentinel`, `eternal_guard`, `ach_a_light_heart`.
+- Code-drawn: the gold feather of Feather's Verdict, the Ushabti's rubble, the Balance bar.

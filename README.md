@@ -2563,6 +2563,33 @@ tab. Autotest: `--stage=necropolis|lioness_temple|two_truths`, `--boss=anubis|se
 `mummy_female`, `scarab_swarm`, `khopesh_guard`, `heka_priest`, `embalmer`, `canopic_jar`; lines `rebirth`, `black land`,
 `heka`, `devourer's hour`, `dynasty kinds`, `dynasty stage`.
 
+#### The Hall of Two Truths (phase 2)
+
+<!-- --- Act XII (temporary number): the Hall of Two Truths --- -->
+The act's finale (`two_truths`, built in phase 2; GDD §15.0 "The Hall of Two Truths (Necropolis Dynasty phase 2)"): the
+judgment hall of the dead in four clock-driven zones, **the Gate of Reeds** (reed mud), **the River of Fire** (basalt
+and braziers), **the Hall of the Scales** (blue-black marble, colonnades and the great Scales) and **the Throne of
+Osiris** (night-blue slabs), each with its floor tile and obstacles (`TwoTruthsGround`, `TwoTruthsGlyphs`).
+- **The Scales.** A Balance bar under the HUD's top line. Every body that **returns** tips it toward the Dynasty; every
+  **raise** tips it toward you, a raise that steals a Name twice as far, a smashed Name a little; it settles back toward
+  level. Past the marks: **Ma'at's favour** (the Dynasty's blows deal 15% less) or **the Dynasty's favour** (15% more,
+  and every Name returns 2 s sooner). Raising the dead is how you win the scale.
+- **The Crocodile Warden** climbs out of his own quicksand, seizes a summon and drags it under (armour 3, Rebirth).
+- **The Devourer's Whelp** (miniboss, 12:30) eats the Names of the dead (they never return), heals a little and grows
+  hungrier each time; it gulps the ring in front of it.
+- **Osiris and Ammit the Devourer** (17:00, one health bar): **the Judge** writes Heka glyphs three at a time, quickens
+  every Name, calls his court and drops Judgment circles under you; **the Weighing** (at two thirds) lays your heart on
+  the Scales for 60 s while he sits immune: end it on the Dynasty's side and Ammit eats 30% of your army, on yours and
+  his shield breaks for a quarter of his health (achievement **A Light Heart**, the title *Light of Heart*); **the
+  Devourer**: Ammit takes the throne, eats every Name on the field and charges in telegraphed lanes. Slay her and the
+  throne is empty.
+- **Rewards** (offered on every stage once Osiris falls): the spell **Feather's Verdict** (a gold feather falls on the
+  strongest foe and executes the weak in a ring round it) → **Heart Devoured** with **Heavy Heart**; the character **the
+  Pharaoh's Shade** (innate Crook and Flail: a higher execute line); the summon class **the Ushabti Sentinel** (a stone
+  blocker that reassembles from its rubble at half health once every 25 s, with a shockwave) → **Eternal Guard** with
+  **Answering Words** (every class special recharges sooner). Autotest lines `two truths`, `two truths events`,
+  `two truths kinds`, `osiris`, and on any stage `feather's verdict` / `ushabti sentinel` when used.
+
 ### The illustrated epilogue
 
 The campaign epilogue (content wave 2, GDD §15.0 "Illustrated epilogue (content wave 2)") is a short
@@ -3293,6 +3320,11 @@ scripts/
     dynasty_glyphs.gd       Code-drawn fallbacks of the Dynasty's kinds and the stubs' obstacles (Act XII)
     dynasty_report.gd       The autotest's Dynasty lines (rebirth, black land, heka, devourer's hour, dynasty kinds,
                             dynasty stage; Act XII)
+    two_truths_ground.gd    The Hall of Two Truths' four zone floors (tiles/two_truths_<style>; Act XII, temporary)
+    two_truths_glyphs.gd    The Hall's single-sprite obstacles, the Weighing's Scales and the feather, Osiris / Ammit
+                            fallbacks (Act XII)
+    two_truths_report.gd    The autotest's Hall lines (two truths, events, kinds, osiris) and the Feather's Verdict /
+                            Ushabti Sentinel item lines (Act XII)
     proving_moon_glyphs.gd  Code fallbacks of the Warbeast, Vrask'Tal and his skull belt, and the stage's obstacles (Act IX)
     proving_moon_report.gd  The autotest's Proving Moon lines (proving moon, warbeast, threats, vrask'tal; the Soul Caster
                             and passives' item lines; Act IX)
@@ -3414,6 +3446,8 @@ scripts/
                             Black Paragon's stun and chain; Origin Story's key)
     behaviors/ghost_saucer_behavior.gd  Act IX: the Ghost Saucer's short beams and lifts (EnemyLift); Black
                             Mothership's three beams and two lifts; Crop Circles' key
+    behaviors/ushabti_sentinel_behavior.gd  Act XII (temporary): the Ushabti Sentinel's reassembly (on_lethal(), the
+                            rubble, the shockwave); Eternal Guard's keys; Answering Words' key
     golem_kit.gd            Content wave 2: Ossuary Hunger, the Ossuary Titan's heal, barrier and
                             collapse wall (HordeDirector.golems, created by the first Golem)
     golem_texts.gd          Content wave 2: Bone Golem / Grave Masonry / Ossuary Titan card and
@@ -3714,6 +3748,10 @@ scripts/
       rebirth.gd            REBIRTH: on_death() (the cartouche), on_raise() (HordeDirector.raise_corpse() steals the
                             Name), smash() (CombatResolver, no kill), return_body(), the Canopic Jars, place_jar()
       quicksand.gd          THE BLACK LAND's ground: fixed hashed patches, add_patch(), the slow (FenWater.wade())
+      two_truths_director.gd The Hall of Two Truths' director: the Scales (truth_scales.gd, the HUD's scales_bar.gd),
+                            the Devourer's Whelp and the Crocodile Wardens' events, Osiris watching from the empty throne
+      boss_osiris.gd        Osiris and Ammit the Devourer: the Judge, the Weighing, the Devourer (osiris_data.gd)
+      crocodile_warden_kit.gd, devourers_whelp_kit.gd  The wardens' drag into the sand; the Whelp that eats the Names
       sandstorm.gd          THE SANDSTORM clock: is_up(), reach_mult(), force(), start_endless(), the veil, the HUD line
       heka.gd               HEKA: write() (CombatResolver.curse_unit()), the jumps, cleanse(), the sigils
       devourers_hour.gd     THE DEVOURER'S HOUR (the act's Reckoning): Rebirth unlimited, the endless storm, the lanes
@@ -4011,6 +4049,8 @@ scripts/
     harvester_data.gd       The Harvester's arrival, phases and numbers (Act IX)
     tractor_lift_data.gd    Tractor Beam / Abduction rules, Starseed keys, Deserter's Signal key (Act IX; the
                             spell node is abilities/spells/tractor_lift.gd, the lift helper abilities/enemy_lift.gd)
+    feathers_verdict_data.gd  Feather's Verdict / Heart Devoured rules, Heavy Heart keys, Crook and Flail key (Act XII,
+                            temporary; the spell node is abilities/spells/feathers_verdict.gd)
     concord_rules_data.gd   Act IX's shared rules: RACES, BEAMS and BEAM_STYLES, ABDUCTION, TERRAFORMING,
                             FINAL_HARVEST, the SOUNDS map, the Mirror Bones / Anchored keys
     stages/crash_site_stage.gd     Act IX stubs: the Crash Site, the Proving Moon and the Ark of the Concord; act 9,
@@ -4051,6 +4091,8 @@ scripts/
     stages/necropolis_stage.gd     Act XII stubs: the Necropolis of Sand, the Temple of the Lioness and the Hall of Two
     stages/lioness_temple_stage.gd Truths; act 12, "dynasty": true, zones, the rule overrides, a timeline of the shared
     stages/two_truths_stage.gd     kinds, the Devourer's Hour, placeholder floors / bosses
+                                   (the Hall of Two Truths built: four zones, the Scales, the Whelp, Osiris and Ammit;
+                                   two_truths_enemy_data.gd the Whelp, osiris_data.gd, feathers_verdict_data.gd)
     stages/ravensmoor_stage.gd     Act VII stubs: Ravensmoor, the Witchwood and Castle Sanguis; act 7,
     stages/witchwood_stage.gd      "court": true, zones, the "moon" overrides, a timeline of the shared kinds,
     stages/castle_sanguis_stage.gd the Endless Feast, placeholder floors / bosses (the Witchwood built: four
