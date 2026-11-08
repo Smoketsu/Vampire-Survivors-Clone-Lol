@@ -311,6 +311,36 @@ const UNLOCKS := {
 	"slow_match": {"type": "passive", "boss": "vandermere", "text": "Defeat Vandermere in the Maelstrom to unlock."},  # Its paired passive (own decision), unlocked with it
 	"captain_of_the_dead": {"type": "title", "achievement": "dead_men_tell_tales",
 		"text": "Earn Dead Men Tell Tales: beat Vandermere with his Oath broken twice."},  # Own decision (the clear is recorded as a title, as Acts VI-IX did)
+	# --- Act XI (temporary): the Barrow Fields ---
+	# Hrimgar's fall (owner-approved proposal "Rewards": Barrow Grasp is
+	# unlocked by Hrimgar) with its paired passive, offered on every stage; the
+	# stage's achievement Keep the Fires earns the act's counter-passive
+	# Fur-Lined Bones (owner decision Nov 7, 2026; offered only in the act
+	# through its card row's "act").
+	"barrow_grasp": {"type": "spell", "boss": "hrimgar", "text": "Defeat Hrimgar the Draugr-King in the Barrow Fields to unlock."},  # Owner-approved proposal
+	"grave_frost": {"type": "passive", "boss": "hrimgar", "text": "Defeat Hrimgar the Draugr-King in the Barrow Fields to unlock."},  # Barrow Grasp's paired passive (owner-approved proposal), unlocked with it
+	"fur_lined_bones": {"type": "passive", "achievement": "keep_the_fires", "text": "Earn Keep the Fires: finish the Barrow Fields with no brazier out for more than 30 s."},  # Owner decision Nov 7, 2026: Keep the Fires unlocks Fur-Lined Bones
+	# --- Act XI (temporary): Valgard ---
+	# Sigrun's fall (owner-approved proposal "Rewards": Valkyrie Spear is
+	# unlocked by Sigrun) with its paired passive, offered on every stage; the
+	# stage's achievement Holmgang earns the act's counter-passive Calm Blood
+	# (brief: Holmgang is Valgard's; offered only in the act through its card
+	# row's "act").
+	"valkyrie_spear": {"type": "spell", "boss": "sigrun", "text": "Slay Sigrun, the Shield-Queen, in Valgard to unlock."},  # Owner-approved proposal
+	"einherjars_oath": {"type": "passive", "boss": "sigrun", "text": "Slay Sigrun, the Shield-Queen, in Valgard to unlock."},  # Valkyrie Spear's paired passive, unlocked with it
+	"calm_blood": {"type": "passive", "achievement": "holmgang", "text": "Earn Holmgang: win Sigrun's duel without a Grave Step."},  # Brief: Holmgang unlocks Calm Blood
+	# --- Act XI (temporary): Vigrid ---
+	# Odin's fall (owner-approved proposal "Rewards": Gungnir is unlocked by Odin
+	# and Fenrir; the finale grants the Draugr Thane): the spell with its paired
+	# passive, and the summon class with its paired passive, offered on every
+	# stage (no card-row "act" key). The title Doom of the Gods is Twilight of
+	# the Wolf's reward (it only records the clear).
+	"gungnir": {"type": "spell", "boss": "odin", "text": "Defeat Odin and Fenrir on Vigrid, the Last Field, to unlock."},  # Owner-approved proposal
+	"runecraft": {"type": "passive", "boss": "odin", "text": "Defeat Odin and Fenrir on Vigrid, the Last Field, to unlock."},  # Gungnir's paired passive (owner-approved proposal), unlocked with it
+	"draugr_thane": {"type": "class", "boss": "odin", "text": "Defeat Odin and Fenrir on Vigrid, the Last Field, to unlock."},  # Owner-approved proposal: the finale's reward
+	"cold_iron": {"type": "passive", "boss": "odin", "text": "Defeat Odin and Fenrir on Vigrid, the Last Field, to unlock."},  # Its paired passive (own decision), unlocked with it
+	"doom_of_the_gods": {"type": "title", "achievement": "twilight_of_the_wolf",
+		"text": "Earn Twilight of the Wolf: beat Odin and Fenrir on Vigrid, the Last Field."},  # Own decision (the clear is recorded as a title, as Act IX did)
 }
 
 ## End-screen plate heading of a newly unlocked item, by type.

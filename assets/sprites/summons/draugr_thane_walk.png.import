@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bidujcf4j46is"
-path="res://.godot/imported/draugr_thane.png-1a62bc2cdf0186656c48a65661b937ac.ctex"
+uid="uid://jk7ea1fihrdy"
+path="res://.godot/imported/draugr_thane_walk.png-ae5e8f0f293843493adabc7f8d0411d9.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/norse/draugr_thane.png"
-dest_files=["res://.godot/imported/draugr_thane.png-1a62bc2cdf0186656c48a65661b937ac.ctex"]
+source_file="res://assets/sprites/summons/draugr_thane_walk.png"
+dest_files=["res://.godot/imported/draugr_thane_walk.png-ae5e8f0f293843493adabc7f8d0411d9.ctex"]
 
 [params]
 

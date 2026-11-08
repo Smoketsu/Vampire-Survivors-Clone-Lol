@@ -82,7 +82,9 @@ const SUMMON_ORDER: Array[String] = ["warrior", "archer", "mage", "mender", "war
 		# --- Act IX: the Ark --- (a silhouette naming its unlock until met)
 		"ghost_saucer",
 		# --- Act X: the Maelstrom --- (a silhouette naming its unlock until met)
-		"powder_wraith"]
+		"powder_wraith",
+		# --- Act XI (temporary): Vigrid --- (a silhouette naming its unlock until met)
+		"draugr_thane"]
 
 ## Covenant soldiers (enemy kinds), in the order the stages bring them.
 const SOLDIERS: Array[String] = ["recruit", "footman", "archer", "chaplain", "purifier", "templar",
@@ -340,13 +342,25 @@ const CORSAIR_BOSSES: Array[String] = ["crow", "marrec", "vandermere"]
 ## hall, the hall's valkyries and seers with its stones and braziers, the cold
 ## things of the north, then its stage bosses (StageRegistry.BOSS_ARRIVALS ids).
 ## Each of its stages adds its own as it is built (phase 2).
-const NORSE_WARRIORS: Array[String] = ["raider", "shield_maiden", "berserker", "skald"]
+const NORSE_WARRIORS: Array[String] = ["raider", "shield_maiden", "berserker", "skald",
+	# --- Act XI (temporary): Valgard --- (the hall's Einherjar and their Champion, the miniboss)
+	"einherjar", "einherjar_champion"]
 ## The hall's kinds (group "hall"): the valkyries, the seers and the
 ## Rune-Stone (recorded when first taken: a stone is never slain). The brazier
 ## has no entry (it is the necromancer's warmth, not a foe).
-const NORSE_HALL: Array[String] = ["valkyrie", "seer", "rune_stone"]
+const NORSE_HALL: Array[String] = ["valkyrie", "seer", "rune_stone",
+	# --- Act XI (temporary): Valgard --- (Sigrun's valkyrie wing)
+	"wing_valkyrie",
+	# --- Act XI (temporary): Vigrid --- (Odin's ravens)
+	"odin_raven"]
 ## The cold things of the north (group "wilds").
-const NORSE_WILDS: Array[String] = ["draugr", "wolf_of_the_wastes", "frost_giant", "fire_giant"]
+const NORSE_WILDS: Array[String] = ["draugr", "wolf_of_the_wastes", "frost_giant", "fire_giant",
+	# --- Act XI (temporary): the Barrow Fields --- (the open barrow and the
+	# stage's miniboss with the barrow-dead; the female draugr shares the
+	# Draugr's entry, Hrimgar's own barrow his)
+	"open_barrow", "barrow_wight",
+	# --- Act XI (temporary): Vigrid --- (the miniboss with its kin, as Act VIII placed Mammoth with the army; Fenrir beside the giants)
+	"muspel_giant", "fenrir"]
 ## The Hall of the Slain's stage bosses (StageRegistry.BOSS_ARRIVALS ids).
 const NORSE_BOSSES: Array[String] = ["hrimgar", "sigrun", "odin"]
 # --- Act XII (temporary number): the Necropolis Dynasty ---
@@ -650,8 +664,19 @@ const DESCRIPTIONS: Dictionary = {
 	"frost_giant": "A frost giant: its boulders fall where a circle shows, it stamps your ring away and douses your braziers.",  # Owner-approved proposal and the Long Winter
 	"fire_giant": "A fire-giant of the south, come to burn the last field.",  # Owner-approved proposal (Ragnarok)
 	"hrimgar": "Hrimgar the Draugr-King, who rises from his barrow three times unless you break it.",  # Owner-approved proposal
+	# --- Act XI (temporary): the Barrow Fields ---
+	"open_barrow": "A burial mound cracking open. Draugr climb out of it until you break it.",  # Brief (the open barrows)
+	"barrow_wight": "A draugr chieftain in a rusted crown. His howl stuns your whole ring for a moment.",  # Brief (miniboss)
 	"sigrun": "Sigrun, the Shield-Queen, captain of the valkyries: she charges your ring and calls you to a duel.",  # Owner-approved proposal
 	"odin": "Odin, the one-eyed god, and Fenrir the wolf, come for the army the world promised them.",  # Owner-approved proposal
+	# --- Act XI (temporary): Valgard ---
+	"einherjar": "A hero of the hall, gold-lit and asleep at the long tables until a horn blows. Then they all rise at once.",  # Owner-approved proposal (the Feast)
+	"einherjar_champion": "The hall's champion, a thousand years at the feast: his sweep throws your ring back, and his horn wakes the tables.",  # Owner-approved proposal (miniboss)
+	"wing_valkyrie": "One of Sigrun's valkyrie wing. When their queen charges, they dive across your ring beside her.",  # Owner-approved proposal (the Charge)
+	# --- Act XI (temporary): Vigrid ---
+	"muspel_giant": "A fire-giant of the south, out of Muspell before his time: his footprints burn, and his stomp sets the ground alight.",  # Owner-approved proposal (miniboss)
+	"fenrir": "Fenrir, the great wolf, his chain broken at last: he swallows one of your dead whole and spits it out four seconds later.",  # Owner-approved proposal
+	"odin_raven": "One of Odin's ravens. If it reaches you, it marks you for the All-Father's spear. Shoot it down.",  # Owner-approved proposal
 	# --- Act IX: the Crash Site ---
 	"burrower": "It tunnels under your ring and bursts up among your dead. A mound of dirt shows a moment ahead: keep blockers inside the ring.",  # Owner-approved Act IX proposal
 	"acid_spitter": "It lobs acid over your ring that leaves a burning puddle. Kill it on approach, and step out of the green.",  # Owner-approved Act IX proposal
@@ -681,6 +706,8 @@ const DESCRIPTIONS: Dictionary = {
 ## Sprite key of an entry whose art is not "<category folder>/<id>":
 ## entry id -> SpriteBank key ("" = draw its icon instead).
 const SPRITE_KEYS: Dictionary = {
+	# --- Act XI (temporary): the Barrow Fields --- (an open barrow has no unit sprite: the king's barrow stands for it)
+	"open_barrow": "norse/boss_barrow",
 	"profane_bishop": "summons/bishop",
 	"inquisitor": "enemies/inquisitor",
 	# --- Act II: Gullhaven Harbour (the Ancient Eye's art is in eye/) ---
@@ -696,6 +723,8 @@ const SPRITE_KEYS: Dictionary = {
 	"ghost_deckhand": "corsair/deckhand",
 	"ghost_gunner": "corsair/musketeer",
 	"corsair_serpent": "corsair/sea_serpent",
+	# --- Act XI (temporary): Valgard --- (Sigrun's wing wears the shared valkyrie's art)
+	"wing_valkyrie": "norse/valkyrie",
 }
 
 ## Stat labels and record lines of the detail panel (format strings use
@@ -979,6 +1008,12 @@ const ACHIEVEMENT_ICONS: Dictionary = {
 	"walked_the_plank": "ach_walked_the_plank",  # TUNING (not in GDD) the art pass's badge
 	# --- Act X: the Maelstrom ---
 	"dead_men_tell_tales": "ach_dead_men_tell_tales",  # TUNING (not in GDD)
+	# --- Act XI (temporary): the Barrow Fields ---
+	"keep_the_fires": "ach_keep_the_fires",  # TUNING (not in GDD) (no badge PNG yet: the fallback icon)
+	# --- Act XI (temporary): Valgard ---
+	"holmgang": "ach_holmgang",  # TUNING (not in GDD) (no badge PNG yet: the fallback icon draws)
+	# --- Act XI (temporary): Vigrid ---
+	"twilight_of_the_wolf": "ach_twilight_of_the_wolf",  # TUNING (not in GDD) (no badge PNG yet: the fallback icon shows)
 }
 ## IconGlyph kind drawn when an achievement badge PNG is missing.
 const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
@@ -1046,6 +1081,12 @@ const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
 	"walked_the_plank": "sea_legs",
 	# --- Act X: the Maelstrom ---
 	"dead_men_tell_tales": "anchor_drop",
+	# --- Act XI (temporary): the Barrow Fields ---
+	"keep_the_fires": "grave_frost",
+	# --- Act XI (temporary): Valgard ---
+	"holmgang": "calm_blood",
+	# --- Act XI (temporary): Vigrid ---
+	"twilight_of_the_wolf": "gungnir",
 }
 ## Screen title (TITLE tier).
 const TITLE: String = "Codex"  # TUNING (not in GDD)

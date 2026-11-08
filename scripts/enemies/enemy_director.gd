@@ -187,6 +187,16 @@
 ##     phase 2)"): on a stage with a "galleon" config it owns the
 ##     GalleonDirector (the zones, the broadsides, the deck cannons, Old
 ##     Hollow-Eye; `galleon`) and hands it the "hollow_eye" events. Null elsewhere.
+##   * The Hall of the Slain (temporarily Act XI), the Barrow Fields (GDD §15.0
+##     "The Barrow Fields (the Hall of the Slain phase 2)"): on a stage with a
+##     "barrow_fields" config it owns the BarrowFieldsDirector (the braziers by
+##     the map, the open barrows, the Fjord's drifts, Keep the Fires, the
+##     Barrow-Wight; `barrow_fields`) and hands it the "barrow" and "wight"
+##     events. Null elsewhere.
+##   * The Hall of the Slain, Valgard (GDD §15.0 "Valgard, the Hall of Heroes
+##     (the Hall of the Slain phase 2)"): on a stage with a "valgard" config it
+##     owns the ValgardDirector (the Feast, the Einherjar Champion; `valgard`)
+##     and hands it the "einherjar_champion" events. Null elsewhere.
 ##   * Online co-op (CoopSession; docs/coop/DESIGN.md): every enemy steps with
 ##     its NEAREST standing necromancer bound (CoopSession.bind_nearest()), so
 ##     it advances on, aims at and recycles around that one (bosses and kits
@@ -409,6 +419,20 @@ var galleon: GalleonDirector = null
 ## Ghost Bosun, Vandermere's crew; StageRegistry "maelstrom"; null on every
 ## other stage).
 var maelstrom: MaelstromDirector = null
+# --- Act XI (temporary): the Barrow Fields ---
+## The Barrow Fields' mechanics (the Hall of the Slain: the braziers by the
+## map, the open barrows, the Fjord's drifts, Keep the Fires, the Barrow-Wight;
+## StageRegistry "barrow_fields"; null on every other stage).
+var barrow_fields: BarrowFieldsDirector = null
+# --- Act XI (temporary): Valgard ---
+## Valgard's mechanics (the Hall of the Slain: the Feast at the long tables,
+## the Einherjar Champion; StageRegistry "valgard"; null on every other stage).
+var valgard: ValgardDirector = null
+# --- Act XI (temporary): Vigrid ---
+## Vigrid, the Last Field's mechanics (the Hall of the Slain's finale: the
+## Fading Light, the early dark's vanguard, the Fire-Giant of the south;
+## StageRegistry "vigrid"; null on every other stage).
+var vigrid: VigridDirector = null
 ## Sanctum kit bookkeeping: recent deaths, Confessor revivals, danger hints.
 var rites: CovenantRites
 ## The living miniboss shown on the HUD's miniboss bar (the Cathedral
@@ -631,6 +655,24 @@ func _ready() -> void:
 		maelstrom.game = game
 		maelstrom.config = stage_def["maelstrom"]
 		add_child(maelstrom)  # The Maelstrom's director.
+	# --- Act XI (temporary): the Barrow Fields ---
+	if not (stage_def.get("barrow_fields", {}) as Dictionary).is_empty():
+		barrow_fields = BarrowFieldsDirector.new()
+		barrow_fields.game = game
+		barrow_fields.config = stage_def["barrow_fields"]
+		add_child(barrow_fields)  # The Barrow Fields' director.
+	# --- Act XI (temporary): Valgard ---
+	if not (stage_def.get("valgard", {}) as Dictionary).is_empty():
+		valgard = ValgardDirector.new()
+		valgard.game = game
+		valgard.config = stage_def["valgard"]
+		add_child(valgard)  # Valgard's director.
+	# --- Act XI (temporary): Vigrid ---
+	if not (stage_def.get("vigrid", {}) as Dictionary).is_empty():
+		vigrid = VigridDirector.new()
+		vigrid.game = game
+		vigrid.config = stage_def["vigrid"]
+		add_child(vigrid)  # Vigrid's director.
 
 
 # =====================================================================================
@@ -790,6 +832,15 @@ func step(delta: float) -> void:
 	# --- Act X: the Maelstrom ---
 	if maelstrom != null:
 		maelstrom.step(delta)  # The Heave, the raised ghosts, the Ghost Bosun.
+	# --- Act XI (temporary): the Barrow Fields ---
+	if barrow_fields != null:
+		barrow_fields.step(delta)  # The braziers by the map, the drifts, Keep the Fires, the Wight.
+	# --- Act XI (temporary): Valgard ---
+	if valgard != null:
+		valgard.step(delta)  # The Feast, the Einherjar Champion.
+	# --- Act XI (temporary): Vigrid ---
+	if vigrid != null:
+		vigrid.step(delta)  # The Fading Light, the vanguard.
 
 
 ## The Archive kinds' world hazards (ArchiveHazards), created on first use.
@@ -954,6 +1005,15 @@ func objective_text() -> String:
 	# --- Act X: the Maelstrom ---
 	if maelstrom != null and maelstrom.objective_override() != "":
 		return maelstrom.objective_override()  # The Ghost Bosun, the Heave's arrow (the HUD arrow, owner-approved proposal).
+	# --- Act XI (temporary): the Barrow Fields ---
+	if barrow_fields != null and barrow_fields.objective_override() != "":
+		return barrow_fields.objective_override()  # The Barrow-Wight.
+	# --- Act XI (temporary): Valgard ---
+	if valgard != null and valgard.objective_override() != "":
+		return valgard.objective_override()  # The Einherjar Champion.
+	# --- Act XI (temporary): Vigrid ---
+	if vigrid != null and vigrid.objective_override() != "":
+		return vigrid.objective_override()  # The Fire-Giant of the south, Odin's phases.
 	if boss != null and not boss.active:
 		return String(boss_info["dead_objective"])
 	return segments[segment_index]["objective"]
@@ -1153,6 +1213,12 @@ func _run_event(ev: Dictionary) -> void:
 			game.norse_rules().stones.start_event(ev)  # Rune-Stones (they show the event's banner).
 			game.stat_add("wave_events", 1.0)
 			return  # A Norse rune-stone event.
+		# --- Act XI (temporary): the Barrow Fields ---
+		"barrow", "wight":
+			if barrow_fields != null:
+				barrow_fields.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return  # The Barrow Fields' open barrows and miniboss.
 		# --- Act VI: the Burning Gate ---
 		"gatekeeper":
 			if burning_gate != null:
@@ -1237,6 +1303,18 @@ func _run_event(ev: Dictionary) -> void:
 				maelstrom.start_event(ev)
 			game.stat_add("wave_events", 1.0)
 			return  # The Maelstrom's miniboss (MaelstromDirector).
+		# --- Act XI (temporary): Valgard ---
+		"einherjar_champion":
+			if valgard != null:
+				valgard.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return  # Valgard's miniboss (ValgardDirector).
+		# --- Act XI (temporary): Vigrid ---
+		"muspel_giant":
+			if vigrid != null:
+				vigrid.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return  # Vigrid's miniboss (VigridDirector).
 	show_banner(ev["banner"])
 	var groups: Array = ev["groups"]
 	if game.shogunate != null:

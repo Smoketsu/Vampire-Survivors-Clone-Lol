@@ -105,6 +105,21 @@ const BRAZIER_KIND: String = "brazier"
 const BRAZIER_SPRITE: String = "norse/brazier_lit"
 ## Sprite key of a doused (cold) brazier (the art pass's brazier_doused).
 const BRAZIER_OUT_SPRITE: String = "norse/brazier_doused"
+# --- Act XI (temporary): the Barrow Fields --- (the art round 2's brazier loops)
+## Suffix of a brazier sprite's animated strip (norse/brazier_lit_anim,
+## norse/brazier_doused_anim: BRAZIER_ANIM_FRAMES frames of 32 x 32 side by
+## side, frame 0 = the still; LongWinter draws them, the stills the fallback).
+const BRAZIER_ANIM_SUFFIX: String = "_anim"
+## Frames in a brazier's animated strip.
+const BRAZIER_ANIM_FRAMES: int = 8  # Art round 2 (docs/norse/ART_MANIFEST.md)
+## Frames a second of a brazier's loop (on game time).
+const BRAZIER_ANIM_FPS: float = 8.0  # Art round 2 (docs/norse/ART_MANIFEST.md)
+# --- Hall of the Slain integration ---
+## Margin (px) beyond the visible world rect within which LongWinter._draw()
+## still draws a brazier and its rings (a brazier counts as on screen when its
+## warmth ring, warm_radius px, reaches within this of the view). Drawing only:
+## off-screen braziers cost nothing on the Web.
+const BRAZIER_DRAW_MARGIN: float = 48.0  # TUNING (not in GDD) visual only
 ## Frost vignette colour (drawing only; a flat tinted band, no screen read).
 const FROST_TINT: Color = Color(0.82, 0.92, 1.0, 0.55)  # TUNING (not in GDD) visual only
 ## Sprite key of the frost edge laid over the vignette's bands (a 128 x 48 strip,
@@ -269,3 +284,11 @@ const SOUNDS := {
 	"skald_song": "banshee_wail",  # Startup bank (a chant); intended a drum and a chant.
 }
 
+
+# --- Act XI (temporary): Valgard ---
+## Calm Blood, the act's counter-passive (owner-approved proposal: "berserk
+## enemies deal 20% less damage to summons"; Valgard's achievement Holmgang
+## unlocks it): its PassiveData id, read by NorseRules.calm_blood_mult().
+const CALM_BLOOD: String = "calm_blood"
+## Calm Blood's value key: share (0..1) cut from a berserk enemy's blow on a summon.
+const CALM_BLOOD_KEY: String = "fury_cut"

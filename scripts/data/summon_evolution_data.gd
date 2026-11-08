@@ -83,7 +83,9 @@ const ORDER := ["death_knight", "lich", "profane_bishop",
 	# --- Act IX: the Ark ---
 	"black_mothership",
 	# --- Act X: the Maelstrom ---
-	"magazine_lord"]
+	"magazine_lord",
+	# --- Act XI (temporary): Vigrid ---
+	"barrow_king"]
 
 ## Summon skill level every base class needs (user rule: Lv 5).
 const BASE_LEVEL_REQUIRED: int = 5  # TUNING (not in GDD) user rule
@@ -1023,6 +1025,39 @@ const EVOLUTIONS := {
 		"special_set": {
 			"kegs": 2,  # TUNING (not in GDD)
 			"reform_time": 8.0,  # TUNING (not in GDD) the Powder Wraith 12
+		},
+	},
+	# --- Act XI (temporary): Vigrid ---
+	# The Barrow King (owner-approved proposal: "the Draugr Thane ... (evolution
+	# Barrow King)"; GDD §15.0 "The Draugr Thane, the Barrow King and Cold
+	# Iron"): Draugr Thane Lv 5 + Cold Iron Lv 5 (a NEW passive, own decision,
+	# owner rule: maxed). A king of the barrows in a crown of rimed iron, his
+	# frost-axe grown huge (summons/barrow_king). DraugrThaneBehavior reads this
+	# special_set key (final):
+	#   cleave_freeze_duration — s the frost cleave FREEZES what it strikes
+	#                            (bosses and minibosses a quarter, elites half).
+	"barrow_king": {
+		"mode": "transform",
+		"bases": ["draugr_thane"],
+		"passive": "cold_iron",
+		"passive_level": 5,  # Owner rule: every evolution needs its paired passive maxed
+		"display_name": "Barrow King",  # Owner-approved proposal
+		"plural": "Barrow Kings",
+		"icon": "barrow_king",
+		"description": "The king of the barrows: his frost cleave freezes what it strikes.",
+		"mult": {
+			"max_hp": 1.4,  # TUNING (not in GDD)
+			"damage": 1.3,  # TUNING (not in GDD)
+		},
+		"set": {
+			"radius": 16.0,  # TUNING (not in GDD) Draugr Thane 14
+			"block_mass": 10.0,  # TUNING (not in GDD) Draugr Thane 7
+		},
+		"special_mult": {
+			"cleave_radius": 1.3,  # TUNING (not in GDD)
+		},
+		"special_set": {
+			"cleave_freeze_duration": 1.0,  # TUNING (not in GDD) s
 		},
 	},
 }

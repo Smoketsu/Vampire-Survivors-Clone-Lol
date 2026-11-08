@@ -276,11 +276,18 @@
 ##     fire_giant, rune_stone, brazier), --boss=hrimgar|sigrun|odin. The bot
 ##     drifts toward the nearest lit brazier while it stands in the cold and
 ##     relights a doused one when calm (NorseRules.warm_point(), the one cold
-##     behaviour), and takes a Rune-Stone the hall holds when its army holds
+##     behaviour; with --keep-fires it walks to the brazier out longest before
+##     anything else, LongWinter.keeper_point()), and takes a Rune-Stone the hall holds when its army holds
 ##     and it is calm (_stone_vector(), NorseRules.stone_point()). When the
 ##     Norse rules ran, the summary adds the "long winter", "berserkergang",
 ##     "rune-stones", "norse kinds", "ragnarok" (after 0:00) and (on a Norse
 ##     stage) "norse stage" lines (NorseReport).
+##     The Barrow Fields (phase 2) adds the kinds draugr_female, open_barrow,
+##     barrow_wight, hrimgar_barrow; the bot also steps out of Hrimgar's mist
+##     circles and cleave and the Barrow-Wight's howl; the "barrow fields",
+##     "barrow wight" and "hrimgar" lines (BarrowFieldsReport), and "norse
+##     spell" / "norse passives" when Barrow Grasp, Grave Frost or Fur-Lined
+##     Bones was taken.
 ##   * Act XII (temporary number), the Necropolis Dynasty (GDD §15.0 "The
 ##     Necropolis Dynasty foundation (phase 1)"):
 ##     --stage=necropolis|lioness_temple|two_truths, --spawn= with its kinds
@@ -339,6 +346,8 @@ const NORSE_WARM_REACH: float = 900.0
 ## Crowd pressure (the flee vector's length) above which the bot stays put
 ## instead of walking to a brazier.
 const NORSE_WARM_PRESSURE: float = 0.8
+## Radius (px) in which the --keep-fires bot looks for a doused brazier.
+const NORSE_KEEP_REACH: float = 1400.0
 ## Radius (px) in which the bot looks for a Rune-Stone the hall holds.
 const NORSE_STONE_RADIUS: float = 600.0
 ## Summons the bot's army needs before it goes to take a stone (it must
@@ -1419,6 +1428,11 @@ func get_move_vector() -> Vector2:
 	# the nearest lit brazier (or a doused one to relight) unless pressed.
 	if goal == Vector2.INF and game.norse != null and away.length() < NORSE_WARM_PRESSURE:
 		goal = game.norse.warm_point(p, NORSE_WARM_REACH)
+	if game.norse != null and GameState.autotest_keep_fires:
+		# --keep-fires: the fire-keeper walks to the brazier out longest, first.
+		var keep := game.norse.winter.keeper_point(p, NORSE_KEEP_REACH)
+		if keep != Vector2.INF:
+			goal = keep
 	if game.enemies.boss is BossVhalneth and game.enemies.boss.active:
 		# Vhal'Neth never walks: go and fight her arms, then her face (every policy).
 		var at := (game.enemies.boss as BossVhalneth).approach_point(p)
@@ -1429,6 +1443,12 @@ func get_move_vector() -> Vector2:
 		# The Siege Core is planted: go and bring the army to its shield drones (every policy).
 		var at := (game.enemies.boss as BossDeusExMachina).approach_point(p)
 		if at != Vector2.INF and p.distance_to(at) > 200.0 and away.length() < 0.6:
+			goal = at
+	# --- Act XI (temporary): the Barrow Fields ---
+	if game.enemies.boss is BossHrimgar and game.enemies.boss.active and policy() in SANCTUM_SEEK_POLICIES:
+		# Hrimgar lies in his barrow: bring the army to it and break it (the objective policies).
+		var at := (game.enemies.boss as BossHrimgar).approach_point(p)
+		if at != Vector2.INF and p.distance_to(at) > 120.0 and away.length() < 0.6:
 			goal = at
 	if game.enemies.sinking != null:
 		danger += game.enemies.sinking.danger_push(p) * 0.5  # Ul-Thalos: keep off the shore the sea is about to take.
@@ -1687,6 +1707,8 @@ func finish(summary: Dictionary) -> void:
 	LibertyHeightsReport.item_lines(game, st)  # Hero's Fist, Secret Identity, the Fallen Hero, Origin Story (only when used; the stage's own lines are CityReport's).
 	# --- Act IX: the Crash Site ---
 	CrashSiteReport.item_lines(game, st)  # Bone Beetles, Chitin, Anchored (only when taken; the stage's own lines are ConcordReport's).
+	# --- Act XI (temporary): the Barrow Fields ---
+	BarrowFieldsReport.item_lines(game, st)  # Barrow Grasp, Grave Frost, Fur-Lined Bones (only when taken; the stage's own lines are NorseReport's).
 	# --- Act IX: the Proving Moon ---
 	ProvingMoonReport.item_lines(game, st)  # Soul Caster, Trophy Rack, Mirror Bones (only when taken; the stage's own lines are ConcordReport's).
 	# --- Act IX: the Ark ---
@@ -1697,6 +1719,10 @@ func finish(summary: Dictionary) -> void:
 	GalleonReport.item_lines(game, st)  # Cannonade, Black Powder, Sea Legs, the Corsair Queen (only when used; the stage's own lines are CorsairReport's).
 	# --- Act X: the Maelstrom ---
 	MaelstromReport.item_lines(game, st)  # Anchor Drop, Dead Reckoning, the Powder Wraith, Slow Match (only when used; the stage's own lines are CorsairReport's).
+	# --- Act XI (temporary): Valgard ---
+	ValgardReport.item_lines(game, st)  # Valkyrie Spear, Einherjar's Oath, Calm Blood (only when taken; the stage's own lines are NorseReport's).
+	# --- Act XI (temporary): Vigrid ---
+	VigridReport.item_lines(game, st)  # Gungnir, Runecraft, the Draugr Thane, Cold Iron (only when used; the stage's own lines are NorseReport's).
 	if game.enemies.boss is BossSeraphine:
 		print("[autotest] seraphine: %s" % BossSeraphine.summary_line(st))
 	var fired := game.enemies.stage.fired

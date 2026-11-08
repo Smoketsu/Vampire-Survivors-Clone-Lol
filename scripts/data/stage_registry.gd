@@ -374,6 +374,25 @@
 ##   rune_stones        — the stage's Rune-Stones: any key of
 ##                        NorseRulesData.RUNE_STONES overrides it ({} = the
 ##                        defaults; e.g. its horn "table").
+## --- Act XI (temporary): the Barrow Fields ---
+##   barrow_fields      — BarrowFieldsDirector config (BarrowFieldsStage
+##                        .BARROW_FIELDS: the braziers of each later zone, the
+##                        open barrows' cap, the Fjord's drifts, Keep the
+##                        Fires' banner, the "barrow" and "wight" events);
+##                        ground "barrow_fields" is its BarrowFieldsGround (the
+##                        zone floors).
+## --- Act XI (temporary): Valgard ---
+##   valgard            — ValgardDirector config (ValgardStage.VALGARD: the
+##                        Feast at the long tables, the hall's hearths on a
+##                        lattice, the Einherjar Champion objective; the
+##                        "einherjar_champion" event); ground "valgard" is its
+##                        ValgardGround (the four zone floors).
+## --- Act XI (temporary): Vigrid ---
+##   vigrid             — VigridDirector config (VigridStage.VIGRID, the Hall of
+##                        the Slain's finale: the Fading Light's look and the
+##                        dark taking a brazier per zone, the early dark's
+##                        vanguard, the "muspel_giant" event); ground "vigrid"
+##                        is its VigridGround (four zone floors).
 ## --- Act XII (temporary number): the Necropolis Dynasty ---
 ##   dynasty            — true: the Necropolis Dynasty's shared rules
 ##                        (DynastyRules as Game.dynasty: Rebirth, the Black

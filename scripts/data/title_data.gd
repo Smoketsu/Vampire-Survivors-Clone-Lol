@@ -33,7 +33,9 @@ const ORDER := ["heretics_bane", "master_of_the_drowned", "archnecromancer", "ex
 	# --- Act IX: the Ark ---
 	"the_unharvested",
 	# --- Act X: the Maelstrom ---
-	"captain_of_the_dead"]  # owner-approved Proposal 2; Act III proposal; Act VI, Act VII and Act VIII (own decisions)
+	"captain_of_the_dead",  # owner-approved Proposal 2; Act III proposal; Act VI, Act VII and Act VIII (own decisions)
+	# --- Act XI (temporary): Vigrid ---
+	"doom_of_the_gods"]  # owner-approved Proposal 2; Act III proposal; Act VI, Act VII and Act VIII (own decisions)
 
 ## Title id -> row (keys above).
 const TITLES := {
@@ -53,6 +55,8 @@ const TITLES := {
 	"the_unharvested": {"display_name": "The Unharvested", "achievement": "last_harvest", "frame": ""},  # Own decision: The Last Harvest records the clear (no epilogue, owner Oct 31; brief Nov 3)
 	# --- Act X: the Maelstrom ---
 	"captain_of_the_dead": {"display_name": "Captain of the Dead", "achievement": "dead_men_tell_tales", "frame": ""},  # Own decision: Dead Men Tell Tales records the clear (no epilogue part until the reorder, docs/last_acts/PLAN.md)
+	# --- Act XI (temporary): Vigrid ---
+	"doom_of_the_gods": {"display_name": "Doom of the Gods", "achievement": "twilight_of_the_wolf", "frame": ""},  # Own decision: Twilight of the Wolf records the clear (no epilogue part until the reorder pass); "Ragnarok" is the doom of the gods
 }
 
 ## Text of the "no title" choice on the setup screen's cycle row.

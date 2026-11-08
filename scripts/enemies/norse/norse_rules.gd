@@ -163,9 +163,14 @@ func play_sound(event: String, pos: Vector2 = Vector2.INF, gap: float = 0.0) -> 
 
 ## The autotest autopilot's push away from the act's own telegraphs at `p`
 ## (the dives and boulders use the shared telegraph circles and the kits'
-## danger_push(), which the bot already reads): none of its own today.
-func danger_push(_p: Vector2) -> Vector2:
-	return Vector2.ZERO
+## danger_push(), which the bot already reads); each stage adds its own.
+func danger_push(p: Vector2) -> Vector2:
+	var push := Vector2.ZERO
+	# --- Act XI (temporary): Vigrid --- out of the burning ground (the
+	# Fire-Giant of the south's tracks, Ragnarok's rings of fire).
+	if game.enemies.vigrid != null:
+		push += game.enemies.vigrid.danger_push(p)
+	return push
 
 
 ## Autotest bot (the one cold behaviour): a brazier to warm up at or relight
@@ -178,3 +183,16 @@ func warm_point(p: Vector2, reach: float) -> Vector2:
 ## holds within `reach` px of `p`, or Vector2.INF (RuneStones.seek_point()).
 func stone_point(p: Vector2, reach: float) -> Vector2:
 	return stones.seek_point(p, reach)
+
+
+# --- Act XI (temporary): Valgard ---
+## CALM BLOOD (the act's counter-passive; owner-approved proposal: "berserk
+## enemies deal 20% less damage to summons"): the share of berserk enemy
+## `by`'s own blow a summon of the BOUND slot takes (1 - the passive's
+## fury_cut). Read once, in CombatResolver.damage_unit() (the one path of
+## damage to summons, its slot bound), where the attacker's fury is known;
+## exactly 1 for a calm attacker and while the passive is not owned.
+func calm_blood_mult(by: Enemy) -> float:
+	if by == null or not by.berserk:
+		return 1.0
+	return clampf(1.0 - game.abilities.passive_value(NorseRulesData.CALM_BLOOD, NorseRulesData.CALM_BLOOD_KEY), 0.0, 1.0)

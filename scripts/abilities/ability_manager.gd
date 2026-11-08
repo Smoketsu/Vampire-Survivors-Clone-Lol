@@ -311,6 +311,12 @@ func apply_spell_mods(row: Dictionary, conduit_lvl: int = -1, focus_lvl: int = -
 	if out.has("anchor_stun"):
 		out["cooldown"] = float(out["cooldown"]) * (1.0 - passive_value(AnchorDropData.DEAD_RECKONING, AnchorDropData.HASTE_KEY))
 		out["anchor_stun"] = float(out["anchor_stun"]) * (1.0 + passive_value(AnchorDropData.DEAD_RECKONING, AnchorDropData.STUN_KEY))
+	# --- Act XI (temporary): Vigrid --- Runecraft: Gungnir flies sooner and
+	# its line cuts wider (its key "spear_width" exists only in the Gungnir /
+	# Spear of the Hanged rows; the passive's values are 0 while not owned).
+	if out.has("spear_width"):
+		out["cooldown"] = float(out["cooldown"]) * (1.0 - passive_value(GungnirData.RUNECRAFT, GungnirData.HASTE_KEY))
+		out["spear_width"] = float(out["spear_width"]) * (1.0 + passive_value(GungnirData.RUNECRAFT, GungnirData.WIDTH_KEY))
 	return out
 
 

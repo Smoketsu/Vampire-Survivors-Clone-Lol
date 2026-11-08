@@ -270,6 +270,12 @@ var autotest_unlock_all: bool = false
 ## content wave 2 (MetaData "run" rows) in memory, as the game does; off by
 ## default so the default summaries (bounty, Soul Ash total) stay as before.
 var autotest_rewards: bool = false
+## Autotest: true when --keep-fires makes the bot a fire-keeper on a Norse
+## stage (Hall of the Slain integration): it walks to the brazier that has been
+## out longest before anything else but its own danger, to show that Keep the
+## Fires can be earned (LongWinter.keeper_point()). Off by default: the
+## default runs stay as before.
+var autotest_keep_fires: bool = false
 ## Autotest: forced spawns from --spawn= ({"kind", "time" s, "count"}, in
 ## the order given; empty = none).
 var autotest_spawns: Array[Dictionary] = []
@@ -582,6 +588,8 @@ func _parse_args(args: PackedStringArray) -> void:
 				autotest_rewards = rv == "on"
 			else:
 				push_error("Unknown --rewards=%s (expected on or off)" % rv)
+		elif arg == "--keep-fires":
+			autotest_keep_fires = true
 		elif arg.begins_with("--spawn="):
 			for entry: String in arg.get_slice("=", 1).split(",", false):
 				var kind := entry.get_slice("@", 0)  # Enemy kind id.

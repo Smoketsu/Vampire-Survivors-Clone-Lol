@@ -55,6 +55,8 @@ const CLASSES: Array[String] = [
 	"ghost_saucer",
 	# --- Act X: the Maelstrom ---
 	"powder_wraith",
+	# --- Act XI (temporary): Vigrid ---
+	"draugr_thane",
 ]  # TUNING (not in GDD) every offerable summon class of all nine acts
 
 ## Evolved-only class -> the classes whose mastery it uses (the best level
@@ -96,6 +98,8 @@ const FLAVOUR := {
 	"ghost_saucer": "A saucer that harvests for you now.",  # TUNING (not in GDD) Act IX's finale class
 	# --- Act X: the Maelstrom ---
 	"powder_wraith": "A keg that always comes back.",  # TUNING (not in GDD) the Black Tide's finale class
+	# --- Act XI (temporary): Vigrid ---
+	"draugr_thane": "A jarl who keeps his oath past the grave.",  # TUNING (not in GDD) the Hall of the Slain's finale class
 }  # TUNING (not in GDD) flavour only
 
 ## Autotest profile "max" owns every level of every mastery; "none" and "mid"

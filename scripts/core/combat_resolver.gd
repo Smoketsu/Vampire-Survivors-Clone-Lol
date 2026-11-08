@@ -75,6 +75,9 @@
 ## foe that is held, stunned or frozen (Enemy.stun_timer / freeze_timer
 ## running) is raised by held_damage (stat crushing_depths_bonus_dmg); exactly
 ## 1 while the passive is not owned.
+## Vigrid (the Hall of the Slain): Cold Iron — damage_enemy(): a minion attack
+## on a slowed foe (Enemy.slow_timer running) is raised by iron_damage (stat
+## cold_iron_bonus_dmg); exactly 1 while the passive is not owned.
 ## Synergies of the newer classes (SynergyData, SynergyManager): damage_enemy()
 ## multiplies every hit by SynergyManager.hit_mult() once, right after
 ## Siegecraft (the highest mark bonus of the hit's class on a staggered /
@@ -312,6 +315,13 @@ func damage_enemy(e: Enemy, amount: float, source: String, as_slot: int = -1, or
 	if depths > 0.0 and (e.stun_timer > 0.0 or e.freeze_timer > 0.0) and is_minion_source(source):
 		game.stat_add("crushing_depths_bonus_dmg", amount * depths)
 		amount *= 1.0 + depths
+	# --- Act XI (temporary): Vigrid --- Cold Iron (the Draugr Thane's paired
+	# passive): minion attacks on a slowed foe (Enemy.slow_timer running) deal
+	# iron_damage more; exactly 1 while the passive is not owned.
+	var iron := game.abilities.passive_value("cold_iron", "iron_damage")  # 0 when not owned.
+	if iron > 0.0 and e.slow_timer > 0.0 and is_minion_source(source):
+		game.stat_add("cold_iron_bonus_dmg", amount * iron)
+		amount *= 1.0 + iron
 	# Synergies of the newer classes (SynergyManager.hit_mult(), the one
 	# synergy hit path): the highest mark bonus of the hit's class, times the
 	# Charnel Menagerie. Exactly 1 while none of them is active.
@@ -651,6 +661,14 @@ func damage_unit(u: SummonedUnit, amount: float, source: String, by: Enemy = nul
 		if kev < 1.0:
 			game.stat_add("kevlar_dmg_prevented", amount * (1.0 - kev))
 			amount *= kev
+	# --- Act XI (temporary): Valgard --- Calm Blood: a berserk enemy's own blow
+	# deals less (NorseRules.calm_blood_mult(); exactly 1 while the passive is
+	# not owned, for a calm attacker, and off the act: no enemy is berserk).
+	if by != null and by.berserk and game.norse != null:
+		var calm := game.norse.calm_blood_mult(by)  # Share of the hit kept.
+		if calm < 1.0:
+			game.stat_add("calm_blood_dmg_prevented", amount * (1.0 - calm))
+			amount *= calm
 	var plate := ab.passive_value("bone_plating", "flat_reduction")  # Flat damage off this hit.
 	if plate > 0.0 and not source in PassiveData.PLATING_EXEMPT_SOURCES:
 		var cut := minf(plate, amount * (1.0 - PassiveData.PLATING_MIN_FRACTION))  # Damage actually removed.

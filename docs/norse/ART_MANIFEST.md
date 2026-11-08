@@ -10,7 +10,7 @@ One hue per ramp, shared ink `norse_ink` #0B0F16: `frost` (#A9BBCC, #EAF2FA), `i
 
 | Key | Size (art px) | Files | What it is |
 |---|---|---|---|
-| `norse/barrow_king` | 52x62 | barrow_king.png, barrow_king_walk.png | the Draugr Thane's evolution (walk) |
+| `summons/barrow_king` | 52x62 | barrow_king.png, barrow_king_walk.png | the Draugr Thane's evolution (walk); moved to `assets/sprites/summons/` by the Vigrid stage agent (summons draw from summons/) |
 | `norse/barrow_wight` | 56x56 | barrow_wight.png, barrow_wight_walk.png | miniboss, male draugr chieftain (walk) |
 | `norse/berserker` | 60x50 | berserker.png, berserker_walk.png | male elite in a bear pelt, red eyes (walk) |
 | `player/berserker_hero` | 64x56 | berserker_hero.png, berserker_hero_walk.png | playable character (REDONE): male purple-hooded necromancer, bear-skull crest, one soul-teal axe held close (glide) |
@@ -18,7 +18,7 @@ One hue per ramp, shared ink `norse_ink` #0B0F16: `frost` (#A9BBCC, #EAF2FA), `i
 | `norse/boss_barrow_broken` | 60x56 | boss_barrow_broken.png | Hrimgar's barrow, broken (still) |
 | `norse/draugr` | 36x42 | draugr.png, draugr_walk.png | male barrow-dead soldier (walk) |
 | `norse/draugr_female` | 32x42 | draugr_female.png, draugr_female_walk.png, draugr_female_idle.png | FEMALE barrow-dead soldier (walk, bust, idle) |
-| `norse/draugr_thane` | 52x54 | draugr_thane.png, draugr_thane_walk.png | finale summon class, undead blocker (walk) |
+| `summons/draugr_thane` | 52x54 | draugr_thane.png, draugr_thane_walk.png | finale summon class, undead blocker (walk); moved to `assets/sprites/summons/` (Vigrid stage agent) |
 | `norse/einherjar` | 42x46 | einherjar.png, einherjar_walk.png | male gold-lit hero elite, base for the Einherjar kind and Risen Einherjar (walk) |
 | `norse/einherjar_champion` | 52x60 | einherjar_champion.png, einherjar_champion_walk.png | miniboss, male gold-lit hero (walk) |
 | `norse/brazier_lit` | 32x32 | brazier_lit.png | Long Winter brazier, lit: hearth-amber flames in an iron bowl (still) |
@@ -71,8 +71,8 @@ Strips: `_walk` 8 frames of the still's size (legs / glide / robe rigs), `_idle`
 | `obstacles/standing_shield_s_v.png` | 24x28 | shield on a post (+ `_v`) |
 | `obstacles/standing_shield_l.png` | 36x34 | shield on a post |
 | `obstacles/standing_shield_l_v.png` | 36x34 | shield on a post |
-| `obstacles/pine_s.png` | 24x38 | snowy pine |
-| `obstacles/pine_l.png` | 34x52 | snowy pine, large |
+| `obstacles/snow_pine_s.png` | 24x38 | snowy pine (renamed from `pine_s` in phase 2: the Crimson March owns `pine`) |
+| `obstacles/snow_pine_l.png` | 34x52 | snowy pine, large (renamed from `pine_l`) |
 
 ## Icons (`assets/sprites/icons/`, 32x32 badges, violet ring; gold ring = evolution)
 
@@ -108,4 +108,4 @@ Strips: `_walk` 8 frames of the still's size (legs / glide / robe rigs), `_idle`
 - Bust boxes refit from the sprites: `seer` (under the collar), `sigrun` (the breastplate, rows 36-43) and `valkyrie` (the chest under the winged helm, rows 23-28); `player/rune_seer` and `player/shield_maiden_hero` boxes 4 px further right. All idle and walk strips rebuilt; sheets in `docs/last_acts/bust_check/`.
 - `draugr_female`: no bust rig any more, a plain walk, **the idle strip is deleted** (code falls back to the still, as for every unit without a strip).
 - `sigrun` and `valkyrie`: the wings flap in walk and idle (`wings` rig entries; Sigrun's spear and shield stay fixed). `fenrir_walk`: the broken chain on his neck and the loose end under his jaw swing (brown pixels only, `pendulums`).
-- `brazier_lit_anim.png` / `brazier_doused_anim.png` (32x32 frames, 8 side by side, 8 fps loop, frame 0 = the still; `art_source/norse/r2_props.py`): flames that flicker and sway, a smoke wisp that drifts. **Code:** play them like any strip, frame = int(game_time * 8) mod 8, drawing region `Rect2(32 * frame, 0, 32, 32)` of `norse/brazier_lit_anim` / `norse/brazier_doused_anim`; the stills stay the fallback. Nothing plays them yet (LongWinter still draws the still).
+- `brazier_lit_anim.png` / `brazier_doused_anim.png` (32x32 frames, 8 side by side, 8 fps loop, frame 0 = the still; `art_source/norse/r2_props.py`): flames that flicker and sway, a smoke wisp that drifts. **Code:** play them like any strip, frame = int(game_time * 8) mod 8, drawing region `Rect2(32 * frame, 0, 32, 32)` of `norse/brazier_lit_anim` / `norse/brazier_doused_anim`; the stills stay the fallback. LongWinter plays them since the Barrow Fields phase 2.

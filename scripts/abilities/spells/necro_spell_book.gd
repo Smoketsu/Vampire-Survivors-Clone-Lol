@@ -71,6 +71,9 @@
 ## and Act IX's (the Crash Site, CRASH_SITE_IDS: stepped, with a kill hook; its
 ## own autotest line, CrashSiteReport.item_lines()):
 ##   Bone Beetles     -> BoneBeetles      (evolves into Hive of Bone)
+## and the Hall of the Slain's (the Barrow Fields, BARROW_FIELDS_IDS: stepped
+## only; its own autotest line, BarrowFieldsReport.item_lines()):
+##   Barrow Grasp     -> BarrowGrasp      (evolves into Barrow-Lord's Embrace)
 ## and Act VIII's (Fort Kessler, FORT_KESSLER_IDS: stepped only; its own
 ## autotest line, FortKesslerReport.item_lines()):
 ##   Bone Mines       -> BoneMines        (evolves into Killing Ground)
@@ -92,6 +95,12 @@
 ## and Act X's (the Maelstrom, MAELSTROM_IDS: stepped only; its own autotest
 ## line, MaelstromReport.item_lines()):
 ##   Anchor Drop      -> AnchorDrop       (evolves into Abyssal Mooring)
+## and the Hall of the Slain's (temporarily Act XI; Valgard, VALGARD_IDS:
+## stepped only; its own autotest line, ValgardReport.item_lines()):
+##   Valkyrie Spear   -> ValkyrieSpear    (evolves into Chooser of the Slain)
+## and Vigrid's (the Hall of the Slain's finale, VIGRID_IDS: stepped only; its
+## own autotest line, VigridReport.item_lines()):
+##   Gungnir          -> Gungnir          (evolves into Spear of the Hanged)
 ## Game calls after_physics() once per tick after obstacles are resolved
 ## (Bone Wall holds enemies there).
 ## Each spell node is created the first time its spell is learned and reads
@@ -227,6 +236,19 @@ const GALLEON_IDS := ["cannonade"]
 ## The Maelstrom's unlockable spell (Vandermere's reward): stepped only (no kill
 ## or after-physics hook), reported by MaelstromReport.
 const MAELSTROM_IDS := ["anchor_drop"]
+# --- Act XI (temporary): the Barrow Fields ---
+## The Barrow Fields' unlockable spell (Hrimgar's reward): stepped only (no
+## kill or after-physics hook), reported by BarrowFieldsReport.
+const BARROW_FIELDS_IDS := ["barrow_grasp"]
+# --- Act XI (temporary): Valgard ---
+## Valgard's unlockable spell (Sigrun's reward): stepped only (no kill or
+## after-physics hook; it sees its own kills), reported by ValgardReport.
+const VALGARD_IDS := ["valkyrie_spear"]
+# --- Act XI (temporary): Vigrid ---
+## Vigrid's unlockable spell (Odin's reward): stepped only (no kill or
+## after-physics hook), reported by VigridReport. Its id is "gungnir" (never
+## Odin's own "odin_gungnir" damage tag).
+const VIGRID_IDS := ["gungnir"]
 ## Damage-source stat tags of each spell (CombatResolver "dmg_<tag>"), base
 ## spell first, then its evolution's. Used for the autotest summary.
 const SOURCES := {
@@ -293,6 +315,12 @@ const SOURCES := {
 	"cannonade": ["cannonade", "dead_mens_broadside"],
 	# --- Act X: the Maelstrom ---
 	"anchor_drop": ["anchor_drop", "anchor_drop_shock", "abyssal_mooring", "abyssal_mooring_shock"],
+	# --- Act XI (temporary): the Barrow Fields ---
+	"barrow_grasp": ["barrow_grasp", "barrow_lords_embrace"],
+	# --- Act XI (temporary): Valgard ---
+	"valkyrie_spear": ["valkyrie_spear", "chooser_of_the_slain"],
+	# --- Act XI (temporary): Vigrid ---
+	"gungnir": ["gungnir", "spear_of_the_hanged"],
 }
 
 ## Owning run.
@@ -503,6 +531,33 @@ func step(delta: float) -> void:
 			node = _create(id)
 		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
 		node.step(delta, ab.spell_stats(id))  # The Maelstrom's spell.
+	# --- Act XI (temporary): the Barrow Fields ---
+	for id: String in BARROW_FIELDS_IDS:
+		if ab.spell_level(id) <= 0:
+			continue
+		var node: NecroSpell = nodes.get(id)  # The spell's node (created lazily).
+		if node == null:
+			node = _create(id)
+		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
+		node.step(delta, ab.spell_stats(id))  # The Barrow Fields' spell.
+	# --- Act XI (temporary): Valgard ---
+	for id: String in VALGARD_IDS:
+		if ab.spell_level(id) <= 0:
+			continue
+		var node: NecroSpell = nodes.get(id)  # The spell's node (created lazily).
+		if node == null:
+			node = _create(id)
+		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
+		node.step(delta, ab.spell_stats(id))  # Valgard's spell.
+	# --- Act XI (temporary): Vigrid ---
+	for id: String in VIGRID_IDS:
+		if ab.spell_level(id) <= 0:
+			continue
+		var node: NecroSpell = nodes.get(id)  # The spell's node (created lazily).
+		if node == null:
+			node = _create(id)
+		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
+		node.step(delta, ab.spell_stats(id))  # Vigrid's spell.
 
 
 ## Content wave 2: the Bone Wall node, created when missing (the Ossuary
@@ -614,6 +669,15 @@ func _create(id: String) -> NecroSpell:
 		# --- Act X: the Maelstrom ---
 		"anchor_drop":
 			node = AnchorDrop.new()  # The Maelstrom's spell.
+		# --- Act XI (temporary): the Barrow Fields ---
+		"barrow_grasp":
+			node = BarrowGrasp.new()  # The Barrow Fields' spell.
+		# --- Act XI (temporary): Valgard ---
+		"valkyrie_spear":
+			node = ValkyrieSpear.new()  # Valgard's spell.
+		# --- Act XI (temporary): Vigrid ---
+		"gungnir":
+			node = Gungnir.new()  # Vigrid's spell.
 		_:
 			node = PlagueCloud.new()
 	node.game = game

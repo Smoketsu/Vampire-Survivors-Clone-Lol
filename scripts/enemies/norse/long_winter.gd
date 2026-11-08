@@ -174,6 +174,27 @@ func fur_mult() -> float:
 	return clampf(1.0 - game.abilities.passive_value(NorseRulesData.FUR_LINED_BONES, NorseRulesData.FUR_KEY), 0.0, 1.0)
 
 
+# --- Act XI (temporary): the Barrow Fields --- (braziers placed by the map)
+## Retires every brazier farther than `dist` px from `p` (a stage director
+## placing the next zone's braziers by its map: BarrowFieldsDirector); one that
+## is out records its outage so far (longest_out(), Keep the Fires). Returns
+## how many were retired.
+func retire_far(p: Vector2, dist: float) -> int:
+	var n := 0
+	var i := braziers.size() - 1
+	while i >= 0:
+		var b := braziers[i]
+		if b.pos.distance_squared_to(p) > dist * dist:
+			if not b.lit:
+				max_out = maxf(max_out, game.elapsed - b.out_since)
+			braziers.remove_at(i)
+			n += 1
+		i -= 1
+	if n > 0 and _draws:
+		queue_redraw()
+	return n
+
+
 ## Longest time (s) a brazier stayed out this run, counting the one out now.
 func longest_out() -> float:
 	var m := max_out
@@ -181,6 +202,35 @@ func longest_out() -> float:
 		if not b.lit:
 			m = maxf(m, game.elapsed - b.out_since)
 	return m
+
+
+# --- Act XI (temporary): Vigrid ---
+## Vigrid's Fading Light (VigridDirector): the dark puts out brazier `i`
+## through the one douse path (`by` names it in the stats, as a douser's kind;
+## relit as any brazier). False when it is not lit.
+func put_out(i: int, by: String) -> bool:
+	if i < 0 or i >= braziers.size() or not braziers[i].lit:
+		return false
+	_douse(braziers[i], by)
+	return true
+
+
+## Vigrid's Fading Light (VigridDirector): brazier `i` is set up again at
+## world point `at` (moved out of obstacles and kept clear of new ones, as
+## place() does), keeping whether it burns: the war-camp moves with the
+## battle at each zone change.
+func move_to(i: int, at: Vector2) -> void:
+	if i < 0 or i >= braziers.size():
+		return
+	var r := float(cfg["brazier_radius"])
+	var b := braziers[i]
+	b.pos = game.arena.free_point(at, r)
+	b.douse = 0.0
+	b.douser = null
+	game.arena.keep_clear(b.pos, r + ArenaData.MAX_HALF_EXTENT * 1.5)
+	game.stat_add("braziers_moved", 1.0)
+	if _draws:
+		queue_redraw()
 
 
 ## Index of the nearest LIT brazier within `reach` px of `p` (a douser's
@@ -230,6 +280,18 @@ func bot_point(p: Vector2, reach: float) -> Vector2:
 		var dsq := b.pos.distance_squared_to(p)
 		if not b.lit and dsq < best_d:
 			best_d = dsq
+			best = b.pos
+	return best
+
+
+## Autotest --keep-fires bot (Hall of the Slain integration): the doused
+## brazier within `reach` px of `p` that has been out longest, else Vector2.INF.
+func keeper_point(p: Vector2, reach: float) -> Vector2:
+	var best := Vector2.INF
+	var best_since := INF  # Earliest out_since found.
+	for b in braziers:
+		if not b.lit and b.out_since < best_since and b.pos.distance_squared_to(p) <= reach * reach:
+			best_since = b.out_since
 			best = b.pos
 	return best
 
@@ -423,12 +485,17 @@ func _busy() -> bool:
 
 ## Each brazier: its warmth ring while lit (faint amber dots), a flicker while
 ## it gutters, its relight ring with the progress while out, and the brazier
-## itself (its sprite, else its glyph).
+## itself (its sprite, else its glyph). Only the braziers whose warmth ring
+## reaches the view are drawn (Hall of the Slain integration: view culling, so
+## the animated strips cost nothing off screen on the Web).
 func _draw() -> void:
 	var n := NorseRulesData.CAPTURE_DOTS
 	var wr := float(cfg["warm_radius"])
 	var rr := float(cfg["relight_radius"])
+	var view := _view_rect().grow(wr + NorseRulesData.BRAZIER_DRAW_MARGIN)  # World rect a drawn brazier must stand in.
 	for b in braziers:
+		if not view.has_point(b.pos):
+			continue
 		if b.lit:
 			for i in n * 2:
 				var a := TAU * float(i) / float(n * 2)
@@ -444,8 +511,39 @@ func _draw() -> void:
 				var a := -PI * 0.5 + TAU * float(i) / float(n)
 				SpriteBank.draw_disc(self, b.pos + Vector2.from_angle(a) * rr, 3.0, Color(Palette.NORSE_HEARTH, 0.95))
 		var key := NorseRulesData.BRAZIER_SPRITE if b.lit else NorseRulesData.BRAZIER_OUT_SPRITE
+		# --- Act XI (temporary): the Barrow Fields --- the art's 8-frame loops
+		# (flames flicker, the smoke drifts) on game time, the stills the fallback.
+		if _draw_anim(b, key):
+			continue
 		if not SpriteBank.draw(self, key, b.pos, false):
 			NorseGlyphs.draw_brazier(self, b.pos, float(cfg["brazier_radius"]), b.lit)
+
+
+# --- Hall of the Slain integration ---
+## The visible world rect (this node's local px = world px; drawing only).
+func _view_rect() -> Rect2:
+	var inv := get_global_transform_with_canvas().affine_inverse()  # Screen -> local.
+	return inv * get_viewport_rect()
+
+
+# --- Act XI (temporary): the Barrow Fields ---
+## Draws brazier `b` from the animated strip of still `key` (key + "_anim":
+## NorseRulesData.BRAZIER_ANIM_FRAMES frames of the still's size side by side,
+## frame = int(game time x BRAZIER_ANIM_FPS) mod frames), centred where the
+## still would stand, with its drop shadow. False without the strip (the still
+## is drawn). Visual only.
+func _draw_anim(b: Brazier, key: String) -> bool:
+	var tex := SpriteBank.texture(key + NorseRulesData.BRAZIER_ANIM_SUFFIX)
+	if tex == null:
+		return false
+	var frames := NorseRulesData.BRAZIER_ANIM_FRAMES
+	var h := SpriteBank.drawn_height(key)  # The still's drawn height (px).
+	var centre := b.pos + Vector2(0.0, h * SpriteData.CENTER_OFFSET)
+	draw_set_transform(centre + Vector2(0.0, h * 0.46), 0.0, Vector2(1.0, SpriteData.SHADOW_SQUASH))
+	SpriteBank.draw_disc(self, Vector2.ZERO, h * SpriteData.SHADOW_WIDTH * 0.5, Color(0.0, 0.0, 0.0, SpriteData.SHADOW_ALPHA))
+	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+	var frame := int(game.elapsed * NorseRulesData.BRAZIER_ANIM_FPS) % frames
+	return SpriteBank.draw_flat_frame(self, key + NorseRulesData.BRAZIER_ANIM_SUFFIX, frames, frame, centre, 0.0)
 
 
 ## (Re)builds the frost vignette for the current level: four gradient bands

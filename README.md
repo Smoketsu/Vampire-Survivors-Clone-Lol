@@ -15,7 +15,7 @@ Bishops, Shadow Reapers, Cathedral Horrors, Hellhounds, Keening Ladies and
 Ossuary Engines.
 
 This repository holds the game's campaign: nine acts of three stages each,
-27 playable stages (and the Black Tide, the Hall of the Slain and the Necropolis Dynasty, Acts X-XII for now, being built) from *The Desecrated Graveyard* (Act I) to *The Ark of the
+33 playable stages (the Black Tide and the Hall of the Slain, temporarily Acts X and XI, went live in Nov 2026; the Necropolis Dynasty, Act XII for now, is being built) from *The Desecrated Graveyard* (Act I) to *The Ark of the
 Concord* (Act IX), each boss opening the next stage (Acts VI-IX went live in
 Nov 2026), built in Godot 4.3 with no addons. The art is true pixel art (PNGs in `assets/`; the code
 drawings remain as the fallback for any missing image), and the sound and
@@ -2603,16 +2603,18 @@ Autotest: `--stage=maelstrom`, `--boss=vandermere`, `--spells=anchor_drop`, `--c
 `maelstrom` (the Heave, raises, longboats, the Bosun, the event log), `maelstrom kinds`, `vandermere`, `black tide
 kraken`, and on any stage `anchor drop` / `powder wraith` when used.
 ### The Hall of the Slain (foundation, not yet playable)
+### The Hall of the Slain (playable, temporarily Act XI)
 
 <!-- --- Act XI (temporary): the Hall of the Slain --- -->
 In the north the dead are not owned but chosen, and since the necromancer took the world's dead the god's hall stands
 empty. So the raiders, the shield-maidens, the berserkers, the barrow-dead and the giants come south, and the valkyries
 fly with them (GDD §15.0 "The Hall of the Slain foundation (phase 1)" and the rows after it; the act's section of
 `docs/proposals/LAST_SIX_ACTS.md`, with the owner's decisions of Nov 7, 2026). Its final place is **Act VI**, between the
-Shogunate and the Necropolis Dynasty; until the reorder pass it sits on a temporary **Act XI** tab after the Concord, and
-it is tuned for its final slot. Three stub stages, **the Barrow Fields**, **Valgard, the Hall of Heroes** and **Vigrid,
-the Last Field** (bosses Hrimgar the Draugr-King, Sigrun the Shield-Queen, Odin and Fenrir), registered but not yet
-playable ("Coming soon"); Captain Vandermere's fall in the Maelstrom opens the Barrow Fields. The act's shared rules:
+Shogunate and the Necropolis Dynasty; until the reorder pass it sits on a temporary **Act XI** tab after the Black Tide, and
+it is tuned for its final slot. Three stages, **the Barrow Fields**, **Valgard, the Hall of Heroes** and **Vigrid,
+the Last Field** (bosses Hrimgar the Draugr-King, Sigrun the Shield-Queen, Odin and Fenrir), playable since the act's
+integration (GDD §15.0 "Hall of the Slain integration"); Captain Vandermere's fall in the Maelstrom opens the Barrow
+Fields (until the Black Tide is built, `--stage=` reaches them). The act's shared rules:
 
 - **The Long Winter** (owner decision, replacing the proposal's Choosing). The cold rises with the clock: a level every
   5:00, three at most, and the frost creeps in from the edges of the screen. Six **braziers** burn on the field; within
@@ -2640,6 +2642,95 @@ braziers) and the **Fire-Giant** (Ragnarök's heavy). The Codex has a **Hall** t
 `--stage=barrow_fields|valgard|vigrid`, `--boss=hrimgar|sigrun|odin`, `--spawn=` with the kinds above
 (`rune_stone@T` raises a stone, `brazier@T` places a brazier); lines `long winter`, `berserkergang`, `rune-stones`,
 `norse kinds`, `ragnarok`, `norse stage`.
+
+### The Hall of the Slain: the Barrow Fields (Stage 16 in the final order)
+
+<!-- --- Act XI (temporary): the Barrow Fields --- -->
+Snowfields of burial mounds above a frozen fjord, and the barrows are cracking open (GDD §15.0 "The Barrow Fields (the
+Hall of the Slain phase 2)" and the rows after it; `docs/norse/BRIEF_PHASE2.md` Agent A). Playable since the act's
+integration. The draugr lead here, men and women, with the living warriors of the hall beside
+them. Four zones on the clock: **the Longshore** (snow down to the fjord, pines), **the Barrows** (5:00, a field of burial
+mounds), **the Frozen Fjord** (10:00, open ice and drifts of deep snow that slow everyone in them, you, your army and
+the enemy alike) and **the Jarl's Hall** (15:00, long tables, shields on posts and two rows of hearths).
+
+- **Braziers by the map.** The Longshore's five fires stand in a loose ring just beyond where you start; each later zone
+  lights its own set around you (four among the mounds, four on the fjord's banks, six hearths in the hall), and the
+  fires left far behind go out of the map. Warmth is near the fight, and fought over: the barrows crack open beside the
+  fires. The braziers flicker and smoke (8-frame loops) on every Norse stage.
+- **Open barrows.** A mound cracks open (2 s, a ring of frost closing on it), then lets a draugr out every 5 s (three of
+  its own at most) until you break it. At most six stand at once.
+- **The Barrow-Wight** (10:30, the miniboss): a draugr chieftain whose howl stuns your whole ring for a second (a frost
+  ring grows for 1 s first) and cracks a barrow near you.
+- **Hrimgar the Draugr-King** (17:00): he rises three times on one health bar. **The Grave**: frost mist bursts on your
+  ring (telegraphed circles that strike and chill) and draugr pour from every mound while new barrows crack. At two
+  thirds of his health he **falls** and sinks; his barrow rises where he fell, and draugr climb out of it. **Break it
+  within 20 s and he never rises again.** Otherwise he climbs out stronger as **the Barrow Lord** (a telegraphed cleave of
+  his greatsword that throws your summons) and, after a second fall, **the Last Rising** (he drags the summons nearest him
+  into the mound at his feet, holding and crushing them). His fall shows a short ending text.
+- **Rewards.** Slaying Hrimgar unlocks **Barrow Grasp** (cold hands burst from the ground in a ring around you and hold
+  your foes; it evolves into **Barrow-Lord's Embrace** with its paired passive **Grave Frost**: two rings of hands that
+  linger and seize what walks into them) and with it **the Rune-Seer** (a volva necromancer; her innate Rune of Binding
+  raises two more hands in every ring). The achievement **Keep the Fires** (reach 0:00 on the Barrow Fields with no
+  brazier ever out for more than 30 s) unlocks the act's counter-passive **Fur-Lined Bones** (the cold slows your summons
+  less, half at Lv 5; offered in this act only).
+
+Autotest: `--stage=barrow_fields`, `--boss=hrimgar`, `--spawn=` with `draugr_female`, `open_barrow`, `barrow_wight`,
+`hrimgar_barrow`; lines `barrow fields` (braziers by zone, barrows, drifts, Keep the Fires, the lowest HP and when),
+`barrow wight`, `hrimgar`, and `norse spell` / `norse passives` when Barrow Grasp, Grave Frost or Fur-Lined Bones was
+taken. The army bot brings its ring to Hrimgar's barrow while he lies in it.
+
+<!-- --- Act XI (temporary): Valgard --- -->
+**Valgard, the Hall of Heroes** (phase 2; GDD §15.0 "Valgard, the Hall of Heroes (the Hall of the Slain phase 2)" and
+the rows after it; playable since the act's integration). A vast feast hall at the edge of the sky. Warriors
+and valkyries lead. Four zones on the art's hall planks and slabs: **the Shield Yard** (shields on posts), **the Mead
+Hall** (long tables without end), **the Hall of Spears** and **the Valkyries' Gate**. The braziers stand by the map: the
+Mead Hall's long hearth either side of the start, the yard fires, and beyond them **the hall's hearths** on a ~900 px
+lattice, lit as you come near (about six in reach at a time), so warmth is a place to hold.
+- **The Feast.** Gold-lit **Einherjar** sit asleep at the long tables. Every horn of a Rune-Stone the hall holds wakes
+  the heroes at the nearest tables (two to four, by zone), who step out and fight; an emptied table fills again after
+  2:30. Take the stones and the horns stop.
+- **The Einherjar Champion** (miniboss, 11:00): a gold-lit hero of a thousand years. His **sweep** (a circle around
+  him) throws your ring back, and his **horn** wakes the tables; below 40% he goes berserk.
+- **Sigrun, the Shield-Queen** (17:00, with her valkyrie wing): **the Charge** (she and her wing mark lines across your
+  ring, then dive along them), **the Holmgang** (from 70%: a square of hazel rods closes around you and her for 15 s;
+  your summons and every other foe are kept out, you cannot leave, and only your **spells** reach her; take 6% of her
+  health and she yields, staggered with her guard down; fail and she heals; a duel every ~30 s), **the Doors of the
+  Hall** (from 35%: ten Einherjar march out of the doors at her side and the tables wake).
+- **Rewards:** **Valkyrie Spear** (a spectral spear dives on the strongest foe and leaps to the next) → **Chooser of the
+  Slain** (+ **Einherjar's Oath**: more leaps and damage; evolved, every fourth foe it slays rises as a Warrior for 12 s),
+  unlocked by Sigrun; **the Shield-Maiden** (Shield-Sister: one more leap); the counter-passive **Calm Blood** (berserk
+  blows on your summons deal up to 20% less; the act only), earned by the achievement **Holmgang** (win Sigrun's duel
+  without a Grave Step).
+- Autotest: `--stage=valgard`, `--boss=sigrun`, `--spawn=einherjar|einherjar_champion|wing_valkyrie@T`,
+  `--character=shield_maiden_hero`, `--spells=valkyrie_spear`, `--passives=calm_blood`; lines `valgard` (the Feast, the
+  hearths, the Champion), `einherjar champion`, `valgard threats`, `sigrun`, and on any stage `norse spell` / `norse
+  passives` when taken.
+
+<!-- --- Act XI (temporary): Vigrid --- -->
+#### Vigrid, the Last Field (phase 2; playable since the act's integration)
+
+The plain where the last battle is fought, under a sky going out (GDD §15.0 "Vigrid, the Last Field (phase 2)" and the
+rows after it). Four zones: **the Frozen Sea** (fjord ice), **the Ash Plain**, **the Giants' March** and **the Field of
+Vigrid** (shields planted in the ash). Giants and wolves lead. The six braziers stand by the map (two by the start, four
+farther out), and **the war-camp moves with the battle**: at each new zone the fires are set up again round you, lit or
+dark as they were. **The Fading Light:** the light fades zone by zone (a darkness over the screen with pools of light at
+the lit braziers and round you), and at every zone change from the Ash Plain on **the dark takes the farthest lit
+brazier** (relight it, or hold the fires you have). **The early dark:** from 15:15 the darkness turns Ragnarök's red and
+a fire-giant of the south steps out of the dark every 75 s until the boss. **Miniboss, the Fire-Giant of the South**
+(12:00): a stomp, and his footprints burn (and his stomp sets the ground alight); keep your ring out of the fire. **Boss,
+Odin and Fenrir:** *the Wolf* (Fenrir breaks his chain and hunts your ring; he swallows one of your dead whole and spits
+it out 4 s later, hurt, while Odin watches out of reach), *the All-Father* (the wolf chained at his side, Odin throws
+**Gungnir**, a homing spear at your strongest summon, or at you while **his ravens** have marked you: only a Bone Wall
+across its path or Grave Step turns it; shoot the ravens down), *Ragnarök* (both at once, rings of fire round you; when
+one falls, the other follows within 30 s). Rewards for Odin's fall, offered on every stage: the spell **Gungnir** (a
+spear of soul-light at the strongest foe on screen that pierces everything in its line) → **Spear of the Hanged** (two
+spears that come back to your hand) with **Runecraft**; the playable **Berserker** (male; Bear-Shirt: one more spear);
+the summon class **the Draugr Thane** (a heavy blocker; every axe blow chills, and its frost cleave chills all before
+it) → **the Barrow King** (the cleave freezes) with **Cold Iron** (your dead strike slowed foes harder); the achievement
+**Twilight of the Wolf** (beat Odin and Fenrir; the title Doom of the Gods). Autotest: `--stage=vigrid`, `--boss=odin`,
+`--spawn=muspel_giant|fenrir|odin_raven@T`, `--spells=gungnir`, `--classes=draugr_thane`, `--character=berserker_hero`;
+lines `vigrid` (the lowest HP before 0:00 and when, the dark, the camp moves, how far the nearest fire was, the
+vanguard, the miniboss), `vigrid events`, `vigrid kinds`, `odin`, and on any stage `gungnir` / `draugr thane` when used.
 ### Act XII (temporary number): the Necropolis Dynasty (foundation)
 
 <!-- --- Act XII (temporary number): the Necropolis Dynasty --- -->
@@ -3392,6 +3483,15 @@ scripts/
                             obstacles (barrows, pines, boulders, long tables, pillars, ash rocks)
     norse_report.gd         The autotest's Hall of the Slain lines (long winter, berserkergang, rune-stones, ragnarok,
                             norse kinds, norse stage)
+    barrow_fields_ground.gd The Barrow Fields' zone floors (tiles/norse_snow, tiles/norse_ice)
+    barrow_fields_report.gd The autotest's Barrow Fields lines (barrow fields, barrow wight, hrimgar) and its items
+                            (Barrow Grasp, Grave Frost, Fur-Lined Bones)
+    valgard_ground.gd       Valgard's four zone floors (tiles/norse_planks, norse_slabs and code decorations)
+    valgard_report.gd       The autotest's Valgard lines (valgard, einherjar champion, valgard threats, sigrun) and
+                            its items (Valkyrie Spear, Einherjar's Oath, Calm Blood)
+    vigrid_report.gd        The autotest's Vigrid lines (vigrid, vigrid events, vigrid kinds, odin) and the Gungnir /
+                            Draugr Thane item lines
+    vigrid_ground.gd        Vigrid's four zone floors (tiles/norse_ice, tiles/norse_ash; the Hall of the Slain)
     crash_site_report.gd    The autotest's Crash Site lines (crash site, burrowers, acid, brood matriarch, hive
                             mother) and its items (Bone Beetles, Chitin, Anchored; Act IX)
     crash_site_ground.gd    The Crash Site's four zone floors (tiles/crash_site_<style>, Act IX)
@@ -3839,6 +3939,10 @@ scripts/
                             song, the Einherjar) and its shared rules:
       norse_rules.gd        Game.norse: owns the Long Winter, the Rune-Stones and Ragnarök; BERSERKERGANG
                             (enter_fury(), the one writer of Enemy.berserk); the draugr's cold touch
+      vigrid_director.gd, vigrid_light.gd  Vigrid: the Fading Light (the dark takes a brazier per zone, the
+                            war-camp moves, the darkness look), the early dark's vanguard, the miniboss event
+      boss_odin.gd, fenrir_kit.gd, odin_raven_kit.gd, muspel_giant_kit.gd  Odin and Fenrir (the Wolf, the
+                            All-Father's Gungnir and ravens, Ragnarök), the Fire-Giant of the South's burning tracks
       long_winter.gd        THE LONG WINTER: the cold level, the braziers (place()), the slow (TerrainSlow) and
                             frostbite out of warmth, the douse and the relight, the frost vignette
       rune_stones.gd        THE RUNE-STONES: raise_stone(), the ward, the horn (horn_blown), the capture, the carving
@@ -3847,6 +3951,17 @@ scripts/
       draugr_kit.gd, wolf_of_the_wastes_kit.gd, frost_giant_kit.gd, fire_giant_kit.gd, rune_stone_kit.gd,
       brazier_kit.gd        The shared kinds (the bash, the song, the dive, the carving and curse, the lunge, the
                             boulder and stomp; the two structure bodies hand their spot to the rules)
+      barrow_fields_director.gd  The Barrow Fields: braziers by the map, THE ONE BARROW PATH (open_barrow()), the
+                            Frozen Fjord's drifts, Keep the Fires, the Barrow-Wight
+      open_barrow_kit.gd, hrimgar_barrow_kit.gd, barrow_wight_kit.gd  The open barrow, Hrimgar's barrow, the miniboss
+      boss_hrimgar.gd       Hrimgar the Draugr-King: the Grave, his falls into the barrow, the Barrow Lord, the Last
+                            Rising (the drag)
+      valgard_director.gd   Valgard: THE FEAST (seated Einherjar at the long tables, wake_feast() on every horn),
+                            the hall's hearths on a lattice (LongWinter.place()), the Einherjar Champion's event
+      einherjar_kit.gd, einherjar_champion_kit.gd, wing_valkyrie_kit.gd  Valgard's kinds (the woken heroes; the
+                            miniboss's sweep and horn; Sigrun's wing and its charge lanes, the one charge hit lane())
+      boss_sigrun.gd        Sigrun, the Shield-Queen: the Charge, the Holmgang (the spell-only rule), the Doors of
+                            the Hall; holmgang.gd is the square of hazel rods (the one keep-out path)
     dynasty/                The Necropolis Dynasty (Act XII, temporary number): its kits ("<id>_kit.gd", loaded by
                             name after the Concord's) and bosses ("boss_<id>.gd", phase 2), and the act's shared rules:
       dynasty_rules.gd      Game.dynasty: owns Rebirth, the quicksand, the Sandstorm, Heka and the Devourer's Hour;
@@ -4183,12 +4298,25 @@ scripts/
     proving_moon_enemy_data.gd  The Proving Moon's table: the Warbeast (Act IX)
     norse_enemy_data.gd     The Hall of the Slain's shared kinds (raider, shield_maiden, berserker, skald, valkyrie,
                             seer, draugr, wolf_of_the_wastes, frost_giant, fire_giant) and the rune_stone / brazier
-                            structure rows (barrow_fields_ / valgard_ / vigrid_enemy_data.gd: each stage's own, empty
-                            until phase 2)
+                            structure rows (barrow_fields_ / valgard_ / vigrid_enemy_data.gd: each stage's own;
+                            the Barrow Fields': draugr_female, open_barrow, barrow_wight, hrimgar_barrow;
+                            Valgard's: einherjar, einherjar_champion, wing_valkyrie)
+    hrimgar_data.gd         Hrimgar's arrival and numbers (the Grave, the Barrow Lord, the Last Rising, his falls)
+    barrow_grasp_data.gd    Barrow Grasp / Barrow-Lord's Embrace rules, Grave Frost and Rune of Binding keys (the
+                            spell node is abilities/spells/barrow_grasp.gd)
+    sigrun_data.gd          Sigrun's arrival and numbers (the Charge, the Holmgang, the Doors of the Hall; Valgard)
+    valkyrie_spear_data.gd  Valkyrie Spear / Chooser of the Slain rules, Einherjar's Oath keys, Shield-Sister key
+                            (Valgard; the spell node is abilities/spells/valkyrie_spear.gd)
     norse_rules_data.gd     The Hall of the Slain's shared rules: LONG_WINTER, EINHERJAR, BERSERK, RUNE_STONES,
                             RAGNAROK, the SOUNDS map, the Fur-Lined Bones / Keep the Fires keys
-    stages/barrow_fields_stage.gd  The Hall of the Slain stubs (temporarily act 11, final slot VI): "norse": true,
+    vigrid_enemy_data.gd    Vigrid's own kinds: the Fire-Giant of the South, Fenrir, Odin's ravens
+    odin_data.gd            Odin and Fenrir's arrival, phases and numbers
+    gungnir_data.gd         Gungnir / Spear of the Hanged rules, Runecraft keys, Bear-Shirt key (the spell node is
+                            abilities/spells/gungnir.gd; the Draugr Thane is horde/behaviors/draugr_thane_behavior.gd)
+    stages/barrow_fields_stage.gd  The Hall of the Slain stages (temporarily act 11, final slot VI): "norse": true,
     stages/valgard_stage.gd        zones, the "long_winter" / "rune_stones" overrides, a timeline of the shared kinds
+                                   (Valgard, phase 2: four zones, the braziers by the map, VALGARD for its director,
+                                   Sigrun)
     stages/vigrid_stage.gd         with four "rune_stone" events, Ragnarök, placeholder floors / bosses
     vrask_tal_data.gd       Vrask'Tal's arrival and numbers (the Stalk, the Duel, the Last Trophy and its bomb)
     soul_caster_data.gd     Soul Caster / Apex Predator rules, Trophy Rack keys, First Blood key (Act IX; the spell
@@ -4447,7 +4575,7 @@ Options (after `--`):
 | `--spells=a,b,...` | Any policy first takes these spells (ids from `AbilityData.SPELL_ORDER`, e.g. `bone_spear,soul_siphon,corpse_explosion,plague_cloud` or the later `death_mark,bone_wall,soul_chains` / `wither,raise_dead`) and their evolution passives, which also get ×8 card weight in hands and chests so they are offered reliably (a test-only hook; without `--spells` the draw is unchanged), never banishes them, and stops taking other new actives (or passives) once the free slots are down to the forced spells (or passives) still missing plus one spare, because chests can fill slots too (a hand with nothing else is rerolled or skipped). The `army`, `evolve` and `summon` bots never take a new item that is not on their build list (they reroll or skip), so the newer spells and the later summon classes do not change those baselines (`--classes` / `--spells` items are exempt); the `summon` and `army` bots also keep active slots free for the core classes they still lack (summon: Warriors, Mages, Menders, Warders; army: those plus Archers). Use it to exercise a spell and reach its evolution. |
 | `--passives=a,b,...` | Any policy first takes these passives (ids from `PassiveData.ORDER` except the Pact, e.g. `unholy_precision,unholy_resilience` or `blood_scent,mournsong,siegecraft`) exactly like the `--spells` items (score, ×8 card weight, slot reservation, never banished), so a passive's effect can be exercised. |
 | Bone Golem (content wave 2) | `--classes=bone_golem,...` and `--passives=grave_masonry` force the locked Golem and its passive. A run that had either prints a `bone golem` line: `absorbed=<n> max_growth=<%> bulwarks=<n> titan=<bool> bone_bastion_prevented=<dmg>`, then its level, alive / capacity, deaths, damage by source (slams with their volleys, splash, the Titan's wall), slams and slam hits, planted seconds, taunts, Grave Masonry's level and damage prevented, the Titan's heal, barriers and walls, and whether Bone Bastion was active. |
-| `--stage=ID` | Stage to play: `graveyard` (default), `crimson_march`, `sanctum`, the Act II stages `harbour`, `archive` and `spire`, the Act III stages `wastes`, `assembly` and `citadel`, the Act IV stages `ilion`, `olympus` and `underworld`, the Act V stages `province`, `kurogane` and `sun_road`, the Act VI stages `burning_gate`, `silk_palace` and `pandemonium`, the Act VII stages `ravensmoor`, `witchwood` and `castle_sanguis` (the summary adds the `bloodfeast`, `night wings`, `blood moon`, `court kinds`, `endless feast` and `court stage` lines; `--boss=vargr\|isolde\|carmilla`), the Act VIII stages `skid_row`, `fort_kessler` and `liberty_heights` (city blocks; the summary adds the `city blocks`, `armour`, `supers`, `civilians`, `escalation`, `city kinds`, `martial law` and `city stage` lines; `--boss=don_marrow\|harrow\|paragon`; `--spawn=` takes `civilian`, `street_thug`, `gang_gunner`, `riot_cop`, `squad_car`, `swat_breacher`, `field_medic`, `rifleman`, `tank`, `blitz` and `city_wreck`, Skid Row's `armoured_limo`, `big_sal` and `bounty_board`, and Fort Kessler's `machine_gunner`, `attack_helicopter` and `mammoth`; Skid Row adds `skid row` (Big Sal, the Bounty, No Witnesses), `tear gas`, `big sal` and `don marrow` lines, Fort Kessler adds the `fort kessler`, `fort kessler kinds`, `mammoth`, `fort kessler threats` (top summon-damage and summon-death sources) and `harrow` lines, and on any stage `act VIII spell` / `act VIII passives` when Hearse Run, Black Car, Kevlar Bones, Bone Mines, Tripwire or Armour-Piercing Bones were taken), the Act IX stages `crash_site`, `proving_moon` and `ark` (see *Act IX* above), the Act X stages `cutter`, `galleon` and `maelstrom` (see *Act X: the Black Tide* above), the Hall of the Slain's stub stages `barrow_fields`, `valgard` and `vigrid` (temporarily Act XI; see *The Hall of the Slain* above), or the temporary Act XII stubs `necropolis`, `lioness_temple` and `two_truths` (see *Act XII: the Necropolis Dynasty* above). Stage locks are ignored. Act II runs print a `dread` line (peak, average, end, Dread calmed by kills, seconds per 25-Dread step, Dread by source) and a `claims` line (claims, Thralls freed, expired, still risen at the end, refusals by the cap, claims by class). Gullhaven adds `tide` (level, seawall, High Water, surges and shoves, seconds in water for you / summons / enemies / swimmers), `harbour` and `harbour events` (buoys sunk and when, tolls, wave and trickle size, caches and chests, the Harbourmaster), `harbour kinds` / `harbour tricks` (also on any stage where a Harbour kind spawned, e.g. `--spawn=deep_kin@60x3`), `merrow` (when he is the boss, also `--boss=merrow`), `act II spell` (Undertow when learned) and `act II passives` (Salt of the Deep, Brinewalker). |
+| `--stage=ID` | Stage to play: `graveyard` (default), `crimson_march`, `sanctum`, the Act II stages `harbour`, `archive` and `spire`, the Act III stages `wastes`, `assembly` and `citadel`, the Act IV stages `ilion`, `olympus` and `underworld`, the Act V stages `province`, `kurogane` and `sun_road`, the Act VI stages `burning_gate`, `silk_palace` and `pandemonium`, the Act VII stages `ravensmoor`, `witchwood` and `castle_sanguis` (the summary adds the `bloodfeast`, `night wings`, `blood moon`, `court kinds`, `endless feast` and `court stage` lines; `--boss=vargr\|isolde\|carmilla`), the Act VIII stages `skid_row`, `fort_kessler` and `liberty_heights` (city blocks; the summary adds the `city blocks`, `armour`, `supers`, `civilians`, `escalation`, `city kinds`, `martial law` and `city stage` lines; `--boss=don_marrow\|harrow\|paragon`; `--spawn=` takes `civilian`, `street_thug`, `gang_gunner`, `riot_cop`, `squad_car`, `swat_breacher`, `field_medic`, `rifleman`, `tank`, `blitz` and `city_wreck`, Skid Row's `armoured_limo`, `big_sal` and `bounty_board`, and Fort Kessler's `machine_gunner`, `attack_helicopter` and `mammoth`; Skid Row adds `skid row` (Big Sal, the Bounty, No Witnesses), `tear gas`, `big sal` and `don marrow` lines, Fort Kessler adds the `fort kessler`, `fort kessler kinds`, `mammoth`, `fort kessler threats` (top summon-damage and summon-death sources) and `harrow` lines, and on any stage `act VIII spell` / `act VIII passives` when Hearse Run, Black Car, Kevlar Bones, Bone Mines, Tripwire or Armour-Piercing Bones were taken), the Act IX stages `crash_site`, `proving_moon` and `ark` (see *Act IX* above), the Act X stages `cutter`, `galleon` and `maelstrom` (see *Act X: the Black Tide* above), the Hall of the Slain's stages `barrow_fields`, `valgard` and `vigrid` (temporarily Act XI; see *The Hall of the Slain* above), or the temporary Act XII stubs `necropolis`, `lioness_temple` and `two_truths` (see *Act XII: the Necropolis Dynasty* above). Stage locks are ignored. Act II runs print a `dread` line (peak, average, end, Dread calmed by kills, seconds per 25-Dread step, Dread by source) and a `claims` line (claims, Thralls freed, expired, still risen at the end, refusals by the cap, claims by class). Gullhaven adds `tide` (level, seawall, High Water, surges and shoves, seconds in water for you / summons / enemies / swimmers), `harbour` and `harbour events` (buoys sunk and when, tolls, wave and trickle size, caches and chests, the Harbourmaster), `harbour kinds` / `harbour tricks` (also on any stage where a Harbour kind spawned, e.g. `--spawn=deep_kin@60x3`), `merrow` (when he is the boss, also `--boss=merrow`), `act II spell` (Undertow when learned) and `act II passives` (Salt of the Deep, Brinewalker). |
 | (the Hollow Archive) | `--stage=archive` adds `archive` (tomes burned and when, Nothing Unwritten, seconds in ink / spores, the orrery's risings, turns and pushes, the Librarian), `archive rifts` (opened and when, closed early, closed by themselves, cultists spat out) and `archive events` lines; any Archive kind adds `archive enemies` (spawned / killed per kind), `archive kits` (curses, wraith rises and dives, spore clouds and their summon damage, mass splits, Librarian beams, summons turned, lashes, kills) and `archive hazards`; the Archivist adds `archivist` (phase times, kill time, pages and their hits, Footnotes and the damage wasted on copies, Erasure steps and pushes); Forbidden Verse adds `act ii spells`, Marginalia / Iron Mind `act ii passives`. `--spawn=` takes `scribe`, `ink_wraith`, `spore_pilgrim`, `gibbering_mass`, `librarian`, `archive_rift`, `unwritten_one`; `--boss=archivist`; `--character=heretic_scribe`. |
 | (Act III) | `--stage=wastes\|assembly\|citadel` (the Act III stubs) prints `line of fire` (shots fired, rails, arcs; stopped by summons, absorbed by barriers, stopped by Bone Walls, Orb intercepts; reached you and the damage; expired, capped, peak), `lock-on` (lines painted on you / on summons, refused at the cap, fired, cancelled by a slain Spotter, rails stopped by summons or reaching you, most lines at once), `steel` (machine and cyborg kills, Grave Gunners raised per raising effect, their damage and kills), `purge protocol` (orbital salvos and strikes, hits), `empire kinds` (spawned / killed and damage per kind), `empire stage` and `ranged share` (the share of Empire spawns that attack from range; every Act III stage). The Empire's lines also print on any stage where an Empire kind was forced: `--spawn=scout_drone@60x10,line_trooper@90x6,spotter@120`. Grave Gunners need a raising effect, e.g. `--spells=death_mark` or `--ultimate=grave_tide`; `--boss=kestrel\|motherboard\|deus_ex_machina`. The Scrap Wastes (`--stage=wastes`) adds `wastes` (pylons raised / destroyed and when, the share of shooter reach samples boosted, shrunk or storm-halved, storms, the Trojan Horse, objective Soul Ash), `wastes kinds` (Aegis shield blocks and breaks, mortar shells, rockets launched / intercepted / hitting you / shot down, decoys; also wherever a Wastes kind was forced, e.g. `--spawn=aegis_bot@60x6,mortar_walker@90x2,trojan_horse@120`), `trojan horse` and `kestrel` (when she is the boss, also `--boss=kestrel`). On any stage, `act III spell` (Death Ray when learned, e.g. `--spells=death_ray`) and `act III passives` (Conductive Marrow, Lead-Lined Bones, e.g. `--passives=lead_lined_bones`). |
 | (Act IV) | `--stage=ilion\|olympus\|underworld` (the Act IV stubs) prints `divine wrath` (the stage's kind; salvos and strikes per kind: waves, bolts, fissures; damage to enemies with the kills, to summons and to you; fodder drowned, lightning chains, corpses swallowed, shades spat, capped strikes, whether the Twilight began), `phalanx` (walls formed, bodies locked, front hits by shots and melee with the damage prevented, flank breaks, most bodies locked at once), `glory` (stacks gained, the peak, heroes killed and with how many stacks, chests and Soul Ash bounty), `pantheon kinds` (spawned / killed and damage per kind) and `pantheon stage`. The lines also print on any stage where a Pantheon kind was forced: `--spawn=hoplite@60x8,hero@90,shade_of_dead@30x12,bronze_titan@120`; `--boss=achilles\|zeus\|hades` (placeholder boss scripts until phase 2). |
@@ -4462,6 +4590,7 @@ Options (after `--`):
 | (the Iron Citadel) | `--stage=citadel` adds `citadel` (gates raised / broken / locked down, garrison spawns, wall pushes, laser cycles and their hits on you, summons and enemies, citadel gun salvos, strikes and hits, turrets placed / destroyed / left behind, guests, objective Soul Ash), `citadel events`, `citadel kinds` (Duelist lunges: blocked / reached you / summons sliced; turret bursts; Valkyrie 2.0: spawned, killed and time to kill, dashes (blocked, hit you), bashes, storms, summon hits) and, when it fought, `deus ex machina` (phase times, plates broken, chaingun / salvo / footfall / stomp counts and hits, drones launched and downed, exposures, lances and their blocked ticks, hangars, pulses, teleports, machines gone dark, damage to you by attack). On every stage, `scrap swarm` (level, damage, kills, bolts, kill drones, peak drones, orbit radius; Machine Soul's bonus damage) and `iron revenant` (level, damage by source, bursts, shells, salvos, missiles; Recoil Frame) print only when used. |
 | `--unlocks=all\|none` | `all` lets every lockable Act II item (UnlockData) be offered; `none` (default) is a fresh save's card pool. Items forced by `--spells` / `--passives` / `--classes` are open either way. It opens the card pool only, never the achievement rewards (ultimates, titles, skins). |
 | `--rewards=on\|off` | Content wave 2: `on` checks the five one-run achievements (Mass Grave, Untouchable, Full Ossuary, Deathlord's Due, Swift Judgment) in memory, as the game does; by default (`off`) the autotest leaves them unchecked (unless `--meta-save`), so the default summaries' bounty and Soul Ash are unchanged. Every summary ends with a `rewards` line: achievements earned this run, titles open, reward items unlocked (`ultimate:` / `title:` / `skin:`), the run counters (temporary undead raised, lowest HP before 0:00, evolutions, the boss's lifetime after arrival), the one-run achievements this run met and whether they were checked, the worn title, and the setup screen's title row built once headless. |
+| `--keep-fires` | The Hall of the Slain: the bot becomes a fire-keeper; on a Norse stage it walks to the brazier that has been out longest before anything but its own danger (`LongWinter.keeper_point()`), to show that the Barrow Fields' **Keep the Fires** (no brazier out more than 30 s) can be earned. Off by default (the default runs are unchanged). |
 | `--boss=ID` | Puts another boss in the stage's boss slot at the stage's boss time: `alaric`, `vael` or `seraphine` (`StageRegistry.BOSS_ARRIVALS`), e.g. `--boss=seraphine` to test Grand Inquisitor Seraphine on the Graveyard. With her the summary adds a `seraphine` line. |
 | `--difficulty=ID` | Difficulty level (GDD §8.4): `initiate`, `necromancer` (default, today's game), `lich` or `deathlord` (names work too, any case). |
 | (chest beacon) | Every summary has a `chest beacon` line: chests marked (lying in the world while the run plays; a chest opened the tick it dropped is never marked), chests seen on screen, the most off-screen arrows at once (after merging and the cap of 4) and the physics ticks (and game seconds) with an arrow. It is counted headless from the logical view (the necromancer at the centre, the visible area at the camera zoom, the desktop layout) and never drawn. |
@@ -4635,6 +4764,8 @@ the live build instead of about 30):
    `sun_road`, `burning_gate`, `silk_palace`, `pandemonium`, `ravensmoor`, `witchwood`, `castle_sanguis`, `skid_row`,
    `fort_kessler`, `liberty_heights`, `crash_site`, `proving_moon`, `ark`, and the Black Tide's `cutter`, `galleon`,
    `maelstrom`; the stubs of the other last acts, Acts XI-XII for now, get their jobs in the reorder pass) (`--quit-after 15000`, at most 10-15
+   `fort_kessler`, `liberty_heights`, `crash_site`, `proving_moon`, `ark`, and the Hall of the Slain's `barrow_fields`,
+   `valgard`, `vigrid`; the other last acts get theirs as they go live) (`--quit-after 15000`, at most 10-15
    wall-clock minutes per run).
    A job fails on any `SCRIPT ERROR`, `ERROR:` or `WARNING:` line, or if its run doesn't complete; one failure does
    not cancel the others. Logs: `test-logs-<id>`.

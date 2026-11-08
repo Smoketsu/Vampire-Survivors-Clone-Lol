@@ -114,7 +114,13 @@ const ORDER := ["void_barrage", "eclipse_ward", "abyssal_detonation",
 	# --- Act X: the Treasure Galleon ---
 	"dead_mens_broadside",
 	# --- Act X: the Maelstrom ---
-	"abyssal_mooring"]
+	"abyssal_mooring",
+	# --- Act XI (temporary): the Barrow Fields ---
+	"barrow_lords_embrace",
+	# --- Act XI (temporary): Valgard ---
+	"chooser_of_the_slain",
+	# --- Act XI (temporary): Vigrid ---
+	"spear_of_the_hanged"]
 
 ## Evolution definitions.
 ##   base         — spell id that evolves (AbilityData.SPELLS key).
@@ -868,6 +874,72 @@ const EVOLUTIONS := {
 		"stats": {
 			"damage": 80.0, "cooldown": 2.5, "anchors": 2, "anchor_stun": 1.5, "ring_radius": 70.0, "ring_share": 0.18,  # TUNING (not in GDD) integration balance 90 / 0.3 -> 80 / 0.18 (345k in the forced seed-7 Maelstrom run, 1.5x the top summon class); first passes 74 px / 0.55, then 0.42 (404k in the forced seed-7 Maelstrom run)
 			"moor": 2.0, "moor_every": 0.6, "moor_share": 0.06, "moor_radius": 64.0,  # TUNING (not in GDD) integration balance 0.08 -> 0.06; the evolution flag: the moored anchor's pulses (first pass 2.4 s / 0.18 / 70 px: 437k damage in the forced seed-7 Maelstrom run)
+		},
+	},
+	# --- Act XI (temporary): the Barrow Fields ---
+	# Barrow-Lord's Embrace (GDD §15.0 "Barrow Grasp, Barrow-Lord's Embrace,
+	# Grave Frost and the Rune-Seer"; owner-approved proposal "Barrow Grasp ->
+	# Barrow-Lord's Embrace (+ Grave Frost)"): Barrow Grasp + Grave Frost (a NEW
+	# passive, owner rule: at Lv 5). Own decision on its kit: two rings of hands
+	# (the inner at ring_step of the outer), and every hand LINGERS `linger` s,
+	# grabbing again every BarrowGraspData.LINGER_TICK s. Detected by "linger".
+	"barrow_lords_embrace": {
+		"base": "barrow_grasp",
+		"passive": "grave_frost",
+		"display_name": "Barrow-Lord's Embrace",  # Owner-approved proposal
+		"icon": "barrow_lords_embrace",
+		"description": "Two rings of barrow hands rise around you and linger, seizing every foe that walks into them.",
+		"labels": {"damage": "Damage", "hands": "Hands", "rings": "Rings", "hold": "Hold", "linger": "Linger (s)", "cooldown": "Cooldown"},
+		"stats": {
+			"damage": 32.0, "hands": 11, "ring": 170.0, "radius": 33.0, "hold": 1.7, "cooldown": 3.4,  # TUNING (not in GDD)
+			"rings": 2, "ring_step": 0.55, "linger": 2.2,  # TUNING (not in GDD) the evolution flag: two rings, lingering hands
+		},
+	},
+	# --- Act XI (temporary): Valgard ---
+	# Chooser of the Slain (GDD §15.0 "Valkyrie Spear, Chooser of the Slain,
+	# Einherjar's Oath and the Shield-Maiden (Valgard)"; owner-approved
+	# proposal "Valkyrie Spear -> Chooser of the Slain (+ Einherjar's Oath)"):
+	# Valkyrie Spear + Einherjar's Oath (a NEW passive, owner rule: at Lv 5).
+	# Own decision on its kit: more leaps and damage, x elite_mult on elites,
+	# minibosses and bosses, and the spear CHOOSES THE SLAIN: every
+	# chosen_every-th foe it kills (that leaves a corpse) rises for risen_time s
+	# as a temporary Warrior of the army (HordeDirector.spawn_temporary(), the
+	# one temporary-summon path: Restless Dead applies), at most risen_cap at
+	# once. Detected by the "risen_time" key.
+	"chooser_of_the_slain": {
+		"base": "valkyrie_spear",
+		"passive": "einherjars_oath",
+		"display_name": "Chooser of the Slain",  # Owner-approved proposal
+		"icon": "chooser_of_the_slain",
+		"description": "More leaps and harder strikes, and the foes it slays rise to fight for you.",
+		"labels": {"damage": "Spear damage", "jumps": "Leaps", "elite_mult": "Vs elites and bosses", "risen_time": "Chosen rise (s)", "cooldown": "Cooldown (s)"},
+		"stats": {
+			"damage": 62.0, "jumps": 5, "falloff": 0.84, "chain": 210.0, "range": 390.0, "cooldown": 2.0,  # TUNING (not in GDD)
+			"elite_mult": 1.35,  # TUNING (not in GDD) x on elites, minibosses and bosses
+			"chosen_every": 4,  # TUNING (not in GDD) every 4th kill of the spear rises
+			"risen_time": 12.0,  # TUNING (not in GDD) the evolution flag: s a chosen warrior fights
+			"risen_cap": 4,  # TUNING (not in GDD) chosen warriors at once
+			"risen_hp": 0.8,  # TUNING (not in GDD) x the Warrior's HP
+			"risen_damage": 0.8,  # TUNING (not in GDD) x the Warrior's damage
+		},
+	},
+	# --- Act XI (temporary): Vigrid ---
+	# Spear of the Hanged (GDD §15.0 "Gungnir, Spear of the Hanged, Runecraft
+	# and the Berserker"; owner-approved proposal "Gungnir -> Spear of the
+	# Hanged (+ Runecraft)"): Gungnir + Runecraft (a NEW passive, owner rule: at
+	# Lv 5). The god hung nine nights on his own spear for the runes: two spears
+	# a cast, wider and longer, and each RETURNS along its line return_delay s
+	# later for return_share x the damage. Detected by the "return_share" key.
+	"spear_of_the_hanged": {
+		"base": "gungnir",
+		"passive": "runecraft",
+		"display_name": "Spear of the Hanged",  # Owner-approved proposal
+		"icon": "spear_of_the_hanged",
+		"description": "Two spears fly at the strongest foes and come back to your hand through everything in their line.",
+		"labels": {"damage": "Damage", "cooldown": "Cooldown (s)", "spears": "Spears", "spear_width": "Width (px)", "length": "Reach (px)", "return_share": "Return damage"},
+		"stats": {
+			"damage": 74.0, "cooldown": 2.3, "spears": 2, "spear_width": 14.0, "length": 740.0,  # TUNING (not in GDD) first pass 84 / 2.2 / 15
+			"return_share": 0.4, "return_delay": 0.35,  # TUNING (not in GDD) the evolution flag: the spear comes back (first pass 0.5: 331k evolved damage in the forced seed-7 run)
 		},
 	},
 }

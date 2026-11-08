@@ -20,6 +20,7 @@
 ##   "hero_slam" Fallen Hero      FallenHeroBehavior (Act VIII, Liberty Heights)
 ##   "saucer_lift" Ghost Saucer   GhostSaucerBehavior (Act IX, the Ark of the Concord)
 ##   "keg_burst" Powder Wraith    PowderWraithBehavior (Act X, the Maelstrom)
+##   "frost_axe" Draugr Thane     DraugrThaneBehavior (Vigrid, the Hall of the Slain)
 ## It creates / reuses the per-unit instance and builds the class-specific
 ## level-up card lines (AbilityManager._summon_offer()), so the shared code
 ## only ever talks to this file and the SummonBehavior base class.
@@ -89,6 +90,9 @@ static func for_unit(current: SummonBehavior, kind: String) -> SummonBehavior:
 		# --- Act X: the Maelstrom ---
 		"keg_burst":
 			b = PowderWraithBehavior.new()  # The Powder Wraith.
+		# --- Act XI (temporary): Vigrid ---
+		"frost_axe":
+			b = DraugrThaneBehavior.new()  # The Draugr Thane.
 	if b != null:
 		b.kind = kind
 	return b
@@ -245,6 +249,14 @@ static func card_lines(cls: String, cur: Dictionary, nxt: Dictionary) -> PackedS
 			else:
 				_delta(out, "Keg damage", a, b, "keg_damage")
 				_delta(out, "Keg blast (px)", a, b, "keg_radius")
+		# --- Act XI (temporary): Vigrid ---
+		"frost_axe":
+			if a.is_empty():
+				out.append("Holds the front; every axe blow slows its foe")
+				out.append("Its frost cleave chills all before it")
+			else:
+				_delta(out, "Cleave damage", a, b, "cleave_damage")
+				_delta(out, "Chill (s)", a, b, "cleave_slow_duration")
 	return out
 
 

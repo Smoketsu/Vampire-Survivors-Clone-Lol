@@ -39,7 +39,7 @@ static func draw_enemy(ci: CanvasItem, kind: String, o: Vector2, r: float, flash
 			_valkyrie(ci, o, r, flash)
 		"seer":
 			_seer(ci, o, r, flash)
-		"draugr":
+		"draugr", "draugr_female", "barrow_wight":  # Act XI (temporary), the Barrow Fields: the barrow-dead share the draugr's shape.
 			_draugr(ci, o, r, flash)
 		"wolf_of_the_wastes":
 			_wolf(ci, o, r, flash)

@@ -14,6 +14,8 @@
 #               silk_palace, pandemonium, ravensmoor, witchwood, castle_sanguis, skid_row, fort_kessler,
 #               liberty_heights, crash_site, proving_moon, ark; army policy) and the three Act X stages (--stage=cutter,
 #               galleon, maelstrom; army policy; the Black Tide, temporary act number). Fails on any script error/warning or if a run
+#               liberty_heights, crash_site, proving_moon, ark,
+#               and the three Hall of the Slain stages (barrow_fields, valgard, vigrid); army policy). Fails on any script error/warning or if a run
 #               doesn't complete.
 #   2. export - builds single-file Windows (.exe) and Linux executables and the
 #               no-threads Web build (index.html + .js + .wasm + .pck, any static
@@ -115,6 +117,10 @@ jobs:
           - {id: cutter, name: "Act X Stage 28, the Smuggler's Cutter", args: "--stage=cutter --policy=army", timeout: 900}
           - {id: galleon, name: "Act X Stage 29, the Treasure Galleon", args: "--stage=galleon --policy=army", timeout: 900}
           - {id: maelstrom, name: "Act X Stage 30, the Maelstrom", args: "--stage=maelstrom --policy=army", timeout: 900}
+          # The Hall of the Slain (temporarily Act XI, stages 31-33 in the registry; final slot VI after the reorder).
+          - {id: barrow_fields, name: "Act XI Stage 31, the Barrow Fields", args: "--stage=barrow_fields --policy=army", timeout: 900}
+          - {id: valgard, name: "Act XI Stage 32, Valgard", args: "--stage=valgard --policy=army", timeout: 900}
+          - {id: vigrid, name: "Act XI Stage 33, Vigrid, the Last Field", args: "--stage=vigrid --policy=army", timeout: 900}
     steps:
       - uses: actions/checkout@v4
 

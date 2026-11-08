@@ -21,7 +21,9 @@
 ##                   grouped by group, and the kinds' specials
 ##   norse stage:    the Norse stage itself (stub status, boss, Soul Ash, the
 ##                   Reckoning)
-## Phase 2 adds one line per stage system here (each stage in its own block).
+## Phase 2 adds one line per stage system here (each stage in its own block):
+##   the Barrow Fields: BarrowFieldsReport ("barrow fields", "barrow wight",
+##                   "hrimgar").
 ## Read-only: it never changes the run.
 class_name NorseReport
 extends RefCounted
@@ -57,6 +59,12 @@ static func print_lines(game: Game, st: Dictionary) -> void:
 			EmpireReport._clock(float(sd.get("enemy_mult_from", 0.0))), float(sd["ash_mult"]),
 			String((sd["reckoning"] as Dictionary).get("kind", "inquisitor")), str(not n.ragnarok.cfg.is_empty())])
 	# Phase 2: each Norse stage's own lines go here (its stage, kinds and boss).
+	# --- Act XI (temporary): the Barrow Fields ---
+	BarrowFieldsReport.print_lines(game, st)  # The braziers by the map, the barrows, the drifts, Keep the Fires, the Wight, Hrimgar.
+	# --- Act XI (temporary): Valgard --- (the Feast, the Champion, Sigrun; ValgardReport)
+	ValgardReport.print_lines(game, st)
+	# --- Act XI (temporary): Vigrid --- (its stage, kinds and boss; VigridReport)
+	VigridReport.stage_lines(game, st)
 
 
 ## The "long winter" line (LongWinter).

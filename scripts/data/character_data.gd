@@ -102,7 +102,13 @@ const ORDER := ["gravecaller", "umbral_warden", "voidcaller", "bone_oracle", "fa
 	# --- Act X: the Treasure Galleon ---
 	"corsair_queen",
 	# --- Act X: the Maelstrom ---
-	"ghost_helmsman"]
+	"ghost_helmsman",
+	# --- Act XI (temporary): the Barrow Fields ---
+	"rune_seer",
+	# --- Act XI (temporary): Valgard ---
+	"shield_maiden_hero",
+	# --- Act XI (temporary): Vigrid ---
+	"berserker_hero"]
 ## The default character (RunConfig, fresh saves, the autotest): today's game.
 const DEFAULT_ID: String = "gravecaller"
 ## Spell level that unlocks a character (owner rule: reach Lv 5 with its spell
@@ -168,6 +174,8 @@ const STAT_LABELS := {
 ##                           she drops; Act VIII)
 ##   beetle_extra            BoneBeetles.on_enemy_killed (extra beetles in every
 ##                           burst; Act IX)
+##   grasp_extra_hands       BarrowGrasp._cast (extra hands in every ring; the
+##                           Barrow Fields, the Hall of the Slain)
 ##   soul_caster_extra_targets  SoulCaster._lock (extra targets each Soul
 ##                           Caster lock takes; Act IX)
 ##   cannonade_extra_marks   Cannonade._volley (extra groups each Cannonade
@@ -229,7 +237,13 @@ const INNATE_KEYS := ["orb_projectile_destroy", "blast_echo_delay", "blast_echo_
 	# --- Act X: the Treasure Galleon ---
 	"cannonade_extra_marks",
 	# --- Act X: the Maelstrom ---
-	"anchor_extra"]
+	"anchor_extra",
+	# --- Act XI (temporary): the Barrow Fields ---
+	"grasp_extra_hands",
+	# --- Act XI (temporary): Valgard ---
+	"valkyrie_spear_extra_jumps",
+	# --- Act XI (temporary): Vigrid ---
+	"gungnir_extra_spears"]
 
 ## Orbit radius (px) of the Bone Oracle's Ossuary Ward shards around him.
 const SHARD_ORBIT_RADIUS: float = 27.0  # TUNING (not in GDD)
@@ -1037,6 +1051,81 @@ const CHARACTERS := {
 		"stats": {"max_hp": 15.0, "move_speed": -0.03},  # TUNING (not in GDD) a broad, steady helmsman
 		"sprite": "player/ghost_helmsman",
 		"tint": Color(0.72, 0.94, 0.86),  # TUNING (not in GDD) a pale spectre green over the violet
+		"starts_unlocked": false,
+	},
+	# --- Act XI (temporary): the Barrow Fields ---
+	# The Rune-Seer (Barrow Grasp's character; owner-approved proposal
+	# "Rewards": "Barrow Grasp ... | The Rune-Seer (female, figure style)"; the
+	# playable-character convention, docs/last_acts/PLAN.md: a necromancer of the
+	# act's theme, never one of the hall): FEMALE, in the figure-redesign style
+	# (fully clothed): a violet-robed volva necromancer with a grey fur mantle,
+	# pale undead-touched skin and a rune staff whose rune burns soul-teal (art
+	# player/rune_seer, glide, bust and idle strips). Barrow Grasp must be
+	# unlocked (Hrimgar) before she can be earned, by the usual Lv 5 rule. Own
+	# decision on her innate (the proposal names none): Rune of Binding, two
+	# more hands in every ring of Barrow Grasp (BarrowGrasp._cast()).
+	"rune_seer": {
+		"display_name": "The Rune-Seer",  # Owner-approved proposal
+		"title": "She read the barrows' runes backwards, and the dead in them answered.",
+		"spell": "barrow_grasp",
+		"innate": {
+			"id": "rune_of_binding", "name": "Rune of Binding",
+			"description": "Barrow Grasp raises two more hands in every ring.",
+			"values": {"grasp_extra_hands": 2.0},  # TUNING (not in GDD) extra hands a ring
+		},
+		"stats": {"max_hp": 5.0, "move_speed": 0.02},  # TUNING (not in GDD) a fur mantle against the winter
+		"sprite": "player/rune_seer",
+		"tint": Color(0.70, 0.78, 0.92),  # TUNING (not in GDD) frost blue over the violet (only without her art)
+		"starts_unlocked": false,
+	},
+	# --- Act XI (temporary): Valgard ---
+	# The Shield-Maiden (Valkyrie Spear's character; owner-approved proposal
+	# "Rewards": "Valkyrie Spear ... | The Shield-Maiden (female, figure
+	# style)"; owner note Nov 2026: every playable character is a purple
+	# necromancer of the act's theme): FEMALE, in the figure-redesign style
+	# (clothed), a purple-cloaked necromancer with a bone-rimmed shield and a
+	# soul-flame spear for her focus (the art pass's player/shield_maiden_hero,
+	# with glide and idle strips). Id shield_maiden_hero: "shield_maiden" is the
+	# enemy kind. Valkyrie Spear must be unlocked (Sigrun) before she can be
+	# earned, by the usual Lv 5 rule. Own decision on her innate (the proposal
+	# names none): Shield-Sister, her spear leaps once more
+	# (ValkyrieSpear._cast()).
+	"shield_maiden_hero": {
+		"display_name": "The Shield-Maiden",  # Owner-approved proposal
+		"title": "She stood in the shield wall until it fell. She raised it again.",
+		"spell": "valkyrie_spear",
+		"innate": {
+			"id": "shield_sister", "name": "Shield-Sister",
+			"description": "Valkyrie Spear leaps to one more foe.",
+			"values": {"valkyrie_spear_extra_jumps": 1.0},  # TUNING (not in GDD) extra leaps a cast
+		},
+		"stats": {"max_hp": 10.0, "move_speed": -0.03},  # TUNING (not in GDD) behind her shield: sturdier, a little slower
+		"sprite": "player/shield_maiden_hero",
+		"tint": Color(0.80, 0.70, 0.95),  # TUNING (not in GDD) a pale violet over the violet (her art replaces it)
+		"starts_unlocked": false,
+	},
+	# --- Act XI (temporary): Vigrid ---
+	# The Berserker (Gungnir's character; owner-approved proposal "Rewards":
+	# "Gungnir ... | The Berserker (male)"; id "berserker_hero", so it never
+	# meets the enemy kind "berserker"): MALE, a necromancer of the north in the
+	# necromancer's violet (docs/last_acts/PLAN.md, the art convention): a
+	# purple hood under a bear-skull crest, bone and soul-teal, one soul-teal axe
+	# held close as his casting focus (player/berserker_hero). Gungnir must be
+	# unlocked (Odin) before he can be earned, by the usual Lv 5 rule. Own
+	# decision on his innate (the proposal names none): the bear-shirt's fury
+	# throws one more spear a cast, at the next strongest foe (Gungnir.step()).
+	"berserker_hero": {
+		"display_name": "The Berserker",  # Owner-approved proposal
+		"title": "He put on the bear's skull and went to war with the dead.",
+		"spell": "gungnir",
+		"innate": {
+			"id": "bear_shirt", "name": "Bear-Shirt",
+			"description": "Gungnir throws one more spear.",
+			"values": {"gungnir_extra_spears": 1.0},  # TUNING (not in GDD) extra spears a cast
+		},
+		"stats": {"max_hp": 15.0, "move_speed": -0.03},  # TUNING (not in GDD) a heavy, hardy body
+		"sprite": "player/berserker_hero",
+		"tint": Color(0.86, 0.72, 0.70),  # TUNING (not in GDD) a bear-pelt warmth over the violet (the art carries the look)
 		"starts_unlocked": false,
 	},
 }

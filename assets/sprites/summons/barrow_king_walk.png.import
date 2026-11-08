@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b15t6x3qgtd72"
-path="res://.godot/imported/draugr_thane_walk.png-aebc79e8a7db642a731e5b3f4583f797.ctex"
+uid="uid://b32ocumvakcmm"
+path="res://.godot/imported/barrow_king_walk.png-a9b592bd0ade1a09b058abc35f3485dd.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/norse/draugr_thane_walk.png"
-dest_files=["res://.godot/imported/draugr_thane_walk.png-aebc79e8a7db642a731e5b3f4583f797.ctex"]
+source_file="res://assets/sprites/summons/barrow_king_walk.png"
+dest_files=["res://.godot/imported/barrow_king_walk.png-a9b592bd0ade1a09b058abc35f3485dd.ctex"]
 
 [params]
 

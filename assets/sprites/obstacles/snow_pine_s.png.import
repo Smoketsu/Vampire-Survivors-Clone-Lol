@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://kny0v6ih506g"
-path="res://.godot/imported/barrow_king_walk.png-82ce690fabbc6afcce1387d6e860e7ef.ctex"
+uid="uid://c48fvyi6ajvqn"
+path="res://.godot/imported/snow_pine_s.png-8d9ac1ba1178617b0b50d378c09e9d64.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/norse/barrow_king_walk.png"
-dest_files=["res://.godot/imported/barrow_king_walk.png-82ce690fabbc6afcce1387d6e860e7ef.ctex"]
+source_file="res://assets/sprites/obstacles/snow_pine_s.png"
+dest_files=["res://.godot/imported/snow_pine_s.png-8d9ac1ba1178617b0b50d378c09e9d64.ctex"]
 
 [params]
 

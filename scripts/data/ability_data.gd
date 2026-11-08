@@ -116,7 +116,13 @@ const SPELL_ORDER := ["shadow_bolt", "orb_shield", "shadow_blast",
 	# --- Act X: the Treasure Galleon ---
 	"cannonade",
 	# --- Act X: the Maelstrom ---
-	"anchor_drop"]
+	"anchor_drop",
+	# --- Act XI (temporary): the Barrow Fields ---
+	"barrow_grasp",
+	# --- Act XI (temporary): Valgard ---
+	"valkyrie_spear",
+	# --- Act XI (temporary): Vigrid ---
+	"gungnir"]
 
 ## Spell definitions.
 ##   display_name — UI name.
@@ -1021,6 +1027,81 @@ const SPELLS := {
 			{"damage": 72.0, "cooldown": 2.8, "anchor_stun": 1.2, "ring_radius": 64.0, "ring_share": 0.25},  # TUNING (not in GDD) integration balance: ring_share 0.3-0.4 -> 0.2-0.25 (the shock ring dealt 148k of the forced seed-7 Maelstrom run's 345k, 1.5x the top summon class); Tractor Beam Lv5 78 / 2.6 s; the stun is its edge (first pass shock 0.54 at 68 px: the shock ring dealt most of its damage)
 		],
 	},
+	# --- Act XI (temporary): the Barrow Fields ---
+	# Barrow Grasp (GDD §15.0 "Barrow Grasp, Barrow-Lord's Embrace, Grave Frost
+	# and the Rune-Seer"; owner-approved proposal: "cold hands burst from the
+	# ground in a ring and hold enemies"; unlocked by slaying Hrimgar,
+	# UnlockData). Every `cooldown` s `hands` hands burst on a ring `ring` px
+	# around the necromancer; each grabs every foe within `radius` px once:
+	# `damage` and a hold of `hold` s (CombatResolver.stun_enemy(): bosses keep a
+	# quarter, elites 60%; the berserk shrug it off). Stat keys: damage, hands,
+	# ring (px), radius (px), hold (s), cooldown (s). Logic: BarrowGrasp; fixed
+	# rules: BarrowGraspData; Grave Frost (its paired passive) makes every hand
+	# hit harder and hold longer.
+	"barrow_grasp": {
+		"display_name": "Barrow Grasp",  # Owner-approved proposal
+		"icon": "barrow_grasp",
+		"description": "Cold hands burst from the ground in a ring around you and hold your foes.",
+		"shared_card_pool": true,  # TUNING (not in GDD) an unlocked spell: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Damage", "hands": "Hands", "hold": "Hold", "cooldown": "Cooldown"},
+		"levels": [
+			{"damage": 14.0, "hands": 6, "ring": 160.0, "radius": 26.0, "hold": 1.0, "cooldown": 4.5},  # TUNING (not in GDD)
+			{"damage": 17.0, "hands": 7, "ring": 160.0, "radius": 27.0, "hold": 1.1, "cooldown": 4.2},  # TUNING (not in GDD)
+			{"damage": 20.0, "hands": 8, "ring": 160.0, "radius": 28.0, "hold": 1.2, "cooldown": 4.0},  # TUNING (not in GDD)
+			{"damage": 24.0, "hands": 9, "ring": 165.0, "radius": 30.0, "hold": 1.4, "cooldown": 3.7},  # TUNING (not in GDD)
+			{"damage": 28.0, "hands": 10, "ring": 165.0, "radius": 32.0, "hold": 1.6, "cooldown": 3.4},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act XI (temporary): Valgard ---
+	# Valkyrie Spear (GDD §15.0 "Valkyrie Spear, Chooser of the Slain,
+	# Einherjar's Oath and the Shield-Maiden (Valgard)"; owner-approved
+	# proposal: "a spectral spear dives on the strongest enemy and chains to the
+	# next"; unlocked by slaying Sigrun, UnlockData): every `cooldown` s a
+	# spectral spear falls on the enemy with the most HP left within `range`
+	# px of the necromancer, strikes it for `damage`, then leaps to the nearest
+	# enemy it has not struck within `chain` px, `jumps` times, each strike x
+	# `falloff` of the last. Stat keys: damage, jumps, falloff, chain (px),
+	# range (px), cooldown (s). Logic: ValkyrieSpear; fixed rules:
+	# ValkyrieSpearData; Einherjar's Oath (its paired passive) adds jumps and
+	# damage. A strong single-target opener with a short chain.
+	"valkyrie_spear": {
+		"display_name": "Valkyrie Spear",  # Owner-approved proposal
+		"icon": "valkyrie_spear",
+		"description": "A spectral spear dives on the strongest foe, then leaps to the next.",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Spear damage", "jumps": "Leaps", "falloff": "Kept per leap", "cooldown": "Cooldown (s)"},
+		"levels": [
+			{"damage": 26.0, "jumps": 2, "falloff": 0.75, "chain": 150.0, "range": 360.0, "cooldown": 2.8},  # TUNING (not in GDD) Soul Caster Lv1 20 x 3 / 2.6 s
+			{"damage": 32.0, "jumps": 2, "falloff": 0.76, "chain": 160.0, "range": 365.0, "cooldown": 2.65},  # TUNING (not in GDD)
+			{"damage": 38.0, "jumps": 3, "falloff": 0.77, "chain": 170.0, "range": 370.0, "cooldown": 2.5},  # TUNING (not in GDD)
+			{"damage": 45.0, "jumps": 3, "falloff": 0.78, "chain": 180.0, "range": 375.0, "cooldown": 2.35},  # TUNING (not in GDD)
+			{"damage": 52.0, "jumps": 3, "falloff": 0.8, "chain": 190.0, "range": 380.0, "cooldown": 2.2},  # TUNING (not in GDD) ~70 dps over a full chain, as Soul Caster Lv5
+		],
+	},
+	# --- Act XI (temporary): Vigrid ---
+	# Gungnir (GDD §15.0 "Gungnir, Spear of the Hanged, Runecraft and the
+	# Berserker"; owner-approved proposal: "a spear thrown at the strongest
+	# enemy on screen that pierces everything in its line"; unlocked by
+	# defeating Odin, UnlockData): every `cooldown` s a spear of soul-light is
+	# thrown at the strongest foe within GungnirData.AIM_RANGE px and strikes
+	# every foe within `spear_width` px of its `length` px line for `damage`. Logic:
+	# Gungnir; fixed rules: GungnirData. A single-target opener that also cuts a
+	# lane through the crowd behind its mark (the spell-only build's missing
+	# single-target damage, with a line's reach).
+	"gungnir": {
+		"display_name": "Gungnir",  # Owner-approved proposal
+		"icon": "gungnir",
+		"description": "A spear of soul-light flies at the strongest foe on screen and pierces everything in its line.",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Damage", "cooldown": "Cooldown (s)", "spear_width": "Width (px)", "length": "Reach (px)"},
+		"levels": [
+			{"damage": 32.0, "cooldown": 3.0, "spear_width": 9.0, "length": 600.0},  # TUNING (not in GDD)
+			{"damage": 40.0, "cooldown": 2.85, "spear_width": 10.0, "length": 620.0},  # TUNING (not in GDD)
+			{"damage": 48.0, "cooldown": 2.7, "spear_width": 11.0, "length": 640.0},  # TUNING (not in GDD)
+			{"damage": 58.0, "cooldown": 2.55, "spear_width": 12.0, "length": 660.0},  # TUNING (not in GDD)
+			{"damage": 68.0, "cooldown": 2.4, "spear_width": 13.0, "length": 680.0},  # TUNING (not in GDD) Tractor Beam Lv5 78 / 2.6 s, on a whole line
+		],
+	},
 }
 
 ## Stat keys shown as a percentage on cards (fractions: 0.25 -> 25%).
@@ -1057,7 +1138,9 @@ const PERCENT_KEYS := ["lifesteal", "rot", "burst", "zone_damage", "zone_slow", 
 	# --- Act IX: the Ark ---
 	"slam_share", "quake_share",
 	# --- Act X: the Maelstrom ---
-	"ring_share", "moor_share"]
+	"ring_share", "moor_share",
+	# --- Act XI (temporary): Vigrid ---
+	"return_share"]
 ## Stat keys that are spell durations (s): the Lingering Malediction passive
 ## lengthens them (AbilityManager.apply_spell_mods()).
 const DURATION_KEYS := ["duration", "zone_duration", "slow_duration"]

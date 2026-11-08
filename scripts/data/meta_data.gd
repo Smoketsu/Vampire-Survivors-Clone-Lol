@@ -450,7 +450,13 @@ const ACHIEVEMENT_ORDER := ["bone_legion", "heretics_bane", "dread_sovereign", "
 	# --- Act X: the Treasure Galleon ---
 	"walked_the_plank",
 	# --- Act X: the Maelstrom ---
-	"dead_men_tell_tales"]
+	"dead_men_tell_tales",
+	# --- Act XI (temporary): the Barrow Fields ---
+	"keep_the_fires",
+	# --- Act XI (temporary): Valgard ---
+	"holmgang",
+	# --- Act XI (temporary): Vigrid ---
+	"twilight_of_the_wolf"]
 
 ## Achievement definitions (GDD §9.4 "Example Achievement Unlocks"). Each
 ## achievement is tracked and recorded in the save and pays a one-time Soul
@@ -729,6 +735,33 @@ const ACHIEVEMENTS := {
 	# lifetime dead_men_tales_kills).
 	"dead_men_tell_tales": {"display_name": "Dead Men Tell Tales", "description": "Beat Vandermere in the Maelstrom with his Oath broken twice",
 		"stat": "dead_men_tales_kills", "goal": 1, "unlock": "The title Captain of the Dead", "bounty": 500},  # Owner-approved proposal; bounty TUNING (not in GDD) as The Last Harvest
+	# --- Act XI (temporary): the Barrow Fields ---
+	# The Hall of the Slain's Barrow Fields achievement (owner decision Nov 7,
+	# 2026, replacing None Chosen: "finish the Barrow Fields with no brazier
+	# ever out for more than 30 s"): a Barrow Fields run that reached 0:00 with
+	# LongWinter.longest_out() at most NorseRulesData.KEEP_THE_FIRES_MAX_OUT
+	# (BarrowFieldsDirector sets the run stat barrow_fields_keep_the_fires;
+	# MetaProgress counts the runs, lifetime keep_the_fires_runs). It unlocks
+	# the counter-passive Fur-Lined Bones.
+	"keep_the_fires": {"display_name": "Keep the Fires", "description": "Finish the Barrow Fields with no brazier ever out for more than 30 s",
+		"stat": "keep_the_fires_runs", "goal": 1, "unlock": "The Fur-Lined Bones passive", "bounty": 300},  # Owner decision Nov 7, 2026; bounty TUNING (not in GDD) as Nothing Hatched
+	# --- Act XI (temporary): Valgard ---
+	# Owner-approved achievement "Holmgang" ("win Sigrun's duel without Grave
+	# Step"): a run in which a Holmgang was won (Sigrun yielded) with no Grave
+	# Step taken in the square (BossSigrun sets the run stat
+	# valgard_holmgang_clean; MetaProgress counts the runs, lifetime
+	# holmgang_runs). It unlocks the counter-passive Calm Blood (brief).
+	"holmgang": {"display_name": "Holmgang", "description": "Win Sigrun's duel in Valgard without a single Grave Step",
+		"stat": "holmgang_runs", "goal": 1, "unlock": "The Calm Blood passive", "bounty": 300},  # Owner-approved proposal; bounty TUNING (not in GDD) as The Hunter Hunted
+	# --- Act XI (temporary): Vigrid ---
+	# The finale of the Hall of the Slain (owner-approved proposal: "Twilight
+	# of the Wolf (beat Odin and Fenrir)"; no epilogue part or closing card until
+	# the reorder pass, docs/last_acts/PLAN.md): counted from the stage record (a
+	# boss kill on Vigrid: Odin's fall; Fenrir always follows him within 30 s,
+	# BossOdin), as The Last Harvest. It records the clear, with the title Doom
+	# of the Gods (UnlockData / TitleData).
+	"twilight_of_the_wolf": {"display_name": "Twilight of the Wolf", "description": "Beat Odin and Fenrir on Vigrid, the Last Field",
+		"stat": "boss_kills", "stage": "vigrid", "goal": 1, "unlock": "The title Doom of the Gods", "bounty": 500},  # Owner-approved proposal; bounty TUNING (not in GDD) as The Last Harvest
 }
 
 # --- Content wave 2: B. Achievement rewards ---

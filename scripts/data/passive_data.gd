@@ -214,7 +214,13 @@ const ORDER := ["grave_dominion", "necrotic_vigor", "dark_command", "soul_recycl
 	# --- Act X: the Treasure Galleon ---
 	"black_powder", "sea_legs",
 	# --- Act X: the Maelstrom ---
-	"dead_reckoning", "slow_match"]
+	"dead_reckoning", "slow_match",
+	# --- Act XI (temporary): the Barrow Fields ---
+	"grave_frost", "fur_lined_bones",
+	# --- Act XI (temporary): Valgard ---
+	"einherjars_oath", "calm_blood",
+	# --- Act XI (temporary): Vigrid ---
+	"runecraft", "cold_iron"]
 
 ## Passives that only help summons (a "dead" level-up card while no summon
 ## class is owned, see AbilityManager.build_offers()).
@@ -270,7 +276,13 @@ const ARMY_PASSIVES := ["grave_dominion", "necrotic_vigor", "dark_command", "sou
 	# --- Act X: the Treasure Galleon ---
 	"sea_legs",
 	# --- Act X: the Maelstrom ---
-	"slow_match"]
+	"slow_match",
+	# --- Act XI (temporary): the Barrow Fields ---
+	"fur_lined_bones",
+	# --- Act XI (temporary): Valgard ---
+	"calm_blood",
+	# --- Act XI (temporary): Vigrid ---
+	"cold_iron"]
 
 # --- Act III: the Assembly Halls ---
 ## Overclock (paired with the Grave Drone): a summon class is "ranged" (and
@@ -343,7 +355,9 @@ const MINION_SPECIAL_SOURCES := ["bash", "abom_stomp", "rogue_dash", "gargoyle_s
 	# --- Act IX: the Ark --- (the Ghost Saucer's and Black Mothership's dropped foes, GhostSaucerBehavior)
 	"ghost_saucer_lift", "black_mothership_lift",
 	# --- Act X: the Maelstrom --- (the Powder Wraith's and Magazine Lord's kegs, PowderWraithBehavior)
-	"powder_wraith_keg", "magazine_lord_keg"]
+	"powder_wraith_keg", "magazine_lord_keg",
+	# --- Act XI (temporary): Vigrid --- (the Draugr Thane's and Barrow King's frost cleave, DraugrThaneBehavior)
+	"thane_cleave", "barrow_king_cleave"]
 ## Unholy Resilience: enemy damage-source tags (CombatResolver.damage_unit
 ## `source`) that count as AREA or HOLY damage, tag -> category ("area" |
 ## "holy"; the category only splits the summary stats). Every other source
@@ -2049,6 +2063,137 @@ const PASSIVES := {
 			{"special_push": 0.3},  # TUNING (not in GDD)
 			{"special_push": 0.4},  # TUNING (not in GDD)
 			{"special_push": 0.5},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act XI (temporary): the Barrow Fields ---
+	# Grave Frost (Barrow Grasp's paired passive; owner-approved proposal:
+	# "Barrow-Lord's Embrace (+ Grave Frost)"; unlocked with the spell by
+	# Hrimgar and offered on every stage). Own decision on its effect: the
+	# barrow's frost bites: every Barrow Grasp hand deals frost_bonus more and
+	# holds frost_bonus longer (BarrowGrasp reads it once per grab; stat
+	# grasp_frost_bonus_dmg; 0 while not owned).
+	"grave_frost": {
+		"display_name": "Grave Frost",  # Owner-approved proposal
+		"icon": "grave_frost",
+		"description": "Barrow frost bites deeper: your barrow hands hit harder and hold longer.",
+		"labels": {"frost_bonus": ["Barrow hand damage and hold", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"frost_bonus": 0.08},  # TUNING (not in GDD)
+			{"frost_bonus": 0.15},  # TUNING (not in GDD)
+			{"frost_bonus": 0.22},  # TUNING (not in GDD)
+			{"frost_bonus": 0.30},  # TUNING (not in GDD)
+			{"frost_bonus": 0.40},  # TUNING (not in GDD)
+		],
+	},
+	# The Hall of the Slain's counter-passive Fur-Lined Bones (owner decision
+	# Nov 7, 2026: "the cold slows summons half as much"; replaces the
+	# proposal's Inglorious; unlocked by the Barrow Fields achievement Keep the
+	# Fires and offered only in the Norse act through its card row's "act"). The
+	# foundation's hook reads it: LongWinter.fur_mult() (x the cold's slow on
+	# summons, 1 - cold_slow_cut). The frostbite and the necromancer's own
+	# slow are unchanged.
+	"fur_lined_bones": {
+		"display_name": "Fur-Lined Bones",  # Owner decision Nov 7, 2026
+		"icon": "fur_lined_bones",
+		"description": "Your dead are wrapped in fur: the Long Winter's cold slows them less.",
+		"labels": {"cold_slow_cut": ["Cold's slow on summons", "neg_pct"]},
+		"act": 11,  # Owner decision: the act's counter-passive is offered only in the Hall of the Slain (TEMPORARY act number 11; the reorder pass renumbers it)
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"cold_slow_cut": 0.10},  # TUNING (not in GDD)
+			{"cold_slow_cut": 0.20},  # TUNING (not in GDD)
+			{"cold_slow_cut": 0.30},  # TUNING (not in GDD)
+			{"cold_slow_cut": 0.40},  # TUNING (not in GDD)
+			{"cold_slow_cut": 0.50},  # Owner decision: "half as much" at full
+		],
+	},
+	# --- Act XI (temporary): Valgard ---
+	# Einherjar's Oath (Valkyrie Spear's paired passive; owner-approved
+	# proposal: "Chooser of the Slain (+ Einherjar's Oath)"; unlocked with the
+	# spell by Sigrun and offered on every stage). Own decision on its effect:
+	# the spear swears the hall's oath: oath_jumps more leaps and +oath_damage
+	# on every strike (ValkyrieSpear._cast(), the one read). Read only by
+	# ValkyrieSpear: exactly nothing without the spell.
+	"einherjars_oath": {
+		"display_name": "Einherjar's Oath",  # Owner-approved proposal
+		"icon": "einherjars_oath",
+		"description": "Your Valkyrie Spear swears the hall's oath: it leaps to more foes and strikes harder.",
+		"labels": {"oath_jumps": ["Valkyrie Spear leaps", "num"], "oath_damage": ["Valkyrie Spear damage", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"oath_jumps": 0, "oath_damage": 0.06},  # TUNING (not in GDD)
+			{"oath_jumps": 1, "oath_damage": 0.08},  # TUNING (not in GDD)
+			{"oath_jumps": 1, "oath_damage": 0.12},  # TUNING (not in GDD)
+			{"oath_jumps": 1, "oath_damage": 0.16},  # TUNING (not in GDD)
+			{"oath_jumps": 2, "oath_damage": 0.2},  # TUNING (not in GDD)
+		],
+	},
+	# The Hall of the Slain's counter-passive Calm Blood (owner-approved
+	# proposal: "Calm Blood (berserk enemies deal 20% less damage to
+	# summons)"; unlocked by Valgard's achievement Holmgang and offered only in
+	# the act through its card row's "act"). Its one read is
+	# NorseRules.calm_blood_mult() in CombatResolver.damage_unit(): a BERSERK
+	# enemy's own blow on a summon deals 1 - fury_cut (exactly 1 while not
+	# owned, and off the act, where no enemy is ever berserk). Keys
+	# NorseRulesData.CALM_BLOOD / CALM_BLOOD_KEY.
+	"calm_blood": {
+		"display_name": "Calm Blood",  # Owner-approved proposal
+		"icon": "calm_blood",
+		"description": "Your dead meet the fury without fear: berserk foes strike them softer.",
+		"labels": {"fury_cut": ["Berserk damage to summons", "neg_pct"]},
+		"act": 11,  # Owner-approved: the act's counter-passives are offered only in the Hall of the Slain (temporary act number; Unlocks.act_allows())
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"fury_cut": 0.06},  # TUNING (not in GDD)
+			{"fury_cut": 0.09},  # TUNING (not in GDD)
+			{"fury_cut": 0.12},  # TUNING (not in GDD)
+			{"fury_cut": 0.16},  # TUNING (not in GDD)
+			{"fury_cut": 0.2},  # Owner-approved proposal: "20% less damage to summons"
+		],
+	},
+	# --- Act XI (temporary): Vigrid ---
+	# Runecraft (owner-approved proposal: Spear of the Hanged's paired passive;
+	# own decision on its rule; GDD §15.0 "Gungnir, Spear of the Hanged,
+	# Runecraft and the Berserker"; unlocked by defeating Odin, UnlockData): the
+	# runes the god won on his own spear: Gungnir recharges runecraft_haste
+	# sooner and its line is runecraft_width wider (AbilityManager
+	# .apply_spell_mods() on the spell rows' own keys, like Starseed). Pairs
+	# with Gungnir -> Spear of the Hanged.
+	"runecraft": {
+		"display_name": "Runecraft",  # Owner-approved proposal
+		"icon": "runecraft",
+		"description": "Your Gungnir flies sooner, and its line cuts wider.",
+		"labels": {"runecraft_haste": ["Gungnir cooldown", "neg_pct"], "runecraft_width": ["Spear width", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"runecraft_haste": 0.04, "runecraft_width": 0.08},  # TUNING (not in GDD)
+			{"runecraft_haste": 0.08, "runecraft_width": 0.16},  # TUNING (not in GDD)
+			{"runecraft_haste": 0.12, "runecraft_width": 0.24},  # TUNING (not in GDD)
+			{"runecraft_haste": 0.16, "runecraft_width": 0.32},  # TUNING (not in GDD)
+			{"runecraft_haste": 0.20, "runecraft_width": 0.40},  # TUNING (not in GDD)
+		],
+	},
+	# Cold Iron (own decision: Barrow King's paired passive, its name and rule;
+	# GDD §15.0 "The Draugr Thane, the Barrow King and Cold Iron"; unlocked by
+	# defeating Odin): the barrow-iron of the old jarls bites deeper into the
+	# slowed: every summon blow on a SLOWED foe deals iron_damage more
+	# (CombatResolver.damage_enemy(), its own category beside Crushing Depths;
+	# 0 when not owned, so every other run is unchanged). Works the same on every
+	# stage; pairs with the Draugr Thane (whose frost-axe slows what it hits) ->
+	# Barrow King.
+	"cold_iron": {
+		"display_name": "Cold Iron",
+		"icon": "cold_iron",
+		"description": "Your dead strike slowed foes harder.",
+		"labels": {"iron_damage": ["Summon damage to slowed foes", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"iron_damage": 0.04},  # TUNING (not in GDD)
+			{"iron_damage": 0.08},  # TUNING (not in GDD)
+			{"iron_damage": 0.12},  # TUNING (not in GDD)
+			{"iron_damage": 0.16},  # TUNING (not in GDD)
+			{"iron_damage": 0.20},  # TUNING (not in GDD)
 		],
 	},
 }
