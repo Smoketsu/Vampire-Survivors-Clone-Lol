@@ -106,6 +106,9 @@
 ## The Hall of the Slain (temporarily Act XI), Valgard:
 ##   Shield-Maiden    Shield-Sister   in ValkyrieSpear._cast() (one more leap a
 ##                    spear); stat valkyrie_spear_extra.
+## Vigrid (the Hall of the Slain's finale):
+##   Berserker        Bear-Shirt         in Gungnir.step() (one more spear a
+##                    cast); stats as the spell's (gungnir_spell_spears).
 class_name CharacterInnates
 extends Node2D
 
@@ -475,6 +478,9 @@ func summary_line() -> String:
 		# --- Act XI (temporary): Valgard --- (Shield-Sister lives in ValkyrieSpear._cast())
 		"shield_sister":
 			counters = "extra leaps %d (spears %d)" % [int(st.get("valkyrie_spear_extra", 0.0)), int(st.get("valkyrie_spears", 0.0))]
+		# --- Act XI (temporary): Vigrid --- (Bear-Shirt lives in Gungnir.step())
+		"bear_shirt":
+			counters = "extra spears %d (spears %d)" % [int(game.character.innate_value(GungnirData.EXTRA_KEY)), int(st.get("gungnir_spell_spears", 0.0))]
 	out += " | innate: %s" % ("none" if _innate == "" else "%s: %s" % [ch.innate_name(), counters])
 	out += " | characters unlocked this run: %s" % (", ".join(ch.unlocked_this_run) if not ch.unlocked_this_run.is_empty() else "none")
 	var open := PackedStringArray()  # Characters unlocked in the Meta profile now.

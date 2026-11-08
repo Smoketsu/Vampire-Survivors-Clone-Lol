@@ -448,7 +448,9 @@ const ACHIEVEMENT_ORDER := ["bone_legion", "heretics_bane", "dread_sovereign", "
 	# --- Act XI (temporary): the Barrow Fields ---
 	"keep_the_fires",
 	# --- Act XI (temporary): Valgard ---
-	"holmgang"]
+	"holmgang",
+	# --- Act XI (temporary): Vigrid ---
+	"twilight_of_the_wolf"]
 
 ## Achievement definitions (GDD §9.4 "Example Achievement Unlocks"). Each
 ## achievement is tracked and recorded in the save and pays a one-time Soul
@@ -713,6 +715,15 @@ const ACHIEVEMENTS := {
 	# holmgang_runs). It unlocks the counter-passive Calm Blood (brief).
 	"holmgang": {"display_name": "Holmgang", "description": "Win Sigrun's duel in Valgard without a single Grave Step",
 		"stat": "holmgang_runs", "goal": 1, "unlock": "The Calm Blood passive", "bounty": 300},  # Owner-approved proposal; bounty TUNING (not in GDD) as The Hunter Hunted
+	# --- Act XI (temporary): Vigrid ---
+	# The finale of the Hall of the Slain (owner-approved proposal: "Twilight
+	# of the Wolf (beat Odin and Fenrir)"; no epilogue part or closing card until
+	# the reorder pass, docs/last_acts/PLAN.md): counted from the stage record (a
+	# boss kill on Vigrid: Odin's fall; Fenrir always follows him within 30 s,
+	# BossOdin), as The Last Harvest. It records the clear, with the title Doom
+	# of the Gods (UnlockData / TitleData).
+	"twilight_of_the_wolf": {"display_name": "Twilight of the Wolf", "description": "Beat Odin and Fenrir on Vigrid, the Last Field",
+		"stat": "boss_kills", "stage": "vigrid", "goal": 1, "unlock": "The title Doom of the Gods", "bounty": 500},  # Owner-approved proposal; bounty TUNING (not in GDD) as The Last Harvest
 }
 
 # --- Content wave 2: B. Achievement rewards ---

@@ -299,6 +299,18 @@ const UNLOCKS := {
 	"valkyrie_spear": {"type": "spell", "boss": "sigrun", "text": "Slay Sigrun, the Shield-Queen, in Valgard to unlock."},  # Owner-approved proposal
 	"einherjars_oath": {"type": "passive", "boss": "sigrun", "text": "Slay Sigrun, the Shield-Queen, in Valgard to unlock."},  # Valkyrie Spear's paired passive, unlocked with it
 	"calm_blood": {"type": "passive", "achievement": "holmgang", "text": "Earn Holmgang: win Sigrun's duel without a Grave Step."},  # Brief: Holmgang unlocks Calm Blood
+	# --- Act XI (temporary): Vigrid ---
+	# Odin's fall (owner-approved proposal "Rewards": Gungnir is unlocked by Odin
+	# and Fenrir; the finale grants the Draugr Thane): the spell with its paired
+	# passive, and the summon class with its paired passive, offered on every
+	# stage (no card-row "act" key). The title Doom of the Gods is Twilight of
+	# the Wolf's reward (it only records the clear).
+	"gungnir": {"type": "spell", "boss": "odin", "text": "Defeat Odin and Fenrir on Vigrid, the Last Field, to unlock."},  # Owner-approved proposal
+	"runecraft": {"type": "passive", "boss": "odin", "text": "Defeat Odin and Fenrir on Vigrid, the Last Field, to unlock."},  # Gungnir's paired passive (owner-approved proposal), unlocked with it
+	"draugr_thane": {"type": "class", "boss": "odin", "text": "Defeat Odin and Fenrir on Vigrid, the Last Field, to unlock."},  # Owner-approved proposal: the finale's reward
+	"cold_iron": {"type": "passive", "boss": "odin", "text": "Defeat Odin and Fenrir on Vigrid, the Last Field, to unlock."},  # Its paired passive (own decision), unlocked with it
+	"doom_of_the_gods": {"type": "title", "achievement": "twilight_of_the_wolf",
+		"text": "Earn Twilight of the Wolf: beat Odin and Fenrir on Vigrid, the Last Field."},  # Own decision (the clear is recorded as a title, as Act IX did)
 }
 
 ## End-screen plate heading of a newly unlocked item, by type.

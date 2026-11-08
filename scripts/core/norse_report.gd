@@ -63,6 +63,8 @@ static func print_lines(game: Game, st: Dictionary) -> void:
 	BarrowFieldsReport.print_lines(game, st)  # The braziers by the map, the barrows, the drifts, Keep the Fires, the Wight, Hrimgar.
 	# --- Act XI (temporary): Valgard --- (the Feast, the Champion, Sigrun; ValgardReport)
 	ValgardReport.print_lines(game, st)
+	# --- Act XI (temporary): Vigrid --- (its stage, kinds and boss; VigridReport)
+	VigridReport.stage_lines(game, st)
 
 
 ## The "long winter" line (LongWinter).

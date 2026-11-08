@@ -373,6 +373,12 @@
 ##                        lattice, the Einherjar Champion objective; the
 ##                        "einherjar_champion" event); ground "valgard" is its
 ##                        ValgardGround (the four zone floors).
+## --- Act XI (temporary): Vigrid ---
+##   vigrid             — VigridDirector config (VigridStage.VIGRID, the Hall of
+##                        the Slain's finale: the Fading Light's look and the
+##                        dark taking a brazier per zone, the early dark's
+##                        vanguard, the "muspel_giant" event); ground "vigrid"
+##                        is its VigridGround (four zone floors).
 ## --- Act XII (temporary number): the Necropolis Dynasty ---
 ##   dynasty            — true: the Necropolis Dynasty's shared rules
 ##                        (DynastyRules as Game.dynasty: Rebirth, the Black

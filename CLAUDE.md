@@ -174,8 +174,8 @@ Autotest options (full table in the README):
   `burning_gate|silk_palace|pandemonium|ravensmoor|witchwood|castle_sanguis|skid_row|fort_kessler|liberty_heights|crash_site|`
   `proving_moon|ark|cutter|galleon|maelstrom|barrow_fields|valgard|vigrid|necropolis|lioness_temple|two_truths` (default
   graveyard; stage locks are ignored; `cutter|galleon|maelstrom` are the Black Tide, Act X until the reorder;
-  `barrow_fields|valgard|vigrid` the Hall of the Slain, Act XI (the Barrow Fields and Valgard built in phase 2; Valgard: the Feast, the Einherjar
-  Champion, Sigrun's Charge / Holmgang / Doors of the Hall; `--boss=sigrun`, `--character=shield_maiden_hero`); `necropolis|lioness_temple|two_truths` the
+  `barrow_fields|valgard|vigrid` the Hall of the Slain, Act XI (`--boss=hrimgar|sigrun|odin`, `--character=rune_seer|shield_maiden_hero|berserker_hero`,
+  `--spawn=muspel_giant|fenrir|odin_raven@T`); `necropolis|lioness_temple|two_truths` the
   Necropolis Dynasty's stubs, Act XII)
 - `--unlocks=all|none` (Act II's lockable spells / passives / classes in the card pool; forced items
   are open either way)

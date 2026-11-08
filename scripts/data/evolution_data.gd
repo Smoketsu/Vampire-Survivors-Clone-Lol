@@ -112,7 +112,9 @@ const ORDER := ["void_barrage", "eclipse_ward", "abyssal_detonation",
 	# --- Act XI (temporary): the Barrow Fields ---
 	"barrow_lords_embrace",
 	# --- Act XI (temporary): Valgard ---
-	"chooser_of_the_slain"]
+	"chooser_of_the_slain",
+	# --- Act XI (temporary): Vigrid ---
+	"spear_of_the_hanged"]
 
 ## Evolution definitions.
 ##   base         — spell id that evolves (AbilityData.SPELLS key).
@@ -852,6 +854,25 @@ const EVOLUTIONS := {
 			"risen_cap": 4,  # TUNING (not in GDD) chosen warriors at once
 			"risen_hp": 0.8,  # TUNING (not in GDD) x the Warrior's HP
 			"risen_damage": 0.8,  # TUNING (not in GDD) x the Warrior's damage
+		},
+	},
+	# --- Act XI (temporary): Vigrid ---
+	# Spear of the Hanged (GDD §15.0 "Gungnir, Spear of the Hanged, Runecraft
+	# and the Berserker"; owner-approved proposal "Gungnir -> Spear of the
+	# Hanged (+ Runecraft)"): Gungnir + Runecraft (a NEW passive, owner rule: at
+	# Lv 5). The god hung nine nights on his own spear for the runes: two spears
+	# a cast, wider and longer, and each RETURNS along its line return_delay s
+	# later for return_share x the damage. Detected by the "return_share" key.
+	"spear_of_the_hanged": {
+		"base": "gungnir",
+		"passive": "runecraft",
+		"display_name": "Spear of the Hanged",  # Owner-approved proposal
+		"icon": "spear_of_the_hanged",
+		"description": "Two spears fly at the strongest foes and come back to your hand through everything in their line.",
+		"labels": {"damage": "Damage", "cooldown": "Cooldown (s)", "spears": "Spears", "spear_width": "Width (px)", "length": "Reach (px)", "return_share": "Return damage"},
+		"stats": {
+			"damage": 74.0, "cooldown": 2.3, "spears": 2, "spear_width": 14.0, "length": 740.0,  # TUNING (not in GDD) first pass 84 / 2.2 / 15
+			"return_share": 0.4, "return_delay": 0.35,  # TUNING (not in GDD) the evolution flag: the spear comes back (first pass 0.5: 331k evolved damage in the forced seed-7 run)
 		},
 	},
 }

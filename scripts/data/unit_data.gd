@@ -64,7 +64,10 @@ const CLASS_ORDER := ["warrior", "archer", "mage", "mender", "warder", "bishop",
 		"fallen_hero",
 		# --- Act IX: the Ark ---
 		# Unlockable (UnlockData: defeating the Harvester), so a fresh save never offers it.
-		"ghost_saucer"]
+		"ghost_saucer",
+		# --- Act XI (temporary): Vigrid ---
+		# Unlockable (UnlockData: defeating Odin), so a fresh save never offers it.
+		"draugr_thane"]
 ## The four GDD §4.2 summon ROLES ("all 4 classes": the Dread Sovereign
 ## achievement), in SynergyManager.classes_met() format: an entry that is an
 ## Array means "any one of these", so after the priest split either priest
@@ -1376,6 +1379,63 @@ const UNITS := {
 			"hover_lift": 16.0,  # TUNING (not in GDD) px the hull hovers above its shadow (drawing only)
 		},
 	},
+	# --- Act XI (temporary): Vigrid ---
+	# The Draugr Thane (owner-approved proposal: "Finale summon class the Draugr
+	# Thane: a heavy undead jarl, a blocker whose frost-axe slows what it hits
+	# (evolution Barrow King)"; GDD §15.0 "The Draugr Thane, the Barrow King and
+	# Cold Iron"): a jarl risen from his barrow in rimed mail, a frost-axe,
+	# soul-teal eyes (summons/draugr_thane). A heavy blocker on the Bone Ring's
+	# front posts (formation "front", it blocks like the Abomination); every
+	# axe blow CHILLS what it strikes, and its FROST CLEAVE (DraugrThaneBehavior,
+	# "frost_axe") sweeps a sector before it, chilling everything in it. No act
+	# rule (owner rule: summons work the same everywhere). Unlockable
+	# (UnlockData), then offered on every stage.
+	"draugr_thane": {
+		"display_name": "Draugr Thane",  # Owner-approved proposal
+		"plural": "Draugr Thanes",
+		"description": "Undead jarls that hold the front; their frost-axes slow whatever they strike.",  # Card text: one short sentence (owner rule).
+		"max_hp": 230.0,  # TUNING (not in GDD) a heavy (Abomination 260, Bound Oni 240)
+		"damage": 16.0,  # TUNING (not in GDD) an axe blow (Abomination 16)
+		"attack_interval": 1.5,  # TUNING (not in GDD) s
+		"attack_range": 16.0,  # TUNING (not in GDD) edge-to-edge reach (px)
+		"move_speed": 62.0,  # TUNING (not in GDD) px/s, a heavy's pace
+		"radius": 14.0,  # TUNING (not in GDD) px
+		"acquisition_range": 140.0,  # TUNING (not in GDD) px
+		"replenish_interval": 18.0,  # TUNING (not in GDD) s, slow to rebuild
+		"band_min": 45.0,  # TUNING (not in GDD) px, with the front
+		"band_max": 95.0,  # TUNING (not in GDD)
+		"w_pursuit": 1.0,  # TUNING (not in GDD)
+		"w_formation": 0.4,  # TUNING (not in GDD)
+		"w_separation": 0.8,  # TUNING (not in GDD)
+		"w_threat": 0.0,  # TUNING (not in GDD) a jarl never shies away
+		"attack_profile": "melee",
+		"target_profile": "guard",
+		"windup": 0.3,  # TUNING (not in GDD) s
+		"projectile_speed": 0.0,
+		"splash_radius": 0.0,
+		"heal_amount": 0.0,
+		"kite_distance": 0.0,
+		"heal_role_priority": 0.9,  # TUNING (not in GDD) healers value the jarl
+		"block_radius": 18.0,  # TUNING (not in GDD) px, blocks like the Abomination
+		"block_mass": 7.0,  # TUNING (not in GDD) (Abomination 8)
+		"engaged_speed_mult": 0.45,  # TUNING (not in GDD) touching enemies move at 45%
+		"formation": "front",  # Owner-approved proposal: "a blocker"
+		"capacity_bonus_mult": 0.4,  # TUNING (not in GDD) Grave Dominion V: +2, like the Abominations
+		"behavior": "frost_axe",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"special": {
+			"axe_slow": 0.3,  # Owner-approved proposal "slows what it hits"; TUNING (not in GDD) share of speed
+			"axe_slow_duration": 1.6,  # TUNING (not in GDD) s (special_duration lengthens it)
+			"cleave_damage": 20.0,  # TUNING (not in GDD) to every foe in the sector
+			"cleave_radius": 50.0,  # TUNING (not in GDD) px of the sector before it
+			"cleave_cooldown": 6.0,  # TUNING (not in GDD) s
+			"cleave_windup": 0.45,  # TUNING (not in GDD) s the axe is raised (the sector telegraphed)
+			"cleave_recover": 0.3,  # TUNING (not in GDD) s it stands after the sweep
+			"cleave_slow": 0.45,  # TUNING (not in GDD) share of speed the sweep takes
+			"cleave_slow_duration": 2.2,  # TUNING (not in GDD) s (special_duration lengthens it)
+			"cleave_trigger": 26.0,  # TUNING (not in GDD) px edge to edge: it sweeps when a foe is this close
+		},
+	},
 }
 
 ## Summon-ability progression, one entry per skill level (index 0 = level 1).
@@ -1624,6 +1684,16 @@ const LEVELS := {
 		{"count": 2, "hp_bonus": 0.2, "special_bonus": 0.25},
 		{"count": 3, "hp_bonus": 0.25, "special_bonus": 0.3, "special_area": 0.15},
 		{"count": 3, "hp_bonus": 0.3, "damage_bonus": 0.25, "special_bonus": 0.5, "special_area": 0.2, "special_haste": 0.2},
+	],
+	# --- Act XI (temporary): Vigrid ---
+	# TUNING (not in GDD): one jarl to a card (a heavy), 1 -> 3 Draugr Thanes;
+	# then harder, wider sweeps and longer chills.
+	"draugr_thane": [
+		{"count": 1},
+		{"count": 1, "hp_bonus": 0.2, "special_bonus": 0.25},
+		{"count": 2, "hp_bonus": 0.2, "special_bonus": 0.25, "special_duration": 0.2},
+		{"count": 2, "hp_bonus": 0.4, "special_bonus": 0.35, "special_area": 0.2, "special_duration": 0.2},
+		{"count": 3, "hp_bonus": 0.4, "damage_bonus": 0.2, "special_bonus": 0.5, "special_area": 0.2, "special_duration": 0.3},
 	],
 }
 

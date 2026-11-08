@@ -100,7 +100,9 @@ const ORDER := ["gravecaller", "umbral_warden", "voidcaller", "bone_oracle", "fa
 	# --- Act XI (temporary): the Barrow Fields ---
 	"rune_seer",
 	# --- Act XI (temporary): Valgard ---
-	"shield_maiden_hero"]
+	"shield_maiden_hero",
+	# --- Act XI (temporary): Vigrid ---
+	"berserker_hero"]
 ## The default character (RunConfig, fresh saves, the autotest): today's game.
 const DEFAULT_ID: String = "gravecaller"
 ## Spell level that unlocks a character (owner rule: reach Lv 5 with its spell
@@ -225,7 +227,9 @@ const INNATE_KEYS := ["orb_projectile_destroy", "blast_echo_delay", "blast_echo_
 	# --- Act XI (temporary): the Barrow Fields ---
 	"grasp_extra_hands",
 	# --- Act XI (temporary): Valgard ---
-	"valkyrie_spear_extra_jumps"]
+	"valkyrie_spear_extra_jumps",
+	# --- Act XI (temporary): Vigrid ---
+	"gungnir_extra_spears"]
 
 ## Orbit radius (px) of the Bone Oracle's Ossuary Ward shards around him.
 const SHARD_ORBIT_RADIUS: float = 27.0  # TUNING (not in GDD)
@@ -1008,6 +1012,30 @@ const CHARACTERS := {
 		"stats": {"max_hp": 10.0, "move_speed": -0.03},  # TUNING (not in GDD) behind her shield: sturdier, a little slower
 		"sprite": "player/shield_maiden_hero",
 		"tint": Color(0.80, 0.70, 0.95),  # TUNING (not in GDD) a pale violet over the violet (her art replaces it)
+		"starts_unlocked": false,
+	},
+	# --- Act XI (temporary): Vigrid ---
+	# The Berserker (Gungnir's character; owner-approved proposal "Rewards":
+	# "Gungnir ... | The Berserker (male)"; id "berserker_hero", so it never
+	# meets the enemy kind "berserker"): MALE, a necromancer of the north in the
+	# necromancer's violet (docs/last_acts/PLAN.md, the art convention): a
+	# purple hood under a bear-skull crest, bone and soul-teal, one soul-teal axe
+	# held close as his casting focus (player/berserker_hero). Gungnir must be
+	# unlocked (Odin) before he can be earned, by the usual Lv 5 rule. Own
+	# decision on his innate (the proposal names none): the bear-shirt's fury
+	# throws one more spear a cast, at the next strongest foe (Gungnir.step()).
+	"berserker_hero": {
+		"display_name": "The Berserker",  # Owner-approved proposal
+		"title": "He put on the bear's skull and went to war with the dead.",
+		"spell": "gungnir",
+		"innate": {
+			"id": "bear_shirt", "name": "Bear-Shirt",
+			"description": "Gungnir throws one more spear.",
+			"values": {"gungnir_extra_spears": 1.0},  # TUNING (not in GDD) extra spears a cast
+		},
+		"stats": {"max_hp": 15.0, "move_speed": -0.03},  # TUNING (not in GDD) a heavy, hardy body
+		"sprite": "player/berserker_hero",
+		"tint": Color(0.86, 0.72, 0.70),  # TUNING (not in GDD) a bear-pelt warmth over the violet (the art carries the look)
 		"starts_unlocked": false,
 	},
 }

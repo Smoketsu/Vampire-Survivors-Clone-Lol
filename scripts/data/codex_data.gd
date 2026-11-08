@@ -80,7 +80,9 @@ const SUMMON_ORDER: Array[String] = ["warrior", "archer", "mage", "mender", "war
 		# --- Act VIII: Liberty Heights --- (a silhouette naming its unlock until met)
 		"fallen_hero",
 		# --- Act IX: the Ark --- (a silhouette naming its unlock until met)
-		"ghost_saucer"]
+		"ghost_saucer",
+		# --- Act XI (temporary): Vigrid --- (a silhouette naming its unlock until met)
+		"draugr_thane"]
 
 ## Covenant soldiers (enemy kinds), in the order the stages bring them.
 const SOLDIERS: Array[String] = ["recruit", "footman", "archer", "chaplain", "purifier", "templar",
@@ -330,13 +332,17 @@ const NORSE_WARRIORS: Array[String] = ["raider", "shield_maiden", "berserker", "
 ## has no entry (it is the necromancer's warmth, not a foe).
 const NORSE_HALL: Array[String] = ["valkyrie", "seer", "rune_stone",
 	# --- Act XI (temporary): Valgard --- (Sigrun's valkyrie wing)
-	"wing_valkyrie"]
+	"wing_valkyrie",
+	# --- Act XI (temporary): Vigrid --- (Odin's ravens)
+	"odin_raven"]
 ## The cold things of the north (group "wilds").
 const NORSE_WILDS: Array[String] = ["draugr", "wolf_of_the_wastes", "frost_giant", "fire_giant",
 	# --- Act XI (temporary): the Barrow Fields --- (the open barrow and the
 	# stage's miniboss with the barrow-dead; the female draugr shares the
 	# Draugr's entry, Hrimgar's own barrow his)
-	"open_barrow", "barrow_wight"]
+	"open_barrow", "barrow_wight",
+	# --- Act XI (temporary): Vigrid --- (the miniboss with its kin, as Act VIII placed Mammoth with the army; Fenrir beside the giants)
+	"muspel_giant", "fenrir"]
 ## The Hall of the Slain's stage bosses (StageRegistry.BOSS_ARRIVALS ids).
 const NORSE_BOSSES: Array[String] = ["hrimgar", "sigrun", "odin"]
 # --- Act XII (temporary number): the Necropolis Dynasty ---
@@ -631,6 +637,10 @@ const DESCRIPTIONS: Dictionary = {
 	"einherjar": "A hero of the hall, gold-lit and asleep at the long tables until a horn blows. Then they all rise at once.",  # Owner-approved proposal (the Feast)
 	"einherjar_champion": "The hall's champion, a thousand years at the feast: his sweep throws your ring back, and his horn wakes the tables.",  # Owner-approved proposal (miniboss)
 	"wing_valkyrie": "One of Sigrun's valkyrie wing. When their queen charges, they dive across your ring beside her.",  # Owner-approved proposal (the Charge)
+	# --- Act XI (temporary): Vigrid ---
+	"muspel_giant": "A fire-giant of the south, out of Muspell before his time: his footprints burn, and his stomp sets the ground alight.",  # Owner-approved proposal (miniboss)
+	"fenrir": "Fenrir, the great wolf, his chain broken at last: he swallows one of your dead whole and spits it out four seconds later.",  # Owner-approved proposal
+	"odin_raven": "One of Odin's ravens. If it reaches you, it marks you for the All-Father's spear. Shoot it down.",  # Owner-approved proposal
 	# --- Act IX: the Crash Site ---
 	"burrower": "It tunnels under your ring and bursts up among your dead. A mound of dirt shows a moment ahead: keep blockers inside the ring.",  # Owner-approved Act IX proposal
 	"acid_spitter": "It lobs acid over your ring that leaves a burning puddle. Kill it on approach, and step out of the green.",  # Owner-approved Act IX proposal
@@ -956,6 +966,8 @@ const ACHIEVEMENT_ICONS: Dictionary = {
 	"keep_the_fires": "ach_keep_the_fires",  # TUNING (not in GDD) (no badge PNG yet: the fallback icon)
 	# --- Act XI (temporary): Valgard ---
 	"holmgang": "ach_holmgang",  # TUNING (not in GDD) (no badge PNG yet: the fallback icon draws)
+	# --- Act XI (temporary): Vigrid ---
+	"twilight_of_the_wolf": "ach_twilight_of_the_wolf",  # TUNING (not in GDD) (no badge PNG yet: the fallback icon shows)
 }
 ## IconGlyph kind drawn when an achievement badge PNG is missing.
 const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
@@ -1021,6 +1033,8 @@ const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
 	"keep_the_fires": "grave_frost",
 	# --- Act XI (temporary): Valgard ---
 	"holmgang": "calm_blood",
+	# --- Act XI (temporary): Vigrid ---
+	"twilight_of_the_wolf": "gungnir",
 }
 ## Screen title (TITLE tier).
 const TITLE: String = "Codex"  # TUNING (not in GDD)

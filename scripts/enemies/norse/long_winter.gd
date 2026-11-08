@@ -204,6 +204,35 @@ func longest_out() -> float:
 	return m
 
 
+# --- Act XI (temporary): Vigrid ---
+## Vigrid's Fading Light (VigridDirector): the dark puts out brazier `i`
+## through the one douse path (`by` names it in the stats, as a douser's kind;
+## relit as any brazier). False when it is not lit.
+func put_out(i: int, by: String) -> bool:
+	if i < 0 or i >= braziers.size() or not braziers[i].lit:
+		return false
+	_douse(braziers[i], by)
+	return true
+
+
+## Vigrid's Fading Light (VigridDirector): brazier `i` is set up again at
+## world point `at` (moved out of obstacles and kept clear of new ones, as
+## place() does), keeping whether it burns: the war-camp moves with the
+## battle at each zone change.
+func move_to(i: int, at: Vector2) -> void:
+	if i < 0 or i >= braziers.size():
+		return
+	var r := float(cfg["brazier_radius"])
+	var b := braziers[i]
+	b.pos = game.arena.free_point(at, r)
+	b.douse = 0.0
+	b.douser = null
+	game.arena.keep_clear(b.pos, r + ArenaData.MAX_HALF_EXTENT * 1.5)
+	game.stat_add("braziers_moved", 1.0)
+	if _draws:
+		queue_redraw()
+
+
 ## Index of the nearest LIT brazier within `reach` px of `p` (a douser's
 ## detour, NorseKit.douse_step()), or -1.
 func nearest_lit(p: Vector2, reach: float) -> int:

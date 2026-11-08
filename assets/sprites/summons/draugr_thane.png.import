@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cm1mskqoptj6s"
-path="res://.godot/imported/barrow_king.png-7c421990830970abe2cb514852c72674.ctex"
+uid="uid://b45of7oredwfm"
+path="res://.godot/imported/draugr_thane.png-2faddcf0350a1b956163f87a9c332bb3.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/norse/barrow_king.png"
-dest_files=["res://.godot/imported/barrow_king.png-7c421990830970abe2cb514852c72674.ctex"]
+source_file="res://assets/sprites/summons/draugr_thane.png"
+dest_files=["res://.godot/imported/draugr_thane.png-2faddcf0350a1b956163f87a9c332bb3.ctex"]
 
 [params]
 
