@@ -10,7 +10,7 @@
 ## to the run as `Game.stage_def` (the STAGE dictionary at the bottom; its keys
 ## are documented in StageRegistry).
 ##
-## STATUS: BUILT (phase 2), "playable" left for the lead. It runs the act's
+## STATUS: PLAYABLE (phase 2, opened at the act's integration). It runs the act's
 ## three shared rules ("norse": true: the Long Winter, Berserkergang and the
 ## Rune-Stones) with the draugr leading the timeline (male and female, the
 ## brief: "The draugr lead the timeline"), the living warriors of the hall
@@ -293,7 +293,7 @@ const STAGE := {
 	"short_name": "Barrow Fields",
 	"chapter": "Chapter XVI",
 	"act": 11,  # The Hall of the Slain: TEMPORARY act number 11 (final slot VI; the reorder pass renumbers it).
-	"playable": false,  # Built in phase 2; the lead switches it on after the integration.
+	"playable": true,  # Opened at the Hall of the Slain integration (GDD §15.0 "Hall of the Slain integration").
 	"description": "Snowfields of burial mounds above a frozen fjord. The barrows are cracking open: the hall's dead walk south, and the living march with them to fill its empty benches.",
 	"unlock": {"stage": "maelstrom", "boss_kills": 1},  # Wave 1 integration: the chain runs ... -> Vandermere -> Hrimgar
 	"unlock_text": "Defeat Captain Vandermere in the Maelstrom to unlock.",

@@ -29,7 +29,7 @@
 ## Odin and Fenrir (OdinData, boss_odin.gd: the Wolf, the All-Father,
 ## Ragnarok) arrive with 3:00 left; the Reckoning, Ragnarok, at 0:00. Every
 ## rate, cap and weight is TUNING (not in GDD), tuned for the act's final slot
-## VI (between the Shogunate and Olympus). "playable" stays for the lead.
+## VI (between the Shogunate and Olympus). Playable since the act's integration.
 class_name VigridStage
 extends RefCounted
 
@@ -279,7 +279,7 @@ const STAGE := {
 	"short_name": "Vigrid",
 	"chapter": "Chapter XVIII",
 	"act": 11,  # The Hall of the Slain: TEMPORARY act number 11 (final slot VI; the reorder pass renumbers it).
-	"playable": false,  # The lead switches it on after the act's integration and reviews.
+	"playable": true,  # Opened at the Hall of the Slain integration (GDD §15.0 "Hall of the Slain integration").
 	"description": "The plain where the last battle is fought, under a sky going out. The giants march, the wolf strains at his chain, and the one-eyed god rides out for the army he was promised.",
 	"unlock": {"stage": "valgard", "boss_kills": 1},
 	"unlock_text": "Defeat Sigrun, the Shield-Queen, in Valgard to unlock.",

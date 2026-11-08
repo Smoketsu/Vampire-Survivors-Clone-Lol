@@ -302,7 +302,7 @@ const STAGE := {
 	"short_name": "Valgard",
 	"chapter": "Chapter XVII",
 	"act": 11,  # The Hall of the Slain: TEMPORARY act number 11 (final slot VI; the reorder pass renumbers it).
-	"playable": false,  # Phase 2 built; the lead opens it.
+	"playable": true,  # Opened at the Hall of the Slain integration (GDD §15.0 "Hall of the Slain integration").
 	"description": "A vast feast hall at the edge of the sky, long tables and shields on the walls. The benches stood empty since you took the world's dead; now the hall's own heroes rise from them.",
 	"unlock": {"stage": "barrow_fields", "boss_kills": 1},
 	"unlock_text": "Defeat Hrimgar the Draugr-King in the Barrow Fields to unlock.",
