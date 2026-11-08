@@ -821,8 +821,8 @@ const EVOLUTIONS := {
 		"description": "Two anchors fall from the abyss; each stays moored where it lands, shocking all around it.",
 		"labels": {"damage": "Slam damage", "cooldown": "Cooldown (s)", "anchors": "Anchors", "anchor_stun": "Stun (s)", "ring_radius": "Shock (px)", "ring_share": "Shock damage", "moor": "Moored (s)", "moor_share": "Mooring pulse"},
 		"stats": {
-			"damage": 90.0, "cooldown": 2.5, "anchors": 2, "anchor_stun": 1.5, "ring_radius": 74.0, "ring_share": 0.55,  # TUNING (not in GDD)
-			"moor": 2.4, "moor_every": 0.6, "moor_share": 0.18, "moor_radius": 70.0,  # TUNING (not in GDD) the evolution flag: the moored anchor's pulses
+			"damage": 90.0, "cooldown": 2.5, "anchors": 2, "anchor_stun": 1.5, "ring_radius": 70.0, "ring_share": 0.3,  # TUNING (not in GDD) first passes 74 px / 0.55, then 0.42 (404k in the forced seed-7 Maelstrom run)
+			"moor": 2.0, "moor_every": 0.6, "moor_share": 0.08, "moor_radius": 64.0,  # TUNING (not in GDD) the evolution flag: the moored anchor's pulses (first pass 2.4 s / 0.18 / 70 px: 437k damage in the forced seed-7 Maelstrom run)
 		},
 	},
 }

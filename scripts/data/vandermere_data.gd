@@ -32,9 +32,9 @@ const ARRIVAL := {
 const SPECIALS := ["crew", "volley", "maelstrom", "oath_break"]
 
 ## His base max HP (x the boss HP multiplier and the stage's HP multiplier:
-## 30,000 on the Maelstrom). Seraphine 21,000 x 1.1; Dead Men's Oath cuts what he
+## 25,500 on the Maelstrom). Seraphine 21,000 x 1.1; Dead Men's Oath cuts what he
 ## takes while it holds, so his effective HP is far higher until it breaks.
-const MAX_HP: float = 20000.0  # TUNING (not in GDD) first pass 9,000: the seed-7 army bot slew him in 54 s
+const MAX_HP: float = 17000.0  # TUNING (not in GDD) first pass 9,000 (the seed-7 army bot slew him in 54 s), then 20,000 (185 s: past 0:00)
 
 ## Run stat set when he fell with his Oath broken at least TALES_BREAKS times
 ## (MetaProgress counts it for Dead Men Tell Tales).

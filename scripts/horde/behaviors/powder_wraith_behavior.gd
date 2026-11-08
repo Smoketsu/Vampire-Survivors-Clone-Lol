@@ -139,7 +139,10 @@ func step_special(u: SummonedUnit, delta: float) -> bool:
 			var to := keg_point - u.position
 			if to.length() <= float(u.special["keg_trigger"]) or phase_time >= float(u.special["keg_march"]):
 				u.velocity = Vector2.ZERO
+				var gen := u.generation
 				var hit := _burst(u, u.position)
+				if not u.active or u.generation != gen or u.state == SummonedUnit.State.DEAD:
+					return true  # Its own blast set off a foe's keg that felled it (a Powder Runner; the body may already be reused).
 				kegs_left -= 1
 				if kegs_left > 0:
 					var e := _densest(u, u.position, float(u.special["chain_range"]), hit)
@@ -167,7 +170,10 @@ func step_special(u: SummonedUnit, delta: float) -> bool:
 func _burst(u: SummonedUnit, pos: Vector2) -> Array:
 	var game := u.game
 	var r := float(u.special["keg_radius"])
+	var dmg := float(u.special["keg_damage"])  # Read once: a foe's death in the loop may fell the wraith (its keys go).
+	var shake := float(u.special["keg_shake"])
 	var src := EVOLVED_SOURCE if u.evolution != "" else SOURCE
+	var gen := u.generation  # The body may be felled and reused inside the loop (see step_special()).
 	var v := sqrt(2.0 * EnemyData.KNOCKBACK_DECAY * float(u.special["keg_knockback"]))  # px/s that carries a body keg_knockback px.
 	game.enemy_grid.query(pos, r + ProjectileManager.MAX_BODY_RADIUS, _buf)
 	var hit: Array = []
@@ -178,15 +184,16 @@ func _burst(u: SummonedUnit, pos: Vector2) -> Array:
 		if not (e.is_boss or e.is_miniboss or e.is_structure):
 			var away := e.position - pos
 			e.knockback += (away / away.length() if away.length() > 0.01 else Vector2.UP) * v / maxf(e.mass, 0.1)
-		game.combat.damage_enemy(e, float(u.special["keg_damage"]), src)
+		game.combat.damage_enemy(e, dmg, src)
 	game.effects.impact(pos, r, Palette.CORSAIR_LANTERN)
 	Juice.fx.burst(pos, Palette.CORSAIR_LANTERN_LIGHT, Palette.NECRO_GREEN, 10, r * 2.0, 0.4, 2.5)
-	game.shake(float(u.special["keg_shake"]))
+	game.shake(shake)
 	if game.corsair != null:
 		game.corsair.play_sound("keg_burst", pos, 0.1)
 	else:
 		Sfx.play("powder_blast", pos)
-	game.volleys.on_special(u, pos, pos + Vector2.RIGHT, float(u.special["keg_damage"]))  # Bullet heaven: the showpiece.
+	if u.active and u.generation == gen:
+		game.volleys.on_special(u, pos, pos + Vector2.RIGHT, dmg)  # Bullet heaven: the showpiece.
 	game.stat_add("powder_wraith_keg_hits", float(hit.size()))
 	return hit
 

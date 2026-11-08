@@ -961,11 +961,11 @@ const SPELLS := {
 		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
 		"labels": {"damage": "Slam damage", "cooldown": "Cooldown (s)", "anchor_stun": "Stun (s)", "ring_radius": "Shock (px)", "ring_share": "Shock damage"},
 		"levels": [
-			{"damage": 34.0, "cooldown": 3.4, "anchor_stun": 0.8, "ring_radius": 52.0, "ring_share": 0.4},  # TUNING (not in GDD)
-			{"damage": 42.0, "cooldown": 3.25, "anchor_stun": 0.9, "ring_radius": 56.0, "ring_share": 0.43},  # TUNING (not in GDD)
-			{"damage": 51.0, "cooldown": 3.1, "anchor_stun": 1.0, "ring_radius": 60.0, "ring_share": 0.46},  # TUNING (not in GDD)
-			{"damage": 61.0, "cooldown": 2.95, "anchor_stun": 1.1, "ring_radius": 64.0, "ring_share": 0.5},  # TUNING (not in GDD)
-			{"damage": 72.0, "cooldown": 2.8, "anchor_stun": 1.2, "ring_radius": 68.0, "ring_share": 0.54},  # TUNING (not in GDD) Tractor Beam Lv5 78 / 2.6 s; the stun is its edge
+			{"damage": 34.0, "cooldown": 3.4, "anchor_stun": 0.8, "ring_radius": 48.0, "ring_share": 0.3},  # TUNING (not in GDD)
+			{"damage": 42.0, "cooldown": 3.25, "anchor_stun": 0.9, "ring_radius": 52.0, "ring_share": 0.32},  # TUNING (not in GDD)
+			{"damage": 51.0, "cooldown": 3.1, "anchor_stun": 1.0, "ring_radius": 56.0, "ring_share": 0.34},  # TUNING (not in GDD)
+			{"damage": 61.0, "cooldown": 2.95, "anchor_stun": 1.1, "ring_radius": 60.0, "ring_share": 0.37},  # TUNING (not in GDD)
+			{"damage": 72.0, "cooldown": 2.8, "anchor_stun": 1.2, "ring_radius": 64.0, "ring_share": 0.4},  # TUNING (not in GDD) Tractor Beam Lv5 78 / 2.6 s; the stun is its edge (first pass shock 0.54 at 68 px: the shock ring dealt most of its damage)
 		],
 	},
 }

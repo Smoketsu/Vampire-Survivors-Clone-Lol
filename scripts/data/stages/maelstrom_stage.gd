@@ -215,23 +215,23 @@ const RECKONING_OBJECTIVE: String = "THE BLACK TIDE: the whole rail boards and t
 ## the serpents, the kraken). The finale's pressure is its traffic: more boats,
 ## more crew (phase 2 raised the stubs' rates and caps; HP stays the act's).
 const SEGMENTS := [
-	{"start": 0.0, "rate": 2.2, "max_alive": 50,  # TUNING (not in GDD)
+	{"start": 0.0, "rate": 1.4, "max_alive": 30,  # TUNING (not in GDD)
 		"weights": {"deckhand": 0.9, "musketeer": 0.1},
 		"objective": "Lanterns in the fog: every one is a boat. Watch the rail"},
-	{"start": 60.0, "rate": 2.7, "max_alive": 64,  # TUNING (not in GDD)
-		"weights": {"deckhand": 0.72, "musketeer": 0.2, "powder_runner": 0.08},
+	{"start": 60.0, "rate": 1.9, "max_alive": 44,  # TUNING (not in GDD)
+		"weights": {"deckhand": 0.85, "musketeer": 0.15},  # TUNING (not in GDD) no kegs yet: the first pass's early powder blasts took the seed-7 army bot to 35%
 		"objective": "Cut both grapple hooks and the boat drifts off with its crew"},
-	{"start": 180.0, "rate": 3.2, "max_alive": 78,  # TUNING (not in GDD)
-		"weights": {"deckhand": 0.5, "ghost_deckhand": 0.16, "musketeer": 0.16, "powder_runner": 0.08, "reef_shark": 0.06, "ghost_gunner": 0.04},
+	{"start": 180.0, "rate": 2.6, "max_alive": 64,  # TUNING (not in GDD)
+		"weights": {"deckhand": 0.57, "ghost_deckhand": 0.17, "musketeer": 0.12, "powder_runner": 0.05, "reef_shark": 0.06, "ghost_gunner": 0.03},
 		"objective": "The drowned board too: cut them down near you and they rise for you"},
-	{"start": 300.0, "rate": 3.7, "max_alive": 92,  # TUNING (not in GDD)
-		"weights": {"deckhand": 0.42, "ghost_deckhand": 0.2, "musketeer": 0.14, "ghost_gunner": 0.06, "powder_runner": 0.07, "swashbuckler": 0.05, "reef_shark": 0.04, "corsair_serpent": 0.02},
+	{"start": 300.0, "rate": 3.4, "max_alive": 88,  # TUNING (not in GDD)
+		"weights": {"deckhand": 0.47, "ghost_deckhand": 0.21, "musketeer": 0.1, "ghost_gunner": 0.05, "powder_runner": 0.06, "swashbuckler": 0.05, "reef_shark": 0.04, "corsair_serpent": 0.02},
 		"objective": "The deck heaves: lean uphill, and knock them over the low rail"},
 	{"start": 600.0, "rate": 4.1, "max_alive": 106,  # TUNING (not in GDD)
-		"weights": {"deckhand": 0.36, "ghost_deckhand": 0.22, "musketeer": 0.12, "ghost_gunner": 0.08, "powder_runner": 0.07, "swashbuckler": 0.06, "boarding_bruiser": 0.02, "reef_shark": 0.04, "corsair_serpent": 0.03},
+		"weights": {"deckhand": 0.34, "ghost_deckhand": 0.22, "musketeer": 0.12, "ghost_gunner": 0.08, "powder_runner": 0.07, "swashbuckler": 0.07, "boarding_bruiser": 0.03, "reef_shark": 0.04, "corsair_serpent": 0.03},
 		"objective": "The eye of the storm: the deck is level, and the sea comes up to look"},
-	{"start": 900.0, "rate": 4.5, "max_alive": 120,  # TUNING (not in GDD)
-		"weights": {"deckhand": 0.32, "ghost_deckhand": 0.26, "musketeer": 0.1, "ghost_gunner": 0.1, "powder_runner": 0.07, "swashbuckler": 0.07, "boarding_bruiser": 0.03, "reef_shark": 0.03, "corsair_serpent": 0.02},
+	{"start": 900.0, "rate": 4.6, "max_alive": 124,  # TUNING (not in GDD)
+		"weights": {"deckhand": 0.29, "ghost_deckhand": 0.26, "musketeer": 0.1, "ghost_gunner": 0.1, "powder_runner": 0.07, "swashbuckler": 0.08, "boarding_bruiser": 0.05, "reef_shark": 0.03, "corsair_serpent": 0.02},
 		"objective": "The dead stand to their posts at the helm"},
 	{"start": BOSS_TIME, "rate": 3.4, "max_alive": 90,  # TUNING (not in GDD) thinner during the boss fight (his crew comes by his own boats)
 		"weights": {"deckhand": 0.4, "ghost_deckhand": 0.3, "musketeer": 0.12, "ghost_gunner": 0.1, "powder_runner": 0.08},
@@ -243,11 +243,11 @@ const SEGMENTS := [
 ## "ghost_bosun" event is MaelstromDirector's (the miniboss climbs over the rail).
 const EVENTS := [
 	{"time": 20.0, "type": "wave", "banner": "Two longboats out of the fog!", "formation": "ring",  # TUNING (not in GDD)
-		"groups": [{"kind": "deckhand", "count": 14, "elite": false}]},
+		"groups": [{"kind": "deckhand", "count": 10, "elite": false}]},
 	{"time": 90.0, "type": "wave", "banner": "Musketeers in the boats!", "formation": "arc",  # TUNING (not in GDD)
-		"groups": [{"kind": "musketeer", "count": 5, "elite": false}, {"kind": "deckhand", "count": 10, "elite": false}]},
+		"groups": [{"kind": "musketeer", "count": 4, "elite": false}, {"kind": "deckhand", "count": 8, "elite": false}]},
 	{"time": 150.0, "type": "wave", "banner": "Fins in the water! The sharks are circling!", "formation": "ring",  # TUNING (not in GDD)
-		"groups": [{"kind": "reef_shark", "count": 3, "elite": false}]},
+		"groups": [{"kind": "reef_shark", "count": 2, "elite": false}]},
 	{"time": 200.0, "type": "wave", "banner": "Ghost boats in the fog! The drowned are boarding!", "formation": "ring",  # TUNING (not in GDD)
 		"groups": [{"kind": "ghost_deckhand", "count": 12, "elite": false}, {"kind": "ghost_gunner", "count": 3, "elite": false}]},
 	{"time": 260.0, "type": "wave", "banner": "Lit kegs! Powder runners are coming over the rail!", "formation": "arc",  # TUNING (not in GDD)

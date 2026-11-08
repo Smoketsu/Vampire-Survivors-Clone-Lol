@@ -2510,8 +2510,8 @@ the sea comes up to look: serpents and the kraken) and **the Drowned Helm**.
   sliding DOWN v v v", "The hull creaks: the deck tips UP ^ ^ ^"), with chevrons along the low rail. Enemies slide by
   their knockback, so a blow at the low rail tips them overboard.
 - **The Brotherhood's own dead.** The *Hollow Queen*'s **ghost crew** (Ghost Deckhands and Ghost Gunners: the roster's
-  art in a spectre green) boards with the living. A ghost crewman cut down on the deck near you **rises for you** for 9 s
-  (at most 10 at once); one that drowns stays in the sea.
+  art in a spectre green) boards with the living. A ghost crewman cut down on the deck near you **rises for you** for 7 s
+  (at most 5 at once); one that drowns stays in the sea.
 - **The Sea Serpent** (`corsair_serpent`, a shared swimmer heavy) breaches in a line across the rail band: step out of
   the lane.
 - **The Ghost Bosun** (miniboss, 8:30) climbs over the rail; each blast of his whistle calls a **spectral longboat** with
