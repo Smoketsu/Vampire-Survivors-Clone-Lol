@@ -81,7 +81,7 @@ const BOSS := {
 	"display_name": "Sigrun, the Shield-Queen",
 	"max_hp": MAX_HP,
 	"move_speed": 62.0,  # TUNING (not in GDD) px/s
-	"damage": 7.0,  # TUNING (not in GDD) a spear thrust, before the time scaling
+	"damage": 6.0,  # TUNING (not in GDD) a spear thrust, before the time scaling (first pass 7: the seed-7 army bot, held in the square with her, fell to 54 of 120 HP)
 	"attack_interval": 1.1,  # TUNING (not in GDD) s
 	"attack_range": 20.0,  # TUNING (not in GDD) px (the spear's reach)
 	"radius": 24.0,  # TUNING (not in GDD) px (an 80 px sprite with wings)
@@ -122,7 +122,7 @@ const BOSS := {
 	"charge_overshoot": 180.0,  # TUNING (not in GDD) px past the necromancer the lane runs
 	"charge_width": 36.0,  # TUNING (not in GDD) px, the lane's width
 	"wing_offset": 72.0,  # TUNING (not in GDD) px each wing lane runs beside hers
-	"charge_damage_player": 8.0,  # TUNING (not in GDD) before the time scaling
+	"charge_damage_player": 7.0,  # TUNING (not in GDD) before the time scaling (first pass 8)
 	"charge_damage_summon": 11.0,  # TUNING (not in GDD) before the time scaling
 	"charge_push": 26.0,  # TUNING (not in GDD) px the summons are thrown aside
 	"recover_time": 0.6,  # TUNING (not in GDD) s she stands after a charge (open to every blow)

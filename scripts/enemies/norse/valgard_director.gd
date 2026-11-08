@@ -22,12 +22,19 @@
 ##   * THE EINHERJAR CHAMPION ("einherjar_champion" event): the stage miniboss,
 ##     brought in on the spawn ring with an escort of Einherjar, tracked
 ##     (objective, kill time); his kit registers him on the HUD's miniboss bar.
+##   * THE HALL'S HEARTHS (the Long Winter's braziers by the map): the hall's
+##     long hearths repeat on a lattice of hearth_spacing px (each one
+##     hearth_jitter px off its point, seeded by its lattice cell); every
+##     lattice hearth within hearth_reach px of a necromancer is lit once
+##     (LongWinter.place(), THE brazier call) unless a brazier already burns
+##     within hearth_min_gap px. The start's hearths are the STAGE's
+##     long_winter "points".
 ##   * The HUD objective while the Champion stands.
 ## Seat states are keyed by the table's arena cell and the zone (a zone change
 ## rebuilds the obstacles), read from the arena's deterministic per-cell
 ## layout. Deterministic: the seeded arena layout and the global RNG only
 ## (where the Champion comes in); the seated figures are drawing only.
-## Stats: feast_wakes, feast_woken, feast_woken_<cause>, feast_tables_emptied,
+## Stats: valgard_hearths, feast_wakes, feast_woken, feast_woken_<cause>, feast_tables_emptied,
 ## feast_capped, valgard_champion_spawned, valgard_champion_killed.
 class_name ValgardDirector
 extends Node2D
@@ -58,6 +65,10 @@ var _emptied: Dictionary = {}
 var _champ: Enemy = null
 ## Generation of `_champ` when he spawned.
 var _champ_gen: int = 0
+## Hearth lattice cells already looked at (Vector2i -> true).
+var _hearths: Dictionary = {}
+## Seconds until the next hearth check.
+var _hearth_cd: float = 0.0
 ## True once connected to the Rune-Stones' horn.
 var _listening: bool = false
 ## True when this build draws (never headless).
@@ -80,6 +91,11 @@ func step(_delta: float) -> void:
 	if not _listening and game.norse != null:
 		_listening = true
 		game.norse.stones.horn_blown.connect(_on_horn)
+	_hearth_cd -= _delta
+	if _hearth_cd <= 0.0 and game.norse != null and game.norse.winter.enabled and not game.norse.winter.braziers.is_empty():
+		_hearth_cd = 1.0
+		for pl in game.all_players:
+			_light_hearths(pl.position)
 	if _champ != null and not (_champ.active and _champ.generation == _champ_gen):
 		_champ = null
 		game.stat_add("valgard_champion_killed", 1.0)
@@ -91,6 +107,39 @@ func step(_delta: float) -> void:
 			_drawn_cell = c
 			_drawn_zone = _zone()
 			queue_redraw()
+
+
+## THE HALL'S HEARTHS around world point `p` (see the header): each lattice
+## cell within hearth_reach px is looked at once; its hearth is lit unless a
+## brazier already burns near it.
+func _light_hearths(p: Vector2) -> void:
+	var step := float(config["hearth_spacing"])
+	var reach := float(config["hearth_reach"])
+	var jit := float(config["hearth_jitter"])
+	var gap := float(config["hearth_min_gap"])
+	var c0 := Vector2i(floori((p.x - reach) / step + 0.5), floori((p.y - reach) / step + 0.5))
+	var c1 := Vector2i(floori((p.x + reach) / step + 0.5), floori((p.y + reach) / step + 0.5))
+	var w := game.norse.winter
+	for cy in range(c0.y, c1.y + 1):
+		for cx in range(c0.x, c1.x + 1):
+			var key := Vector2i(cx, cy)
+			if _hearths.has(key):
+				continue
+			var h := absi(hash(Vector3i(cx, cy, 1777)))
+			var at := Vector2(float(cx) * step, float(cy) * step)  # The lattice point.
+			at += Vector2(float(h % 1000) / 500.0 - 1.0, float((h >> 10) % 1000) / 500.0 - 1.0) * jit
+			if at.distance_to(p) > reach:
+				continue
+			_hearths[key] = true
+			var near := false
+			for b in w.braziers:
+				if b.pos.distance_to(at) < gap:
+					near = true
+					break
+			if near:
+				continue
+			w.place(at)
+			game.stat_add("valgard_hearths", 1.0)
 
 
 ## A Rune-Stone's horn (RuneStones.horn_blown): the Feast wakes around the

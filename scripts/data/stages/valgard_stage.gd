@@ -132,16 +132,17 @@ const MARCH := {
 }
 
 ## The Long Winter on this stage (keys of NorseRulesData.LONG_WINTER override
-## its defaults): the six braziers stand BY THE MAP ("points": offsets in px
-## from the start; foundation note: the stub's seeded ring left the army bot in
-## the cold 60-75% of the run): the Mead Hall's long hearth either side of the
-## start (two fires 210 px out, so the start itself is just warm between
-## them), the two yard fires 470 px above and below, and the two gate
-## braziers far out on the diagonal. Warmth is a place to hold; the dousers
-## come for the hearth.
+## its defaults): the braziers stand BY THE MAP (foundation note: the stub's
+## seeded ring left the army bot in the cold 60-75% of the run, and the fight
+## drifts thousands of px from the start). At the start ("points": offsets in
+## px) the Mead Hall's long hearth burns either side of the necromancer (two
+## fires 210 px out, the start just warm between them) with the two yard fires
+## 470 px above and below; beyond them THE HALL'S HEARTHS repeat on a lattice
+## (VALGARD "hearth_*", ValgardDirector, LongWinter.place()): about six in
+## reach at any time, each a warm island ~900 px from the next. Warmth is a
+## place to hold; the seers and giants come for it.
 const LONG_WINTER := {
-	"points": [Vector2(-210.0, 0.0), Vector2(210.0, 0.0), Vector2(0.0, -470.0), Vector2(0.0, 470.0),  # TUNING (not in GDD) the long hearth, the yard fires
-		Vector2(-640.0, -340.0), Vector2(640.0, 340.0)],  # TUNING (not in GDD) the gate braziers
+	"points": [Vector2(-210.0, 0.0), Vector2(210.0, 0.0), Vector2(0.0, -470.0), Vector2(0.0, 470.0)],  # TUNING (not in GDD) the long hearth, the yard fires
 }
 ## The Rune-Stones on this stage: {} = the defaults of NorseRulesData.RUNE_STONES
 ## (every horn also wakes the Feast: ValgardDirector listens to horn_blown).
@@ -163,6 +164,17 @@ const RUNE_STONES := {}
 ##   doors_wake      — Einherjar the Doors of the Hall wake at the tables (on
 ##                     top of Sigrun's marching wave).
 ##   champion_objective — the HUD objective while the Champion stands.
+##   hearth_spacing  — px between two of THE HALL'S HEARTHS (the Long Winter's
+##                     braziers by the map: the hall's long hearths repeat down
+##                     its length and across its bays, a lattice of this
+##                     pitch; ValgardDirector lights each one as the
+##                     necromancer comes near it, LongWinter.place()).
+##   hearth_jitter   — px a hearth stands off its lattice point (seeded by the
+##                     cell, the same in every run).
+##   hearth_reach    — px around a necromancer within which the hearths of the
+##                     lattice are lit.
+##   hearth_min_gap  — px kept from every brazier already burning (the start's
+##                     hearths of LONG_WINTER "points" included).
 const VALGARD := {
 	"wake_reach": 640.0,  # TUNING (not in GDD) px
 	"wake_by_zone": [2, 4, 3, 3],  # TUNING (not in GDD) the Mead Hall wakes the most
@@ -173,6 +185,10 @@ const VALGARD := {
 	"seat_scan": 900.0,  # TUNING (not in GDD) px, visual only
 	"doors_wake": 6,  # TUNING (not in GDD)
 	"champion_objective": "The Einherjar Champion: step out of his sweep. His horn wakes the hall",  # TUNING (not in GDD)
+	"hearth_spacing": 900.0,  # TUNING (not in GDD) px: about six hearths in reach at a time (owner: "about 6 brazier structures")
+	"hearth_jitter": 150.0,  # TUNING (not in GDD) px
+	"hearth_reach": 1250.0,  # TUNING (not in GDD) px
+	"hearth_min_gap": 420.0,  # TUNING (not in GDD) px
 }
 
 ## The Reckoning of this stage (keys as GraveyardStage.RECKONING): RAGNAROK,
@@ -255,7 +271,7 @@ const EVENTS := [
 	{"time": 910.0, "type": "wave", "banner": "The Valkyries' Gate: the wing circles before its queen!", "formation": "ring",  # TUNING (not in GDD)
 		"groups": [{"kind": "valkyrie", "count": 2, "elite": false}, {"kind": "einherjar", "count": 3, "elite": false}, {"kind": "raider", "count": 8, "elite": false}]},
 	{"time": 990.0, "type": "wave", "banner": "The war-host gathers before its queen!", "formation": "ring",  # TUNING (not in GDD)
-		"groups": [{"kind": "raider", "count": 10, "elite": false}, {"kind": "shield_maiden", "count": 4, "elite": false}, {"kind": "frost_giant", "count": 1, "elite": false}]},
+		"groups": [{"kind": "raider", "count": 10, "elite": false}, {"kind": "shield_maiden", "count": 4, "elite": false}, {"kind": "einherjar", "count": 2, "elite": false}]},  # (first pass: a frost giant; its stomps took the seed-7 army bot to 68 HP before Sigrun)
 ]
 
 ## Obstacle layout before the first zone change (the Shield Yard's).
