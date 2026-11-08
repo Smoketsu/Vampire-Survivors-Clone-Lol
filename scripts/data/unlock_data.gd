@@ -281,6 +281,15 @@ const UNLOCKS := {
 	"crop_circles": {"type": "passive", "boss": "harvester", "text": "Defeat the Harvester on the Ark of the Concord to unlock."},  # Its paired passive (own decision), unlocked with it
 	"the_unharvested": {"type": "title", "achievement": "last_harvest",
 		"text": "Earn The Last Harvest: beat the Harvester on the Ark of the Concord."},  # Own decision (the clear is recorded as a title, as Acts VI-VIII did)
+	# --- Act XI (temporary): the Barrow Fields ---
+	# Hrimgar's fall (owner-approved proposal "Rewards": Barrow Grasp is
+	# unlocked by Hrimgar) with its paired passive, offered on every stage; the
+	# stage's achievement Keep the Fires earns the act's counter-passive
+	# Fur-Lined Bones (owner decision Nov 7, 2026; offered only in the act
+	# through its card row's "act").
+	"barrow_grasp": {"type": "spell", "boss": "hrimgar", "text": "Defeat Hrimgar the Draugr-King in the Barrow Fields to unlock."},  # Owner-approved proposal
+	"grave_frost": {"type": "passive", "boss": "hrimgar", "text": "Defeat Hrimgar the Draugr-King in the Barrow Fields to unlock."},  # Barrow Grasp's paired passive (owner-approved proposal), unlocked with it
+	"fur_lined_bones": {"type": "passive", "achievement": "keep_the_fires", "text": "Earn Keep the Fires: finish the Barrow Fields with no brazier out for more than 30 s."},  # Owner decision Nov 7, 2026: Keep the Fires unlocks Fur-Lined Bones
 }
 
 ## End-screen plate heading of a newly unlocked item, by type.

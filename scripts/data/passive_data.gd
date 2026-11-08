@@ -208,7 +208,9 @@ const ORDER := ["grave_dominion", "necrotic_vigor", "dark_command", "soul_recycl
 	# --- Act IX: the Proving Moon ---
 	"trophy_rack", "mirror_bones",
 	# --- Act IX: the Ark ---
-	"starseed", "crop_circles"]
+	"starseed", "crop_circles",
+	# --- Act XI (temporary): the Barrow Fields ---
+	"grave_frost", "fur_lined_bones"]
 
 ## Passives that only help summons (a "dead" level-up card while no summon
 ## class is owned, see AbilityManager.build_offers()).
@@ -258,7 +260,9 @@ const ARMY_PASSIVES := ["grave_dominion", "necrotic_vigor", "dark_command", "sou
 	# --- Act IX: the Proving Moon ---
 	"mirror_bones",
 	# --- Act IX: the Ark ---
-	"crop_circles"]
+	"crop_circles",
+	# --- Act XI (temporary): the Barrow Fields ---
+	"fur_lined_bones"]
 
 # --- Act III: the Assembly Halls ---
 ## Overclock (paired with the Grave Drone): a summon class is "ranged" (and
@@ -1902,6 +1906,49 @@ const PASSIVES := {
 			{"special_hold": 0.18},  # TUNING (not in GDD)
 			{"special_hold": 0.24},  # TUNING (not in GDD)
 			{"special_hold": 0.30},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act XI (temporary): the Barrow Fields ---
+	# Grave Frost (Barrow Grasp's paired passive; owner-approved proposal:
+	# "Barrow-Lord's Embrace (+ Grave Frost)"; unlocked with the spell by
+	# Hrimgar and offered on every stage). Own decision on its effect: the
+	# barrow's frost bites: every Barrow Grasp hand deals frost_bonus more and
+	# holds frost_bonus longer (BarrowGrasp reads it once per grab; stat
+	# grasp_frost_bonus_dmg; 0 while not owned).
+	"grave_frost": {
+		"display_name": "Grave Frost",  # Owner-approved proposal
+		"icon": "grave_frost",
+		"description": "Barrow frost bites deeper: your barrow hands hit harder and hold longer.",
+		"labels": {"frost_bonus": ["Barrow hand damage and hold", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"frost_bonus": 0.08},  # TUNING (not in GDD)
+			{"frost_bonus": 0.15},  # TUNING (not in GDD)
+			{"frost_bonus": 0.22},  # TUNING (not in GDD)
+			{"frost_bonus": 0.30},  # TUNING (not in GDD)
+			{"frost_bonus": 0.40},  # TUNING (not in GDD)
+		],
+	},
+	# The Hall of the Slain's counter-passive Fur-Lined Bones (owner decision
+	# Nov 7, 2026: "the cold slows summons half as much"; replaces the
+	# proposal's Inglorious; unlocked by the Barrow Fields achievement Keep the
+	# Fires and offered only in the Norse act through its card row's "act"). The
+	# foundation's hook reads it: LongWinter.fur_mult() (x the cold's slow on
+	# summons, 1 - cold_slow_cut). The frostbite and the necromancer's own
+	# slow are unchanged.
+	"fur_lined_bones": {
+		"display_name": "Fur-Lined Bones",  # Owner decision Nov 7, 2026
+		"icon": "fur_lined_bones",
+		"description": "Your dead are wrapped in fur: the Long Winter's cold slows them less.",
+		"labels": {"cold_slow_cut": ["Cold's slow on summons", "neg_pct"]},
+		"act": 11,  # Owner decision: the act's counter-passive is offered only in the Hall of the Slain (TEMPORARY act number 11; the reorder pass renumbers it)
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"cold_slow_cut": 0.10},  # TUNING (not in GDD)
+			{"cold_slow_cut": 0.20},  # TUNING (not in GDD)
+			{"cold_slow_cut": 0.30},  # TUNING (not in GDD)
+			{"cold_slow_cut": 0.40},  # TUNING (not in GDD)
+			{"cold_slow_cut": 0.50},  # Owner decision: "half as much" at full
 		],
 	},
 }

@@ -444,7 +444,9 @@ const ACHIEVEMENT_ORDER := ["bone_legion", "heretics_bane", "dread_sovereign", "
 	# --- Act IX: the Proving Moon ---
 	"the_hunter_hunted",
 	# --- Act IX: the Ark ---
-	"last_harvest"]
+	"last_harvest",
+	# --- Act XI (temporary): the Barrow Fields ---
+	"keep_the_fires"]
 
 ## Achievement definitions (GDD §9.4 "Example Achievement Unlocks"). Each
 ## achievement is tracked and recorded in the save and pays a one-time Soul
@@ -691,6 +693,16 @@ const ACHIEVEMENTS := {
 	# clear, with the title The Unharvested (UnlockData / TitleData).
 	"last_harvest": {"display_name": "The Last Harvest", "description": "Beat the Harvester on the Ark of the Concord",
 		"stat": "boss_kills", "stage": "ark", "goal": 1, "unlock": "The title The Unharvested", "bounty": 500},  # Owner-approved proposal; bounty TUNING (not in GDD) as Last Supper
+	# --- Act XI (temporary): the Barrow Fields ---
+	# The Hall of the Slain's Barrow Fields achievement (owner decision Nov 7,
+	# 2026, replacing None Chosen: "finish the Barrow Fields with no brazier
+	# ever out for more than 30 s"): a Barrow Fields run that reached 0:00 with
+	# LongWinter.longest_out() at most NorseRulesData.KEEP_THE_FIRES_MAX_OUT
+	# (BarrowFieldsDirector sets the run stat barrow_fields_keep_the_fires;
+	# MetaProgress counts the runs, lifetime keep_the_fires_runs). It unlocks
+	# the counter-passive Fur-Lined Bones.
+	"keep_the_fires": {"display_name": "Keep the Fires", "description": "Finish the Barrow Fields with no brazier ever out for more than 30 s",
+		"stat": "keep_the_fires_runs", "goal": 1, "unlock": "The Fur-Lined Bones passive", "bounty": 300},  # Owner decision Nov 7, 2026; bounty TUNING (not in GDD) as Nothing Hatched
 }
 
 # --- Content wave 2: B. Achievement rewards ---

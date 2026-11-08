@@ -174,6 +174,27 @@ func fur_mult() -> float:
 	return clampf(1.0 - game.abilities.passive_value(NorseRulesData.FUR_LINED_BONES, NorseRulesData.FUR_KEY), 0.0, 1.0)
 
 
+# --- Act XI (temporary): the Barrow Fields --- (braziers placed by the map)
+## Retires every brazier farther than `dist` px from `p` (a stage director
+## placing the next zone's braziers by its map: BarrowFieldsDirector); one that
+## is out records its outage so far (longest_out(), Keep the Fires). Returns
+## how many were retired.
+func retire_far(p: Vector2, dist: float) -> int:
+	var n := 0
+	var i := braziers.size() - 1
+	while i >= 0:
+		var b := braziers[i]
+		if b.pos.distance_squared_to(p) > dist * dist:
+			if not b.lit:
+				max_out = maxf(max_out, game.elapsed - b.out_since)
+			braziers.remove_at(i)
+			n += 1
+		i -= 1
+	if n > 0 and _draws:
+		queue_redraw()
+	return n
+
+
 ## Longest time (s) a brazier stayed out this run, counting the one out now.
 func longest_out() -> float:
 	var m := max_out
@@ -444,8 +465,32 @@ func _draw() -> void:
 				var a := -PI * 0.5 + TAU * float(i) / float(n)
 				SpriteBank.draw_disc(self, b.pos + Vector2.from_angle(a) * rr, 3.0, Color(Palette.NORSE_HEARTH, 0.95))
 		var key := NorseRulesData.BRAZIER_SPRITE if b.lit else NorseRulesData.BRAZIER_OUT_SPRITE
+		# --- Act XI (temporary): the Barrow Fields --- the art's 8-frame loops
+		# (flames flicker, the smoke drifts) on game time, the stills the fallback.
+		if _draw_anim(b, key):
+			continue
 		if not SpriteBank.draw(self, key, b.pos, false):
 			NorseGlyphs.draw_brazier(self, b.pos, float(cfg["brazier_radius"]), b.lit)
+
+
+# --- Act XI (temporary): the Barrow Fields ---
+## Draws brazier `b` from the animated strip of still `key` (key + "_anim":
+## NorseRulesData.BRAZIER_ANIM_FRAMES frames of the still's size side by side,
+## frame = int(game time x BRAZIER_ANIM_FPS) mod frames), centred where the
+## still would stand, with its drop shadow. False without the strip (the still
+## is drawn). Visual only.
+func _draw_anim(b: Brazier, key: String) -> bool:
+	var tex := SpriteBank.texture(key + NorseRulesData.BRAZIER_ANIM_SUFFIX)
+	if tex == null:
+		return false
+	var frames := NorseRulesData.BRAZIER_ANIM_FRAMES
+	var h := SpriteBank.drawn_height(key)  # The still's drawn height (px).
+	var centre := b.pos + Vector2(0.0, h * SpriteData.CENTER_OFFSET)
+	draw_set_transform(centre + Vector2(0.0, h * 0.46), 0.0, Vector2(1.0, SpriteData.SHADOW_SQUASH))
+	SpriteBank.draw_disc(self, Vector2.ZERO, h * SpriteData.SHADOW_WIDTH * 0.5, Color(0.0, 0.0, 0.0, SpriteData.SHADOW_ALPHA))
+	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+	var frame := int(game.elapsed * NorseRulesData.BRAZIER_ANIM_FPS) % frames
+	return SpriteBank.draw_flat_frame(self, key + NorseRulesData.BRAZIER_ANIM_SUFFIX, frames, frame, centre, 0.0)
 
 
 ## (Re)builds the frost vignette for the current level: four gradient bands

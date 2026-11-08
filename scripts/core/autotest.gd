@@ -273,6 +273,12 @@
 ##     Norse rules ran, the summary adds the "long winter", "berserkergang",
 ##     "rune-stones", "norse kinds", "ragnarok" (after 0:00) and (on a Norse
 ##     stage) "norse stage" lines (NorseReport).
+##     The Barrow Fields (phase 2) adds the kinds draugr_female, open_barrow,
+##     barrow_wight, hrimgar_barrow; the bot also steps out of Hrimgar's mist
+##     circles and cleave and the Barrow-Wight's howl; the "barrow fields",
+##     "barrow wight" and "hrimgar" lines (BarrowFieldsReport), and "norse
+##     spell" / "norse passives" when Barrow Grasp, Grave Frost or Fur-Lined
+##     Bones was taken.
 ##   * Act XII (temporary number), the Necropolis Dynasty (GDD §15.0 "The
 ##     Necropolis Dynasty foundation (phase 1)"):
 ##     --stage=necropolis|lioness_temple|two_truths, --spawn= with its kinds
@@ -1422,6 +1428,12 @@ func get_move_vector() -> Vector2:
 		var at := (game.enemies.boss as BossDeusExMachina).approach_point(p)
 		if at != Vector2.INF and p.distance_to(at) > 200.0 and away.length() < 0.6:
 			goal = at
+	# --- Act XI (temporary): the Barrow Fields ---
+	if game.enemies.boss is BossHrimgar and game.enemies.boss.active and policy() in SANCTUM_SEEK_POLICIES:
+		# Hrimgar lies in his barrow: bring the army to it and break it (the objective policies).
+		var at := (game.enemies.boss as BossHrimgar).approach_point(p)
+		if at != Vector2.INF and p.distance_to(at) > 120.0 and away.length() < 0.6:
+			goal = at
 	if game.enemies.sinking != null:
 		danger += game.enemies.sinking.danger_push(p) * 0.5  # Ul-Thalos: keep off the shore the sea is about to take.
 	if goal != Vector2.INF:
@@ -1679,6 +1691,8 @@ func finish(summary: Dictionary) -> void:
 	LibertyHeightsReport.item_lines(game, st)  # Hero's Fist, Secret Identity, the Fallen Hero, Origin Story (only when used; the stage's own lines are CityReport's).
 	# --- Act IX: the Crash Site ---
 	CrashSiteReport.item_lines(game, st)  # Bone Beetles, Chitin, Anchored (only when taken; the stage's own lines are ConcordReport's).
+	# --- Act XI (temporary): the Barrow Fields ---
+	BarrowFieldsReport.item_lines(game, st)  # Barrow Grasp, Grave Frost, Fur-Lined Bones (only when taken; the stage's own lines are NorseReport's).
 	# --- Act IX: the Proving Moon ---
 	ProvingMoonReport.item_lines(game, st)  # Soul Caster, Trophy Rack, Mirror Bones (only when taken; the stage's own lines are ConcordReport's).
 	# --- Act IX: the Ark ---
