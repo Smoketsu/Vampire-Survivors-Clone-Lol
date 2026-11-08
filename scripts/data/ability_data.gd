@@ -110,7 +110,9 @@ const SPELL_ORDER := ["shadow_bolt", "orb_shield", "shadow_blast",
 	# --- Act IX: the Proving Moon ---
 	"soul_caster",
 	# --- Act IX: the Ark ---
-	"tractor_lift"]
+	"tractor_lift",
+	# --- Act XI (temporary): the Barrow Fields ---
+	"barrow_grasp"]
 
 ## Spell definitions.
 ##   display_name — UI name.
@@ -939,6 +941,31 @@ const SPELLS := {
 			{"damage": 56.0, "cooldown": 2.9, "lift_time": 0.95, "slam_radius": 56.0, "slam_share": 0.51},  # TUNING (not in GDD)
 			{"damage": 66.0, "cooldown": 2.75, "lift_time": 0.95, "slam_radius": 60.0, "slam_share": 0.54},  # TUNING (not in GDD)
 			{"damage": 78.0, "cooldown": 2.6, "lift_time": 1.0, "slam_radius": 64.0, "slam_share": 0.57},  # TUNING (not in GDD) Hero's Fist Lv5 72 / 2.4 s
+		],
+	},
+	# --- Act XI (temporary): the Barrow Fields ---
+	# Barrow Grasp (GDD §15.0 "Barrow Grasp, Barrow-Lord's Embrace, Grave Frost
+	# and the Rune-Seer"; owner-approved proposal: "cold hands burst from the
+	# ground in a ring and hold enemies"; unlocked by slaying Hrimgar,
+	# UnlockData). Every `cooldown` s `hands` hands burst on a ring `ring` px
+	# around the necromancer; each grabs every foe within `radius` px once:
+	# `damage` and a hold of `hold` s (CombatResolver.stun_enemy(): bosses keep a
+	# quarter, elites 60%; the berserk shrug it off). Stat keys: damage, hands,
+	# ring (px), radius (px), hold (s), cooldown (s). Logic: BarrowGrasp; fixed
+	# rules: BarrowGraspData; Grave Frost (its paired passive) makes every hand
+	# hit harder and hold longer.
+	"barrow_grasp": {
+		"display_name": "Barrow Grasp",  # Owner-approved proposal
+		"icon": "barrow_grasp",
+		"description": "Cold hands burst from the ground in a ring around you and hold your foes.",
+		"shared_card_pool": true,  # TUNING (not in GDD) an unlocked spell: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Damage", "hands": "Hands", "hold": "Hold", "cooldown": "Cooldown"},
+		"levels": [
+			{"damage": 14.0, "hands": 6, "ring": 160.0, "radius": 26.0, "hold": 1.0, "cooldown": 4.5},  # TUNING (not in GDD)
+			{"damage": 17.0, "hands": 7, "ring": 160.0, "radius": 27.0, "hold": 1.1, "cooldown": 4.2},  # TUNING (not in GDD)
+			{"damage": 20.0, "hands": 8, "ring": 160.0, "radius": 28.0, "hold": 1.2, "cooldown": 4.0},  # TUNING (not in GDD)
+			{"damage": 24.0, "hands": 9, "ring": 165.0, "radius": 30.0, "hold": 1.4, "cooldown": 3.7},  # TUNING (not in GDD)
+			{"damage": 28.0, "hands": 10, "ring": 165.0, "radius": 32.0, "hold": 1.6, "cooldown": 3.4},  # TUNING (not in GDD)
 		],
 	},
 }

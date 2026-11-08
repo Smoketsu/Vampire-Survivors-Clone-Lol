@@ -506,6 +506,9 @@ func _ready() -> void:
 			var nog := NorseGround.new()  # The Norse stubs' placeholder floor (the STAGE's "floor").
 			nog.look = stage_def.get("floor", {})
 			ground = nog
+		# --- Act XI (temporary): the Barrow Fields ---
+		"barrow_fields":
+			ground = BarrowFieldsGround.new()  # The Barrow Fields' zone floors (BarrowFieldsStage.ZONES).
 		# --- Act XII (temporary number): the Necropolis Dynasty ---
 		"dynasty":
 			var dyg := DynastyGround.new()  # The Dynasty stubs' placeholder floor (the STAGE's "floor").

@@ -360,6 +360,13 @@
 ##   rune_stones        — the stage's Rune-Stones: any key of
 ##                        NorseRulesData.RUNE_STONES overrides it ({} = the
 ##                        defaults; e.g. its horn "table").
+## --- Act XI (temporary): the Barrow Fields ---
+##   barrow_fields      — BarrowFieldsDirector config (BarrowFieldsStage
+##                        .BARROW_FIELDS: the braziers of each later zone, the
+##                        open barrows' cap, the Fjord's drifts, Keep the
+##                        Fires' banner, the "barrow" and "wight" events);
+##                        ground "barrow_fields" is its BarrowFieldsGround (the
+##                        zone floors).
 ## --- Act XII (temporary number): the Necropolis Dynasty ---
 ##   dynasty            — true: the Necropolis Dynasty's shared rules
 ##                        (DynastyRules as Game.dynasty: Rebirth, the Black

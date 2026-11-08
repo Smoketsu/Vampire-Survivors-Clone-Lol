@@ -273,6 +273,12 @@
 ##     Norse rules ran, the summary adds the "long winter", "berserkergang",
 ##     "rune-stones", "norse kinds", "ragnarok" (after 0:00) and (on a Norse
 ##     stage) "norse stage" lines (NorseReport).
+##     The Barrow Fields (phase 2) adds the kinds draugr_female, open_barrow,
+##     barrow_wight, hrimgar_barrow; the bot also steps out of Hrimgar's mist
+##     circles and cleave and the Barrow-Wight's howl; the "barrow fields",
+##     "barrow wight" and "hrimgar" lines (BarrowFieldsReport), and "norse
+##     spell" / "norse passives" when Barrow Grasp, Grave Frost or Fur-Lined
+##     Bones was taken.
 ##   * Act XII (temporary number), the Necropolis Dynasty (GDD §15.0 "The
 ##     Necropolis Dynasty foundation (phase 1)"):
 ##     --stage=necropolis|lioness_temple|two_truths, --spawn= with its kinds
@@ -1679,6 +1685,8 @@ func finish(summary: Dictionary) -> void:
 	LibertyHeightsReport.item_lines(game, st)  # Hero's Fist, Secret Identity, the Fallen Hero, Origin Story (only when used; the stage's own lines are CityReport's).
 	# --- Act IX: the Crash Site ---
 	CrashSiteReport.item_lines(game, st)  # Bone Beetles, Chitin, Anchored (only when taken; the stage's own lines are ConcordReport's).
+	# --- Act XI (temporary): the Barrow Fields ---
+	BarrowFieldsReport.item_lines(game, st)  # Barrow Grasp, Grave Frost, Fur-Lined Bones (only when taken; the stage's own lines are NorseReport's).
 	# --- Act IX: the Proving Moon ---
 	ProvingMoonReport.item_lines(game, st)  # Soul Caster, Trophy Rack, Mirror Bones (only when taken; the stage's own lines are ConcordReport's).
 	# --- Act IX: the Ark ---

@@ -178,6 +178,12 @@
 ##     2)"): on a stage with a "proving_moon" config it owns the
 ##     ProvingMoonDirector (the Warbeast, the Last Trophy objective;
 ##     `proving_moon`) and hands it the "warbeast" events. Null elsewhere.
+##   * The Hall of the Slain (temporarily Act XI), the Barrow Fields (GDD §15.0
+##     "The Barrow Fields (the Hall of the Slain phase 2)"): on a stage with a
+##     "barrow_fields" config it owns the BarrowFieldsDirector (the braziers by
+##     the map, the open barrows, the Fjord's drifts, Keep the Fires, the
+##     Barrow-Wight; `barrow_fields`) and hands it the "barrow" and "wight"
+##     events. Null elsewhere.
 ##   * Online co-op (CoopSession; docs/coop/DESIGN.md): every enemy steps with
 ##     its NEAREST standing necromancer bound (CoopSession.bind_nearest()), so
 ##     it advances on, aims at and recycles around that one (bosses and kits
@@ -386,6 +392,11 @@ var proving_moon: ProvingMoonDirector = null
 ## Reactor's vents, the Luminous Archon; StageRegistry "ark"; null on every
 ## other stage).
 var ark: ArkDirector = null
+# --- Act XI (temporary): the Barrow Fields ---
+## The Barrow Fields' mechanics (the Hall of the Slain: the braziers by the
+## map, the open barrows, the Fjord's drifts, Keep the Fires, the Barrow-Wight;
+## StageRegistry "barrow_fields"; null on every other stage).
+var barrow_fields: BarrowFieldsDirector = null
 ## Sanctum kit bookkeeping: recent deaths, Confessor revivals, danger hints.
 var rites: CovenantRites
 ## The living miniboss shown on the HUD's miniboss bar (the Cathedral
@@ -590,6 +601,12 @@ func _ready() -> void:
 		ark.game = game
 		ark.config = stage_def["ark"]
 		add_child(ark)  # The Ark of the Concord's director.
+	# --- Act XI (temporary): the Barrow Fields ---
+	if not (stage_def.get("barrow_fields", {}) as Dictionary).is_empty():
+		barrow_fields = BarrowFieldsDirector.new()
+		barrow_fields.game = game
+		barrow_fields.config = stage_def["barrow_fields"]
+		add_child(barrow_fields)  # The Barrow Fields' director.
 
 
 # =====================================================================================
@@ -740,6 +757,9 @@ func step(delta: float) -> void:
 	# --- Act IX: the Ark ---
 	if ark != null:
 		ark.step(delta)  # The tanks, the vents.
+	# --- Act XI (temporary): the Barrow Fields ---
+	if barrow_fields != null:
+		barrow_fields.step(delta)  # The braziers by the map, the drifts, Keep the Fires, the Wight.
 
 
 ## The Archive kinds' world hazards (ArchiveHazards), created on first use.
@@ -893,6 +913,9 @@ func objective_text() -> String:
 	# --- Act IX: the Ark ---
 	if ark != null and ark.objective_override() != "":
 		return ark.objective_override()  # The Luminous Archon, the Reaping.
+	# --- Act XI (temporary): the Barrow Fields ---
+	if barrow_fields != null and barrow_fields.objective_override() != "":
+		return barrow_fields.objective_override()  # The Barrow-Wight.
 	if boss != null and not boss.active:
 		return String(boss_info["dead_objective"])
 	return segments[segment_index]["objective"]
@@ -1092,6 +1115,12 @@ func _run_event(ev: Dictionary) -> void:
 			game.norse_rules().stones.start_event(ev)  # Rune-Stones (they show the event's banner).
 			game.stat_add("wave_events", 1.0)
 			return  # A Norse rune-stone event.
+		# --- Act XI (temporary): the Barrow Fields ---
+		"barrow", "wight":
+			if barrow_fields != null:
+				barrow_fields.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return  # The Barrow Fields' open barrows and miniboss.
 		# --- Act VI: the Burning Gate ---
 		"gatekeeper":
 			if burning_gate != null:

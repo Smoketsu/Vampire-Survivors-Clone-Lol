@@ -108,7 +108,9 @@ const ORDER := ["void_barrage", "eclipse_ward", "abyssal_detonation",
 	# --- Act IX: the Proving Moon ---
 	"apex_predator",
 	# --- Act IX: the Ark ---
-	"star_abduction"]
+	"star_abduction",
+	# --- Act XI (temporary): the Barrow Fields ---
+	"barrow_lords_embrace"]
 
 ## Evolution definitions.
 ##   base         — spell id that evolves (AbilityData.SPELLS key).
@@ -801,6 +803,25 @@ const EVOLUTIONS := {
 		"stats": {
 			"damage": 88.0, "cooldown": 2.4, "lifts": 3, "lift_time": 1.2, "slam_radius": 70.0, "slam_share": 0.5,  # TUNING (not in GDD) first pass 96 / 0.55
 			"pull": 120.0, "pull_force": 260.0, "quake_share": 0.18,  # TUNING (not in GDD) the evolution flag: the pull round each slam (first pass 0.3: 244k damage, 95k of it quake, in the forced seed-7 Graveyard run)
+		},
+	},
+	# --- Act XI (temporary): the Barrow Fields ---
+	# Barrow-Lord's Embrace (GDD §15.0 "Barrow Grasp, Barrow-Lord's Embrace,
+	# Grave Frost and the Rune-Seer"; owner-approved proposal "Barrow Grasp ->
+	# Barrow-Lord's Embrace (+ Grave Frost)"): Barrow Grasp + Grave Frost (a NEW
+	# passive, owner rule: at Lv 5). Own decision on its kit: two rings of hands
+	# (the inner at ring_step of the outer), and every hand LINGERS `linger` s,
+	# grabbing again every BarrowGraspData.LINGER_TICK s. Detected by "linger".
+	"barrow_lords_embrace": {
+		"base": "barrow_grasp",
+		"passive": "grave_frost",
+		"display_name": "Barrow-Lord's Embrace",  # Owner-approved proposal
+		"icon": "barrow_lords_embrace",
+		"description": "Two rings of barrow hands rise around you and linger, seizing every foe that walks into them.",
+		"labels": {"damage": "Damage", "hands": "Hands", "rings": "Rings", "hold": "Hold", "linger": "Linger (s)", "cooldown": "Cooldown"},
+		"stats": {
+			"damage": 32.0, "hands": 11, "ring": 170.0, "radius": 33.0, "hold": 1.7, "cooldown": 3.4,  # TUNING (not in GDD)
+			"rings": 2, "ring_step": 0.55, "linger": 2.2,  # TUNING (not in GDD) the evolution flag: two rings, lingering hands
 		},
 	},
 }

@@ -328,7 +328,11 @@ const NORSE_WARRIORS: Array[String] = ["raider", "shield_maiden", "berserker", "
 ## has no entry (it is the necromancer's warmth, not a foe).
 const NORSE_HALL: Array[String] = ["valkyrie", "seer", "rune_stone"]
 ## The cold things of the north (group "wilds").
-const NORSE_WILDS: Array[String] = ["draugr", "wolf_of_the_wastes", "frost_giant", "fire_giant"]
+const NORSE_WILDS: Array[String] = ["draugr", "wolf_of_the_wastes", "frost_giant", "fire_giant",
+	# --- Act XI (temporary): the Barrow Fields --- (the open barrow and the
+	# stage's miniboss with the barrow-dead; the female draugr shares the
+	# Draugr's entry, Hrimgar's own barrow his)
+	"open_barrow", "barrow_wight"]
 ## The Hall of the Slain's stage bosses (StageRegistry.BOSS_ARRIVALS ids).
 const NORSE_BOSSES: Array[String] = ["hrimgar", "sigrun", "odin"]
 # --- Act XII (temporary number): the Necropolis Dynasty ---
@@ -614,6 +618,9 @@ const DESCRIPTIONS: Dictionary = {
 	"frost_giant": "A frost giant: its boulders fall where a circle shows, it stamps your ring away and douses your braziers.",  # Owner-approved proposal and the Long Winter
 	"fire_giant": "A fire-giant of the south, come to burn the last field.",  # Owner-approved proposal (Ragnarok)
 	"hrimgar": "Hrimgar the Draugr-King, who rises from his barrow three times unless you break it.",  # Owner-approved proposal
+	# --- Act XI (temporary): the Barrow Fields ---
+	"open_barrow": "A burial mound cracking open. Draugr climb out of it until you break it.",  # Brief (the open barrows)
+	"barrow_wight": "A draugr chieftain in a rusted crown. His howl stuns your whole ring for a moment.",  # Brief (miniboss)
 	"sigrun": "Sigrun, the Shield-Queen, captain of the valkyries: she charges your ring and calls you to a duel.",  # Owner-approved proposal
 	"odin": "Odin, the one-eyed god, and Fenrir the wolf, come for the army the world promised them.",  # Owner-approved proposal
 	# --- Act IX: the Crash Site ---
@@ -645,6 +652,8 @@ const DESCRIPTIONS: Dictionary = {
 ## Sprite key of an entry whose art is not "<category folder>/<id>":
 ## entry id -> SpriteBank key ("" = draw its icon instead).
 const SPRITE_KEYS: Dictionary = {
+	# --- Act XI (temporary): the Barrow Fields --- (an open barrow has no unit sprite: the king's barrow stands for it)
+	"open_barrow": "norse/boss_barrow",
 	"profane_bishop": "summons/bishop",
 	"inquisitor": "enemies/inquisitor",
 	# --- Act II: Gullhaven Harbour (the Ancient Eye's art is in eye/) ---
@@ -933,6 +942,8 @@ const ACHIEVEMENT_ICONS: Dictionary = {
 	"the_hunter_hunted": "ach_the_hunter_hunted",  # TUNING (not in GDD)
 	# --- Act IX: the Ark ---
 	"last_harvest": "ach_last_harvest",  # TUNING (not in GDD)
+	# --- Act XI (temporary): the Barrow Fields ---
+	"keep_the_fires": "ach_keep_the_fires",  # TUNING (not in GDD) (no badge PNG yet: the fallback icon)
 }
 ## IconGlyph kind drawn when an achievement badge PNG is missing.
 const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
@@ -994,6 +1005,8 @@ const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
 	"the_hunter_hunted": "mirror_bones",
 	# --- Act IX: the Ark ---
 	"last_harvest": "tractor_lift",
+	# --- Act XI (temporary): the Barrow Fields ---
+	"keep_the_fires": "grave_frost",
 }
 ## Screen title (TITLE tier).
 const TITLE: String = "Codex"  # TUNING (not in GDD)

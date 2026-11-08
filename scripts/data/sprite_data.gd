@@ -493,6 +493,8 @@ const HEIGHTS: Dictionary = {
 	# --- Act VI (final order): the Hall of the Slain (assets/sprites/norse/; art by art_source/norse/gen.py) ---
 	"norse/brazier_lit": 32.0,  # TUNING (not in GDD) Long Winter brazier, lit: hearth-amber flames in an iron bowl, 32 x 32 art px
 	"norse/brazier_doused": 32.0,  # TUNING (not in GDD) the same brazier doused: cold ash, a thin smoke wisp
+	"norse/brazier_lit_anim": 32.0,  # TUNING (not in GDD) the lit brazier's 8-frame loop (8 x 32 px wide; Barrow Fields phase 2 wires it in LongWinter)
+	"norse/brazier_doused_anim": 32.0,  # TUNING (not in GDD) the doused brazier's 8-frame smoke loop
 	"norse/frost_creep": 48.0,  # TUNING (not in GDD) 128 x 48 tileable frost edge texture for the Long Winter vignette (flat overlay, code rotates it per screen edge)
 	"norse/raider": 40.0,  # TUNING (not in GDD) Hall of the Slain art, on-screen height in px
 	"norse/shield_maiden": 44.0,  # TUNING (not in GDD) Hall of the Slain art, on-screen height in px
