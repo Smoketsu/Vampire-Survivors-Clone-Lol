@@ -14,10 +14,14 @@
 ##     grabs;
 ##   * it registers as the HUD's miniboss (EnemyDirector.set_miniboss(); the
 ##     miniboss chest is ChestManager's).
+##   * after "tire_after" s it TIRES (the lead's cap on its kill time): no more
+##     strikes or arms; it comes up at the hull beside the necromancer and stays
+##     there surfaced (hittable) until it dies, so it falls near the other minibosses' kill times.
 ## Dead: an XP burst (reward_xp in reward_crystals at the rail nearest it),
 ## the banner; its arms stay (kill them as usual).
 ## Determinism: no RNG of its own (SeaStrikes' seeded points and jitter).
-## Stats: hollow_eye_spawned, hollow_eye_arms, hollow_eye_kills, hollow_eye_ttk.
+## Stats: hollow_eye_spawned, hollow_eye_arms, hollow_eye_kills, hollow_eye_ttk,
+## hollow_eye_tired.
 class_name OldHollowEyeKit
 extends CorsairKit
 
@@ -25,18 +29,35 @@ extends CorsairKit
 var _arm_cd: float = 0.0
 ## Game time (s) it arrived (time-to-kill stat).
 var _spawned_at: float = 0.0
+## True once it has tired ("tire_after"): surfaced for good, no strikes or arms.
+var _tired: bool = false
 
 
 func reset(e: Enemy, def: Dictionary) -> void:
 	super.reset(e, def)
 	_arm_cd = float(d.get("arm_every", 11.0)) * 0.5
 	_spawned_at = e.game.elapsed
+	_tired = false
 	e.game.enemies.set_miniboss(e)
 	e.game.stat_add("hollow_eye_spawned", 1.0)
 
 
 func physics(e: Enemy, delta: float) -> bool:
 	if in_water and e.game.corsair != null and e.game.corsair.enabled:
+		var now := e.game.elapsed
+		var tire := float(d.get("tire_after", 0.0))  # s after its arrival it tires (0 = never).
+		if not _tired and tire > 0.0 and now - _spawned_at >= tire and not striking:
+			_tired = true
+			e.game.stat_add("hollow_eye_tired", 1.0)
+			# It drifts up beside the necromancer (the bound slot) and holds there:
+			# SeaStrikes keeps a "striking" swimmer still at the hull.
+			swim_s = e.game.deck.perimeter_s(e.game.player.position)
+			e.position = e.game.corsair.sea.swim_point(e, swim_s)
+			striking = true
+		if _tired:
+			surfaced_until = now + 1.0  # Stays up at the hull: hittable until it dies.
+			next_strike = now + 1.0  # No more tentacles.
+			return super.physics(e, delta)
 		_arm_cd -= delta
 		if _arm_cd <= 0.0:
 			_arm_cd = float(d.get("arm_every", 11.0))

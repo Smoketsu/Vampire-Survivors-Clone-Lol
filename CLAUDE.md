@@ -735,21 +735,17 @@ tiny tweaks.
    (the finale), fifteen acts in all. Waits on the owner's answers to the doc's open questions; then wave 1 (Dynasty + Norse + a
    Black Tide deck spike), wave 2 (Black Tide + Celestial Host + Titans), wave 3 (Turning Year), each with the `docs/act5/` plan
    and tuned for its final slot, then the reorder in one pass.
-   Wave 1b, the Black Tide's stages: **the Smuggler's Cutter** is built (branch `tide-cutter`, GDD §15.0 "The Smuggler's
-   Cutter (Act X phase 2)" and the rows after it: `CutterDirector` (powder barrels, the Fog Bank, Bosun Gorran's ram
-   longboat, the Fire Ship through `HellPits.open_pit()`), the shared Grappler and Boatswain, Captain Crow (`boss_crow.gd`),
-   Chain Shot / Keelhauler + Bosun's Whistle, the Marooned Quartermaster, Not One Aboard → Barnacle Bones; `"playable"`
-   stays false until the lead flips the act).
-   Wave 1b, the Black Tide's **Treasure Galleon** (branch `tide-galleon`; GDD §15.0 from "The Treasure Galleon (Act X
-   phase 2)"): broadsides, the deck cannons (a world rule), the Gunnery Mate, Voodoo Navigator, Gunboat and Hull Crab,
-   Old Hollow-Eye, Admiral Marrec, Cannonade / Dead Men's Broadside + Black Powder, the Corsair Queen, Walked the Plank →
-   Sea Legs; still `"playable": false` until the lead's integration.
-   Black Tide phase 2, **the Maelstrom** (branch `tide-maelstrom`, GDD §15.0 "The Maelstrom (Act X phase 2)" and the rows
-   after it): the Heave (`MaelstromDirector`), the ghost crew raised for the necromancer, the Sea Serpent
-   (`corsair_serpent`: Act IV owns `sea_serpent`), the Ghost Bosun, Captain Vandermere and Dead Men's Oath, Anchor Drop /
-   Abyssal Mooring + Dead Reckoning, the Ghost Helmsman, the Powder Wraith / Magazine Lord + Slow Match, Dead Men Tell
-   Tales (title only); autotest `--boss=vandermere`, `--spells=anchor_drop`, `--classes=powder_wraith`; still
-   "playable": false until the lead's merge.
+   Wave 1b, **the Black Tide is live** on the lead's branch `tide-integration` (GDD §15.0 from "The Smuggler's Cutter (Act X
+   phase 2)" to "The Black Tide goes live (integration and balance)"; balance pass `docs/tide/playtest/pass1.md`): **the
+   Smuggler's Cutter** (`CutterDirector`: powder barrels, the Fog Bank, Bosun Gorran's ram longboat, Captain Crow and the Fire
+   Ship through `HellPits.open_pit()`; the shared Grappler and Boatswain; Chain Shot / Keelhauler + Bosun's Whistle, the
+   Marooned Quartermaster, Not One Aboard → Barnacle Bones), **the Treasure Galleon** (broadsides, the deck cannons as a
+   world rule, the Gunnery Mate, Voodoo Navigator, Gunboat and Hull Crab, Old Hollow-Eye, Admiral Marrec, Cannonade / Dead
+   Men's Broadside + Black Powder, the Corsair Queen, Walked the Plank → Sea Legs) and **the Maelstrom** (the Heave
+   (`MaelstromDirector`), the ghost crew raised for the necromancer, the Sea Serpent (`corsair_serpent`: Act IV owns
+   `sea_serpent`), the Ghost Bosun, Captain Vandermere and Dead Men's Oath, Anchor Drop / Abyssal Mooring + Dead Reckoning,
+   the Ghost Helmsman, the Powder Wraith / Magazine Lord + Slow Match, Dead Men Tell Tales); `"playable": true`, one CI army
+   job each. Still Act X until the reorder (final slot II); no epilogue part or closing card yet.
 7. **Phase 4 polish:** accessibility, profiling on real hardware, and the **final balance pass**.
    The owner's Oct 2026 playtest balance pass is in (GDD §15.0 "Balance pass (Oct 2026 playtest)": Dread Rally raises the army, spells ×1.2, boss HP Alaric −35% / Vael −40% / Seraphine −30%, later level-up items weigh 0.5, Frost Wraith / Bone Hound / Banshee base damage raised; the earlier +5% global multiplier was removed); further value tweaks wait for this pass (naive-bot
    death rates above target on both stages and spell-only builds lacking single-target damage are

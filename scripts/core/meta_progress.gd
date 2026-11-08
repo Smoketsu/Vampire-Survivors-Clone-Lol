@@ -1669,7 +1669,7 @@ static func _default_lifetime() -> Dictionary:
 		# --- Act X: the Treasure Galleon ---
 		"walked_the_plank_runs": 0.0,  # runs that sent at least 200 foes overboard (Walked the Plank)
 		# --- Act X: the Maelstrom ---
-		"dead_men_tales_kills": 0.0,  # Vandermere slain with his Oath broken three times (Dead Men Tell Tales)
+		"dead_men_tales_kills": 0.0,  # Vandermere slain with his Oath broken twice (Dead Men Tell Tales; the proposal's three lowered by the lead)
 		# --- Content wave 2: B. Achievement rewards (MetaProgress.run_counters()) ---
 		"best_temp_raised": 0.0,  # most temporary undead raised in one run (Mass Grave)
 		"untouchable_runs": 0.0,  # runs that reached 0:00 never below half HP (Untouchable)

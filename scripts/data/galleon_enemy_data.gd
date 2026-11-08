@@ -18,6 +18,9 @@
 ## Optional keys of these rows (absent = off):
 ##   reward_xp / reward_crystals — a miniboss's XP burst.
 ##   arm_every / arms_max — Old Hollow-Eye's kraken arms (s between two, most alive).
+##   tire_after — s after Old Hollow-Eye arrives that it TIRES: it stops striking
+##                    and raising arms and stays surfaced (hittable) at the hull
+##                    until it dies (the lead's cap on its kill time; 0 = never).
 ##   aura / shield / life / pulse — the coin's barrier reach (px), barrier HP
 ##                    (x the enemies' HP scaling), lifetime (s), refresh (s).
 ## Every number is TUNING (not in GDD) unless marked as the owner-approved proposal.
@@ -61,6 +64,7 @@ const ENEMIES := {
 			"first_strike": 2.0, "dmg_summon": 10.0, "dmg_player": 8.0, "dmg_enemy": 20.0},  # TUNING (not in GDD)
 		"arm_every": 11.0,  # TUNING (not in GDD) s between two kraken arms it raises
 		"arms_max": 3,  # TUNING (not in GDD) kraken arms alive at once (its own and the timeline's)
+		"tire_after": 75.0,  # TUNING (not in GDD) s; the lead's integration cap: it once took 282 s and dragged 30 summons overboard (other minibosses fall in ~60-120 s)
 		"reward_xp": 300,  # TUNING (not in GDD) as the Warbeast's burst
 		"reward_crystals": 14,  # TUNING (not in GDD)
 	},  # Old Hollow-Eye.

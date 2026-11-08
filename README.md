@@ -2518,7 +2518,7 @@ that drags one of your dead to the rail) and **Boatswain** (a bellow that speeds
   back, hitting each twice; evolves into **Keelhauler**, which also throws every foe it strikes aside, with the new
   passive **Bosun's Whistle**: a shorter cooldown) and through it the character **the Marooned Quartermaster** (Spare
   Shot: one more chain-shot). The achievement **Not One Aboard** (on the Cutter, sink five boats before any of their crew
-  climbs aboard; the crew needs 1 s to climb the hooks here) unlocks the act's counter-passive **Barnacle Bones** (summon
+  climbs aboard; the crew needs 3 s to climb the hooks here) unlocks the act's counter-passive **Barnacle Bones** (summon
   hits on boats, hooks and sea beasts deal more; offered only in this act).
 - Autotest lines: `cutter` (barrels, fog boats, the ram, the fire patches, clean sinks), `cutter crew`, `bosun gorran`,
   `captain crow`; `act X spell` / `act X passives` on any stage when Chain Shot, Bosun's Whistle or Barnacle Bones was
@@ -2594,7 +2594,7 @@ stay moored and keep shocking) with **Dead Reckoning**; the character **the Ghos
 Anchor: one more anchor); the summon class **the Powder Wraith** (a skeleton that marches a lit keg into a pack, bursts
 for area damage and a 60 px knockback, and reforms at your ring 12 s later) evolving into **Magazine Lord** (two kegs a
 march, reforms in 8 s) with the new passive **Slow Match** (every summon special knocks farther). Achievement **Dead Men
-Tell Tales** (beat Vandermere with his Oath broken three times): the title *Captain of the Dead* (no epilogue part until
+Tell Tales** (beat Vandermere with his Oath broken twice; the proposal's three lowered at the integration): the title *Captain of the Dead* (no epilogue part until
 the act reorder).
 
 Autotest: `--stage=maelstrom`, `--boss=vandermere`, `--spells=anchor_drop`, `--classes=powder_wraith`,

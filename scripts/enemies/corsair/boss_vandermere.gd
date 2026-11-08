@@ -29,7 +29,7 @@
 ##     every kraken_every s an ownerless strike lands on the LOW rail's band
 ##     beside the necromancer (SeaStrikes.strike()).
 ## When he falls the whirlpool closes: the Heave stops and, fallen with the
-## Oath broken TALES_BREAKS (3) times or more, the run stat TALES_STAT is set
+## Oath broken TALES_BREAKS (2) times or more, the run stat TALES_STAT is set
 ## (Dead Men Tell Tales, MetaProgress): MaelstromDirector hears his fall
 ## (EnemyDirector.boss_defeated) and reads `breaks`. The defeat banner is the
 ## short ending. Slaying him unlocks Anchor Drop with

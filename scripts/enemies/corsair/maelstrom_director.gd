@@ -323,7 +323,7 @@ static func _arrow(s: int) -> String:
 # =====================================================================================
 
 ## The stage boss fell (EnemyDirector.boss_defeated): the whirlpool closes;
-## Vandermere fallen with his Oath broken three times sets Dead Men Tell Tales.
+## Vandermere fallen with his Oath broken TALES_BREAKS (2) times sets Dead Men Tell Tales.
 func _on_boss_defeated() -> void:
 	on_boss_down()
 	var b := game.enemies.boss

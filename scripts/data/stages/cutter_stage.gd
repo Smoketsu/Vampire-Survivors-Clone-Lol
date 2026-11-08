@@ -132,7 +132,7 @@ const DECK := {"length": 960.0, "beam": 360.0, "bow": 150.0, "bow_tip": 46.0, "s
 ## from hooking to the first crewman (the Cutter's: the crew climbs the hooks,
 ## the window for a clean sink, Not One Aboard).
 const BOARDING := {"points": [[-200.0, -1], [160.0, -1], [-200.0, 1], [160.0, 1]], "boats": ["skiff", "longboat"],  # Owner-approved proposal: two boarding points per side; tier cap skiffs and longboats
-	"first_pour": 1.0,  # TUNING (not in GDD) s (the other stages: half a pour, 0.3 s)
+	"first_pour": 3.0,  # TUNING (not in GDD) s (the other stages: half a pour, 0.3 s); lead decision at the integration: 1 -> 3 s so a fast sink before the first crewman can earn Not One Aboard (GDD §15.0 "The Black Tide goes live")
 	"leave_time": 1.0,  # TUNING (not in GDD) s an emptied boat takes to cast off (the shared 2.5): the next boat comes sooner
 	"min_crew": 4,  # TUNING (not in GDD) crew a queue gathers before a boat launches (fuller boats: more boarders at once)
 }

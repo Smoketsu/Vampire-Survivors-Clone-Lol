@@ -702,7 +702,8 @@ const ACHIEVEMENTS := {
 	# single crewman climbs aboard, on the Cutter"). Own reading, recorded in
 	# GDD §15.0: five CLEAN SINKS in one Cutter run, each a boat sunk before any
 	# of ITS crew climbed aboard (BoardingParty stat boats_sunk_clean; the
-	# Cutter's crew climbs the hooks for 1 s first, its STAGE first_pour).
+	# Cutter's crew climbs the hooks for 3 s first, its STAGE first_pour;
+	# lead decision at the integration, 1 -> 3 s: nobody could earn it).
 	# CutterDirector sets the run stat cutter_not_one_aboard; MetaProgress
 	# counts the runs (lifetime not_one_aboard_runs). It unlocks the
 	# counter-passive Barnacle Bones (the brief's pairing).
@@ -721,10 +722,12 @@ const ACHIEVEMENTS := {
 	# (beat Vandermere with the Oath broken three times; opens the act's
 	# epilogue part)"; the lead's plan: no epilogue part until the reorder, so
 	# it only records the clear, with the title Captain of the Dead): a run in
-	# which Vandermere fell with his Oath broken at least three times (run stat
+	# which Vandermere fell with his Oath broken at least twice (lowered from
+	# three by the lead at the integration: the army slays him in his first
+	# broken-Oath window; VandermereData.TALES_BREAKS; run stat
 	# vandermere_tales_kills, set by MaelstromDirector; MetaProgress counts it,
 	# lifetime dead_men_tales_kills).
-	"dead_men_tell_tales": {"display_name": "Dead Men Tell Tales", "description": "Beat Vandermere in the Maelstrom with his Oath broken three times",
+	"dead_men_tell_tales": {"display_name": "Dead Men Tell Tales", "description": "Beat Vandermere in the Maelstrom with his Oath broken twice",
 		"stat": "dead_men_tales_kills", "goal": 1, "unlock": "The title Captain of the Dead", "bounty": 500},  # Owner-approved proposal; bounty TUNING (not in GDD) as The Last Harvest
 }
 

@@ -310,7 +310,7 @@ const UNLOCKS := {
 	"powder_wraith": {"type": "class", "boss": "vandermere", "text": "Defeat Vandermere in the Maelstrom to unlock."},  # Owner-approved proposal: the finale's reward
 	"slow_match": {"type": "passive", "boss": "vandermere", "text": "Defeat Vandermere in the Maelstrom to unlock."},  # Its paired passive (own decision), unlocked with it
 	"captain_of_the_dead": {"type": "title", "achievement": "dead_men_tell_tales",
-		"text": "Earn Dead Men Tell Tales: beat Vandermere with his Oath broken three times."},  # Own decision (the clear is recorded as a title, as Acts VI-IX did)
+		"text": "Earn Dead Men Tell Tales: beat Vandermere with his Oath broken twice."},  # Own decision (the clear is recorded as a title, as Acts VI-IX did)
 }
 
 ## End-screen plate heading of a newly unlocked item, by type.

@@ -118,7 +118,7 @@ func spawn_swimmer(kind: String, hp_scale: float, elite: bool, dmg_scale: float,
 		return true  # Not a swimmer after all (no kit): it stays on the deck.
 	k.swim_s = s
 	k.next_strike = game.elapsed + float(_c(e)["first_strike"]) * (0.75 + 0.5 * randf())
-	e.position = _swim_point(e, s)
+	e.position = swim_point(e, s)
 	e.untargetable = true  # Submerged.
 	swimmers.append([e, e.generation])
 	peak = maxi(peak, alive())
@@ -127,7 +127,7 @@ func spawn_swimmer(kind: String, hp_scale: float, elite: bool, dmg_scale: float,
 
 
 ## Where swimmer `e` is at hull arc length `s`: swim_offset px out in the water.
-func _swim_point(e: Enemy, s: float) -> Vector2:
+func swim_point(e: Enemy, s: float) -> Vector2:
 	var deck := game.deck
 	return deck.perimeter_point(s) + deck.perimeter_normal(s) * (float(cfg["swim_offset"]) + e.radius * 0.5)
 
@@ -160,7 +160,7 @@ func _step_swimmer(e: Enemy, k: CorsairKit, now: float, delta: float) -> void:
 	if k.striking:
 		return  # Holding at the hull while its strike is out (or its grab holds).
 	k.swim_s = fposmod(k.swim_s + k.swim_dir * float(cfg["swim_speed"]) * delta, game.deck.perimeter_length)
-	e.position = _swim_point(e, k.swim_s)
+	e.position = swim_point(e, k.swim_s)
 	e.velocity = Vector2.ZERO
 	if now < k.next_strike:
 		return
@@ -171,7 +171,7 @@ func _step_swimmer(e: Enemy, k: CorsairKit, now: float, delta: float) -> void:
 		return
 	var s := game.deck.perimeter_s(target)
 	k.swim_s = s
-	e.position = _swim_point(e, s)
+	e.position = swim_point(e, s)
 	k.striking = true
 	var tel := float(CorsairRulesData.LEAP["telegraph"]) if String(c.get("type", "leap")) == "leap" else float(c["telegraph"])
 	k.surfaced_until = now + tel + float(c["surface_time"])

@@ -40,8 +40,11 @@ const MAX_HP: float = 17000.0  # TUNING (not in GDD) first pass 9,000 (the seed-
 ## (MetaProgress counts it for Dead Men Tell Tales).
 const TALES_STAT: String = "vandermere_tales_kills"
 ## Oath breaks the achievement asks (owner-approved proposal: "beat Vandermere
-## with the Oath broken three times").
-const TALES_BREAKS: int = 3  # Owner-approved proposal
+## with the Oath broken three times"; lead decision at the integration, GDD
+## §15.0 "The Black Tide goes live (integration and balance)": TWICE, because
+## the army usually slays him in his first broken-Oath window and nobody could
+## earn it).
+const TALES_BREAKS: int = 2  # TUNING (not in GDD) owner-approved proposal 3, lowered by the lead
 
 ## Damage-source tag of his spectral lantern volley.
 const VOLLEY_SOURCE: String = "vandermere_volley"
