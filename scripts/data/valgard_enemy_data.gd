@@ -54,9 +54,9 @@ const ENEMIES := {
 	# top of these numbers).
 	"einherjar": {
 		"display_name": "Einherjar",
-		"max_hp": 64.0,  # TUNING (not in GDD) x1.35 = 86: an elite soldier (shield-maiden 44)
+		"max_hp": 54.0,  # TUNING (not in GDD) x1.35 = 73: an elite soldier (shield-maiden 44; first pass 64)
 		"move_speed": 54.0,  # TUNING (not in GDD) px/s (x1.1 = 59)
-		"damage": 4.5,  # TUNING (not in GDD) a sword blow, before the time scaling (x1.25 = 5.6)
+		"damage": 3.6,  # TUNING (not in GDD) a sword blow, before the time scaling (x1.25 = 4.5; first pass 4.5)
 		"attack_interval": 1.1,  # TUNING (not in GDD) s
 		"attack_range": 10.0,  # TUNING (not in GDD) px
 		"radius": 10.0,  # TUNING (not in GDD) px (~46 px sprite)
@@ -78,7 +78,7 @@ const ENEMIES := {
 	# The Einherjar Champion (see the header): the miniboss of Valgard.
 	"einherjar_champion": {
 		"display_name": "Einherjar Champion",
-		"max_hp": 2200.0,  # TUNING (not in GDD) a miniboss (Warbeast 2,100, Mammoth 2,200)
+		"max_hp": 1600.0,  # TUNING (not in GDD) a miniboss (Warbeast 2,100; first pass 2,200: the seed-2 army bot needed 3:43 and its army broke under his horns)
 		"move_speed": 58.0,  # TUNING (not in GDD) px/s
 		"damage": 9.0,  # TUNING (not in GDD) a war-axe blow, before the time scaling
 		"attack_interval": 1.2,  # TUNING (not in GDD) s
@@ -110,8 +110,8 @@ const ENEMIES := {
 		"sweep_damage_summon": 11.0,  # TUNING (not in GDD) before the time scaling
 		"sweep_push": 24.0,  # TUNING (not in GDD) px
 		"horn_first": 6.0,  # TUNING (not in GDD) s after he arrives
-		"horn_every": 24.0,  # TUNING (not in GDD) s
-		"horn_wake": 3,  # TUNING (not in GDD) seated Einherjar his horn wakes (the Feast)
+		"horn_every": 32.0,  # TUNING (not in GDD) s (first pass 24)
+		"horn_wake": 2,  # TUNING (not in GDD) seated Einherjar his horn wakes (the Feast; first pass 3)
 		"horn_escort": 2,  # TUNING (not in GDD) Einherjar that rise beside him instead when no Feast runs (another stage)
 		"reward_xp": 260,  # TUNING (not in GDD) a miniboss (Warbeast 260)
 		"reward_crystals": 12,  # TUNING (not in GDD)

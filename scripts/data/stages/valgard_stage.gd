@@ -175,9 +175,11 @@ const RUNE_STONES := {}
 ##                     lattice are lit.
 ##   hearth_min_gap  — px kept from every brazier already burning (the start's
 ##                     hearths of LONG_WINTER "points" included).
+##   hearth_max      — lattice hearths lit at most in a run (the braziers are
+##                     never removed; LongWinter draws every one).
 const VALGARD := {
 	"wake_reach": 640.0,  # TUNING (not in GDD) px
-	"wake_by_zone": [2, 4, 3, 3],  # TUNING (not in GDD) the Mead Hall wakes the most
+	"wake_by_zone": [2, 3, 2, 2],  # TUNING (not in GDD) the Mead Hall wakes the most (first pass 2 / 4 / 3 / 3)
 	"per_table": [1, 2],  # TUNING (not in GDD) short / long table
 	"reseat_time": 150.0,  # TUNING (not in GDD) s
 	"cap_margin": 6,  # TUNING (not in GDD)
@@ -189,6 +191,7 @@ const VALGARD := {
 	"hearth_jitter": 150.0,  # TUNING (not in GDD) px
 	"hearth_reach": 1250.0,  # TUNING (not in GDD) px
 	"hearth_min_gap": 420.0,  # TUNING (not in GDD) px
+	"hearth_max": 40,  # TUNING (not in GDD) the seed-7 army bot lights ~30 in a run; a wandering naive bot 80
 }
 
 ## The Reckoning of this stage (keys as GraveyardStage.RECKONING): RAGNAROK,
@@ -229,13 +232,13 @@ const SEGMENTS := [
 		"weights": {"raider": 0.5, "shield_maiden": 0.2, "skald": 0.05, "einherjar": 0.04, "draugr": 0.07, "seer": 0.04, "wolf_of_the_wastes": 0.06, "valkyrie": 0.04},
 		"objective": "The Mead Hall: every horn wakes the Einherjar at the long tables"},
 	{"start": 480.0, "rate": 2.6, "max_alive": 70,  # TUNING (not in GDD)
-		"weights": {"raider": 0.46, "shield_maiden": 0.2, "skald": 0.05, "einherjar": 0.05, "draugr": 0.07, "seer": 0.04, "wolf_of_the_wastes": 0.05, "berserker": 0.025, "valkyrie": 0.055},
+		"weights": {"raider": 0.46, "shield_maiden": 0.2, "skald": 0.05, "einherjar": 0.05, "draugr": 0.07, "seer": 0.04, "wolf_of_the_wastes": 0.05, "berserker": 0.015, "valkyrie": 0.055},
 		"objective": "Wounded warriors go berserk: finish them in one blow"},
 	{"start": 720.0, "rate": 2.9, "max_alive": 80,  # TUNING (not in GDD)
-		"weights": {"raider": 0.44, "shield_maiden": 0.2, "skald": 0.05, "einherjar": 0.055, "draugr": 0.06, "seer": 0.045, "wolf_of_the_wastes": 0.05, "berserker": 0.03, "valkyrie": 0.06, "frost_giant": 0.008},
+		"weights": {"raider": 0.44, "shield_maiden": 0.2, "skald": 0.05, "einherjar": 0.055, "draugr": 0.06, "seer": 0.045, "wolf_of_the_wastes": 0.05, "berserker": 0.02, "valkyrie": 0.06, "frost_giant": 0.008},
 		"objective": "Seers douse the hearths. Stand by a brazier to relight it"},
 	{"start": 900.0, "rate": 3.1, "max_alive": 88,  # TUNING (not in GDD)
-		"weights": {"raider": 0.42, "shield_maiden": 0.2, "skald": 0.05, "einherjar": 0.06, "draugr": 0.06, "seer": 0.05, "wolf_of_the_wastes": 0.05, "berserker": 0.035, "valkyrie": 0.065, "frost_giant": 0.01},
+		"weights": {"raider": 0.42, "shield_maiden": 0.2, "skald": 0.05, "einherjar": 0.06, "draugr": 0.06, "seer": 0.05, "wolf_of_the_wastes": 0.05, "berserker": 0.025, "valkyrie": 0.065, "frost_giant": 0.01},
 		"objective": "The Valkyries' Gate: the Shield-Queen's wing circles the sky"},
 	{"start": BOSS_TIME, "rate": 2.5, "max_alive": 66,  # TUNING (not in GDD) thinner during the boss fight
 		"weights": {"raider": 0.5, "shield_maiden": 0.2, "skald": 0.04, "einherjar": 0.04, "draugr": 0.06, "seer": 0.04, "wolf_of_the_wastes": 0.06, "berserker": 0.02, "valkyrie": 0.04},
@@ -267,7 +270,7 @@ const EVENTS := [
 		"kind": "einherjar_champion", "escort": [{"kind": "einherjar", "count": 2}]},
 	{"time": 760.0, "type": "rune_stone", "count": 1, "banner": "The last rune-stone rises!"},  # TUNING (not in GDD)
 	{"time": 820.0, "type": "wave", "banner": "Berserkers, and a skald to drive them!", "formation": "ring",  # TUNING (not in GDD)
-		"groups": [{"kind": "berserker", "count": 2, "elite": false}, {"kind": "skald", "count": 1, "elite": false}, {"kind": "raider", "count": 8, "elite": false}]},
+		"groups": [{"kind": "berserker", "count": 1, "elite": false}, {"kind": "skald", "count": 1, "elite": false}, {"kind": "raider", "count": 8, "elite": false}]},  # (first pass: two berserkers; berserkers were the seed-2 and seed-7 bots' worst foe)
 	{"time": 910.0, "type": "wave", "banner": "The Valkyries' Gate: the wing circles before its queen!", "formation": "ring",  # TUNING (not in GDD)
 		"groups": [{"kind": "valkyrie", "count": 2, "elite": false}, {"kind": "einherjar", "count": 3, "elite": false}, {"kind": "raider", "count": 8, "elite": false}]},
 	{"time": 990.0, "type": "wave", "banner": "The war-host gathers before its queen!", "formation": "ring",  # TUNING (not in GDD)

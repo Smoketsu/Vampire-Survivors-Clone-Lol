@@ -27,8 +27,8 @@
 ##     hearth_jitter px off its point, seeded by its lattice cell); every
 ##     lattice hearth within hearth_reach px of a necromancer is lit once
 ##     (LongWinter.place(), THE brazier call) unless a brazier already burns
-##     within hearth_min_gap px. The start's hearths are the STAGE's
-##     long_winter "points".
+##     within hearth_min_gap px (hearth_max at most in a run). The start's
+##     hearths are the STAGE's long_winter "points".
 ##   * The HUD objective while the Champion stands.
 ## Seat states are keyed by the table's arena cell and the zone (a zone change
 ## rebuilds the obstacles), read from the arena's deterministic per-cell
@@ -129,6 +129,8 @@ func _light_hearths(p: Vector2) -> void:
 	var c0 := Vector2i(floori((p.x - reach) / step + 0.5), floori((p.y - reach) / step + 0.5))
 	var c1 := Vector2i(floori((p.x + reach) / step + 0.5), floori((p.y + reach) / step + 0.5))
 	var w := game.norse.winter
+	if int(game.stats.get("valgard_hearths", 0.0)) >= int(config["hearth_max"]):
+		return
 	for cy in range(c0.y, c1.y + 1):
 		for cx in range(c0.x, c1.x + 1):
 			var key := Vector2i(cx, cy)
@@ -149,6 +151,8 @@ func _light_hearths(p: Vector2) -> void:
 				continue
 			w.place(at)
 			game.stat_add("valgard_hearths", 1.0)
+			if int(game.stats.get("valgard_hearths", 0.0)) >= int(config["hearth_max"]):
+				return
 
 
 ## A Rune-Stone's horn (RuneStones.horn_blown): the Feast wakes around the

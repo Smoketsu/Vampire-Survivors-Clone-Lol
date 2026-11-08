@@ -12,7 +12,8 @@
 ##   * SIGRUN is held inside it.
 ##   * EVERY SUMMON (both armies in co-op), every other necromancer and every
 ##     other enemy (structures aside) is pushed out to the nearest side and
-##     cannot enter: the one keep-out path of the duel. Summons never get an
+##     cannot enter (the enemies ENEMY_BAND px further: the duel ground's
+##     verge): the one keep-out path of the duel. Summons never get an
 ##     act-only rule: this is a world effect on positions, like an obstacle.
 ## Which hits land on Sigrun in the square is BossSigrun.damage_taken_mult()'s
 ## (spells only). Drawing: the rods close in over `close_time` s, then stand;
@@ -32,6 +33,10 @@ const ROPE_COLOR: Color = Color(0.78, 0.68, 0.46, 0.85)  # TUNING (not in GDD) v
 const GROUND_TINT: Color = Color(0.96, 0.84, 0.48, 0.08)  # TUNING (not in GDD) visual only
 ## Px a body is set beyond the rods when it is pushed out.
 const OUT_GAP: float = 2.0  # TUNING (not in GDD)
+## Px every other ENEMY is kept beyond the rods (the duel ground's verge): the
+## army is outside and cannot shield the duellist, so no blade may reach over
+## the rope at a duellist pressed against it (melee reach is under 20 px).
+const ENEMY_BAND: float = 34.0  # TUNING (not in GDD) first pass 0: the seed-7 army bot, hugging the rope, fell to 35 of 120 HP to the berserkers outside
 
 ## Owning run.
 var game: Game
@@ -128,9 +133,9 @@ func enforce(boss: Enemy, duelist: Necromancer) -> void:
 		game.stat_add("holmgang_pushed_summons", 1.0)
 	game.enemy_grid.query(center, reach + ProjectileManager.MAX_BODY_RADIUS, _tmp)
 	for e: Enemy in _tmp:
-		if e == boss or not e.active or e.is_structure or e.is_boss or not overlaps(e.position, e.radius):
+		if e == boss or not e.active or e.is_structure or e.is_boss or not overlaps(e.position, e.radius + ENEMY_BAND):
 			continue
-		e.position = push_out(e.position, e.radius)
+		e.position = push_out(e.position, e.radius + ENEMY_BAND)
 		game.stat_add("holmgang_pushed_enemies", 1.0)
 	if _draws and _moving:
 		queue_redraw()

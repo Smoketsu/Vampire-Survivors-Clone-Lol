@@ -132,17 +132,17 @@ const BOSS := {
 	"holmgang_close": 0.6,  # TUNING (not in GDD) s the rods take to close (drawing; the rule holds at once)
 	"duel_gap": 16.0,  # TUNING (not in GDD) s between the end of a duel and the next
 	"duel_offset": 90.0,  # TUNING (not in GDD) px from the necromancer she stands when the square closes
-	"yield_share": 0.06,  # TUNING (not in GDD) of her max HP his spells must take in the square
+	"yield_share": 0.05,  # TUNING (not in GDD) of her max HP his spells must take in the square (first pass 0.06: the seed-1 army bot lost all three duels)
 	"won_stagger": 2.5,  # TUNING (not in GDD) s she reels after yielding
 	"won_taken": 0.25,  # TUNING (not in GDD) + share of every hit she takes after yielding
 	"won_time": 8.0,  # TUNING (not in GDD) s her guard stays down
-	"lost_heal": 0.04,  # TUNING (not in GDD) of her max HP when she wins the duel
+	"lost_heal": 0.03,  # TUNING (not in GDD) of her max HP when she wins the duel (first pass 0.04)
 	"lunge_every": 3.5,  # TUNING (not in GDD) s
 	"lunge_windup": 0.75,  # TUNING (not in GDD) s the lane shows
 	"lunge_length": 170.0,  # TUNING (not in GDD) px
 	"lunge_width": 30.0,  # TUNING (not in GDD) px
 	"lunge_time": 0.2,  # TUNING (not in GDD) s
-	"lunge_damage": 9.0,  # TUNING (not in GDD) before the time scaling
+	"lunge_damage": 7.0,  # TUNING (not in GDD) before the time scaling (first pass 9)
 	# The Doors of the Hall (phase 3).
 	"doors_count": 10,  # TUNING (not in GDD) Einherjar marching out at her side (owner decision Nov 7, 2026: "a scripted wave")
 	"doors_spacing": 34.0,  # TUNING (not in GDD) px between two heroes of a file
