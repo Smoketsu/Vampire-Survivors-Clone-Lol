@@ -292,13 +292,21 @@ func _start_leap_out() -> void:
 
 ## Her perch at `angle` around the necromancer: beside the obstacle (a pillar
 ## of the temple) nearest the point perch_radius px out when one stands within
-## pillar_search px of it, else the point itself.
+## pillar_search px of it (its arena cell and the eight round it), else the
+## point itself.
 func _perch_point(angle: float) -> Vector2:
 	var pl := game.player.position
 	var dir := Vector2.from_angle(angle)
 	var p := pl + dir * float(boss_def["perch_radius"])
-	var o := game.arena.obstacle_at(p)
-	if o != null and o.center.distance_to(p) <= float(boss_def["pillar_search"]):
+	var o: Arena.Obstacle = null  # The nearest pillar.
+	var best := float(boss_def["pillar_search"])
+	for oy in range(-1, 2):
+		for ox in range(-1, 2):
+			var c := game.arena.obstacle_at(p + Vector2(float(ox), float(oy)) * ArenaData.CELL)
+			if c != null and c.center.distance_to(p) <= best:
+				best = c.center.distance_to(p)
+				o = c
+	if o != null:
 		var ext := o.radius if o.is_circle else maxf(o.half.x, o.half.y)  # The pillar's reach (px).
 		p = o.center - dir * (ext + radius + 4.0)  # On the necromancer's side of the pillar.
 		game.stat_add("sekhmet_pillar_perches", 1.0)
@@ -389,6 +397,8 @@ func _set_jars() -> void:
 		var j := game.enemies.spawn_at(LionessTempleEnemyData.WINE_JAR, at, false)
 		if j == null:
 			continue
+		j.max_hp = max_hp * float(boss_def["jar_hp_share"])  # Its HP follows hers (co-op, Hyper), not the time scaling.
+		j.hp = j.max_hp
 		_jars.append(j)
 		_jar_gens.append(j.generation)
 		game.effects.pop(at, Palette.DYN_CARNELIAN, 20.0)

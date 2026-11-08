@@ -96,7 +96,7 @@ const BOSS := {
 	# The Hunt: perches by the pillars and leaps onto the ring.
 	"perch_radius": 280.0,  # TUNING (not in GDD) px from the necromancer (the ring is 60-150 px)
 	"perch_turn": 2.1,  # TUNING (not in GDD) rad on around the necromancer each perch (about 120 degrees)
-	"pillar_search": 90.0,  # TUNING (not in GDD) px: an obstacle this near the perch point is her pillar
+	"pillar_search": 200.0,  # TUNING (not in GDD) px: the nearest obstacle this near the perch point (its cell and the eight round it) is her pillar
 	"perch_time": 2.4,  # TUNING (not in GDD) s on her perch, the Hunt
 	"perch_time_p2": 1.7,  # TUNING (not in GDD) s on her perch, the Red Wind
 	"first_perch": 1.5,  # TUNING (not in GDD) s on her first perch after she arrives
@@ -106,13 +106,13 @@ const BOSS := {
 	"land_offset": 64.0,  # TUNING (not in GDD) px from the necromancer toward her where she lands (on the Bone Ring)
 	"leap_radius": 62.0,  # TUNING (not in GDD) px of the landing
 	"leap_damage_player": 12.0,  # TUNING (not in GDD) before the time scaling
-	"leap_damage_summon": 12.0,  # TUNING (not in GDD) before the time scaling
+	"leap_damage_summon": 10.0,  # TUNING (not in GDD) before the time scaling (first pass 12)
 	"leap_push": 30.0,  # TUNING (not in GDD) px the summons are thrown out
 	"rake_count": 2,  # TUNING (not in GDD) rakes after the landing
 	"rake_gap": 0.35,  # TUNING (not in GDD) s between two rakes
 	"rake_radius": 54.0,  # TUNING (not in GDD) px around her
 	"rake_damage_player": 7.0,  # TUNING (not in GDD) before the time scaling
-	"rake_damage_summon": 9.0,  # TUNING (not in GDD) before the time scaling
+	"rake_damage_summon": 6.0,  # TUNING (not in GDD) before the time scaling (first pass 9: 61 summons raked to death in the seed-7 army run)
 	# The Red Wind.
 	"red_wind_storm": 40.0,  # TUNING (not in GDD) s of Sandstorm she calls (re-forced while the phase lasts)
 	"red_wind_jump": 2.0,  # Owner-approved proposal: "the Heka glyph spreads at double speed"
@@ -122,13 +122,14 @@ const BOSS := {
 	"feast_speed": 92.0,  # TUNING (not in GDD) px/s; enraged
 	"feast_damage": 15.0,  # TUNING (not in GDD) per bite, enraged
 	"jar_count": 3,  # Owner-approved proposal: three red-wine jars
-	"jar_dist": 175.0,  # TUNING (not in GDD) px from the necromancer (within the army's reach)
+	"jar_dist": 140.0,  # TUNING (not in GDD) px from the necromancer (on the Bone Ring's edge, within the army's reach; first pass 175: 17 of 21 jars drained)
 	"drink_reach": 30.0,  # TUNING (not in GDD) px edge to edge: she drinks once this near her jar
-	"drink_time": 3.2,  # TUNING (not in GDD) s she drinks from a jar
+	"drink_time": 4.5,  # TUNING (not in GDD) s she drinks from a jar (first pass 3.2)
 	"drain_heal": 0.04,  # TUNING (not in GDD) share of her max HP a drained jar gives back (at most back to feast_hp)
 	"stumble_time": 4.0,  # Owner-approved proposal: "she stumbles for 4 s"
+	"jar_hp_share": 0.012,  # TUNING (not in GDD) a wine jar's max HP as a share of hers (set at spawn, whatever the time scaling: three must break in her drinking time)
 	"stumble_taken": 1.6,  # TUNING (not in GDD) x the damage she takes while she stumbles (the only window)
 	"refill_time": 2.5,  # TUNING (not in GDD) s before a new set of jars stands
-	"feast_cap": 150.0,  # TUNING (not in GDD) s of Feast after which every hit lands (x feast_cap_taken): a failsafe, the run must end
+	"feast_cap": 90.0,  # TUNING (not in GDD) s of Feast after which every hit lands (x feast_cap_taken): a failsafe, the run must end
 	"feast_cap_taken": 0.35,  # TUNING (not in GDD) x the damage she takes once the Feast passed feast_cap
 }

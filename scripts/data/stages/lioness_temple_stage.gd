@@ -98,7 +98,7 @@ const ZONES := [
 		"blurb": "The processional way, lined with the goddess's sleeping servants",
 		"ground": {"style": "avenue", "base": Color(0.50, 0.40, 0.27), "line": Color(0.40, 0.31, 0.20),
 			"accent": Palette.DYN_SAND_LIGHT, "trim": Palette.DYN_BRONZE},
-		"arena": {"density": 0.42, "clear_radius": 220.0, "layout_seed": 3535, "aligned": true,  # TUNING (not in GDD) rows of statues on their cells
+		"arena": {"density": 0.26, "clear_radius": 220.0, "layout_seed": 3535,  # TUNING (not in GDD) statue-lined (first pass 0.42 aligned: the seed-7 army bot's ring broke up among the rows from the first minute)
 			"kinds": {
 				"dyn_statue_row": {"weight": 0.55, "shape": STATUE_ROW["shape"], "sizes": STATUE_ROW["sizes"], "short": STATUE_ROW["short"]},  # TUNING (not in GDD)
 				"dyn_obelisk": {"weight": 0.2, "shape": OBELISK["shape"], "sizes": OBELISK["sizes"]},  # TUNING (not in GDD)
@@ -120,7 +120,7 @@ const ZONES := [
 		"blurb": "A forest of painted columns, and the Warden at its door",
 		"ground": {"style": "hypostyle", "base": Color(0.30, 0.25, 0.20), "line": Color(0.22, 0.18, 0.14),
 			"accent": Palette.DYN_SAND_DARK, "trim": Palette.DYN_LAPIS},
-		"arena": {"density": 0.46, "clear_radius": 220.0, "layout_seed": 3555, "aligned": true,  # TUNING (not in GDD) a forest of columns
+		"arena": {"density": 0.3, "clear_radius": 220.0, "layout_seed": 3555,  # TUNING (not in GDD) a forest of columns, kept passable (first pass 0.46 aligned)
 			"kinds": {
 				"dyn_colonnade": {"weight": 0.55, "shape": COLONNADE["shape"], "sizes": COLONNADE["sizes"], "short": COLONNADE["short"]},  # TUNING (not in GDD)
 				"dyn_statue_row": {"weight": 0.3, "shape": STATUE_ROW["shape"], "sizes": STATUE_ROW["sizes"], "short": STATUE_ROW["short"]},  # TUNING (not in GDD)
@@ -177,7 +177,7 @@ const LIONESS_TEMPLE := {
 	"small_row": 2,  # TUNING (not in GDD) Ushabti out of a short row (3 statues drawn: 2 walk, 1 crumbles)
 	"long_row": 3,  # TUNING (not in GDD) Ushabti out of a long row (5 drawn)
 	"colossus_every": 2,  # TUNING (not in GDD) every 2nd long row wakes as one Woken Colossus
-	"seal_radius": 400.0,  # TUNING (not in GDD) px (the view's height is 720)
+	"seal_radius": 220.0,  # TUNING (not in GDD) px: the Warden in his doorway stands within the Bone Ring's reach (first passes 400 and 280: the ring never reached him before the seal fell)
 	"seal_time": 100.0,  # TUNING (not in GDD) s
 	"door_gap": 0.5,  # TUNING (not in GDD) rad (drawing)
 	"seal_objective": "THE LION WARDEN holds the only door: kill him to leave the hall (%d s)",  # TUNING (not in GDD)

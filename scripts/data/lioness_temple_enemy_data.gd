@@ -92,14 +92,14 @@ const ENEMIES := {
 	# doorway and must be killed to pass"): the stage's miniboss.
 	"lion_warden": {
 		"display_name": "Lion Warden",
-		"max_hp": 1800.0,  # TUNING (not in GDD) a miniboss (the Warbeast 2,100, Mammoth 2,200; first pass 2,300 outlived his 120 s seal)
+		"max_hp": 1300.0,  # TUNING (not in GDD) a miniboss in a doorway (the Warbeast 2,100, Mammoth 2,200 walk at you; first passes 2,300, 1,800 and 1,500 outlived his seal)
 		"move_speed": 0.0,  # He holds his doorway (LionWardenKit sets walk_speed once released)
 		"damage": 12.0,  # TUNING (not in GDD) his slab shield in reach, before the time scaling
 		"attack_interval": 1.4,  # TUNING (not in GDD) s
 		"attack_range": 16.0,  # TUNING (not in GDD) px
 		"radius": 24.0,  # TUNING (not in GDD) px (an 80 px statue-warrior)
 		"armor": 0.2,  # TUNING (not in GDD) stone
-		"flat_armor": 4.0,  # TUNING (not in GDD) as the Warbeast's plates
+		"flat_armor": 2.0,  # TUNING (not in GDD) stone (first pass 4, the Warbeast's plates: too slow to kill in a doorway)
 		"xp": 0,  # His XP is the burst.
 		"behavior": "melee",
 		"projectile_speed": 0.0,
@@ -142,7 +142,7 @@ const ENEMIES := {
 	# arena; break all three while she drinks from each"): Sekhmet's Feast.
 	"wine_jar": {
 		"display_name": "Wine Jar",
-		"max_hp": 150.0,  # TUNING (not in GDD) x the run's HP scaling: the army must break three in her drinking time
+		"max_hp": 150.0,  # Replaced at spawn by SekhmetData jar_hp_share x her max HP (BossSekhmet._set_jars())
 		"move_speed": 0.0,
 		"damage": 0.0,
 		"attack_interval": 1.0,
