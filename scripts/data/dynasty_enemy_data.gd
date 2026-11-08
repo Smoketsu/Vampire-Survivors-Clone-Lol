@@ -354,7 +354,7 @@ const ENEMIES := {
 	# him (the Hall of Two Truths brings him).
 	"crocodile_warden": {
 		"display_name": "Crocodile Warden",  # Owner-approved proposal
-		"max_hp": 120.0,  # TUNING (not in GDD) a heavy (the khopesh guard 44, the oni 140)
+		"max_hp": 95.0,  # TUNING (not in GDD) first pass 120 (seed 7: 4 of 18 slain); a heavy (the khopesh guard 44, the oni 140)
 		"move_speed": 38.0,  # TUNING (not in GDD) px/s; heavy
 		"damage": 9.0,  # TUNING (not in GDD) a jaw snap, before the time scaling
 		"attack_interval": 1.4,  # TUNING (not in GDD) s
@@ -382,11 +382,11 @@ const ENEMIES := {
 		},
 		"drag": {
 			"first": 3.0,  # TUNING (not in GDD) s before his first drag
-			"every": 9.0,  # TUNING (not in GDD) s between two drags
+			"every": 11.0,  # TUNING (not in GDD) s between two drags (first pass 9)
 			"reach": 70.0,  # TUNING (not in GDD) px from his body edge to the summon he seizes
 			"hold": 1.6,  # TUNING (not in GDD) s at most he drags
 			"speed": 80.0,  # TUNING (not in GDD) px/s
-			"damage": 20.0,  # TUNING (not in GDD) the pull under, before the time scaling
+			"damage": 16.0,  # TUNING (not in GDD) first pass 20; the pull under, before the time scaling
 			"sink_radius": 34.0,  # TUNING (not in GDD) px of the sand that opens at his feet
 			"sink_life": 6.0,  # TUNING (not in GDD) s it stays
 		},

@@ -132,10 +132,10 @@ const BOSS := {
 	"court_every": 15.0,  # TUNING (not in GDD) s between two courts
 	"judgment_first": 5.0,  # TUNING (not in GDD) s before his first Judgment
 	"judgment_every": 6.0,  # TUNING (not in GDD) s between two
-	"judgment_radius": 70.0,  # TUNING (not in GDD) px
+	"judgment_radius": 60.0,  # TUNING (not in GDD) px
 	"judgment_warn": 1.2,  # TUNING (not in GDD) s of telegraph
-	"judgment_damage": 16.0,  # TUNING (not in GDD) to the necromancer, before the time scaling
-	"judgment_summon_damage": 26.0,  # TUNING (not in GDD) to each summon, before the time scaling
+	"judgment_damage": 14.0,  # TUNING (not in GDD) to the necromancer, before the time scaling
+	"judgment_summon_damage": 12.0,  # TUNING (not in GDD) first pass 26 (seed 7: 81 summons lost in his first minute); to each summon, before the time scaling
 	# The Weighing.
 	"weighing_hp": 0.66,  # TUNING (not in GDD) share of the pool where the Weighing begins
 	"weighing_time": 60.0,  # Owner-approved proposal: "placed on the scales for 60 s"

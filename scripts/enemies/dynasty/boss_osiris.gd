@@ -426,6 +426,7 @@ func _step_devourer(delta: float) -> void:
 	if feast_cd <= 0.0:
 		feast_cd = float(boss_def["feast_every"])
 		_feast()
+	game.stat_add("ammit_time_" + String(Charge.keys()[charge]).to_lower(), delta)  # Seconds in each charge state (the report).
 	match charge:
 		Charge.NONE:
 			_walk(delta)
@@ -488,6 +489,8 @@ func _run(delta: float) -> void:
 	_update_facing()
 	_strike_along()
 	if free < step - 0.5 or left - free <= 1.0:
+		if free < step - 0.5:
+			game.stat_add("ammit_charge_blocked", 1.0)
 		charge = Charge.NONE
 		charge_cd = float(boss_def["charge_every"])
 		velocity = Vector2.ZERO

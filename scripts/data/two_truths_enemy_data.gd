@@ -31,7 +31,7 @@ const ENEMIES := {
 	# front of it, gulp_warn s) on every summon there (gulp_damage).
 	"devourers_whelp": {
 		"display_name": "The Devourer's Whelp",  # Owner-approved proposal
-		"max_hp": 2300.0,  # TUNING (not in GDD) a miniboss (the Kirin 2,300, Polyphemus 2,500)
+		"max_hp": 2000.0,  # TUNING (not in GDD) a miniboss (the Kirin 2,300, Polyphemus 2,500)
 		"move_speed": 58.0,  # TUNING (not in GDD) px/s
 		"damage": 12.0,  # TUNING (not in GDD) a bite, before the time scaling
 		"attack_interval": 1.1,  # TUNING (not in GDD) s
@@ -55,14 +55,14 @@ const ENEMIES := {
 		"seek_reach": 260.0,  # TUNING (not in GDD) px within which it smells a cartouche
 		"seek_speed_mult": 1.6,  # TUNING (not in GDD) x its speed while it lopes to one
 		"eat_reach": 10.0,  # TUNING (not in GDD) px between its body edge and the cartouche to eat it
-		"eat_heal": 0.015,  # TUNING (not in GDD) share of its max HP a Name heals
+		"eat_heal": 0.008,  # TUNING (not in GDD) share of its max HP a Name heals
 		"hunger_damage": 0.05,  # TUNING (not in GDD) x its bite per stack
 		"hunger_speed": 0.03,  # TUNING (not in GDD) x its speed per stack
-		"hunger_max": 10,  # TUNING (not in GDD) stacks
+		"hunger_max": 6,  # TUNING (not in GDD) stacks
 		"gulp_first": 4.0,  # TUNING (not in GDD) s before its first gulp
 		"gulp_every": 7.0,  # TUNING (not in GDD) s between two gulps
 		"gulp_warn": 0.7,  # TUNING (not in GDD) s of telegraph
 		"gulp_radius": 46.0,  # TUNING (not in GDD) px, a circle just in front of it
-		"gulp_damage": 24.0,  # TUNING (not in GDD) per summon, before the time scaling
+		"gulp_damage": 18.0,  # TUNING (not in GDD) per summon, before the time scaling
 	},  # The Devourer's Whelp.
 }

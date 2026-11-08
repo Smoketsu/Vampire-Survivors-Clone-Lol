@@ -131,11 +131,11 @@ const TWO_TRUTHS := {
 	"scales": {
 		"limit": 100.0,  # TUNING (not in GDD) each side
 		"threshold": 40.0,  # TUNING (not in GDD) past it the favour turns
-		"return_tip": 5.0,  # TUNING (not in GDD) toward the Dynasty per body that returned (proposal: "Each Rebirth tips the scale toward the Dynasty")
+		"return_tip": 2.5,  # TUNING (not in GDD) first pass 5 (seed 7: pinned at +100 from 5:00) toward the Dynasty per body that returned (proposal: "Each Rebirth tips the scale toward the Dynasty")
 		"raise_tip": 4.0,  # TUNING (not in GDD) toward the necromancer per raise (proposal: "each raise tips it toward the necromancer")
 		"steal_tip": 4.0,  # TUNING (not in GDD) more per raise that stole a Name ("Raising the dead is the way to win the scale")
-		"smash_tip": 0.25,  # TUNING (not in GDD) own decision: a smashed Name is a lighter weight than a stolen one
-		"settle": 1.0,  # TUNING (not in GDD) per s back toward level (not during the Weighing)
+		"smash_tip": 0.5,  # TUNING (not in GDD) first pass 0.25; own decision: a smashed Name is a lighter weight than a stolen one
+		"settle": 1.5,  # TUNING (not in GDD) first pass 1; per s back toward level (not during the Weighing)
 		"dynasty_mult": 1.15,  # Owner-approved proposal: "toward the Dynasty, they gain +15%"
 		"maat_mult": 0.85,  # Owner-approved proposal: "toward the necromancer, Dynasty enemies deal -15% damage (Ma'at's favour)"
 		"rebirth_bonus": -2.0,  # Owner-approved proposal: "Rebirth timers are 2 s shorter"
@@ -180,22 +180,22 @@ const RECKONING_OBJECTIVE: String = "THE DEVOURER'S HOUR: the dead rise without 
 ## dead first, then the guard and the priesthood, the Crocodile Wardens from
 ## the River of Fire. The priests and the wardens stay rare.
 const SEGMENTS := [
-	{"start": 0.0, "rate": 1.6, "max_alive": 34,  # TUNING (not in GDD)
+	{"start": 0.0, "rate": 1.5, "max_alive": 32,  # TUNING (not in GDD)
 		"weights": {"mummy": 0.6, "mummy_female": 0.4},
 		"objective": "The Gate of Reeds: a fallen mummy's Name waits over it. Raise it to tip the Scales your way"},
-	{"start": 60.0, "rate": 1.95, "max_alive": 46,  # TUNING (not in GDD)
+	{"start": 60.0, "rate": 1.8, "max_alive": 42,  # TUNING (not in GDD)
 		"weights": {"mummy": 0.45, "mummy_female": 0.3, "scarab_swarm": 0.25},
 		"objective": "Every body that stands again tips the Scales to the Dynasty. Smash the Names or raise them"},
-	{"start": 180.0, "rate": 2.3, "max_alive": 58,  # TUNING (not in GDD)
+	{"start": 180.0, "rate": 2.15, "max_alive": 54,  # TUNING (not in GDD)
 		"weights": {"mummy": 0.4, "mummy_female": 0.27, "scarab_swarm": 0.17, "khopesh_guard": 0.11, "heka_priest": 0.05},
 		"objective": "Heka priests curse your dead. A Mender's heal or a Warder's barrier clears the glyph"},
-	{"start": 300.0, "rate": 2.6, "max_alive": 68,  # TUNING (not in GDD)
+	{"start": 300.0, "rate": 2.45, "max_alive": 64,  # TUNING (not in GDD)
 		"weights": {"mummy": 0.34, "mummy_female": 0.24, "scarab_swarm": 0.16, "khopesh_guard": 0.13, "heka_priest": 0.05, "embalmer": 0.05, "crocodile_warden": 0.03},
 		"objective": "The River of Fire: Crocodile Wardens climb out of the sand and drag your dead under. Keep out of the quicksand"},
-	{"start": 600.0, "rate": 3.0, "max_alive": 80,  # TUNING (not in GDD)
+	{"start": 600.0, "rate": 2.85, "max_alive": 76,  # TUNING (not in GDD)
 		"weights": {"mummy": 0.32, "mummy_female": 0.23, "scarab_swarm": 0.15, "khopesh_guard": 0.15, "heka_priest": 0.06, "embalmer": 0.05, "crocodile_warden": 0.04},
 		"objective": "The Hall of the Scales: when the sand blows, every bow and spell reaches half as far"},
-	{"start": 900.0, "rate": 3.4, "max_alive": 92,  # TUNING (not in GDD)
+	{"start": 900.0, "rate": 3.2, "max_alive": 88,  # TUNING (not in GDD)
 		"weights": {"mummy": 0.3, "mummy_female": 0.22, "scarab_swarm": 0.15, "khopesh_guard": 0.17, "heka_priest": 0.06, "embalmer": 0.05, "crocodile_warden": 0.05},
 		"objective": "The Throne of Osiris: the Dynasty comes for its dead, and for yours"},
 	{"start": BOSS_TIME, "rate": 2.6, "max_alive": 70,  # TUNING (not in GDD) thinner during the boss fight
