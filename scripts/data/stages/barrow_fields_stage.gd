@@ -125,6 +125,7 @@ const MARCH := {
 ## are BARROW_FIELDS "braziers".
 const LONG_WINTER := {
 	"points": [Vector2(0.0, -300.0), Vector2(323.0, -105.0), Vector2(176.0, 243.0), Vector2(-200.0, 275.0), Vector2(-285.0, -93.0)],  # TUNING (not in GDD)
+	"douse_time": 2.0,  # TUNING (not in GDD) the act's first stage: a longer gutter (the shared 1.2 s), time for the ring to cut the douser down
 }
 ## The Rune-Stones on this stage: {} = the defaults of NorseRulesData.RUNE_STONES.
 const RUNE_STONES := {}
@@ -153,7 +154,7 @@ const BARROW_FIELDS := {
 		"frozen_fjord": [Vector2(320.0, 0.0), Vector2(0.0, 320.0), Vector2(-320.0, 0.0), Vector2(0.0, -320.0)],  # TUNING (not in GDD) fires on the fjord's banks
 		"jarls_hall": [Vector2(-300.0, -140.0), Vector2(0.0, -140.0), Vector2(300.0, -140.0), Vector2(-300.0, 140.0), Vector2(0.0, 140.0), Vector2(300.0, 140.0)],  # TUNING (not in GDD) the hall's two rows of hearths
 	},
-	"retire_dist": 900.0,  # TUNING (not in GDD) px
+	"retire_dist": 650.0,  # TUNING (not in GDD) px: the fires far behind are retired at a zone change, the near ones kept (900 retired none: 19 piled up; 0 retired all and the seed-7 army bot spent 543 s cold, frostbite x9)
 	"barrow_cap": 6,  # TUNING (not in GDD)
 	"brazier_reach": 700.0,  # TUNING (not in GDD) px
 	"brazier_side": 90.0,  # TUNING (not in GDD) px

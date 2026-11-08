@@ -79,6 +79,11 @@ var _barrow_gens: PackedInt32Array = PackedInt32Array()
 var _wight: Enemy = null
 ## Generation of `_wight` when he spawned.
 var _wight_gen: int = 0
+## Lowest HP (share of max) the necromancer fell to before 0:00, and when
+## (game s): the report's balance hint (where the stage bites).
+var low_hp: float = 1.0
+## Game time (s) of `low_hp` (-1 before any hit).
+var low_hp_at: float = -1.0
 ## Reusable query buffer.
 var _tmp: Array = []
 ## True when this build draws (never headless).
@@ -112,6 +117,9 @@ func step(delta: float) -> void:
 		_log("wight_killed")
 	if not judged and game.countdown_finished():
 		_judge_fires()
+	if not judged and not game.player.dead and game.player.hp / maxf(game.player.max_hp, 1.0) < low_hp:
+		low_hp = game.player.hp / maxf(game.player.max_hp, 1.0)
+		low_hp_at = game.elapsed
 
 
 # =====================================================================================
@@ -361,7 +369,7 @@ func summary_line() -> String:
 	var zones := PackedStringArray()
 	for z: String in ["barrows", "frozen_fjord", "jarls_hall"]:
 		zones.append("%s %d" % [z, int(st.get("barrow_fields_braziers_" + z, 0.0))])
-	return "braziers by zone (%s), retired %d | open barrows %d (events %d, howls %d, hrimgar %d; refused at the cap %d), opened %d, broken %d, draugr let out %d (capped %d) | drifts %d: slows you %d, summons %d, enemies %d | keep the fires %s (longest out %.1f s of at most %.0f) | wight spawned %d, killed %d%s | events: %s" % [
+	return "braziers by zone (%s), retired %d | open barrows %d (events %d, howls %d, hrimgar %d; refused at the cap %d), opened %d, broken %d, draugr let out %d (capped %d) | drifts %d: slows you %d, summons %d, enemies %d | keep the fires %s (longest out %.1f s of at most %.0f) | wight spawned %d, killed %d%s | lowest HP before 0:00 %d%% at %s | events: %s" % [
 		", ".join(zones), int(st.get("barrow_fields_braziers_retired", 0.0)),
 		barrows, int(st.get("barrows_event", 0.0)), int(st.get("barrows_howl", 0.0)), int(st.get("barrows_hrimgar", 0.0)),
 		int(st.get("barrows_refused", 0.0)), int(st.get("barrows_opened", 0.0)), int(st.get("barrows_broken", 0.0)),
@@ -371,7 +379,7 @@ func summary_line() -> String:
 		"EARNED" if keep_the_fires else ("lost" if judged else "open"), judged_out if judged else (game.norse.winter.longest_out() if game.norse != null else 0.0),
 		NorseRulesData.KEEP_THE_FIRES_MAX_OUT,
 		int(st.get("barrow_fields_wight_spawned", 0.0)), int(st.get("barrow_fields_wight_killed", 0.0)),
-		(" at " + wight_time) if wight_time != "" else "", ", ".join(fired)]
+		(" at " + wight_time) if wight_time != "" else "", roundi(100.0 * low_hp), EmpireReport._clock(low_hp_at) if low_hp_at >= 0.0 else "-", ", ".join(fired)]
 
 
 ## Appends "m:ss name" to the event log.

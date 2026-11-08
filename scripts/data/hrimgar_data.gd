@@ -138,8 +138,8 @@ const BOSS := {
 	"mist_min": 50.0,  # TUNING (not in GDD) px from the necromancer
 	"mist_max": 140.0,  # TUNING (not in GDD) px (the ring is 60-150 px)
 	"mist_telegraph": 1.3,  # TUNING (not in GDD) s the circle shows before it bursts
-	"mist_damage": 9.0,  # TUNING (not in GDD) to a necromancer, before the time scaling, once
-	"mist_damage_summon": 12.0,  # TUNING (not in GDD) to a summon, before the time scaling, once
+	"mist_damage": 6.0,  # TUNING (not in GDD) first pass 9 (seed-7 army: min HP 27% in his fight); to a necromancer, before the time scaling, once
+	"mist_damage_summon": 8.0,  # TUNING (not in GDD) first pass 12 (his Grave cost the seed-7 army 74 summons); to a summon, before the time scaling, once
 	"mist_chill": 0.4,  # TUNING (not in GDD) share of a summon's speed lost
 	"mist_chill_time": 3.0,  # TUNING (not in GDD) s
 	"call_first": 6.0,  # TUNING (not in GDD) s after he arrives
@@ -154,8 +154,8 @@ const BOSS := {
 	"cleave_windup": 1.0,  # TUNING (not in GDD) s he raises the greatsword (the sector shows)
 	"cleave_reach": 120.0,  # TUNING (not in GDD) px
 	"cleave_half": 0.9,  # TUNING (not in GDD) rad half-angle of the sector (~100 degrees wide)
-	"cleave_damage": 16.0,  # TUNING (not in GDD) to a necromancer, before the time scaling, once
-	"cleave_damage_summon": 26.0,  # TUNING (not in GDD) to a summon, before the time scaling, once
+	"cleave_damage": 14.0,  # TUNING (not in GDD) first pass 16; to a necromancer, before the time scaling, once
+	"cleave_damage_summon": 18.0,  # TUNING (not in GDD) first pass 26; to a summon, before the time scaling, once
 	"cleave_knock": 40.0,  # TUNING (not in GDD) px a struck summon is thrown
 	# The Last Rising: the drag.
 	"drag_first": 3.0,  # TUNING (not in GDD) s after he rises
