@@ -62,9 +62,13 @@ func physics(e: Enemy, delta: float) -> bool:
 				if to.length() > 0.01:
 					e.position = lunge_to - to.normalized() * minf(to.length(), e.radius)  # Beside it, not on it.
 				if mark != null and mark.active and mark.generation == mark_gen:
-					e.game.combat.damage_unit(mark, float(l.get("damage", 9.0)) * hit_scale(e), e.kind, e)
-					e.target = mark
-					e.target_gen = mark.generation
+					# Locals: the hit can kill her (thorns), and on_deactivate() then clears `mark` mid-call.
+					var m: SummonedUnit = mark  # The summon hit by this lunge.
+					var m_gen: int = mark_gen  # Its pool generation when marked (stale guard for e.target).
+					e.game.combat.damage_unit(m, float(l.get("damage", 9.0)) * hit_scale(e), e.kind, e)
+					if e.active:
+						e.target = m
+						e.target_gen = m_gen
 				e.game.stat_add("swashbuckler_lunges", 1.0)
 				rules(e).play_sound("cutlass_clash", e.position, 0.2)
 				lunge_cd = float(l.get("every", 5.0))
