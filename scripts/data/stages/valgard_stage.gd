@@ -1,23 +1,33 @@
 ## ValgardStage — STAGE 17 (final order), VALGARD, THE HALL OF HEROES (the Hall of the
-## Slain, temporarily Act XI, final slot VI; GDD §15.0 "The Hall of the Slain
-## foundation (phase 1)"; the act's section "Stage 17: Valgard, the Hall of Heroes" of
-## docs/proposals/LAST_SIX_ACTS.md). A vast feast hall at the edge of the sky, long tables and shields on the walls. The benches stand empty, and every warrior who dies well here is carried back to them.
+## Slain, temporarily Act XI, final slot VI; GDD §15.0 "Valgard, the Hall of
+## Heroes (the Hall of the Slain phase 2)" and the rows after it; the act's
+## section "Stage 17: Valgard, the Hall of Heroes" of
+## docs/proposals/LAST_SIX_ACTS.md, with the owner decisions of Nov 7, 2026).
+## A vast feast hall at the edge of the sky, long tables and shields on the
+## walls. The benches stood empty since the necromancer took the world's dead;
+## now the hall's own heroes rise from them.
 ## Every number and event that belongs to this stage. StageRegistry exposes it
 ## to the run as `Game.stage_def` (the STAGE dictionary at the bottom; its keys
 ## are documented in StageRegistry).
 ##
-## STATUS: FOUNDATION STUB (phase 1). The stage is registered, unlocked in the
-## campaign chain, runs the act's three shared rules ("norse": true: the Long
-## Winter, Berserkergang and the Rune-Stones) and plays a simple timeline of
-## the shared kinds (every rule shows: six braziers and the cold rising every
-## 5:00, frost giants and seers dousing, berserkers and the wounded in the
-## fury, four rune-stones raised by the "rune_stone" event)
-## against a PLACEHOLDER boss script (the "vael" boss script under
-## Sigrun's name), with the Ragnarok Reckoning (the sun swallowed, the
-## Einherjar of the hall march, the fire-giants, every valkyrie dives). It is hidden from
-## the stage select ("playable": false) until phase 2 builds it: the Feast (Einherjar at the long tables wake on every horn), the Einherjar Champion (the miniboss) and Sigrun, the Shield-Queen (the Charge, the Holmgang, the Doors of the Hall: every Einherjar of the hall marches out at her side, a scripted wave).
-## Planned zones (ZONES; clock-driven like every stage): The Shield Yard, The Mead Hall, The Hall of Spears, The Valkyries' Gate.
-## The boss arrives with 3:00 left; the Reckoning at 0:00.
+## The stage runs the act's three shared rules ("norse": true: the Long
+## Winter, Berserkergang and the Rune-Stones, NorseRules) and the Ragnarök
+## Reckoning. WARRIORS AND VALKYRIES LEAD (raiders, shield-maidens, skalds,
+## berserkers and the hall's own Einherjar heavier in the timeline, valkyries
+## from the first minutes; the draugr, wolves and giants of the wilds thinner).
+## The braziers stand by the MAP (LONG_WINTER "points"): the Mead Hall's long
+## hearth either side of the start, the yard fires and the gate braziers
+## further out, so warmth is a place to hold, not everywhere.
+## Four clock-driven zones (ZONES, MarchDirector; ValgardGround draws their
+## floors from the art's hall planks and slabs): THE SHIELD YARD, THE MEAD
+## HALL (the long tables, the Feast's heart), THE HALL OF SPEARS (the Einherjar
+## Champion, the miniboss) and THE VALKYRIES' GATE (Sigrun's arena).
+## THE FEAST (ValgardDirector, VALGARD): Einherjar sit at the long tables
+## (drawn, no body) and wake whenever a horn blows (RuneStones.horn_blown, the
+## Champion's horn, Sigrun's Doors of the Hall), then fight
+## (NorseKit.make_einherjar()). Sigrun, the Shield-Queen (BossSigrun,
+## SigrunData) arrives with 3:00 left: the Charge, the Holmgang, the Doors of
+## the Hall. The Reckoning at 0:00.
 ## Every rate, cap and weight is TUNING (not in GDD), tuned for the act's final
 ## slot VI (between the Shogunate and Olympus).
 class_name ValgardStage
@@ -43,23 +53,127 @@ const ENEMY_MULT_FROM: float = 420.0  # TUNING (not in GDD) 7:00, as Acts III to
 ## Soul Ash multiplier of a run on this stage (its own end-screen line).
 const ASH_MULT: float = 1.25  # TUNING (not in GDD) owner decision Oct 2026, GDD §15.0 "Ossuary expansion: owner decisions": every act restarts, stage 2 of the act
 
-## The four zones phase 2 builds (names from the proposal), each from `start`
-## game seconds. The stub has one placeholder floor.
+# =====================================================================================
+# Zones and their look
+# =====================================================================================
+
+## Obstacle kinds of the stage (the art pass's obstacles/<kind>_<size>[_v]);
+## each keeps the same sizes in every zone, so its art keys stay the same:
+##   long_table      — a long feast table with its benches (rect; the Feast's
+##                     seats: ValgardDirector seats Einherjar at them).
+##   standing_shield — a round shield on a post (circle).
+## The long table's layout entry (shared by every zone; art 48 / 72 px long).
+const LONG_TABLE := {"shape": "rect", "sizes": [44.0, 68.0], "short": 14.0}  # TUNING (not in GDD)
+## The standing shield's layout entry (shared by every zone; art 24 / 36 px wide).
+const STANDING_SHIELD := {"shape": "circle", "sizes": [9.0, 13.0]}  # TUNING (not in GDD)
+
+## The four zones (owner-approved proposal names; the clock is authoritative).
+## Keys as CrimsonMarchStage.ZONES (MarchDirector). `ground` is a
+## ValgardGround look:
+##   style  — "shield_yard" (weathered planks, straw, a shield's rim),
+##            "mead_hall" (the hall's planks, rushes, spilt mead, embers),
+##            "hall_of_spears" (cut slabs, rune lines, spear racks' shadows) or
+##            "valkyries_gate" (slabs under the sky, feathers, gold light).
+##   tile   — the art pass's floor tile key under tiles/ (norse_planks or
+##            norse_slabs); the code colours below are the fallback.
+##   base / line / accent / trim — colours of the code floor, its seams, its
+##            decorations and its glints.
+## `arena` is the zone's obstacle layout (keys as GraveyardStage.ARENA; each
+## kind's entry is one of the constants above plus its weight).
 const ZONES := [
-	{"id": "shield_yard", "name": "The Shield Yard", "start": 0.0},  # Owner-approved proposal (names); TUNING (not in GDD) times
-	{"id": "mead_hall", "name": "The Mead Hall", "start": 300.0},  # Owner-approved proposal (names); TUNING (not in GDD) times
-	{"id": "hall_of_spears", "name": "The Hall of Spears", "start": 600.0},  # Owner-approved proposal (names); TUNING (not in GDD) times
-	{"id": "valkyries_gate", "name": "The Valkyries' Gate", "start": 900.0},  # Owner-approved proposal (names); TUNING (not in GDD) times
+	{"start": 0.0, "numeral": "I", "name": "The Shield Yard",  # Owner-approved proposal (zones)
+		"blurb": "Shields of the fallen on their posts, and the hall's doors above",
+		"ground": {"style": "shield_yard", "tile": "norse_planks", "base": Color(0.26, 0.19, 0.13), "line": Color(0.18, 0.12, 0.08),
+			"accent": Color(0.62, 0.55, 0.30), "trim": Palette.NORSE_HEARTH},
+		"arena": {"density": 0.18, "clear_radius": 220.0, "layout_seed": 1717,  # TUNING (not in GDD)
+			"kinds": {
+				"standing_shield": {"weight": 0.6, "shape": STANDING_SHIELD["shape"], "sizes": STANDING_SHIELD["sizes"]},  # TUNING (not in GDD)
+				"long_table": {"weight": 0.4, "shape": LONG_TABLE["shape"], "sizes": LONG_TABLE["sizes"], "short": LONG_TABLE["short"]},  # TUNING (not in GDD)
+			}}},
+	{"start": 300.0, "numeral": "II", "name": "The Mead Hall",  # Owner-approved proposal (zones)
+		"blurb": "Long tables without end, and the heroes asleep at them",
+		"ground": {"style": "mead_hall", "tile": "norse_planks", "base": Color(0.24, 0.16, 0.10), "line": Color(0.17, 0.11, 0.07),
+			"accent": Palette.NORSE_HEARTH_DARK, "trim": Palette.NORSE_HEARTH},
+		"arena": {"density": 0.24, "clear_radius": 220.0, "layout_seed": 1727,  # TUNING (not in GDD) the Feast's heart: the most tables
+			"kinds": {
+				"long_table": {"weight": 0.75, "shape": LONG_TABLE["shape"], "sizes": LONG_TABLE["sizes"], "short": LONG_TABLE["short"]},  # TUNING (not in GDD)
+				"standing_shield": {"weight": 0.25, "shape": STANDING_SHIELD["shape"], "sizes": STANDING_SHIELD["sizes"]},  # TUNING (not in GDD)
+			}}},
+	{"start": 600.0, "numeral": "III", "name": "The Hall of Spears",  # Owner-approved proposal (zones)
+		"blurb": "Where the hall's champion has waited a thousand years",
+		"ground": {"style": "hall_of_spears", "tile": "norse_slabs", "base": Color(0.17, 0.19, 0.24), "line": Color(0.10, 0.11, 0.15),
+			"accent": Palette.NORSE_IRON, "trim": Palette.NORSE_RUNE},
+		"arena": {"density": 0.2, "clear_radius": 220.0, "layout_seed": 1737,  # TUNING (not in GDD)
+			"kinds": {
+				"standing_shield": {"weight": 0.55, "shape": STANDING_SHIELD["shape"], "sizes": STANDING_SHIELD["sizes"]},  # TUNING (not in GDD)
+				"long_table": {"weight": 0.45, "shape": LONG_TABLE["shape"], "sizes": LONG_TABLE["sizes"], "short": LONG_TABLE["short"]},  # TUNING (not in GDD)
+			}}},
+	{"start": 900.0, "numeral": "IV", "name": "The Valkyries' Gate",  # Owner-approved proposal (zones)
+		"blurb": "The hall's edge, open to the sky, where the Shield-Queen lands",
+		"ground": {"style": "valkyries_gate", "tile": "norse_slabs", "base": Color(0.20, 0.22, 0.27), "line": Color(0.12, 0.13, 0.17),
+			"accent": Palette.NORSE_FROST, "trim": Palette.NORSE_VALKYRIE_GOLD},
+		"arena": {"density": 0.14, "clear_radius": 240.0, "layout_seed": 1747,  # TUNING (not in GDD) open ground for Sigrun's charges
+			"kinds": {
+				"standing_shield": {"weight": 0.7, "shape": STANDING_SHIELD["shape"], "sizes": STANDING_SHIELD["sizes"]},  # TUNING (not in GDD)
+				"long_table": {"weight": 0.3, "shape": LONG_TABLE["shape"], "sizes": LONG_TABLE["sizes"], "short": LONG_TABLE["short"]},  # TUNING (not in GDD)
+			}}},
 ]
 
-## The Long Winter on this stage: {} = the defaults of
-## NorseRulesData.LONG_WINTER (any of its keys overrides them here; "points":
-## the braziers' offsets (px) from the start, else a seeded ring; phase 2 places
-## them by the stage's map).
-const LONG_WINTER := {}
+## Zone mechanics for MarchDirector (keys as SanctumStage.MARCH: no road,
+## outposts or carts), with the stage's own zone change look.
+const MARCH := {
+	"transition_time": 1.6,  # TUNING (not in GDD)
+	"transition_clear": 260.0,  # TUNING (not in GDD)
+	"zone_title": "VALGARD  -  ZONE %s",  # TUNING (not in GDD)
+	"zone_color": Palette.NORSE_VALKYRIE_GOLD,  # The hall's gold, never the UI's soul-teal.
+	"fog_color": Color(0.06, 0.05, 0.04),  # The hall's dark rafters.
+	"fog_bank_color": Color(0.55, 0.42, 0.28),  # Hearth smoke.
+	"zones": ZONES,
+}
+
+## The Long Winter on this stage (keys of NorseRulesData.LONG_WINTER override
+## its defaults): the six braziers stand BY THE MAP ("points": offsets in px
+## from the start; foundation note: the stub's seeded ring left the army bot in
+## the cold 60-75% of the run): the Mead Hall's long hearth either side of the
+## start (two fires 210 px out, so the start itself is just warm between
+## them), the two yard fires 470 px above and below, and the two gate
+## braziers far out on the diagonal. Warmth is a place to hold; the dousers
+## come for the hearth.
+const LONG_WINTER := {
+	"points": [Vector2(-210.0, 0.0), Vector2(210.0, 0.0), Vector2(0.0, -470.0), Vector2(0.0, 470.0),  # TUNING (not in GDD) the long hearth, the yard fires
+		Vector2(-640.0, -340.0), Vector2(640.0, 340.0)],  # TUNING (not in GDD) the gate braziers
+}
 ## The Rune-Stones on this stage: {} = the defaults of NorseRulesData.RUNE_STONES
-## (any of its keys overrides them here; e.g. a stage's own horn "table").
+## (every horn also wakes the Feast: ValgardDirector listens to horn_blown).
 const RUNE_STONES := {}
+
+## THE FEAST and the stage's objectives (ValgardDirector; StageRegistry
+## "valgard"):
+##   wake_reach      — px around the necromancer within which a horn wakes
+##                     seated Einherjar (the nearest tables first).
+##   wake_by_zone    — Einherjar a horn wakes at most, per zone (I..IV).
+##   per_table       — Einherjar seated at a short / long table.
+##   reseat_time     — s before an emptied table is full again.
+##   cap_margin      — a wake skips while fewer than this many enemies are left
+##                     under the hard cap.
+##   rise_offset     — px from the table's centre (toward the necromancer) a
+##                     woken Einherjar steps out.
+##   seat_scan       — px around the necromancer the seated figures are drawn
+##                     (drawing only).
+##   doors_wake      — Einherjar the Doors of the Hall wake at the tables (on
+##                     top of Sigrun's marching wave).
+##   champion_objective — the HUD objective while the Champion stands.
+const VALGARD := {
+	"wake_reach": 640.0,  # TUNING (not in GDD) px
+	"wake_by_zone": [2, 4, 3, 3],  # TUNING (not in GDD) the Mead Hall wakes the most
+	"per_table": [1, 2],  # TUNING (not in GDD) short / long table
+	"reseat_time": 150.0,  # TUNING (not in GDD) s
+	"cap_margin": 6,  # TUNING (not in GDD)
+	"rise_offset": 22.0,  # TUNING (not in GDD) px
+	"seat_scan": 900.0,  # TUNING (not in GDD) px, visual only
+	"doors_wake": 6,  # TUNING (not in GDD)
+	"champion_objective": "The Einherjar Champion: step out of his sweep. His horn wakes the hall",  # TUNING (not in GDD)
+}
 
 ## The Reckoning of this stage (keys as GraveyardStage.RECKONING): RAGNAROK,
 ## shared by every stage of the act: the wolf swallows the sun (a dark red
@@ -70,7 +184,7 @@ const RUNE_STONES := {}
 const RECKONING := {
 	"banner": "RAGNAROK: THE WOLF SWALLOWS THE SUN",
 	"kind": NorseEnemyData.RECKONING_KIND,  # The shared Ragnarok heavy (the fire-giant).
-	"ragnarok": {},  # NorseRulesData.RAGNAROK defaults (phase 2 may tune them here).
+	"ragnarok": {},  # NorseRulesData.RAGNAROK defaults.
 	"companions": NorseEnemyData.RECKONING_COMPANIONS,  # Raiders, berserkers, wolves, a valkyrie.
 	"interval": 10.0,  # TUNING (not in GDD) as every stage
 	"base_count": 2,  # TUNING (not in GDD) fire-giants
@@ -81,98 +195,79 @@ const RECKONING := {
 ## Objective text shown once the countdown has reached 0:00.
 const RECKONING_OBJECTIVE: String = "RAGNAROK: the sun is gone, the hall's heroes march and the giants burn the field. Endure."
 
-## Continuous spawning segments (keys as GraveyardStage.SEGMENTS): a plain ramp
-## of the shared kinds (placeholder), the stage's lead kind weighted up.
-## Berserkers, valkyries and giants stay rare (elites and heavies).
+## Continuous spawning segments (keys as GraveyardStage.SEGMENTS): the
+## warriors and valkyries of the hall lead (raiders, shield-maidens, skalds,
+## berserkers, the hall's Einherjar; valkyries from 1:00), the draugr, wolves
+## and giants of the wilds thinner than on the other two stages.
 const SEGMENTS := [
 	{"start": 0.0, "rate": 1.4, "max_alive": 30,  # TUNING (not in GDD)
 		"weights": {"raider": 1.0},
-		"objective": "The Shield Yard: the hall's warriors come for you. Keep near the braziers"},
+		"objective": "The Shield Yard: the hall's warriors come for you. Keep by the hearth fires"},
 	{"start": 60.0, "rate": 1.7, "max_alive": 40,  # TUNING (not in GDD)
-		"weights": {"raider": 0.777, "shield_maiden": 0.194, "valkyrie": 0.029},
+		"weights": {"raider": 0.74, "shield_maiden": 0.22, "valkyrie": 0.04},
 		"objective": "Shield-maidens! Their bash throws your dead out of the ring"},
 	{"start": 150.0, "rate": 2.0, "max_alive": 50,  # TUNING (not in GDD)
-		"weights": {"raider": 0.602, "shield_maiden": 0.194, "draugr": 0.117, "wolf_of_the_wastes": 0.058, "valkyrie": 0.029},
-		"objective": "Draugr from the barrows: armoured, and their touch is cold"},
+		"weights": {"raider": 0.62, "shield_maiden": 0.22, "skald": 0.04, "wolf_of_the_wastes": 0.08, "valkyrie": 0.04},
+		"objective": "A rune-stone's horn wakes the heroes at the tables. Take the stones"},
 	{"start": 300.0, "rate": 2.3, "max_alive": 60,  # TUNING (not in GDD)
-		"weights": {"raider": 0.485, "shield_maiden": 0.175, "draugr": 0.136, "wolf_of_the_wastes": 0.097, "skald": 0.039, "seer": 0.039, "valkyrie": 0.029},
-		"objective": "Skalds sing their warriors faster; seers douse braziers and re-carve the stones you take"},
+		"weights": {"raider": 0.5, "shield_maiden": 0.2, "skald": 0.05, "einherjar": 0.04, "draugr": 0.07, "seer": 0.04, "wolf_of_the_wastes": 0.06, "valkyrie": 0.04},
+		"objective": "The Mead Hall: every horn wakes the Einherjar at the long tables"},
 	{"start": 480.0, "rate": 2.6, "max_alive": 70,  # TUNING (not in GDD)
-		"weights": {"raider": 0.447, "shield_maiden": 0.175, "draugr": 0.136, "wolf_of_the_wastes": 0.097, "skald": 0.039, "seer": 0.039, "berserker": 0.024, "valkyrie": 0.044},
+		"weights": {"raider": 0.46, "shield_maiden": 0.2, "skald": 0.05, "einherjar": 0.05, "draugr": 0.07, "seer": 0.04, "wolf_of_the_wastes": 0.05, "berserker": 0.025, "valkyrie": 0.055},
 		"objective": "Wounded warriors go berserk: finish them in one blow"},
 	{"start": 720.0, "rate": 2.9, "max_alive": 80,  # TUNING (not in GDD)
-		"weights": {"raider": 0.427, "shield_maiden": 0.175, "draugr": 0.136, "wolf_of_the_wastes": 0.097, "skald": 0.039, "seer": 0.039, "berserker": 0.029, "valkyrie": 0.049, "frost_giant": 0.01},
-		"objective": "Frost giants douse the braziers they pass. Stand by one to relight it"},
+		"weights": {"raider": 0.44, "shield_maiden": 0.2, "skald": 0.05, "einherjar": 0.055, "draugr": 0.06, "seer": 0.045, "wolf_of_the_wastes": 0.05, "berserker": 0.03, "valkyrie": 0.06, "frost_giant": 0.008},
+		"objective": "Seers douse the hearths. Stand by a brazier to relight it"},
 	{"start": 900.0, "rate": 3.1, "max_alive": 88,  # TUNING (not in GDD)
-		"weights": {"raider": 0.408, "shield_maiden": 0.175, "draugr": 0.136, "wolf_of_the_wastes": 0.097, "skald": 0.039, "seer": 0.049, "berserker": 0.034, "valkyrie": 0.049, "frost_giant": 0.015},
-		"objective": "The whole north comes south"},
-	{"start": BOSS_TIME, "rate": 2.5, "max_alive": 66,  # TUNING (not in GDD)
-		"weights": {"raider": 0.447, "shield_maiden": 0.175, "draugr": 0.136, "wolf_of_the_wastes": 0.097, "skald": 0.039, "seer": 0.039, "berserker": 0.024, "valkyrie": 0.044},
+		"weights": {"raider": 0.42, "shield_maiden": 0.2, "skald": 0.05, "einherjar": 0.06, "draugr": 0.06, "seer": 0.05, "wolf_of_the_wastes": 0.05, "berserker": 0.035, "valkyrie": 0.065, "frost_giant": 0.01},
+		"objective": "The Valkyries' Gate: the Shield-Queen's wing circles the sky"},
+	{"start": BOSS_TIME, "rate": 2.5, "max_alive": 66,  # TUNING (not in GDD) thinner during the boss fight
+		"weights": {"raider": 0.5, "shield_maiden": 0.2, "skald": 0.04, "einherjar": 0.04, "draugr": 0.06, "seer": 0.04, "wolf_of_the_wastes": 0.06, "berserker": 0.02, "valkyrie": 0.04},
 		"objective": "Sigrun, the Shield-Queen has come for you"},
 ]
 
 ## One-shot scripted events (keys as GraveyardStage.EVENTS, plus the type
 ## "rune_stone": `count` stones rise around the necromancer, RuneStones
-## .start_event()). Wolves come in packs of 5 (owner-approved proposal).
+## .start_event(); and "einherjar_champion": ValgardDirector's miniboss, with an
+## "escort" list of {kind, count}). Wolves come in packs of 5 (owner-approved
+## proposal).
 const EVENTS := [
-	{"time": 25.0, "type": "wave", "banner": "A raiding party comes up from the shore!", "formation": "ring",  # TUNING (not in GDD)
+	{"time": 25.0, "type": "wave", "banner": "A raiding party storms the Shield Yard!", "formation": "ring",  # TUNING (not in GDD)
 		"groups": [{"kind": "raider", "count": 8, "elite": false}]},
-	{"time": 45.0, "type": "rune_stone", "count": 1, "banner": "A rune-stone rises! Stand by it with your army to take it"},  # TUNING (not in GDD) rule 3: a stone the hall holds
-	{"time": 120.0, "type": "wave", "banner": "Wolves of the wastes, hunting in packs!", "formation": "arc",  # TUNING (not in GDD)
-		"groups": [{"kind": "wolf_of_the_wastes", "count": 5, "elite": false}, {"kind": "wolf_of_the_wastes", "count": 5, "elite": false}]},
-	{"time": 200.0, "type": "wave", "banner": "A shield line, and a skald to sing it on!", "formation": "line",  # TUNING (not in GDD)
+	{"time": 45.0, "type": "rune_stone", "count": 1, "banner": "A rune-stone rises! Its horn will wake the heroes at the tables"},  # TUNING (not in GDD) rule 3: a stone the hall holds
+	{"time": 110.0, "type": "wave", "banner": "A shield line, and a skald to sing it on!", "formation": "line",  # TUNING (not in GDD)
 		"groups": [{"kind": "shield_maiden", "count": 4, "elite": false}, {"kind": "skald", "count": 1, "elite": false}, {"kind": "raider", "count": 6, "elite": false}]},
-	{"time": 270.0, "type": "rune_stone", "count": 1, "banner": "Another rune-stone is carved! Its horn will call the hall"},  # TUNING (not in GDD) rule 3: a stone the hall holds
-	{"time": 330.0, "type": "wave", "banner": "A berserker! Wound him and he is already in the fury", "formation": "arc",  # TUNING (not in GDD)
-		"groups": [{"kind": "berserker", "count": 1, "elite": false}, {"kind": "raider", "count": 8, "elite": false}]},
-	{"time": 420.0, "type": "wave", "banner": "A valkyrie! Bring her down with arrows and spells", "formation": "arc",  # TUNING (not in GDD)
-		"groups": [{"kind": "valkyrie", "count": 1, "elite": false}, {"kind": "draugr", "count": 5, "elite": false}]},
-	{"time": 520.0, "type": "rune_stone", "count": 1, "banner": "A seer carves a new stone!"},  # TUNING (not in GDD) rule 3: a stone the hall holds
-	{"time": 540.0, "type": "wave", "banner": "Seers walk to the stones you took!", "formation": "arc",  # TUNING (not in GDD)
-		"groups": [{"kind": "seer", "count": 2, "elite": false}, {"kind": "shield_maiden", "count": 3, "elite": false}]},
-	{"time": 600.0, "type": "wave", "banner": "A frost giant strides out of the snow!", "formation": "arc",  # TUNING (not in GDD)
-		"groups": [{"kind": "frost_giant", "count": 1, "elite": false}, {"kind": "draugr", "count": 6, "elite": false}]},
-	{"time": 700.0, "type": "wave", "banner": "Two valkyries circle the ring!", "formation": "ring",  # TUNING (not in GDD)
-		"groups": [{"kind": "valkyrie", "count": 2, "elite": false}, {"kind": "raider", "count": 8, "elite": false}]},
-	{"time": 780.0, "type": "rune_stone", "count": 1, "banner": "The last rune-stone rises!"},  # TUNING (not in GDD) rule 3: a stone the hall holds
-	{"time": 840.0, "type": "wave", "banner": "Berserkers, and a skald to drive them!", "formation": "ring",  # TUNING (not in GDD)
+	{"time": 180.0, "type": "wave", "banner": "A valkyrie! Bring her down with arrows and spells", "formation": "arc",  # TUNING (not in GDD)
+		"groups": [{"kind": "valkyrie", "count": 1, "elite": false}, {"kind": "raider", "count": 8, "elite": false}]},
+	{"time": 250.0, "type": "rune_stone", "count": 1, "banner": "Another rune-stone is carved! Every horn wakes the Feast"},  # TUNING (not in GDD)
+	{"time": 330.0, "type": "wave", "banner": "The Mead Hall: a berserker leaves his bench in the fury!", "formation": "arc",  # TUNING (not in GDD)
+		"groups": [{"kind": "berserker", "count": 1, "elite": false}, {"kind": "einherjar", "count": 2, "elite": false}, {"kind": "raider", "count": 6, "elite": false}]},
+	{"time": 430.0, "type": "wave", "banner": "Wolves of the wastes, loosed in the hall!", "formation": "arc",  # TUNING (not in GDD)
+		"groups": [{"kind": "wolf_of_the_wastes", "count": 5, "elite": false}, {"kind": "wolf_of_the_wastes", "count": 5, "elite": false}]},
+	{"time": 500.0, "type": "rune_stone", "count": 1, "banner": "A seer carves a new stone!"},  # TUNING (not in GDD)
+	{"time": 540.0, "type": "wave", "banner": "Two valkyries and the seers who call them!", "formation": "ring",  # TUNING (not in GDD)
+		"groups": [{"kind": "valkyrie", "count": 2, "elite": false}, {"kind": "seer", "count": 2, "elite": false}, {"kind": "shield_maiden", "count": 3, "elite": false}]},
+	{"time": 660.0, "type": "einherjar_champion", "banner": "THE EINHERJAR CHAMPION rises in the Hall of Spears! A thousand years of battle in his arm",  # TUNING (not in GDD) the miniboss
+		"kind": "einherjar_champion", "escort": [{"kind": "einherjar", "count": 2}]},
+	{"time": 760.0, "type": "rune_stone", "count": 1, "banner": "The last rune-stone rises!"},  # TUNING (not in GDD)
+	{"time": 820.0, "type": "wave", "banner": "Berserkers, and a skald to drive them!", "formation": "ring",  # TUNING (not in GDD)
 		"groups": [{"kind": "berserker", "count": 2, "elite": false}, {"kind": "skald", "count": 1, "elite": false}, {"kind": "raider", "count": 8, "elite": false}]},
-	{"time": 930.0, "type": "wave", "banner": "Giants and wolves together!", "formation": "ring",  # TUNING (not in GDD)
-		"groups": [{"kind": "frost_giant", "count": 1, "elite": false}, {"kind": "wolf_of_the_wastes", "count": 5, "elite": false}, {"kind": "wolf_of_the_wastes", "count": 5, "elite": false}]},
-	{"time": 990.0, "type": "wave", "banner": "The war-host gathers before its lord!", "formation": "ring",  # TUNING (not in GDD)
-		"groups": [{"kind": "raider", "count": 10, "elite": false}, {"kind": "shield_maiden", "count": 4, "elite": false}, {"kind": "valkyrie", "count": 1, "elite": false}, {"kind": "berserker", "count": 1, "elite": false}]},
+	{"time": 910.0, "type": "wave", "banner": "The Valkyries' Gate: the wing circles before its queen!", "formation": "ring",  # TUNING (not in GDD)
+		"groups": [{"kind": "valkyrie", "count": 2, "elite": false}, {"kind": "einherjar", "count": 3, "elite": false}, {"kind": "raider", "count": 8, "elite": false}]},
+	{"time": 990.0, "type": "wave", "banner": "The war-host gathers before its queen!", "formation": "ring",  # TUNING (not in GDD)
+		"groups": [{"kind": "raider", "count": 10, "elite": false}, {"kind": "shield_maiden", "count": 4, "elite": false}, {"kind": "frost_giant", "count": 1, "elite": false}]},
 ]
 
-## Obstacle layout (keys as GraveyardStage.ARENA): the normal scattered-obstacle
-## arena. Placeholder kinds drawn by NorseGlyphs until phase 2 brings the
-## stage's own art.
-const ARENA := {
-	"density": 0.2,  # TUNING (not in GDD)
-	"clear_radius": 220.0,  # TUNING (not in GDD)
-	"layout_seed": 1717,  # TUNING (not in GDD)
-	"kinds": {
-		"norse_long_table": {"weight": 0.45, "shape": "rect", "sizes": [40.0, 56.0], "short": 12.0},  # TUNING (not in GDD) placeholder art (feast tables)
-		"norse_pillar": {"weight": 0.55, "shape": "circle", "sizes": [12.0, 16.0]},  # TUNING (not in GDD) placeholder art (carved pillars)
-	},
-}
+## Obstacle layout before the first zone change (the Shield Yard's).
+const ARENA: Dictionary = ZONES[0]["arena"]
 
-## The stage boss's arrival (keys as GraveyardStage.BOSS, plus "script": the
-## boss script when it differs from the id). PLACEHOLDER: the "vael" boss script
-## under Sigrun's name until phase 2 adds
-## scripts/enemies/norse/boss_sigrun.gd (then remove the "script" key).
-const BOSS := {
-	"id": "sigrun",
-	"script": "vael",  # PLACEHOLDER boss script until phase 2 adds boss_sigrun.gd (then remove this key).
-	"time": BOSS_TIME,
-	"display_name": "Sigrun, the Shield-Queen",
-	"short_name": "Sigrun",
-	"arrive_banner": "Sigrun, the Shield-Queen, leads her valkyrie wing down!",
-	"defeat_banner": "Sigrun falls, and the hall's doors swing shut! Hold out until the end...",
-	"dead_objective": "Sigrun is dead. Survive Ragnarok... you cannot.",
-}
+## Sigrun's arrival (keys as GraveyardStage.BOSS): her own SigrunData.ARRIVAL
+## (boss id "sigrun"), whose `time` equals BOSS_TIME (17:00). Her script is
+## scripts/enemies/norse/boss_sigrun.gd (loaded by her id).
+const BOSS: Dictionary = SigrunData.ARRIVAL
 
-## Placeholder floor (NorseGround, code-drawn) until phase 2 brings the stage's
-## zone floors: base colour, joint lines, accent, trim, style.
+## The foundation stub's floor (NorseGround "floor" key), kept for the tools
+## that read it; the stage draws ValgardGround ("ground").
 const FLOOR := {
 	"style": "hall",  # The feast hall's broad planks, rushes and hearth embers.
 	"base": Color(0.24, 0.16, 0.10),  # TUNING (not in GDD)
@@ -188,8 +283,8 @@ const STAGE := {
 	"short_name": "Valgard",
 	"chapter": "Chapter XVII",
 	"act": 11,  # The Hall of the Slain: TEMPORARY act number 11 (final slot VI; the reorder pass renumbers it).
-	"playable": false,  # Foundation stub: hidden from the stage select until phase 2.
-	"description": "A vast feast hall at the edge of the sky, long tables and shields on the walls. The benches stand empty, and every warrior who dies well here is carried back to them.",
+	"playable": false,  # Phase 2 built; the lead opens it.
+	"description": "A vast feast hall at the edge of the sky, long tables and shields on the walls. The benches stood empty since you took the world's dead; now the hall's own heroes rise from them.",
 	"unlock": {"stage": "barrow_fields", "boss_kills": 1},
 	"unlock_text": "Defeat Hrimgar the Draugr-King in the Barrow Fields to unlock.",
 	"boss": BOSS,
@@ -201,19 +296,17 @@ const STAGE := {
 	"consecration": {},  # A Covenant event: none here.
 	"crypt_defender": {},  # None here.
 	"arena": ARENA,
-	"ground": "norse",  # Placeholder NorseGround until phase 2.
+	"ground": "valgard",  # ValgardGround: the four zone floors.
 	"floor": FLOOR,
 	"enemy_hp_mult": ENEMY_HP_MULT,
 	"enemy_damage_mult": ENEMY_DAMAGE_MULT,
 	"enemy_mult_from": ENEMY_MULT_FROM,
 	"ash_mult": ASH_MULT,
-	"march": {},  # Phase 2 adds the clock-driven zones (MarchDirector).
+	"march": MARCH,  # The four clock-driven zones (MarchDirector).
 	"norse": true,  # The Hall of the Slain: the Long Winter, Berserkergang, the Rune-Stones (NorseRules).
-	"long_winter": LONG_WINTER,  # This stage's Long Winter overrides ({} = the defaults).
+	"long_winter": LONG_WINTER,  # This stage's Long Winter: the braziers by the map.
 	"rune_stones": RUNE_STONES,  # This stage's Rune-Stone overrides ({} = the defaults).
-	"zones": ZONES,  # Stub: the planned zones (phase 2 builds them).
-	# Music key "bronze" FOR NOW (the Act IV hymn, whose lazy pack also renders
-	# the horn and boulder sounds NorseRulesData.SOUNDS borrows): the audio pass
-	# adds the act's own score and the lead switches this at the merge.
+	"zones": ZONES,  # The four zones.
+	"valgard": VALGARD,  # ValgardDirector: the Feast, the Einherjar Champion.
 	"music": "valhall",  # Wave 1 integration: the act's own score (SoundData.SCORES; its pack renders with it)
 }

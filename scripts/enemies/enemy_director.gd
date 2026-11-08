@@ -178,6 +178,10 @@
 ##     2)"): on a stage with a "proving_moon" config it owns the
 ##     ProvingMoonDirector (the Warbeast, the Last Trophy objective;
 ##     `proving_moon`) and hands it the "warbeast" events. Null elsewhere.
+##   * The Hall of the Slain, Valgard (GDD §15.0 "Valgard, the Hall of Heroes
+##     (the Hall of the Slain phase 2)"): on a stage with a "valgard" config it
+##     owns the ValgardDirector (the Feast, the Einherjar Champion; `valgard`)
+##     and hands it the "einherjar_champion" events. Null elsewhere.
 ##   * Online co-op (CoopSession; docs/coop/DESIGN.md): every enemy steps with
 ##     its NEAREST standing necromancer bound (CoopSession.bind_nearest()), so
 ##     it advances on, aims at and recycles around that one (bosses and kits
@@ -386,6 +390,10 @@ var proving_moon: ProvingMoonDirector = null
 ## Reactor's vents, the Luminous Archon; StageRegistry "ark"; null on every
 ## other stage).
 var ark: ArkDirector = null
+# --- Act XI (temporary): Valgard ---
+## Valgard's mechanics (the Hall of the Slain: the Feast at the long tables,
+## the Einherjar Champion; StageRegistry "valgard"; null on every other stage).
+var valgard: ValgardDirector = null
 ## Sanctum kit bookkeeping: recent deaths, Confessor revivals, danger hints.
 var rites: CovenantRites
 ## The living miniboss shown on the HUD's miniboss bar (the Cathedral
@@ -590,6 +598,12 @@ func _ready() -> void:
 		ark.game = game
 		ark.config = stage_def["ark"]
 		add_child(ark)  # The Ark of the Concord's director.
+	# --- Act XI (temporary): Valgard ---
+	if not (stage_def.get("valgard", {}) as Dictionary).is_empty():
+		valgard = ValgardDirector.new()
+		valgard.game = game
+		valgard.config = stage_def["valgard"]
+		add_child(valgard)  # Valgard's director.
 
 
 # =====================================================================================
@@ -740,6 +754,9 @@ func step(delta: float) -> void:
 	# --- Act IX: the Ark ---
 	if ark != null:
 		ark.step(delta)  # The tanks, the vents.
+	# --- Act XI (temporary): Valgard ---
+	if valgard != null:
+		valgard.step(delta)  # The Feast, the Einherjar Champion.
 
 
 ## The Archive kinds' world hazards (ArchiveHazards), created on first use.
@@ -893,6 +910,9 @@ func objective_text() -> String:
 	# --- Act IX: the Ark ---
 	if ark != null and ark.objective_override() != "":
 		return ark.objective_override()  # The Luminous Archon, the Reaping.
+	# --- Act XI (temporary): Valgard ---
+	if valgard != null and valgard.objective_override() != "":
+		return valgard.objective_override()  # The Einherjar Champion.
 	if boss != null and not boss.active:
 		return String(boss_info["dead_objective"])
 	return segments[segment_index]["objective"]
@@ -1158,6 +1178,12 @@ func _run_event(ev: Dictionary) -> void:
 				ark.start_event(ev)
 			game.stat_add("wave_events", 1.0)
 			return  # The Ark's miniboss (ArkDirector).
+		# --- Act XI (temporary): Valgard ---
+		"einherjar_champion":
+			if valgard != null:
+				valgard.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return  # Valgard's miniboss (ValgardDirector).
 	show_banner(ev["banner"])
 	var groups: Array = ev["groups"]
 	if game.shogunate != null:
