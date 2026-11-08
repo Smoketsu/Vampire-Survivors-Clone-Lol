@@ -281,6 +281,14 @@ const UNLOCKS := {
 	"crop_circles": {"type": "passive", "boss": "harvester", "text": "Defeat the Harvester on the Ark of the Concord to unlock."},  # Its paired passive (own decision), unlocked with it
 	"the_unharvested": {"type": "title", "achievement": "last_harvest",
 		"text": "Earn The Last Harvest: beat the Harvester on the Ark of the Concord."},  # Own decision (the clear is recorded as a title, as Acts VI-VIII did)
+	# --- Act X: the Smuggler's Cutter ---
+	# Captain Crow's fall (owner-approved Act X proposal "Rewards": Chain Shot
+	# is Crow's) with its paired passive, offered on every stage; the stage's
+	# achievement Not One Aboard earns the act's counter-passive Barnacle Bones
+	# (offered only in Act X through its card row's "act"; the brief's pairing).
+	"chain_shot": {"type": "spell", "boss": "crow", "text": "Defeat Captain Crow on the Smuggler's Cutter to unlock."},  # Owner-approved Act X proposal
+	"bosuns_whistle": {"type": "passive", "boss": "crow", "text": "Defeat Captain Crow on the Smuggler's Cutter to unlock."},  # Chain Shot's paired passive (owner-approved proposal), unlocked with it
+	"barnacle_bones": {"type": "passive", "achievement": "not_one_aboard", "text": "Earn Not One Aboard: sink five boats before any of their crew climbs aboard, on the Smuggler's Cutter."},  # Brief: Not One Aboard unlocks Barnacle Bones
 }
 
 ## End-screen plate heading of a newly unlocked item, by type.

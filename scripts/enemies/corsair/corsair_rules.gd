@@ -192,7 +192,11 @@ func powder_blast(at: Vector2, keg: Dictionary, skip: Enemy = null) -> void:
 func danger_push(p: Vector2) -> Vector2:
 	if not enabled:
 		return Vector2.ZERO
-	return deck.danger_push(p) + sea.danger_push(p) + tide.danger_push(p)
+	var push := deck.danger_push(p) + sea.danger_push(p) + tide.danger_push(p)
+	# --- Act X: the Smuggler's Cutter --- off the ram longboat's point while its lane shows.
+	if game.enemies.cutter != null:
+		push += game.enemies.cutter.danger_push(p)
+	return push
 
 
 # =====================================================================================

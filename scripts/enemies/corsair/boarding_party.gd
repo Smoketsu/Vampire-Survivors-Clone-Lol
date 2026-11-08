@@ -38,7 +38,11 @@
 ## Determinism: the seeded gameplay RNG only (lanes), game time, ordered lists
 ## with pooling generations. Stats: boats_launched, boats_<size>, boats_hooked,
 ## boats_repelled, boats_sunk, boats_emptied, crew_aboard, crew_cancelled,
-## crew_drowned, boarding_refused, hooks_cut.
+## crew_drowned, boarding_refused, hooks_cut; the Smuggler's Cutter's
+## boats_sunk_clean (a boat sunk before any of its crew climbed aboard).
+## The Cutter's two hooks (its block): the Fog Bank's `fog_reveal` (a lane
+## shown only for its last seconds) and the STAGE boarding key "first_pour"
+## (s from hooking to the first crewman; absent = half a pour, as before).
 class_name BoardingParty
 extends RefCounted
 
@@ -74,6 +78,11 @@ var peak_queue: int = 0
 var peak_boats: int = 0
 ## Crew who stepped aboard this run.
 var aboard: int = 0
+# --- Act X: the Smuggler's Cutter ---
+## THE FOG BANK (CutterDirector sets it while its fog zone lasts; 0 = no fog):
+## a boat launched now shows its lane only for its last `fog_reveal` s (the
+## boat's "fog" flag; draw() hides the wake and the lantern before that).
+var fog_reveal: float = 0.0
 
 
 ## Builds Boarding for `p_game`; `p_enabled` false on a non-Act X stage.
@@ -232,6 +241,8 @@ func _launch(now: float) -> bool:
 	var b := {"id": launched, "state": LANE, "t": now, "size": size, "rail": lane[0], "n": lane[1], "lane": int(lane[2]),
 		"crew": [], "capacity": int(CorsairRulesData.BOAT_CREW[size]), "taken": 0,
 		"planks": int(CorsairRulesData.BOAT_PLANKS.get(size, 1)), "next_pour": 0.0, "boat": null, "boat_gen": 0, "hooks": []}
+	b["fog"] = fog_reveal  # Act X, the Cutter: the Fog Bank's hidden lane (0 = none).
+	b["poured"] = 0  # Act X, the Cutter: crew this boat put aboard (a clean sink has none).
 	boats.append(b)
 	_fill(b)
 	game.stat_add("boats_launched", 1.0)
@@ -304,7 +315,7 @@ func _hook(b: Dictionary, now: float) -> void:
 		(b["hooks"] as Array).append([hook, hook.generation])
 	b["state"] = HOOKED
 	b["t"] = now
-	b["next_pour"] = now + _time("pour_every") * 0.5
+	b["next_pour"] = now + (_time("pour_every") * 0.5 if _tide() or not cfg.has("first_pour") else float(cfg["first_pour"]))  # Act X, the Cutter: STAGE boarding "first_pour" (the crew climbs the hooks)
 	game.stat_add("boats_hooked", 1.0)
 	if game.corsair != null:
 		game.corsair.play_sound("hook_bite", rail, 0.2)
@@ -327,6 +338,7 @@ func _pour(b: Dictionary, k: int) -> void:
 	if bool(c["reck"]):
 		e.is_reckoning = true
 	aboard += 1
+	b["poured"] = int(b.get("poured", 0)) + 1
 	game.stat_add("crew_aboard", 1.0)
 
 
@@ -369,6 +381,8 @@ func on_boat_killed(boat: Enemy) -> void:
 		game.pickups.spawn(crate, int(cfg["crate_xp"]))
 		game.stat_add("boats_sunk", 1.0)
 		game.stat_add("crew_drowned", float(left))
+		if int(b.get("poured", 0)) == 0:
+			game.stat_add("boats_sunk_clean", 1.0)  # Act X, the Cutter: sunk before one of its crew climbed aboard (Not One Aboard).
 		if game.corsair != null:
 			game.corsair.play_sound("hull_creak", boat.position, 0.2)
 		return
@@ -396,6 +410,8 @@ func draw(ci: CanvasItem) -> void:
 	for b in boats:
 		var rail: Vector2 = b["rail"]
 		var n: Vector2 = b["n"]
+		if int(b["state"]) == LANE and float(b.get("fog", 0.0)) > 0.0 and t < float(b["t"]) + _time("lane_time") - float(b["fog"]):
+			continue  # Act X, the Cutter: the Fog Bank hides the lane until its last `fog` s.
 		if int(b["state"]) == LANE:
 			var k := clampf((t - float(b["t"])) / maxf(_time("lane_time"), 0.01), 0.0, 1.0)  # 0 -> 1 as it nears.
 			var d := 40.0

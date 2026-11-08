@@ -208,7 +208,9 @@ const ORDER := ["grave_dominion", "necrotic_vigor", "dark_command", "soul_recycl
 	# --- Act IX: the Proving Moon ---
 	"trophy_rack", "mirror_bones",
 	# --- Act IX: the Ark ---
-	"starseed", "crop_circles"]
+	"starseed", "crop_circles",
+	# --- Act X: the Smuggler's Cutter ---
+	"bosuns_whistle", "barnacle_bones"]
 
 ## Passives that only help summons (a "dead" level-up card while no summon
 ## class is owned, see AbilityManager.build_offers()).
@@ -258,7 +260,9 @@ const ARMY_PASSIVES := ["grave_dominion", "necrotic_vigor", "dark_command", "sou
 	# --- Act IX: the Proving Moon ---
 	"mirror_bones",
 	# --- Act IX: the Ark ---
-	"crop_circles"]
+	"crop_circles",
+	# --- Act X: the Smuggler's Cutter ---
+	"barnacle_bones"]
 
 # --- Act III: the Assembly Halls ---
 ## Overclock (paired with the Grave Drone): a summon class is "ranged" (and
@@ -1902,6 +1906,49 @@ const PASSIVES := {
 			{"special_hold": 0.18},  # TUNING (not in GDD)
 			{"special_hold": 0.24},  # TUNING (not in GDD)
 			{"special_hold": 0.30},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act X: the Smuggler's Cutter ---
+	# Bosun's Whistle (Chain Shot's paired passive; owner-approved Act X
+	# proposal: "Keelhauler (+ Bosun's Whistle)"; unlocked with the spell by
+	# Captain Crow and offered on every stage). Own decision on its effect: the
+	# whistle calls the shot home sooner: Chain Shot's cooldown is cooldown_cut
+	# shorter (ChainShot._cooldown(), the one read; stat chain_whistle_s; 0
+	# while not owned).
+	"bosuns_whistle": {
+		"display_name": "Bosun's Whistle",  # Owner-approved proposal
+		"icon": "bosuns_whistle",
+		"description": "The bosun's whistle calls your chain-shots home: Chain Shot recovers faster.",
+		"labels": {"cooldown_cut": ["Chain Shot cooldown", "neg_pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"cooldown_cut": 0.05},  # TUNING (not in GDD)
+			{"cooldown_cut": 0.10},  # TUNING (not in GDD)
+			{"cooldown_cut": 0.15},  # TUNING (not in GDD)
+			{"cooldown_cut": 0.20},  # TUNING (not in GDD)
+			{"cooldown_cut": 0.25},  # TUNING (not in GDD) first pass 0.30
+		],
+	},
+	# Act X's counter-passive Barnacle Bones (owner-approved Act X proposal:
+	# "summon hits on boats, hooks and surfaced creatures deal more"; unlocked
+	# by the Smuggler's Cutter's achievement Not One Aboard and offered only in
+	# Act X through its card row's "act": 10 until the reorder pass renumbers
+	# it). The foundation's hook reads it: CorsairRules.barnacle_mult() (1 +
+	# sea_damage, the bound player's), in CorsairKit.taken_mult() on boats,
+	# hooks and swimmers, for summon hits only.
+	"barnacle_bones": {
+		"display_name": "Barnacle Bones",  # Owner-approved proposal
+		"icon": "barnacle_bones",
+		"description": "Your dead grow barnacled bones: their blows on boats, grapple hooks and sea beasts hit harder.",
+		"labels": {"sea_damage": ["Summon damage to boats and sea beasts", "pct"]},
+		"act": 10,  # Owner-approved: the act's counter-passives are offered only in this act (Unlocks.act_allows()); temporary number until the reorder
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"sea_damage": 0.15},  # TUNING (not in GDD)
+			{"sea_damage": 0.30},  # TUNING (not in GDD)
+			{"sea_damage": 0.45},  # TUNING (not in GDD)
+			{"sea_damage": 0.60},  # TUNING (not in GDD)
+			{"sea_damage": 0.75},  # TUNING (not in GDD)
 		],
 	},
 }

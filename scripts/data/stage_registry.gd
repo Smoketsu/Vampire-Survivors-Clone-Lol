@@ -344,6 +344,13 @@
 ##   sea                — the stage's sea strikes (SeaStrikes): any key of
 ##                        CorsairRulesData.SEA ({} = the defaults).
 ##   zones              — Act X stubs too: the planned zones (names and starts).
+## --- Act X: the Smuggler's Cutter ---
+##   cutter             — CutterDirector config (CutterStage.CUTTER, Act X, the
+##                        Smuggler's Cutter: the powder barrels, the Fog Bank,
+##                        Bosun Gorran's ram longboat ("gorran" event), the
+##                        Fire Ship's patches, Not One Aboard); ground "cutter"
+##                        is its CutterGround (the tiled sea and deck, a look
+##                        per zone). Its boarding also sets "first_pour".
 ## --- Act XI (temporary): the Hall of the Slain ---
 ##   norse              — true: the Hall of the Slain's shared rules
 ##                        (NorseRules as Game.norse: the Long Winter,

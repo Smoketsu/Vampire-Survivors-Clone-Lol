@@ -174,6 +174,11 @@
 ##     crater, Infestation's eggs, Nothing Hatched, the Brood Matriarch;
 ##     `crash_site`) and hands it the "matriarch" events. Its eggs have their
 ##     own cap: regular_alive() leaves them out. Null elsewhere.
+##   * Act X, the Smuggler's Cutter (GDD §15.0 "The Smuggler's Cutter (Act X
+##     phase 2)"): on a stage with a "cutter" config it owns the
+##     CutterDirector (barrels, the Fog Bank, Gorran's ram, the Fire Ship;
+##     `cutter`) and hands it the "gorran" events; regular_alive() leaves its
+##     barrels and ram longboat out. Null elsewhere.
 ##   * Act IX, the Proving Moon (GDD §15.0 "The Proving Moon (Act IX phase
 ##     2)"): on a stage with a "proving_moon" config it owns the
 ##     ProvingMoonDirector (the Warbeast, the Last Trophy objective;
@@ -377,6 +382,11 @@ var liberty_heights: LibertyHeightsDirector = null
 ## Hatched, the Brood Matriarch; StageRegistry "crash_site"; null on every
 ## other stage).
 var crash_site: CrashSiteDirector = null
+# --- Act X: the Smuggler's Cutter ---
+## The Smuggler's Cutter's stage systems (Act X: the powder barrels, the Fog
+## Bank, Bosun Gorran's ram longboat, the Fire Ship's patches, Not One Aboard;
+## StageRegistry "cutter"; null on every other stage).
+var cutter: CutterDirector = null
 # --- Act IX: the Proving Moon ---
 ## The Proving Moon's mechanics (Act IX: the Warbeast, the Last Trophy
 ## objective; StageRegistry "proving_moon"; null on every other stage).
@@ -578,6 +588,12 @@ func _ready() -> void:
 		crash_site.game = game
 		crash_site.config = stage_def["crash_site"]
 		add_child(crash_site)  # The Crash Site's director.
+	# --- Act X: the Smuggler's Cutter ---
+	if not (stage_def.get("cutter", {}) as Dictionary).is_empty():
+		cutter = CutterDirector.new()
+		cutter.game = game
+		cutter.config = stage_def["cutter"]
+		add_child(cutter)  # The Smuggler's Cutter's director.
 	# --- Act IX: the Proving Moon ---
 	if not (stage_def.get("proving_moon", {}) as Dictionary).is_empty():
 		proving_moon = ProvingMoonDirector.new()
@@ -734,6 +750,9 @@ func step(delta: float) -> void:
 	# --- Act IX: the Crash Site ---
 	if crash_site != null:
 		crash_site.step(delta)  # The crater, Infestation's eggs, the Brood Matriarch.
+	# --- Act X: the Smuggler's Cutter ---
+	if cutter != null:
+		cutter.step(delta)  # The powder barrels, the Fog Bank, Gorran's ram, the Fire Ship.
 	# --- Act IX: the Proving Moon ---
 	if proving_moon != null:
 		proving_moon.step(delta)  # The Warbeast.
@@ -798,6 +817,8 @@ func regular_alive() -> int:
 		n -= crash_site.eggs_alive()  # Act IX, the Crash Site: Infestation's eggs have their own cap.
 	if game.corsair != null:
 		n += game.corsair.alive_adjust()  # Act X: crew waiting for a boat count; boats and hooks do not.
+	if cutter != null:
+		n -= cutter.structures_alive()  # Act X, the Cutter: the powder barrels and the ram longboat are not crew.
 	if game.dynasty != null:
 		n -= game.dynasty.rebirth.alive_count()  # Act XII (temporary): Rebirth's cartouches have their own cap.
 	return n
@@ -887,6 +908,9 @@ func objective_text() -> String:
 	# --- Act IX: the Crash Site ---
 	if crash_site != null and crash_site.objective_override() != "":
 		return crash_site.objective_override()  # The Brood Matriarch.
+	# --- Act X: the Smuggler's Cutter ---
+	if cutter != null and cutter.objective_override() != "":
+		return cutter.objective_override()  # Bosun Gorran.
 	# --- Act IX: the Proving Moon ---
 	if proving_moon != null and proving_moon.objective_override() != "":
 		return proving_moon.objective_override()  # The Last Trophy's countdown, the Warbeast.
@@ -1146,6 +1170,12 @@ func _run_event(ev: Dictionary) -> void:
 				crash_site.start_event(ev)
 			game.stat_add("wave_events", 1.0)
 			return  # The Crash Site's miniboss (CrashSiteDirector).
+		# --- Act X: the Smuggler's Cutter ---
+		"gorran":
+			if cutter != null:
+				cutter.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return  # The Cutter's miniboss and his ram longboat (CutterDirector).
 		# --- Act IX: the Proving Moon ---
 		"warbeast":
 			if proving_moon != null:

@@ -110,7 +110,9 @@ const SPELL_ORDER := ["shadow_bolt", "orb_shield", "shadow_blast",
 	# --- Act IX: the Proving Moon ---
 	"soul_caster",
 	# --- Act IX: the Ark ---
-	"tractor_lift"]
+	"tractor_lift",
+	# --- Act X: the Smuggler's Cutter ---
+	"chain_shot"]
 
 ## Spell definitions.
 ##   display_name — UI name.
@@ -939,6 +941,30 @@ const SPELLS := {
 			{"damage": 56.0, "cooldown": 2.9, "lift_time": 0.95, "slam_radius": 56.0, "slam_share": 0.51},  # TUNING (not in GDD)
 			{"damage": 66.0, "cooldown": 2.75, "lift_time": 0.95, "slam_radius": 60.0, "slam_share": 0.54},  # TUNING (not in GDD)
 			{"damage": 78.0, "cooldown": 2.6, "lift_time": 1.0, "slam_radius": 64.0, "slam_share": 0.57},  # TUNING (not in GDD) Hero's Fist Lv5 72 / 2.4 s
+		],
+	},
+	# --- Act X: the Smuggler's Cutter ---
+	# Chain Shot (GDD §15.0 "Chain Shot, Keelhauler, Bosun's Whistle and the
+	# Marooned Quartermaster (Act X)"; owner-approved proposal: "a spectral
+	# chain-shot spins through a line of enemies and returns"; unlocked by
+	# slaying Captain Crow, UnlockData): every `cooldown` s `shots` chain-shots
+	# fly `range` px out at `speed` px/s through the nearest foes and spin back
+	# to the necromancer, striking every foe within `width` px once out and
+	# once back for `damage`. Logic: ChainShot; fixed rules: ChainShotData;
+	# Bosun's Whistle (its paired passive) shortens its cooldown. A line
+	# piercer that hits twice (Hearse Run's lane, half its damage a hit).
+	"chain_shot": {
+		"display_name": "Chain Shot",  # Owner-approved proposal
+		"icon": "chain_shot",
+		"description": "A spectral chain-shot spins through a line of foes and returns.",
+		"shared_card_pool": true,  # TUNING (not in GDD) an unlocked Act X spell: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Hit damage", "shots": "Chain-shots", "range": "Range (px)", "cooldown": "Cooldown (s)"},
+		"levels": [
+			{"damage": 10.0, "shots": 1, "range": 230.0, "speed": 380.0, "width": 14.0, "cooldown": 2.8},  # TUNING (not in GDD) every foe in the line is hit twice (first pass 11)
+			{"damage": 12.0, "shots": 1, "range": 240.0, "speed": 390.0, "width": 15.0, "cooldown": 2.7},  # TUNING (not in GDD) first pass 13
+			{"damage": 13.0, "shots": 2, "range": 250.0, "speed": 400.0, "width": 16.0, "cooldown": 2.6},  # TUNING (not in GDD) first pass 15
+			{"damage": 15.0, "shots": 2, "range": 265.0, "speed": 410.0, "width": 17.0, "cooldown": 2.5},  # TUNING (not in GDD) first pass 18
+			{"damage": 18.0, "shots": 3, "range": 280.0, "speed": 420.0, "width": 18.0, "cooldown": 2.4},  # TUNING (not in GDD) Hearse Run Lv5 26 / 2.8 s (one hit a foe); first pass 21
 		],
 	},
 }

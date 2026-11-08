@@ -19,7 +19,9 @@
 ##                  first appearance, its damage to the necromancer and to summons
 ##   corsair stage: the Act X stage itself (stub status, deck, boss, Soul Ash,
 ##                  the Reckoning)
-## Phase 2 adds one line per stage system here (each stage in its own block).
+## Phase 2 adds one line per stage system here (each stage in its own block):
+## the Smuggler's Cutter's are CutterReport's (cutter, cutter crew, bosun
+## gorran, captain crow).
 ## Read-only: it never changes the run.
 class_name CorsairReport
 extends RefCounted
@@ -52,6 +54,8 @@ static func print_lines(game: Game, st: Dictionary) -> void:
 			EmpireReport._clock(float(sd.get("enemy_mult_from", 0.0))), float(sd["ash_mult"]),
 			String((sd["reckoning"] as Dictionary).get("kind", "inquisitor")), str(c.tide.enabled)])
 	# Phase 2: each Act X stage's own lines go here (its stage, kinds and boss).
+	# --- Act X: the Smuggler's Cutter ---
+	CutterReport.print_lines(game, st)  # The barrels, fog, Gorran's ram, the Fire Ship; the Grappler and Boatswain; Gorran; Crow.
 
 
 ## The "boarding" line (BoardingParty).

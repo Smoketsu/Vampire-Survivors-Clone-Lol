@@ -18,6 +18,9 @@
 ##   skiff / longboat / raider_ship — the boats (structures BoardingParty
 ##                      brings; never in a timeline).
 ##   boarding_hook    — a boat's grapple (a 40 HP structure at the rail).
+## Phase 2 (the Smuggler's Cutter) adds the shared grappler (soldier, male: a
+## hook line that drags one summon to the rail) and boatswain (support, male:
+## a bellow of speed and shields to his crew), at the end of ENEMIES.
 ## Phase 2 adds the stage kinds in CutterEnemyData / GalleonEnemyData /
 ## MaelstromEnemyData (the Grappler, Gunnery Mate, Boatswain, Voodoo Navigator,
 ## Gunboat, Hull Crab, Sea Serpent, the ghost crew, the bosses' allies);
@@ -368,4 +371,63 @@ const ENEMIES := {
 		"is_structure": true,
 		"hook": true,  # A boat's grapple (BoardingParty)
 	},  # The Grapple Hook.
+	# --- Act X: the Smuggler's Cutter --- (shared rows: any stage may field them)
+	# Soldier, male (owner-approved proposal: "Throws a hook line that drags one summon to the rail (into the rail
+	# band) | Kill first; Sea Legs passive"). GrapplerKit: every grapple "every" s, when a grounded summon stands
+	# within grapple "range" px, he swings the hook (windup s, its line drawn), the hook flies (throw s) and bites:
+	# the summon is HELD (SummonedUnit.held_until + one CombatResolver.stun_unit(u, drag, "grapple")) and DRAGGED
+	# toward the nearest rail at pull px/s x Sea Legs (TerrainSlow.push_summon(), the act's one shove path) for drag
+	# s or until it is rail_stop px from the rail; then it is let go. Killing him cuts the line. A body wider than
+	# max_radius px (an Abomination, a Colossus, a Golem) is too heavy to drag (the tentacle's rule).
+	"grappler": {
+		"display_name": "Grappler",
+		"max_hp": 30.0,  # TUNING (not in GDD)
+		"move_speed": 56.0,  # TUNING (not in GDD) px/s
+		"damage": 4.0,  # TUNING (not in GDD) per hit, before the time scaling
+		"attack_interval": 1.1,  # TUNING (not in GDD) s
+		"attack_range": 5.0,  # TUNING (not in GDD) px
+		"radius": 9.0,  # TUNING (not in GDD) px
+		"armor": 0.0,  # TUNING (not in GDD)
+		"xp": 3,  # TUNING (not in GDD)
+		"behavior": "melee",
+		"projectile_speed": 0.0,  # TUNING (not in GDD) px/s (0 = none)
+		"undead_damage_mult": 1.0,
+		"heal_amount": 0.0,
+		"heal_interval": 0.0,
+		"heal_radius": 0.0,
+		"target_priority": 0.6,  # TUNING (not in GDD) 0..1; owner-approved proposal: "kill first"
+		"mass": 1.0,  # TUNING (not in GDD)
+		"faction": FACTION,
+		"kit": "grappler",
+		"crew": true,
+		"grapple": {"range": 180.0, "min_range": 34.0, "every": 7.5, "windup": 0.6, "throw": 0.3, "drag": 1.4,  # TUNING (not in GDD)
+			"pull": 150.0, "rail_stop": 28.0, "damage": 3.0, "max_radius": 13.0},  # TUNING (not in GDD) the hook line (owner-approved: "drags one summon to the rail")
+	},  # The Grappler.
+	# Support, male (owner-approved proposal: "Bellow: +20% move speed and a short shield to crew within 200 px |
+	# Priority target"). BoatswainKit: every bellow "every" s (windup s, his whistle) every OTHER living crewman within
+	# radius px moves speed x faster for time s (Enemy.apply_buff(), the one aura buff path) and gains a shield of
+	# shield x its max HP for time s (Enemy.holy_shield, the one enemy shield path).
+	"boatswain": {
+		"display_name": "Boatswain",
+		"max_hp": 40.0,  # TUNING (not in GDD)
+		"move_speed": 50.0,  # TUNING (not in GDD) px/s
+		"damage": 3.0,  # TUNING (not in GDD) per hit, before the time scaling
+		"attack_interval": 1.2,  # TUNING (not in GDD) s
+		"attack_range": 5.0,  # TUNING (not in GDD) px
+		"radius": 10.0,  # TUNING (not in GDD) px
+		"armor": 0.0,  # TUNING (not in GDD)
+		"xp": 4,  # TUNING (not in GDD)
+		"behavior": "melee",
+		"projectile_speed": 0.0,  # TUNING (not in GDD) px/s (0 = none)
+		"undead_damage_mult": 1.0,
+		"heal_amount": 0.0,
+		"heal_interval": 0.0,
+		"heal_radius": 0.0,
+		"target_priority": 0.75,  # TUNING (not in GDD) 0..1; owner-approved proposal: "priority target"
+		"mass": 1.1,  # TUNING (not in GDD)
+		"faction": FACTION,
+		"kit": "boatswain",
+		"crew": true,
+		"bellow": {"every": 8.0, "windup": 0.5, "radius": 200.0, "speed": 1.2, "shield": 0.25, "time": 4.0},  # Owner-approved proposal: +20% speed, 200 px; TUNING (not in GDD) the rest
+	},  # The Boatswain.
 }
