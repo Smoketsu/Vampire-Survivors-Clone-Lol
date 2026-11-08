@@ -7,7 +7,10 @@
 ## barrels, cannons, the Hollow Queen's wheel) until each stage brings its own
 ## obstacle art. Shapes are discs (SpriteBank's texture) and rects: no
 ## polygon is redrawn every frame (the Web GL rule in CLAUDE.md). Every Black
-## Tide kind without a shape of its own gets the deckhand. Purely visual.
+## Tide kind without a shape of its own gets the deckhand. The Smuggler's
+## Cutter's block draws its powder barrel with the deck furniture's barrel art
+## and Crow's sloop with the raider ship's; the deck_ furniture kinds (the art
+## pass's obstacles) fall back to the stub shapes here. Purely visual.
 class_name CorsairGlyphs
 extends RefCounted
 
@@ -25,6 +28,23 @@ static func draw_enemy(ci: CanvasItem, kind: String, o: Vector2, r: float, flash
 	if EnemyDirector.corsair_def(kind).is_empty():
 		return false
 	# Phase 2: each Act X stage's own fallbacks go here, before the shared kinds'.
+	# --- Act X: the Smuggler's Cutter ---
+	match kind:
+		"powder_barrel":
+			if SpriteBank.draw(ci, CutterEnemyData.BARREL_SPRITE, o, flash):
+				return true  # The deck furniture's barrel art.
+			SpriteBank.draw_disc(ci, o, r, Glyphs._c(INK, flash))
+			SpriteBank.draw_disc(ci, o, r - 1.5, Glyphs._c(Palette.CORSAIR_OAK_DARK, flash))
+			ci.draw_rect(Rect2(o + Vector2(-r + 2.0, -1.0), Vector2((r - 2.0) * 2.0, 2.0)), Palette.CORSAIR_POWDER_LIGHT)  # An iron hoop.
+			return true
+		"crow_sloop":
+			if SpriteBank.draw(ci, CutterEnemyData.SLOOP_SPRITE, o, flash):
+				return true  # The raider ship's art (Crow's sloop has none of its own).
+			_boat(ci, o, r, flash, true)
+			return true
+		"bosun_gorran":
+			_crewman(ci, o, r, flash, Palette.CORSAIR_SEA_DARK, false)
+			return true
 	match kind:
 		"musketeer":
 			_crewman(ci, o, r, flash, Palette.CORSAIR_SEA, true)
@@ -126,17 +146,17 @@ static func _boat(ci: CanvasItem, o: Vector2, r: float, flash: bool, ship: bool)
 static func draw_obstacle(ci: CanvasItem, o: Arena.Obstacle) -> bool:
 	var c := o.center
 	var kind := o.kind
-	if not (kind.begins_with("cutter_") or kind.begins_with("galleon_") or kind.begins_with("maelstrom_")):
+	if not (kind.begins_with("cutter_") or kind.begins_with("galleon_") or kind.begins_with("maelstrom_") or kind.begins_with("deck_")):
 		return false
 	var ghost := kind.begins_with("maelstrom_")  # The Hollow Queen: rotten, green-washed.
 	var wood := Palette.CORSAIR_OAK_LIGHT if not ghost else Palette.CORSAIR_SPECTRE_DARK
 	var dark := Palette.CORSAIR_OAK_DARK
-	if kind.ends_with("_mast") or kind.ends_with("_wheel") or kind.ends_with("_barrel"):
+	if kind.ends_with("_mast") or kind.ends_with("_wheel") or kind.ends_with("_barrel") or kind.ends_with("_barrels"):
 		var r := o.radius
 		SpriteBank.draw_disc(ci, c + Vector2(3, 4), r, Color(0, 0, 0, 0.35))
 		SpriteBank.draw_disc(ci, c, r, INK)
-		SpriteBank.draw_disc(ci, c, r - 1.5, dark if kind.ends_with("_barrel") else wood)
-		if kind.ends_with("_barrel"):
+		SpriteBank.draw_disc(ci, c, r - 1.5, dark if kind.ends_with("_barrel") or kind.ends_with("_barrels") else wood)
+		if kind.ends_with("_barrel") or kind.ends_with("_barrels"):
 			ci.draw_rect(Rect2(c + Vector2(-r + 2.0, -1.0), Vector2((r - 2.0) * 2.0, 2.0)), Palette.CORSAIR_POWDER_LIGHT)  # An iron hoop.
 			SpriteBank.draw_disc(ci, c, r * 0.3, Palette.CORSAIR_LANTERN_DARK)  # Powder marks.
 		elif kind.ends_with("_wheel"):

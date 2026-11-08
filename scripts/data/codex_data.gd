@@ -309,11 +309,15 @@ const CONCORD_BOSSES: Array[String] = ["hive_mother", "vrask_tal", "harvester"]
 ## 1)"; the Black Tide tab): the Brotherhood's crews, the sea's beasts, the
 ## boats and their hooks, then its stage bosses (StageRegistry.BOSS_ARRIVALS
 ## ids). Each Act X stage adds its own kinds as it is built (phase 2).
-const CORSAIR_CREW: Array[String] = ["deckhand", "musketeer", "powder_runner", "swashbuckler", "boarding_bruiser"]
+const CORSAIR_CREW: Array[String] = ["deckhand", "musketeer", "powder_runner", "swashbuckler", "boarding_bruiser",
+	# --- Act X: the Smuggler's Cutter --- (the shared Grappler and Boatswain; the miniboss with the crews, as Act VIII placed Mammoth with the army)
+	"grappler", "boatswain", "bosun_gorran"]
 ## The sea's beasts (rows "water").
 const CORSAIR_SEA: Array[String] = ["reef_shark", "kraken_arm"]
 ## The boats and their grapple hooks (structures BoardingParty brings).
-const CORSAIR_BOATS: Array[String] = ["skiff", "longboat", "raider_ship", "boarding_hook"]
+const CORSAIR_BOATS: Array[String] = ["skiff", "longboat", "raider_ship", "boarding_hook",
+	# --- Act X: the Smuggler's Cutter --- (Gorran's ram longboat; the powder barrel and Crow's sloop have no entry: never a Codex kill)
+	"ram_longboat"]
 ## Black Tide stage bosses (StageRegistry.BOSS_ARRIVALS ids).
 const CORSAIR_BOSSES: Array[String] = ["crow", "marrec", "vandermere"]
 # --- Act XI (temporary): the Hall of the Slain ---
@@ -601,6 +605,11 @@ const DESCRIPTIONS: Dictionary = {
 	"crow": "Captain Ezekiel Crow, the Gull King: broadsides, a cutlass duel, and his own ship set ablaze.",  # Owner-approved Act X proposal
 	"marrec": "Admiral Isabeau Marrec, the Sea Wolf: her fleet, the boarding plank and cursed gold.",  # Owner-approved Act X proposal
 	"vandermere": "Captain Cornelius Vandermere, lashed to the wheel of the Hollow Queen behind an oath only the dead can break.",  # Owner-approved Act X proposal
+	# --- Act X: the Smuggler's Cutter ---
+	"grappler": "He throws a hook line and drags one of your dead to the rail, where the sea strikes. Kill him first.",  # Owner-approved Act X proposal
+	"boatswain": "His bellow drives his crew faster and shields them for a moment. A priority target.",  # Owner-approved Act X proposal
+	"bosun_gorran": "Bosun Gorran rams the hull in his longboat, staggering your whole ring, then swings his chain-hook through it.",  # Owner-approved Act X proposal (miniboss)
+	"ram_longboat": "A heavy longboat with an iron ram. Sink it before its crew is aboard and they drown with it.",  # Owner-approved Act X proposal
 	# --- Act XI (temporary): the Hall of the Slain ---
 	"raider": "Raiders with axe and round shield, come south in crowds. Anything cuts them down.",  # Owner-approved proposal (LAST_SIX_ACTS.md)
 	"shield_maiden": "A shield-maiden: her shield bash throws one of your dead out of the ring. Flank her.",  # Owner-approved proposal
@@ -933,6 +942,8 @@ const ACHIEVEMENT_ICONS: Dictionary = {
 	"the_hunter_hunted": "ach_the_hunter_hunted",  # TUNING (not in GDD)
 	# --- Act IX: the Ark ---
 	"last_harvest": "ach_last_harvest",  # TUNING (not in GDD)
+	# --- Act X: the Smuggler's Cutter ---
+	"not_one_aboard": "ach_not_one_aboard",  # TUNING (not in GDD)
 }
 ## IconGlyph kind drawn when an achievement badge PNG is missing.
 const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
@@ -994,6 +1005,8 @@ const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
 	"the_hunter_hunted": "mirror_bones",
 	# --- Act IX: the Ark ---
 	"last_harvest": "tractor_lift",
+	# --- Act X: the Smuggler's Cutter ---
+	"not_one_aboard": "barnacle_bones",
 }
 ## Screen title (TITLE tier).
 const TITLE: String = "Codex"  # TUNING (not in GDD)

@@ -2494,6 +2494,34 @@ Arm**, plus the boats and their hooks. The Codex has a **Black Tide** tab (the B
 Autotest: `--stage=cutter|galleon|maelstrom`, `--boss=crow|marrec|vandermere`, `--spawn=` with the kinds above; lines
 `boarding`, `deck`, `sea strikes`, `black tide`, `corsair kinds`, `corsair stage`. The deck in the game:
 `docs/tide/deck_spike.png` and `docs/tide/deck_spike_rail.png`.
+
+<!-- --- Act X: the Smuggler's Cutter --- -->
+**The Smuggler's Cutter** (`cutter`, built in phase 2; GDD §15.0 "The Smuggler's Cutter (Act X phase 2)" and the rows
+after it). A night-time sloop slips out of a ruined harbour with the Covenant's coast burning behind it. The deck is the
+art pass's night planks with a single mast, one hatch, two deck guns and lashed barrels; two boarding points a side,
+skiffs and longboats only; the camera never moves. Four zones change the look and the timeline, not the map: **the
+Harbour Mouth** (the burning coast), **Open Water**, **the Fog Bank** (a boat shows its lane only for its last 2 s:
+watch the rail) and **the Cove** (black cliffs). The boats come thick and fast, and the shared **Grappler** (a hook line
+that drags one of your dead to the rail) and **Boatswain** (a bellow that speeds and shields his crew) join the crews.
+- **Powder barrels** stand along both rails and are restocked every zone. Any hit sets one off: a blast that hurts both
+  sides and knocks everyone 120 px, so crews crowding the rail go over it.
+- **Bosun Gorran and the Ram Longboat** (the miniboss, 11:00): a heavy longboat shows its lane, rams the hull (your
+  whole army is staggered back) and pours Gorran and his crew aboard. He sweeps his chain-hook through the ring and
+  bellows his crew on. Sink the longboat and the crew still aboard drowns.
+- **Captain Ezekiel Crow, the Gull King** (17:00): **Broadside** (his sloop alongside, out of reach: rolling lines of
+  cannon fire across the deck every 20 s that hit both armies and throw boarders overboard, and his crew boarding
+  double; sink the sloop or outlast it), **the Duel** (he swings aboard on a landing circle and fights with cutlass and
+  pistol, leaping your ring again and again) and **the Fire Ship** (below 40%: his burning sloop rams the hull and
+  burning planks spread as short fire patches until he falls). A short ending text only.
+- **Rewards:** slaying Crow unlocks the spell **Chain Shot** (spectral chain-shots spin out through a line of foes and
+  back, hitting each twice; evolves into **Keelhauler**, which also throws every foe it strikes aside, with the new
+  passive **Bosun's Whistle**: a shorter cooldown) and through it the character **the Marooned Quartermaster** (Spare
+  Shot: one more chain-shot). The achievement **Not One Aboard** (on the Cutter, sink five boats before any of their crew
+  climbs aboard; the crew needs 1 s to climb the hooks here) unlocks the act's counter-passive **Barnacle Bones** (summon
+  hits on boats, hooks and sea beasts deal more; offered only in this act).
+- Autotest lines: `cutter` (barrels, fog boats, the ram, the fire patches, clean sinks), `cutter crew`, `bosun gorran`,
+  `captain crow`; `act X spell` / `act X passives` on any stage when Chain Shot, Bosun's Whistle or Barnacle Bones was
+  taken (`--spells=chain_shot`, `--character=marooned_quartermaster`).
 ### The Hall of the Slain (foundation, not yet playable)
 
 <!-- --- Act XI (temporary): the Hall of the Slain --- -->
@@ -3307,6 +3335,10 @@ scripts/
                             furniture (masts, hatches, barrels, cannons, the wheel; Act X)
     corsair_report.gd       The autotest's Act X lines (boarding, deck, sea strikes, black tide, corsair kinds,
                             corsair stage)
+    cutter_ground.gd        The Smuggler's Cutter's floor: the sea tile, the night-deck plank tile in the deck's
+                            outline, a look per zone (the burning coast, the fog's grey, the cove's cliffs; Act X)
+    cutter_report.gd        The autotest's Cutter lines (cutter, cutter crew, bosun gorran, captain crow) and the
+                            Chain Shot / Bosun's Whistle / Barnacle Bones lines (Act X)
     fort_kessler_report.gd  The autotest's Fort Kessler lines (the stage, its kinds, Mammoth, the threats, Harrow) and
                             its items (Bone Mines, Tripwire, Armour-Piercing Bones)
     fort_kessler_ground.gd  Fort Kessler's floor: CityGround with each zone's look (checkpoints, minefields, aprons,
@@ -3651,7 +3683,15 @@ scripts/
       black_tide.gd         The Black Tide Reckoning: the whole rail boards, rail strikes, the great wave
       corsair_kit.gd        CorsairKit: the water state, surfacing, the submerged look, Barnacle Bones' read
       *_kit.gd              deckhand, musketeer, powder_runner (the keg), swashbuckler (the lunge),
-                            boarding_bruiser, reef_shark, kraken_arm, corsair_boat, boarding_hook
+                            boarding_bruiser, reef_shark, kraken_arm, corsair_boat, boarding_hook; grappler (the
+                            hook line's drag to the rail), boatswain (the bellow: bellow_at())
+      cutter_director.gd    The Smuggler's Cutter: powder barrels restocked per zone, the Fog Bank's hidden lanes,
+                            Bosun Gorran's ram longboat (the hull stagger, ram_stagger()), the Fire Ship's patches
+                            (HellPits.open_pit()), Not One Aboard (Act X)
+      powder_barrel_kit.gd, bosun_gorran_kit.gd  The Cutter's barrel (any hit: the powder blast) and miniboss
+                            (the chain sweep, the bellow)
+      boss_crow.gd          Captain Crow: Broadside (his sloop, the cannon lines, his crew), the Duel (leaps,
+                            pistol, cutlass), the Fire Ship
     concord/                The Concord of Stars (Act IX): its kits ("<id>_kit.gd", loaded by name after the
                             City's) and bosses ("boss_<id>.gd", phase 2), and the act's shared rules:
       concord_rules.gd      Game.concord: owns the beams, Abduction, Terraforming and the Final Harvest;
@@ -4021,10 +4061,15 @@ scripts/
                             Bruiser, Reef Shark, Kraken Arm), the boats (skiff, longboat, raider_ship) and the
                             grapple hook; the crew / water / strike / boat / hook / keg / lunge keys; the Black Tide's
                             kind and companions (Act X; cutter_ / galleon_ / maelstrom_enemy_data.gd: each stage's
-                            own, empty until phase 2)
+                            own; the Cutter's block adds the shared Grappler and Boatswain)
+    cutter_enemy_data.gd    The Smuggler's Cutter's table: the powder barrel, Bosun Gorran, his ram longboat,
+                            Crow's sloop (Act X)
+    crow_data.gd            Captain Crow's arrival and fight (Broadside, the Duel, the Fire Ship) (Act X)
+    chain_shot_data.gd      Chain Shot / Keelhauler rules, Bosun's Whistle key, Spare Shot key (Act X; the spell
+                            node is abilities/spells/chain_shot.gd)
     corsair_rules_data.gd   Act X's shared rules: DECK, BOARDING (BOAT_CREW, BOAT_PLANKS), SEA (TENTACLE, LEAP),
                             BLACK_TIDE, the SOUNDS map, the Sea Legs / Barnacle Bones keys
-    stages/cutter_stage.gd         Act X stubs: the Smuggler's Cutter, the Treasure Galleon and the Maelstrom; act 10
+    stages/cutter_stage.gd         Act X: the Smuggler's Cutter (built: zones, the "cutter" config), the Treasure Galleon and the Maelstrom; act 10
     stages/galleon_stage.gd        (temporary; final slot II), "corsair": true, "deck", "boarding", "sea", a FIXED
     stages/maelstrom_stage.gd      furniture layout ("fixed"), a timeline of the shared kinds, the Black Tide,
                                    placeholder look / bosses

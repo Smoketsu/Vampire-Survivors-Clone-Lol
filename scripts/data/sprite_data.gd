@@ -600,6 +600,8 @@ const HEIGHTS: Dictionary = {
 	"player/ghost_helmsman": 56.0,  # TUNING (not in GDD) THE GHOST HELMSMAN, male; walk strip
 	"summons/powder_wraith": 44.0,  # TUNING (not in GDD) a POWDER WRAITH, undead skeleton; walk strip
 	"summons/magazine_lord": 52.0,  # TUNING (not in GDD) a MAGAZINE LORD, undead skeleton; walk strip
+	# --- Act X: the Smuggler's Cutter ---
+	"obstacles/deck_barrels_s": 21.0,  # TUNING (not in GDD) the deck furniture's two lashed barrels (30 x 21), drawn as the Cutter's Powder Barrel enemy (CutterEnemyData.BARREL_SPRITE)
 }
 
 ## Height (world px) used for a key missing from HEIGHTS.

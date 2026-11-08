@@ -444,7 +444,9 @@ const ACHIEVEMENT_ORDER := ["bone_legion", "heretics_bane", "dread_sovereign", "
 	# --- Act IX: the Proving Moon ---
 	"the_hunter_hunted",
 	# --- Act IX: the Ark ---
-	"last_harvest"]
+	"last_harvest",
+	# --- Act X: the Smuggler's Cutter ---
+	"not_one_aboard"]
 
 ## Achievement definitions (GDD §9.4 "Example Achievement Unlocks"). Each
 ## achievement is tracked and recorded in the save and pays a one-time Soul
@@ -691,6 +693,17 @@ const ACHIEVEMENTS := {
 	# clear, with the title The Unharvested (UnlockData / TitleData).
 	"last_harvest": {"display_name": "The Last Harvest", "description": "Beat the Harvester on the Ark of the Concord",
 		"stat": "boss_kills", "stage": "ark", "goal": 1, "unlock": "The title The Unharvested", "bounty": 500},  # Owner-approved proposal; bounty TUNING (not in GDD) as Last Supper
+	# --- Act X: the Smuggler's Cutter ---
+	# Not One Aboard (owner-approved Act X proposal: "sink five boats before a
+	# single crewman climbs aboard, on the Cutter"). Own reading, recorded in
+	# GDD §15.0: five CLEAN SINKS in one Cutter run, each a boat sunk before any
+	# of ITS crew climbed aboard (BoardingParty stat boats_sunk_clean; the
+	# Cutter's crew climbs the hooks for 1 s first, its STAGE first_pour).
+	# CutterDirector sets the run stat cutter_not_one_aboard; MetaProgress
+	# counts the runs (lifetime not_one_aboard_runs). It unlocks the
+	# counter-passive Barnacle Bones (the brief's pairing).
+	"not_one_aboard": {"display_name": "Not One Aboard", "description": "On the Smuggler's Cutter, sink five boats before any of their crew climbs aboard",
+		"stat": "not_one_aboard_runs", "goal": 1, "unlock": "The Barnacle Bones passive", "bounty": 300},  # Owner-approved Act X proposal; bounty TUNING (not in GDD) as Nothing Hatched
 }
 
 # --- Content wave 2: B. Achievement rewards ---

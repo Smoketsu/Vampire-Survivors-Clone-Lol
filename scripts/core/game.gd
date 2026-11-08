@@ -501,6 +501,12 @@ func _ready() -> void:
 			csg.look = stage_def.get("floor", {})
 			csg.game = self
 			ground = csg
+		# --- Act X: the Smuggler's Cutter ---
+		"cutter":
+			var cug := CutterGround.new()  # Act X: the Cutter's tiled sea and deck, a look per zone (CutterStage.ZONES).
+			cug.look = stage_def.get("floor", {})
+			cug.game = self
+			ground = cug
 		# --- Act XI (temporary): the Hall of the Slain ---
 		"norse":
 			var nog := NorseGround.new()  # The Norse stubs' placeholder floor (the STAGE's "floor").

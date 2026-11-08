@@ -108,7 +108,9 @@ const ORDER := ["void_barrage", "eclipse_ward", "abyssal_detonation",
 	# --- Act IX: the Proving Moon ---
 	"apex_predator",
 	# --- Act IX: the Ark ---
-	"star_abduction"]
+	"star_abduction",
+	# --- Act X: the Smuggler's Cutter ---
+	"keelhauler"]
 
 ## Evolution definitions.
 ##   base         — spell id that evolves (AbilityData.SPELLS key).
@@ -801,6 +803,27 @@ const EVOLUTIONS := {
 		"stats": {
 			"damage": 88.0, "cooldown": 2.4, "lifts": 3, "lift_time": 1.2, "slam_radius": 70.0, "slam_share": 0.5,  # TUNING (not in GDD) first pass 96 / 0.55
 			"pull": 120.0, "pull_force": 260.0, "quake_share": 0.18,  # TUNING (not in GDD) the evolution flag: the pull round each slam (first pass 0.3: 244k damage, 95k of it quake, in the forced seed-7 Graveyard run)
+		},
+	},
+	# --- Act X: the Smuggler's Cutter ---
+	# Keelhauler (GDD §15.0 "Chain Shot, Keelhauler, Bosun's Whistle and the
+	# Marooned Quartermaster (Act X)"; owner-approved proposal "Chain Shot ->
+	# Keelhauler (+ Bosun's Whistle)"): Chain Shot + Bosun's Whistle (a NEW
+	# passive, owner rule: at Lv 5). Own decision on its kit: heavier, wider
+	# shots that KNOCK every foe they strike `knock` px off the line (never a
+	# boss, miniboss or structure; on the Black Tide's decks, over the rail).
+	# No pull (owner: the act's spells knock back, chain and bombard). Detected
+	# by the "knock" key.
+	"keelhauler": {
+		"base": "chain_shot",
+		"passive": "bosuns_whistle",
+		"display_name": "Keelhauler",  # Owner-approved proposal
+		"icon": "keelhauler",
+		"description": "Barnacled chain-shots tear through the line and back, throwing every foe they strike aside.",
+		"labels": {"damage": "Hit damage", "shots": "Chain-shots", "knock": "Knockback (px)", "cooldown": "Cooldown (s)"},
+		"stats": {
+			"damage": 16.0, "shots": 3, "range": 320.0, "speed": 440.0, "width": 22.0, "cooldown": 2.4,  # TUNING (not in GDD) first pass 27 / 2.2 s (185k in the forced seed-7 run, 3.4x the Death Knights), then 19 (177k, 1.7x the Mages: its knocks drown more)
+			"knock": 80.0,  # TUNING (not in GDD) the evolution flag: px each struck foe is knocked off the line
 		},
 	},
 }

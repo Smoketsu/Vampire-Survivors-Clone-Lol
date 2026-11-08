@@ -186,6 +186,13 @@ const SOUNDS := {
 	"cutlass_clash": "cutlass_clash",  # Corsair pack: a rapier lunge lands.
 	"hull_creak": "hull_creak",  # Corsair pack: a boat sinks.
 	"wave_crash": "wave_crash",  # Corsair pack: the Black Tide's great wave.
+	# --- Act X: the Smuggler's Cutter ---
+	"cannon_fire": "cannon_fire",  # Corsair pack: Crow's broadside fires.
+	"cannon_hit": "cannon_hit",  # Corsair pack: a broadside line lands.
+	"musket_shot": "musket_shot",  # Corsair pack: Crow's pistol.
+	"cutlass_slash": "cutlass_slash",  # Corsair pack: Crow's cutlass, Gorran's chain sweep.
+	"bosun_whistle": "bosun_whistle",  # Corsair pack: a Boatswain's bellow, Gorran's bellow.
+	"plank_drop": "plank_drop",  # Corsair pack: Crow lands from his leap; the ram longboat's crew boards.
 }
 
 # --- Counter-passive hooks (not built) -------------------------------------------------
