@@ -10,7 +10,7 @@ Outputs (assets/sprites/):
   tiles/norse_planks.png     128 x 128 seamless hall planks with nail heads and a few ember specks (Valgard: Shield Yard / Mead Hall)
   tiles/norse_slabs.png      128 x 128 seamless hall slabs with joints and a carved rune border line (Valgard: Hall of Spears / Valkyries' Gate)
   tiles/norse_ash.png        128 x 128 seamless grey ash with ember specks (Vigrid: Ash Plain, Giants' March, the Field)
-  obstacles/mound_s / mound_l (+ _v), barrow_closed, barrow_open, long_table_s / _l (+ _v), standing_shield_s / _l (+ _v), pine_s / pine_l
+  obstacles/mound_s / mound_l (+ _v), barrow_closed, barrow_open, long_table_s / _l (+ _v), standing_shield_s / _l (+ _v), norse_pine_s / norse_pine_l (renamed: they had overwritten the Crimson March pines)
   norse/brazier_lit.png / brazier_doused.png 32 x 32 (Long Winter braziers), norse/frost_creep.png 128 x 48 (vignette frost edge)
   norse/einherjar_overlay.png 48 x 48 dithered pale-gold aura ring (drawn additively under / over an Einherjar), norse/valkyrie_shadow.png 40 x 20
       dithered gold ellipse (the dive telegraph shadow)
@@ -251,7 +251,7 @@ def main():
         Image.fromarray(fn(random.Random(hash(name) % 1000 if False else {"snow": 1, "ice": 2, "planks": 3, "slabs": 4, "ash": 5}[name]))).save(out / f"tiles/norse_{name}.png")
     obs = {"mound_s": mound(36, 24, rng), "mound_l": mound(56, 36, rng), "barrow_closed": barrow(48, 38, False), "barrow_open": barrow(48, 38, True),
            "long_table_s": table(48, 24), "long_table_l": table(72, 26), "standing_shield_s": shield_stand(24, 28), "standing_shield_l": shield_stand(36, 34),
-           "pine_s": pine(24, 38, rng), "pine_l": pine(34, 52, rng)}
+           "norse_pine_s": pine(24, 38, rng), "norse_pine_l": pine(34, 52, rng)}
     for k, im in dict(obs).items():
         if k.startswith(("mound", "long_table", "standing_shield")): obs[k + "_v"] = im.rotate(90, expand=True) if k.startswith("long_table") else im.transpose(Image.FLIP_LEFT_RIGHT)
     for k, im in obs.items(): im.save(out / f"obstacles/{k}.png")
