@@ -81,7 +81,9 @@ const ORDER := ["death_knight", "lich", "profane_bishop",
 	# --- Act VIII: Liberty Heights ---
 	"black_paragon",
 	# --- Act IX: the Ark ---
-	"black_mothership"]
+	"black_mothership",
+	# --- Act X: the Maelstrom ---
+	"magazine_lord"]
 
 ## Summon skill level every base class needs (user rule: Lv 5).
 const BASE_LEVEL_REQUIRED: int = 5  # TUNING (not in GDD) user rule
@@ -987,6 +989,40 @@ const EVOLUTIONS := {
 		"special_set": {
 			"beams": 3,  # TUNING (not in GDD)
 			"lifts": 2,  # TUNING (not in GDD)
+		},
+	},
+	# --- Act X: the Maelstrom ---
+	# Magazine Lord (owner-approved proposal: "the Powder Wraith ... (evolution
+	# Magazine Lord)"; GDD §15.0 "The Powder Wraith, Magazine Lord and Slow
+	# Match"): Powder Wraith Lv 5 + Slow Match Lv 5 (a NEW passive, own decision,
+	# owner rule: maxed). A large armoured skeleton in a captain's coat with a
+	# tower of lit kegs: two bursts a march (the second at the next pack within
+	# chain_range px), wider, and it reforms sooner. PowderWraithBehavior reads
+	# these special_set keys (final):
+	#   kegs        — bursts a march;
+	#   reform_time — s before it reforms at the ring.
+	"magazine_lord": {
+		"mode": "transform",
+		"bases": ["powder_wraith"],
+		"passive": "slow_match",
+		"passive_level": 5,  # Owner rule: every evolution needs its paired passive maxed
+		"display_name": "Magazine Lord",  # Owner-approved proposal
+		"plural": "Magazine Lords",
+		"icon": "magazine_lord",
+		"description": "A lord of the powder magazine: two kegs a march, wider blasts, and it reforms sooner.",
+		"mult": {
+			"max_hp": 1.5,  # TUNING (not in GDD)
+			"damage": 1.3,  # TUNING (not in GDD)
+		},
+		"set": {
+			"radius": 12.0,  # TUNING (not in GDD) Powder Wraith 10
+		},
+		"special_mult": {
+			"keg_radius": 1.25,  # TUNING (not in GDD)
+		},
+		"special_set": {
+			"kegs": 2,  # TUNING (not in GDD)
+			"reform_time": 8.0,  # TUNING (not in GDD) the Powder Wraith 12
 		},
 	},
 }

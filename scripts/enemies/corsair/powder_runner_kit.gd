@@ -63,6 +63,20 @@ func physics(e: Enemy, delta: float) -> bool:
 	return false
 
 
+# --- Act X: the Smuggler's Cutter ---
+## Autopilot hint (the autotest bot): out of the keg's blast while the fuse
+## burns (a player steps back from a lit keg).
+func danger_push(e: Enemy, p: Vector2) -> Vector2:
+	if phase != FUSE:
+		return Vector2.ZERO
+	var reach := float((d.get("keg", {}) as Dictionary).get("radius", 64.0)) + 24.0
+	var off := p - e.position
+	var dist := off.length()
+	if dist >= reach:
+		return Vector2.ZERO
+	return (off / dist if dist > 0.01 else Vector2.RIGHT) * (1.0 - dist / reach) * 3.0
+
+
 ## The lit fuse: a spark over the keg that brightens as it burns (visual only).
 func draw_over(e: Enemy, ci: CanvasItem) -> void:
 	if phase != FUSE:

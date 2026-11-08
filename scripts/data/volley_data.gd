@@ -209,6 +209,9 @@ const CLASSES := {
 	# --- Act IX: the Ark ---
 	"ghost_saucer": {"trigger": "special", "every": 1, "pattern": "ring", "counts": [5, 7], "speed": 260.0,
 		"life": 0.45, "share": 0.3, "pierce": 1, "radius": 3.5, "style": "orb", "color": Color(0.70, 0.92, 0.86)},  # TUNING (not in GDD) a ring of soul-light where a lifted foe falls
+	# --- Act X: the Maelstrom ---
+	"powder_wraith": {"trigger": "special", "every": 1, "pattern": "ring", "counts": [6, 8], "speed": 260.0,
+		"life": 0.4, "share": 0.3, "pierce": 1, "radius": 3.5, "style": "shard", "color": Color(0.95, 0.65, 0.23)},  # TUNING (not in GDD) a ring of burning shrapnel off every keg
 }
 
 ## Summon evolution id -> its showpiece volley (replaces the class volley once evolved;
@@ -272,6 +275,9 @@ const EVOLVED := {
 	# --- Act IX: the Ark ---
 	"black_mothership": {"trigger": "special", "every": 1, "pattern": "ring", "counts": [10], "speed": 300.0,
 		"life": 0.5, "share": 0.3, "pierce": 2, "radius": 4.0, "style": "orb", "color": Color(0.70, 0.92, 0.86)},  # TUNING (not in GDD) a full ring of soul-light where each lifted foe falls
+	# --- Act X: the Maelstrom ---
+	"magazine_lord": {"trigger": "special", "every": 1, "pattern": "ring", "counts": [10], "speed": 290.0,
+		"life": 0.45, "share": 0.3, "pierce": 2, "radius": 4.0, "style": "shard", "color": Color(0.95, 0.65, 0.23)},  # TUNING (not in GDD) a full ring of burning shrapnel off every keg
 }
 
 # --- Spell echoes (every owned spell from LEVEL_ON) --------------------------------------
@@ -376,6 +382,12 @@ const SPELLS := {
 	# --- Act IX: the Ark ---
 	"tractor_lift": {"every": 2, "clock": "cooldown", "aim": "strongest", "pattern": "ring", "counts": [5, 6, 8], "speed": 240.0,
 		"life": 0.5, "share": 0.35, "pierce": 1, "radius": 3.5, "style": "orb", "color": Color(0.70, 0.92, 0.86)},  # TUNING (not in GDD) a ring of soul-light with every other lift
+	# --- Act X: the Treasure Galleon ---
+	"cannonade": {"every": 2, "clock": "cooldown", "aim": "strongest", "pattern": "fan", "counts": [3, 4, 6], "spread": 30.0, "speed": 280.0,
+		"life": 0.5, "share": 0.3, "pierce": 1, "radius": 3.5, "style": "orb", "color": Color(0.55, 0.95, 0.84)},  # TUNING (not in GDD) a fan of grapeshot with every other volley (CannonadeData.SOUL_COLOR)
+	# --- Act X: the Maelstrom ---
+	"anchor_drop": {"every": 2, "clock": "cooldown", "aim": "strongest", "pattern": "ring", "counts": [5, 6, 8], "speed": 240.0,
+		"life": 0.5, "share": 0.35, "pierce": 1, "radius": 3.5, "style": "orb", "color": Color(0.70, 0.92, 0.86)},  # TUNING (not in GDD) a ring of soul-light round every other anchor
 }
 ## Range (px) within which a spell echo looks for its target (no target, no echo).
 const SPELL_RANGE: float = 340.0  # TUNING (not in GDD)

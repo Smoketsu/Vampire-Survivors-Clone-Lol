@@ -208,7 +208,13 @@ const ORDER := ["grave_dominion", "necrotic_vigor", "dark_command", "soul_recycl
 	# --- Act IX: the Proving Moon ---
 	"trophy_rack", "mirror_bones",
 	# --- Act IX: the Ark ---
-	"starseed", "crop_circles"]
+	"starseed", "crop_circles",
+	# --- Act X: the Smuggler's Cutter ---
+	"bosuns_whistle", "barnacle_bones",
+	# --- Act X: the Treasure Galleon ---
+	"black_powder", "sea_legs",
+	# --- Act X: the Maelstrom ---
+	"dead_reckoning", "slow_match"]
 
 ## Passives that only help summons (a "dead" level-up card while no summon
 ## class is owned, see AbilityManager.build_offers()).
@@ -258,7 +264,13 @@ const ARMY_PASSIVES := ["grave_dominion", "necrotic_vigor", "dark_command", "sou
 	# --- Act IX: the Proving Moon ---
 	"mirror_bones",
 	# --- Act IX: the Ark ---
-	"crop_circles"]
+	"crop_circles",
+	# --- Act X: the Smuggler's Cutter ---
+	"barnacle_bones",
+	# --- Act X: the Treasure Galleon ---
+	"sea_legs",
+	# --- Act X: the Maelstrom ---
+	"slow_match"]
 
 # --- Act III: the Assembly Halls ---
 ## Overclock (paired with the Grave Drone): a summon class is "ranged" (and
@@ -329,7 +341,9 @@ const MINION_SPECIAL_SOURCES := ["bash", "abom_stomp", "rogue_dash", "gargoyle_s
 	# what lets Armour-Piercing Bones, Armour.pierce_share(), count them as summon hits)
 	"fallen_hero_slam", "black_paragon_slam",
 	# --- Act IX: the Ark --- (the Ghost Saucer's and Black Mothership's dropped foes, GhostSaucerBehavior)
-	"ghost_saucer_lift", "black_mothership_lift"]
+	"ghost_saucer_lift", "black_mothership_lift",
+	# --- Act X: the Maelstrom --- (the Powder Wraith's and Magazine Lord's kegs, PowderWraithBehavior)
+	"powder_wraith_keg", "magazine_lord_keg"]
 ## Unholy Resilience: enemy damage-source tags (CombatResolver.damage_unit
 ## `source`) that count as AREA or HOLY damage, tag -> category ("area" |
 ## "holy"; the category only splits the summary stats). Every other source
@@ -1902,6 +1916,139 @@ const PASSIVES := {
 			{"special_hold": 0.18},  # TUNING (not in GDD)
 			{"special_hold": 0.24},  # TUNING (not in GDD)
 			{"special_hold": 0.30},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act X: the Smuggler's Cutter ---
+	# Bosun's Whistle (Chain Shot's paired passive; owner-approved Act X
+	# proposal: "Keelhauler (+ Bosun's Whistle)"; unlocked with the spell by
+	# Captain Crow and offered on every stage). Own decision on its effect: the
+	# whistle calls the shot home sooner: Chain Shot's cooldown is cooldown_cut
+	# shorter (ChainShot._cooldown(), the one read; stat chain_whistle_s; 0
+	# while not owned).
+	"bosuns_whistle": {
+		"display_name": "Bosun's Whistle",  # Owner-approved proposal
+		"icon": "bosuns_whistle",
+		"description": "The bosun's whistle calls your chain-shots home: Chain Shot recovers faster.",
+		"labels": {"cooldown_cut": ["Chain Shot cooldown", "neg_pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"cooldown_cut": 0.05},  # TUNING (not in GDD)
+			{"cooldown_cut": 0.10},  # TUNING (not in GDD)
+			{"cooldown_cut": 0.15},  # TUNING (not in GDD)
+			{"cooldown_cut": 0.20},  # TUNING (not in GDD)
+			{"cooldown_cut": 0.25},  # TUNING (not in GDD) first pass 0.30
+		],
+	},
+	# Act X's counter-passive Barnacle Bones (owner-approved Act X proposal:
+	# "summon hits on boats, hooks and surfaced creatures deal more"; unlocked
+	# by the Smuggler's Cutter's achievement Not One Aboard and offered only in
+	# Act X through its card row's "act": 10 until the reorder pass renumbers
+	# it). The foundation's hook reads it: CorsairRules.barnacle_mult() (1 +
+	# sea_damage, the bound player's), in CorsairKit.taken_mult() on boats,
+	# hooks and swimmers, for summon hits only.
+	"barnacle_bones": {
+		"display_name": "Barnacle Bones",  # Owner-approved proposal
+		"icon": "barnacle_bones",
+		"description": "Your dead grow barnacled bones: their blows on boats, grapple hooks and sea beasts hit harder.",
+		"labels": {"sea_damage": ["Summon damage to boats and sea beasts", "pct"]},
+		"act": 10,  # Owner-approved: the act's counter-passives are offered only in this act (Unlocks.act_allows()); temporary number until the reorder
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"sea_damage": 0.15},  # TUNING (not in GDD)
+			{"sea_damage": 0.30},  # TUNING (not in GDD)
+			{"sea_damage": 0.45},  # TUNING (not in GDD)
+			{"sea_damage": 0.60},  # TUNING (not in GDD)
+			{"sea_damage": 0.75},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act X: the Treasure Galleon ---
+	# Black Powder (Cannonade's paired passive; owner-approved proposal:
+	# "Dead Men's Broadside (+ Black Powder)"; unlocked with the spell by
+	# Admiral Marrec and offered on every stage). Own decision on its effect:
+	# every Cannonade blast is powder_blast_radius wider and knocks the foes it
+	# hits powder_knock px outward (their knockback; on a deck a blast at the
+	# rail drowns them). Read only by Cannonade (CannonadeData.BLAST_KEY /
+	# KNOCK_KEY): exactly nothing without the spell.
+	"black_powder": {
+		"display_name": "Black Powder",  # Owner-approved proposal
+		"icon": "black_powder",
+		"description": "Your Cannonade's balls are packed with black powder: wider blasts that throw foes back.",
+		"labels": {"powder_blast_radius": ["Cannonade blast radius", "pct"], "powder_knock": ["Knockback (px)", "num"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"powder_blast_radius": 0.08, "powder_knock": 20.0},  # TUNING (not in GDD)
+			{"powder_blast_radius": 0.12, "powder_knock": 28.0},  # TUNING (not in GDD)
+			{"powder_blast_radius": 0.16, "powder_knock": 36.0},  # TUNING (not in GDD)
+			{"powder_blast_radius": 0.20, "powder_knock": 44.0},  # TUNING (not in GDD)
+			{"powder_blast_radius": 0.25, "powder_knock": 52.0},  # TUNING (not in GDD)
+		],
+	},
+	# The Black Tide's counter-passive Sea Legs (owner-approved proposal: "Sea
+	# Legs (the Heave drift and grapple pulls are halved for the army)";
+	# unlocked by the Treasure Galleon's achievement Walked the Plank and
+	# offered only in Act X through its card row's "act"; the act number is
+	# the temporary 10 until the reorder). The foundation's hook reads it,
+	# nothing else: CorsairRules.sea_legs_mult(u) (x 1 - drift_cut on every
+	# drift and pull the army takes: the powder blasts' push, the Black Tide's
+	# wave, the Heave and the Grappler's pull). Key CorsairRulesData.SEA_LEGS_KEY.
+	"sea_legs": {
+		"display_name": "Sea Legs",  # Owner-approved proposal
+		"icon": "sea_legs",
+		"description": "Your dead have found their sea legs: the deck's heave, the waves and the blasts barely move them.",
+		"labels": {"drift_cut": ["Drift and pulls on summons", "neg_pct"]},
+		"act": 10,  # Owner-approved: the act's counter-passives are offered only in the Black Tide (temporary act number 10; Unlocks.act_allows())
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"drift_cut": 0.15},  # TUNING (not in GDD)
+			{"drift_cut": 0.25},  # TUNING (not in GDD)
+			{"drift_cut": 0.35},  # TUNING (not in GDD)
+			{"drift_cut": 0.43},  # TUNING (not in GDD)
+			{"drift_cut": 0.50},  # TUNING (not in GDD) owner-approved proposal: halved at full
+		],
+	},
+	# --- Act X: the Maelstrom ---
+	# Dead Reckoning (owner-approved proposal: Abyssal Mooring's paired passive;
+	# own decision on its rule; GDD §15.0 "Anchor Drop, Abyssal Mooring, Dead
+	# Reckoning and the Ghost Helmsman"; unlocked by defeating Vandermere,
+	# UnlockData): the dead know where to strike: Anchor Drop recharges
+	# reckoning_haste sooner and its stun lasts reckoning_stun longer
+	# (AbilityManager.apply_spell_mods() on the spell rows' own keys, like
+	# Starseed). Pairs with Anchor Drop -> Abyssal Mooring.
+	"dead_reckoning": {
+		"display_name": "Dead Reckoning",  # Owner-approved proposal
+		"icon": "dead_reckoning",
+		"description": "Your Anchor Drop falls sooner, and its stun holds longer.",
+		"labels": {"reckoning_haste": ["Anchor Drop cooldown", "neg_pct"], "reckoning_stun": ["Anchor stun", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"reckoning_haste": 0.04, "reckoning_stun": 0.1},  # TUNING (not in GDD)
+			{"reckoning_haste": 0.08, "reckoning_stun": 0.2},  # TUNING (not in GDD)
+			{"reckoning_haste": 0.12, "reckoning_stun": 0.3},  # TUNING (not in GDD)
+			{"reckoning_haste": 0.16, "reckoning_stun": 0.4},  # TUNING (not in GDD)
+			{"reckoning_haste": 0.20, "reckoning_stun": 0.5},  # TUNING (not in GDD)
+		],
+	},
+	# Slow Match (own decision: Magazine Lord's paired passive, its name and
+	# rule; GDD §15.0 "The Powder Wraith, Magazine Lord and Slow Match";
+	# unlocked by defeating Vandermere): a slow match is the gunner's fuse cord:
+	# every class special's KNOCKBACK pushes special_push farther (its
+	# *_knockback keys: the Powder Wraith's keg, the Fallen Hero's slam, the
+	# Abomination's stomp...; HordeDirector._special_stats(), THE one path of
+	# summon special numbers, its own category; 0 when not owned, so every
+	# other run is unchanged). On a deck, farther is overboard. Works the same
+	# on every stage. Pairs with the Powder Wraith -> Magazine Lord.
+	"slow_match": {
+		"display_name": "Slow Match",
+		"icon": "slow_match",
+		"description": "Every summon's special knocks foes farther.",
+		"labels": {"special_push": ["Special knockback", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"special_push": 0.1},  # TUNING (not in GDD)
+			{"special_push": 0.2},  # TUNING (not in GDD)
+			{"special_push": 0.3},  # TUNING (not in GDD)
+			{"special_push": 0.4},  # TUNING (not in GDD)
+			{"special_push": 0.5},  # TUNING (not in GDD)
 		],
 	},
 }

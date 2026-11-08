@@ -110,7 +110,13 @@ const SPELL_ORDER := ["shadow_bolt", "orb_shield", "shadow_blast",
 	# --- Act IX: the Proving Moon ---
 	"soul_caster",
 	# --- Act IX: the Ark ---
-	"tractor_lift"]
+	"tractor_lift",
+	# --- Act X: the Smuggler's Cutter ---
+	"chain_shot",
+	# --- Act X: the Treasure Galleon ---
+	"cannonade",
+	# --- Act X: the Maelstrom ---
+	"anchor_drop"]
 
 ## Spell definitions.
 ##   display_name — UI name.
@@ -941,6 +947,80 @@ const SPELLS := {
 			{"damage": 78.0, "cooldown": 2.6, "lift_time": 1.0, "slam_radius": 64.0, "slam_share": 0.57},  # TUNING (not in GDD) Hero's Fist Lv5 72 / 2.4 s
 		],
 	},
+	# --- Act X: the Smuggler's Cutter ---
+	# Chain Shot (GDD §15.0 "Chain Shot, Keelhauler, Bosun's Whistle and the
+	# Marooned Quartermaster (Act X)"; owner-approved proposal: "a spectral
+	# chain-shot spins through a line of enemies and returns"; unlocked by
+	# slaying Captain Crow, UnlockData): every `cooldown` s `shots` chain-shots
+	# fly `range` px out at `speed` px/s through the nearest foes and spin back
+	# to the necromancer, striking every foe within `width` px once out and
+	# once back for `damage`. Logic: ChainShot; fixed rules: ChainShotData;
+	# Bosun's Whistle (its paired passive) shortens its cooldown. A line
+	# piercer that hits twice (Hearse Run's lane, half its damage a hit).
+	"chain_shot": {
+		"display_name": "Chain Shot",  # Owner-approved proposal
+		"icon": "chain_shot",
+		"description": "A spectral chain-shot spins through a line of foes and returns.",
+		"shared_card_pool": true,  # TUNING (not in GDD) an unlocked Act X spell: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Hit damage", "shots": "Chain-shots", "range": "Range (px)", "cooldown": "Cooldown (s)"},
+		"levels": [
+			{"damage": 8.0, "shots": 1, "range": 230.0, "speed": 380.0, "width": 14.0, "cooldown": 2.8},  # TUNING (not in GDD) every foe in the line is hit twice (first pass 11)
+			{"damage": 10.0, "shots": 1, "range": 240.0, "speed": 390.0, "width": 15.0, "cooldown": 2.7},  # TUNING (not in GDD) first pass 13
+			{"damage": 10.0, "shots": 2, "range": 250.0, "speed": 400.0, "width": 16.0, "cooldown": 2.6},  # TUNING (not in GDD) first pass 15
+			{"damage": 12.0, "shots": 2, "range": 265.0, "speed": 410.0, "width": 17.0, "cooldown": 2.5},  # TUNING (not in GDD) first pass 18
+			{"damage": 14.0, "shots": 3, "range": 280.0, "speed": 420.0, "width": 18.0, "cooldown": 2.4},  # TUNING (not in GDD) Hearse Run Lv5 26 / 2.8 s (one hit a foe); first pass 21; integration balance 10/12/13/15/18 -> 8/10/10/12/14 (the forced seed-7 Cutter run: 159k, 2.5x the top summon class)
+		],
+	},
+	# --- Act X: the Treasure Galleon ---
+	# Cannonade (GDD §15.0 "Cannonade, Dead Men's Broadside, Black Powder and
+	# the Corsair Queen (Act X)"; owner-approved proposal: "spectral
+	# cannonballs arc down on three marked groups"; unlocked by slaying Admiral
+	# Marrec, UnlockData): every `cooldown` s it marks up to `marks` dense
+	# groups within `range` px, and a spectral ball lands on each after
+	# CannonadeData.FALL_TIME s: `damage` to every foe within `radius` px.
+	# Stat keys: damage, marks, radius (px), range (px), cooldown (s). Logic:
+	# Cannonade; fixed rules: CannonadeData; Black Powder (its paired passive)
+	# widens the blasts and knocks the foes outward. An area spell (Brimstone's
+	# numbers, three marks from the first level).
+	"cannonade": {
+		"display_name": "Cannonade",  # Owner-approved proposal
+		"icon": "cannonade",
+		"description": "Spectral cannonballs arc down on the three thickest groups of foes.",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Ball damage", "marks": "Groups marked", "radius": "Blast radius", "cooldown": "Cooldown (s)"},
+		"levels": [
+			{"damage": 13.0, "marks": 3, "radius": 30.0, "range": 340.0, "cooldown": 3.6},  # TUNING (not in GDD) owner-approved proposal: three marked groups; first pass 18 / 3.4 s
+			{"damage": 15.0, "marks": 3, "radius": 32.0, "range": 345.0, "cooldown": 3.4},  # TUNING (not in GDD)
+			{"damage": 19.0, "marks": 3, "radius": 34.0, "range": 350.0, "cooldown": 3.2},  # TUNING (not in GDD)
+			{"damage": 22.0, "marks": 4, "radius": 36.0, "range": 355.0, "cooldown": 3.0},  # TUNING (not in GDD)
+			{"damage": 26.0, "marks": 4, "radius": 38.0, "range": 360.0, "cooldown": 2.8},  # TUNING (not in GDD) first pass 38 / 2.7 s (the forced seed-7 run: 322k damage, far ahead of the army); integration balance 14/17/21/25/30 -> 13/15/19/22/26 (232k beside the Death Knights' 214k)
+		],
+	},
+	# --- Act X: the Maelstrom ---
+	# Anchor Drop (GDD §15.0 "Anchor Drop, Abyssal Mooring, Dead Reckoning and
+	# the Ghost Helmsman"; owner-approved proposal: "a spectral anchor slams the
+	# strongest enemy, stuns it and shocks a ring around it (no pull)"; unlocked
+	# by defeating Vandermere, UnlockData): every `cooldown` s a spectral anchor
+	# falls on the strongest foe within AnchorDropData.AIM_RANGE px: `damage`, a
+	# stun of anchor_stun s (CombatResolver.stun_enemy(); bosses a quarter), and
+	# ring_share x the damage to the foes within ring_radius px. Logic:
+	# AnchorDrop; fixed rules: AnchorDropData. A single-target blow with a stun
+	# and a splash, the act's answer to a heavy (no pull: the act's spells
+	# knock, chain and bombard).
+	"anchor_drop": {
+		"display_name": "Anchor Drop",  # Owner-approved proposal
+		"icon": "anchor_drop",
+		"description": "A spectral anchor slams the strongest foe, stuns it and shocks the ring around it.",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Slam damage", "cooldown": "Cooldown (s)", "anchor_stun": "Stun (s)", "ring_radius": "Shock (px)", "ring_share": "Shock damage"},
+		"levels": [
+			{"damage": 34.0, "cooldown": 3.4, "anchor_stun": 0.8, "ring_radius": 48.0, "ring_share": 0.2},  # TUNING (not in GDD)
+			{"damage": 42.0, "cooldown": 3.25, "anchor_stun": 0.9, "ring_radius": 52.0, "ring_share": 0.21},  # TUNING (not in GDD)
+			{"damage": 51.0, "cooldown": 3.1, "anchor_stun": 1.0, "ring_radius": 56.0, "ring_share": 0.22},  # TUNING (not in GDD)
+			{"damage": 61.0, "cooldown": 2.95, "anchor_stun": 1.1, "ring_radius": 60.0, "ring_share": 0.23},  # TUNING (not in GDD)
+			{"damage": 72.0, "cooldown": 2.8, "anchor_stun": 1.2, "ring_radius": 64.0, "ring_share": 0.25},  # TUNING (not in GDD) integration balance: ring_share 0.3-0.4 -> 0.2-0.25 (the shock ring dealt 148k of the forced seed-7 Maelstrom run's 345k, 1.5x the top summon class); Tractor Beam Lv5 78 / 2.6 s; the stun is its edge (first pass shock 0.54 at 68 px: the shock ring dealt most of its damage)
+		],
+	},
 }
 
 ## Stat keys shown as a percentage on cards (fractions: 0.25 -> 25%).
@@ -975,7 +1055,9 @@ const PERCENT_KEYS := ["lifesteal", "rot", "burst", "zone_damage", "zone_slow", 
 	# --- Act VIII: Liberty Heights ---
 	"fling_share", "crater_share",
 	# --- Act IX: the Ark ---
-	"slam_share", "quake_share"]
+	"slam_share", "quake_share",
+	# --- Act X: the Maelstrom ---
+	"ring_share", "moor_share"]
 ## Stat keys that are spell durations (s): the Lingering Malediction passive
 ## lengthens them (AbilityManager.apply_spell_mods()).
 const DURATION_KEYS := ["duration", "zone_duration", "slow_duration"]

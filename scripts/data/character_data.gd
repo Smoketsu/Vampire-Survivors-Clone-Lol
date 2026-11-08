@@ -96,7 +96,13 @@ const ORDER := ["gravecaller", "umbral_warden", "voidcaller", "bone_oracle", "fa
 	# --- Act IX: the Proving Moon ---
 	"blooded",
 	# --- Act IX: the Ark ---
-	"starborn"]
+	"starborn",
+	# --- Act X: the Smuggler's Cutter ---
+	"marooned_quartermaster",
+	# --- Act X: the Treasure Galleon ---
+	"corsair_queen",
+	# --- Act X: the Maelstrom ---
+	"ghost_helmsman"]
 ## The default character (RunConfig, fresh saves, the autotest): today's game.
 const DEFAULT_ID: String = "gravecaller"
 ## Spell level that unlocks a character (owner rule: reach Lv 5 with its spell
@@ -164,6 +170,8 @@ const STAT_LABELS := {
 ##                           burst; Act IX)
 ##   soul_caster_extra_targets  SoulCaster._lock (extra targets each Soul
 ##                           Caster lock takes; Act IX)
+##   cannonade_extra_marks   Cannonade._volley (extra groups each Cannonade
+##                           volley marks; Act X, the Treasure Galleon)
 const INNATE_KEYS := ["orb_projectile_destroy", "blast_echo_delay", "blast_echo_damage", "spear_shard_max",
 	"spear_shard_cooldown", "summon_corpses", "grace_share", "grace_targets", "grace_range", "contagion_range",
 	"contagion_duration", "death_mark_slow", "bone_wall_duration", "soul_chains_extra_jumps", "wither_rot",
@@ -215,7 +223,13 @@ const INNATE_KEYS := ["orb_projectile_destroy", "blast_echo_delay", "blast_echo_
 	# --- Act IX: the Proving Moon ---
 	"soul_caster_extra_targets",
 	# --- Act IX: the Ark ---
-	"tractor_extra_lifts"]
+	"tractor_extra_lifts",
+	# --- Act X: the Smuggler's Cutter ---
+	"chain_extra",
+	# --- Act X: the Treasure Galleon ---
+	"cannonade_extra_marks",
+	# --- Act X: the Maelstrom ---
+	"anchor_extra"]
 
 ## Orbit radius (px) of the Bone Oracle's Ossuary Ward shards around him.
 const SHARD_ORBIT_RADIUS: float = 27.0  # TUNING (not in GDD)
@@ -947,6 +961,82 @@ const CHARACTERS := {
 		"stats": {"max_hp": 5.0, "move_speed": 0.04},  # TUNING (not in GDD) a light, quick deserter
 		"sprite": "player/starborn",
 		"tint": Color(0.70, 0.86, 0.74),  # TUNING (not in GDD) a pale plasma green over the violet
+		"starts_unlocked": false,
+	},
+	# --- Act X: the Smuggler's Cutter ---
+	# The Marooned Quartermaster (Chain Shot's character; owner-approved Act X
+	# proposal "Rewards": "Chain Shot ... | The Marooned Quartermaster (male)"):
+	# MALE, a lean castaway quartermaster in the necromancer's violet (the art
+	# convention of the last acts, docs/last_acts/PLAN.md: a necromancer of the
+	# act's theme, never one of the Brotherhood): a tricorn, a peg leg, a rusted
+	# shackle and chain on one wrist, a ship's-lantern staff for his focus.
+	# Chain Shot must be unlocked (Captain Crow) before he can be earned, by
+	# the usual Lv 5 rule. Own decision on his innate (the proposal names
+	# none): Spare Shot, one more chain-shot a cast (ChainShot._cast()).
+	"marooned_quartermaster": {
+		"display_name": "The Marooned Quartermaster",  # Owner-approved proposal
+		"title": "They left him on a sandbar with one shot and no powder. He kept the shot.",
+		"spell": "chain_shot",
+		"innate": {
+			"id": "spare_shot", "name": "Spare Shot",
+			"description": "Chain Shot throws one more chain-shot.",
+			"values": {"chain_extra": 1.0},  # TUNING (not in GDD) one more chain-shot a cast
+		},
+		"stats": {"max_hp": 10.0, "move_speed": -0.03},  # TUNING (not in GDD) a castaway's hard hide, a peg leg
+		"sprite": "player/marooned_quartermaster",
+		"tint": Color(0.78, 0.70, 0.92),  # TUNING (not in GDD) the necromancer's violet (his art is violet already)
+		"starts_unlocked": false,
+	},
+	# --- Act X: the Treasure Galleon ---
+	# The Corsair Queen (Cannonade's character; owner-approved proposal
+	# "Rewards": "Cannonade ... | the Corsair Queen (figure style)"; the art
+	# convention of Nov 7, 2026: a necromancer of the act's theme, never a
+	# member of the Brotherhood): FEMALE, in the figure-redesign style (clothed,
+	# chest and hips covered): pale undead-touched skin, a plumed tricorn and a
+	# long coat in the necromancer's violet with bone-white trim and soul-teal
+	# light, a glowing cutlass for her casting focus (player/corsair_queen,
+	# its walk strip, bust rig and idle strip). Cannonade must be unlocked
+	# (Admiral Marrec) before she can be earned, by the usual Lv 5 rule. Own
+	# decision on her innate (the proposal names none): Queen's Ransom, her
+	# Cannonade marks one more group (Cannonade._volley()).
+	"corsair_queen": {
+		"display_name": "The Corsair Queen",  # Owner-approved proposal
+		"title": "She took the Admiral's fleet for her dead, and the sea for her throne.",
+		"spell": "cannonade",
+		"innate": {
+			"id": "queens_ransom", "name": "Queen's Ransom",
+			"description": "Cannonade marks one more group.",
+			"values": {"cannonade_extra_marks": 1.0},  # TUNING (not in GDD) extra marks a volley
+		},
+		"stats": {"max_hp": -5.0, "move_speed": 0.05},  # TUNING (not in GDD) a quick, lightly armoured captain
+		"sprite": "player/corsair_queen",
+		"tint": Color(0.80, 0.66, 0.92),  # TUNING (not in GDD) her own violet (the art is already the necromancer's colours)
+		"starts_unlocked": false,
+	},
+	# --- Act X: the Maelstrom ---
+	# The Ghost Helmsman (Anchor Drop's character; owner-approved proposal
+	# "Rewards": "Anchor Drop ... | The Ghost Helmsman (male)"; the owner's art
+	# convention of Nov 7, 2026: a necromancer of the act's theme, never one of
+	# the enemy faction): MALE, a broad drowned helmsman in a violet hooded
+	# oilskin with bone-white and soul-teal accents, pale undead skin, a
+	# wheel-topped lantern staff for his focus and an anchor charm
+	# (player/ghost_helmsman, the art pass's round 1). Anchor Drop must be
+	# unlocked (Vandermere) before he can be earned, by the usual Lv 5 rule.
+	# Own decision on his innate (the proposal names none): he held the Hollow
+	# Queen's helm in the deep, so his anchor never falls alone: Second Anchor,
+	# one more anchor a cast (AnchorDrop.step()).
+	"ghost_helmsman": {
+		"display_name": "The Ghost Helmsman",  # Owner-approved proposal
+		"title": "He held her helm through a hundred years of drowning.",
+		"spell": "anchor_drop",
+		"innate": {
+			"id": "second_anchor", "name": "Second Anchor",
+			"description": "Anchor Drop drops one more anchor.",
+			"values": {"anchor_extra": 1.0},  # TUNING (not in GDD) extra anchors a cast
+		},
+		"stats": {"max_hp": 15.0, "move_speed": -0.03},  # TUNING (not in GDD) a broad, steady helmsman
+		"sprite": "player/ghost_helmsman",
+		"tint": Color(0.72, 0.94, 0.86),  # TUNING (not in GDD) a pale spectre green over the violet
 		"starts_unlocked": false,
 	},
 }

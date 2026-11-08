@@ -100,10 +100,10 @@ func alive() -> int:
 
 ## A water kind the timeline asked for comes from the sea at a seeded point of
 ## the hull (false when refused at the cap).
-func spawn_swimmer(kind: String, hp_scale: float, elite: bool, dmg_scale: float, reckoning: bool) -> bool:
+func spawn_swimmer(kind: String, hp_scale: float, elite: bool, dmg_scale: float, reckoning: bool, force: bool = false) -> bool:
 	if game.deck == null:
 		return false
-	if alive() >= int(cfg["cap"]):
+	if not force and alive() >= int(cfg["cap"]):  # Act X, the Treasure Galleon: `force` (a miniboss and its arms) ignores the cap.
 		game.stat_add("sea_refused_cap", 1.0)
 		return false
 	var deck := game.deck
@@ -118,7 +118,7 @@ func spawn_swimmer(kind: String, hp_scale: float, elite: bool, dmg_scale: float,
 		return true  # Not a swimmer after all (no kit): it stays on the deck.
 	k.swim_s = s
 	k.next_strike = game.elapsed + float(_c(e)["first_strike"]) * (0.75 + 0.5 * randf())
-	e.position = _swim_point(e, s)
+	e.position = swim_point(e, s)
 	e.untargetable = true  # Submerged.
 	swimmers.append([e, e.generation])
 	peak = maxi(peak, alive())
@@ -127,7 +127,7 @@ func spawn_swimmer(kind: String, hp_scale: float, elite: bool, dmg_scale: float,
 
 
 ## Where swimmer `e` is at hull arc length `s`: swim_offset px out in the water.
-func _swim_point(e: Enemy, s: float) -> Vector2:
+func swim_point(e: Enemy, s: float) -> Vector2:
 	var deck := game.deck
 	return deck.perimeter_point(s) + deck.perimeter_normal(s) * (float(cfg["swim_offset"]) + e.radius * 0.5)
 
@@ -160,7 +160,7 @@ func _step_swimmer(e: Enemy, k: CorsairKit, now: float, delta: float) -> void:
 	if k.striking:
 		return  # Holding at the hull while its strike is out (or its grab holds).
 	k.swim_s = fposmod(k.swim_s + k.swim_dir * float(cfg["swim_speed"]) * delta, game.deck.perimeter_length)
-	e.position = _swim_point(e, k.swim_s)
+	e.position = swim_point(e, k.swim_s)
 	e.velocity = Vector2.ZERO
 	if now < k.next_strike:
 		return
@@ -171,7 +171,7 @@ func _step_swimmer(e: Enemy, k: CorsairKit, now: float, delta: float) -> void:
 		return
 	var s := game.deck.perimeter_s(target)
 	k.swim_s = s
-	e.position = _swim_point(e, s)
+	e.position = swim_point(e, s)
 	k.striking = true
 	var tel := float(CorsairRulesData.LEAP["telegraph"]) if String(c.get("type", "leap")) == "leap" else float(c["telegraph"])
 	k.surfaced_until = now + tel + float(c["surface_time"])
@@ -179,11 +179,16 @@ func _step_swimmer(e: Enemy, k: CorsairKit, now: float, delta: float) -> void:
 	strikes.append({"type": String(c.get("type", "leap")), "owner": e, "gen": e.generation, "at": target, "land": now + tel, "c": c})
 	game.stat_add("sea_strikes_" + String(c.get("type", "leap")), 1.0)
 	if game.corsair != null:
-		game.corsair.play_sound("shark_leap" if String(c.get("type", "")) == "leap" else "kraken_rise", e.position, 0.3)
+		var ev := "shark_leap" if String(c.get("type", "")) == "leap" else "kraken_rise"
+		if String(c.get("type", "")) == "climb":
+			ev = "crab_climb"  # Act X, the Treasure Galleon: a hull crab climbs.
+		game.corsair.play_sound(ev, e.position, 0.3)
 
 
 ## The point swimmer `e` strikes for a strike of `type`, or Vector2.INF.
 func _target(e: Enemy, type: String, reach: float) -> Vector2:
+	if type == "climb":
+		return _climb_target(e, reach)  # Act X, the Treasure Galleon: the hull crab.
 	var deck := game.deck
 	var band := float(deck.cfg["rail_band"])
 	var best := Vector2.INF
@@ -202,7 +207,7 @@ func _target(e: Enemy, type: String, reach: float) -> Vector2:
 			if depth >= float(CorsairRulesData.LEAP["inset"]) and dist < best_d:
 				best = u.position
 				best_d = dist
-		elif depth <= band and grabbable(u) and dist < best_d:
+		elif depth <= band and (type == "breach" or grabbable(u)) and dist < best_d:  # (Act X, the Maelstrom: a breach needs no grab)
 			best = u.position
 			best_d = dist
 		if dist < any_d:
@@ -241,6 +246,8 @@ func _step_strikes(now: float) -> void:
 		var owner: Enemy = st["owner"]
 		var owned := owner != null and _alive(owner, int(st["gen"]))
 		if owner != null and not owned:
+			if String(st["type"]) == "mark":
+				game.stat_add("sea_marks_failed", 1.0)  # Act X, the Treasure Galleon: the Voodoo Navigator died first.
 			continue  # The swimmer died during its telegraph: the strike fizzles.
 		_land(st, owner if owned else null, now)
 
@@ -249,10 +256,17 @@ func _step_strikes(now: float) -> void:
 func _land(st: Dictionary, owner: Enemy, now: float) -> void:
 	var c: Dictionary = st["c"]
 	var at: Vector2 = st["at"]
+	# --- Act X: the Maelstrom --- the Sea Serpent's breach sweeps its lane, not a circle.
+	if String(st["type"]) == "breach" and owner != null and owner.kit is CorsairKit:
+		_breach(owner, at, c)
+		_end_strike(owner, owner.kit as CorsairKit, now)
+		return
 	var r := float(c["radius"])
 	game.effects.ring(at, r, Palette.CORSAIR_FOAM, 0.3)
 	_hit_circle(at, r, c, owner)
 	var type := String(st["type"])
+	if type == "mark":
+		return  # Act X, the Treasure Galleon: a Voodoo Navigator's mark is a plain circle (its owner only cancels it).
 	var k: CorsairKit = owner.kit as CorsairKit if owner != null else null
 	if k == null:
 		return
@@ -260,6 +274,9 @@ func _land(st: Dictionary, owner: Enemy, now: float) -> void:
 		owner.position = game.deck.clamp_point(at, owner.radius)
 		k.leave_water(owner)
 		game.stat_add("sea_leaps_landed", 1.0)
+		return
+	if type == "climb":
+		_climb_aboard(owner, k, at)  # Act X, the Treasure Galleon: the hull crab heaves itself over the rail.
 		return
 	if type == "tentacle":
 		var u := _grab_target(at, r)
@@ -385,12 +402,15 @@ func release_all(arm: Enemy) -> void:
 ## AN OWNERLESS STRIKE (the Black Tide's rail strikes; phase 2's serpent
 ## breach and the Voodoo Navigator's marks): a plain telegraphed circle at
 ## `at`, the SEA numbers with `overrides` (radius, telegraph, damage).
-func strike(at: Vector2, overrides: Dictionary = {}) -> void:
+## Act X, the Treasure Galleon: with an `owner` (the Voodoo Navigator) it is
+## her MARK (type "mark"): the same circle, cancelled if she dies before it lands.
+func strike(at: Vector2, overrides: Dictionary = {}, owner: Enemy = null) -> void:
 	var c := cfg.duplicate()
 	for k: String in overrides:
 		c[k] = overrides[k]
-	strikes.append({"type": "sea", "owner": null, "gen": 0, "at": at, "land": game.elapsed + float(c["telegraph"]), "c": c})
-	game.stat_add("sea_strikes_sea", 1.0)
+	var type := "sea" if owner == null else "mark"
+	strikes.append({"type": type, "owner": owner, "gen": owner.generation if owner != null else 0, "at": at, "land": game.elapsed + float(c["telegraph"]), "c": c})
+	game.stat_add("sea_strikes_" + type, 1.0)
 
 
 ## True while `e` is the same living enemy it was at generation `gen`.
@@ -402,6 +422,9 @@ static func _alive(e: Enemy, gen: int) -> bool:
 func danger_push(p: Vector2) -> Vector2:
 	var push := Vector2.ZERO
 	for st in strikes:
+		if String(st["type"]) == "breach":
+			push += _breach_push(st, p)  # Act X, the Maelstrom: out of the serpent's lane.
+			continue
 		var off: Vector2 = p - (st["at"] as Vector2)
 		var reach := float((st["c"] as Dictionary)["radius"]) + game.player.radius + 18.0
 		var d := off.length()
@@ -417,6 +440,9 @@ func draw(ci: CanvasItem) -> void:
 	var ring := CityGlyphs.ring_texture()
 	for st in strikes:
 		var c: Dictionary = st["c"]
+		if String(st["type"]) == "breach":
+			_draw_breach(ci, st, t)  # Act X, the Maelstrom: the serpent's lane.
+			continue
 		var r := float(c["radius"])
 		var at: Vector2 = st["at"]
 		var span := float(CorsairRulesData.LEAP["telegraph"]) if String(st["type"]) == "leap" else float(c["telegraph"])
@@ -429,3 +455,124 @@ func draw(ci: CanvasItem) -> void:
 		if _alive(arm, int(g[1])) and u.active:
 			ci.draw_line(arm.position, u.position, Palette.CORSAIR_KRAKEN, 4.0)
 			ci.draw_line(arm.position, u.position, Palette.CORSAIR_KRAKEN_LIGHT, 1.5)
+
+
+# --- Act X: the Treasure Galleon ---
+## THE CLIMB (the Hull Crab's strike type "climb"): the point in the rail band
+## nearest its target (the nearest standing summon in the rail band, else the
+## nearest summon or necromancer in `reach`), or Vector2.INF. The crab comes
+## over the rail there.
+func _climb_target(e: Enemy, reach: float) -> Vector2:
+	var best := Vector2.INF
+	var best_d := INF
+	game.ally_grid.query(e.position, reach + UnitData.MAX_BLOCK_RADIUS, _tmp)
+	for u: SummonedUnit in _tmp:
+		if not u.active or u.state == SummonedUnit.State.DEAD or u.airborne or u.flies:
+			continue
+		var dist := u.position.distance_to(e.position)
+		if dist <= reach and dist < best_d:
+			best = u.position
+			best_d = dist
+	if best == Vector2.INF:
+		for pl in game.all_players:
+			var dist := pl.position.distance_to(e.position)
+			if not pl.dead and dist <= reach and dist < best_d:
+				best = pl.position
+				best_d = dist
+	if best == Vector2.INF:
+		return best
+	var rail: Array = game.deck.nearest_rail(best)
+	var depth := minf(float(CorsairRulesData.CLIMB["inset"]), maxf(game.deck.rail_depth(best), e.radius))
+	return (rail[0] as Vector2) - (rail[1] as Vector2) * depth
+
+
+## The climb lands: the crab stands on the deck in the rail band, an ordinary
+## deck enemy from now on.
+func _climb_aboard(owner: Enemy, k: CorsairKit, at: Vector2) -> void:
+	owner.position = game.deck.clamp_point(at, owner.radius)
+	k.leave_water(owner)
+	game.stat_add("sea_climbs_landed", 1.0)
+# =====================================================================================
+# --- Act X: the Maelstrom --- the Sea Serpent's BREACH (strike type "breach")
+# =====================================================================================
+
+## The lane of a breach by `serpent` toward `at`: [from (its hull point), unit
+## direction, length px] (CorsairRulesData.BREACH).
+func _breach_lane(serpent_pos: Vector2, at: Vector2) -> Array:
+	var dir := at - serpent_pos
+	dir = dir.normalized() if dir.length() > 0.5 else Vector2.UP
+	return [serpent_pos, dir, float(CorsairRulesData.BREACH["length"])]
+
+
+## True when a body of radius `r` at `p` lies in the lane [from, dir, length].
+static func _in_lane(lane: Array, p: Vector2, r: float) -> bool:
+	var rel := p - (lane[0] as Vector2)
+	var along := rel.dot(lane[1] as Vector2)
+	if along < -r or along > float(lane[2]) + r:
+		return false
+	return absf(rel.dot((lane[1] as Vector2).orthogonal())) <= float(CorsairRulesData.BREACH["half_width"]) + r
+
+
+## THE BREACH lands: the serpent's body sweeps its lane once, BOTH ARMIES (the
+## strike's damage keys: summons and the necromancer x the damage scaling, deck
+## enemies x the HP scaling), then it submerges (the caller ends the strike).
+func _breach(serpent: Enemy, at: Vector2, c: Dictionary) -> void:
+	var lane := _breach_lane(serpent.position, at)
+	var dm := game.enemies.damage_mult
+	var mid: Vector2 = (lane[0] as Vector2) + (lane[1] as Vector2) * float(lane[2]) * 0.5
+	var reach := float(lane[2]) * 0.5 + float(CorsairRulesData.BREACH["half_width"])
+	game.stat_add("sea_breaches", 1.0)
+	game.effects.ring(mid, reach * 0.6, Palette.CORSAIR_SERPENT_LIGHT, 0.3)
+	game.shake(1.5)
+	if game.corsair != null:
+		game.corsair.play_sound("serpent_breach", mid, 0.4)
+	for pl in game.all_players:
+		if not pl.dead and _in_lane(lane, pl.position, pl.radius):
+			game.combat.damage_player(float(c["dmg_player"]) * dm, CorsairRulesData.STRIKE_SOURCE, pl)
+			game.stat_add("sea_strike_hits_you", 1.0)
+	game.ally_grid.query(mid, reach + UnitData.MAX_BLOCK_RADIUS, _tmp)
+	for u: SummonedUnit in _tmp:
+		if u.active and not u.airborne and _in_lane(lane, u.position, u.radius):
+			game.combat.damage_unit(u, float(c["dmg_summon"]) * dm, CorsairRulesData.STRIKE_SOURCE)
+			game.stat_add("sea_strike_hits_summons", 1.0)
+			game.stat_add("sea_breach_hits", 1.0)
+	var hits: Array[Enemy] = []
+	game.enemy_grid.query(mid, reach + ProjectileManager.MAX_BODY_RADIUS, _tmp)
+	for e: Enemy in _tmp:
+		if e.active and e != serpent and not e.is_structure and not CorsairKit.is_in_water(e) and _in_lane(lane, e.position, e.radius):
+			hits.append(e)
+	var hp := game.enemies.hp_mult
+	for e in hits:
+		if e.active:
+			game.stat_add("sea_strike_enemy_dmg", game.combat.damage_enemy(e, float(c["dmg_enemy"]) * hp, CorsairRulesData.STRIKE_SOURCE))
+
+
+## The autotest autopilot's push out of a telegraphed breach lane at `p`.
+func _breach_push(st: Dictionary, p: Vector2) -> Vector2:
+	var owner: Enemy = st["owner"]
+	if owner == null or not _alive(owner, int(st["gen"])):
+		return Vector2.ZERO
+	var lane := _breach_lane(owner.position, st["at"])
+	if not _in_lane(lane, p, game.player.radius + 16.0):
+		return Vector2.ZERO
+	var side := (lane[1] as Vector2).orthogonal()
+	var off := (p - (lane[0] as Vector2)).dot(side)
+	return side * (1.5 if off >= 0.0 else -1.5)
+
+
+## A breach's telegraph on `ci`: the lane darkening as it nears, its edges in
+## lantern amber (rects in the lane's frame; visual only).
+func _draw_breach(ci: CanvasItem, st: Dictionary, t: float) -> void:
+	var owner: Enemy = st["owner"]
+	if owner == null or not _alive(owner, int(st["gen"])):
+		return
+	var c: Dictionary = st["c"]
+	var k := clampf(1.0 - (float(st["land"]) - t) / maxf(float(c["telegraph"]), 0.01), 0.0, 1.0)  # 0 -> 1 as it lands.
+	var lane := _breach_lane(owner.position, st["at"])
+	var hw := float(CorsairRulesData.BREACH["half_width"])
+	var length := float(lane[2])
+	ci.draw_set_transform(lane[0], (lane[1] as Vector2).angle(), Vector2.ONE)
+	ci.draw_rect(Rect2(Vector2(0.0, -hw), Vector2(length * (0.3 + 0.7 * k), hw * 2.0)), Color(Palette.CORSAIR_INK, 0.2 + 0.3 * k))
+	ci.draw_rect(Rect2(Vector2(0.0, -hw), Vector2(length, 2.0)), Color(Palette.CORSAIR_LANTERN, 0.5 + 0.4 * k))
+	ci.draw_rect(Rect2(Vector2(0.0, hw - 2.0), Vector2(length, 2.0)), Color(Palette.CORSAIR_LANTERN, 0.5 + 0.4 * k))
+	ci.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)

@@ -21,8 +21,10 @@
 ##     knockback (kept at wave_knock px/s outward), so the far rail drowns
 ##     them (DeckBounds); bosses, minibosses and structures stand. It deals
 ##     wave_damage once to every summon and necromancer.
-##   * Gunboats' shelling and the kraken's surfacing are phase 2 (the
-##     Gunboat kind, the Maelstrom's kraken).
+##   * THE GUNBOATS (Act X, the Treasure Galleon's block): with a
+##     "gunboat_every" > 0 (the Galleon's RECKONING) a gunboat comes alongside
+##     every gunboat_every s (GunboatKit.launch(), capped) and shells the deck
+##     in lines. The kraken's surfacing is the Maelstrom's.
 ## Determinism: the seeded gameplay RNG only (the strike points, the first
 ## wave's side). Stats: black_tide_strikes, black_tide_waves,
 ## black_tide_wave_pushes (enemies shoved), black_tide_drowned (overboard
@@ -50,10 +52,17 @@ var _wave_at: float = -1.0
 var strikes: int = 0
 ## Waves rolled so far (the report).
 var waves: int = 0
+## Game time (s) of the next gunboat (Act X, the Treasure Galleon; INF = none).
+var _next_gunboat: float = INF
 ## True once the current wave's start (its damage) has run.
 var _wave_hit: bool = false
 ## Overboard count when the current wave started (the report's wave drownings).
 var _drowned_before: int = 0
+# --- Act X: the Maelstrom ---
+## Game time (s) the next kraken arm surfaces (-1 = not scheduled yet).
+var _next_kraken: float = -1.0
+## Kraken arms that surfaced in the Black Tide (the report).
+var krakens: int = 0
 
 
 ## Builds the Black Tide for `p_game`; `p_enabled` false off Act X.
@@ -85,6 +94,12 @@ func step(delta: float) -> void:
 		_next_strike = now + float(cfg["strike_every"])
 		_next_wave = now + float(cfg["wave_every"]) - float(cfg["wave_telegraph"])
 		_side = 1 if randf() < 0.5 else -1
+		if float(cfg.get("gunboat_every", 0.0)) > 0.0:
+			_next_gunboat = now + float(cfg["gunboat_every"]) * 0.5  # Act X, the Treasure Galleon: the gunboats.
+	if now >= _next_gunboat:
+		_next_gunboat = now + float(cfg["gunboat_every"])
+		if GunboatKit.launch(game, game.enemies.hp_mult, 1.0, true) != null:
+			game.stat_add("black_tide_gunboats", 1.0)
 	if now >= _next_strike:
 		_rail_strike()
 		var mins := (now - started_at) / 60.0
@@ -102,6 +117,7 @@ func step(delta: float) -> void:
 			_next_wave = now + float(cfg["wave_every"]) - float(cfg["wave_telegraph"])
 			_side = -_side
 			game.stat_add("black_tide_drowned", float(game.deck.drowned - _drowned_before))
+	_kraken(now)  # --- Act X: the Maelstrom --- the kraken surfaces.
 
 
 ## One ownerless strike on the rail band beside a standing necromancer.
@@ -176,3 +192,23 @@ func draw(ci: CanvasItem) -> void:
 	var x1 := deck.center.x + deck.half_length
 	ci.draw_rect(Rect2(Vector2(x0, y - 4.0), Vector2(x1 - x0, 8.0)), Color(Palette.CORSAIR_SEA_LIGHT, 0.3 + 0.3 * k))
 	ci.draw_line(Vector2(x0, y), Vector2(x1, y), Color(Palette.CORSAIR_FOAM_LIGHT, 0.5 + 0.5 * k), 2.0)
+
+
+# --- Act X: the Maelstrom ---
+## "The kraken surfaces" (owner-approved proposal): every kraken_every s (the
+## first kraken_first s after 0:00; 0 = off) a kraken arm comes up out of the
+## sea through SeaStrikes.spawn_swimmer() (the Reckoning's flag; the swimmer cap
+## holds), at the director's HP scaling.
+func _kraken(now: float) -> void:
+	var every := float(cfg.get("kraken_every", 0.0))
+	if every <= 0.0:
+		return
+	if _next_kraken < 0.0:
+		_next_kraken = started_at + float(cfg.get("kraken_first", every))
+	if now < _next_kraken:
+		return
+	_next_kraken = now + every
+	if game.corsair.sea.spawn_swimmer("kraken_arm", game.enemies.hp_mult, false, 1.0, true):
+		krakens += 1
+		game.stat_add("black_tide_krakens", 1.0)
+		game.corsair.play_sound("kraken_rise", game.player.position, 1.0)

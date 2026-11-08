@@ -108,7 +108,13 @@ const ORDER := ["void_barrage", "eclipse_ward", "abyssal_detonation",
 	# --- Act IX: the Proving Moon ---
 	"apex_predator",
 	# --- Act IX: the Ark ---
-	"star_abduction"]
+	"star_abduction",
+	# --- Act X: the Smuggler's Cutter ---
+	"keelhauler",
+	# --- Act X: the Treasure Galleon ---
+	"dead_mens_broadside",
+	# --- Act X: the Maelstrom ---
+	"abyssal_mooring"]
 
 ## Evolution definitions.
 ##   base         — spell id that evolves (AbilityData.SPELLS key).
@@ -801,6 +807,67 @@ const EVOLUTIONS := {
 		"stats": {
 			"damage": 88.0, "cooldown": 2.4, "lifts": 3, "lift_time": 1.2, "slam_radius": 70.0, "slam_share": 0.5,  # TUNING (not in GDD) first pass 96 / 0.55
 			"pull": 120.0, "pull_force": 260.0, "quake_share": 0.18,  # TUNING (not in GDD) the evolution flag: the pull round each slam (first pass 0.3: 244k damage, 95k of it quake, in the forced seed-7 Graveyard run)
+		},
+	},
+	# --- Act X: the Smuggler's Cutter ---
+	# Keelhauler (GDD §15.0 "Chain Shot, Keelhauler, Bosun's Whistle and the
+	# Marooned Quartermaster (Act X)"; owner-approved proposal "Chain Shot ->
+	# Keelhauler (+ Bosun's Whistle)"): Chain Shot + Bosun's Whistle (a NEW
+	# passive, owner rule: at Lv 5). Own decision on its kit: heavier, wider
+	# shots that KNOCK every foe they strike `knock` px off the line (never a
+	# boss, miniboss or structure; on the Black Tide's decks, over the rail).
+	# No pull (owner: the act's spells knock back, chain and bombard). Detected
+	# by the "knock" key.
+	"keelhauler": {
+		"base": "chain_shot",
+		"passive": "bosuns_whistle",
+		"display_name": "Keelhauler",  # Owner-approved proposal
+		"icon": "keelhauler",
+		"description": "Barnacled chain-shots tear through the line and back, throwing every foe they strike aside.",
+		"labels": {"damage": "Hit damage", "shots": "Chain-shots", "knock": "Knockback (px)", "cooldown": "Cooldown (s)"},
+		"stats": {
+			"damage": 12.0, "shots": 3, "range": 320.0, "speed": 440.0, "width": 22.0, "cooldown": 2.4,  # TUNING (not in GDD) integration balance 16 -> 12 (159k with the base in the forced seed-7 Cutter run, 2.5x the top summon class); first pass 27 / 2.2 s (185k in the forced seed-7 run, 3.4x the Death Knights), then 19 (177k, 1.7x the Mages: its knocks drown more)
+			"knock": 80.0,  # TUNING (not in GDD) the evolution flag: px each struck foe is knocked off the line
+		},
+	},
+	# --- Act X: the Treasure Galleon ---
+	# Dead Men's Broadside (GDD §15.0 "Cannonade, Dead Men's Broadside, Black
+	# Powder and the Corsair Queen (Act X)"; owner-approved proposal "Cannonade
+	# -> Dead Men's Broadside (+ Black Powder)"): Cannonade + Black Powder (a NEW
+	# passive, owner rule: at Lv 5). Own decision on its kit: five marks,
+	# wider blasts, and every mark takes a second ball `salvo` s later dealing
+	# `salvo_share` of the damage (a double broadside). Detected by the "salvo" key.
+	"dead_mens_broadside": {
+		"base": "cannonade",
+		"passive": "black_powder",
+		"display_name": "Dead Men's Broadside",  # Owner-approved proposal
+		"icon": "dead_mens_broadside",
+		"description": "Five groups marked at once, and a second ghostly ball follows every first.",
+		"labels": {"damage": "Ball damage", "marks": "Groups marked", "salvo": "Second ball after (s)", "cooldown": "Cooldown (s)"},
+		"stats": {
+			"damage": 26.0, "marks": 5, "radius": 42.0, "range": 380.0, "cooldown": 2.8,  # TUNING (not in GDD) integration balance 30 -> 26 (232k with the base, above the Death Knights); first pass 40 / 2.6 s (the forced seed-7 run: 261k from the evolution alone)
+			"salvo": 0.45,  # TUNING (not in GDD) the evolution flag: s between the two balls of a mark
+			"salvo_share": 0.5,  # TUNING (not in GDD) x the damage of the second ball
+		},
+	},
+	# --- Act X: the Maelstrom ---
+	# Abyssal Mooring (GDD §15.0 "Anchor Drop, Abyssal Mooring, Dead Reckoning
+	# and the Ghost Helmsman"; owner-approved proposal "Anchor Drop -> Abyssal
+	# Mooring (+ Dead Reckoning)"): Anchor Drop + Dead Reckoning (a NEW passive,
+	# owner rule: at Lv 5). Two anchors a cast, harder, a wider shock and a
+	# longer stun, and each anchor stays MOORED `moor` s where it fell, shocking
+	# the foes within moor_radius px every moor_every s for moor_share x the
+	# damage (no pull). Detected by the "moor" key.
+	"abyssal_mooring": {
+		"base": "anchor_drop",
+		"passive": "dead_reckoning",
+		"display_name": "Abyssal Mooring",  # Owner-approved proposal
+		"icon": "abyssal_mooring",
+		"description": "Two anchors fall from the abyss; each stays moored where it lands, shocking all around it.",
+		"labels": {"damage": "Slam damage", "cooldown": "Cooldown (s)", "anchors": "Anchors", "anchor_stun": "Stun (s)", "ring_radius": "Shock (px)", "ring_share": "Shock damage", "moor": "Moored (s)", "moor_share": "Mooring pulse"},
+		"stats": {
+			"damage": 80.0, "cooldown": 2.5, "anchors": 2, "anchor_stun": 1.5, "ring_radius": 70.0, "ring_share": 0.18,  # TUNING (not in GDD) integration balance 90 / 0.3 -> 80 / 0.18 (345k in the forced seed-7 Maelstrom run, 1.5x the top summon class); first passes 74 px / 0.55, then 0.42 (404k in the forced seed-7 Maelstrom run)
+			"moor": 2.0, "moor_every": 0.6, "moor_share": 0.06, "moor_radius": 64.0,  # TUNING (not in GDD) integration balance 0.08 -> 0.06; the evolution flag: the moored anchor's pulses (first pass 2.4 s / 0.18 / 70 px: 437k damage in the forced seed-7 Maelstrom run)
 		},
 	},
 }

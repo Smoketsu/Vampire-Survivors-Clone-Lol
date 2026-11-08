@@ -52,6 +52,10 @@ var tide: BlackTide
 var first_seen: Dictionary = {}
 ## Sound event -> game time (s) it last played (rate limits).
 var _sound_at: Dictionary = {}
+## Act X, the Treasure Galleon: grenadoes in the air (lob()): each {at, land
+## (game s), keg}; they burst through powder_blast() even if their thrower
+## fell (a thrown grenado is out of her hands).
+var _lobs: Array[Dictionary] = []
 
 
 ## Builds the rules for `p_game` (call before add_child; Game does both).
@@ -79,6 +83,7 @@ func step(delta: float) -> void:
 	tide.step(delta)
 	boarding.step(delta)
 	sea.step(delta)
+	_step_lobs()
 	queue_redraw()
 
 
@@ -100,6 +105,9 @@ func routes() -> bool:
 ## promoted by the difficulty (base XP).
 func route_spawn(kind: String, hp_scale: float, elite: bool, dmg_scale: float, reckoning: bool, promoted: bool) -> void:
 	var row := game.enemies.enemy_def(kind)
+	if bool(row.get("gunboat", false)):
+		GunboatKit.launch(game, hp_scale, dmg_scale, reckoning)  # Act X, the Treasure Galleon: a gunboat comes alongside (never boards).
+		return
 	if bool(row.get("water", false)):
 		sea.spawn_swimmer(kind, hp_scale, elite, dmg_scale, reckoning)
 		return
@@ -192,7 +200,17 @@ func powder_blast(at: Vector2, keg: Dictionary, skip: Enemy = null) -> void:
 func danger_push(p: Vector2) -> Vector2:
 	if not enabled:
 		return Vector2.ZERO
-	return deck.danger_push(p) + sea.danger_push(p) + tide.danger_push(p)
+	var push := deck.danger_push(p) + sea.danger_push(p) + tide.danger_push(p)
+	# --- Act X: the Smuggler's Cutter --- off the ram longboat's point while its lane shows.
+	if game.enemies.cutter != null:
+		push += game.enemies.cutter.danger_push(p)
+	push += lob_danger(p)  # Act X, the Treasure Galleon: out of the grenadoes' landing circles.
+	if game.enemies.galleon != null:
+		push += game.enemies.galleon.danger_push(p)  # Act X, the Treasure Galleon: out of the broadside lanes.
+	# --- Act X: the Maelstrom --- the Heave: lean uphill, off the low rail.
+	if game.enemies.maelstrom != null:
+		push += game.enemies.maelstrom.danger_push(p)
+	return push
 
 
 # =====================================================================================
@@ -230,3 +248,38 @@ func _draw() -> void:
 	boarding.draw(self)
 	sea.draw(self)
 	tide.draw(self)
+
+
+# --- Act X: the Treasure Galleon ---
+## A GRENADO is thrown (the Gunnery Mate's lob, GunneryMateKit): it bursts at
+## `at` after `flight` s through THE POWDER BLAST with `keg`'s numbers, its
+## landing circle telegraphed until then. Off Act X it bursts too (the rules
+## step only on a deck stage, so there the kit bursts it itself).
+func lob(at: Vector2, flight: float, keg: Dictionary) -> void:
+	_lobs.append({"at": at, "land": game.elapsed + flight, "keg": keg})
+	game.effects.telegraph_circle(at, float(keg.get("radius", 46.0)), flight)
+
+
+## Bursts every grenado whose flight ended.
+func _step_lobs() -> void:
+	var i := 0
+	while i < _lobs.size():
+		var g: Dictionary = _lobs[i]
+		if game.elapsed < float(g["land"]):
+			i += 1
+			continue
+		_lobs.remove_at(i)
+		powder_blast(g["at"], g["keg"], null)
+		game.stat_add("gunnery_grenadoes", 1.0)
+
+
+## The autotest bot's push out of every grenado's landing circle at `p`.
+func lob_danger(p: Vector2) -> Vector2:
+	var push := Vector2.ZERO
+	for g in _lobs:
+		var reach := float((g["keg"] as Dictionary).get("radius", 46.0)) + 18.0
+		var off: Vector2 = p - (g["at"] as Vector2)
+		var d := off.length()
+		if d < reach:
+			push += (off / d if d > 0.01 else Vector2.RIGHT) * (1.0 - d / reach) * 2.0
+	return push

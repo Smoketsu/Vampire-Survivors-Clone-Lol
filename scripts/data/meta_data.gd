@@ -444,7 +444,13 @@ const ACHIEVEMENT_ORDER := ["bone_legion", "heretics_bane", "dread_sovereign", "
 	# --- Act IX: the Proving Moon ---
 	"the_hunter_hunted",
 	# --- Act IX: the Ark ---
-	"last_harvest"]
+	"last_harvest",
+	# --- Act X: the Smuggler's Cutter ---
+	"not_one_aboard",
+	# --- Act X: the Treasure Galleon ---
+	"walked_the_plank",
+	# --- Act X: the Maelstrom ---
+	"dead_men_tell_tales"]
 
 ## Achievement definitions (GDD §9.4 "Example Achievement Unlocks"). Each
 ## achievement is tracked and recorded in the save and pays a one-time Soul
@@ -691,6 +697,38 @@ const ACHIEVEMENTS := {
 	# clear, with the title The Unharvested (UnlockData / TitleData).
 	"last_harvest": {"display_name": "The Last Harvest", "description": "Beat the Harvester on the Ark of the Concord",
 		"stat": "boss_kills", "stage": "ark", "goal": 1, "unlock": "The title The Unharvested", "bounty": 500},  # Owner-approved proposal; bounty TUNING (not in GDD) as Last Supper
+	# --- Act X: the Smuggler's Cutter ---
+	# Not One Aboard (owner-approved Act X proposal: "sink five boats before a
+	# single crewman climbs aboard, on the Cutter"). Own reading, recorded in
+	# GDD §15.0: five CLEAN SINKS in one Cutter run, each a boat sunk before any
+	# of ITS crew climbed aboard (BoardingParty stat boats_sunk_clean; the
+	# Cutter's crew climbs the hooks for 3 s first, its STAGE first_pour;
+	# lead decision at the integration, 1 -> 3 s: nobody could earn it).
+	# CutterDirector sets the run stat cutter_not_one_aboard; MetaProgress
+	# counts the runs (lifetime not_one_aboard_runs). It unlocks the
+	# counter-passive Barnacle Bones (the brief's pairing).
+	"not_one_aboard": {"display_name": "Not One Aboard", "description": "On the Smuggler's Cutter, sink five boats before any of their crew climbs aboard",
+		"stat": "not_one_aboard_runs", "goal": 1, "unlock": "The Barnacle Bones passive", "bounty": 300},  # Owner-approved Act X proposal; bounty TUNING (not in GDD) as Nothing Hatched
+	# --- Act X: the Treasure Galleon ---
+	# Walked the Plank (brief: "push 200 enemies overboard in one run: the
+	# overboard_total stat"): a run in which at least GalleonData.WALKED_GOAL
+	# enemies drowned overboard (any Black Tide deck; MetaProgress counts the
+	# runs, lifetime walked_the_plank_runs). It unlocks the counter-passive Sea
+	# Legs (brief).
+	"walked_the_plank": {"display_name": "Walked the Plank", "description": "Send 200 foes overboard in one run",
+		"stat": "walked_the_plank_runs", "goal": 1, "unlock": "The Sea Legs passive", "bounty": 300},  # Brief; bounty TUNING (not in GDD) as The Hunter Hunted
+	# --- Act X: the Maelstrom ---
+	# The Black Tide's finale (owner-approved proposal: "Dead Men Tell Tales
+	# (beat Vandermere with the Oath broken three times; opens the act's
+	# epilogue part)"; the lead's plan: no epilogue part until the reorder, so
+	# it only records the clear, with the title Captain of the Dead): a run in
+	# which Vandermere fell with his Oath broken at least twice (lowered from
+	# three by the lead at the integration: the army slays him in his first
+	# broken-Oath window; VandermereData.TALES_BREAKS; run stat
+	# vandermere_tales_kills, set by MaelstromDirector; MetaProgress counts it,
+	# lifetime dead_men_tales_kills).
+	"dead_men_tell_tales": {"display_name": "Dead Men Tell Tales", "description": "Beat Vandermere in the Maelstrom with his Oath broken twice",
+		"stat": "dead_men_tales_kills", "goal": 1, "unlock": "The title Captain of the Dead", "bounty": 500},  # Owner-approved proposal; bounty TUNING (not in GDD) as The Last Harvest
 }
 
 # --- Content wave 2: B. Achievement rewards ---

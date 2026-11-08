@@ -249,6 +249,31 @@ func step(delta: float) -> void:
 		_drawn = busy
 
 
+# --- Act X: the Smuggler's Cutter ---
+## Off Act VI (InfernoRules not enabled), the per-tick update of the pits
+## opened through open_pit() only (Captain Crow's Fire Ship): their closing,
+## their burn and their redraw. No fixed pit is built and no timed pit opens,
+## so nothing changes on any stage where nobody calls open_pit().
+func step_opened(delta: float) -> void:
+	var now := game.elapsed
+	var i := 0
+	while i < count:
+		if now >= _close_at[i] + float(cfg["close_time"]):
+			_remove(i)
+			continue
+		i += 1
+	_tick_acc += delta
+	var tick := float(cfg["tick"])
+	if _tick_acc >= tick:
+		_tick_acc -= tick
+		_burn(tick)
+	if _draws:
+		var busy := count > 0
+		if busy or _drawn:
+			queue_redraw()
+		_drawn = busy
+
+
 ## Index of the zone at game time `t` (the last STAGE "zones" row started by then).
 func _zone_at(t: float) -> int:
 	var z := 0

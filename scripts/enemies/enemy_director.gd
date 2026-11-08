@@ -174,10 +174,19 @@
 ##     crater, Infestation's eggs, Nothing Hatched, the Brood Matriarch;
 ##     `crash_site`) and hands it the "matriarch" events. Its eggs have their
 ##     own cap: regular_alive() leaves them out. Null elsewhere.
+##   * Act X, the Smuggler's Cutter (GDD §15.0 "The Smuggler's Cutter (Act X
+##     phase 2)"): on a stage with a "cutter" config it owns the
+##     CutterDirector (barrels, the Fog Bank, Gorran's ram, the Fire Ship;
+##     `cutter`) and hands it the "gorran" events; regular_alive() leaves its
+##     barrels and ram longboat out. Null elsewhere.
 ##   * Act IX, the Proving Moon (GDD §15.0 "The Proving Moon (Act IX phase
 ##     2)"): on a stage with a "proving_moon" config it owns the
 ##     ProvingMoonDirector (the Warbeast, the Last Trophy objective;
 ##     `proving_moon`) and hands it the "warbeast" events. Null elsewhere.
+##   * Act X, the Treasure Galleon (GDD §15.0 "The Treasure Galleon (Act X
+##     phase 2)"): on a stage with a "galleon" config it owns the
+##     GalleonDirector (the zones, the broadsides, the deck cannons, Old
+##     Hollow-Eye; `galleon`) and hands it the "hollow_eye" events. Null elsewhere.
 ##   * Online co-op (CoopSession; docs/coop/DESIGN.md): every enemy steps with
 ##     its NEAREST standing necromancer bound (CoopSession.bind_nearest()), so
 ##     it advances on, aims at and recycles around that one (bosses and kits
@@ -377,6 +386,11 @@ var liberty_heights: LibertyHeightsDirector = null
 ## Hatched, the Brood Matriarch; StageRegistry "crash_site"; null on every
 ## other stage).
 var crash_site: CrashSiteDirector = null
+# --- Act X: the Smuggler's Cutter ---
+## The Smuggler's Cutter's stage systems (Act X: the powder barrels, the Fog
+## Bank, Bosun Gorran's ram longboat, the Fire Ship's patches, Not One Aboard;
+## StageRegistry "cutter"; null on every other stage).
+var cutter: CutterDirector = null
 # --- Act IX: the Proving Moon ---
 ## The Proving Moon's mechanics (Act IX: the Warbeast, the Last Trophy
 ## objective; StageRegistry "proving_moon"; null on every other stage).
@@ -386,6 +400,15 @@ var proving_moon: ProvingMoonDirector = null
 ## Reactor's vents, the Luminous Archon; StageRegistry "ark"; null on every
 ## other stage).
 var ark: ArkDirector = null
+# --- Act X: the Treasure Galleon ---
+## The Treasure Galleon's mechanics (Act X: the zones, the broadsides, the
+## deck cannons, Old Hollow-Eye; StageRegistry "galleon"; null on every other stage).
+var galleon: GalleonDirector = null
+# --- Act X: the Maelstrom ---
+## The Maelstrom's mechanics (Act X: the Heave, the raised ghost crew, the
+## Ghost Bosun, Vandermere's crew; StageRegistry "maelstrom"; null on every
+## other stage).
+var maelstrom: MaelstromDirector = null
 ## Sanctum kit bookkeeping: recent deaths, Confessor revivals, danger hints.
 var rites: CovenantRites
 ## The living miniboss shown on the HUD's miniboss bar (the Cathedral
@@ -578,6 +601,12 @@ func _ready() -> void:
 		crash_site.game = game
 		crash_site.config = stage_def["crash_site"]
 		add_child(crash_site)  # The Crash Site's director.
+	# --- Act X: the Smuggler's Cutter ---
+	if not (stage_def.get("cutter", {}) as Dictionary).is_empty():
+		cutter = CutterDirector.new()
+		cutter.game = game
+		cutter.config = stage_def["cutter"]
+		add_child(cutter)  # The Smuggler's Cutter's director.
 	# --- Act IX: the Proving Moon ---
 	if not (stage_def.get("proving_moon", {}) as Dictionary).is_empty():
 		proving_moon = ProvingMoonDirector.new()
@@ -590,6 +619,18 @@ func _ready() -> void:
 		ark.game = game
 		ark.config = stage_def["ark"]
 		add_child(ark)  # The Ark of the Concord's director.
+	# --- Act X: the Treasure Galleon ---
+	if not (stage_def.get("galleon", {}) as Dictionary).is_empty():
+		galleon = GalleonDirector.new()
+		galleon.game = game
+		galleon.config = stage_def["galleon"]
+		add_child(galleon)  # The Treasure Galleon's director.
+	# --- Act X: the Maelstrom ---
+	if not (stage_def.get("maelstrom", {}) as Dictionary).is_empty():
+		maelstrom = MaelstromDirector.new()
+		maelstrom.game = game
+		maelstrom.config = stage_def["maelstrom"]
+		add_child(maelstrom)  # The Maelstrom's director.
 
 
 # =====================================================================================
@@ -734,12 +775,21 @@ func step(delta: float) -> void:
 	# --- Act IX: the Crash Site ---
 	if crash_site != null:
 		crash_site.step(delta)  # The crater, Infestation's eggs, the Brood Matriarch.
+	# --- Act X: the Smuggler's Cutter ---
+	if cutter != null:
+		cutter.step(delta)  # The powder barrels, the Fog Bank, Gorran's ram, the Fire Ship.
 	# --- Act IX: the Proving Moon ---
 	if proving_moon != null:
 		proving_moon.step(delta)  # The Warbeast.
 	# --- Act IX: the Ark ---
 	if ark != null:
 		ark.step(delta)  # The tanks, the vents.
+	# --- Act X: the Treasure Galleon ---
+	if galleon != null:
+		galleon.step(delta)  # The zones, the broadsides, the deck cannons, Old Hollow-Eye.
+	# --- Act X: the Maelstrom ---
+	if maelstrom != null:
+		maelstrom.step(delta)  # The Heave, the raised ghosts, the Ghost Bosun.
 
 
 ## The Archive kinds' world hazards (ArchiveHazards), created on first use.
@@ -798,6 +848,8 @@ func regular_alive() -> int:
 		n -= crash_site.eggs_alive()  # Act IX, the Crash Site: Infestation's eggs have their own cap.
 	if game.corsair != null:
 		n += game.corsair.alive_adjust()  # Act X: crew waiting for a boat count; boats and hooks do not.
+	if cutter != null:
+		n -= cutter.structures_alive()  # Act X, the Cutter: the powder barrels and the ram longboat are not crew.
 	if game.dynasty != null:
 		n -= game.dynasty.rebirth.alive_count()  # Act XII (temporary): Rebirth's cartouches have their own cap.
 	return n
@@ -887,12 +939,21 @@ func objective_text() -> String:
 	# --- Act IX: the Crash Site ---
 	if crash_site != null and crash_site.objective_override() != "":
 		return crash_site.objective_override()  # The Brood Matriarch.
+	# --- Act X: the Smuggler's Cutter ---
+	if cutter != null and cutter.objective_override() != "":
+		return cutter.objective_override()  # Bosun Gorran.
 	# --- Act IX: the Proving Moon ---
 	if proving_moon != null and proving_moon.objective_override() != "":
 		return proving_moon.objective_override()  # The Last Trophy's countdown, the Warbeast.
 	# --- Act IX: the Ark ---
 	if ark != null and ark.objective_override() != "":
 		return ark.objective_override()  # The Luminous Archon, the Reaping.
+	# --- Act X: the Treasure Galleon ---
+	if galleon != null and galleon.objective_override() != "":
+		return galleon.objective_override()  # The Admiral's plank, a broadside, Old Hollow-Eye.
+	# --- Act X: the Maelstrom ---
+	if maelstrom != null and maelstrom.objective_override() != "":
+		return maelstrom.objective_override()  # The Ghost Bosun, the Heave's arrow (the HUD arrow, owner-approved proposal).
 	if boss != null and not boss.active:
 		return String(boss_info["dead_objective"])
 	return segments[segment_index]["objective"]
@@ -1146,6 +1207,12 @@ func _run_event(ev: Dictionary) -> void:
 				crash_site.start_event(ev)
 			game.stat_add("wave_events", 1.0)
 			return  # The Crash Site's miniboss (CrashSiteDirector).
+		# --- Act X: the Smuggler's Cutter ---
+		"gorran":
+			if cutter != null:
+				cutter.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return  # The Cutter's miniboss and his ram longboat (CutterDirector).
 		# --- Act IX: the Proving Moon ---
 		"warbeast":
 			if proving_moon != null:
@@ -1158,6 +1225,18 @@ func _run_event(ev: Dictionary) -> void:
 				ark.start_event(ev)
 			game.stat_add("wave_events", 1.0)
 			return  # The Ark's miniboss (ArkDirector).
+		# --- Act X: the Treasure Galleon ---
+		"hollow_eye":
+			if galleon != null:
+				galleon.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return  # The Treasure Galleon's miniboss (GalleonDirector).
+		# --- Act X: the Maelstrom ---
+		"ghost_bosun":
+			if maelstrom != null:
+				maelstrom.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return  # The Maelstrom's miniboss (MaelstromDirector).
 	show_banner(ev["banner"])
 	var groups: Array = ev["groups"]
 	if game.shogunate != null:

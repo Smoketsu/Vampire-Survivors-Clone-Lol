@@ -208,9 +208,9 @@ Autotest options (full table in the README):
 the autotests for the area a change touches plus one default run; run the full "Done" set (every stage,
 the same-seed gates) once per batch of changes, before `main` moves; multi-seed batches only for balance.
 
-CI (`.github/workflows/ci.yml`) runs the import and, as twenty-five **parallel** matrix jobs, the Graveyard
+CI (`.github/workflows/ci.yml`) runs the import and, as twenty-eight **parallel** matrix jobs, the Graveyard
 autotest with the naive and army policies, a Crimson March autotest, a Sanctum of Judgment autotest (army
-policy) and one army autotest per Act II, Act IV, V, VI, VII, VIII and IX stage; beside them, the Windows/Linux/Web exports (artifacts
+policy) and one army autotest per Act II, Act IV, V, VI, VII, VIII, IX and X (the Black Tide) stage; beside them, the Windows/Linux/Web exports (artifacts
 `Necropathy-windows` / `-linux` / `-web`) and an exported-build smoke test; also the co-op jobs `coop-net` (relay
 protocol + two-process transport test) and `coop-lockstep` (the two-process full-run determinism gate, ~10 min, not
 waited on by the publish jobs) and, on `main` pushes, `deploy-relay` (the Worker, secrets `CLOUDFLARE_API_TOKEN` /
@@ -735,6 +735,17 @@ tiny tweaks.
    (the finale), fifteen acts in all. Waits on the owner's answers to the doc's open questions; then wave 1 (Dynasty + Norse + a
    Black Tide deck spike), wave 2 (Black Tide + Celestial Host + Titans), wave 3 (Turning Year), each with the `docs/act5/` plan
    and tuned for its final slot, then the reorder in one pass.
+   Wave 1b, **the Black Tide is live** on the lead's branch `tide-integration` (GDD §15.0 from "The Smuggler's Cutter (Act X
+   phase 2)" to "The Black Tide goes live (integration and balance)"; balance pass `docs/tide/playtest/pass1.md`): **the
+   Smuggler's Cutter** (`CutterDirector`: powder barrels, the Fog Bank, Bosun Gorran's ram longboat, Captain Crow and the Fire
+   Ship through `HellPits.open_pit()`; the shared Grappler and Boatswain; Chain Shot / Keelhauler + Bosun's Whistle, the
+   Marooned Quartermaster, Not One Aboard → Barnacle Bones), **the Treasure Galleon** (broadsides, the deck cannons as a
+   world rule, the Gunnery Mate, Voodoo Navigator, Gunboat and Hull Crab, Old Hollow-Eye, Admiral Marrec, Cannonade / Dead
+   Men's Broadside + Black Powder, the Corsair Queen, Walked the Plank → Sea Legs) and **the Maelstrom** (the Heave
+   (`MaelstromDirector`), the ghost crew raised for the necromancer, the Sea Serpent (`corsair_serpent`: Act IV owns
+   `sea_serpent`), the Ghost Bosun, Captain Vandermere and Dead Men's Oath, Anchor Drop / Abyssal Mooring + Dead Reckoning,
+   the Ghost Helmsman, the Powder Wraith / Magazine Lord + Slow Match, Dead Men Tell Tales); `"playable": true`, one CI army
+   job each. Still Act X until the reorder (final slot II); no epilogue part or closing card yet.
 7. **Phase 4 polish:** accessibility, profiling on real hardware, and the **final balance pass**.
    The owner's Oct 2026 playtest balance pass is in (GDD §15.0 "Balance pass (Oct 2026 playtest)": Dread Rally raises the army, spells ×1.2, boss HP Alaric −35% / Vael −40% / Seraphine −30%, later level-up items weigh 0.5, Frost Wraith / Bone Hound / Banshee base damage raised; the earlier +5% global multiplier was removed); further value tweaks wait for this pass (naive-bot
    death rates above target on both stages and spell-only builds lacking single-target damage are

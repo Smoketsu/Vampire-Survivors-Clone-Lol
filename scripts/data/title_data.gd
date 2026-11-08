@@ -31,7 +31,9 @@ const ORDER := ["heretics_bane", "master_of_the_drowned", "archnecromancer", "ex
 	# --- Act VIII: Liberty Heights ---
 	"bane_of_heroes",
 	# --- Act IX: the Ark ---
-	"the_unharvested"]  # owner-approved Proposal 2; Act III proposal; Act VI, Act VII and Act VIII (own decisions)
+	"the_unharvested",
+	# --- Act X: the Maelstrom ---
+	"captain_of_the_dead"]  # owner-approved Proposal 2; Act III proposal; Act VI, Act VII and Act VIII (own decisions)
 
 ## Title id -> row (keys above).
 const TITLES := {
@@ -49,6 +51,8 @@ const TITLES := {
 	"bane_of_heroes": {"display_name": "Bane of Heroes", "achievement": "no_more_heroes", "frame": ""},  # Own decision: No More Heroes records the clear (no epilogue, owner Oct 31; brief Nov 2)
 	# --- Act IX: the Ark ---
 	"the_unharvested": {"display_name": "The Unharvested", "achievement": "last_harvest", "frame": ""},  # Own decision: The Last Harvest records the clear (no epilogue, owner Oct 31; brief Nov 3)
+	# --- Act X: the Maelstrom ---
+	"captain_of_the_dead": {"display_name": "Captain of the Dead", "achievement": "dead_men_tell_tales", "frame": ""},  # Own decision: Dead Men Tell Tales records the clear (no epilogue part until the reorder, docs/last_acts/PLAN.md)
 }
 
 ## Text of the "no title" choice on the setup screen's cycle row.

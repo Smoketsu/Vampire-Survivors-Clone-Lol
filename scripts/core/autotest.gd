@@ -261,6 +261,14 @@
 ##     ran, the summary adds the "boarding", "deck", "sea strikes", "corsair
 ##     kinds", "black tide" (after 0:00) and (on an Act X stage) "corsair
 ##     stage" lines (CorsairReport).
+##     The Smuggler's Cutter (phase 2) adds the kinds grappler, boatswain,
+##     powder_barrel, bosun_gorran, ram_longboat, crow_sloop; the bot also
+##     steps off the ram longboat's point, out of Crow's cannon lines and
+##     landing circles (his danger_push()) and out of the Fire Ship's patches
+##     (InfernoRules.danger_push()); the "cutter", "cutter crew", "bosun
+##     gorran" and "captain crow" lines (CutterReport), and "act X spell" /
+##     "act X passives" when Chain Shot, Bosun's Whistle or Barnacle Bones was
+##     taken.
 ##   * The Hall of the Slain (the Norse act, temporarily Act XI; GDD §15.0 "The
 ##     Hall of the Slain foundation (phase 1)"): --stage=barrow_fields|valgard|
 ##     vigrid, --spawn= with its kinds (raider, shield_maiden, berserker,
@@ -1683,6 +1691,12 @@ func finish(summary: Dictionary) -> void:
 	ProvingMoonReport.item_lines(game, st)  # Soul Caster, Trophy Rack, Mirror Bones (only when taken; the stage's own lines are ConcordReport's).
 	# --- Act IX: the Ark ---
 	ArkReport.item_lines(game, st)  # Tractor Beam, Starseed, the Ghost Saucer, Crop Circles (only when used; the stage's own lines are ConcordReport's).
+	# --- Act X: the Smuggler's Cutter ---
+	CutterReport.item_lines(game, st)  # Chain Shot, Bosun's Whistle, Barnacle Bones (only when taken; the stage's own lines are CorsairReport's).
+	# --- Act X: the Treasure Galleon ---
+	GalleonReport.item_lines(game, st)  # Cannonade, Black Powder, Sea Legs, the Corsair Queen (only when used; the stage's own lines are CorsairReport's).
+	# --- Act X: the Maelstrom ---
+	MaelstromReport.item_lines(game, st)  # Anchor Drop, Dead Reckoning, the Powder Wraith, Slow Match (only when used; the stage's own lines are CorsairReport's).
 	if game.enemies.boss is BossSeraphine:
 		print("[autotest] seraphine: %s" % BossSeraphine.summary_line(st))
 	var fired := game.enemies.stage.fired
