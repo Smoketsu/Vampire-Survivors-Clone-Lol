@@ -15,8 +15,8 @@
 #               liberty_heights, crash_site, proving_moon, ark; army policy), the three Act X stages (--stage=cutter,
 #               galleon, maelstrom; army policy; the Black Tide, temporary act number), the three Hall of the Slain
 #               stages (barrow_fields, valgard, vigrid) and the three Necropolis Dynasty stages (necropolis,
-#               lioness_temple, two_truths) and the Celestial Host's Silver Stair and Wheel of Thrones
-#               (silver_stair, wheel_of_thrones); army policy.
+#               lioness_temple, two_truths) and the three Celestial Host stages (silver_stair,
+#               wheel_of_thrones, empyrean); army policy.
 #               Fails on any script error/warning or if a run
 #               doesn't complete.
 #   2. export - builds single-file Windows (.exe) and Linux executables and the
@@ -129,6 +129,7 @@ jobs:
           # The Celestial Host (temporarily Act XIII, stage 37 in the registry; final slot X after the reorder).
           - {id: silver_stair, name: "Act XIII Stage 37, the Silver Stair", args: "--stage=silver_stair --policy=army", timeout: 900}
           - {id: wheel_of_thrones, name: "Act XIII Stage 38, the Wheel of Thrones", args: "--stage=wheel_of_thrones --policy=army", timeout: 900}
+          - {id: empyrean, name: "Act XIII Stage 39, the Empyrean", args: "--stage=empyrean --policy=army", timeout: 900}
     steps:
       - uses: actions/checkout@v4
 

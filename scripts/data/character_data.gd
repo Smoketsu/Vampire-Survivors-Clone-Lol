@@ -118,7 +118,9 @@ const ORDER := ["gravecaller", "umbral_warden", "voidcaller", "bone_oracle", "fa
 	# --- Act XIII (temporary number): the Silver Stair ---
 	"fallen_herald",
 	# --- Act XIII (temporary number): the Wheel of Thrones ---
-	"blind_saint"]
+	"blind_saint",
+	# --- Act XIII (temporary number): the Empyrean ---
+	"the_unveiled"]
 ## The default character (RunConfig, fresh saves, the autotest): today's game.
 const DEFAULT_ID: String = "gravecaller"
 ## Spell level that unlocks a character (owner rule: reach Lv 5 with its spell
@@ -196,6 +198,8 @@ const STAT_LABELS := {
 ##                           Act XIII, temporary)
 ##   wheel_radius_bonus      WheelOfEyes._cast (px more radius on every wheel;
 ##                           Act XIII, temporary)
+##   revelation_stun_bonus   Revelation._flash (s more stun on every flash;
+##                           Act XIII, temporary)
 const INNATE_KEYS := ["orb_projectile_destroy", "blast_echo_delay", "blast_echo_damage", "spear_shard_max",
 	"spear_shard_cooldown", "summon_corpses", "grace_share", "grace_targets", "grace_range", "contagion_range",
 	"contagion_duration", "death_mark_slow", "bone_wall_duration", "soul_chains_extra_jumps", "wither_rot",
@@ -269,7 +273,9 @@ const INNATE_KEYS := ["orb_projectile_destroy", "blast_echo_delay", "blast_echo_
 	# --- Act XIII (temporary number): the Silver Stair ---
 	"sword_reach_bonus",
 	# --- Act XIII (temporary number): the Wheel of Thrones ---
-	"wheel_radius_bonus"]
+	"wheel_radius_bonus",
+	# --- Act XIII (temporary number): the Empyrean ---
+	"revelation_stun_bonus"]
 
 ## Orbit radius (px) of the Bone Oracle's Ossuary Ward shards around him.
 const SHARD_ORBIT_RADIUS: float = 27.0  # TUNING (not in GDD)
@@ -1278,6 +1284,32 @@ const CHARACTERS := {
 		"stats": {"max_hp": -5.0, "spell_area": 0.05},  # TUNING (not in GDD) a frail saint whose sight reaches wide
 		"sprite": "player/blind_saint",
 		"tint": Color(0.86, 0.82, 0.96),  # TUNING (not in GDD) a pale lilac over the violet (her art replaces it)
+		"starts_unlocked": false,
+	},
+	# --- Act XIII (temporary number): the Empyrean ---
+	# The Unveiled (Revelation's character; owner-approved proposal "Rewards":
+	# "The Voice | Revelation ... | The Unveiled (female, figure style; an angel
+	# who looked on the necromancer and fell)"; docs/last_acts/PLAN.md: every
+	# playable character is a necromancer of the act's theme in violet): FEMALE,
+	# in the figure-redesign style (fully clothed): a violet dress, a lowered
+	# violet veil, small grey wings folded, a staff of a dead star (art
+	# player/the_unveiled, walk and idle strips, docs/host/ART_MANIFEST.md).
+	# Revelation must be unlocked (the Voice) before she can be earned, by the
+	# usual Lv 5 rule. Own decision on her innate (the proposal names none):
+	# Lifted Veil, she who looked on the necromancer and fell holds the light
+	# longer: her flashes stun longer (Revelation._flash()).
+	"the_unveiled": {
+		"display_name": "The Unveiled",  # Owner-approved proposal
+		"title": "She lifted her veil to look on you, and fell.",
+		"spell": "revelation",
+		"innate": {
+			"id": "lifted_veil", "name": "Lifted Veil",
+			"description": "Revelation stuns 0.3 s longer.",
+			"values": {"revelation_stun_bonus": 0.3},  # TUNING (not in GDD) s more stun on every flash
+		},
+		"stats": {"max_hp": -5.0, "move_speed": 0.04},  # TUNING (not in GDD) a frail fallen angel, light on her feet
+		"sprite": "player/the_unveiled",
+		"tint": Color(0.90, 0.86, 0.98),  # TUNING (not in GDD) a pale violet light over the violet (her art replaces it)
 		"starts_unlocked": false,
 	},
 }

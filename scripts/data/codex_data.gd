@@ -90,7 +90,9 @@ const SUMMON_ORDER: Array[String] = ["warrior", "archer", "mage", "mender", "war
 		# --- Act XI (temporary): Vigrid --- (a silhouette naming its unlock until met)
 		"draugr_thane",
 		# --- Act XII (temporary number): the Hall of Two Truths --- (a silhouette naming its unlock until met)
-		"ushabti_sentinel"]
+		"ushabti_sentinel",
+		# --- Act XIII (temporary number): the Empyrean --- (a silhouette naming its unlock until met)
+		"bound_ophan"]
 
 ## Covenant soldiers (enemy kinds), in the order the stages bring them.
 const SOLDIERS: Array[String] = ["recruit", "footman", "archer", "chaplain", "purifier", "templar",
@@ -418,7 +420,9 @@ const HOST_GUARDIANS: Array[String] = [
 	# --- Act XIII (temporary number): the Silver Stair ---
 	"cherub", "cherub_of_the_gate",
 	# --- Act XIII (temporary number): the Wheel of Thrones ---
-	"ophan", "dominion_of_the_spheres"]
+	"ophan", "dominion_of_the_spheres",
+	# --- Act XIII (temporary number): the Empyrean ---
+	"herald_of_the_seventh_trumpet"]
 ## Host stage bosses (StageRegistry.BOSS_ARRIVALS ids).
 const HOST_BOSSES: Array[String] = ["seraiel", "throne", "voice"]
 # --- Act XIV (temporary number): the Age of Titans ---
@@ -790,6 +794,8 @@ const DESCRIPTIONS: Dictionary = {
 	# --- Act XIII (temporary number): the Wheel of Thrones ---
 	"ophan": "A burning wheel within a wheel: it marks its line, rolls straight through your ring, then turns. A Bone Wall stops it; step aside.",  # Owner-approved proposal
 	"dominion_of_the_spheres": "A Dominion among the turning spheres: while he stands, every halo in the zone keeps coming back.",  # Owner-approved proposal (miniboss)
+	# --- Act XIII (temporary number): the Empyrean ---
+	"herald_of_the_seventh_trumpet": "The Herald of the Seventh Trumpet: each blast of his great trumpet calls down the squads of the Rose's earlier zones.",  # Owner-approved proposal (miniboss)
 	"seraiel": "Seraiel, Warden of the Gate: an archangel with a flaming sword who splits the way with walls of light.",  # Proposal
 	"throne": "The Throne: a colossal wheel within a wheel, its rims covered in eyes. It rolls, it gazes, and its core burns.",  # Proposal
 	"voice": "The Voice: a six-winged seraph whose face is never seen. When it lowers its wings, your dead stand still.",  # Proposal
@@ -1155,6 +1161,8 @@ const ACHIEVEMENT_ICONS: Dictionary = {
 	"without_sin": "ach_without_sin",  # TUNING (not in GDD)
 	# --- Act XIII (temporary number): the Wheel of Thrones ---
 	"the_wheel_breaks": "ach_the_wheel_breaks",  # TUNING (not in GDD)
+	# --- Act XIII (temporary number): the Empyrean ---
+	"the_last_word": "ach_the_last_word",  # TUNING (not in GDD)
 }
 ## IconGlyph kind drawn when an achievement badge PNG is missing.
 const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
@@ -1238,6 +1246,8 @@ const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
 	"without_sin": "absolution",
 	# --- Act XIII (temporary number): the Wheel of Thrones ---
 	"the_wheel_breaks": "smoked_glass",
+	# --- Act XIII (temporary number): the Empyrean ---
+	"the_last_word": "revelation",
 }
 ## Screen title (TITLE tier).
 const TITLE: String = "Codex"  # TUNING (not in GDD)

@@ -143,6 +143,11 @@ const SOUNDS := {
 	"sphere_turn": "halo_regrow",  # Host pack (reused): a crystal sphere comes turning in (a rising shimmer).
 	"throne_roll": "pillar_fall",  # Host pack (reused): the Throne rolls (a white roar).
 	"throne_core": "judge_slain",  # Host pack (reused): the wheels open on the burning eye (glass ringing).
+	# --- Act XIII (temporary number): the Empyrean ---
+	"seventh_trumpet": "trumpet",  # Host pack (reused): the Herald of the Seventh Trumpet's great blast (a long silver trumpet).
+	"voice_holy": "light_warn",  # Host pack (reused): the Holy's shafts rise round the Voice (a thin rising tone).
+	"voice_unveil": "verdict",  # Host pack (reused): the Voice lowers its wings (a deep struck bell).
+	"last_word": "judge_descend",  # Host pack (reused): the scales read the run's sins back (a falling chord, wings).
 }
 
 # --- The counter-passives (phase 2 builds them; HostRules' hooks read them) ----------------

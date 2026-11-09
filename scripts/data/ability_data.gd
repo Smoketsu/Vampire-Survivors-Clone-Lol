@@ -132,7 +132,9 @@ const SPELL_ORDER := ["shadow_bolt", "orb_shield", "shadow_blast",
 	# --- Act XIII (temporary number): the Silver Stair ---
 	"flaming_sword",
 	# --- Act XIII (temporary number): the Wheel of Thrones ---
-	"wheel_of_eyes"]
+	"wheel_of_eyes",
+	# --- Act XIII (temporary number): the Empyrean ---
+	"revelation"]
 
 ## Spell definitions.
 ##   display_name — UI name.
@@ -1232,6 +1234,30 @@ const SPELLS := {
 			{"damage": 34.0, "count": 2, "speed": 250.0, "life": 3.2, "radius": 20.0, "cooldown": 2.1},  # TUNING (not in GDD) about Flaming Sword's Lv5 damage a second, spread over the field
 		],
 	},
+	# --- Act XIII (temporary number): the Empyrean ---
+	# Revelation (GDD §15.0 "Revelation, Be Not Afraid, Seventh Seal and the
+	# Unveiled"; owner-approved proposal: "a flash that stuns every enemy on
+	# screen for 1 s and weakens them through the one debuff path"; unlocked by
+	# slaying the Voice, then offered on every stage). Every `cooldown` s, a foe
+	# on screen, a flash: every foe in the view round the necromancer takes
+	# `damage`, is stunned `stun` s (CombatResolver.stun_enemy(): bosses and
+	# elites a share) and weakened for `weaken_time` s (CombatResolver.
+	# weaken_enemy(): `weaken_slow` slower, `weaken_cut` less damage). Logic:
+	# Revelation; fixed rules: RevelationData. Crowd control more than damage.
+	"revelation": {
+		"display_name": "Revelation",  # Owner-approved proposal
+		"icon": "revelation",
+		"description": "A flash of the unveiled light: every foe on screen is struck, stunned and weakened.",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Flash damage", "stun": "Stun (s)", "weaken_cut": "Their damage cut", "weaken_time": "Weakened for (s)", "cooldown": "Cooldown (s)"},
+		"levels": [
+			{"damage": 8.0, "stun": 1.0, "weaken_slow": 0.15, "weaken_cut": 0.12, "weaken_time": 3.0, "cooldown": 9.0},  # Owner-approved proposal: "stuns ... for 1 s"; TUNING (not in GDD) the rest
+			{"damage": 10.0, "stun": 1.0, "weaken_slow": 0.15, "weaken_cut": 0.14, "weaken_time": 3.0, "cooldown": 8.5},  # TUNING (not in GDD)
+			{"damage": 13.0, "stun": 1.0, "weaken_slow": 0.18, "weaken_cut": 0.16, "weaken_time": 3.5, "cooldown": 8.0},  # TUNING (not in GDD)
+			{"damage": 16.0, "stun": 1.0, "weaken_slow": 0.2, "weaken_cut": 0.18, "weaken_time": 3.5, "cooldown": 7.5},  # TUNING (not in GDD)
+			{"damage": 20.0, "stun": 1.0, "weaken_slow": 0.2, "weaken_cut": 0.2, "weaken_time": 4.0, "cooldown": 7.0},  # TUNING (not in GDD) every foe in sight, so lighter per foe than a single-target spell (first pass 14-34: the evolved run dealt 513k, Flaming Sword 320k)
+		],
+	},
 }
 
 ## Stat keys shown as a percentage on cards (fractions: 0.25 -> 25%).
@@ -1272,7 +1298,9 @@ const PERCENT_KEYS := ["lifesteal", "rot", "burst", "zone_damage", "zone_slow", 
 	# --- Act XI (temporary): Vigrid ---
 	"return_share",
 	# --- Act XII (temporary number): the Hall of Two Truths ---
-	"execute"]
+	"execute",
+	# --- Act XIII (temporary number): the Empyrean ---
+	"weaken_cut", "weaken_slow"]
 ## Stat keys that are spell durations (s): the Lingering Malediction passive
 ## lengthens them (AbilityManager.apply_spell_mods()).
 const DURATION_KEYS := ["duration", "zone_duration", "slow_duration"]

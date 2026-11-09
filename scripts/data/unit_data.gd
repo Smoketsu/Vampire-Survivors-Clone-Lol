@@ -73,7 +73,10 @@ const CLASS_ORDER := ["warrior", "archer", "mage", "mender", "warder", "bishop",
 		"draugr_thane",
 		# --- Act XII (temporary number): the Hall of Two Truths ---
 		# Unlockable (UnlockData: defeating Osiris and Ammit), so a fresh save never offers it.
-		"ushabti_sentinel"]
+		"ushabti_sentinel",
+		# --- Act XIII (temporary number): the Empyrean ---
+		# Unlockable (UnlockData: defeating the Voice), so a fresh save never offers it.
+		"bound_ophan"]
 ## The four GDD §4.2 summon ROLES ("all 4 classes": the Dread Sovereign
 ## achievement), in SynergyManager.classes_met() format: an entry that is an
 ## Array means "any one of these", so after the priest split either priest
@@ -1553,6 +1556,61 @@ const UNITS := {
 			"reform_radius": 50.0,  # TUNING (not in GDD) px round it
 		},
 	},
+	# --- Act XIII (temporary number): the Empyrean ---
+	# The Bound Ophan (owner-approved proposal: "Finale summon class the Bound
+	# Ophan: a wheel of bone and eyes that orbits the Bone Ring and rolls
+	# through packs (evolution Throne of Bones)"; GDD §15.0 "The Bound Ophan,
+	# Throne of Bones and Turning Bones"): a wheel of bone with soul-teal eyes,
+	# no sex, the necromancer's own (art summons/bound_ophan). A ground body on
+	# the Bone Ring's front posts; its class special ("orbit_roll",
+	# BoundOphanBehavior) works on every stage: with a pack within roll_range px
+	# of its necromancer it ORBITS the ring for roll_orbit s (striking what it
+	# rolls over), then ROLLS straight through the pack and roll_past px beyond
+	# (each foe struck once a roll). Unlockable (UnlockData), then offered on
+	# every stage.
+	"bound_ophan": {
+		"display_name": "Bound Ophan",  # Owner-approved proposal
+		"plural": "Bound Ophans",
+		"description": "A wheel of bone and eyes that circles your ring and rolls through packs.",  # Card text: one short sentence (owner rule).
+		"max_hp": 90.0,  # TUNING (not in GDD) a bone wheel (Warrior 60, Fallen Hero 110)
+		"damage": 10.0,  # TUNING (not in GDD) a rim blow (melee)
+		"attack_interval": 1.1,  # TUNING (not in GDD) s
+		"attack_range": 12.0,  # TUNING (not in GDD) edge-to-edge reach (px)
+		"move_speed": 100.0,  # TUNING (not in GDD) px/s; a wheel rolls fast
+		"radius": 11.0,  # TUNING (not in GDD) px (~30 px sprite)
+		"acquisition_range": 180.0,  # TUNING (not in GDD) px
+		"replenish_interval": 12.0,  # TUNING (not in GDD) s
+		"band_min": 45.0,  # TUNING (not in GDD) px, with the front
+		"band_max": 100.0,  # TUNING (not in GDD)
+		"w_pursuit": 1.0,  # TUNING (not in GDD)
+		"w_formation": 0.4,  # TUNING (not in GDD)
+		"w_separation": 0.8,  # TUNING (not in GDD)
+		"w_threat": 0.0,  # TUNING (not in GDD) a wheel never shies away
+		"attack_profile": "melee",
+		"target_profile": "skirmisher",
+		"windup": 0.15,  # TUNING (not in GDD) s
+		"projectile_speed": 0.0,
+		"splash_radius": 0.0,
+		"heal_amount": 0.0,
+		"kite_distance": 0.0,
+		"heal_role_priority": 0.6,  # TUNING (not in GDD)
+		"formation": "front",  # Owner-approved proposal: it orbits the Bone Ring
+		"capacity_bonus_mult": 0.5,  # TUNING (not in GDD) Grave Dominion V: +2
+		"behavior": "orbit_roll",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"special": {
+			"roll_damage": 22.0,  # TUNING (not in GDD) to every foe it rolls over (once a roll; the orbit's strikes too)
+			"roll_cooldown": 6.0,  # TUNING (not in GDD) s between two rolls
+			"roll_orbit": 0.8,  # TUNING (not in GDD) s it circles the ring before it rolls
+			"roll_orbit_speed": 2.6,  # TUNING (not in GDD) rad/s round the necromancer while it circles
+			"roll_speed": 300.0,  # TUNING (not in GDD) px/s straight through the pack
+			"roll_range": 260.0,  # TUNING (not in GDD) px from its necromancer it looks for a pack
+			"roll_past": 70.0,  # TUNING (not in GDD) px it rolls on beyond the pack's centre
+			"roll_min_enemies": 3,  # TUNING (not in GDD) foes round the pick (an elite or the boss alone also counts)
+			"roll_rim": 8.0,  # TUNING (not in GDD) px beyond its radius its rim strikes
+			"roll_knockback": 120.0,  # TUNING (not in GDD) px/s impulse sideways, divided by the foe's mass
+		},
+	},
 }
 
 ## Summon-ability progression, one entry per skill level (index 0 = level 1).
@@ -1826,6 +1884,15 @@ const LEVELS := {
 	# TUNING (not in GDD): 1 -> 3 Ushabti Sentinels; tougher stone, harder
 	# shockwaves, then quicker reassembly.
 	"ushabti_sentinel": [
+		{"count": 1},
+		{"count": 2},
+		{"count": 2, "hp_bonus": 0.2, "special_bonus": 0.25},
+		{"count": 3, "hp_bonus": 0.25, "special_bonus": 0.3, "special_area": 0.15},
+		{"count": 3, "hp_bonus": 0.3, "damage_bonus": 0.25, "special_bonus": 0.5, "special_area": 0.2, "special_haste": 0.2},
+	],
+	# --- Act XIII (temporary number): the Empyrean ---
+	# TUNING (not in GDD): 1 -> 3 Bound Ophans; harder rims, then quicker rolls.
+	"bound_ophan": [
 		{"count": 1},
 		{"count": 2},
 		{"count": 2, "hp_bonus": 0.2, "special_bonus": 0.25},

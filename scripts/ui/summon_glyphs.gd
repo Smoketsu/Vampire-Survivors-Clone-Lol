@@ -83,9 +83,27 @@ static func draw_summon(ci: CanvasItem, kind: String, o: Vector2, r: float, flas
 			return GolemGlyphs.draw_summon(ci, kind, o, r, flash)  # Content wave 2: the Bone Golem.
 		"grave_gunner":
 			EmpireGlyphs.draw_gunner(ci, o, r, flash)  # Act III: a cyborg raised with its rifle.
+		"bound_ophan", "throne_of_bones":
+			_draw_bone_wheel(ci, o, r, flash, kind == "throne_of_bones")  # Act XIII (temporary): the Bound Ophan.
 		_:
 			return SpireGlyphs.draw_summon(ci, kind, o, r, flash)  # Act II: Ul-Thalos summons (false when unknown).
 	return true
+
+
+## The Bound Ophan (Act XIII, temporary: the Empyrean) without its art: a
+## wheel of bone with soul-teal eyes round a dark hub; `double` adds the
+## Throne of Bones' second rim (disc textures only).
+static func _draw_bone_wheel(ci: CanvasItem, o: Vector2, r: float, flash: bool, double: bool) -> void:
+	var rim := r * (1.25 if double else 1.0)
+	SpriteBank.draw_disc(ci, o, rim + 1.0, Glyphs._c(Glyphs.OUTLINE, flash))
+	SpriteBank.draw_disc(ci, o, rim, Glyphs._c(Palette.BONE, flash))
+	if double:
+		SpriteBank.draw_disc(ci, o, r * 0.95, Glyphs._c(Glyphs.OUTLINE, flash))
+		SpriteBank.draw_disc(ci, o, r * 0.88, Glyphs._c(Palette.BONE, flash))
+	SpriteBank.draw_disc(ci, o, r * 0.55, Glyphs._c(Glyphs.OUTLINE, flash))
+	for i in 6:
+		SpriteBank.draw_disc(ci, o + Vector2.from_angle(TAU * float(i) / 6.0) * rim * 0.78, r * 0.14, Glyphs._c(WheelOfEyesData.FIRE, flash))  # A soul-teal eye on the rim.
+	SpriteBank.draw_disc(ci, o, r * 0.2, Glyphs._c(WheelOfEyesData.FIRE, flash))
 
 
 ## Draws UI icon `kind` centred at `c` with half-size `s`. Returns false if

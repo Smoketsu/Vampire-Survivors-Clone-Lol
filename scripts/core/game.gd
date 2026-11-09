@@ -583,6 +583,9 @@ func _ready() -> void:
 		# --- Act XIII (temporary number): the Wheel of Thrones ---
 		"wheel_of_thrones":
 			ground = WheelOfThronesGround.new()  # The Wheel of Thrones' four zone floors (WheelOfThronesStage.ZONES).
+		# --- Act XIII (temporary number): the Empyrean ---
+		"empyrean":
+			ground = EmpyreanGround.new()  # The Empyrean's four zone floors (EmpyreanStage.ZONES).
 		_:
 			ground = Ground.new()
 	add_child(ground)

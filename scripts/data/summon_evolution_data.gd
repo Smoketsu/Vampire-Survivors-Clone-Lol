@@ -87,7 +87,9 @@ const ORDER := ["death_knight", "lich", "profane_bishop",
 	# --- Act XI (temporary): Vigrid ---
 	"barrow_king",
 	# --- Act XII (temporary number): the Hall of Two Truths ---
-	"eternal_guard"]
+	"eternal_guard",
+	# --- Act XIII (temporary number): the Empyrean ---
+	"throne_of_bones"]
 
 ## Summon skill level every base class needs (user rule: Lv 5).
 const BASE_LEVEL_REQUIRED: int = 5  # TUNING (not in GDD) user rule
@@ -1096,6 +1098,41 @@ const EVOLUTIONS := {
 			"reassemble_cooldown": 15.0,  # TUNING (not in GDD) Ushabti Sentinel 25
 			"reassemble_hp": 0.75,  # TUNING (not in GDD) Ushabti Sentinel 0.5
 			"eternal": 1,  # The evolution flag (its shockwave's source tag).
+		},
+	},
+	# --- Act XIII (temporary number): the Empyrean ---
+	# Throne of Bones (owner-approved proposal: "the Bound Ophan ... (evolution
+	# Throne of Bones)"; GDD §15.0 "The Bound Ophan, Throne of Bones and Turning
+	# Bones"): Bound Ophan Lv 5 + Turning Bones Lv 5 (a NEW passive, own
+	# decision, owner rule: maxed). A double wheel of bone in soul-teal fire
+	# (art summons/throne_of_bones). It rolls harder and wider, and every roll
+	# ROLLS BACK through the pack the way it came (BoundOphanBehavior reads
+	# these special_set keys, final):
+	#   roll_back — 1: the return pass (each foe may be struck once more);
+	#   throne    — the evolution flag (its roll's source tag).
+	"throne_of_bones": {
+		"mode": "transform",
+		"bases": ["bound_ophan"],
+		"passive": "turning_bones",
+		"passive_level": 5,  # Owner rule: every evolution needs its paired passive maxed
+		"display_name": "Throne of Bones",  # Owner-approved proposal
+		"plural": "Thrones of Bones",
+		"icon": "throne_of_bones",
+		"description": "A double wheel of bone: it rolls through every pack and back again.",
+		"mult": {
+			"max_hp": 1.5,  # TUNING (not in GDD)
+			"damage": 1.3,  # TUNING (not in GDD)
+		},
+		"set": {
+			"radius": 15.0,  # TUNING (not in GDD) Bound Ophan 11 (~44 px sprite)
+		},
+		"special_mult": {
+			"roll_damage": 1.4,  # TUNING (not in GDD)
+			"roll_rim": 1.5,  # TUNING (not in GDD) a wider double rim
+		},
+		"special_set": {
+			"roll_back": 1,  # The return pass through the pack.
+			"throne": 1,  # The evolution flag (its roll's source tag).
 		},
 	},
 }

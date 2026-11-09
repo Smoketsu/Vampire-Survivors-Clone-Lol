@@ -130,7 +130,9 @@ const ORDER := ["void_barrage", "eclipse_ward", "abyssal_detonation",
 	# --- Act XIII (temporary number): the Silver Stair ---
 	"sword_at_the_gate",
 	# --- Act XIII (temporary number): the Wheel of Thrones ---
-	"ophanim"]
+	"ophanim",
+	# --- Act XIII (temporary number): the Empyrean ---
+	"be_not_afraid"]
 
 ## Evolution definitions.
 ##   base         — spell id that evolves (AbilityData.SPELLS key).
@@ -1051,6 +1053,26 @@ const EVOLUTIONS := {
 		"stats": {
 			"damage": 46.0, "count": 3, "speed": 260.0, "life": 3.6, "radius": 26.0, "cooldown": 2.0,  # TUNING (not in GDD) three great wheels
 			"flare_share": 0.6, "flare_radius": 60.0,  # TUNING (not in GDD) the evolution flag: share of the damage a rebound's flare strikes, px round the wall
+		},
+	},
+	# --- Act XIII (temporary number): the Empyrean ---
+	# Be Not Afraid (GDD §15.0 "Revelation, Be Not Afraid, Seventh Seal and the
+	# Unveiled"; owner-approved proposal "Revelation -> Be Not Afraid (+
+	# Seventh Seal)"): Revelation + Seventh Seal (a NEW passive, owner rule: at
+	# Lv 5). Own decision on its kit: a longer stun, deeper weakening, and
+	# echo_delay s after the flash a SECOND flash strikes every foe on screen
+	# for echo_share of the damage (no second stun). Detected by the
+	# "echo_share" key.
+	"be_not_afraid": {
+		"base": "revelation",
+		"passive": "seventh_seal",
+		"display_name": "Be Not Afraid",  # Owner-approved proposal
+		"icon": "be_not_afraid",
+		"description": "The unveiled light holds every foe on screen longer, and flashes again a moment later.",
+		"labels": {"damage": "Flash damage", "stun": "Stun (s)", "weaken_cut": "Their damage cut", "cooldown": "Cooldown (s)", "echo_share": "Second flash"},
+		"stats": {
+			"damage": 24.0, "stun": 1.5, "weaken_slow": 0.25, "weaken_cut": 0.25, "weaken_time": 5.0, "cooldown": 6.5,  # TUNING (not in GDD) first passes 52 (513k in a run) and 28 (376k; Flaming Sword 320k)
+			"echo_share": 0.5, "echo_delay": 1.0,  # TUNING (not in GDD) the evolution flag: share of the damage the second flash strikes, s after the first
 		},
 	},
 }

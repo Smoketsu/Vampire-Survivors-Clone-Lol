@@ -21,7 +21,7 @@
 ##                    Reckoning)
 ## Phase 2 adds one line per stage system here (each stage in its own block):
 ## the Silver Stair's are SilverStairReport's, the Wheel of Thrones'
-## WheelOfThronesReport's.
+## WheelOfThronesReport's, the Empyrean's EmpyreanReport's.
 ## Read-only: it never changes the run.
 class_name HostReport
 extends RefCounted
@@ -58,6 +58,8 @@ static func print_lines(game: Game, st: Dictionary) -> void:
 	SilverStairReport.stage_lines(game, st)
 	# --- Act XIII (temporary number): the Wheel of Thrones --- (its stage, the Ophans and the Dominion, the Throne; WheelOfThronesReport)
 	WheelOfThronesReport.stage_lines(game, st)
+	# --- Act XIII (temporary number): the Empyrean --- (its stage, the Herald of the Seventh Trumpet, the Voice; EmpyreanReport)
+	EmpyreanReport.stage_lines(game, st)
 
 
 ## The "judgment" line (Judgment).

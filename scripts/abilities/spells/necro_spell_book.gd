@@ -113,6 +113,9 @@
 ## and the Wheel of Thrones' (temporary Act XIII, WHEEL_OF_THRONES_IDS: stepped
 ## only; its own autotest line, WheelOfThronesReport.item_lines()):
 ##   Wheel of Eyes    -> WheelOfEyes      (evolves into Ophanim)
+## and the Empyrean's (temporary Act XIII, EMPYREAN_IDS: stepped only; its own
+## autotest line, EmpyreanReport.item_lines()):
+##   Revelation       -> Revelation       (evolves into Be Not Afraid)
 ## Game calls after_physics() once per tick after obstacles are resolved
 ## (Bone Wall holds enemies there).
 ## Each spell node is created the first time its spell is learned and reads
@@ -282,6 +285,10 @@ const SILVER_STAIR_IDS := ["flaming_sword"]
 ## The Wheel of Thrones' unlockable spell (the Throne's reward): stepped only
 ## (no kill or after-physics hook), reported by WheelOfThronesReport.
 const WHEEL_OF_THRONES_IDS := ["wheel_of_eyes"]
+# --- Act XIII (temporary number): the Empyrean ---
+## The Empyrean's unlockable spell (the Voice's reward): stepped only (no kill
+## or after-physics hook), reported by EmpyreanReport.
+const EMPYREAN_IDS := ["revelation"]
 ## Damage-source stat tags of each spell (CombatResolver "dmg_<tag>"), base
 ## spell first, then its evolution's. Used for the autotest summary.
 const SOURCES := {
@@ -364,6 +371,8 @@ const SOURCES := {
 	"flaming_sword": ["flaming_sword", "sword_at_the_gate"],
 	# --- Act XIII (temporary number): the Wheel of Thrones ---
 	"wheel_of_eyes": ["wheel_of_eyes", "ophanim"],
+	# --- Act XIII (temporary number): the Empyrean ---
+	"revelation": ["revelation", "be_not_afraid"],
 }
 
 ## Owning run.
@@ -646,6 +655,15 @@ func step(delta: float) -> void:
 			node = _create(id)
 		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
 		node.step(delta, ab.spell_stats(id))  # The Wheel of Thrones' spell.
+	# --- Act XIII (temporary number): the Empyrean ---
+	for id: String in EMPYREAN_IDS:
+		if ab.spell_level(id) <= 0:
+			continue
+		var node: NecroSpell = nodes.get(id)  # The spell's node (created lazily).
+		if node == null:
+			node = _create(id)
+		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
+		node.step(delta, ab.spell_stats(id))  # The Empyrean's spell.
 
 
 ## Content wave 2: the Bone Wall node, created when missing (the Ossuary
@@ -781,6 +799,9 @@ func _create(id: String) -> NecroSpell:
 		# --- Act XIII (temporary number): the Wheel of Thrones ---
 		"wheel_of_eyes":
 			node = WheelOfEyes.new()  # The Wheel of Thrones' spell.
+		# --- Act XIII (temporary number): the Empyrean ---
+		"revelation":
+			node = Revelation.new()  # The Empyrean's spell.
 		_:
 			node = PlagueCloud.new()
 	node.game = game

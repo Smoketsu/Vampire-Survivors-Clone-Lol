@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bsd5de84j6q7h"
-path="res://.godot/imported/host_petal.png-7e0ba04fd97d9083f2a2e40d15123239.ctex"
+uid="uid://doxuh1yq7rrhj"
+path="res://.godot/imported/host_petal_m_v.png-ecf16fa9fd01651ba1860a2ccd865adc.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/obstacles/host_petal.png"
-dest_files=["res://.godot/imported/host_petal.png-7e0ba04fd97d9083f2a2e40d15123239.ctex"]
+source_file="res://assets/sprites/obstacles/host_petal_m_v.png"
+dest_files=["res://.godot/imported/host_petal_m_v.png-ecf16fa9fd01651ba1860a2ccd865adc.ctex"]
 
 [params]
 

@@ -218,6 +218,9 @@ const CLASSES := {
 	# --- Act XII (temporary number): the Hall of Two Truths ---
 	"ushabti_sentinel": {"trigger": "special", "every": 1, "pattern": "ring", "counts": [6, 8], "speed": 260.0,
 		"life": 0.45, "share": 0.3, "pierce": 1, "radius": 4.0, "style": "orb", "color": Color(0.70, 0.92, 0.86)},  # TUNING (not in GDD) a ring of stone shards as it reassembles
+	# --- Act XIII (temporary number): the Empyrean ---
+	"bound_ophan": {"trigger": "special", "every": 1, "pattern": "ring", "counts": [5, 7], "speed": 260.0,
+		"life": 0.45, "share": 0.3, "pierce": 1, "radius": 3.5, "style": "orb", "color": Color(0.45, 0.95, 0.85)},  # TUNING (not in GDD) a ring of soul-fire eyes where a roll ends
 }
 
 ## Summon evolution id -> its showpiece volley (replaces the class volley once evolved;
@@ -290,6 +293,9 @@ const EVOLVED := {
 	# --- Act XII (temporary number): the Hall of Two Truths ---
 	"eternal_guard": {"trigger": "special", "every": 1, "pattern": "ring", "counts": [12], "speed": 300.0,
 		"life": 0.5, "share": 0.3, "pierce": 2, "radius": 4.5, "style": "orb", "color": Color(0.70, 0.92, 0.86)},  # TUNING (not in GDD) a full ring of stone shards as it reassembles
+	# --- Act XIII (temporary number): the Empyrean ---
+	"throne_of_bones": {"trigger": "special", "every": 1, "pattern": "ring", "counts": [10], "speed": 300.0,
+		"life": 0.5, "share": 0.3, "pierce": 2, "radius": 4.0, "style": "orb", "color": Color(0.45, 0.95, 0.85)},  # TUNING (not in GDD) a full ring of soul-fire eyes where each roll ends
 }
 
 # --- Spell echoes (every owned spell from LEVEL_ON) --------------------------------------
@@ -418,6 +424,9 @@ const SPELLS := {
 	# --- Act XIII (temporary number): the Wheel of Thrones ---
 	"wheel_of_eyes": {"every": 2, "clock": "cooldown", "aim": "nearest", "pattern": "ring", "counts": [4, 6, 8], "speed": 220.0,
 		"life": 0.5, "share": 0.3, "pierce": 1, "radius": 3.0, "style": "orb", "color": Color(0.45, 0.95, 0.85)},  # TUNING (not in GDD) a ring of soul-fire eyes after every other cast (WheelOfEyesData.FIRE)
+	# --- Act XIII (temporary number): the Empyrean ---
+	"revelation": {"every": 1, "clock": "cooldown", "aim": "nearest", "pattern": "ring", "counts": [6, 8, 10], "speed": 240.0,
+		"life": 0.5, "share": 0.3, "pierce": 1, "radius": 3.0, "style": "orb", "color": Color(0.55, 1.0, 0.9)},  # TUNING (not in GDD) a ring of soul-light with every flash (RevelationData.LIGHT)
 }
 ## Range (px) within which a spell echo looks for its target (no target, no echo).
 const SPELL_RANGE: float = 340.0  # TUNING (not in GDD)

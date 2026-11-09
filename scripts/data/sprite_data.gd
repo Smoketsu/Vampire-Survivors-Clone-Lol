@@ -740,6 +740,9 @@ const FLAT_SIZES: Dictionary = {
 	"primeval/tyrant": 72.0,  # TUNING (not in GDD) titan, one sprite: a great tyrant, orange throat (about 86 wide); walk strip
 	"summons/ushabti_sentinel": 46.0,  # TUNING (not in GDD) summon class, the necromancer's stone servant (no sex) (about 20 wide)
 	"summons/eternal_guard": 58.0,  # TUNING (not in GDD) its evolution: a taller gold-trimmed stone guardian (about 32 wide)
+	# --- Act XIII (temporary number): the Empyrean (art pending, SummonGlyphs' bone wheel until then) ---
+	"summons/bound_ophan": 30.0,  # TUNING (not in GDD) summon class (no sex, a wheel): a wheel of bone with soul-teal eyes; roll strip (about 30 wide)
+	"summons/throne_of_bones": 44.0,  # TUNING (not in GDD) its evolution: a double wheel of bone in soul-teal fire; roll strip (about 44 wide)
 	# The Dynasty's playable necromancers (violet, owner note Nov 2026; assets/sprites/player/)
 	"summons/linen_mummy": 40.0,  # TUNING (not in GDD) Act XII (temporary), the Necropolis: Linen Bind's risen Mummy (the Dynasty mummy in the necromancer's bone and soul-teal)
 	"player/the_embalmer": 56.0,  # TUNING (not in GDD) female (figure redesign): violet linen-wrapped necromancer, a canopic-jar staff focus (about 32 wide); glide strip, bust rig, idle strip
@@ -764,6 +767,11 @@ const FLAT_SIZES: Dictionary = {
 	"host/dominion_of_the_spheres": 70.0,  # TUNING (not in GDD) Wheel of Thrones miniboss, male: a larger Dominion among crystal rings; walk strip (about 44 wide)
 	"host/throne": 96.0,  # TUNING (not in GDD) Wheel of Thrones boss: a colossal wheel within a wheel of silver and blue fire, rims covered in eyes; roll strip, pose 1 (the wheels open) (about 96 wide)
 	"host/throne_core": 32.0,  # TUNING (not in GDD) the Throne's burning eye at its centre (drawn over it while the Core is open)
+	# --- Act XIII (temporary number): the Empyrean (phase 2; art pending, HostGlyphs / the boss's glyph / the tint until then) ---
+	"host/herald_of_the_seventh_trumpet": 70.0,  # TUNING (not in GDD) Empyrean miniboss, male: a larger Herald with a great trumpet; walk strip (about 44 wide)
+	"host/voice": 104.0,  # TUNING (not in GDD) Empyrean boss (a sexless seraph): six wings of light (two over the face, two over the feet, two spread) in a white rose; glide strip (about 80 wide)
+	"host/voice_unveiled": 104.0,  # TUNING (not in GDD) the Voice with its face wings lowered (Be Not Afraid): the face pure light, never features (about 80 wide)
+	"player/the_unveiled": 56.0,  # TUNING (not in GDD) female (figure style): violet dress, a lowered violet veil, small grey wings folded, a staff of a dead star (about 38 wide); walk and idle strips
 	"player/blind_saint": 56.0,  # TUNING (not in GDD) female (figure style): violet gown, a violet blindfold, a staff ringed with a bone wheel of closed eyes (about 36 wide); walk and idle strips
 	"player/fallen_herald": 56.0,  # TUNING (not in GDD) male: violet robe and torn cope, one broken bone-white wing, a trumpet-headed staff with a soul flame (about 40 wide); walk strip
 	"markers/host_halo": 6.0,  # TUNING (not in GDD) the halo ring over an angel (cerulean light, silver rim), 16 x 6 (not drawn yet: the code ring stays)

@@ -463,6 +463,11 @@
 ##                        crystal rings per zone, the "spheres_dominion" event,
 ##                        The Wheel Breaks); ground "wheel_of_thrones" is its
 ##                        WheelOfThronesGround (four zone floors).
+## --- Act XIII (temporary number): the Empyrean ---
+##   empyrean           — EmpyreanDirector config (EmpyreanStage.EMPYREAN: the
+##                        Choir's widening of the Light, the "seventh_herald"
+##                        event, The Last Word); ground "empyrean" is its
+##                        EmpyreanGround (four zone floors).
 ## --- Act XIV (temporary number): the Age of Titans ---
 ##   primeval           — true: the Age of Titans' shared rules
 ##                        (PrimevalRules as Game.primeval: Packs, Herds,

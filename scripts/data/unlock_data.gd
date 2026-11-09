@@ -389,6 +389,16 @@ const UNLOCKS := {
 	"wheel_of_eyes": {"type": "spell", "boss": "throne", "text": "Break the Throne on the Wheel of Thrones to unlock."},  # Owner-approved proposal
 	"all_seeing": {"type": "passive", "boss": "throne", "text": "Break the Throne on the Wheel of Thrones to unlock."},  # Wheel of Eyes' paired passive (owner-approved proposal), unlocked with it
 	"smoked_glass": {"type": "passive", "achievement": "the_wheel_breaks", "text": "Earn The Wheel Breaks: break the Throne by its open Core."},  # Owner answer (Nov 9, 2026): the Host's other achievement unlocks Smoked Glass
+	# --- Act XIII (temporary number): the Empyrean ---
+	# The Voice's fall (owner-approved proposal "Rewards": Revelation is the
+	# Voice's; the finale grants the Bound Ophan): the spell with its paired
+	# passive, and the summon class with its paired passive, offered on every
+	# stage (no card-row "act" key). The Last Word only records the clear until
+	# the reorder pass writes the Part One epilogue part.
+	"revelation": {"type": "spell", "boss": "voice", "text": "Silence the Voice in the Empyrean to unlock."},  # Owner-approved proposal
+	"seventh_seal": {"type": "passive", "boss": "voice", "text": "Silence the Voice in the Empyrean to unlock."},  # Revelation's paired passive (owner-approved proposal), unlocked with it
+	"bound_ophan": {"type": "class", "boss": "voice", "text": "Silence the Voice in the Empyrean to unlock."},  # Owner-approved proposal: the finale's reward
+	"turning_bones": {"type": "passive", "boss": "voice", "text": "Silence the Voice in the Empyrean to unlock."},  # Its paired passive (own decision), unlocked with it
 }
 
 ## End-screen plate heading of a newly unlocked item, by type.

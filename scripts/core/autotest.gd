@@ -1476,6 +1476,12 @@ func get_move_vector() -> Vector2:
 		var at := (game.enemies.boss as BossVhalneth).approach_point(p)
 		if at != Vector2.INF and p.distance_to(at) > 150.0 and away.length() < 0.6:
 			goal = at
+	# --- Act XIII (temporary number): the Empyrean ---
+	if game.enemies.boss is BossVoice and game.enemies.boss.active:
+		# The Voice never moves: bring the army to it while the bot is healthy (every policy).
+		var at := (game.enemies.boss as BossVoice).approach_point(p)
+		if at != Vector2.INF and away.length() < 0.6 and game.player.hp > game.player.max_hp * 0.5:
+			goal = at
 	# --- Act III: the Iron Citadel ---
 	if game.enemies.boss is BossDeusExMachina and game.enemies.boss.active:
 		# The Siege Core is planted: go and bring the army to its shield drones (every policy).
@@ -1773,6 +1779,8 @@ func finish(summary: Dictionary) -> void:
 	SilverStairReport.item_lines(game, st)  # Flaming Sword, Fallen Light, Absolution (only when taken; the stage's own lines are HostReport's).
 	# --- Act XIII (temporary number): the Wheel of Thrones ---
 	WheelOfThronesReport.item_lines(game, st)  # Wheel of Eyes, All-Seeing, Smoked Glass (only when taken; the stage's own lines are HostReport's).
+	# --- Act XIII (temporary number): the Empyrean ---
+	EmpyreanReport.item_lines(game, st)  # Revelation, Seventh Seal, the Bound Ophan, Turning Bones (only when taken; the stage's own lines are HostReport's).
 	if game.enemies.boss is BossSeraphine:
 		print("[autotest] seraphine: %s" % BossSeraphine.summary_line(st))
 	var fired := game.enemies.stage.fired

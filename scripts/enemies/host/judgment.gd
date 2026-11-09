@@ -15,7 +15,8 @@
 ##     Judges (send_judges(): HostEnemyData "judge", landing judge_distance px
 ##     from each standing necromancer at a seeded angle), once a cycle (a
 ##     third is not sent again until the scales reset). on_judge_died() takes
-##     judge_lighten off.
+##     judge_lighten off. send_wave() lands a wave of Judges without the
+##     scales (the Empyrean's Voice, the Last Word).
 ##   * THE VERDICT (full): for verdict_duration s, every verdict_every s a
 ##     pillar falls on each standing necromancer: a ring for pillar_warn s at
 ##     the spot he stood, then the pillar: pillar_player_damage to a
@@ -169,6 +170,25 @@ func send_judges() -> void:
 				game.stat_add("judges_sent", 1.0)
 	game.enemies.show_banner("The scales tip: a Judge descends for you!")
 	game.host.play_sound("judge_descend", game.player.position, 0.5)
+
+
+## THE LAST WORD's wave (the Empyrean's boss, BossVoice): `count` Judges land
+## round every standing necromancer, judge_distance px off at seeded angles
+## (the gameplay RNG), counted as sent like the thirds'. The scales' weight is
+## not touched. Returns how many landed.
+func send_wave(count: int) -> int:
+	var kind := String(cfg["judge_kind"])
+	var n := 0
+	for pl in game.all_players:
+		if pl.dead:
+			continue
+		for i in count:
+			var at := pl.position + Vector2.from_angle(randf() * TAU) * float(cfg["judge_distance"])
+			if game.enemies.spawn_at(kind, game.arena.free_point(at, 12.0), false) != null:
+				judges_sent += 1
+				n += 1
+				game.stat_add("judges_sent", 1.0)
+	return n
 
 
 ## The scales are full: the Verdict begins.

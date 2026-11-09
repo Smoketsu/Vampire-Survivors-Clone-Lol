@@ -483,6 +483,10 @@ var silver_stair: SilverStairDirector = null
 ## Dominion of the Spheres, The Wheel Breaks; StageRegistry "wheel_of_thrones";
 ## null on every other stage).
 var wheel_of_thrones: WheelOfThronesDirector = null
+# --- Act XIII (temporary number): the Empyrean ---
+## The Empyrean's mechanics (the Choir, the Herald of the Seventh Trumpet, The
+## Last Word; StageRegistry "empyrean"; null on every other stage).
+var empyrean: EmpyreanDirector = null
 ## Sanctum kit bookkeeping: recent deaths, Confessor revivals, danger hints.
 var rites: CovenantRites
 ## The living miniboss shown on the HUD's miniboss bar (the Cathedral
@@ -753,6 +757,12 @@ func _ready() -> void:
 		wheel_of_thrones.game = game
 		wheel_of_thrones.config = stage_def["wheel_of_thrones"]
 		add_child(wheel_of_thrones)  # The Wheel of Thrones' director.
+	# --- Act XIII (temporary number): the Empyrean ---
+	if not (stage_def.get("empyrean", {}) as Dictionary).is_empty():
+		empyrean = EmpyreanDirector.new()
+		empyrean.game = game
+		empyrean.config = stage_def["empyrean"]
+		add_child(empyrean)  # The Empyrean's director.
 
 
 # =====================================================================================
@@ -936,6 +946,9 @@ func step(delta: float) -> void:
 	# --- Act XIII (temporary number): the Wheel of Thrones ---
 	if wheel_of_thrones != null:
 		wheel_of_thrones.step(delta)  # The turning spheres, the Dominion of the Spheres, The Wheel Breaks.
+	# --- Act XIII (temporary number): the Empyrean ---
+	if empyrean != null:
+		empyrean.step(delta)  # The Choir, the Herald of the Seventh Trumpet, The Last Word.
 
 
 ## The Archive kinds' world hazards (ArchiveHazards), created on first use.
@@ -1124,6 +1137,9 @@ func objective_text() -> String:
 	# --- Act XIII (temporary number): the Wheel of Thrones ---
 	if wheel_of_thrones != null and wheel_of_thrones.objective_override() != "":
 		return wheel_of_thrones.objective_override()  # The Dominion of the Spheres.
+	# --- Act XIII (temporary number): the Empyrean ---
+	if empyrean != null and empyrean.objective_override() != "":
+		return empyrean.objective_override()  # The Herald of the Seventh Trumpet.
 	if boss != null and not boss.active:
 		return String(boss_info["dead_objective"])
 	return segments[segment_index]["objective"]
@@ -1455,6 +1471,12 @@ func _run_event(ev: Dictionary) -> void:
 				wheel_of_thrones.start_event(ev)
 			game.stat_add("wave_events", 1.0)
 			return  # The Wheel of Thrones' miniboss (WheelOfThronesDirector).
+		# --- Act XIII (temporary number): the Empyrean ---
+		"seventh_herald":
+			if empyrean != null:
+				empyrean.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return  # The Empyrean's miniboss (EmpyreanDirector).
 	show_banner(ev["banner"])
 	var groups: Array = ev["groups"]
 	if game.shogunate != null:

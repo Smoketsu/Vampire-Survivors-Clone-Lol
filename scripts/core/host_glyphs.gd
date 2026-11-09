@@ -45,7 +45,7 @@ static func draw_enemy(ci: CanvasItem, kind: String, o: Vector2, r: float, flash
 			_angel(ci, o, r, flash, Palette.HOST_STARLIGHT, Palette.HOST_ROSE, true)
 		"choir_angel":
 			_angel(ci, o, r, flash, Palette.HOST_CLOUD, Palette.HOST_ROSE, false)
-		"herald":
+		"herald", "herald_of_the_seventh_trumpet":
 			_angel(ci, o, r, flash, Palette.HOST_SILVER, Palette.HOST_CERULEAN, false)
 			ci.draw_rect(Rect2(o + Vector2(r * 0.4, -r * 0.5), Vector2(r * 1.1, 2.0)), Glyphs._c(Palette.HOST_SILVER, flash))  # The trumpet.
 		"dominion":

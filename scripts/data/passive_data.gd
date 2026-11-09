@@ -230,7 +230,9 @@ const ORDER := ["grave_dominion", "necrotic_vigor", "dark_command", "soul_recycl
 	# --- Act XIII (temporary number): the Silver Stair ---
 	"fallen_light", "absolution",
 	# --- Act XIII (temporary number): the Wheel of Thrones ---
-	"all_seeing", "smoked_glass"]
+	"all_seeing", "smoked_glass",
+	# --- Act XIII (temporary number): the Empyrean ---
+	"seventh_seal", "turning_bones"]
 
 ## Passives that only help summons (a "dead" level-up card while no summon
 ## class is owned, see AbilityManager.build_offers()).
@@ -298,7 +300,9 @@ const ARMY_PASSIVES := ["grave_dominion", "necrotic_vigor", "dark_command", "sou
 	# --- Act XII (temporary number): the Temple of the Lioness ---
 	"dune_walkers",
 	# --- Act XII (temporary number): the Hall of Two Truths ---
-	"answering_words"]
+	"answering_words",
+	# --- Act XIII (temporary number): the Empyrean ---
+	"turning_bones"]
 
 # --- Act III: the Assembly Halls ---
 ## Overclock (paired with the Grave Drone): a summon class is "ranged" (and
@@ -377,7 +381,9 @@ const MINION_SPECIAL_SOURCES := ["bash", "abom_stomp", "rogue_dash", "gargoyle_s
 	# --- Act XI (temporary): Vigrid --- (the Draugr Thane's and Barrow King's frost cleave, DraugrThaneBehavior)
 	"thane_cleave", "barrow_king_cleave",
 	# --- Act XII (temporary number): the Hall of Two Truths --- (the Ushabti Sentinel's and Eternal Guard's shockwaves, UshabtiSentinelBehavior)
-	"ushabti_reform", "eternal_guard_reform"]
+	"ushabti_reform", "eternal_guard_reform",
+	# --- Act XIII (temporary number): the Empyrean --- (the Bound Ophan's and Throne of Bones' rolls, BoundOphanBehavior)
+	"bound_ophan_roll", "throne_of_bones_roll"]
 ## Unholy Resilience: enemy damage-source tags (CombatResolver.damage_unit
 ## `source`) that count as AREA or HOLY damage, tag -> category ("area" |
 ## "holy"; the category only splits the summary stats). Every other source
@@ -2435,6 +2441,47 @@ const PASSIVES := {
 			{"burn_cut": 0.3},  # TUNING (not in GDD)
 			{"burn_cut": 0.4},  # TUNING (not in GDD)
 			{"burn_cut": 0.5},  # Owner-approved proposal: "burns summons for half" at full
+		],
+	},
+	# --- Act XIII (temporary number): the Empyrean ---
+	# Seventh Seal (Revelation's paired passive; owner-approved proposal: "Be
+	# Not Afraid (+ Seventh Seal)"; unlocked with the spell by the Voice and
+	# offered on every stage). Own decision on its effect: the seventh seal
+	# opens on the flash: every foe it stuns stays stunned seal_stun s longer
+	# and every flash strikes seal_damage harder (Revelation._flash(), the one
+	# read). Read only by Revelation: nothing without the spell.
+	"seventh_seal": {
+		"display_name": "Seventh Seal",  # Owner-approved proposal
+		"icon": "seventh_seal",
+		"description": "The last seal breaks: Revelation stuns longer and strikes harder.",
+		"labels": {"seal_damage": ["Revelation damage", "pct"], "seal_stun": ["Revelation stun (s)", "num"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"seal_damage": 0.06, "seal_stun": 0.1},  # TUNING (not in GDD)
+			{"seal_damage": 0.12, "seal_stun": 0.2},  # TUNING (not in GDD)
+			{"seal_damage": 0.18, "seal_stun": 0.3},  # TUNING (not in GDD)
+			{"seal_damage": 0.24, "seal_stun": 0.4},  # TUNING (not in GDD)
+			{"seal_damage": 0.30, "seal_stun": 0.5},  # TUNING (not in GDD)
+		],
+	},
+	# Turning Bones (the Bound Ophan's paired passive; own decision, the
+	# proposal names none; owner rule: every evolution needs its paired passive
+	# maxed; unlocked with the class by the Voice and offered on every stage).
+	# Its effect: the wheel turns faster: every roll of a Bound Ophan / Throne of
+	# Bones strikes turn_damage harder and comes turn_haste sooner
+	# (BoundOphanBehavior, the one read). Nothing without the class.
+	"turning_bones": {
+		"display_name": "Turning Bones",  # Own decision
+		"icon": "turning_bones",
+		"description": "Your wheels of bone turn faster: the Bound Ophan rolls harder and more often.",
+		"labels": {"turn_damage": ["Bound Ophan roll damage", "pct"], "turn_haste": ["Bound Ophan roll recharge", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"turn_damage": 0.06, "turn_haste": 0.05},  # TUNING (not in GDD)
+			{"turn_damage": 0.12, "turn_haste": 0.10},  # TUNING (not in GDD)
+			{"turn_damage": 0.18, "turn_haste": 0.15},  # TUNING (not in GDD)
+			{"turn_damage": 0.24, "turn_haste": 0.20},  # TUNING (not in GDD)
+			{"turn_damage": 0.30, "turn_haste": 0.25},  # TUNING (not in GDD)
 		],
 	},
 }

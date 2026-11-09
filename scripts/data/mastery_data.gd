@@ -59,6 +59,8 @@ const CLASSES: Array[String] = [
 	"draugr_thane",
 	# --- Act XII (temporary number): the Hall of Two Truths ---
 	"ushabti_sentinel",
+	# --- Act XIII (temporary number): the Empyrean ---
+	"bound_ophan",
 ]  # TUNING (not in GDD) every offerable summon class of all nine acts
 
 ## Evolved-only class -> the classes whose mastery it uses (the best level
@@ -104,6 +106,8 @@ const FLAVOUR := {
 	"draugr_thane": "A jarl who keeps his oath past the grave.",  # TUNING (not in GDD) the Hall of the Slain's finale class
 	# --- Act XII (temporary number): the Hall of Two Truths ---
 	"ushabti_sentinel": "A servant of stone that answers only you.",  # TUNING (not in GDD) the Dynasty's finale class
+	# --- Act XIII (temporary number): the Empyrean ---
+	"bound_ophan": "A wheel of heaven that turns for you now.",  # TUNING (not in GDD) the Celestial Host's finale class
 }  # TUNING (not in GDD) flavour only
 
 ## Autotest profile "max" owns every level of every mastery; "none" and "mid"
