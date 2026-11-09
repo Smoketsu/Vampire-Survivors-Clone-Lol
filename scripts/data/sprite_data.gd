@@ -759,17 +759,19 @@ const FLAT_SIZES: Dictionary = {
 	"host/dominion": 54.0,  # TUNING (not in GDD) Host elite, male: sceptre and a crown of light rings; walk strip (about 32 wide)
 	"host/judge": 56.0,  # TUNING (not in GDD) Judgment's elite, male: a sword and scales held high, mirror mask; walk strip (about 58 wide with the scales)
 	# --- Act XIII (temporary number): the Silver Stair (phase 2; art pending, HostGlyphs / the boss's glyph until then) ---
-	"host/cherub": 56.0,  # TUNING (not in GDD) Host guardian (no sex, a creature): four faces, four wings full of eyes, a flaming white sword; walk strip (about 48 wide)
-	"host/cherub_of_the_gate": 76.0,  # TUNING (not in GDD) Silver Stair miniboss: a larger Cherub, its sword turning a full circle; walk strip (about 64 wide)
+	"host/cherub": 58.0,  # TUNING (not in GDD) Host guardian (no sex, a creature): four faces, four wings full of eyes, a flaming white sword; walk strip, 2 empty rows on top for the hover bob (50 wide)
+	"host/cherub_of_the_gate": 78.0,  # TUNING (not in GDD) Silver Stair miniboss: a larger Cherub, its sword turning a full circle; walk strip (about 64 wide)
 	"host/seraiel": 96.0,  # TUNING (not in GDD) Silver Stair boss, male: a towering four-winged archangel in silver armour, a flaming white sword; walk strip, pose 1 (sword raised) (about 64 wide)
 	# --- Act XIII (temporary number): the Wheel of Thrones (phase 2; art pending, HostGlyphs / the boss's glyph until then) ---
 	"host/ophan": 52.0,  # TUNING (not in GDD) Host guardian (no sex, a wheel): a burning silver wheel within a wheel, rims covered in eyes; roll strip (about 52 wide)
+	"host/seraiel_raised": 96.0,  # TUNING (not in GDD) Seraiel with the sword raised overhead (pose 1 of BossPoseData)
 	"host/dominion_of_the_spheres": 70.0,  # TUNING (not in GDD) Wheel of Thrones miniboss, male: a larger Dominion among crystal rings; walk strip (about 44 wide)
 	"host/throne": 96.0,  # TUNING (not in GDD) Wheel of Thrones boss: a colossal wheel within a wheel of silver and blue fire, rims covered in eyes; roll strip, pose 1 (the wheels open) (about 96 wide)
+	"host/throne_open": 96.0,  # TUNING (not in GDD) the Throne with its wheels parted (pose 1 of BossPoseData)
 	"host/throne_core": 32.0,  # TUNING (not in GDD) the Throne's burning eye at its centre (drawn over it while the Core is open)
 	# --- Act XIII (temporary number): the Empyrean (phase 2; art pending, HostGlyphs / the boss's glyph / the tint until then) ---
 	"host/herald_of_the_seventh_trumpet": 70.0,  # TUNING (not in GDD) Empyrean miniboss, male: a larger Herald with a great trumpet; walk strip (about 44 wide)
-	"host/voice": 104.0,  # TUNING (not in GDD) Empyrean boss (a sexless seraph): six wings of light (two over the face, two over the feet, two spread) in a white rose; glide strip (about 80 wide)
+	"host/voice": 106.0,  # TUNING (not in GDD) Empyrean boss (a sexless seraph): six wings of light (two over the face, two over the feet, two spread) in a white rose; glide strip (about 80 wide)
 	"host/voice_unveiled": 104.0,  # TUNING (not in GDD) the Voice with its face wings lowered (Be Not Afraid): the face pure light, never features (about 80 wide)
 	"player/the_unveiled": 56.0,  # TUNING (not in GDD) female (figure style): violet dress, a lowered violet veil, small grey wings folded, a staff of a dead star (about 38 wide); walk and idle strips
 	"player/blind_saint": 56.0,  # TUNING (not in GDD) female (figure style): violet gown, a violet blindfold, a staff ringed with a bone wheel of closed eyes (about 36 wide); walk and idle strips

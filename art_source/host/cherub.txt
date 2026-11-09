@@ -1,0 +1,12 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, a CHERUB (a creature, no sex): four faces around a central body (a lion, an ox, an eagle and a man's mask-like face) and four large wings covered in small cerulean eyes, a flaming white sword of light held in front. Signature shape: four faces and four eye-covered wings.
+
+LOW-RESOLUTION pixel art: the whole SUBJECT is only 56 pixels tall, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no soft glow haze. NO HALO above the head (it is added by the game).
+
+Subject sex: creature (no sex).
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: starlight white #F4F7FF; pale silver #8A96AC #C9D2E0; cerulean #1F4F8F #3E8FD8 #9CC8F0; dawn rose #B07888 #F2B8C6 #FCE4EA; pale skin #B8A8A0 #E8DCD4. NO red, NO crimson, NO gold, NO yellow.
+
+Outline: a clean 1-pixel dark outline around the whole subject in deep night blue #0E1626. Light from the top-left. Keep the main shapes clearly brighter than a near-black ground.
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, no dark glow around the subject), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no text, no frame. Draw ONLY ONE figure.
+Attached: (1) a game sprite of this game for pixel size, outline weight and flat look; (2) concept art of this unit for its shape and colours only (keep it flat, chunky and low-resolution).

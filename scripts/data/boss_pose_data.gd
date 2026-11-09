@@ -41,4 +41,7 @@ const POSES: Dictionary = {
 	"bosses/shogun": {3: "duel"},  # TUNING (not in GDD) the low iai stance with the blade drawn (BossShogun: the leap down and every cut he stands to draw in the duel)
 	# --- Act IX: the Crash Site ---
 	"bosses/hive_mother": {1: "cast", 3: "strike"},  # TUNING (not in GDD) her claws raised over the egg sac as she lays a wave / her claws thrust down as she bursts out of the ground (BossHiveMother; her Flight form is its own still, bosses/hive_mother_flight)
+	# --- Act XIII: the Celestial Host ---
+	"host/seraiel": {1: "raised"},  # TUNING (not in GDD) the sword raised overhead (BossSeraiel: the sword's windup, the sweep and the Gate's cast)
+	"host/throne": {1: "open"},  # TUNING (not in GDD) the wheels parted, the Core open (BossThrone)
 }

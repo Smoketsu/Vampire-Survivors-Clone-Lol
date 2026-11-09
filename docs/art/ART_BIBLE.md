@@ -3215,3 +3215,17 @@ her crest. Also 2 obstacle kinds (the fossil with `_v`), 16 icon badges on the a
 concept's greens); the Razorclaw Alpha is 28 px wide (the model drew her upright and narrow), the Duckbill 48; the Scuttler is a pale single-colour
 speck at 20 px; the Skyraider's wing flap is a plain 4 px shear. Phase 2 art (the two other Plain / Basin beasts, minibosses, bosses, characters,
 summon class, zone floors, tree fern, canyon wall, lava rock, tar patch) is not made.
+
+### Act X slot: the Celestial Host (phase 2 art, Nov 2026)
+
+| Key | What |
+|---|---|
+| `host/cherub` (58 rows with 2 for the bob), `cherub_of_the_gate` (78) | four faces (lion, ox, eagle, man) and four wings covered in eyes, a flaming sword; hover strips |
+| `host/seraiel` (96), `seraiel_raised` | the Warden of the Gate, male, four wings, flaming sword; walk strip; pose 1 sword raised |
+| `host/ophan` (52), `throne` (96), `throne_open`, `throne_core` (32) | burning silver wheels of eyes; roll strips (Throne turns, the Ophan squeezes); pose 1 = wheels parted; the Core's eye |
+| `host/dominion_of_the_spheres` (70), `herald_of_the_seventh_trumpet` (70) | larger Dominion (ring crown) and Herald (great trumpet), male; walk strips |
+| `host/voice` (106), `voice_unveiled` (104) | six wings in a white-and-rose lotus; the unveiled face is pure light, no features |
+| `player/fallen_herald` (46x56), `blind_saint` (38x56), `the_unveiled` (42x56) | violet necromancers; the two women in the figure-redesign style, fully clothed, bust rigs, walk + idle strips |
+| `summons/bound_ophan`, `throne_of_bones` | bone wheels with soul-teal eyes / fire; roll strips |
+| `icons/turning_bones`, `obstacles/host_pearl_gate` (72x80) | the passive's badge; the Gate of Pearl |
+| `tiles/silver_stair_*`, `wheel_*`, `empyrean_*` (12) | procedural 128x128 floors (`host_floors.py`) |

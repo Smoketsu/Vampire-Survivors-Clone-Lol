@@ -1078,6 +1078,20 @@ RIGS = {
     "host/herald": dict(mode="robe", hip=34, rigid=[], sway=1, dip=1, float=1),
     "host/dominion": dict(mode="robe", hip=38, rigid=[], sway=1, dip=1, float=1),
     "host/judge": dict(mode="robe", hip=40, rigid=[], sway=1, dip=1, float=1),
+    # --- Act X slot, phase 2: the Celestial Host's guardians, bosses and characters ---
+    # The creatures float (hover, the whole sprite bobs 2 px: Cherubs, the Voice); the archangels glide on their hems (robe); the wheels
+    # have roll strips made by art_source/host/make_phase2.py (not rigs). The two violet women carry bust boxes (figure redesign) and idle strips.
+    "host/cherub": dict(mode="hover", bob=2, parts=[]),
+    "host/cherub_of_the_gate": dict(mode="hover", bob=2, parts=[]),
+    "host/voice": dict(mode="hover", bob=2, parts=[]),
+    "host/seraiel": dict(mode="robe", hip=64, rigid=[], sway=1, dip=1, float=1),
+    "host/dominion_of_the_spheres": dict(mode="robe", hip=48, rigid=[], sway=1, dip=1, float=1),
+    "host/herald_of_the_seventh_trumpet": dict(mode="robe", hip=46, rigid=[], sway=1, dip=1, float=1),
+    "player/fallen_herald": dict(mode="robe", hip=40, rigid=[], sway=1, dip=1),
+    "player/blind_saint": dict(mode="robe", hip=40, rigid=[(25, 38, 0, None)], sway=1, dip=1,
+                               bust=(14, 24, 18, 25, 1), bust_exclude=[(0, 14, 12, 50), (24, 38, 12, 50)]),
+    "player/the_unveiled": dict(mode="robe", hip=40, rigid=[(31, 42, 0, None)], sway=1, dip=1,
+                                bust=(16, 29, 19, 27, 1), bust_exclude=[(0, 16, 12, 50), (29, 42, 12, 50)]),
     # --- Act XIV slot: the Age of Titans (assets/sprites/primeval/) ---
     # Beasts walk on two or four legs (`legs`: the hind legs left of the middle, the front legs right of it, the tail and neck
     # ride with the body above the hip); the Skyraider flaps (`hover`, the wing on the left of the still hinged at the body).

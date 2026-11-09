@@ -167,3 +167,11 @@ Wheel of Thrones (phase 2): renamed `host_crystal` → `host_crystal_m` (+ `_m_v
 `host/dominion_of_the_spheres`, `host/throne` (pose 1: the wheels parted), `host/throne_core`, `player/blind_saint` (walk, idle) and
 `tiles/wheel_moon` / `wheel_sun` / `wheel_stars` / `wheel_core` when they exist (none drawn yet: code shapes until then); the icons
 `wheel_of_eyes`, `ophanim`, `all_seeing`, `smoked_glass`, `ach_the_wheel_breaks` exist.
+
+## Status (art agent, phase 2, Nov 2026)
+
+Done: `host/cherub`, `cherub_of_the_gate`, `seraiel` (+ `seraiel_raised` pose), `ophan`, `dominion_of_the_spheres`, `throne` (+ `throne_open` pose), `throne_core`,
+`herald_of_the_seventh_trumpet`, `voice`, `voice_unveiled` (+ walk / hover / roll strips; the hover ones carry 2 empty top rows, HEIGHTS 58 / 78 / 106); `player/fallen_herald`,
+`blind_saint`, `the_unveiled` (walk, idle for the women); `summons/bound_ophan`, `throne_of_bones` (roll strips); `icons/turning_bones`; `obstacles/host_pearl_gate` (72x80);
+all twelve zone floors (`tiles/silver_stair_*`, `wheel_*`, `empyrean_*`). `BossPoseData`: `host/seraiel` 1 = raised, `host/throne` 1 = open. Not done: `obstacles/host_crystal_ring`
+(the rings use turned `host_crystal_m`), the optional markers / fx of the foundation list that the code still draws.
