@@ -46,7 +46,7 @@ The constants are already in `scripts/data/palette.gd` (`HOST_*`); the ramps mus
 | `host/ophan` | 52x52 | none (a wheel) | phase 2 (guardians): a burning silver wheel within a wheel, rims covered in eyes; rolls | roll (8 frames) | yes (Wheel of Thrones; `HostGlyphs` until drawn) |
 | `host/cherub_of_the_gate` | 64x76 | none | Silver Stair miniboss: a larger Cherub, its sword turning a full circle | walk | yes (Silver Stair; `HostGlyphs` until drawn) |
 | `host/dominion_of_the_spheres` | 44x70 | male | Wheel of Thrones miniboss: a larger Dominion among crystal rings | walk | yes (Wheel of Thrones; `HostGlyphs` until drawn) |
-| `host/herald_of_the_seventh_trumpet` | 44x70 | male | Empyrean miniboss: a larger Herald, a great trumpet | walk | phase 2 |
+| `host/herald_of_the_seventh_trumpet` | 44x70 | male | Empyrean miniboss: a larger Herald, a great trumpet | walk | yes (Empyrean; `HostGlyphs` until drawn) |
 
 The halo over each angel is drawn by the code (`HostKit.draw_over()`: a ring of cerulean rects that gaps as it cracks), so
 **do not paint a halo into the unit sprites**; a later `markers/host_halo` (below) may replace the code ring.
@@ -104,7 +104,7 @@ The halo over each angel is drawn by the code (`HostKit.draw_over()`: a ring of 
 | `tiles/silver_stair_cloud_shelf` | zone 3: steps among cloud | phase 2 |
 | `tiles/silver_stair_pearl_gate` | zone 4: pearl flagstones | phase 2 |
 | `tiles/wheel_moon` / `wheel_sun` / `wheel_stars` / `wheel_core` | the Wheel of Thrones' four spheres (silver, pale light, deep star-blue, the Wheel's rim) | yes (`WheelOfThronesGround`; a code grid until drawn) |
-| `tiles/empyrean_rose_edge` / `empyrean_petals` / `empyrean_choir` / `empyrean_heart` | the Empyrean's four zones (white petals of light, darker toward the heart only in value, never in hue) | phase 2 |
+| `tiles/empyrean_rose_edge` / `empyrean_petals` / `empyrean_choir` / `empyrean_heart` | the Empyrean's four zones (white petals of light, darker toward the heart only in value, never in hue) | yes (`EmpyreanGround`; code petal seams until drawn) |
 
 ## Obstacles (`assets/sprites/obstacles/`; rect kinds also `_v`, turned 90 degrees). The stubs use these kind ids (code-drawn by `HostGlyphs` today); phase 2 renames to its own kinds if it wants
 
@@ -113,7 +113,7 @@ The halo over each angel is drawn by the code (`HostKit.draw_over()`: a ring of 
 | `obstacles/host_pillar` | 30x46 | a pillar of white stone with a band of light (circle kind; casts a pillar's shadow, safe from the Light) | yes on the Silver Stair, as `host_pillar_m` (one size); code on the stubs |
 | `obstacles/host_cloudstone` + `_v` | 52x30 | a cloud-wrapped block of the stair | yes on the Silver Stair, as `host_cloudstone_m` / `_m_v`; code on the stubs |
 | `obstacles/host_crystal` + `_v` | 44x26 | a shard of a sphere's crystal (cerulean, see-through edge) | yes on the Wheel of Thrones, as `host_crystal_m` / `_m_v` (one size; also the pieces the turning rings are drawn from) |
-| `obstacles/host_petal` + `_v` | 56x24 | a standing petal of light | code |
+| `obstacles/host_petal` + `_v` | 56x24 | a standing petal of light | yes on the Empyrean, as `host_petal_m` / `_m_v` (one size) |
 | `obstacles/host_pearl_gate` | 96x80 | the Gate of Pearl (Silver Stair set piece) | phase 2 |
 | `obstacles/host_crystal_ring` | strip, 3 sizes | the turning spheres' crystal ring segments (moving walls, Wheel of Thrones) | optional: the rings are drawn from turned `host_crystal_m` pieces |
 
@@ -137,6 +137,7 @@ The halo over each angel is drawn by the code (`HostKit.draw_over()`: a ring of 
 | `icons/ach_the_last_word` | achievement The Last Word |
 | `icons/bound_ophan` | summon class icon |
 | `icons/throne_of_bones` | its evolution icon |
+| `icons/turning_bones` | the Bound Ophan's paired passive (own decision; not drawn yet: the code fallback) |
 
 ## Audio
 

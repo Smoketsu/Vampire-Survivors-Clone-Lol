@@ -178,9 +178,9 @@ Autotest options (full table in the README):
   `barrow_fields|valgard|vigrid` the Hall of the Slain, Act XI (`--boss=hrimgar|sigrun|odin`, `--character=rune_seer|shield_maiden_hero|berserker_hero`,
   `--spawn=muspel_giant|fenrir|odin_raven@T`); `necropolis|lioness_temple|two_truths` the
   Necropolis Dynasty, Act XII (`--boss=anubis|sekhmet|osiris`, `--character=the_embalmer|lion_priestess|pharaohs_shade`);
-  `silver_stair|wheel_of_thrones|empyrean` the Celestial Host, Act XIII (the Silver Stair and the Wheel of Thrones built, the
-  Empyrean a stub; `--boss=seraiel|throne|voice`, `--character=fallen_herald|blind_saint`, `--spawn=` with
-  `lesser_light|virtue|power|choir_angel|herald|dominion|judge|cherub|cherub_of_the_gate|ophan|dominion_of_the_spheres`); `fern_basin|great_plain|last_day` the Age of Titans' stubs,
+  `silver_stair|wheel_of_thrones|empyrean` the Celestial Host, Act XIII (all three built; `--boss=seraiel|throne|voice`,
+  `--character=fallen_herald|blind_saint|the_unveiled`, `--classes=bound_ophan`, `--spawn=` with
+  `lesser_light|virtue|power|choir_angel|herald|dominion|judge|cherub|cherub_of_the_gate|ophan|dominion_of_the_spheres|herald_of_the_seventh_trumpet`); `fern_basin|great_plain|last_day` the Age of Titans' stubs,
   Act XIV (`--boss=scarmaw|ironbrow|gravejaw`, `--spawn=` with `scuttler|razorclaw|frill_spitter|longneck|duckbill|skyraider|tyrant`))
 - `--unlocks=all|none` (Act II's lockable spells / passives / classes in the card pool; forced items
   are open either way)
@@ -215,10 +215,10 @@ Autotest options (full table in the README):
 the autotests for the area a change touches plus one default run; run the full "Done" set (every stage,
 the same-seed gates) once per batch of changes, before `main` moves; multi-seed batches only for balance.
 
-CI (`.github/workflows/ci.yml`) runs the import and, as thirty-six **parallel** matrix jobs, the Graveyard
+CI (`.github/workflows/ci.yml`) runs the import and, as thirty-seven **parallel** matrix jobs, the Graveyard
 autotest with the naive and army policies, a Crimson March autotest, a Sanctum of Judgment autotest (army
 policy) and one army autotest per Act II, Act IV, V, VI, VII, VIII, IX, X (the Black Tide), XI (the Hall of the Slain) and XII (the
-Necropolis Dynasty) stage and the Celestial Host's Silver Stair and Wheel of Thrones; beside them, the Windows/Linux/Web exports (artifacts
+Necropolis Dynasty) stage and the three Celestial Host stages; beside them, the Windows/Linux/Web exports (artifacts
 `Necropathy-windows` / `-linux` / `-web`) and an exported-build smoke test; also the co-op jobs `coop-net` (relay
 protocol + two-process transport test) and `coop-lockstep` (the two-process full-run determinism gate, ~10 min, not
 waited on by the publish jobs) and, on `main` pushes, `deploy-relay` (the Worker, secrets `CLOUDFLARE_API_TOKEN` /
@@ -726,6 +726,16 @@ tiny tweaks.
   (`boss_throne.gd`: the Rolling, the Gaze through `HallowedLight.add_shaft()`, the Core: rims take ×0.2), Wheel of Eyes /
   Ophanim + All-Seeing, the Blind Saint, The Wheel Breaks → Smoked Glass. One CI army job (36 matrix jobs). Stages 1–37
   same-seed summaries unchanged.
+- **The Empyrean, playable** (the Celestial Host's finale and the end of Part One; GDD §15.0 from "The Empyrean (Act XIII
+  phase 2)" to "The Empyrean tests and gate"): the four zones (`EmpyreanGround`), **the Choir** (`EmpyreanDirector`: every
+  live Choir Angel, `HostRules.choir`, widens the Light's `width_mult`, applied relatively so the Last Trumpet stacks), the
+  Herald of the Seventh Trumpet (miniboss, `SeventhHeraldKit`: each blast calls the next earlier zone's squad, seven in
+  all), **the Voice** (`boss_voice.gd`: it never moves; the Holy through `HallowedLight.add_shaft()`; Be Not Afraid: a flat
+  additive white (`ParagonSky`) and `CombatResolver.stun_unit()` on every summon not shaded or barriered; the Last Word:
+  the run's sins return as Judges in waves, `Judgment.send_wave()`), Revelation / Be Not Afraid + Seventh Seal, the
+  Unveiled, the finale class **Bound Ophan** / Throne of Bones + Turning Bones (`BoundOphanBehavior` "orbit_roll": it
+  circles the ring, then rolls through the densest pack; its Ossuary mastery), The Last Word (records the clear; no
+  epilogue part until the reorder). One CI army job (37 matrix jobs). Stages 1–38 same-seed summaries unchanged.
 
 **Next, in priority order:**
 1. **Playtest feedback** from the owner and friends (actively playtesting); it outranks everything below.
