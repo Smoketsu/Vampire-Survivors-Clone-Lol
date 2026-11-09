@@ -23,6 +23,10 @@
 ##   judge        — the high orders (male), an elite sent by JUDGMENT at each
 ##                  third of the scales: he comes for the necromancer himself
 ##                  with a sword and a set of scales; killing him lightens them.
+## Added by the Silver Stair (phase 2, its block at the end):
+##   cherub       — the guardians (no sex, a creature), an elite: four faces,
+##                  four wings full of eyes and a flaming sword that SWEEPS
+##                  ALL AROUND IT (CherubKit, row "sword"); GRACE.
 ## The Reckoning, the Last Trumpet, has no kind of its own: its heavy is the
 ## Dominion (RECKONING_KIND) with the shared kinds as companions.
 ## Each stage's own kinds live in its own file (SilverStairEnemyData,
@@ -54,6 +58,14 @@
 ##              (s), radius (px of the push), push (px a summon is moved),
 ##              calls (most squads a Herald calls), squad (Array of
 ##              {kind, count}).
+##   sword    — Dictionary: the Cherub's flaming sword (CherubKit): first (s
+##              after it arrives), every (s between two sweeps; 0 = the
+##              sword never stops turning), windup (s of telegraph), turn (s
+##              for one full circle), turns (full circles a sweep), reach
+##              (px), damage_summon, damage_player (per body a pass, before
+##              the time scaling).
+##   miniboss — true: the stage miniboss (the HUD bar, the chest); with
+##              reward_xp / reward_crystals, its XP burst (CherubKit).
 ##   fodder   — true: fodder (reports).
 ##   figure   — true: a figure-style woman (the art pass's bust rig; no rule
 ##              reads it).
@@ -79,6 +91,9 @@ const HERALD: String = "herald"
 const DOMINION: String = "dominion"
 ## Kind id of the Judge (Judgment's elite).
 const JUDGE: String = "judge"
+# --- Act XIII (temporary number): the Silver Stair ---
+## Kind id of the Cherub (the guardians; a shared row, the Silver Stair's block).
+const CHERUB: String = "cherub"
 ## Sprite folder of the Host's kinds (assets/sprites/host/).
 const SPRITE_DIR: String = "host/"
 
@@ -311,4 +326,47 @@ const ENEMIES := {
 		"halo": true,  # Owner-approved proposal: Grace (every angel)
 		"judge": true,  # Owner-approved proposal: hunts the necromancer; lightens the scales
 	},  # The Judge.
+	# --- Act XIII (temporary number): the Silver Stair ---
+	# The guardians (a creature, no sex), an elite: four faces (lion, ox,
+	# eagle, man), four wings covered in eyes and a flaming sword that sweeps
+	# all around it (owner-approved proposal: "Elite (guardian) | Four faces,
+	# four wings full of eyes and a flaming sword that sweeps all around it |
+	# Siegecraft; stay out of reach"). CherubKit: every sword.every s, once a
+	# body stands within reach, it plants itself for sword.windup s (a ring
+	# telegraph) and its sword turns one full circle in sword.turn s, cutting
+	# every summon and necromancer it passes (their body radius counts).
+	# Siegecraft's extra damage to elites already applies to it.
+	"cherub": {
+		"display_name": "Cherub",
+		"max_hp": 200.0,  # TUNING (not in GDD) an elite guardian (Dominion 150; Grace's halo on top)
+		"move_speed": 38.0,  # TUNING (not in GDD) px/s; a slow guardian
+		"damage": 9.0,  # TUNING (not in GDD) a blow in reach, before the time scaling
+		"attack_interval": 1.4,  # TUNING (not in GDD) s
+		"attack_range": 10.0,  # TUNING (not in GDD) px
+		"radius": 14.0,  # TUNING (not in GDD) px (~56 px sprite)
+		"armor": 0.2,  # TUNING (not in GDD)
+		"xp": 12,  # TUNING (not in GDD)
+		"behavior": "melee",
+		"projectile_speed": 0.0,
+		"undead_damage_mult": 1.0,
+		"heal_amount": 0.0,
+		"heal_interval": 0.0,
+		"heal_radius": 0.0,
+		"target_priority": 0.8,  # TUNING (not in GDD) 0..1
+		"mass": 3.0,  # TUNING (not in GDD)
+		"faction": FACTION,
+		"kit": "cherub",
+		"group": "guardians",
+		"halo": true,  # Owner-approved proposal: Grace (every angel)
+		"sword": {
+			"first": 2.0,  # TUNING (not in GDD) s after it arrives
+			"every": 7.5,  # TUNING (not in GDD) s between two sweeps
+			"windup": 0.8,  # TUNING (not in GDD) s of telegraph (a ring round it)
+			"turn": 1.0,  # TUNING (not in GDD) s for one full circle
+			"turns": 1,  # TUNING (not in GDD) full circles a sweep
+			"reach": 54.0,  # TUNING (not in GDD) px; "stay out of reach"
+			"damage_summon": 12.0,  # TUNING (not in GDD) per summon passed (once a turn), before the time scaling
+			"damage_player": 8.0,  # TUNING (not in GDD) before the time scaling
+		},
+	},  # The Cherub.
 }

@@ -25,9 +25,12 @@ extends RefCounted
 const FACTION: String = "host"
 ## The roster's groups in order (row "group"; the Codex and the report group
 ## by them): the lesser lights, the soldiers of light, the choir (the
-## supports), the high orders (the elites). Phase 2 adds "guardians" (the
-## Cherub, the Ophan) with its Codex section.
-const GROUPS: Array[String] = ["lights", "soldiers", "choir", "orders"]
+## supports), the high orders (the elites), the guardians (the Cherub, the
+## Ophan and the Silver Stair's miniboss; the Silver Stair added the group with
+## its Codex section).
+const GROUPS: Array[String] = ["lights", "soldiers", "choir", "orders",
+	# --- Act XIII (temporary number): the Silver Stair ---
+	"guardians"]
 
 # --- Judgment (Judgment; one path) ----------------------------------------------------------
 ## The scales of Judgment (a stage's STAGE "judgment" overrides any key).
@@ -130,6 +133,11 @@ const SOUNDS := {
 	"trumpet": "trumpet",  # Host pack: a long silver trumpet blast.
 	"herald_blast": "herald_blast",  # Host pack: a short trumpet call and a gust.
 	"power_lunge": "power_lunge",  # Host pack: a white-flame sword cut.
+	# --- Act XIII (temporary number): the Silver Stair ---
+	"cherub_sword": "power_lunge",  # Host pack (reused): the Cherub's sword cut as it sweeps round.
+	"seraiel_sword": "power_lunge",  # Host pack (reused): Seraiel's sword sweep.
+	"gate_raise": "verdict",  # Host pack (reused): the Gate's walls of light rise (a deep struck bell).
+	"trial": "scales_tip",  # Host pack (reused): Seraiel's Trial tips the scales.
 }
 
 # --- The counter-passives (phase 2 builds them; HostRules' hooks read them) ----------------

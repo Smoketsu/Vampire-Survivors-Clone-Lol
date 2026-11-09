@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dnbrvwuieillw"
-path="res://.godot/imported/host_cloudstone.png-b42d2b26a0b1e153c88eba38ea384347.ctex"
+uid="uid://blfkrioftlx2u"
+path="res://.godot/imported/host_cloudstone_m_v.png-3554da326c7fd0b39ae726347288f3b2.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/obstacles/host_cloudstone.png"
-dest_files=["res://.godot/imported/host_cloudstone.png-b42d2b26a0b1e153c88eba38ea384347.ctex"]
+source_file="res://assets/sprites/obstacles/host_cloudstone_m_v.png"
+dest_files=["res://.godot/imported/host_cloudstone_m_v.png-3554da326c7fd0b39ae726347288f3b2.ctex"]
 
 [params]
 

@@ -226,7 +226,9 @@ const ORDER := ["grave_dominion", "necrotic_vigor", "dark_command", "soul_recycl
 	# --- Act XII (temporary number): the Temple of the Lioness ---
 	"desert_fury", "dune_walkers",
 	# --- Act XII (temporary number): the Hall of Two Truths ---
-	"heavy_heart", "answering_words"]
+	"heavy_heart", "answering_words",
+	# --- Act XIII (temporary number): the Silver Stair ---
+	"fallen_light", "absolution"]
 
 ## Passives that only help summons (a "dead" level-up card while no summon
 ## class is owned, see AbilityManager.build_offers()).
@@ -2347,6 +2349,48 @@ const PASSIVES := {
 			{"answer_haste": 0.15},  # TUNING (not in GDD)
 			{"answer_haste": 0.20},  # TUNING (not in GDD)
 			{"answer_haste": 0.25},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act XIII (temporary number): the Silver Stair ---
+	# Fallen Light (Flaming Sword's paired passive; owner-approved proposal:
+	# "Sword at the Gate (+ Fallen Light)"; unlocked with the spell by Seraiel
+	# and offered on every stage). Own decision on its effect: the light the
+	# Fallen Herald stole burns on the blade: every sweep deals edge_bonus more
+	# and its arc reaches arc_bonus degrees wider (FlamingSword._sweep() /
+	# _arc(), the one read). Read only by FlamingSword: nothing without the spell.
+	"fallen_light": {
+		"display_name": "Fallen Light",  # Owner-approved proposal
+		"icon": "fallen_light",
+		"description": "Stolen light burns on your blade: Flaming Sword cuts harder and sweeps wider.",
+		"labels": {"edge_bonus": ["Flaming Sword damage", "pct"], "arc_bonus": ["Flaming Sword arc (deg)", "num"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"edge_bonus": 0.06, "arc_bonus": 6.0},  # TUNING (not in GDD)
+			{"edge_bonus": 0.12, "arc_bonus": 12.0},  # TUNING (not in GDD)
+			{"edge_bonus": 0.18, "arc_bonus": 18.0},  # TUNING (not in GDD)
+			{"edge_bonus": 0.24, "arc_bonus": 24.0},  # TUNING (not in GDD)
+			{"edge_bonus": 0.30, "arc_bonus": 30.0},  # TUNING (not in GDD)
+		],
+	},
+	# The Celestial Host's counter-passive Absolution (owner-approved proposal:
+	# "the scales fill 30% slower"; unlocked by the Silver Stair achievement
+	# Without Sin, owner answer Nov 9, 2026; offered only on the Host through
+	# its card row's "act"). The foundation's hook reads it:
+	# HostRules.absolution_mult() (x every sin's weight, 1 - fill_cut, in
+	# Judgment.on_raise() / on_replace()).
+	"absolution": {
+		"display_name": "Absolution",  # Owner-approved proposal
+		"icon": "absolution",
+		"description": "Your sins weigh less: the scales of Judgment fill slower.",
+		"labels": {"fill_cut": ["Weight of each sin", "neg_pct"]},
+		"act": 13,  # Owner-approved: the act's counter-passives are offered only in this act (Unlocks.act_allows(); temporary number, the reorder renumbers)
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"fill_cut": 0.06},  # TUNING (not in GDD)
+			{"fill_cut": 0.12},  # TUNING (not in GDD)
+			{"fill_cut": 0.18},  # TUNING (not in GDD)
+			{"fill_cut": 0.24},  # TUNING (not in GDD)
+			{"fill_cut": 0.30},  # Owner-approved proposal: "the scales fill 30% slower" at full
 		],
 	},
 }

@@ -28,6 +28,9 @@ static func draw_enemy(ci: CanvasItem, kind: String, o: Vector2, r: float, flash
 	# Phase 2: each Host stage's own fallbacks go here, before the shared
 	# kinds' (as CourtGlyphs asks RavensmoorGlyphs first).
 	match kind:
+		# --- Act XIII (temporary number): the Silver Stair ---
+		"cherub", "cherub_of_the_gate":
+			_cherub(ci, o, r, flash)
 		"lesser_light":
 			_light(ci, o, r, flash)
 		"power":
@@ -55,6 +58,22 @@ static func _light(ci: CanvasItem, o: Vector2, r: float, flash: bool) -> void:
 	SpriteBank.draw_disc(ci, o, r * 0.75, Glyphs._c(INK, flash))
 	SpriteBank.draw_disc(ci, o, r * 0.65, Glyphs._c(Palette.HOST_STARLIGHT, flash))
 	SpriteBank.draw_disc(ci, o, r * 0.3, Glyphs._c(Palette.HOST_CERULEAN, flash))  # Its heart.
+
+
+# --- Act XIII (temporary number): the Silver Stair ---
+## A Cherub (and the Cherub of the Gate): four wings spread like a cross, each
+## marked with eyes, a round body of four faces and a white-flame sword at its
+## side (rects and disc textures; the turning sword is CherubKit's).
+static func _cherub(ci: CanvasItem, o: Vector2, r: float, flash: bool) -> void:
+	for d: Vector2 in [Vector2(-1.0, -0.5), Vector2(1.0, -0.5), Vector2(-0.8, 0.4), Vector2(0.8, 0.4)]:
+		var wc := o + d * r * 0.9
+		ci.draw_rect(Rect2(wc - Vector2(r * 0.5, r * 0.25), Vector2(r, r * 0.5)), Glyphs._c(Color(Palette.HOST_CLOUD, 0.9), flash))  # A wing.
+		SpriteBank.draw_disc(ci, wc, r * 0.1, Glyphs._c(Palette.HOST_CERULEAN, flash))  # An eye on it.
+	SpriteBank.draw_disc(ci, o, r * 0.62, Glyphs._c(INK, flash))
+	SpriteBank.draw_disc(ci, o, r * 0.55, Glyphs._c(Palette.HOST_SILVER, flash))
+	for f: Vector2 in [Vector2(0.0, -0.3), Vector2(0.3, 0.0), Vector2(0.0, 0.3), Vector2(-0.3, 0.0)]:
+		SpriteBank.draw_disc(ci, o + f * r, r * 0.13, Glyphs._c(Palette.HOST_STARLIGHT, flash))  # The four faces.
+	ci.draw_rect(Rect2(o + Vector2(r * 0.7, -r * 1.1), Vector2(2.5, r * 1.6)), Glyphs._c(Palette.HOST_STARLIGHT, flash))  # The flaming sword.
 
 
 ## An angel: a robed body, two pairs of wings behind it, a mirror-mask head;

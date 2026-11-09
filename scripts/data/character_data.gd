@@ -114,7 +114,9 @@ const ORDER := ["gravecaller", "umbral_warden", "voidcaller", "bone_oracle", "fa
 	# --- Act XII (temporary number): the Temple of the Lioness ---
 	"lion_priestess",
 	# --- Act XII (temporary number): the Hall of Two Truths ---
-	"pharaohs_shade"]
+	"pharaohs_shade",
+	# --- Act XIII (temporary number): the Silver Stair ---
+	"fallen_herald"]
 ## The default character (RunConfig, fresh saves, the autotest): today's game.
 const DEFAULT_ID: String = "gravecaller"
 ## Spell level that unlocks a character (owner rule: reach Lv 5 with its spell
@@ -188,6 +190,8 @@ const STAT_LABELS := {
 ##                           volley marks; Act X, the Treasure Galleon)
 ##   linen_mummy_life        LinenBind._raise_pending (s more each risen Mummy
 ##                           lasts; Act XII, temporary)
+##   sword_reach_bonus       FlamingSword._reach (px more reach on every sweep;
+##                           Act XIII, temporary)
 const INNATE_KEYS := ["orb_projectile_destroy", "blast_echo_delay", "blast_echo_damage", "spear_shard_max",
 	"spear_shard_cooldown", "summon_corpses", "grace_share", "grace_targets", "grace_range", "contagion_range",
 	"contagion_duration", "death_mark_slow", "bone_wall_duration", "soul_chains_extra_jumps", "wither_rot",
@@ -257,7 +261,9 @@ const INNATE_KEYS := ["orb_projectile_destroy", "blast_echo_delay", "blast_echo_
 	# --- Act XII (temporary number): the Temple of the Lioness ---
 	"eye_reach_bonus",
 	# --- Act XII (temporary number): the Hall of Two Truths ---
-	"verdict_execute_bonus"]
+	"verdict_execute_bonus",
+	# --- Act XIII (temporary number): the Silver Stair ---
+	"sword_reach_bonus"]
 
 ## Orbit radius (px) of the Bone Oracle's Ossuary Ward shards around him.
 const SHARD_ORBIT_RADIUS: float = 27.0  # TUNING (not in GDD)
@@ -1215,6 +1221,31 @@ const CHARACTERS := {
 		"stats": {"max_hp": 10.0, "move_speed": -0.03},  # TUNING (not in GDD) a king's bearing: sturdier, a little slower
 		"sprite": "player/pharaohs_shade",
 		"tint": Color(0.84, 0.76, 0.52),  # TUNING (not in GDD) a dull royal gold over the violet
+		"starts_unlocked": false,
+	},
+	# --- Act XIII (temporary number): the Silver Stair ---
+	# The Fallen Herald (Flaming Sword's character; owner-approved proposal
+	# "Rewards": "Seraiel | Flaming Sword ... | The Fallen Herald (male)";
+	# docs/last_acts/PLAN.md: every playable character is a necromancer of the
+	# act's theme, never one of the Host): MALE, a violet robe and a torn violet
+	# cope, one broken bone-white wing, a dark trumpet-headed staff with a soul
+	# flame (art player/fallen_herald, docs/host/ART_MANIFEST.md). Flaming Sword
+	# must be unlocked (Seraiel) before he can be earned, by the usual Lv 5
+	# rule. Own decision on his innate (the proposal names none): Torn Wing,
+	# the herald who fell from the Stair still swings the Gate's sword long:
+	# his sweeps reach farther (FlamingSword._reach()).
+	"fallen_herald": {
+		"display_name": "The Fallen Herald",  # Owner-approved proposal
+		"title": "He sounded the trumpet once. Now he answers to the dead.",
+		"spell": "flaming_sword",
+		"innate": {
+			"id": "torn_wing", "name": "Torn Wing",
+			"description": "Flaming Sword reaches 20 px farther.",
+			"values": {"sword_reach_bonus": 20.0},  # TUNING (not in GDD) px more reach on every sweep
+		},
+		"stats": {"max_hp": 5.0, "move_speed": 0.03},  # TUNING (not in GDD) a herald's stride: a little quicker
+		"sprite": "player/fallen_herald",
+		"tint": Color(0.80, 0.84, 0.94),  # TUNING (not in GDD) a pale fallen silver over the violet (his art replaces it)
 		"starts_unlocked": false,
 	},
 }

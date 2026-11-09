@@ -126,7 +126,9 @@ const ORDER := ["void_barrage", "eclipse_ward", "abyssal_detonation",
 	# --- Act XII (temporary number): the Temple of the Lioness ---
 	"eye_of_retribution",
 	# --- Act XII (temporary number): the Hall of Two Truths ---
-	"heart_devoured"]
+	"heart_devoured",
+	# --- Act XIII (temporary number): the Silver Stair ---
+	"sword_at_the_gate"]
 
 ## Evolution definitions.
 ##   base         — spell id that evolves (AbilityData.SPELLS key).
@@ -1008,6 +1010,26 @@ const EVOLUTIONS := {
 		"stats": {
 			"damage": 92.0, "cooldown": 2.6, "range": 320.0, "feathers": 2, "execute": 0.3, "ring": 88.0,  # TUNING (not in GDD)
 			"devour_heal": 0.5, "devour_cap": 6.0,  # TUNING (not in GDD) the evolution's heal (HP an execution, HP a cast at most)
+		},
+	},
+	# --- Act XIII (temporary number): the Silver Stair ---
+	# Sword at the Gate (GDD §15.0 "Flaming Sword, Sword at the Gate, Fallen
+	# Light and the Fallen Herald"; owner-approved proposal "Flaming Sword ->
+	# Sword at the Gate (+ Fallen Light)"): Flaming Sword + Fallen Light (a NEW
+	# passive, owner rule: at Lv 5). Own decision on its kit: the sword turns a
+	# full circle round the necromancer (Seraiel's guard at the Gate), and
+	# echo_delay s later it sweeps back once more for echo_share of the damage.
+	# Detected by the "echo_share" key.
+	"sword_at_the_gate": {
+		"base": "flaming_sword",
+		"passive": "fallen_light",
+		"display_name": "Sword at the Gate",  # Owner-approved proposal
+		"icon": "sword_at_the_gate",
+		"description": "The sword turns a full circle round you, then sweeps back once more.",
+		"labels": {"damage": "Sword damage", "radius": "Reach (px)", "cooldown": "Cooldown (s)", "echo_share": "Echo damage"},
+		"stats": {
+			"damage": 72.0, "arc": 360.0, "radius": 165.0, "cooldown": 1.7,  # TUNING (not in GDD) a full circle
+			"echo_share": 0.5, "echo_delay": 0.3,  # TUNING (not in GDD) the evolution flag: share of the damage the way back strikes, s after the first sweep
 		},
 	},
 }

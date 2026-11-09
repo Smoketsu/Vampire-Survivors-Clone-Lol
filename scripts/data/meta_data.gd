@@ -462,7 +462,9 @@ const ACHIEVEMENT_ORDER := ["bone_legion", "heretics_bane", "dread_sovereign", "
 	# --- Act XII (temporary number): the Temple of the Lioness ---
 	"names_taken",
 	# --- Act XII (temporary number): the Hall of Two Truths ---
-	"a_light_heart"]
+	"a_light_heart",
+	# --- Act XIII (temporary number): the Silver Stair ---
+	"without_sin"]
 
 ## Achievement definitions (GDD §9.4 "Example Achievement Unlocks"). Each
 ## achievement is tracked and recorded in the save and pays a one-time Soul
@@ -795,6 +797,16 @@ const ACHIEVEMENTS := {
 	# the title Light of Heart (UnlockData / TitleData).
 	"a_light_heart": {"display_name": "A Light Heart", "description": "Win Osiris's Weighing with the Scales on your side",
 		"stat": "light_heart_wins", "goal": 1, "unlock": "The title Light of Heart", "bounty": 500},  # Owner-approved proposal; bounty TUNING (not in GDD) as The Last Harvest
+	# --- Act XIII (temporary number): the Silver Stair ---
+	# The Host's achievement "Without Sin" (owner-approved proposal: "clear the
+	# Silver Stair without the scales passing the first third"): a Silver Stair
+	# run in which Seraiel fell while the scales of Judgment had never passed
+	# their first third all run (SilverStairDirector sets the run stat
+	# silver_stair_without_sin; MetaProgress counts the runs, lifetime
+	# without_sin_runs). It unlocks the counter-passive Absolution (owner
+	# answer, Nov 9, 2026).
+	"without_sin": {"display_name": "Without Sin", "description": "Slay Seraiel on the Silver Stair without the scales of Judgment ever passing their first third",
+		"stat": "without_sin_runs", "goal": 1, "unlock": "The Absolution passive", "bounty": 300},  # Owner-approved proposal; bounty TUNING (not in GDD) as No Jars Left
 }
 
 # --- Content wave 2: B. Achievement rewards ---

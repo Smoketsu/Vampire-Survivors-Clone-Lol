@@ -135,6 +135,8 @@ const HYPER_NAMES := {
 	"lion_priestess": "The Golden Lioness",  # TUNING (not in GDD)
 	# --- Act XII (temporary number): the Hall of Two Truths ---
 	"pharaohs_shade": "The Golden King",  # TUNING (not in GDD)
+	# --- Act XIII (temporary number): the Silver Stair ---
+	"fallen_herald": "The Gilded Herald",  # TUNING (not in GDD)
 }
 ## Sprite-multiply tint of each Hyper skin (gilded; the Eclipsed Gravecaller
 ## and the Sunless / Starless pair are darkened with a gold corona instead).
@@ -217,6 +219,8 @@ const HYPER_TINTS := {
 	"lion_priestess": Color(1.2, 1.05, 0.62),  # TUNING (not in GDD) gilded (the drawn skin replaces the tint)
 	# --- Act XII (temporary number): the Hall of Two Truths ---
 	"pharaohs_shade": Color(1.2, 1.05, 0.62),  # TUNING (not in GDD) gilded (no drawn skin: the tint)
+	# --- Act XIII (temporary number): the Silver Stair ---
+	"fallen_herald": Color(1.2, 1.05, 0.62),  # TUNING (not in GDD) gilded (no drawn skin: the tint)
 }
 ## Emblem and accent shared by every Hyper skin: a gold sun corona.
 const HYPER_ACCENT := Color(1.0, 0.82, 0.3)  # TUNING (not in GDD) Palette.GOLD

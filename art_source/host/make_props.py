@@ -14,8 +14,9 @@ SCRATCH = HERE / "_work"  # Temporary crops (deleted at the end).
 RAMPS = "host_silver,host_cerulean,host_rose,host_cloud,host_skin"  # Obstacle ramps.
 ICON_RAMPS = RAMPS + ",soul,bone"  # Icon ramps (the Bound Ophan's bone and soul-teal).
 # Obstacle sheet left to right: (key, max art width, max art height). Rect kinds also get a `_v` (the horizontal one turned 90 degrees).
-OBSTACLES = [("obstacles/host_pillar", 30, 46), ("obstacles/host_cloudstone", 52, 30), ("obstacles/host_crystal", 44, 26), ("obstacles/host_petal", 56, 24)]
-VERTICAL = ["obstacles/host_cloudstone", "obstacles/host_crystal", "obstacles/host_petal"]
+# The Silver Stair's two kinds carry the one-size suffix `_m` (EnvironmentArtData: its arena uses one size of each).
+OBSTACLES = [("obstacles/host_pillar_m", 30, 46), ("obstacles/host_cloudstone_m", 52, 30), ("obstacles/host_crystal", 44, 26), ("obstacles/host_petal", 56, 24)]
+VERTICAL = ["obstacles/host_cloudstone_m", "obstacles/host_crystal", "obstacles/host_petal"]
 # Badge sheets: file -> the first four symbols left to right: (icon id, frame icon). Violet frame = spells, passives, counter-passives
 # and summon classes; gold frame = evolutions and achievements (as the existing icons).
 VIOLET, GOLD = "icons/bone_spear", "icons/ossuary_lance"

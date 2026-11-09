@@ -452,6 +452,11 @@
 ##                        "chance" 0 = no fixed cloud banks).
 ##   grace              — any key of HostRulesData.GRACE ({} = defaults).
 ##   zones              — the Host stubs too: the planned zones.
+## --- Act XIII (temporary number): the Silver Stair ---
+##   silver_stair       — SilverStairDirector config (SilverStairStage.STAIR:
+##                        the Stair's steps and low cloud banks, Without Sin,
+##                        the "cherub_gate" event); ground "silver_stair" is
+##                        its SilverStairGround (four zone floors).
 ## --- Act XIV (temporary number): the Age of Titans ---
 ##   primeval           — true: the Age of Titans' shared rules
 ##                        (PrimevalRules as Game.primeval: Packs, Herds,

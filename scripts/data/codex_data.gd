@@ -412,6 +412,11 @@ const HOST_SOLDIERS: Array[String] = ["virtue", "power"]
 const HOST_CHOIR: Array[String] = ["choir_angel", "herald"]
 ## The high orders (group "orders": the elites).
 const HOST_ORDERS: Array[String] = ["dominion", "judge"]
+## The guardians (group "guardians": the Cherub and, with the Wheel of Thrones,
+## the Ophan; the stage minibosses of the Silver Stair).
+const HOST_GUARDIANS: Array[String] = [
+	# --- Act XIII (temporary number): the Silver Stair ---
+	"cherub", "cherub_of_the_gate"]
 ## Host stage bosses (StageRegistry.BOSS_ARRIVALS ids).
 const HOST_BOSSES: Array[String] = ["seraiel", "throne", "voice"]
 # --- Act XIV (temporary number): the Age of Titans ---
@@ -464,7 +469,7 @@ const SECTIONS: Dictionary = {
 		["dynasty_priests", "The Priesthood"], ["dynasty_stone", "Stone and Jars"], ["dynasty_bosses", "Bosses"]],  # TUNING (not in GDD) Act XII
 	# --- Act XIII (temporary number): the Celestial Host (grouped by group) ---
 	"host": [["host_lights", "Lesser Lights"], ["host_soldiers", "Soldiers of Light"], ["host_choir", "The Choir"],
-		["host_orders", "The High Orders"], ["host_bosses", "Bosses"]],  # TUNING (not in GDD) Act XIII
+		["host_orders", "The High Orders"], ["host_guardians", "The Guardians"], ["host_bosses", "Bosses"]],  # TUNING (not in GDD) Act XIII
 	# --- Act XIV (temporary number): the Age of Titans (grouped by group) ---
 	"primeval": [["primeval_swarm", "Swarms"], ["primeval_hunters", "Hunters"], ["primeval_herds", "Herds"],
 		["primeval_fliers", "Fliers"], ["primeval_titans", "Titans"], ["primeval_bosses", "Bosses"]],  # TUNING (not in GDD) Act XIV
@@ -777,6 +782,9 @@ const DESCRIPTIONS: Dictionary = {
 	"herald": "His trumpet calls a squad of the Host and pushes your ring back. Kill him on arrival.",  # Proposal
 	"dominion": "A sceptre of light rings: the angels near him move faster, and their halos come back. Kill him first.",  # Proposal (Grace)
 	"judge": "Sent when the scales of your sins tip a third. He comes for you, not your dead; killing him lightens the scales.",  # Proposal (Judgment)
+	# --- Act XIII (temporary number): the Silver Stair ---
+	"cherub": "Four faces and four wings full of eyes: its flaming sword sweeps all around it. Stay out of its reach.",  # Owner-approved proposal
+	"cherub_of_the_gate": "The guardian of the Gate of Pearl: its flaming sword turns a full circle every six seconds.",  # Owner-approved proposal (miniboss)
 	"seraiel": "Seraiel, Warden of the Gate: an archangel with a flaming sword who splits the way with walls of light.",  # Proposal
 	"throne": "The Throne: a colossal wheel within a wheel, its rims covered in eyes. It rolls, it gazes, and its core burns.",  # Proposal
 	"voice": "The Voice: a six-winged seraph whose face is never seen. When it lowers its wings, your dead stand still.",  # Proposal
@@ -1138,6 +1146,8 @@ const ACHIEVEMENT_ICONS: Dictionary = {
 	"names_taken": "ach_names_taken",  # TUNING (not in GDD)
 	# --- Act XII (temporary number): the Hall of Two Truths ---
 	"a_light_heart": "ach_a_light_heart",  # TUNING (not in GDD)
+	# --- Act XIII (temporary number): the Silver Stair ---
+	"without_sin": "ach_without_sin",  # TUNING (not in GDD)
 }
 ## IconGlyph kind drawn when an achievement badge PNG is missing.
 const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
@@ -1217,6 +1227,8 @@ const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
 	"names_taken": "dune_walkers",
 	# --- Act XII (temporary number): the Hall of Two Truths ---
 	"a_light_heart": "feathers_verdict",
+	# --- Act XIII (temporary number): the Silver Stair ---
+	"without_sin": "absolution",
 }
 ## Screen title (TITLE tier).
 const TITLE: String = "Codex"  # TUNING (not in GDD)
@@ -1266,7 +1278,7 @@ static func is_known(cat: String, id: String) -> bool:
 					or DYNASTY_DEAD.has(id) or DYNASTY_BEASTS.has(id) or DYNASTY_GUARD.has(id) \
 					or DYNASTY_PRIESTS.has(id) or DYNASTY_STONE.has(id) \
 					or HOST_LIGHTS.has(id) or HOST_SOLDIERS.has(id) or HOST_CHOIR.has(id) \
-					or HOST_ORDERS.has(id) \
+					or HOST_ORDERS.has(id) or HOST_GUARDIANS.has(id) \
 					or PRIMEVAL_SWARM.has(id) or PRIMEVAL_HUNTERS.has(id) or PRIMEVAL_HERDS.has(id) \
 					or PRIMEVAL_FLIERS.has(id) or PRIMEVAL_TITANS.has(id)  # Act IV to Act XIV (temporary numbers)
 		BOSS:
@@ -1302,7 +1314,7 @@ static func total(cat: String) -> int:
 					+ DYNASTY_DEAD.size() + DYNASTY_BEASTS.size() + DYNASTY_GUARD.size() \
 					+ DYNASTY_PRIESTS.size() + DYNASTY_STONE.size() \
 					+ HOST_LIGHTS.size() + HOST_SOLDIERS.size() + HOST_CHOIR.size() \
-					+ HOST_ORDERS.size() \
+					+ HOST_ORDERS.size() + HOST_GUARDIANS.size() \
 					+ PRIMEVAL_SWARM.size() + PRIMEVAL_HUNTERS.size() + PRIMEVAL_HERDS.size() \
 					+ PRIMEVAL_FLIERS.size() + PRIMEVAL_TITANS.size()  # Act IV to Act XIV (temporary numbers)
 		BOSS:

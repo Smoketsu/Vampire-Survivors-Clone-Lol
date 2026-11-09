@@ -412,6 +412,9 @@ const SPELLS := {
 	# --- Act XII (temporary number): the Hall of Two Truths ---
 	"feathers_verdict": {"every": 2, "clock": "cooldown", "aim": "strongest", "pattern": "ring", "counts": [5, 6, 8], "speed": 240.0,
 		"life": 0.5, "share": 0.35, "pierce": 1, "radius": 3.5, "style": "orb", "color": Color(0.70, 0.92, 0.86)},  # TUNING (not in GDD) a ring of soul-light with every other feather
+	# --- Act XIII (temporary number): the Silver Stair ---
+	"flaming_sword": {"every": 2, "clock": "cooldown", "aim": "nearest", "pattern": "fan", "counts": [3, 4, 6], "spread": 24.0, "speed": 300.0,
+		"life": 0.5, "share": 0.3, "pierce": 1, "radius": 3.0, "style": "shard", "color": Color(0.45, 0.95, 0.85)},  # TUNING (not in GDD) a fan of soul-flame shards after every other sweep (FlamingSwordData.FLAME)
 }
 ## Range (px) within which a spell echo looks for its target (no target, no echo).
 const SPELL_RANGE: float = 340.0  # TUNING (not in GDD)

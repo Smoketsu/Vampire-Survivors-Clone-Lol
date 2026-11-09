@@ -372,6 +372,14 @@ const UNLOCKS := {
 	"answering_words": {"type": "passive", "boss": "osiris", "text": "Defeat Osiris and Ammit in the Hall of Two Truths to unlock."},  # Its paired passive (own decision), unlocked with it
 	"light_of_heart": {"type": "title", "achievement": "a_light_heart",
 		"text": "Earn A Light Heart: win the Weighing with the Scales on your side."},  # Own decision (the win is recorded as a title, as Acts VI-IX did)
+	# --- Act XIII (temporary number): the Silver Stair ---
+	# Seraiel's fall (owner-approved proposal "Rewards": Flaming Sword is
+	# Seraiel's) with its paired passive, offered on every stage; the stage's
+	# achievement Without Sin earns the Host's counter-passive Absolution (owner
+	# answer Nov 9, 2026; offered only in the act through its card row's "act").
+	"flaming_sword": {"type": "spell", "boss": "seraiel", "text": "Slay Seraiel on the Silver Stair to unlock."},  # Owner-approved proposal
+	"fallen_light": {"type": "passive", "boss": "seraiel", "text": "Slay Seraiel on the Silver Stair to unlock."},  # Flaming Sword's paired passive (owner-approved proposal), unlocked with it
+	"absolution": {"type": "passive", "achievement": "without_sin", "text": "Earn Without Sin: slay Seraiel on the Silver Stair with the scales never past their first third."},  # Owner answer (Nov 9, 2026): Without Sin unlocks Absolution
 }
 
 ## End-screen plate heading of a newly unlocked item, by type.

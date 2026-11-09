@@ -577,6 +577,9 @@ func _ready() -> void:
 		# --- Act XII (temporary number): the Hall of Two Truths ---
 		"two_truths":
 			ground = TwoTruthsGround.new()  # The Hall of Two Truths' four zone floors (TwoTruthsStage.ZONES).
+		# --- Act XIII (temporary number): the Silver Stair ---
+		"silver_stair":
+			ground = SilverStairGround.new()  # The Silver Stair's four zone floors (SilverStairStage.ZONES).
 		_:
 			ground = Ground.new()
 	add_child(ground)

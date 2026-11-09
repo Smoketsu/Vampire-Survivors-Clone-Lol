@@ -473,6 +473,11 @@ var lioness_temple: LionessTempleDirector = null
 ## Devourer's Whelp, the Crocodile Wardens' rise; StageRegistry "two_truths";
 ## null on every other stage).
 var two_truths: TwoTruthsDirector = null
+# --- Act XIII (temporary number): the Silver Stair ---
+## The Silver Stair's mechanics (the Stair's steps and low cloud banks, Without
+## Sin, the Cherub of the Gate; StageRegistry "silver_stair"; null on every
+## other stage).
+var silver_stair: SilverStairDirector = null
 ## Sanctum kit bookkeeping: recent deaths, Confessor revivals, danger hints.
 var rites: CovenantRites
 ## The living miniboss shown on the HUD's miniboss bar (the Cathedral
@@ -731,6 +736,12 @@ func _ready() -> void:
 		two_truths.game = game
 		two_truths.config = stage_def["two_truths"]
 		add_child(two_truths)  # The Hall of Two Truths' director.
+	# --- Act XIII (temporary number): the Silver Stair ---
+	if not (stage_def.get("silver_stair", {}) as Dictionary).is_empty():
+		silver_stair = SilverStairDirector.new()
+		silver_stair.game = game
+		silver_stair.config = stage_def["silver_stair"]
+		add_child(silver_stair)  # The Silver Stair's director.
 
 
 # =====================================================================================
@@ -908,6 +919,9 @@ func step(delta: float) -> void:
 	# --- Act XII (temporary number): the Hall of Two Truths ---
 	if two_truths != null:
 		two_truths.step(delta)  # The Scales.
+	# --- Act XIII (temporary number): the Silver Stair ---
+	if silver_stair != null:
+		silver_stair.step(delta)  # The Stair's steps and banks, Without Sin, the Cherub of the Gate.
 
 
 ## The Archive kinds' world hazards (ArchiveHazards), created on first use.
@@ -1090,6 +1104,9 @@ func objective_text() -> String:
 	# --- Act XII (temporary number): the Hall of Two Truths ---
 	if two_truths != null and two_truths.objective_override() != "":
 		return two_truths.objective_override()  # The Whelp, the Weighing.
+	# --- Act XIII (temporary number): the Silver Stair ---
+	if silver_stair != null and silver_stair.objective_override() != "":
+		return silver_stair.objective_override()  # The Cherub of the Gate.
 	if boss != null and not boss.active:
 		return String(boss_info["dead_objective"])
 	return segments[segment_index]["objective"]
@@ -1409,6 +1426,12 @@ func _run_event(ev: Dictionary) -> void:
 				two_truths.start_event(ev)
 			game.stat_add("wave_events", 1.0)
 			return  # The Hall's miniboss and wardens (TwoTruthsDirector).
+		# --- Act XIII (temporary number): the Silver Stair ---
+		"cherub_gate":
+			if silver_stair != null:
+				silver_stair.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return  # The Silver Stair's miniboss (SilverStairDirector).
 	show_banner(ev["banner"])
 	var groups: Array = ev["groups"]
 	if game.shogunate != null:

@@ -128,7 +128,9 @@ const SPELL_ORDER := ["shadow_bolt", "orb_shield", "shadow_blast",
 	# --- Act XII (temporary number): the Temple of the Lioness ---
 	"burning_eye",
 	# --- Act XII (temporary number): the Hall of Two Truths ---
-	"feathers_verdict"]
+	"feathers_verdict",
+	# --- Act XIII (temporary number): the Silver Stair ---
+	"flaming_sword"]
 
 ## Spell definitions.
 ##   display_name — UI name.
@@ -1179,6 +1181,29 @@ const SPELLS := {
 			{"damage": 52.0, "cooldown": 3.1, "range": 300.0, "execute": 0.19, "ring": 64.0},  # TUNING (not in GDD)
 			{"damage": 62.0, "cooldown": 2.95, "range": 300.0, "execute": 0.21, "ring": 68.0},  # TUNING (not in GDD)
 			{"damage": 74.0, "cooldown": 2.8, "range": 300.0, "execute": 0.24, "ring": 74.0},  # TUNING (not in GDD) Tractor Beam Lv5 78 / 2.6 s
+		],
+	},
+	# --- Act XIII (temporary number): the Silver Stair ---
+	# Flaming Sword (GDD §15.0 "Flaming Sword, Sword at the Gate, Fallen Light
+	# and the Fallen Herald"; owner-approved proposal: "a spectral sword sweeps
+	# a wide arc in front of the necromancer"; unlocked by slaying Seraiel, then
+	# offered on every stage). Every `cooldown` s, a foe within reach, it sweeps
+	# `arc` degrees centred on the nearest foe, `radius` px long (spell area
+	# widens it): every foe in the sector takes `damage` at once. Logic:
+	# FlamingSword; fixed rules: FlamingSwordData. Shorter and wider than the
+	# Burning Eye: a close guard for a necromancer in the middle of his ring.
+	"flaming_sword": {
+		"display_name": "Flaming Sword",  # Owner-approved proposal
+		"icon": "flaming_sword",
+		"description": "A spectral sword sweeps a wide arc in front of you, cutting every foe in it.",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Sword damage", "arc": "Arc (deg)", "radius": "Reach (px)", "cooldown": "Cooldown (s)"},
+		"levels": [
+			{"damage": 24.0, "arc": 140.0, "radius": 120.0, "cooldown": 2.2},  # TUNING (not in GDD) owner-approved proposal: "a wide arc"
+			{"damage": 30.0, "arc": 140.0, "radius": 125.0, "cooldown": 2.1},  # TUNING (not in GDD)
+			{"damage": 37.0, "arc": 150.0, "radius": 130.0, "cooldown": 2.0},  # TUNING (not in GDD)
+			{"damage": 45.0, "arc": 160.0, "radius": 138.0, "cooldown": 1.9},  # TUNING (not in GDD)
+			{"damage": 54.0, "arc": 170.0, "radius": 145.0, "cooldown": 1.8},  # TUNING (not in GDD) Burning Eye Lv5 52 / 2.2 s (a longer, narrower beam)
 		],
 	},
 }

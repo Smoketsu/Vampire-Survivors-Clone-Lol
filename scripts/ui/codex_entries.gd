@@ -175,7 +175,7 @@ static func section_entries(section: String) -> Array:
 				b["section"] = section
 				out.append(b)  # Act XII bosses.
 		# --- Act XIII (temporary number): the Celestial Host (grouped by group) ---
-		"host_lights", "host_soldiers", "host_choir", "host_orders":
+		"host_lights", "host_soldiers", "host_choir", "host_orders", "host_guardians":
 			for id: String in _host_list(section):
 				out.append(_covenant(id, section))  # Act XIII kinds, by group.
 		"host_bosses":
@@ -332,6 +332,8 @@ static func _host_list(section: String) -> Array[String]:
 			return CodexData.HOST_SOLDIERS
 		"host_choir":
 			return CodexData.HOST_CHOIR
+		"host_guardians":
+			return CodexData.HOST_GUARDIANS
 	return CodexData.HOST_ORDERS
 
 

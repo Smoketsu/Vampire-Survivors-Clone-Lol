@@ -755,6 +755,11 @@ const FLAT_SIZES: Dictionary = {
 	"host/herald": 48.0,  # TUNING (not in GDD) Host support, male: a long silver trumpet, two wings; walk strip (about 36 wide)
 	"host/dominion": 54.0,  # TUNING (not in GDD) Host elite, male: sceptre and a crown of light rings; walk strip (about 32 wide)
 	"host/judge": 56.0,  # TUNING (not in GDD) Judgment's elite, male: a sword and scales held high, mirror mask; walk strip (about 58 wide with the scales)
+	# --- Act XIII (temporary number): the Silver Stair (phase 2; art pending, HostGlyphs / the boss's glyph until then) ---
+	"host/cherub": 56.0,  # TUNING (not in GDD) Host guardian (no sex, a creature): four faces, four wings full of eyes, a flaming white sword; walk strip (about 48 wide)
+	"host/cherub_of_the_gate": 76.0,  # TUNING (not in GDD) Silver Stair miniboss: a larger Cherub, its sword turning a full circle; walk strip (about 64 wide)
+	"host/seraiel": 96.0,  # TUNING (not in GDD) Silver Stair boss, male: a towering four-winged archangel in silver armour, a flaming white sword; walk strip, pose 1 (sword raised) (about 64 wide)
+	"player/fallen_herald": 56.0,  # TUNING (not in GDD) male: violet robe and torn cope, one broken bone-white wing, a trumpet-headed staff with a soul flame (about 40 wide); walk strip
 	"markers/host_halo": 6.0,  # TUNING (not in GDD) the halo ring over an angel (cerulean light, silver rim), 16 x 6 (not drawn yet: the code ring stays)
 	"markers/host_halo_cracked": 6.0,  # TUNING (not in GDD) the halo with two gaps, 16 x 6
 	"markers/host_scales": 20.0,  # TUNING (not in GDD) the scales of Judgment, the HUD bar's end cap, 24 x 20

@@ -1457,6 +1457,11 @@ func get_move_vector() -> Vector2:
 	# --- Act XII (temporary number): the Necropolis of Sand ---
 	if goal == Vector2.INF and game.enemies.necropolis != null and away.length() < 0.3 and policy() in SANCTUM_SEEK_POLICIES:
 		goal = game.enemies.necropolis.seek_point(p, OBJECTIVE_SEEK_RADIUS)  # The Necropolis: break the Canopic Jars when calm.
+	# --- Act XIII (temporary number): the Silver Stair --- into Seraiel's open lane while the Gate stands (every policy).
+	if game.enemies.boss is BossSeraiel and game.enemies.boss.active:
+		var lane := (game.enemies.boss as BossSeraiel).gate_point(p)
+		if lane != Vector2.INF and p.distance_to(lane) > 24.0:
+			goal = lane
 	# --- Act XI (temporary): the Hall of the Slain --- out of the cold: toward
 	# the nearest lit brazier (or a doused one to relight) unless pressed.
 	if goal == Vector2.INF and game.norse != null and away.length() < NORSE_WARM_PRESSURE:
@@ -1764,6 +1769,8 @@ func finish(summary: Dictionary) -> void:
 	NecropolisReport.item_lines(game, st)  # Linen Bind, Natron Salts, Embalmed Bones (only when taken; the stage's own lines are DynastyReport's).
 	# --- Act XII (temporary number): the Hall of Two Truths ---
 	TwoTruthsReport.item_lines(game, st)  # Feather's Verdict, Heavy Heart, the Ushabti Sentinel, Answering Words (only when used; the stage's own lines are DynastyReport's).
+	# --- Act XIII (temporary number): the Silver Stair ---
+	SilverStairReport.item_lines(game, st)  # Flaming Sword, Fallen Light, Absolution (only when taken; the stage's own lines are HostReport's).
 	if game.enemies.boss is BossSeraphine:
 		print("[autotest] seraphine: %s" % BossSeraphine.summary_line(st))
 	var fired := game.enemies.stage.fired
