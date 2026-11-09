@@ -115,22 +115,21 @@ const TRUMPET := {
 	"open_max_live": 6,  # TUNING (not in GDD) shafts at once once the sky is open
 }
 
-## Sound of each Host event: an existing sound id until the Host's lazy pack
-## (docs/host/ART_MANIFEST.md, pack "host") exists; the intended pack id is in
-## each comment. The lead switches the ids at the art and audio merge.
+## Sound of each Host event: its id in the Host's lazy pack (SoundData.HOST_SOUNDS,
+## pack "host", rendered with the "hosanna" music; wired at the art and audio merge).
 const SOUNDS := {
-	"scales_tip": "ui_tick",  # Intended "scales_tip" (a small bright bell as weight is added at a third).
-	"judge_descend": "boss_telegraph",  # Intended "judge_descend" (a falling chord, wings).
-	"judge_slain": "orb_block",  # Intended "judge_slain" (a glass ring breaking).
-	"verdict": "boss_telegraph",  # Intended "verdict" (a deep struck bell).
-	"pillar_fall": "boss_impact",  # Intended "pillar_fall" (a white roar of light).
-	"light_warn": "priest_ward",  # Intended "light_warn" (a thin rising tone).
-	"light_burn": "plague_cast",  # Intended "light_burn" (a hiss of searing light).
-	"halo_absorb": "orb_block",  # Intended "halo_absorb" (a soft glass chime).
-	"halo_regrow": "priest_ward",  # Intended "halo_regrow" (a rising shimmer).
-	"trumpet": "boss_telegraph",  # Intended "trumpet" (a long silver trumpet blast).
-	"herald_blast": "warrior_bash",  # Intended "herald_blast" (a short trumpet call and a gust).
-	"power_lunge": "rogue_dash",  # Intended "power_lunge" (a white-flame sword cut).
+	"scales_tip": "scales_tip",  # Host pack: a small bright bell as weight is added at a third.
+	"judge_descend": "judge_descend",  # Host pack: a falling chord, wings.
+	"judge_slain": "judge_slain",  # Host pack: a glass ring breaking.
+	"verdict": "verdict",  # Host pack: a deep struck bell.
+	"pillar_fall": "pillar_fall",  # Host pack: a white roar of light.
+	"light_warn": "light_warn",  # Host pack: a thin rising tone.
+	"light_burn": "light_burn",  # Host pack: a hiss of searing light.
+	"halo_absorb": "halo_absorb",  # Host pack: a soft glass chime.
+	"halo_regrow": "halo_regrow",  # Host pack: a rising shimmer.
+	"trumpet": "trumpet",  # Host pack: a long silver trumpet blast.
+	"herald_blast": "herald_blast",  # Host pack: a short trumpet call and a gust.
+	"power_lunge": "power_lunge",  # Host pack: a white-flame sword cut.
 }
 
 # --- The counter-passives (phase 2 builds them; HostRules' hooks read them) ----------------

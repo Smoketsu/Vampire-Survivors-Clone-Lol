@@ -192,8 +192,6 @@ const STAGE := {
 	"clouds": {},  # This stage's cloud banks ({} = HostRulesData.CLOUDS).
 	"grace": {},  # This stage's Grace ({} = HostRulesData.GRACE).
 	"zones": ZONES,  # The planned zones (phase 2 builds them).
-	# Music key "starsong" FOR NOW ("The Reaping Stars", a vast, slow loop that
-	# exists): the Host's own score ("hosanna", docs/host/ART_MANIFEST.md) comes
-	# from the art and audio pass, and the lead switches this key at the merge.
-	"music": "starsong",
+	# Music key: the Host's own score "Hosanna in the Silence" (SoundData.HOSANNA_SCORE).
+	"music": "hosanna",
 }
