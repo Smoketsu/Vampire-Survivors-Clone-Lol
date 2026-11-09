@@ -57,3 +57,34 @@ min HP 44). The boss is still often alive at 0:00 (6 of 18 slain, pass 1 8 of 18
 brought several close (150, 216, 1,493 HP left) but the Devourer phase is where the time goes. Open
 for the owner: a larger HP cut (~9,500), a lower `weighing_hp` so more of the pool falls to the Judge
 before the Weighing, or a shorter Weighing (60 s is from the owner-approved proposal).
+
+## Pass 3: the Weighing earlier (owner's choice)
+
+The owner picked option 2: begin the Weighing at a lower HP share; `weighing_time` stays 60 s and
+`max_hp` 11,500. Pass 2 phase rates: the Judge lost his 34% (about 6,060 of 17,824 scaled HP) in
+28-37 s, about 180 HP/s; Ammit lost 30-80 HP/s. So the pool moves to the Judge.
+
+| key | old | new |
+|---|---|---|
+| `weighing_hp` | 0.66 | 0.30 |
+
+Ammit's share is now 5% of the pool after a won Weighing (the shield break takes 25%), 30% after a lost one.
+Logs `pass3_logs/`, table `pass3_report.md`.
+
+| build | died | boss slain | mean min HP |
+|---|---|---|---|
+| army | 0 | 3 | 116 |
+| evolve | 0 | 3 | 98 |
+| summon | 0 | 3 | 120 |
+| newclasses | 0 | 3 | 65 |
+| newspells | 0 | 3 | 117 |
+| naive | 2 | 1 | 80 |
+
+16 of 18 slain before 0:00; the two left are the naive deaths at 13:44 / 14:50 (before the boss,
+unchanged), so every run that met Osiris killed him. Every run: 0 `SCRIPT ERROR` / `ERROR:` /
+`WARNING:`, `stuck_units=0`. Every Weighing begins before 0:00 (17:23-18:08; newspells s3 18:54) and
+was won; the boss falls 85-132 s after arriving (newspells s3: 195 s, at 20:15, after 0:00). The
+Judge sped up as more of the pool became his (70% in 40-55 s), so **Ammit now lives only about
+5-10 s**: no charge reached the necromancer in pass 3. The longer Judge phase means more Judgments:
+newclasses took 100-138 from them (lowest HP 29 on s3). If the owner wants a real Devourer phase, a
+value between (0.35-0.40) keeps her about 15-30 s.

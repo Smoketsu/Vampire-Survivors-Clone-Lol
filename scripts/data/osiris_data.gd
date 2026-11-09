@@ -137,7 +137,7 @@ const BOSS := {
 	"judgment_damage": 8.0,  # TUNING (not in GDD) balance pass 1: 14 (~40 a hit at 17:30, three Judgments killed a full-HP necromancer); to the necromancer, before the time scaling
 	"judgment_summon_damage": 12.0,  # TUNING (not in GDD) first pass 26 (seed 7: 81 summons lost in his first minute); to each summon, before the time scaling
 	# The Weighing.
-	"weighing_hp": 0.66,  # TUNING (not in GDD) share of the pool where the Weighing begins
+	"weighing_hp": 0.30,  # TUNING (not in GDD) balance pass 3 (owner's choice): 0.66 (the Judge took his 34% in ~30 s at ~180 HP/s, Ammit 41% at 30-80 HP/s, so she was alive at 0:00 in 12 of 18 runs); share of the pool where the Weighing begins
 	"weighing_time": 60.0,  # Owner-approved proposal: "placed on the scales for 60 s"
 	"weighing_court_every": 12.0,  # TUNING (not in GDD) s between two courts while the heart is weighed
 	"devour_share": 0.3,  # Owner-approved proposal: "Ammit eats 30% of the summons"
