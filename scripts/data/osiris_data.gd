@@ -99,7 +99,7 @@ const LIGHT_HEART_STAT: String = "light_heart_wins"
 ## Its design row.
 const BOSS := {
 	"display_name": "Osiris and Ammit the Devourer",
-	"max_hp": 13000.0,  # TUNING (not in GDD) before the stage / co-op scaling; one pool for the pair (the Weighing holds him immune 60 s)
+	"max_hp": 11500.0,  # TUNING (not in GDD) balance pass 1: 13,000 (slain before 0:00 in 8 of 18 Hall runs); before the stage / co-op scaling; one pool for the pair (the Weighing holds him immune 60 s)
 	"move_speed": 30.0,  # TUNING (not in GDD) px/s, his throne glides
 	"damage": 10.0,  # TUNING (not in GDD) his flail in melee, before the time scaling
 	"attack_interval": 1.3,  # TUNING (not in GDD) s
@@ -134,7 +134,7 @@ const BOSS := {
 	"judgment_every": 6.0,  # TUNING (not in GDD) s between two
 	"judgment_radius": 60.0,  # TUNING (not in GDD) px
 	"judgment_warn": 1.2,  # TUNING (not in GDD) s of telegraph
-	"judgment_damage": 14.0,  # TUNING (not in GDD) to the necromancer, before the time scaling
+	"judgment_damage": 8.0,  # TUNING (not in GDD) balance pass 1: 14 (~40 a hit at 17:30, three Judgments killed a full-HP necromancer); to the necromancer, before the time scaling
 	"judgment_summon_damage": 12.0,  # TUNING (not in GDD) first pass 26 (seed 7: 81 summons lost in his first minute); to each summon, before the time scaling
 	# The Weighing.
 	"weighing_hp": 0.66,  # TUNING (not in GDD) share of the pool where the Weighing begins
@@ -153,6 +153,6 @@ const BOSS := {
 	"charge_speed": 560.0,  # TUNING (not in GDD) px/s
 	"charge_length": 640.0,  # TUNING (not in GDD) px she runs
 	"charge_width": 64.0,  # TUNING (not in GDD) px, the lane
-	"charge_damage": 22.0,  # TUNING (not in GDD) to the necromancer, before the time scaling
+	"charge_damage": 12.0,  # TUNING (not in GDD) balance pass 1: 22 (~40 a charge, four charges killed a full-HP necromancer); to the necromancer, before the time scaling
 	"charge_summon_damage": 40.0,  # TUNING (not in GDD) to each summon, before the time scaling
 }
