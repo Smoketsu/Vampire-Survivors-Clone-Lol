@@ -1,5 +1,5 @@
 """Last acts art review, wave 2, round 3: only the 18 images the owner marked Redo in round 2, redone, each beside its previous version
-("was" from commit OLD, "now" from the worktree), for new marks in the SAME db collection (wave2_art_r1) as the owner's single page. Derived from make_wave2_review_r2.py.
+("was" from commit OLD, "now" from the worktree), for new marks in a fresh db collection (wave2_art_r3; round 1 marks stay in wave2_art_r1) on the owner's single page. Derived from make_wave2_review_r2.py.
 
 Usage: python3 docs/last_acts/tools/make_wave2_review_r3.py <out.html>
 Run from the repository root; the new PNGs are read from the working tree (commit them first or not), the old ones from git.
@@ -29,7 +29,7 @@ KINDS = [("units", "Units and strips"), ("obstacles", "Obstacles"), ("icons", "I
          ("markers", "Markers"), ("effects", "Effects")]  # Group kinds in page order.
 FX_FRAMES = {"fx/host_trumpet_ring": 8, "fx/primeval_bomb_burst": 6, "fx/primeval_fossil_rise": 6}  # Frame counts of animated effect strips (from the manifests).
 FLAWS = {"host": "Known flaws: the Ophan and bone wheels roll by a width squeeze (an upright ellipse cannot turn); the floors are procedural; the Gate of Pearl is 72 px wide."}  # Flaws the art agents reported.
-COLLECTION = "wave2_art_r1"  # db collection the owner's marks are saved in.
+COLLECTION = "wave2_art_r3"  # db collection this round's marks are saved in (a fresh one, so the redone images start unmarked).
 MISSING = []  # Keys that could not be read.
 OLD = "4169c831"  # Commit holding the previous version of every redone image.
 REDONE = ["host/herald_walk", "host/judge_walk", "host/lesser_light_walk", "host/power_walk", "host/seraiel_walk", "host/dominion_of_the_spheres_walk",
