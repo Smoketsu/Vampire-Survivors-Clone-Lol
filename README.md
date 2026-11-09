@@ -2847,7 +2847,7 @@ Osiris** (night-blue slabs), each with its floor tile and obstacles (`TwoTruthsG
 The throne below is taken, and for the first time heaven comes down itself: the old, strange angels, silver and blue, with
 thin geometric halos (design `docs/proposals/LAST_SIX_ACTS.md` section X; final slot X of the fifteen-act order, the end
 of Part One, temporary act number 13 until the reorder pass, `docs/last_acts/PLAN.md`). Three stub stages are registered
-under an **Act XIII** tab, hidden as "Coming soon" until phase 2 builds them (the Silver Stair is built and playable): **the Silver Stair** (`silver_stair`,
+under an **Act XIII** tab, hidden as "Coming soon" until phase 2 builds them (the Silver Stair and the Wheel of Thrones are built and playable): **the Silver Stair** (`silver_stair`,
 Seraiel, Warden of the Gate), **the Wheel of Thrones** (`wheel_of_thrones`, the Throne) and **the Empyrean** (`empyrean`,
 the Voice); Osiris's fall in the Hall of Two Truths opens the first, each boss the next. Every Host stage runs three
 shared rules (`Game.host`, `HostRules`):
@@ -2887,6 +2887,25 @@ evolves into **Sword at the Gate**, a full circle that sweeps back, with the pas
 Herald** (innate Torn Wing: the sword reaches 20 px farther). **Without Sin** (slay Seraiel with the scales never past
 their first third) unlocks **Absolution** (your sins weigh up to 30% less; offered only on the Host). Autotest lines
 `silver stair`, `cherubs`, `seraiel`, `act XIII spell`, `act XIII passives`; `--spawn=cherub@T`, `cherub_of_the_gate@T`.
+
+#### The Wheel of Thrones (stage 38, playable)
+
+The turning spheres of heaven, in four zones: **the Sphere of the Moon**, **the Sphere of the Sun**, **the Sphere of the
+Stars** and **the Wheel**. **The turning spheres:** from 2:30, great rings of crystal drift slowly across the map, turning
+as they go: their arcs are walls nobody walks through (you, your dead and the Host alike), so lead your ring through the
+gaps; a ring passing over you never shoves you along. Each zone brings bigger, faster rings, two at once from the Sphere of
+the Stars. **Ophans** (burning wheels within wheels) mark a line and roll straight through your ring, then turn: step out
+of the line, or put a Bone Wall in it. At 12:00 **the Dominion of the Spheres** comes down: while he stands, every halo in
+the zone keeps coming back. **The Throne** arrives at 17:00 and loops: **the Rolling** (it marks a line, then rolls across
+the field and rebounds), **the Gaze** (every eye opens: shafts of Hallowed Light sweep from its rim toward you; find shade)
+and **the Core** (the wheels open for 10 s and the burning eye takes full damage; the closed rims take only a fifth of every
+hit); below half its health every eye opens (faster rolls, more beams). Breaking it unlocks the spell **Wheel of Eyes**
+(burning wheels roll out at the nearest foe and rebound off obstacles and the edge of your sight; evolves into **Ophanim**,
+three great wheels that flare at every rebound, with the passive **All-Seeing**) and so the **Blind Saint** (innate Inner
+Sight: her wheels are 6 px larger). **The Wheel Breaks** (the killing blow on the open Core, with at least 80% of its health
+lost while the Core was open) unlocks **Smoked Glass** (Hallowed Light burns your summons for up to half; offered only on
+the Host). Autotest lines `wheel of thrones`, `ophans`, `throne`, and the `act XIII spell` / `act XIII passives` lines for
+its items; `--spawn=ophan@T`, `dominion_of_the_spheres@T`, `--character=blind_saint`.
 
 ### Act XIV (temporary number): the Age of Titans (foundation)
 
@@ -3679,6 +3698,9 @@ scripts/
     silver_stair_ground.gd  The Silver Stair's four zone floors (tiles/silver_stair_<style>, wider steps; Act XIII)
     silver_stair_report.gd  The autotest's Silver Stair lines (silver stair, cherubs, seraiel) and the Flaming Sword /
                             Fallen Light / Absolution item lines (Act XIII)
+    wheel_of_thrones_ground.gd  The Wheel of Thrones' four zone floors (tiles/wheel_<style>, a celestial grid; Act XIII)
+    wheel_of_thrones_report.gd  The autotest's Wheel of Thrones lines (wheel of thrones, ophans, throne) and the Wheel of
+                            Eyes / All-Seeing / Smoked Glass item lines (Act XIII)
     primeval_ground.gd      The Titans stubs' placeholder floor (styles fern / plain / ash; Act XIV, temporary)
     primeval_glyphs.gd      Code-drawn fallbacks of the Titans' kinds and the stubs' obstacles (Act XIV)
     primeval_report.gd      The autotest's Titans lines (packs, herds, scavengers, stampede of ash, primeval kinds,
@@ -4192,6 +4214,11 @@ scripts/
       silver_stair_director.gd  The Silver Stair: the Stair's steps and low cloud banks, Without Sin, the Cherub of
                             the Gate (game.enemies.silver_stair)
       boss_seraiel.gd       Seraiel, Warden of the Gate: the Sword, the Gate (lanes closed by shafts), the Trial
+      ophan_kit.gd          The Ophan: the marked line, the roll straight through the ring, the turn (the Wheel of Thrones)
+      spheres_dominion_kit.gd  The Dominion of the Spheres: a Dominion whose regrowth covers the zone, the miniboss bar
+      wheel_of_thrones_director.gd  The Wheel of Thrones: the turning spheres (moving crystal walls, contain_all() from
+                            Arena.resolve_all()), the Dominion of the Spheres, The Wheel Breaks (game.enemies.wheel_of_thrones)
+      boss_throne.gd        The Throne: the Rolling (rebounds), the Gaze (shafts from the rim), the Core (rims take a fifth)
     primeval/               The Age of Titans (Act XIV, temporary number): its kits ("<id>_kit.gd", loaded by name
                             after the Host's) and bosses ("boss_<id>.gd", phase 2), and the act's shared rules:
       primeval_rules.gd     Game.primeval: owns Packs, Herds, Scavengers and the Stampede of Ash; the one telegraph
@@ -4499,6 +4526,9 @@ scripts/
     flaming_sword_data.gd   Flaming Sword / Sword at the Gate rules, Fallen Light keys, Torn Wing key (Act XIII,
                             temporary; the spell node is abilities/spells/flaming_sword.gd)
     seraiel_data.gd         Seraiel, Warden of the Gate: his row, phases, the Sword, the Gate, the Trial (Act XIII)
+    wheel_of_eyes_data.gd   Wheel of Eyes / Ophanim rules, All-Seeing keys, Inner Sight key (Act XIII, temporary;
+                            the spell node is abilities/spells/wheel_of_eyes.gd)
+    throne_data.gd          The Throne: its row, the cycle, the Rolling, the Gaze, the Core, The Wheel Breaks share (Act XIII)
     tractor_lift_data.gd    Tractor Beam / Abduction rules, Starseed keys, Deserter's Signal key (Act IX; the
                             spell node is abilities/spells/tractor_lift.gd, the lift helper abilities/enemy_lift.gd)
     burning_eye_data.gd     Burning Eye / Eye of Retribution rules, Desert Fury keys, Lioness's Gaze key (Act XII,
@@ -4577,13 +4607,15 @@ scripts/
                             Dominion, Judge); the group / halo / regrows / judge / lunge / blast keys; the Last
                             Trumpet's kind and companions (Act XIII, temporary; silver_stair_ / wheel_of_thrones_ /
                             empyrean_enemy_data.gd: each stage's own; the Silver Stair's holds the Cherub of the Gate,
-                            and its block in the shared file the Cherub)
+                            and its block in the shared file the Cherub; the Wheel of Thrones' the Dominion of the
+                            Spheres, and its block the Ophan)
     host_rules_data.gd      Act XIII's shared rules: JUDGMENT, LIGHT, CLOUDS, GRACE, TRUMPET, the SOUNDS map, the
                             Absolution / Smoked Glass keys
     stages/silver_stair_stage.gd     Act XIII stubs: the Silver Stair, the Wheel of Thrones and the Empyrean; act 13,
     stages/wheel_of_thrones_stage.gd "host": true, zones, the rule overrides, a timeline of the shared kinds, the Last
     stages/empyrean_stage.gd         Trumpet, placeholder floors / bosses ("playable": false; the Silver Stair is built:
-                                     its zones, the Stair, the Cherub of the Gate, Seraiel, "playable": true)
+                                     its zones, the Stair, the Cherub of the Gate, Seraiel, "playable": true; so is the
+                                     Wheel of Thrones: its zones, the turning spheres, the Dominion of the Spheres, the Throne)
     primeval_enemy_data.gd  The Age of Titans' shared kinds (Scuttler, Razorclaw, Frill-Spitter, Longneck, Duckbill,
                             Skyraider, Tyrant); the group / pack / herd / fright / scavenger keys; the Stampede of
                             Ash's kind and companions (Act XIV, temporary; fern_basin_ / great_plain_ /
@@ -5019,14 +5051,14 @@ uptime.
 time, and everything that ships waits for all of them (GDD §15.0 "Parallel CI and lean testing": about 8-10 minutes from a push to
 the live build instead of about 30):
 
-1. **test:** thirty-five parallel jobs, one per playthrough. Each imports the project with Godot 4.3 headless and runs
+1. **test:** thirty-six parallel jobs, one per playthrough. Each imports the project with Godot 4.3 headless and runs
    one full 20-minute autotest: the Graveyard with the naive and the army policy, the Crimson March
    (`--stage=crimson_march`), the Sanctum (`--stage=sanctum --policy=army`) and each stage of Acts II, IV-IX and X-XII with
    the army policy (`--stage=harbour`, `archive`, `spire`, `ilion`, `olympus`, `underworld`, `province`, `kurogane`,
    `sun_road`, `burning_gate`, `silk_palace`, `pandemonium`, `ravensmoor`, `witchwood`, `castle_sanguis`, `skid_row`,
    `fort_kessler`, `liberty_heights`, `crash_site`, `proving_moon`, `ark`, the Black Tide's `cutter`, `galleon`,
    `maelstrom`, the Hall of the Slain's `barrow_fields`, `valgard`, `vigrid` and the Necropolis Dynasty's `necropolis`,
-   `lioness_temple`, `two_truths`, and the Celestial Host's `silver_stair`; the other last acts get theirs as they go live) (`--quit-after 15000`, at most 10-15
+   `lioness_temple`, `two_truths`, and the Celestial Host's `silver_stair`, `wheel_of_thrones`; the other last acts get theirs as they go live) (`--quit-after 15000`, at most 10-15
    wall-clock minutes per run).
    A job fails on any `SCRIPT ERROR`, `ERROR:` or `WARNING:` line, or if its run doesn't complete; one failure does
    not cancel the others. Logs: `test-logs-<id>`.

@@ -43,9 +43,9 @@ The constants are already in `scripts/data/palette.gd` (`HOST_*`); the ramps mus
 | `host/dominion` | 34x54 | male | elite: sceptre, a crown of light rings (rings, not a crown of metal) | walk | yes |
 | `host/judge` | 34x56 | male | Judgment's elite: a sword and a set of scales held high, mirror mask | walk | yes |
 | `host/cherub` | 48x56 | none (a creature) | phase 2 (guardians): four faces (lion, ox, eagle, man), four wings covered in eyes, a flaming white sword | walk | yes (Silver Stair; `HostGlyphs` until drawn) |
-| `host/ophan` | 52x52 | none (a wheel) | phase 2 (guardians): a burning silver wheel within a wheel, rims covered in eyes; rolls | roll (8 frames) | phase 2 |
+| `host/ophan` | 52x52 | none (a wheel) | phase 2 (guardians): a burning silver wheel within a wheel, rims covered in eyes; rolls | roll (8 frames) | yes (Wheel of Thrones; `HostGlyphs` until drawn) |
 | `host/cherub_of_the_gate` | 64x76 | none | Silver Stair miniboss: a larger Cherub, its sword turning a full circle | walk | yes (Silver Stair; `HostGlyphs` until drawn) |
-| `host/dominion_of_the_spheres` | 44x70 | male | Wheel of Thrones miniboss: a larger Dominion among crystal rings | walk | phase 2 |
+| `host/dominion_of_the_spheres` | 44x70 | male | Wheel of Thrones miniboss: a larger Dominion among crystal rings | walk | yes (Wheel of Thrones; `HostGlyphs` until drawn) |
 | `host/herald_of_the_seventh_trumpet` | 44x70 | male | Empyrean miniboss: a larger Herald, a great trumpet | walk | phase 2 |
 
 The halo over each angel is drawn by the code (`HostKit.draw_over()`: a ring of cerulean rects that gaps as it cracks), so
@@ -56,7 +56,7 @@ The halo over each angel is drawn by the code (`HostKit.draw_over()`: a ring of 
 | Key | Size | Sex | What | Strips |
 |---|---|---|---|---|
 | `host/seraiel` | 64x96 | male | Seraiel, Warden of the Gate: a towering four-winged archangel in silver armour, a flaming white sword | walk |
-| `host/throne` | 96x96 | none | the Throne: a colossal wheel within a wheel of silver and blue fire, rims covered in eyes | roll (8 frames) |
+| `host/throne` | 96x96 | none | the Throne: a colossal wheel within a wheel of silver and blue fire, rims covered in eyes; pose 1 = the wheels parted (the Core open) | roll (8 frames) |
 | `host/throne_core` | 32x32 | none | the Throne's burning eye at its centre (the Core, drawn when the wheels open) | none |
 | `host/voice` | 80x104 | none (sexless seraph) | the Voice: six wings of light (two over the face, two over the feet, two spread) in a white rose | glide |
 | `host/voice_unveiled` | 80x104 | none | the Voice with its face wings lowered (Be Not Afraid): the face is pure light, never features | none |
@@ -103,7 +103,7 @@ The halo over each angel is drawn by the code (`HostKit.draw_over()`: a ring of 
 | `tiles/silver_stair_stair` | zone 2: wide pale steps | phase 2 |
 | `tiles/silver_stair_cloud_shelf` | zone 3: steps among cloud | phase 2 |
 | `tiles/silver_stair_pearl_gate` | zone 4: pearl flagstones | phase 2 |
-| `tiles/wheel_moon` / `wheel_sun` / `wheel_stars` / `wheel_core` | the Wheel of Thrones' four spheres (silver, pale light, deep star-blue, the Wheel's rim) | phase 2 |
+| `tiles/wheel_moon` / `wheel_sun` / `wheel_stars` / `wheel_core` | the Wheel of Thrones' four spheres (silver, pale light, deep star-blue, the Wheel's rim) | yes (`WheelOfThronesGround`; a code grid until drawn) |
 | `tiles/empyrean_rose_edge` / `empyrean_petals` / `empyrean_choir` / `empyrean_heart` | the Empyrean's four zones (white petals of light, darker toward the heart only in value, never in hue) | phase 2 |
 
 ## Obstacles (`assets/sprites/obstacles/`; rect kinds also `_v`, turned 90 degrees). The stubs use these kind ids (code-drawn by `HostGlyphs` today); phase 2 renames to its own kinds if it wants
@@ -112,10 +112,10 @@ The halo over each angel is drawn by the code (`HostKit.draw_over()`: a ring of 
 |---|---|---|---|
 | `obstacles/host_pillar` | 30x46 | a pillar of white stone with a band of light (circle kind; casts a pillar's shadow, safe from the Light) | yes on the Silver Stair, as `host_pillar_m` (one size); code on the stubs |
 | `obstacles/host_cloudstone` + `_v` | 52x30 | a cloud-wrapped block of the stair | yes on the Silver Stair, as `host_cloudstone_m` / `_m_v`; code on the stubs |
-| `obstacles/host_crystal` + `_v` | 44x26 | a shard of a sphere's crystal (cerulean, see-through edge) | code |
+| `obstacles/host_crystal` + `_v` | 44x26 | a shard of a sphere's crystal (cerulean, see-through edge) | yes on the Wheel of Thrones, as `host_crystal_m` / `_m_v` (one size; also the pieces the turning rings are drawn from) |
 | `obstacles/host_petal` + `_v` | 56x24 | a standing petal of light | code |
 | `obstacles/host_pearl_gate` | 96x80 | the Gate of Pearl (Silver Stair set piece) | phase 2 |
-| `obstacles/host_crystal_ring` | strip, 3 sizes | the turning spheres' crystal ring segments (moving walls, Wheel of Thrones) | phase 2 |
+| `obstacles/host_crystal_ring` | strip, 3 sizes | the turning spheres' crystal ring segments (moving walls, Wheel of Thrones) | optional: the rings are drawn from turned `host_crystal_m` pieces |
 
 ## Icons (`assets/sprites/icons/<id>.png`, 32x32 badges on the approved frames: violet = spells / passives / counter-passives / classes, gold = evolutions and achievements)
 
@@ -162,3 +162,7 @@ obstacles `host_pillar`, `host_cloudstone`, `host_crystal`, `host_petal` (+ `_v`
 (seed `SYNTH_SEED - 13`) and the pack `host` (offset 10000, 12 sounds). `SpriteData.FLAT_SIZES` has the foundation entries. Still missing (phase 2):
 `cherub`, `ophan`, the three minibosses, the five bosses, the three characters, the summon class and its two icons' art (the icons exist), the
 zone floors, `host_pearl_gate`, `host_crystal_ring`. The lead still has to point the stages' `"music"` at `hosanna` and `HostRulesData.SOUNDS` at the pack.
+Wheel of Thrones (phase 2): renamed `host_crystal` → `host_crystal_m` (+ `_m_v`) for its one-size arena; it loads `host/ophan`,
+`host/dominion_of_the_spheres`, `host/throne` (pose 1: the wheels parted), `host/throne_core`, `player/blind_saint` (walk, idle) and
+`tiles/wheel_moon` / `wheel_sun` / `wheel_stars` / `wheel_core` when they exist (none drawn yet: code shapes until then); the icons
+`wheel_of_eyes`, `ophanim`, `all_seeing`, `smoked_glass`, `ach_the_wheel_breaks` exist.
