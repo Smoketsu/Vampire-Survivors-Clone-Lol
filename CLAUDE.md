@@ -172,13 +172,15 @@ Autotest options (full table in the README):
 - `--passives=a,b` (force passives the same way, e.g. `unholy_precision,unholy_resilience`)
 - `--stage=graveyard|crimson_march|sanctum|harbour|archive|spire|wastes|assembly|citadel|ilion|olympus|underworld|province|kurogane|sun_road|`
   `burning_gate|silk_palace|pandemonium|ravensmoor|witchwood|castle_sanguis|skid_row|fort_kessler|liberty_heights|crash_site|`
-  `proving_moon|ark|cutter|galleon|maelstrom|barrow_fields|valgard|vigrid|necropolis|lioness_temple|two_truths|silver_stair|wheel_of_thrones|empyrean` (default
+  `proving_moon|ark|cutter|galleon|maelstrom|barrow_fields|valgard|vigrid|necropolis|lioness_temple|two_truths|silver_stair|wheel_of_thrones|empyrean|`
+  `fern_basin|great_plain|last_day` (default
   graveyard; stage locks are ignored; `cutter|galleon|maelstrom` are the Black Tide, Act X until the reorder;
   `barrow_fields|valgard|vigrid` the Hall of the Slain, Act XI (`--boss=hrimgar|sigrun|odin`, `--character=rune_seer|shield_maiden_hero|berserker_hero`,
   `--spawn=muspel_giant|fenrir|odin_raven@T`); `necropolis|lioness_temple|two_truths` the
   Necropolis Dynasty, Act XII (`--boss=anubis|sekhmet|osiris`, `--character=the_embalmer|lion_priestess|pharaohs_shade`);
   `silver_stair|wheel_of_thrones|empyrean` the Celestial Host's stubs, Act XIII (`--boss=seraiel|throne|voice`, `--spawn=` with
-  `lesser_light|virtue|power|choir_angel|herald|dominion|judge`))
+  `lesser_light|virtue|power|choir_angel|herald|dominion|judge`); `fern_basin|great_plain|last_day` the Age of Titans' stubs,
+  Act XIV (`--boss=scarmaw|ironbrow|gravejaw`, `--spawn=` with `scuttler|razorclaw|frill_spitter|longneck|duckbill|skyraider|tyrant`))
 - `--unlocks=all|none` (Act II's lockable spells / passives / classes in the card pool; forced items
   are open either way)
 - `--boss=alaric|vael|seraphine` (puts that boss in the stage's slot, e.g. test Seraphine on the Graveyard)
