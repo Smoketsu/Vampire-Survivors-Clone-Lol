@@ -239,6 +239,8 @@ FACTION_RAMPS = {
     # the undead's bone or soul teal (the Ushabti Sentinel and the Pharaoh's Shade are the player's and add soul / grey).
     # --- Act X slot: the Celestial Host (assets/sprites/host/): starlight silver, cerulean, dawn rose, cloud and pale skin; never crimson, gold or the player's violet ---
     "host": ["host_silver", "host_cerulean", "host_rose", "host_cloud", "host_skin"],
+    # --- Act XIV slot: the Age of Titans (assets/sprites/primeval/): fern, dust ochre, tar, lava orange and bone; never crimson, gold or the player's violet ---
+    "primeval": ["primeval_fern", "primeval_ochre", "primeval_tar", "primeval_lava", "primeval_bone"],
     "dynasty": ["night", "dyn_bronze", "lapis", "linen", "carnelian", "papyrus", "dynskin", "brown"],
 }
 # Per-key exceptions to FACTION_RAMPS: key -> (ramps added, ramps removed). The arcane

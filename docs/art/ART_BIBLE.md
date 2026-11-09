@@ -3197,3 +3197,21 @@ halo, scales and pillar markers and the shaft / telegraph line / trumpet ring ef
 Rebuilt by `art_source/host/make_art.py`, `make_props.py` and `host_tiles.py`. Known soft spots: the Virtue's torso is a flat grey, the
 Judge is 58 px wide (sword and scales), the standing petal is nearly square (the model drew it diagonal), the generated icons' extra fifth
 symbol is discarded. Phase 2 art (bosses, stage-only kinds, characters, summon class, zone floors) is not made yet.
+
+### Act XIV slot: the Age of Titans (art and audio, foundation, Nov 2026)
+
+The Titans' look (GDD §15.0 "The Age of Titans art and audio (foundation)"; approved concepts `art_source/concepts/final5/titans_*.png`):
+**fern green, dust ochre, tar black, volcanic orange and bone white**, plus the meteor's white streak; never crimson, never gold (gold stays
+the reward colour, only in the gold icon frames), never the necromancer's violet; no humans. Ink `#120F0D` (`primeval_ink`). **Palette:** five
+one-hue ramps `primeval_fern`, `primeval_ochre`, `primeval_tar`, `primeval_lava`, `primeval_bone` (tools/palette.json; `prepare_sprite.py` folder
+`primeval/` takes exactly these; the values are the `PRIMEVAL_*` constants of `palette.gd`). **Sprites** (`assets/sprites/primeval/`, heights in
+`SpriteData.HEIGHTS`): the eight foundation kinds (Scuttler, Razorclaw, Razorclaw Alpha, Frill Spitter, Longneck, Duckbill, Skyraider, Tyrant),
+one API image each (a game beast plus the concept crop as references, prompts beside the raws in `art_source/titans/`), every beast but the
+Scuttler through `pixelate_source.py` first, the art height chosen so the width fits the manifest box; 8-frame walk strips (`legs` rigs; the
+Skyraider flaps as a `hover` rig; its strip is `_walk`, the only name the code loads). Animals: no bust rigs, no idle strips, the alpha is told by
+her crest. Also 2 obstacle kinds (the fossil with `_v`), 16 icon badges on the approved violet / gold frames, 3 floors (`tiles/primeval_fern`,
+`_plain`, `_ash`), 3 markers and 4 effect files, drawn procedurally by `titans_tiles.py`. Rebuilt by `art_source/titans/make_art.py`,
+`make_props.py`, `titans_tiles.py`. Known soft spots: the Tyrant's tar-black hide is mostly tar-brown with fern stripes (the model kept the
+concept's greens); the Razorclaw Alpha is 28 px wide (the model drew her upright and narrow), the Duckbill 48; the Scuttler is a pale single-colour
+speck at 20 px; the Skyraider's wing flap is a plain 4 px shear. Phase 2 art (the two other Plain / Basin beasts, minibosses, bosses, characters,
+summon class, zone floors, tree fern, canyon wall, lava rock, tar patch) is not made.

@@ -1,0 +1,6 @@
+A sheet of 2 separate pixel-art game OBSTACLE sprites for a top-down 2D horde-survival game (three-quarter top-down view, camera above and slightly in front), laid out in one row, evenly spaced with wide empty gaps between them, on a FULLY TRANSPARENT background (real alpha). Prehistoric jungle and badlands. LOW-RESOLUTION pixel art, chunky simple shapes, crisp square pixels (nearest-neighbour), a clean 1-pixel dark outline #120F0D, flat colours, at most 3 shades per material, light from the top-left. No ground under them, no cast shadows, no text.
+From left to right:
+1. a mossy BOULDER: a round rock with moss and ferns on top (about 36 px wide, 36 px tall);
+2. a FOSSIL RIB ARCH: a row of bone-white curved ribs arching over a dark rock base, lying lengthwise (about 52 px wide, 30 px tall).
+Colours: grey-brown rock #231C18 #4A3A30 #6E5A4C; moss #24451F #4D8534 #8CC46A; bone #9C9078 #E7DEC9 #F8F6EE.
+Attached: a game sprite of this game for pixel size, outline weight and flat look.

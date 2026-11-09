@@ -1078,6 +1078,18 @@ RIGS = {
     "host/herald": dict(mode="robe", hip=34, rigid=[], sway=1, dip=1, float=1),
     "host/dominion": dict(mode="robe", hip=38, rigid=[], sway=1, dip=1, float=1),
     "host/judge": dict(mode="robe", hip=40, rigid=[], sway=1, dip=1, float=1),
+    # --- Act XIV slot: the Age of Titans (assets/sprites/primeval/) ---
+    # Beasts walk on two or four legs (`legs`: the hind legs left of the middle, the front legs right of it, the tail and neck
+    # ride with the body above the hip); the Skyraider flaps (`hover`, the wing on the left of the still hinged at the body).
+    # No bust rigs: these are animals. Boxes read from the stills (art px, [start, end)).
+    "primeval/scuttler": dict(mode="legs", hip=8, back=(0, 10), front=(10, 20), rigid=[], spread=1, lift=1, dip=1),
+    "primeval/razorclaw": dict(mode="legs", hip=24, back=(0, 20), front=(20, 40), rigid=[], spread=2, lift=2, dip=1),
+    "primeval/razorclaw_alpha": dict(mode="legs", hip=27, back=(0, 14), front=(14, 28), rigid=[], spread=2, lift=2, dip=1),
+    "primeval/frill_spitter": dict(mode="legs", hip=23, back=(0, 18), front=(18, 36), rigid=[], spread=2, lift=1, dip=1),
+    "primeval/longneck": dict(mode="legs", hip=58, back=(0, 44), front=(44, 88), rigid=[], spread=2, lift=2, dip=1),
+    "primeval/duckbill": dict(mode="legs", hip=40, back=(0, 24), front=(24, 48), rigid=[], spread=2, lift=2, dip=1),
+    "primeval/skyraider": dict(mode="hover", bob=0, parts=[dict(kind="flap", box=(0, 22, 0, 22), root=22, amp=4)]),
+    "primeval/tyrant": dict(mode="legs", hip=52, back=(0, 43), front=(43, 86), rigid=[], spread=2, lift=2, dip=1),
 }
 
 # Skins (SkinData, cosmetic): skin sprite key -> its character's sprite key. A skin keeps

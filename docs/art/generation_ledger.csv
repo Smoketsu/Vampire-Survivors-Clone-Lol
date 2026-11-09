@@ -1510,3 +1510,16 @@ utc,key,model,quality,size,refs,text_in,image_in,image_out,usd_est,file
 2026-11-09 02:15,host/icons_c,gpt-image-2.5-flare,medium,1536x1024,1,345,4,343,0.0120,sheet_icons_c.png
 2026-11-09 02:15,host/icons_d,gpt-image-2.5-flare,medium,1536x1024,1,374,4,343,0.0122,sheet_icons_d.png
 2026-11-09 02:15,host/obstacles,gpt-image-2.5-flare,medium,1536x1024,1,392,16,343,0.0124,sheet_obstacles.png
+2026-11-09 03:52,titans/scuttler,gpt-image-2.5-flare,medium,1024x1024,2,496,259,439,0.0177,scuttler.png
+2026-11-09 03:52,titans/razorclaw,gpt-image-2.5-flare,medium,1024x1024,2,505,215,439,0.0174,razorclaw.png
+2026-11-09 03:52,titans/razorclaw_alpha,gpt-image-2.5-flare,medium,1024x1024,2,508,215,439,0.0174,razorclaw_alpha.png
+2026-11-09 03:52,titans/frill_spitter,gpt-image-2.5-flare,medium,1024x1024,2,489,189,439,0.0171,frill_spitter.png
+2026-11-09 03:53,titans/longneck,gpt-image-2.5-flare,medium,1024x1024,2,513,575,439,0.0203,longneck.png
+2026-11-09 03:53,titans/duckbill,gpt-image-2.5-flare,medium,1024x1024,2,494,251,439,0.0176,duckbill.png
+2026-11-09 03:53,titans/skyraider,gpt-image-2.5-flare,medium,1024x1024,2,502,377,439,0.0187,skyraider.png
+2026-11-09 03:53,titans/tyrant,gpt-image-2.5-flare,medium,1024x1024,2,503,377,439,0.0187,tyrant.png
+2026-11-09 03:54,titans/icons_a,gpt-image-2.5-flare,medium,1536x1024,1,378,4,343,0.0122,sheet_icons_a.png
+2026-11-09 03:54,titans/icons_b,gpt-image-2.5-flare,medium,1536x1024,1,373,4,343,0.0122,sheet_icons_b.png
+2026-11-09 03:55,titans/icons_c,gpt-image-2.5-flare,medium,1536x1024,1,400,4,343,0.0123,sheet_icons_c.png
+2026-11-09 03:55,titans/icons_d,gpt-image-2.5-flare,medium,1536x1024,1,383,4,343,0.0122,sheet_icons_d.png
+2026-11-09 03:55,titans/obstacles,gpt-image-2.5-flare,medium,1536x1024,1,302,35,343,0.0121,sheet_obstacles.png

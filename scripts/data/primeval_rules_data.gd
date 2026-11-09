@@ -130,26 +130,23 @@ const ASH := {
 ## Damage source tag of a volcanic bomb.
 const BOMB_SOURCE: String = "primeval_bomb"
 
-## Sound of each Age of Titans event. FOR NOW each points at an EXISTING sound
-## id (the startup bank, or the Concord pack the placeholder music "starsong"
-## renders); the art + audio agent makes the act's own pack ("titans", rendered
-## with the act's score) and the lead points each event at the pack id named
-## in its comment.
+## Sound of each Age of Titans event: each is an id of the lazy "titans" pack (SoundData.TITANS_SOUNDS, rendered with the score
+## "primordial"; the comment names what it sounds like).
 const SOUNDS := {
-	"pack_circle": "brood_chitter",  # Titans pack id "pack_rustle" (ferns rustling on both flanks, a low chatter).
-	"pack_hold": "boss_telegraph",  # Titans pack id "pack_hiss" (a held, rising hiss: the pack is about to rush).
-	"pack_rush": "rogue_dash",  # Titans pack id "pack_rush" (claws on earth, a shriek).
-	"alpha_slain": "enemy_death",  # Titans pack id "alpha_slain" (a broken screech, the pack's yelps).
-	"stampede_warn": "burrow_rumble",  # Titans pack id "stampede_warn" (a deep rolling rumble, a bellow).
-	"stampede_run": "abom_stomp",  # Titans pack id "stampede_run" (heavy footfalls in rhythm).
-	"trample": "catapult_impact",  # Titans pack id "trample" (a heavy thud and bones cracking).
-	"fossil_rise": "summon_rise",  # Titans pack id "fossil_rise" (stone cracking, a hollow bone groan).
-	"skyraider_dive": "gargoyle_dive",  # Titans pack id "skyraider_dive" (a falling whistle and a screech).
-	"snatch": "xp_pickup",  # Titans pack id "snatch" (a beak clack and crystals chiming away).
-	"pile_drop": "chest_open",  # Titans pack id "pile_drop" (crystals scattering on stone).
-	"bomb_warn": "boss_telegraph",  # Titans pack id "bomb_warn" (a falling roar of fire).
-	"bomb_land": "eruption",  # Titans pack id "bomb_land" (a molten crack and a splash of embers).
-	"ash_stampede": "reckoning",  # Titans pack id "ash_horn" (the sky burns: a long low roar of herds).
+	"pack_circle": "pack_rustle",  # Titans pack id "pack_rustle" (ferns rustling on both flanks, a low chatter).
+	"pack_hold": "pack_hiss",  # Titans pack id "pack_hiss" (a held, rising hiss: the pack is about to rush).
+	"pack_rush": "pack_rush",  # Titans pack id "pack_rush" (claws on earth, a shriek).
+	"alpha_slain": "alpha_slain",  # Titans pack id "alpha_slain" (a broken screech, the pack's yelps).
+	"stampede_warn": "stampede_warn",  # Titans pack id "stampede_warn" (a deep rolling rumble, a bellow).
+	"stampede_run": "stampede_run",  # Titans pack id "stampede_run" (heavy footfalls in rhythm).
+	"trample": "trample",  # Titans pack id "trample" (a heavy thud and bones cracking).
+	"fossil_rise": "fossil_rise",  # Titans pack id "fossil_rise" (stone cracking, a hollow bone groan).
+	"skyraider_dive": "skyraider_dive",  # Titans pack id "skyraider_dive" (a falling whistle and a screech).
+	"snatch": "snatch",  # Titans pack id "snatch" (a beak clack and crystals chiming away).
+	"pile_drop": "pile_drop",  # Titans pack id "pile_drop" (crystals scattering on stone).
+	"bomb_warn": "bomb_warn",  # Titans pack id "bomb_warn" (a falling roar of fire).
+	"bomb_land": "bomb_land",  # Titans pack id "bomb_land" (a molten crack and a splash of embers).
+	"ash_stampede": "ash_horn",  # Titans pack id "ash_horn" (the sky burns: a long low roar of herds).
 }
 
 # --- The counter-passives (phase 2 builds them; PrimevalRules' hooks read them) -------------

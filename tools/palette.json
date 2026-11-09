@@ -291,7 +291,23 @@
     {"name": "host_cloud", "hex": "#DCE4F0", "ramp": "host_cloud", "index": 2, "group": "unit", "role": "cloud banks (HOST_CLOUD)"},
     {"name": "host_skin_dark", "hex": "#B8A8A0", "ramp": "host_skin", "index": 1, "group": "unit", "role": "the rare visible skin in shade: pale, unearthly (an added shade)"},
     {"name": "host_skin", "hex": "#E8DCD4", "ramp": "host_skin", "index": 2, "group": "unit", "role": "pale unearthly skin (an added shade)"},
-    {"name": "host_skin_light", "hex": "#FAF4F0", "ramp": "host_skin", "index": 3, "group": "unit", "role": "pale skin lit (an added shade)"}
+    {"name": "host_skin_light", "hex": "#FAF4F0", "ramp": "host_skin", "index": 3, "group": "unit", "role": "pale skin lit (an added shade)"},
+    {"name": "primeval_ink", "hex": "#120F0D", "ramp": "primeval_fern", "index": 0, "group": "ink", "role": "outline of every Age of Titans sprite: tar black (Act XIV slot; PRIMEVAL_INK)"},
+    {"name": "primeval_fern_dark", "hex": "#24451F", "ramp": "primeval_fern", "index": 1, "group": "unit", "role": "fern in shade (PRIMEVAL_FERN_DARK)"},
+    {"name": "primeval_fern", "hex": "#4D8534", "ramp": "primeval_fern", "index": 2, "group": "unit", "role": "fern green: hides, feathers (PRIMEVAL_FERN)"},
+    {"name": "primeval_fern_light", "hex": "#8CC46A", "ramp": "primeval_fern", "index": 3, "group": "glow", "role": "fern lit (an added shade)"},
+    {"name": "primeval_ochre_dark", "hex": "#7E552A", "ramp": "primeval_ochre", "index": 1, "group": "unit", "role": "ochre in shade (PRIMEVAL_OCHRE_DARK)"},
+    {"name": "primeval_ochre", "hex": "#C89448", "ramp": "primeval_ochre", "index": 2, "group": "unit", "role": "dust ochre: the herds' hides (PRIMEVAL_OCHRE)"},
+    {"name": "primeval_ochre_light", "hex": "#E8C88A", "ramp": "primeval_ochre", "index": 3, "group": "glow", "role": "ochre lit (an added shade)"},
+    {"name": "primeval_tar", "hex": "#231C18", "ramp": "primeval_tar", "index": 1, "group": "unit", "role": "tar black: Bog Croc, the Tyrants' hide (PRIMEVAL_TAR)"},
+    {"name": "primeval_tar_mid", "hex": "#4A3A30", "ramp": "primeval_tar", "index": 2, "group": "unit", "role": "tar brown (an added shade)"},
+    {"name": "primeval_tar_light", "hex": "#6E5A4C", "ramp": "primeval_tar", "index": 3, "group": "glow", "role": "tar lit (an added shade)"},
+    {"name": "primeval_lava_dark", "hex": "#8A2E0C", "ramp": "primeval_lava", "index": 1, "group": "glow", "role": "lava in shade (an added shade; orange, never crimson)"},
+    {"name": "primeval_lava", "hex": "#EF6B1C", "ramp": "primeval_lava", "index": 2, "group": "glow", "role": "lava orange: throats, bombs (PRIMEVAL_LAVA)"},
+    {"name": "primeval_lava_light", "hex": "#FFC070", "ramp": "primeval_lava", "index": 3, "group": "glow", "role": "lava lit (an added shade)"},
+    {"name": "primeval_bone_dark", "hex": "#9C9078", "ramp": "primeval_bone", "index": 1, "group": "unit", "role": "bone in shade (an added shade)"},
+    {"name": "primeval_bone", "hex": "#E7DEC9", "ramp": "primeval_bone", "index": 2, "group": "unit", "role": "bone: horns, claws, skeletons (PRIMEVAL_BONE)"},
+    {"name": "primeval_streak", "hex": "#F8F6EE", "ramp": "primeval_bone", "index": 3, "group": "glow", "role": "the meteor's white streak (PRIMEVAL_STREAK)"}
   ],
   "ramps": {
     "violet": {"members": ["ink_violet", "violet_deep", "violet", "violet_glow", "violet_flare"], "role": "the player only: necromancer, the 12 characters, their spells and icons"},
@@ -380,6 +396,11 @@
     "host_rose": {"members": ["host_ink", "host_rose_dark", "host_rose", "host_rose_light"], "role": "Celestial Host dawn rose: sashes, the Choir hymn, the Judges pans"},
     "host_cloud": {"members": ["host_ink", "host_cloud_dark", "host_cloud", "host_starlight"], "role": "Celestial Host cloud banks, stair steps, cloud shadows"},
     "host_skin": {"members": ["host_ink", "host_skin_dark", "host_skin", "host_skin_light"], "role": "the Host rare visible skin: pale and unearthly"},
+    "primeval_fern": {"members": ["primeval_ink", "primeval_fern_dark", "primeval_fern", "primeval_fern_light"], "role": "Age of Titans fern"},
+    "primeval_ochre": {"members": ["primeval_ink", "primeval_ochre_dark", "primeval_ochre", "primeval_ochre_light"], "role": "Age of Titans ochre"},
+    "primeval_tar": {"members": ["primeval_ink", "primeval_tar", "primeval_tar_mid", "primeval_tar_light"], "role": "Age of Titans tar"},
+    "primeval_lava": {"members": ["primeval_ink", "primeval_lava_dark", "primeval_lava", "primeval_lava_light"], "role": "Age of Titans lava"},
+    "primeval_bone": {"members": ["primeval_ink", "primeval_bone_dark", "primeval_bone", "primeval_streak"], "role": "Age of Titans bone"},
     "floor": {"members": ["floor_soil", "floor_earth", "floor_grass", "floor_ochre", "floor_slate", "floor_ash", "floor_dirt", "floor_moss", "floor_marble", "floor_stone"], "role": "ground colours of the three stages (tiles only, never sprites), dark -> light; the zone tiles add close shades per zone"}
   }
 }

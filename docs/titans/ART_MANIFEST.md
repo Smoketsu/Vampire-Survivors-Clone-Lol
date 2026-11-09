@@ -156,3 +156,15 @@ The constants are already in `scripts/data/palette.gd` (`PRIMEVAL_*`); the ramps
   falling roar of fire), `bomb_land` (a molten crack, a splash of embers), `ash_horn` (the sky burns: a long low roar of
   herds).
 - Art and audio agents run no Godot (PLAN.md); the lead's integration imports their files and the owner hears the loop.
+
+## Status (art and audio agent, foundation)
+
+Done: palette ramps `primeval_*`; units `scuttler`, `razorclaw`, `razorclaw_alpha`, `frill_spitter`, `longneck`, `duckbill`, `skyraider`, `tyrant` (+ walk
+strips, the Skyraider's flap strip is `_walk`); obstacles `primeval_rock`, `primeval_fossil` (+ `_v`); all 16 icons; floors `primeval_fern`,
+`primeval_plain`, `primeval_ash`; markers `primeval_alpha`, `primeval_shadow`, `primeval_bomb`; fx `primeval_dust_line`, `primeval_dust_front`,
+`primeval_bomb_burst`, `primeval_fossil_rise`; the score `primordial` "Before the Fall" (seed `SYNTH_SEED - 14`) and the pack `titans` (offset 11000,
+14 sounds); both wired (stages' `"music"`, `PrimevalRulesData.SOUNDS`). Sizes: all inside the manifest boxes (Alpha 28x38, Duckbill 48x56, Frill 36x32,
+Razorclaw 40x34, Longneck 88x80, Tyrant 86x72, Skyraider 40x36, Scuttler 20x12). Still missing (phase 2): `horncharger`, `clubtail`, `bog_croc`,
+`stormwing`, `ironjaw`, `primeval_nest`, `mother_clubtail`, `thunderwing`, the three bosses, the three characters, the summon class sprites
+(`bonehorn`, `fossil_tyrant`, `fossil_giant`; the two icons exist), the zone floors, `primeval_tar`, `primeval_tree_fern`, `primeval_canyon_wall`,
+`primeval_lava_rock`.

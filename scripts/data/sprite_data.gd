@@ -729,6 +729,15 @@ const FLAT_SIZES: Dictionary = {
 	"dynasty/sekhmet": 92.0,  # TUNING (not in GDD) boss, female goddess (figure redesign): lioness head and sun disc, red gown; bust rig, idle strip (about 52 wide)
 	"dynasty/osiris": 96.0,  # TUNING (not in GDD) boss, male god seated on his throne (still only, no strip) (about 46 wide)
 	"dynasty/ammit": 44.0,  # TUNING (not in GDD) boss, a monster: crocodile jaws, lion front, hippo rump (about 76 wide)
+	# --- Act XIV slot: the Age of Titans (assets/sprites/primeval/; beasts: no bust rigs, no idle strips) ---
+	"primeval/scuttler": 12.0,  # TUNING (not in GDD) fodder, no sex: a tiny fast lizard (about 20 wide); walk strip
+	"primeval/razorclaw": 34.0,  # TUNING (not in GDD) soldier, male: a feathered raptor (about 40 wide); walk strip
+	"primeval/razorclaw_alpha": 38.0,  # TUNING (not in GDD) the pack's female alpha: a tall bone-white crest (about 28 wide); walk strip
+	"primeval/frill_spitter": 32.0,  # TUNING (not in GDD) ranged, male: an orange-frilled lizard (about 36 wide); walk strip
+	"primeval/longneck": 80.0,  # TUNING (not in GDD) herd, one sprite: a huge sauropod (about 88 wide); walk strip
+	"primeval/duckbill": 56.0,  # TUNING (not in GDD) herd, no sex: a crested hadrosaur (about 48 wide); walk strip
+	"primeval/skyraider": 36.0,  # TUNING (not in GDD) flier, male: a pterosaur clutching a crystal; flap strip (about 40 wide); walk strip
+	"primeval/tyrant": 72.0,  # TUNING (not in GDD) titan, one sprite: a great tyrant, orange throat (about 86 wide); walk strip
 	"summons/ushabti_sentinel": 46.0,  # TUNING (not in GDD) summon class, the necromancer's stone servant (no sex) (about 20 wide)
 	"summons/eternal_guard": 58.0,  # TUNING (not in GDD) its evolution: a taller gold-trimmed stone guardian (about 32 wide)
 	# The Dynasty's playable necromancers (violet, owner note Nov 2026; assets/sprites/player/)
@@ -750,6 +759,10 @@ const FLAT_SIZES: Dictionary = {
 	"markers/host_halo_cracked": 6.0,  # TUNING (not in GDD) the halo with two gaps, 16 x 6
 	"markers/host_scales": 20.0,  # TUNING (not in GDD) the scales of Judgment, the HUD bar's end cap, 24 x 20
 	"markers/host_pillar": 120.0,  # TUNING (not in GDD) the Verdict's pillar of light, 40 x 120, drawn additively
+	# --- Act XIV slot: the Age of Titans markers (not drawn until the stage agents wire them; the code shapes stay) ---
+	"markers/primeval_alpha": 10.0,  # TUNING (not in GDD) the alpha's bone-white chevron over her head, 10 x 6
+	"markers/primeval_shadow": 48.0,  # TUNING (not in GDD) a diving Skyraider's shadow, 48 x 24
+	"markers/primeval_bomb": 64.0,  # TUNING (not in GDD) a volcanic bomb's landing ring, 64 x 64
 }
 ## Longest side (px) for a flat sprite key missing from FLAT_SIZES.
 const DEFAULT_FLAT_SIZE: float = 20.0  # TUNING (not in GDD)

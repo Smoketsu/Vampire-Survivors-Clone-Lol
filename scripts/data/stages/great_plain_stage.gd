@@ -198,8 +198,6 @@ const STAGE := {
 	"herds": {},  # This stage's Herds ({} = PrimevalRulesData.HERDS).
 	"scavengers": {},  # This stage's Scavengers ({} = PrimevalRulesData.SCAVENGERS).
 	"zones": ZONES,  # The planned zones (phase 2 builds them).
-	# Music key FOR NOW: "starsong" (the Concord's "The Reaping Stars": the
-	# Harvesters' log led here); the art + audio agent adds the act's own score
-	# and the lead switches every Titans stage to it.
-	"music": "starsong",
+	# Music key: "primordial" (the Titans' "Before the Fall", SoundData.PRIMORDIAL_SCORE; its sound pack "titans").
+	"music": "primordial",
 }
