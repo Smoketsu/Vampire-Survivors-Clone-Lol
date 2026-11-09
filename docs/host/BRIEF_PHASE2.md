@@ -172,3 +172,8 @@ stage each:
   through packs; evolution Throne of Bones; a class special that works everywhere; its Ossuary mastery).
 - **Achievement: The Last Word** (beat the Voice). It only records the clear until the reorder pass writes the Part One
   epilogue part.
+
+## Owner answers (Nov 9, 2026; GDD §15.0 "Wave 2 owner answers")
+- Grace stays as built; angel HP is tuned to compensate.
+- Lesser lights have no halo.
+- **Without Sin unlocks Absolution**; the Host's other achievement unlocks Smoked Glass.

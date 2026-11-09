@@ -186,3 +186,9 @@ heavy). The rest, one stage each:
 - **Achievements: Trampled** (a stampede kills 100 enemies in one run: the run stat `trample_kills`; any Titans stage) and
   **The Day the Sky Fell** (reach the Extinction with no summon lost; it only records the clear until the reorder pass
   writes the epilogue part).
+
+## Owner answers (Nov 9, 2026; GDD §15.0 "Wave 2 owner answers")
+- Nothing Taken → Hoarder's Bones; Trampled → Thick Marrow.
+- **Stampedes run AWAY from whatever hurt the herd**, not at the necromancer (overrides the "Stampedes run at the necromancer" note above; the Fern Basin agent changes `Herds.launch()`'s callers).
+- **The Extinction lasts 30 s** (the Fossil Host's lifetime), not 45 s.
+- Lit beacons on the Last Day: later, not in phase 2.
