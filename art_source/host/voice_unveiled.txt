@@ -1,8 +1,8 @@
-Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, the VOICE UNVEILED (a sexless seraph of light): six white wings, the two face wings now LOWERED to reveal a face of pure bright white light with NO features at all, two wings over the feet, two spread wide, in a large white-and-pale-rose rose of light.
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, the VOICE UNVEILED (a female seraph of light, in the figure-redesign style): a very alluring woman with a STRONGLY EXAGGERATED HOURGLASS FIGURE: a full bust, a tiny cinched waist and wide hips, FULLY CLOTHED in clinging, flowing white-and-pale-rose silk robes with a deep but covered neckline and a high slit skirt over opaque leggings, a cerulean sash at the waist; the cloth hugs the silhouette so the hourglass shape reads clearly. A face of pure bright white light with NO features, long flowing light-white hair, six large white wings (two raised high, two spread wide, two low behind her), standing on a smaller rose of pale-rose light petals at her feet. Signature shape: the hourglass silhouette in front of six wings.
 
 LOW-RESOLUTION pixel art: the whole SUBJECT is only 104 pixels tall, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no soft glow haze. NO HALO above the head (it is added by the game).
 
-Subject sex: seraph (no sex).
+Subject sex: female.
 
 Colours: ONLY flat fills from this list, at most 3 shades per material: starlight white #F4F7FF; pale silver #8A96AC #C9D2E0; cerulean #1F4F8F #3E8FD8 #9CC8F0; dawn rose #B07888 #F2B8C6 #FCE4EA; pale skin #B8A8A0 #E8DCD4. NO red, NO crimson, NO gold, NO yellow.
 

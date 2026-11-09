@@ -1542,3 +1542,6 @@ utc,key,model,quality,size,refs,text_in,image_in,image_out,usd_est,file
 2026-11-09 21:42,host2/throne_core,gpt-image-2.5-flare,medium,1024x1024,2,471,848,439,0.0223,throne_core.png
 2026-11-09 21:44,host2/pearl_gate,gpt-image-2.5-flare,medium,1536x1024,1,267,16,343,0.0118,sheet_pearl_gate.png
 2026-11-09 21:44,host2/icon_turning,gpt-image-2.5-flare,medium,1536x1024,1,188,4,343,0.0113,sheet_icon_turning.png
+2026-11-09 22:58,host3/virtue,gpt-image-2.5-flare,medium,1024x1024,2,556,354,439,0.0188,virtue_n.png
+2026-11-09 22:59,host3/voice_unveiled,gpt-image-2.5-flare,medium,1024x1024,2,603,838,439,0.0229,voice_unveiled_n.png
+2026-11-09 22:59,host3/virtue,gpt-image-2.5-flare,medium,1024x1024,2,597,364,439,0.0191,virtue_n.png

@@ -1069,29 +1069,47 @@ RIGS = {
     # The angels float: every figure glides on its hem (`robe`, a 1 px float) with the wings and the spear / trumpet / sceptre
     # as rigid columns of the still; the Lesser Light bobs (`hover`). The two women (Power, Choir Angel) have a `bust` box and an
     # idle strip (figure redesign). Boxes read from the stills (art px, [start, end)).
-    "host/lesser_light": dict(mode="hover", bob=2, parts=[]),
-    "host/virtue": dict(mode="robe", hip=34, rigid=[], sway=1, dip=1, float=1),
+    "host/lesser_light": dict(mode="hover", bob=2, parts=[],
+                             # Art review r3 (owner: wings must move): the two winglets beat.
+                             wings=[dict(box=(0, 9, 2, 14), pivot=(9, 10), degrees=22.0, seam=1), dict(box=(17, 26, 2, 14), pivot=(17, 10), degrees=-22.0, seam=1)]),
+    "host/virtue": dict(mode="robe", hip=34, rigid=[], sway=1, dip=1, float=1,
+                        # Art review r3: redrawn (28 -> 22 wide); the four wings beat.
+                        wings=[dict(box=(0, 6, 5, 20), pivot=(6, 10), degrees=22.0, seam=1), dict(box=(16, 22, 5, 20), pivot=(16, 10), degrees=-22.0, seam=1),
+                               dict(box=(0, 6, 20, 38), pivot=(6, 22), degrees=18.0, seam=1), dict(box=(16, 22, 20, 38), pivot=(16, 22), degrees=-18.0, seam=1)]),
     "host/power": dict(mode="robe", hip=34, rigid=[], sway=1, dip=1, float=1,
-                       bust=(16, 23, 13, 21, 1), bust_exclude=[(0, 16, 10, 24), (23, 36, 10, 24)]),
+                       bust=(10, 19, 15, 22, 1), bust_exclude=[(0, 10, 12, 24), (19, 30, 12, 24)],  # R3: box on the chest (was cols 16-23, right of it).
+                       wings=[dict(box=(0, 10, 21, 38), pivot=(10, 24), degrees=12.0, seam=2), dict(box=(20, 30, 4, 36), pivot=(20, 12), degrees=-12.0, seam=2)]),  # R3: wings beat (the sword on the left stays).
     "host/choir_angel": dict(mode="robe", hip=34, rigid=[], sway=1, dip=1, float=1,
-                             bust=(17, 25, 11, 21, 1), bust_exclude=[(0, 17, 8, 26), (25, 40, 8, 26)]),
-    "host/herald": dict(mode="robe", hip=34, rigid=[], sway=1, dip=1, float=1),
-    "host/dominion": dict(mode="robe", hip=38, rigid=[], sway=1, dip=1, float=1),
-    "host/judge": dict(mode="robe", hip=40, rigid=[], sway=1, dip=1, float=1),
+                             bust=(10, 20, 12, 19, 1), bust_exclude=[(0, 10, 10, 24), (20, 32, 10, 24)],  # R3: box on the chest (was cols 17-25, right of it).
+                             wings=[dict(box=(0, 9, 10, 26), pivot=(9, 15), degrees=12.0, seam=2), dict(box=(22, 32, 16, 38), pivot=(22, 20), degrees=-12.0, seam=2)]),  # R3: wings beat.
+    "host/herald": dict(mode="robe", hip=34, rigid=[], sway=1, dip=1, float=1,
+                        wings=[dict(box=(0, 10, 12, 42), pivot=(10, 16), degrees=12.0, seam=2), dict(box=(22, 34, 14, 42), pivot=(22, 16), degrees=-12.0, seam=2)]),  # R3: wings beat (the trumpet stays).
+    "host/dominion": dict(mode="robe", hip=38, rigid=[], sway=1, dip=1, float=1,
+                          wings=[dict(box=(0, 9, 16, 42), pivot=(9, 22), degrees=12.0, seam=2), dict(box=(23, 32, 22, 42), pivot=(23, 24), degrees=-12.0, seam=2)]),  # R3: wings beat.
+    "host/judge": dict(mode="robe", hip=40, rigid=[], sway=1, dip=1, float=1,
+                       wings=[dict(box=(0, 17, 8, 46), pivot=(17, 16), degrees=10.0, seam=3)]),  # R3: the great wing beats (the scales stay).
     # --- Act X slot, phase 2: the Celestial Host's guardians, bosses and characters ---
     # The creatures float (hover, the whole sprite bobs 2 px: Cherubs, the Voice); the archangels glide on their hems (robe); the wheels
     # have roll strips made by art_source/host/make_phase2.py (not rigs). The two violet women carry bust boxes (figure redesign) and idle strips.
-    "host/cherub": dict(mode="hover", bob=2, parts=[]),
-    "host/cherub_of_the_gate": dict(mode="hover", bob=2, parts=[]),
-    "host/voice": dict(mode="hover", bob=2, parts=[]),
-    "host/seraiel": dict(mode="robe", hip=64, rigid=[], sway=1, dip=1, float=1),
-    "host/dominion_of_the_spheres": dict(mode="robe", hip=48, rigid=[], sway=1, dip=1, float=1),
-    "host/herald_of_the_seventh_trumpet": dict(mode="robe", hip=46, rigid=[], sway=1, dip=1, float=1),
+    "host/cherub": dict(mode="hover", bob=2, parts=[],
+                        wings=[dict(box=(0, 14, 4, 34), pivot=(14, 22), degrees=12.0, seam=2), dict(box=(34, 50, 4, 34), pivot=(34, 22), degrees=-12.0, seam=2)]),  # R3: wings beat.
+    "host/cherub_of_the_gate": dict(mode="hover", bob=2, parts=[],
+                                    wings=[dict(box=(0, 24, 4, 34), pivot=(24, 24), degrees=10.0, seam=3), dict(box=(50, 76, 4, 28), pivot=(50, 24), degrees=-10.0, seam=3)]),  # R3: wings beat (the sword stays).
+    "host/voice": dict(mode="hover", bob=2, parts=[],
+                       wings=[dict(box=(0, 28, 2, 32), pivot=(28, 28), degrees=9.0, seam=3), dict(box=(56, 84, 2, 32), pivot=(56, 28), degrees=-9.0, seam=3)]),  # R3: the two raised wings beat.
+    "host/seraiel": dict(mode="robe", hip=64, rigid=[], sway=1, dip=1, float=1,
+                         wings=[dict(box=(0, 32, 0, 34), pivot=(32, 32), degrees=8.0, seam=3), dict(box=(44, 76, 0, 34), pivot=(44, 32), degrees=-8.0, seam=3),
+                                dict(box=(0, 28, 36, 76), pivot=(28, 40), degrees=7.0, seam=3), dict(box=(46, 76, 36, 76), pivot=(46, 40), degrees=-7.0, seam=3)]),  # R3: four wings beat.
+    "host/dominion_of_the_spheres": dict(mode="robe", hip=48, rigid=[], sway=1, dip=1, float=1,
+                                         wings=[dict(box=(0, 17, 18, 70), pivot=(17, 26), degrees=9.0, seam=3), dict(box=(27, 31, 22, 52), pivot=(27, 26), degrees=-9.0, seam=1)]),  # R3: wings beat (the sceptre stays).
+    "host/herald_of_the_seventh_trumpet": dict(mode="robe", hip=46, rigid=[], sway=1, dip=1, float=1,
+                                               wings=[dict(box=(0, 22, 14, 68), pivot=(22, 22), degrees=9.0, seam=3), dict(box=(40, 54, 22, 62), pivot=(40, 26), degrees=-9.0, seam=3)]),  # R3: wings beat (the trumpet stays).
     "player/fallen_herald": dict(mode="robe", hip=40, rigid=[], sway=1, dip=1),
     "player/blind_saint": dict(mode="robe", hip=40, rigid=[(25, 38, 0, None)], sway=1, dip=1,
-                               bust=(14, 24, 18, 25, 1), bust_exclude=[(0, 14, 12, 50), (24, 38, 12, 50)]),
+                               bust=(12, 24, 14, 22, 1), bust_exclude=[(0, 12, 12, 50), (24, 38, 12, 50)]),  # R3: box on the chest (was rows 18-25).
     "player/the_unveiled": dict(mode="robe", hip=40, rigid=[(31, 42, 0, None)], sway=1, dip=1,
-                                bust=(16, 29, 19, 27, 1), bust_exclude=[(0, 16, 12, 50), (29, 42, 12, 50)]),
+                                bust=(15, 27, 14, 22, 1), bust_exclude=[(0, 15, 12, 50), (27, 42, 12, 50)],  # R3: box on the chest (was rows 19-27).
+                                wings=[dict(box=(0, 13, 9, 38), pivot=(13, 16), degrees=18.0, seam=2)]),  # R3: the folded wing sways (walk and idle).
     # --- Act XIV slot: the Age of Titans (assets/sprites/primeval/) ---
     # Beasts walk on two or four legs (`legs`: the hind legs left of the middle, the front legs right of it, the tail and neck
     # ride with the body above the hip); the Skyraider flaps (`hover`, the wing on the left of the still hinged at the body).
