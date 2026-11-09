@@ -218,7 +218,7 @@ const ACT_TAB_SIZE: Vector2 = Vector2(300.0, 40.0)  # TUNING (not in GDD)
 ## fits six acts at 1280 x 600 layout px (GDD §15.0 "Act IV foundation (phase 1)").
 const ACT_TABS_FULL_MAX: int = 3  # TUNING (not in GDD)
 ## Size (px) of a compact act tab ("Act IV").
-const ACT_TAB_COMPACT_SIZE: Vector2 = Vector2(70.0, 40.0)  # TUNING (not in GDD) Act IX: 104 -> 98, so nine tabs keep a margin at 1280 px; wave 1 of the last acts (Acts X-XII, temporary numbers): 98 -> 70, so twelve tabs fit at 1280 px until the reorder pass groups them by Part
+const ACT_TAB_COMPACT_SIZE: Vector2 = Vector2(62.0, 40.0)  # TUNING (not in GDD) Act IX: 104 -> 98, so nine tabs keep a margin at 1280 px; wave 1 of the last acts (Acts X-XII, temporary numbers): 98 -> 70, so twelve tabs fit at 1280 px until the reorder pass groups them by Part; Act XIV (temporary): 70 -> 62, so the fourteen-tab row stays under 1280 layout px (at 70 it was 1,370 px and the screen shrank to fit)
 ## Lock line of a registered stage that is not yet playable (StageRegistry "playable").
 const COMING_SOON: String = "Coming soon"  # TUNING (not in GDD)
 
