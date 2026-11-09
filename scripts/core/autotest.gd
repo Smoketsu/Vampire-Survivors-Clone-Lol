@@ -297,6 +297,15 @@
 ##     Dynasty ran, the summary adds the "rebirth", "black land", "heka",
 ##     "dynasty kinds", "devourer's hour" (after 0:00) and (on a Dynasty
 ##     stage) "dynasty stage" lines (DynastyReport).
+##   * Act XIII (temporary number), the Celestial Host (GDD §15.0 "The
+##     Celestial Host foundation (phase 1)"):
+##     --stage=silver_stair|wheel_of_thrones|empyrean, --spawn= with its kinds
+##     (lesser_light, virtue, power, choir_angel, herald, dominion, judge),
+##     --boss=seraiel|throne|voice. The bot steps out of the Verdict's pillars
+##     and across the shafts (HostRules.danger_push()). When the Host ran, the
+##     summary adds the "judgment", "hallowed light", "grace", "host kinds",
+##     "last trumpet" (after 0:00) and (on a Host stage) "host stage" lines
+##     (HostReport).
 class_name Autotest
 extends Node
 
@@ -1282,6 +1291,8 @@ func _danger_at(pos: Vector2) -> Vector2:
 		danger += game.corsair.danger_push(pos)  # Act X: off the rail, out of the strike circles (null elsewhere).
 	if game.dynasty != null:
 		danger += game.dynasty.danger_push(pos)  # Act XII (temporary): the Devourer's lanes (null elsewhere).
+	if game.host != null:
+		danger += game.host.danger_push(pos)  # Act XIII (temporary): the Verdict's pillars and the shafts (null elsewhere).
 	return danger
 
 
@@ -1397,6 +1408,8 @@ func get_move_vector() -> Vector2:
 		danger += game.norse.danger_push(p)  # The Hall of the Slain: its own telegraphs (null elsewhere).
 	if game.dynasty != null:
 		danger += game.dynasty.danger_push(p)  # Act XII (temporary): the Devourer's lanes (null elsewhere).
+	if game.host != null:
+		danger += game.host.danger_push(p)  # Act XIII (temporary): the Verdict's pillars and the shafts (null elsewhere).
 	var objective := Vector2.ZERO
 	# Walk to shrines any time, to graves under consecration only when calm.
 	var goal := game.enemies.stage.seek_point(p, OBJECTIVE_SEEK_RADIUS, away.length() < 0.2)
@@ -1639,6 +1652,7 @@ func finish(summary: Dictionary) -> void:
 	CorsairReport.print_lines(game, st_all)  # Act X: boarding, the deck, the sea's strikes, the black tide, kinds, the stage (only when the Black Tide ran).
 	NorseReport.print_lines(game, st_all)  # The Hall of the Slain: the long winter, the fury, the stones, ragnarok, kinds, the stage (only when the Norse rules ran).
 	DynastyReport.print_lines(game, st_all)  # Act XII (temporary): rebirth, the black land, heka, the devourer's hour, kinds, the stage (only when the Dynasty ran).
+	HostReport.print_lines(game, st_all)  # Act XIII (temporary): judgment, the light, grace, the last trumpet, kinds, the stage (only when the Host ran).
 	WastesReport.print_items(game, st_all)  # Act III, the Scrap Wastes: Death Ray and its passives (only when taken).
 	IlionReport.print_items(game, st_all)  # Act IV, the Shores of Ilion: Paris's Arrow and its passives (only when taken).
 	# --- Act V: the Burning Province ---

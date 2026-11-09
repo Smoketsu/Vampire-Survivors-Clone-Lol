@@ -490,3 +490,28 @@ const DYN_PAPYRUS_LIGHT := Color(0.549, 0.769, 0.369)  # #8CC45E
 const DYN_SKIN_DARK := Color(0.353, 0.212, 0.133)  # #5A3622
 ## Egyptian skin lit (tools/palette.json "dyn_skin_light"; added at the wave 1 integration).
 const DYN_SKIN_LIGHT := Color(0.722, 0.486, 0.282)  # #B87C48
+
+# --- Act XIII (temporary number): the Celestial Host ---
+# GDD §15.0 "The Celestial Host foundation (phase 1)": the act's look (docs/proposals/LAST_SIX_ACTS.md X: "starlight
+# white, pale silver, cerulean and dawn rose, with no crimson and no warm gold", thin geometric halos). These are the
+# values the art pass's tools/palette.json ramps host_* must use (docs/host/ART_MANIFEST.md). Gold keeps its meaning
+# (evolution, chest, victory), crimson stays danger, and no Host kind wears the necromancer's violet.
+
+## Host outline ink (deep night blue, darkest): every Host sprite's outline.
+const HOST_INK := Color(0.055, 0.086, 0.149)  # #0E1626
+## Starlight white: robes, wings, the Hallowed Light's shafts, the Verdict's pillar.
+const HOST_STARLIGHT := Color(0.957, 0.969, 1.0)  # #F4F7FF
+## Pale silver: armour, mirror masks, the halos' rims, the scales of Judgment.
+const HOST_SILVER := Color(0.788, 0.824, 0.878)  # #C9D2E0
+## Silver in shade: armour in shadow, a cracked halo.
+const HOST_SILVER_DARK := Color(0.541, 0.588, 0.675)  # #8A96AC
+## Cerulean: halos' light, wing eyes, the Light's aiming line, the Ophan's fire.
+const HOST_CERULEAN := Color(0.243, 0.561, 0.847)  # #3E8FD8
+## Cerulean in shade: robes' folds, the sky floor's deep tone.
+const HOST_CERULEAN_DARK := Color(0.122, 0.310, 0.561)  # #1F4F8F
+## Dawn rose: the Choir's hymn, sashes, the Judges' scales pans (never crimson).
+const HOST_ROSE := Color(0.949, 0.722, 0.776)  # #F2B8C6
+## Cloud: the cloud banks and the stair's pale steps.
+const HOST_CLOUD := Color(0.863, 0.894, 0.941)  # #DCE4F0
+## Cloud shadow: the safe dark ground under a cloud bank (Hallowed Light).
+const HOST_SHADE := Color(0.102, 0.133, 0.212)  # #1A2236

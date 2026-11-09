@@ -27,8 +27,10 @@
 ## "<id>_kit.gd" (e.g. "reef_shark" -> ReefSharkKit), else a HALL OF THE SLAIN
 ## kit (the Norse act): NORSE_KIT_DIR + "<id>_kit.gd" (e.g. "raider" -> RaiderKit),
 ## else a NECROPOLIS DYNASTY kit (Act XII, temporary):
-## DYNASTY_KIT_DIR + "<id>_kit.gd" (e.g. "mummy" -> MummyKit).
-## Kit ids must be unique across the nine folders.
+## DYNASTY_KIT_DIR + "<id>_kit.gd" (e.g. "mummy" -> MummyKit), else a
+## CELESTIAL HOST kit (Act XIII, temporary): HOST_KIT_DIR + "<id>_kit.gd"
+## (e.g. "virtue" -> VirtueKit).
+## Kit ids must be unique across every folder.
 ## Enemy only ever talks to this file and the CovenantKit base class.
 class_name CovenantKits
 extends RefCounted
@@ -64,6 +66,9 @@ const NORSE_KIT_DIR: String = "res://scripts/enemies/norse/"
 # --- Act XII (temporary number): the Necropolis Dynasty ---
 ## Folder of the Necropolis Dynasty's kit scripts ("<id>_kit.gd", each a DynastyKit).
 const DYNASTY_KIT_DIR: String = "res://scripts/enemies/dynasty/"
+# --- Act XIII (temporary number): the Celestial Host ---
+## Folder of the Celestial Host's kit scripts ("<id>_kit.gd", each a HostKit).
+const HOST_KIT_DIR: String = "res://scripts/enemies/host/"
 
 ## Eye / Empire kit id -> its loaded Script (null when no file exists), filled on first use.
 static var _eye_scripts: Dictionary = {}
@@ -109,7 +114,8 @@ static func for_enemy(current: CovenantKit, id: String) -> CovenantKit:
 ## kit `id` (CITY_KIT_DIR + "<id>_kit.gd", Act VIII), else of Concord of
 ## Stars kit `id` (CONCORD_KIT_DIR + "<id>_kit.gd", Act IX), else of
 ## Necropolis Dynasty kit `id` (DYNASTY_KIT_DIR + "<id>_kit.gd", Act XII,
-## temporary), or null when no such script exists.
+## temporary), else of Celestial Host kit `id` (HOST_KIT_DIR + "<id>_kit.gd",
+## Act XIII, temporary), or null when no such script exists.
 static func _eye_kit(id: String) -> CovenantKit:
 	if not _eye_scripts.has(id):
 		var path := EYE_KIT_DIR + id + "_kit.gd"  # Expected script location.
@@ -133,6 +139,8 @@ static func _eye_kit(id: String) -> CovenantKit:
 			path = NORSE_KIT_DIR + id + "_kit.gd"  # The Hall of the Slain: a Norse kit.
 		if not ResourceLoader.exists(path):
 			path = DYNASTY_KIT_DIR + id + "_kit.gd"  # Act XII (temporary): a Necropolis Dynasty kit.
+		if not ResourceLoader.exists(path):
+			path = HOST_KIT_DIR + id + "_kit.gd"  # Act XIII (temporary): a Celestial Host kit.
 		_eye_scripts[id] = load(path) if ResourceLoader.exists(path) else null
 	var scr: Script = _eye_scripts[id]
 	if scr == null:

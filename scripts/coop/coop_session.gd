@@ -435,6 +435,9 @@ func step(delta: float) -> void:
 	if game.dynasty != null:
 		bind_primary()
 		game.dynasty.step(delta)  # Act XII (temporary): the Devourer's Hour, the Sandstorm, the cartouches, the glyphs, the quicksand (before the push-out, as in solo).
+	if game.host != null:
+		bind_primary()
+		game.host.step(delta)  # Act XIII (temporary): the Last Trumpet, the scales, the Light, the halos (before the push-out, as in solo).
 	if pf != null:
 		tl = pf.lap(PerfProbe.SEC_ENEMIES, tl)
 	bind_primary()

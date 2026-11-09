@@ -628,6 +628,8 @@ func _update_replenishment(delta: float) -> void:
 			if _try_spawn(cls):
 				replenish_timer[cls] = 0.0
 				game.stat_add("replacements", 1.0)
+				if game.host != null:
+					game.host.on_replace()  # Act XIII (temporary): Judgment, a replaced summon is a sin.
 				_bone_reserve(units[units.size() - 1])
 
 
@@ -785,6 +787,11 @@ func raise_corpse(cls: String, pos: Vector2, duration: float, hp_mult: float, dm
 	# while Game.dynasty exists, so nothing changes elsewhere).
 	if game.dynasty != null:
 		game.dynasty.rebirth.on_raise(pos)
+	# --- Act XIII (temporary number): the Celestial Host --- JUDGMENT: every
+	# raise is a sin on the scales (HostRules.on_raise(); only while Game.host
+	# exists).
+	if game.host != null:
+		game.host.on_raise()
 	var steel := EmpireRulesData.STEEL  # Grave Gunner rules.
 	var u := spawn_temporary(String(steel["class"]) if gunner else cls, pos, duration, hp_mult, dmg_mult)
 	if gunner:

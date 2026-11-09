@@ -174,6 +174,15 @@ static func section_entries(section: String) -> Array:
 				var b := _boss(id)
 				b["section"] = section
 				out.append(b)  # Act XII bosses.
+		# --- Act XIII (temporary number): the Celestial Host (grouped by group) ---
+		"host_lights", "host_soldiers", "host_choir", "host_orders":
+			for id: String in _host_list(section):
+				out.append(_covenant(id, section))  # Act XIII kinds, by group.
+		"host_bosses":
+			for id: String in CodexData.HOST_BOSSES:
+				var b := _boss(id)
+				b["section"] = section
+				out.append(b)  # Act XIII bosses.
 	return out
 
 
@@ -304,6 +313,19 @@ static func _dynasty_list(section: String) -> Array[String]:
 	return CodexData.DYNASTY_STONE
 
 
+# --- Act XIII (temporary number): the Celestial Host ---
+## The Host kinds of group section `section` (CodexData.HOST_*).
+static func _host_list(section: String) -> Array[String]:
+	match section:
+		"host_lights":
+			return CodexData.HOST_LIGHTS
+		"host_soldiers":
+			return CodexData.HOST_SOLDIERS
+		"host_choir":
+			return CodexData.HOST_CHOIR
+	return CodexData.HOST_ORDERS
+
+
 static func _covenant(id: String, section: String) -> Dictionary:
 	var d := CodexData.enemy_row(id)
 	var stats: Array = [[_t("hp"), num(float(d.get("max_hp", 0.0)))]]
@@ -336,6 +358,8 @@ static func _covenant(id: String, section: String) -> Dictionary:
 		sprite = "norse/" + id  # ...a Hall of the Slain kind...
 	elif not SpriteBank.has(sprite) and SpriteBank.has("dynasty/" + id):
 		sprite = "dynasty/" + id  # ...a Necropolis Dynasty kind (Act XII, temporary)...
+	elif not SpriteBank.has(sprite) and SpriteBank.has("host/" + id):
+		sprite = "host/" + id  # ...a Celestial Host kind (Act XIII, temporary)...
 	elif not SpriteBank.has(sprite):
 		sprite = "structures/" + id  # ...or a structure.
 	var kills := Meta.codex_kill_count(id)  # Lifetime kills of this kind.

@@ -22,8 +22,10 @@
 ## Fields -> Valgard -> Vigrid, opened by defeating Vandermere; temporary Act
 ## XII, GDD §15.0 "The Necropolis Dynasty foundation (phase 1)": the
 ## Necropolis of Sand -> the Temple of the Lioness -> the Hall of Two Truths,
-## opened by defeating Odin; the reorder pass moves the three acts to their
-## final slots). One
+## opened by defeating Odin; temporary Act XIII, GDD §15.0 "The Celestial
+## Host foundation (phase 1)": the Silver Stair -> the Wheel of Thrones -> the
+## Empyrean, opened by defeating Osiris; the reorder pass moves the four acts
+## to their final slots). One
 ## entry per stage, each
 ## the STAGE dictionary of its file under scripts/data/stages/. A run reads
 ## its stage through RunConfig.stage_def() as `Game.stage_def`; nothing else
@@ -77,8 +79,9 @@
 ##                        Sun, 6 = the Inferno, 7 = the Sanguine Court,
 ##                        8 = the Last Line, 9 = the Concord of Stars,
 ##                        10 = the Black Tide, 11 = the Hall of the Slain,
-##                        12 = the Necropolis Dynasty (TEMPORARY until the
-##                        reorder pass, docs/last_acts/PLAN.md);
+##                        12 = the Necropolis Dynasty, 13 = the Celestial
+##                        Host (TEMPORARY until the reorder pass,
+##                        docs/last_acts/PLAN.md);
 ##                        absent = 1). The stage select shows one
 ##                        act at a time; Act II-only cards (PassiveData "act")
 ##                        are offered only on stages of that act.
@@ -431,6 +434,21 @@
 ##                        "statues_wake" and "lion_warden" events); ground
 ##                        "lioness_temple" is its LionessTempleGround (the four
 ##                        zone floors).
+## --- Act XIII (temporary number): the Celestial Host ---
+##   host               — true: the Celestial Host's shared rules (HostRules
+##                        as Game.host: Judgment, Hallowed Light, Grace, and
+##                        the Last Trumpet when the RECKONING has a
+##                        "last_trumpet" key); ground "host" is the
+##                        placeholder HostGround (from the "floor" dictionary,
+##                        styles stair / wheel / rose), on the normal
+##                        scattered-obstacle arena (each obstacle casts a
+##                        pillar's shadow).
+##   judgment           — any key of HostRulesData.JUDGMENT ({} = defaults).
+##   light              — any key of HostRulesData.LIGHT ({} = defaults).
+##   clouds             — any key of HostRulesData.CLOUDS ({} = defaults;
+##                        "chance" 0 = no fixed cloud banks).
+##   grace              — any key of HostRulesData.GRACE ({} = defaults).
+##   zones              — the Host stubs too: the planned zones.
 class_name StageRegistry
 extends RefCounted
 
@@ -455,7 +473,9 @@ const ORDER := ["graveyard", "crimson_march", "sanctum", "harbour", "archive", "
 	# --- Act XI (temporary): the Hall of the Slain ---
 	"barrow_fields", "valgard", "vigrid",
 	# --- Act XII (temporary number): the Necropolis Dynasty ---
-	"necropolis", "lioness_temple", "two_truths"]
+	"necropolis", "lioness_temple", "two_truths",
+	# --- Act XIII (temporary number): the Celestial Host ---
+	"silver_stair", "wheel_of_thrones", "empyrean"]
 ## Stage used when none (or an unknown id) is given.
 const DEFAULT_ID: String = "graveyard"
 ## Stage id -> STAGE dictionary.
@@ -506,6 +526,10 @@ const STAGES := {
 	"necropolis": NecropolisStage.STAGE,
 	"lioness_temple": LionessTempleStage.STAGE,
 	"two_truths": TwoTruthsStage.STAGE,  # Temporary Act XII, the finale
+	# --- Act XIII (temporary number): the Celestial Host ---
+	"silver_stair": SilverStairStage.STAGE,
+	"wheel_of_thrones": WheelOfThronesStage.STAGE,
+	"empyrean": EmpyreanStage.STAGE,  # Temporary Act XIII, the finale (the end of Part One)
 }
 
 ## Acts in order: act number -> {name, subtitle} (stage select tabs).
@@ -532,6 +556,8 @@ const ACTS := {
 	11: {"name": "Act XI", "subtitle": "The Hall of the Slain"},
 	# --- Act XII (temporary number; final slot VII): the Necropolis Dynasty ---
 	12: {"name": "Act XII", "subtitle": "The Necropolis Dynasty"},
+	# --- Act XIII (temporary number; final slot X): the Celestial Host ---
+	13: {"name": "Act XIII", "subtitle": "The Celestial Host"},
 }
 
 
@@ -620,4 +646,9 @@ const BOSS_ARRIVALS := {
 	"anubis": NecropolisStage.BOSS,
 	"sekhmet": LionessTempleStage.BOSS,
 	"osiris": TwoTruthsStage.BOSS,  # The act's finale boss
+	# --- Act XIII (temporary number): the Celestial Host (stubs: each stage's
+	# BOSS until phase 2 gives the boss its own data file) ---
+	"seraiel": SilverStairStage.BOSS,
+	"throne": WheelOfThronesStage.BOSS,
+	"voice": EmpyreanStage.BOSS,  # The act's finale boss
 }

@@ -682,6 +682,9 @@ func _draw_obstacle(o: Obstacle) -> void:
 	# --- Act XII (temporary number): the Necropolis Dynasty ---
 	if DynastyGlyphs.draw_obstacle(self, o):
 		return  # A Dynasty stub's placeholder obstacle kind.
+	# --- Act XIII (temporary number): the Celestial Host ---
+	if HostGlyphs.draw_obstacle(self, o):
+		return  # A Host stub's placeholder obstacle kind.
 	# --- Act IX: the Proving Moon ---
 	if ProvingMoonGlyphs.draw_obstacle(self, o):
 		return  # A Proving Moon obstacle kind (Act IX).

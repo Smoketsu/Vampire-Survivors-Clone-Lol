@@ -106,6 +106,11 @@
 ## the Black Land, Heka, the Devourer's Hour), stepped after the Concord's and
 ## before the obstacle push-out; null on every other act unless a Dynasty kind
 ## forced there asks for it (dynasty_rules()).
+## Temporary Act XIII (GDD §15.0 "The Celestial Host foundation (phase 1)"):
+## `host` (HostRules) runs the Celestial Host's shared rules (Judgment,
+## Hallowed Light, Grace, the Last Trumpet), stepped after the Dynasty's and
+## before the obstacle push-out; null on every other act unless a Host kind
+## forced there asks for it (host_rules()).
 ## Online co-op (docs/coop/DESIGN.md): `coop` (CoopSession) holds two player
 ## slots in this one simulation; the per-player fields below (player, horde,
 ## abilities, grave_step, dread_rally, ultimates, stance, character, innates,
@@ -299,6 +304,11 @@ var norse: NorseRules = null
 ## STAGE has "dynasty": true, or a Dynasty kind spawned on another stage asked
 ## for it through dynasty_rules(); no other act creates it).
 var dynasty: DynastyRules = null
+# --- Act XIII (temporary number): the Celestial Host ---
+## The Celestial Host's shared rules (HostRules; null unless the stage's STAGE
+## has "host": true, or a Host kind spawned on another stage asked for it
+## through host_rules(); no other act creates it).
+var host: HostRules = null
 ## Content wave 2: the run counters of the one-run achievements (RunRewards;
 ## never null once _ready ran; reads the run only, never changes gameplay).
 var rewards: RunRewards
@@ -538,6 +548,11 @@ func _ready() -> void:
 			var dyg := DynastyGround.new()  # The Dynasty stubs' placeholder floor (the STAGE's "floor").
 			dyg.look = stage_def.get("floor", {})
 			ground = dyg
+		# --- Act XIII (temporary number): the Celestial Host ---
+		"host":
+			var hog := HostGround.new()  # The Host stubs' placeholder floor (the STAGE's "floor").
+			hog.look = stage_def.get("floor", {})
+			ground = hog
 		# --- Act XII (temporary number): the Necropolis of Sand ---
 		"necropolis":
 			ground = NecropolisGround.new()  # The Necropolis of Sand's four zone floors (NecropolisStage.ZONES).
@@ -645,6 +660,8 @@ func _ready() -> void:
 		norse_rules()  # The Hall of the Slain's shared rules.
 	if bool(stage_def.get("dynasty", false)):
 		dynasty_rules()  # Act XII (temporary): the Necropolis Dynasty's shared rules.
+	if bool(stage_def.get("host", false)):
+		host_rules()  # Act XIII (temporary): the Celestial Host's shared rules.
 
 	if autotest != null:
 		player.invulnerable = not GameState.autotest_mortal
@@ -958,6 +975,8 @@ func _physics_process(delta: float) -> void:
 		norse.step(delta)  # The Hall of the Slain: Ragnarök, the Long Winter, the Rune-Stones (pushed out next).
 	if dynasty != null:
 		dynasty.step(delta)  # Act XII (temporary): the Devourer's Hour, the Sandstorm, the cartouches, the glyphs, the quicksand (returned bodies pushed out next).
+	if host != null:
+		host.step(delta)  # Act XIII (temporary): the Last Trumpet, the scales, the Light, the halos (pushed summons pushed out next).
 	if pf != null:
 		tl = pf.lap(PerfProbe.SEC_ENEMIES, tl)
 	arena.resolve_all(delta)
@@ -1173,6 +1192,17 @@ func dynasty_rules() -> DynastyRules:
 		dynasty = DynastyRules.new(self)
 		add_child(dynasty)
 	return dynasty
+
+
+# --- Act XIII (temporary number): the Celestial Host ---
+## The Celestial Host's shared rules, created on first use: at the start of a
+## Host run, or when a Host kind forced onto another stage is activated
+## (HostKit.reset()), so its halo works there (the clocks stay off off the act).
+func host_rules() -> HostRules:
+	if host == null:
+		host = HostRules.new(self)
+		add_child(host)
+	return host
 
 
 # --- Act IV: the Asphodel Underworld ---

@@ -51,7 +51,9 @@ const TABS: Array = [["feats", "Achievements"], ["spells", "Spells"], ["summons"
 		# --- Act XI (temporary): the Hall of the Slain ---
 		["norse", "Hall"],
 		# --- Act XII (temporary number): the Necropolis Dynasty ---
-		["dynasty", "Dynasty"]]  # TUNING (not in GDD) Act II adds the Ancient Eye tab, Act III the Electronic Empire's, Act IV the Olympian Republic's, Act V the Shogunate's, Act VI the Inferno's, Act VII the Sanguine Court's, Act VIII the Last Line's, Act IX the Concord's, Act XII (temporary) the Dynasty's
+		["dynasty", "Dynasty"],
+		# --- Act XIII (temporary number): the Celestial Host ---
+		["host", "Host"]]  # TUNING (not in GDD) Act XIII (temporary) the Host's; Act II adds the Ancient Eye tab, Act III the Electronic Empire's, Act IV the Olympian Republic's, Act V the Shogunate's, Act VI the Inferno's, Act VII the Sanguine Court's, Act VIII the Last Line's, Act IX the Concord's, Act XII (temporary) the Dynasty's
 
 ## Summon classes shown on the Summons page (UnitData ids, card order). The
 ## Profane Bishop is a merge evolution, so it sits with the evolutions.
@@ -395,6 +397,21 @@ const DYNASTY_STONE: Array[String] = ["canopic_jar",
 	"ushabti_statue", "woken_colossus", "lion_warden"]
 ## Dynasty stage bosses (StageRegistry.BOSS_ARRIVALS ids).
 const DYNASTY_BOSSES: Array[String] = ["anubis", "sekhmet", "osiris"]
+# --- Act XIII (temporary number): the Celestial Host ---
+## The Celestial Host (GDD §15.0 "The Celestial Host foundation (phase 1)"; the
+## Host tab), GROUPED BY GROUP (HostRulesData.GROUPS): the lesser lights, the
+## soldiers of light, the choir, the high orders, then its stage bosses
+## (StageRegistry.BOSS_ARRIVALS ids). Each Host stage adds its own as it is
+## built (phase 2; the Cherub and the Ophan bring a "guardians" section).
+const HOST_LIGHTS: Array[String] = ["lesser_light"]
+## The soldiers of light (group "soldiers").
+const HOST_SOLDIERS: Array[String] = ["virtue", "power"]
+## The choir (group "choir": the supports).
+const HOST_CHOIR: Array[String] = ["choir_angel", "herald"]
+## The high orders (group "orders": the elites).
+const HOST_ORDERS: Array[String] = ["dominion", "judge"]
+## Host stage bosses (StageRegistry.BOSS_ARRIVALS ids).
+const HOST_BOSSES: Array[String] = ["seraiel", "throne", "voice"]
 
 ## Section headers of each page: page id -> [[section id, header text], ...].
 const SECTIONS: Dictionary = {
@@ -426,6 +443,9 @@ const SECTIONS: Dictionary = {
 	# --- Act XII (temporary number): the Necropolis Dynasty (grouped by group) ---
 	"dynasty": [["dynasty_dead", "The Wrapped Dead"], ["dynasty_beasts", "Sacred Beasts"], ["dynasty_guard", "The Guard"],
 		["dynasty_priests", "The Priesthood"], ["dynasty_stone", "Stone and Jars"], ["dynasty_bosses", "Bosses"]],  # TUNING (not in GDD) Act XII
+	# --- Act XIII (temporary number): the Celestial Host (grouped by group) ---
+	"host": [["host_lights", "Lesser Lights"], ["host_soldiers", "Soldiers of Light"], ["host_choir", "The Choir"],
+		["host_orders", "The High Orders"], ["host_bosses", "Bosses"]],  # TUNING (not in GDD) Act XIII
 }
 
 ## One-sentence descriptions of the Covenant (the enemy data has none),
@@ -727,6 +747,17 @@ const DESCRIPTIONS: Dictionary = {
 	# --- Act XII (temporary number): the Hall of Two Truths ---
 	"crocodile_warden": "A crocodile-headed warden of the river of the dead. He climbs out of the quicksand and drags your dead under.",  # Proposal
 	"devourers_whelp": "A young hippo-lion-crocodile beast that eats the Names of the dead before they can stand. Raise them before it reaches them.",  # Proposal
+	# --- Act XIII (temporary number): the Celestial Host ---
+	"lesser_light": "A small winged orb of light. They come down in swarms of twelve and wear no halo.",  # Proposal
+	"virtue": "A silver spearman with a mirror mask and four wings. His halo shrugs off the first blow of each kind: hold him with blockers.",  # Proposal (Grace)
+	"power": "A warrior angel with a blade of white flame. Her lunge cuts the first two bodies in its line.",  # Proposal
+	"choir_angel": "Her hymn heals every angel within her reach. Kill her first.",  # Proposal
+	"herald": "His trumpet calls a squad of the Host and pushes your ring back. Kill him on arrival.",  # Proposal
+	"dominion": "A sceptre of light rings: the angels near him move faster, and their halos come back. Kill him first.",  # Proposal (Grace)
+	"judge": "Sent when the scales of your sins tip a third. He comes for you, not your dead; killing him lightens the scales.",  # Proposal (Judgment)
+	"seraiel": "Seraiel, Warden of the Gate: an archangel with a flaming sword who splits the way with walls of light.",  # Proposal
+	"throne": "The Throne: a colossal wheel within a wheel, its rims covered in eyes. It rolls, it gazes, and its core burns.",  # Proposal
+	"voice": "The Voice: a six-winged seraph whose face is never seen. When it lowers its wings, your dead stand still.",  # Proposal
 }
 
 ## Sprite key of an entry whose art is not "<category folder>/<id>":
@@ -829,6 +860,12 @@ const LOCKED_HINT: Dictionary = {
 	"dynasty_priests": "Slay one to record it.",  # TUNING (not in GDD) Act XII priests
 	"dynasty_stone": "Break one to record it.",  # TUNING (not in GDD) Act XII stone
 	"dynasty_bosses": "Face it to record it.",  # TUNING (not in GDD) Act XII bosses
+	# --- Act XIII (temporary number): the Celestial Host ---
+	"host_lights": "Slay one to record it.",  # TUNING (not in GDD) Act XIII
+	"host_soldiers": "Slay one to record it.",  # TUNING (not in GDD) Act XIII soldiers
+	"host_choir": "Slay one to record it.",  # TUNING (not in GDD) Act XIII choir
+	"host_orders": "Slay one to record it.",  # TUNING (not in GDD) Act XIII orders
+	"host_bosses": "Face it to record it.",  # TUNING (not in GDD) Act XIII bosses
 	"evolution": "Undiscovered.",  # TUNING (not in GDD) owner rule: no hint
 }
 ## Name shown for a locked entry.
@@ -895,6 +932,12 @@ const TAGS: Dictionary = {
 	"dynasty_priests": "The priesthood",  # TUNING (not in GDD) Act XII
 	"dynasty_stone": "Stone and jars",  # TUNING (not in GDD) Act XII
 	"dynasty_bosses": "Stage boss",  # TUNING (not in GDD) Act XII bosses
+	# --- Act XIII (temporary number): the Celestial Host ---
+	"host_lights": "Lesser light",  # TUNING (not in GDD) Act XIII
+	"host_soldiers": "Soldier of light",  # TUNING (not in GDD) Act XIII
+	"host_choir": "The choir",  # TUNING (not in GDD) Act XIII
+	"host_orders": "The high orders",  # TUNING (not in GDD) Act XIII
+	"host_bosses": "Stage boss",  # TUNING (not in GDD) Act XIII bosses
 }
 
 # --- Layout (layout px at 1280x720; TUNING, not in GDD) -----------------------------
@@ -1174,12 +1217,15 @@ static func is_known(cat: String, id: String) -> bool:
 					or CORSAIR_CREW.has(id) or CORSAIR_SEA.has(id) or CORSAIR_BOATS.has(id) \
 					or NORSE_WARRIORS.has(id) or NORSE_HALL.has(id) or NORSE_WILDS.has(id) \
 					or DYNASTY_DEAD.has(id) or DYNASTY_BEASTS.has(id) or DYNASTY_GUARD.has(id) \
-					or DYNASTY_PRIESTS.has(id) or DYNASTY_STONE.has(id)  # Act IV to Act XII (temporary numbers)
+					or DYNASTY_PRIESTS.has(id) or DYNASTY_STONE.has(id) \
+					or HOST_LIGHTS.has(id) or HOST_SOLDIERS.has(id) or HOST_CHOIR.has(id) \
+					or HOST_ORDERS.has(id)  # Act IV to Act XIII (temporary numbers)
 		BOSS:
 			return BOSSES.has(id) or EYE_BOSSES.has(id) or EMPIRE_BOSSES.has(id) or PANTHEON_BOSSES.has(id) \
 					or SHOGUNATE_BOSSES.has(id) or INFERNO_BOSSES.has(id) or COURT_BOSSES.has(id) \
 					or CITY_BOSSES.has(id) or CONCORD_BOSSES.has(id) or CORSAIR_BOSSES.has(id) \
-					or NORSE_BOSSES.has(id) or DYNASTY_BOSSES.has(id)  # (Act XII, temporary, last)
+					or NORSE_BOSSES.has(id) or DYNASTY_BOSSES.has(id) \
+					or HOST_BOSSES.has(id)  # (Act XIII, temporary, last)
 	return false
 
 
@@ -1204,12 +1250,15 @@ static func total(cat: String) -> int:
 					+ CORSAIR_CREW.size() + CORSAIR_SEA.size() + CORSAIR_BOATS.size() \
 					+ NORSE_WARRIORS.size() + NORSE_HALL.size() + NORSE_WILDS.size() \
 					+ DYNASTY_DEAD.size() + DYNASTY_BEASTS.size() + DYNASTY_GUARD.size() \
-					+ DYNASTY_PRIESTS.size() + DYNASTY_STONE.size()  # Act IV to Act XII (temporary numbers)
+					+ DYNASTY_PRIESTS.size() + DYNASTY_STONE.size() \
+					+ HOST_LIGHTS.size() + HOST_SOLDIERS.size() + HOST_CHOIR.size() \
+					+ HOST_ORDERS.size()  # Act IV to Act XIII (temporary numbers)
 		BOSS:
 			return BOSSES.size() + EYE_BOSSES.size() + EMPIRE_BOSSES.size() + PANTHEON_BOSSES.size() \
 					+ SHOGUNATE_BOSSES.size() + INFERNO_BOSSES.size() + COURT_BOSSES.size() \
 					+ CITY_BOSSES.size() + CONCORD_BOSSES.size() + CORSAIR_BOSSES.size() \
-					+ NORSE_BOSSES.size() + DYNASTY_BOSSES.size()  # (Act XII, temporary, last)
+					+ NORSE_BOSSES.size() + DYNASTY_BOSSES.size() \
+					+ HOST_BOSSES.size()  # (Act XIII, temporary, last)
 	return 0
 
 
@@ -1254,6 +1303,9 @@ static func enemy_row(id: String) -> Dictionary:
 	var dynasty := EnemyDirector.dynasty_def(id)  # Act XII (temporary) kinds ({} when none).
 	if not dynasty.is_empty():
 		return dynasty
+	var host := EnemyDirector.host_def(id)  # Act XIII (temporary) kinds ({} when none).
+	if not host.is_empty():
+		return host
 	match id:
 		"alaric":
 			return EnemyData.BOSS

@@ -67,6 +67,10 @@ const STAGES := {
 	"necropolis": {"title": "The Procession Ends", "boss_line": "Anubis lays down his flail, and the road of tombs is quiet."},  # TUNING (not in GDD) Act XII placeholder
 	"lioness_temple": {"title": "The Lioness Sleeps", "boss_line": "Sekhmet's fury burns out, and the temple falls quiet."},  # TUNING (not in GDD) Act XII placeholder
 	"two_truths": {"title": "The Scales Are Empty", "boss_line": "Osiris falls from his throne, and no one weighs the dead again."},  # TUNING (not in GDD) Act XII placeholder
+	# --- Act XIII (temporary number): the Celestial Host (placeholders until each stage is built) ---
+	"silver_stair": {"title": "The Gate Stands Open", "boss_line": "Seraiel lays down his sword before the Gate of Pearl."},  # TUNING (not in GDD) Act XIII placeholder
+	"wheel_of_thrones": {"title": "The Wheel Breaks", "boss_line": "The Throne stops turning, and its eyes close."},  # TUNING (not in GDD) Act XIII placeholder
+	"empyrean": {"title": "Heaven Is Silent", "boss_line": "The Voice folds its wings and is silent."},  # TUNING (not in GDD) Act XIII placeholder
 }
 ## Title of a victory on a stage missing from STAGES.
 const DEFAULT_TITLE: String = "Victory"  # TUNING (not in GDD)
@@ -93,6 +97,8 @@ const ACT_LINES := {
 	11: "You outlasted the hall. Ragnarok took you at last.",  # TUNING (not in GDD) the Norse act
 	# --- Act XII (temporary number): the Necropolis Dynasty ---
 	12: "You outlasted the Dynasty. The Devourer ate you at last.",  # TUNING (not in GDD) Act XII
+	# --- Act XIII (temporary number): the Celestial Host ---
+	13: "You outlasted heaven. The Last Trumpet sounded for you at last.",  # TUNING (not in GDD) Act XIII
 }
 
 # --- The last stand (LastStand; seconds of real time from its start) ----------------

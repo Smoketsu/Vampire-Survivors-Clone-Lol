@@ -217,6 +217,10 @@
 ## guardian gets its cartouche, which the Lich's raise then finds). HEKA:
 ## curse_unit() is THE one path that curses a summon (x damage and move speed,
 ## SummonedUnit.curse()) and lift_curse() the one that lifts it.
+## Act XIII, temporary (the Celestial Host; GDD §15.0 "Grace"; Game.host is
+## null on every other act, so none of this runs there): GRACE in
+## damage_enemy(), the one halo stat, first of all: a Host kind's halo shrugs
+## off the first hit of each kind of damage (Grace.absorbs(): the hit deals 0).
 ## Online co-op (CoopSession): every rule above reads the BOUND player's
 ## passives, synergies, meter and innate, so each entry point first binds the
 ## player the hit belongs to (the one path for "whose hit"), then restores the
@@ -298,6 +302,12 @@ func damage_enemy(e: Enemy, amount: float, source: String, as_slot: int = -1, or
 		game.coop.bind(prev)
 		return dealt_as
 	if not e.active or amount <= 0.0:
+		return 0.0
+	# --- Act XIII (temporary number): the Celestial Host --- GRACE (the one
+	# halo stat): an angel's halo shrugs off the first hit of each kind of
+	# damage (Grace.absorbs(); only while Game.host exists).
+	if game.host != null and game.host.grace.absorbs(e, source):
+		e.on_hit()
 		return 0.0
 	var crit_mult := 1.0  # Unholy Precision multiplier of this hit.
 	var crit := game.abilities.passive_value("unholy_precision", "crit_chance")  # 0..1, 0 when not owned.

@@ -199,6 +199,10 @@ const STAGE_LINES: Dictionary = {
 	"necropolis": "The oldest masters of the dead come down the tomb road for theirs.",  # TUNING (not in GDD) Act XII
 	"lioness_temple": "In the Lioness's temple the stone itself walks.",  # TUNING (not in GDD) Act XII
 	"two_truths": "Stand before the scales, and take the dead from Osiris himself.",  # TUNING (not in GDD) Act XII
+	# --- Act XIII (temporary number): the Celestial Host ---
+	"silver_stair": "Heaven comes down a stair of light to weigh your sins.",  # TUNING (not in GDD) Act XIII
+	"wheel_of_thrones": "Through the turning spheres, where the Throne has eyes on every rim.",  # TUNING (not in GDD) Act XIII
+	"empyrean": "In the white rose at the top of heaven, the Voice waits in silence.",  # TUNING (not in GDD) Act XIII
 }
 
 ## Size (px) of an act tab button on the stage select (Act I / Act II / Act III).
@@ -583,6 +587,33 @@ const VIGNETTES: Dictionary = {
 		],
 		"fx": "motes", "fx_color": Color8(43, 84, 184),
 	},  # TUNING (not in GDD) lapis motes
+	# --- Act XIII (temporary number): the Celestial Host (placeholder scenes
+	# from the shared kinds' art until each stage brings its own floor, props
+	# and boss; a missing sprite or tile is skipped) ---
+	"silver_stair": {
+		"tile": "tiles/host_stair",
+		"items": [
+			["host/virtue", 196, 112, true], ["host/lesser_light", 232, 128, true], ["host/power", 168, 160, true],
+			["summons/warrior", 46, 214, false], ["summons/archer", 88, 224, false],
+		],
+		"fx": "motes", "fx_color": Color8(244, 247, 255),
+	},  # TUNING (not in GDD) starlight motes
+	"wheel_of_thrones": {
+		"tile": "tiles/host_stair",
+		"items": [
+			["host/dominion", 204, 112, true], ["host/virtue", 236, 176, true], ["host/judge", 168, 192, true],
+			["summons/warrior", 46, 214, false], ["summons/mage", 90, 224, false],
+		],
+		"fx": "motes", "fx_color": Color8(62, 143, 216),
+	},  # TUNING (not in GDD) cerulean motes
+	"empyrean": {
+		"tile": "tiles/host_stair",
+		"items": [
+			["host/choir_angel", 206, 104, true], ["host/herald", 170, 188, true], ["host/power", 228, 196, true],
+			["summons/warrior", 46, 214, false], ["summons/archer", 88, 224, false],
+		],
+		"fx": "motes", "fx_color": Color8(242, 184, 198),
+	},  # TUNING (not in GDD) dawn-rose motes
 }
 ## Ambient motes of a vignette: most at once, seconds between two (random in
 ## range), life (s), rise speed (px/s), sideways sway (px).
