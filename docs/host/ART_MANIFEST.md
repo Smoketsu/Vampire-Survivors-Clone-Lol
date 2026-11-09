@@ -153,3 +153,12 @@ The halo over each angel is drawn by the code (`HostKit.draw_over()`: a ring of 
   (a hiss of searing light), `halo_absorb` (a soft glass chime), `halo_regrow` (a rising shimmer), `trumpet` (a long silver
   trumpet blast), `herald_blast` (a short trumpet call and a gust), `power_lunge` (a white-flame sword cut).
 - Art and audio agents run no Godot (PLAN.md); the lead's integration imports their files and the owner hears the loop.
+
+## Status (art and audio agent, foundation)
+
+Done: palette ramps `host_*`; units `lesser_light`, `virtue`, `power`, `choir_angel`, `herald`, `dominion`, `judge` (+ strips, idle for the women);
+obstacles `host_pillar`, `host_cloudstone`, `host_crystal`, `host_petal` (+ `_v`); all 16 icons; floors `host_stair`, `host_cloud_shadow`; markers
+`host_halo`, `host_halo_cracked`, `host_scales`, `host_pillar`; fx `host_shaft`, `host_shaft_line`, `host_trumpet_ring`; the score `hosanna`
+(seed `SYNTH_SEED - 13`) and the pack `host` (offset 10000, 12 sounds). `SpriteData.FLAT_SIZES` has the foundation entries. Still missing (phase 2):
+`cherub`, `ophan`, the three minibosses, the five bosses, the three characters, the summon class and its two icons' art (the icons exist), the
+zone floors, `host_pearl_gate`, `host_crystal_ring`. The lead still has to point the stages' `"music"` at `hosanna` and `HostRulesData.SOUNDS` at the pack.

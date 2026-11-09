@@ -276,7 +276,22 @@
     {"name": "dyn_papyrus_light", "hex": "#8CC45E", "ramp": "papyrus", "index": 3, "group": "unit", "role": "papyrus green lit: scale highlights (DYN_PAPYRUS_LIGHT)"},
     {"name": "dyn_skin_dark", "hex": "#5A3622", "ramp": "dynskin", "index": 1, "group": "unit", "role": "Egyptian skin in shade (DYN_SKIN_DARK)"},
     {"name": "dyn_skin", "hex": "#8A5430", "ramp": "dynskin", "index": 2, "group": "unit", "role": "Egyptian skin: the Dynasty's men and women (DYN_SKIN)"},
-    {"name": "dyn_skin_light", "hex": "#B87C48", "ramp": "dynskin", "index": 3, "group": "unit", "role": "Egyptian skin lit (DYN_SKIN_LIGHT)"}
+    {"name": "dyn_skin_light", "hex": "#B87C48", "ramp": "dynskin", "index": 3, "group": "unit", "role": "Egyptian skin lit (DYN_SKIN_LIGHT)"},
+    {"name": "host_ink", "hex": "#0E1626", "ramp": "host_silver", "index": 0, "group": "ink", "role": "outline of every Celestial Host sprite: deep night blue (Act X slot; HOST_INK)"},
+    {"name": "host_silver_dark", "hex": "#8A96AC", "ramp": "host_silver", "index": 1, "group": "unit", "role": "pale silver in shade: armour, mirror masks (HOST_SILVER_DARK)"},
+    {"name": "host_silver", "hex": "#C9D2E0", "ramp": "host_silver", "index": 2, "group": "unit", "role": "pale silver: armour, mirror masks, halo rims (HOST_SILVER)"},
+    {"name": "host_starlight", "hex": "#F4F7FF", "ramp": "host_silver", "index": 3, "group": "glow", "role": "starlight white: lit armour, wing highlights, cloud highlights (HOST_STARLIGHT)"},
+    {"name": "host_cerulean_dark", "hex": "#1F4F8F", "ramp": "host_cerulean", "index": 1, "group": "unit", "role": "cerulean in shade: robe folds (HOST_CERULEAN_DARK)"},
+    {"name": "host_cerulean", "hex": "#3E8FD8", "ramp": "host_cerulean", "index": 2, "group": "glow", "role": "cerulean: halo light, wing eyes, the Ophan fire (HOST_CERULEAN)"},
+    {"name": "host_cerulean_light", "hex": "#9CC8F0", "ramp": "host_cerulean", "index": 3, "group": "glow", "role": "cerulean lit (an added shade)"},
+    {"name": "host_rose_dark", "hex": "#B07888", "ramp": "host_rose", "index": 1, "group": "unit", "role": "dawn rose in shade (an added shade)"},
+    {"name": "host_rose", "hex": "#F2B8C6", "ramp": "host_rose", "index": 2, "group": "unit", "role": "dawn rose: sashes, the Choir hymn, the Judges pans (HOST_ROSE)"},
+    {"name": "host_rose_light", "hex": "#FCE4EA", "ramp": "host_rose", "index": 3, "group": "glow", "role": "dawn rose lit (an added shade)"},
+    {"name": "host_cloud_dark", "hex": "#1A2236", "ramp": "host_cloud", "index": 1, "group": "unit", "role": "cloud shadow, the stair steps in shade (HOST_SHADE)"},
+    {"name": "host_cloud", "hex": "#DCE4F0", "ramp": "host_cloud", "index": 2, "group": "unit", "role": "cloud banks (HOST_CLOUD)"},
+    {"name": "host_skin_dark", "hex": "#B8A8A0", "ramp": "host_skin", "index": 1, "group": "unit", "role": "the rare visible skin in shade: pale, unearthly (an added shade)"},
+    {"name": "host_skin", "hex": "#E8DCD4", "ramp": "host_skin", "index": 2, "group": "unit", "role": "pale unearthly skin (an added shade)"},
+    {"name": "host_skin_light", "hex": "#FAF4F0", "ramp": "host_skin", "index": 3, "group": "unit", "role": "pale skin lit (an added shade)"}
   ],
   "ramps": {
     "violet": {"members": ["ink_violet", "violet_deep", "violet", "violet_glow", "violet_flare"], "role": "the player only: necromancer, the 12 characters, their spells and icons"},
@@ -360,6 +375,11 @@
     "carnelian": {"members": ["dyn_ink", "dyn_carnelian_dark", "dyn_carnelian", "dyn_carnelian_light"], "role": "carnelian red: Sekhmet, belts, gems, the sun disc"},
     "papyrus": {"members": ["dyn_ink", "dyn_papyrus_dark", "dyn_papyrus", "dyn_papyrus_light"], "role": "papyrus green: the crocodile warden, Osiris, reeds"},
     "dynskin": {"members": ["dyn_ink", "dyn_skin_dark", "dyn_skin", "dyn_skin_light"], "role": "the Dynasty's skin tones (its own ramp: the Covenant `skin` is a pale peach)"},
+    "host_silver": {"members": ["host_ink", "host_silver_dark", "host_silver", "host_starlight"], "role": "Celestial Host silver: armour, mirror masks, halo rims (Act X slot)"},
+    "host_cerulean": {"members": ["host_ink", "host_cerulean_dark", "host_cerulean", "host_cerulean_light"], "role": "Celestial Host cerulean: halo light, wing eyes, robe folds"},
+    "host_rose": {"members": ["host_ink", "host_rose_dark", "host_rose", "host_rose_light"], "role": "Celestial Host dawn rose: sashes, the Choir hymn, the Judges pans"},
+    "host_cloud": {"members": ["host_ink", "host_cloud_dark", "host_cloud", "host_starlight"], "role": "Celestial Host cloud banks, stair steps, cloud shadows"},
+    "host_skin": {"members": ["host_ink", "host_skin_dark", "host_skin", "host_skin_light"], "role": "the Host rare visible skin: pale and unearthly"},
     "floor": {"members": ["floor_soil", "floor_earth", "floor_grass", "floor_ochre", "floor_slate", "floor_ash", "floor_dirt", "floor_moss", "floor_marble", "floor_stone"], "role": "ground colours of the three stages (tiles only, never sprites), dark -> light; the zone tiles add close shades per zone"}
   }
 }

@@ -738,6 +738,18 @@ const FLAT_SIZES: Dictionary = {
 	"player/pharaohs_shade": 56.0,  # TUNING (not in GDD) male: a violet-robed spectral pharaoh in a nemes, a crook staff with a soul flame (about 40 wide); glide strip
 	"markers/dyn_cartouche": 20.0,  # TUNING (not in GDD) a gold cartouche floating over a fallen Dynasty body (Rebirth), 12 x 20
 	"markers/dyn_heka_glyph": 16.0,  # TUNING (not in GDD) the gold Heka glyph sigil over a cursed summon, 16 x 16
+	# --- Act X slot: the Celestial Host (assets/sprites/host/, markers/, fx/) ---
+	"host/lesser_light": 24.0,  # TUNING (not in GDD) Host fodder, an orb of light (no sex): 22 art rows + 2 empty rows on top for the hover bob; glide (hover) strip (about 26 wide)
+	"host/virtue": 48.0,  # TUNING (not in GDD) Host soldier, male: silver spearman, mirror mask, four wings; walk strip (about 26 wide)
+	"host/power": 48.0,  # TUNING (not in GDD) Host soldier, female (figure redesign): silver armour over a robe, a blade of white flame; bust rig, walk and idle strips (about 30 wide)
+	"host/choir_angel": 48.0,  # TUNING (not in GDD) Host support, female (figure redesign): flowing pale-blue robes, singing; bust rig, glide and idle strips (about 32 wide)
+	"host/herald": 48.0,  # TUNING (not in GDD) Host support, male: a long silver trumpet, two wings; walk strip (about 36 wide)
+	"host/dominion": 54.0,  # TUNING (not in GDD) Host elite, male: sceptre and a crown of light rings; walk strip (about 32 wide)
+	"host/judge": 56.0,  # TUNING (not in GDD) Judgment's elite, male: a sword and scales held high, mirror mask; walk strip (about 58 wide with the scales)
+	"markers/host_halo": 6.0,  # TUNING (not in GDD) the halo ring over an angel (cerulean light, silver rim), 16 x 6 (not drawn yet: the code ring stays)
+	"markers/host_halo_cracked": 6.0,  # TUNING (not in GDD) the halo with two gaps, 16 x 6
+	"markers/host_scales": 20.0,  # TUNING (not in GDD) the scales of Judgment, the HUD bar's end cap, 24 x 20
+	"markers/host_pillar": 120.0,  # TUNING (not in GDD) the Verdict's pillar of light, 40 x 120, drawn additively
 }
 ## Longest side (px) for a flat sprite key missing from FLAT_SIZES.
 const DEFAULT_FLAT_SIZE: float = 20.0  # TUNING (not in GDD)

@@ -1065,6 +1065,19 @@ RIGS = {
     "player/pharaohs_shade": dict(mode="robe", hip=42, rigid=[(31, 40, 0, None)], sway=1, dip=1, float=2),
     "dynasty/ushabti_sentinel": dict(mode="robe", hip=34, rigid=[], sway=1, dip=1),  # R2: redrawn (clean mummiform stone shabti, 20x46).
     "dynasty/eternal_guard": dict(mode="robe", hip=38, rigid=[], sway=1, dip=1),
+    # --- Act X slot: the Celestial Host (assets/sprites/host/) ---
+    # The angels float: every figure glides on its hem (`robe`, a 1 px float) with the wings and the spear / trumpet / sceptre
+    # as rigid columns of the still; the Lesser Light bobs (`hover`). The two women (Power, Choir Angel) have a `bust` box and an
+    # idle strip (figure redesign). Boxes read from the stills (art px, [start, end)).
+    "host/lesser_light": dict(mode="hover", bob=2, parts=[]),
+    "host/virtue": dict(mode="robe", hip=34, rigid=[], sway=1, dip=1, float=1),
+    "host/power": dict(mode="robe", hip=34, rigid=[], sway=1, dip=1, float=1,
+                       bust=(16, 23, 13, 21, 1), bust_exclude=[(0, 16, 10, 24), (23, 36, 10, 24)]),
+    "host/choir_angel": dict(mode="robe", hip=34, rigid=[], sway=1, dip=1, float=1,
+                             bust=(17, 25, 11, 21, 1), bust_exclude=[(0, 17, 8, 26), (25, 40, 8, 26)]),
+    "host/herald": dict(mode="robe", hip=34, rigid=[], sway=1, dip=1, float=1),
+    "host/dominion": dict(mode="robe", hip=38, rigid=[], sway=1, dip=1, float=1),
+    "host/judge": dict(mode="robe", hip=40, rigid=[], sway=1, dip=1, float=1),
 }
 
 # Skins (SkinData, cosmetic): skin sprite key -> its character's sprite key. A skin keeps

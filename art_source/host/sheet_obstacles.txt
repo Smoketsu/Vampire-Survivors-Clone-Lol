@@ -1,0 +1,8 @@
+A sheet of 4 separate pixel-art game OBSTACLE sprites for a top-down 2D horde-survival game (three-quarter top-down view, camera above and slightly in front), laid out in one row, evenly spaced with wide empty gaps between them, on a FULLY TRANSPARENT background (real alpha). Heaven's stair: white stone, cloud and light, no red, no gold. LOW-RESOLUTION pixel art, chunky simple shapes, crisp square pixels (nearest-neighbour), a clean 1-pixel dark outline #0E1626, flat colours, at most 3 shades per material, light from the top-left. No ground under them, no cast shadows, no text.
+From left to right:
+1. a PILLAR of white stone: a round fluted column with a glowing cerulean band of light around it (about 30 px wide, 46 px tall);
+2. a CLOUDSTONE: a wide block of the stair wrapped in a puffy white cloud (about 52 px wide, 30 px tall);
+3. a CRYSTAL: a shard of a heavenly sphere, a long cerulean see-through crystal lying along the ground with a pale edge (about 44 px wide, 26 px tall);
+4. a PETAL: a standing petal of light, a long curved white-and-pale-rose petal (about 56 px wide, 24 px tall).
+Colours: white stone #8A96AC #C9D2E0 #F4F7FF; cerulean light #1F4F8F #3E8FD8 #9CC8F0; cloud #DCE4F0; dark #0E1626.
+Attached: a game sprite of this game for pixel size, outline weight and flat look.

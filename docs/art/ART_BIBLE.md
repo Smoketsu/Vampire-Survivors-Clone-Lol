@@ -3180,3 +3180,20 @@ idle strips; Osiris (on his throne) and the canopic jars are stills. Rebuilt by 
 the quicksand). Known soft spots: the mummy's green eyes fell below the cleanup threshold at 40 px; the pixelated women are noisy (as the
 Act IX women); the scarab swarm is drawn with `--no-cleanup` to keep its beetles apart. Rig lines in `tools/walk_cycle.py`
 ("# --- Act VII slot: the Necropolis Dynasty ---"), boxes read by eye, not yet reviewed in game.
+
+### Act X slot: the Celestial Host (art and audio, foundation, Nov 2026)
+
+The Host's look (GDD §15.0 "The Celestial Host art and audio (foundation)"; approved concepts `art_source/concepts/act15/host*.png`):
+**starlight white, pale silver, cerulean and dawn rose**, never crimson and never warm gold (gold stays the player's reward colour; it
+appears only in the gold icon frames). Halos are drawn by the code (`HostKit.draw_over()`), never painted into a unit. Ink `#0E1626`
+(`host_ink`). **Palette:** five one-hue ramps `host_silver`, `host_cerulean`, `host_rose`, `host_cloud`, `host_skin` (tools/palette.json;
+`prepare_sprite.py` folder `host/` takes exactly these). **Sprites** (`assets/sprites/host/`, heights in `SpriteData.FLAT_SIZES`): the seven
+roster kinds (Lesser Light, Virtue, Power, Choir Angel, Herald, Dominion, Judge), one API image each (`tools/gen_image.py`, a game sprite
+plus the concept crop as references, prompts beside the raws in `art_source/host/`), every figure through `pixelate_source.py` first (the
+grid-mode conversion turned the armoured ones to mush), walk strips (robe glide with a 1 px float; the Lesser Light hovers, its still has 2
+empty rows on top), the two women (Power, Choir Angel; figure redesign, fully clothed) with bust rigs and idle strips. Also: 4 obstacle kinds
+(+ `_v`), 16 icon badges on the approved violet / gold frames, 2 floors (`tiles/host_stair`, `tiles/host_cloud_shadow`), the halo, cracked
+halo, scales and pillar markers and the shaft / telegraph line / trumpet ring effects (drawn procedurally by `host_tiles.py`).
+Rebuilt by `art_source/host/make_art.py`, `make_props.py` and `host_tiles.py`. Known soft spots: the Virtue's torso is a flat grey, the
+Judge is 58 px wide (sword and scales), the standing petal is nearly square (the model drew it diagonal), the generated icons' extra fifth
+symbol is discarded. Phase 2 art (bosses, stage-only kinds, characters, summon class, zone floors) is not made yet.

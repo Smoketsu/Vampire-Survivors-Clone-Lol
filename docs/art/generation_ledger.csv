@@ -1498,3 +1498,15 @@ utc,key,model,quality,size,refs,text_in,image_in,image_out,usd_est,file
 2026-11-08 05:33,dynasty/r3_mummy_a,gpt-image-2.5-flare,medium,1024x1024,2,543,12,439,0.0160,mummy_a.png
 2026-11-08 05:33,dynasty/r3_mummy_b,gpt-image-2.5-flare,medium,1024x1024,2,570,12,439,0.0161,mummy_b.png
 2026-11-08 05:34,dynasty/r3_mummy_c,gpt-image-2.5-flare,medium,1024x1024,2,567,12,439,0.0161,mummy_c.png
+2026-11-09 02:12,host/lesser_light,gpt-image-2.5-flare,medium,1024x1024,2,478,241,439,0.0175,lesser_light.png
+2026-11-09 02:12,host/virtue,gpt-image-2.5-flare,medium,1024x1024,2,504,364,439,0.0186,virtue.png
+2026-11-09 02:12,host/power,gpt-image-2.5-flare,medium,1024x1024,2,513,354,439,0.0186,power.png
+2026-11-09 02:12,host/choir_angel,gpt-image-2.5-flare,medium,1024x1024,2,523,246,439,0.0178,choir_angel.png
+2026-11-09 02:13,host/herald,gpt-image-2.5-flare,medium,1024x1024,2,472,421,439,0.0189,herald.png
+2026-11-09 02:13,host/dominion,gpt-image-2.5-flare,medium,1024x1024,2,492,352,439,0.0184,dominion.png
+2026-11-09 02:13,host/judge,gpt-image-2.5-flare,medium,1024x1024,2,487,352,439,0.0184,judge.png
+2026-11-09 02:14,host/icons_a,gpt-image-2.5-flare,medium,1536x1024,1,340,4,343,0.0120,sheet_icons_a.png
+2026-11-09 02:15,host/icons_b,gpt-image-2.5-flare,medium,1536x1024,1,342,4,343,0.0120,sheet_icons_b.png
+2026-11-09 02:15,host/icons_c,gpt-image-2.5-flare,medium,1536x1024,1,345,4,343,0.0120,sheet_icons_c.png
+2026-11-09 02:15,host/icons_d,gpt-image-2.5-flare,medium,1536x1024,1,374,4,343,0.0122,sheet_icons_d.png
+2026-11-09 02:15,host/obstacles,gpt-image-2.5-flare,medium,1536x1024,1,392,16,343,0.0124,sheet_obstacles.png

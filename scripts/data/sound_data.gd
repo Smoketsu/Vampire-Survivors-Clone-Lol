@@ -835,6 +835,8 @@ const SCORES := {
 	"valhall": VALHALL_SCORE,  # "Horns at the Last Feast"
 	# --- the Necropolis Dynasty (Act VII slot) ---
 	"weighing": WEIGHING_SCORE,  # "The Weighing of the Heart"
+	# --- the Celestial Host (Act X slot) ---
+	"hosanna": HOSANNA_SCORE,  # "Hosanna in the Silence"
 }
 ## Sound pack each score asks for when its run starts (Sfx.prepare_pack():
 ## "empire" = EMPIRE_SOUNDS, the Act III effects; "pantheon" = PANTHEON_SOUNDS,
@@ -853,6 +855,7 @@ const SCORE_PACKS := {
 	# --- Act VI (final order): the Hall of the Slain ---
 	"valhall": "norse",  # the Norse sound pack
 	"weighing": "dynasty",  # the Necropolis Dynasty sound pack
+	"hosanna": "host",  # the Celestial Host sound pack
 }
 
 ## Act III sound effects (the Electronic Empire; recipe keys as SOUNDS). Kept
@@ -2231,4 +2234,135 @@ const DYNASTY_SOUNDS: Dictionary = {  # TUNING (not in GDD)
 			{"wave": "tri", "f0": 220.0, "f1": 330.0, "dur": 0.6, "amp": 0.06, "attack": 0.3, "decay": 0.25, "lp0": 700.0},
 			{"wave": "noise", "dur": 0.6, "amp": 0.04, "attack": 0.4, "decay": 0.15, "lp0": 1500.0, "lp1": 5000.0},
 			{"wave": "sine", "f0": 1760.0, "start": 0.62, "dur": 0.38, "amp": 0.09, "attack": 0.002, "decay": 0.14}]},
+}
+
+
+# --- the Celestial Host (Act X slot; stage key host) ---
+## "Hosanna in the Silence", the Host's run loop (GDD §15.0 "The Celestial Host art and audio (foundation)"): the
+## RunLoopSynth score of every stage whose STAGE has "music": "hosanna". Slow, vast and bright: a sustained choir pad (the
+## existing "organ" job on a few pure partials), a sung line (the existing "choir" job), high bell tones (the existing
+## "hits"), a long silver trumpet call twice a loop (the existing "horn" job with its filter opened up), and no drums until a
+## soft timpani swell at the loop's end (the existing "machine" job, three kicks and nothing else). D Mixolydian (D C G Am: a
+## major mode with a lowered seventh, so it reads holy but strange), 24 s, four 6 s chord segments. Never shrill: everything
+## above 1 kHz is a sine or low-passed. Rendered lazily (Sfx), never under the autotest; its fixed seed is Sfx.SCORE_SEEDS["hosanna"].
+const HOSANNA_SCORE := {
+	"loop_seconds": 24.0,  # TUNING (not in GDD) four 6 s chord segments
+	"root_hz": 36.71,  # TUNING (not in GDD) D1, a very low drone under D
+	"chords": [
+		[146.83, 220.0, 293.66],
+		[130.81, 196.0, 261.63],
+		[196.0, 246.94, 293.66],
+		[110.0, 164.81, 220.0],
+	],  # TUNING (not in GDD) D5 (open), C (the lowered seventh), G, Am
+	"drone_lp_hz": 60.0,  # TUNING (not in GDD) a soft, deep hum
+	"wind_lp_hz": 700.0,  # TUNING (not in GDD) thin high air
+	"wind_swells": 2.0,  # TUNING (not in GDD)
+	"vibrato_hz": 0.3,  # TUNING (not in GDD)
+	"vibrato_depth": 0.002,  # TUNING (not in GDD)
+	# The timpani swell: three soft low kicks at the loop's end (steps 26, 28 and 30 of 32 at 0.75 s), no snare, no hats.
+	"machine": {"step": 0.75, "steps_per_bar": 32, "kick_steps": [26, 28, 30], "snare_steps": [],
+		"hat_steps": [], "open_hat_steps": [], "kick_amp": 0.24, "snare_amp": 0.0,
+		"hat_amp": 0.0, "open_hat_amp": 0.0, "kick_hz0": 95.0, "kick_hz1": 48.0, "kick_dur": 0.7,
+		"snare_dur": 0.1, "hat_dur": 0.04, "open_hat_dur": 0.2},  # TUNING (not in GDD)
+	# The choir pad: pure partials, swelling in over 2 s, re-struck each segment.
+	"organ": {"attack": 2.0, "decay": 4.0, "vib_hz": 0.4, "vib_depth": 0.002,
+		"partials": [[1.0, 0.05], [2.0, 0.035], [3.0, 0.02], [4.0, 0.012]],
+		"notes": [[0.0, 293.66, 5.9], [6.0, 261.63, 5.9], [12.0, 392.0, 5.9], [18.0, 220.0, 5.8]]},  # TUNING (not in GDD) [start (s), Hz, length (s)]
+	# The sung line: detuned saws through a low-pass, a vowel-like swell (A4 up to D5 and back).
+	"choir": {"amp": 0.028, "attack": 1.4, "decay": 2.4, "lp0": 1100.0, "lp1": 1600.0, "vib_hz": 4.5, "vib_depth": 0.006,
+		"detune": 1.004, "octave_amp": 0.35,
+		"notes": [
+			[0.5, 440.0, 3.0], [3.5, 587.33, 2.4],
+			[6.5, 523.25, 2.8], [9.5, 392.0, 2.4],
+			[12.5, 493.88, 3.0], [15.5, 587.33, 2.4],
+			[18.5, 440.0, 2.6], [21.5, 369.99, 2.3]]},  # TUNING (not in GDD) [start (s), Hz, length (s)]
+	# Bell tones: a clear, quiet ping every 6 s, 3 s into each segment.
+	"hits": {"every": 6.0, "offset": 3.0, "root_hz": 1760.0, "dur": 2.0, "decay": 0.6,
+		"partials": [[1.0, 0.04], [2.76, 0.02], [5.4, 0.008]], "click": 0.008},  # TUNING (not in GDD)
+	# The silver trumpet: a long soft swell of a saw and its fifth, filter opened, twice a loop.
+	"horn": {"starts": [6.5, 18.5], "dur": 5.0, "attack": 2.0, "decay": 2.4, "amp": 0.03,
+		"lp0": 700.0, "lp1": 2200.0,
+		"notes": [[293.66, 440.0], [392.0, 587.33]]},  # TUNING (not in GDD)
+}
+
+## Celestial Host sound effects (recipe keys as SOUNDS), one per HostRulesData.SOUNDS event. Kept OUT of SOUNDS like the other
+## packs: Sfx renders it lazily the first time a Host run's music ("hosanna") is asked for (Sfx.prepare_pack("host"); seeds
+## Sfx.PACK_SEED + Sfx.PACK_SEED_OFFSETS["host"] + i, offset 10000). Nothing plays them until the lead points the sound map at them.
+const HOST_SOUNDS: Dictionary = {  # TUNING (not in GDD)
+	# The scales tip a third: a small bright bell.
+	"scales_tip": {"dur": 0.8, "volume_db": -17.0, "max_voices": 3, "min_interval": 100, "pitch_var": 0.05, "priority": 1,
+		"layers": [
+			{"wave": "sine", "f0": 2093.0, "dur": 0.7, "amp": 0.15, "attack": 0.002, "decay": 0.26},
+			{"wave": "sine", "f0": 5760.0, "dur": 0.4, "amp": 0.04, "attack": 0.002, "decay": 0.12},
+			{"wave": "sine", "f0": 3136.0, "start": 0.06, "dur": 0.5, "amp": 0.06, "attack": 0.002, "decay": 0.2}]},
+	# A Judge descends: a falling chord and a rush of wings.
+	"judge_descend": {"dur": 1.5, "volume_db": -13.0, "max_voices": 2, "min_interval": 200, "pitch_var": 0.04, "priority": 3,
+		"layers": [
+			{"wave": "sine", "f0": 880.0, "f1": 440.0, "dur": 1.3, "amp": 0.12, "attack": 0.15, "decay": 0.8},
+			{"wave": "sine", "f0": 1108.0, "f1": 554.0, "dur": 1.3, "amp": 0.08, "attack": 0.15, "decay": 0.8},
+			{"wave": "sine", "f0": 1319.0, "f1": 660.0, "dur": 1.3, "amp": 0.06, "attack": 0.15, "decay": 0.8},
+			{"wave": "noise", "dur": 1.0, "amp": 0.1, "attack": 0.2, "decay": 0.5, "lp0": 3500.0, "lp1": 900.0}]},
+	# A Judge is slain: a glass ring breaking.
+	"judge_slain": {"dur": 1.1, "volume_db": -13.0, "max_voices": 3, "min_interval": 100, "pitch_var": 0.06, "priority": 3,
+		"layers": [
+			{"wave": "noise", "dur": 0.08, "amp": 0.36, "attack": 0.001, "decay": 0.025, "lp0": 9000.0, "lp1": 4000.0},
+			{"wave": "sine", "f0": 2637.0, "dur": 0.9, "amp": 0.12, "attack": 0.002, "decay": 0.35},
+			{"wave": "sine", "f0": 3951.0, "start": 0.04, "dur": 0.7, "amp": 0.07, "attack": 0.002, "decay": 0.28},
+			{"wave": "tri", "f0": 1800.0, "f1": 1300.0, "start": 0.1, "dur": 0.1, "amp": 0.06, "attack": 0.001, "decay": 0.04},
+			{"wave": "noise", "start": 0.1, "dur": 0.5, "amp": 0.08, "attack": 0.002, "decay": 0.25, "lp0": 8000.0, "lp1": 3000.0}]},
+	# The Verdict is read: a deep struck bell.
+	"verdict": {"dur": 2.6, "volume_db": -10.0, "max_voices": 1, "min_interval": 600, "pitch_var": 0.02, "priority": 4,
+		"layers": [
+			{"wave": "sine", "f0": 110.0, "dur": 2.4, "amp": 0.3, "attack": 0.004, "decay": 1.2},
+			{"wave": "sine", "f0": 264.0, "dur": 2.0, "amp": 0.14, "attack": 0.004, "decay": 0.9},
+			{"wave": "sine", "f0": 453.0, "dur": 1.4, "amp": 0.07, "attack": 0.004, "decay": 0.6},
+			{"wave": "noise", "dur": 0.05, "amp": 0.2, "attack": 0.001, "decay": 0.015, "lp0": 1800.0}]},
+	# A pillar of light falls: a white roar and a deep thump.
+	"pillar_fall": {"dur": 1.4, "volume_db": -11.0, "max_voices": 3, "min_interval": 120, "pitch_var": 0.05, "priority": 3,
+		"layers": [
+			{"wave": "noise", "dur": 1.1, "amp": 0.24, "attack": 0.35, "decay": 0.5, "lp0": 6500.0, "lp1": 1500.0},
+			{"wave": "sine", "f0": 330.0, "f1": 220.0, "dur": 1.0, "amp": 0.06, "attack": 0.4, "decay": 0.4},
+			{"wave": "sine", "f0": 90.0, "f1": 40.0, "start": 0.4, "dur": 0.8, "amp": 0.34, "attack": 0.004, "decay": 0.3}]},
+	# A shaft of light is about to open: a thin rising tone.
+	"light_warn": {"dur": 1.3, "volume_db": -17.0, "max_voices": 3, "min_interval": 150, "pitch_var": 0.04, "priority": 2,
+		"layers": [
+			{"wave": "sine", "f0": 600.0, "f1": 1800.0, "dur": 1.2, "amp": 0.1, "attack": 0.9, "decay": 0.25},
+			{"wave": "sine", "f0": 606.0, "f1": 1815.0, "dur": 1.2, "amp": 0.05, "attack": 0.9, "decay": 0.25},
+			{"wave": "noise", "dur": 1.0, "amp": 0.03, "attack": 0.8, "decay": 0.15, "lp0": 4000.0, "lp1": 7000.0}]},
+	# The Light burns: a hiss of searing light.
+	"light_burn": {"dur": 0.6, "volume_db": -19.0, "max_voices": 4, "min_interval": 120, "pitch_var": 0.08, "priority": 1,
+		"layers": [
+			{"wave": "noise", "dur": 0.5, "amp": 0.14, "attack": 0.02, "decay": 0.3, "lp0": 9000.0, "lp1": 5000.0},
+			{"wave": "saw", "f0": 220.0, "f1": 180.0, "dur": 0.4, "amp": 0.04, "attack": 0.02, "decay": 0.25, "lp0": 700.0}]},
+	# A halo takes a hit: a soft glass chime.
+	"halo_absorb": {"dur": 0.7, "volume_db": -16.0, "max_voices": 3, "min_interval": 90, "pitch_var": 0.05, "priority": 1,
+		"layers": [
+			{"wave": "sine", "f0": 1568.0, "dur": 0.6, "amp": 0.12, "attack": 0.002, "decay": 0.22},
+			{"wave": "sine", "f0": 2349.0, "start": 0.05, "dur": 0.5, "amp": 0.06, "attack": 0.002, "decay": 0.18},
+			{"wave": "noise", "dur": 0.02, "amp": 0.03, "attack": 0.001, "decay": 0.006, "lp0": 8000.0}]},
+	# A halo regrows: a rising shimmer.
+	"halo_regrow": {"dur": 1.0, "volume_db": -18.0, "max_voices": 3, "min_interval": 150, "pitch_var": 0.04, "priority": 1,
+		"layers": [
+			{"wave": "sine", "f0": 784.0, "f1": 1568.0, "dur": 0.9, "amp": 0.08, "attack": 0.5, "decay": 0.3},
+			{"wave": "sine", "f0": 1175.0, "f1": 2350.0, "start": 0.1, "dur": 0.8, "amp": 0.05, "attack": 0.4, "decay": 0.3},
+			{"wave": "noise", "dur": 0.8, "amp": 0.03, "attack": 0.5, "decay": 0.2, "lp0": 5000.0, "lp1": 9000.0}]},
+	# The Last Trumpet: a long silver trumpet blast.
+	"trumpet": {"dur": 2.0, "volume_db": -12.0, "max_voices": 1, "min_interval": 500, "pitch_var": 0.02, "priority": 4,
+		"layers": [
+			{"wave": "saw", "f0": 466.0, "f1": 470.0, "dur": 1.8, "amp": 0.14, "attack": 0.1, "decay": 0.7, "lp0": 1800.0, "lp1": 3200.0, "vib_hz": 5.5, "vib_depth": 0.01},
+			{"wave": "saw", "f0": 698.0, "dur": 1.7, "amp": 0.06, "attack": 0.12, "decay": 0.7, "lp0": 2400.0},
+			{"wave": "sine", "f0": 932.0, "dur": 1.7, "amp": 0.05, "attack": 0.12, "decay": 0.7},
+			{"wave": "noise", "dur": 0.15, "amp": 0.05, "attack": 0.01, "decay": 0.06, "lp0": 3000.0}]},
+	# A Herald sounds: a short trumpet call and a gust.
+	"herald_blast": {"dur": 0.9, "volume_db": -14.0, "max_voices": 2, "min_interval": 200, "pitch_var": 0.05, "priority": 2,
+		"layers": [
+			{"wave": "saw", "f0": 392.0, "dur": 0.3, "amp": 0.12, "attack": 0.03, "decay": 0.15, "lp0": 2200.0},
+			{"wave": "saw", "f0": 523.0, "start": 0.28, "dur": 0.55, "amp": 0.13, "attack": 0.03, "decay": 0.3, "lp0": 2400.0, "vib_hz": 5.5, "vib_depth": 0.01},
+			{"wave": "noise", "start": 0.2, "dur": 0.6, "amp": 0.08, "attack": 0.1, "decay": 0.35, "lp0": 3500.0, "lp1": 1000.0}]},
+	# A Power lunges: a white-flame sword cut.
+	"power_lunge": {"dur": 0.45, "volume_db": -15.0, "max_voices": 3, "min_interval": 100, "pitch_var": 0.08, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.28, "amp": 0.2, "attack": 0.01, "decay": 0.12, "lp0": 9000.0, "lp1": 2500.0},
+			{"wave": "saw", "f0": 900.0, "f1": 300.0, "dur": 0.25, "amp": 0.06, "attack": 0.005, "decay": 0.1, "lp0": 2500.0},
+			{"wave": "sine", "f0": 1800.0, "f1": 900.0, "dur": 0.2, "amp": 0.05, "attack": 0.003, "decay": 0.08}]},
 }

@@ -1,0 +1,8 @@
+A sheet of 4 separate pixel-art game ICON SYMBOLS in one row, evenly spaced with a wide empty gap between them, on a FULLY TRANSPARENT background (real alpha). Each symbol is simple, bold and centred in its part of the image, drawn as chunky low-resolution pixel art (each symbol about 24 pixels wide on a coarse grid, shown enlarged with crisp square pixels, nearest-neighbour, 1-pixel dark outline, flat colours, at most 3 shades per colour, light from the top-left). No frame, no badge background, no text, no letters.
+From left to right:
+1. ALL-SEEING: one large silver eye with a cerulean iris, rays above it.
+2. SEVENTH SEAL: a round silver seal with seven small dots around a cerulean centre.
+3. ABSOLUTION: a pair of balance scales, the pans lifted, dawn-rose pans, silver beam.
+4. SMOKED GLASS: a dark-blue glass pane (a rounded diamond) with a pale reflection streak.
+Colours: starlight white #F4F7FF; pale silver #8A96AC #C9D2E0; cerulean #1F4F8F #3E8FD8 #9CC8F0; dawn rose #B07888 #F2B8C6; dark #0E1626. NO red, NO gold, NO yellow.
+Attached: an approved icon of this game: match its pixel size, outline weight and flat look (only the symbol, not its frame).

@@ -237,6 +237,8 @@ FACTION_RAMPS = {
     # lapis, linen wrappings, carnelian, papyrus green, the act's own skin tones (`dynskin`) and wood. Sandstone (`sand`: statues,
     # the colossus, tombs) is added per key (KEY_RAMPS) because it sits next to the linen and the skin. Never the player's violet,
     # the undead's bone or soul teal (the Ushabti Sentinel and the Pharaoh's Shade are the player's and add soul / grey).
+    # --- Act X slot: the Celestial Host (assets/sprites/host/): starlight silver, cerulean, dawn rose, cloud and pale skin; never crimson, gold or the player's violet ---
+    "host": ["host_silver", "host_cerulean", "host_rose", "host_cloud", "host_skin"],
     "dynasty": ["night", "dyn_bronze", "lapis", "linen", "carnelian", "papyrus", "dynskin", "brown"],
 }
 # Per-key exceptions to FACTION_RAMPS: key -> (ramps added, ramps removed). The arcane
