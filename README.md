@@ -2847,7 +2847,7 @@ Osiris** (night-blue slabs), each with its floor tile and obstacles (`TwoTruthsG
 The throne below is taken, and for the first time heaven comes down itself: the old, strange angels, silver and blue, with
 thin geometric halos (design `docs/proposals/LAST_SIX_ACTS.md` section X; final slot X of the fifteen-act order, the end
 of Part One, temporary act number 13 until the reorder pass, `docs/last_acts/PLAN.md`). Three stub stages are registered
-under an **Act XIII** tab, hidden as "Coming soon" until phase 2 builds them: **the Silver Stair** (`silver_stair`,
+under an **Act XIII** tab, hidden as "Coming soon" until phase 2 builds them (the Silver Stair is built and playable): **the Silver Stair** (`silver_stair`,
 Seraiel, Warden of the Gate), **the Wheel of Thrones** (`wheel_of_thrones`, the Throne) and **the Empyrean** (`empyrean`,
 the Voice); Osiris's fall in the Hall of Two Truths opens the first, each boss the next. Every Host stage runs three
 shared rules (`Game.host`, `HostRules`):
@@ -2871,6 +2871,22 @@ and the **Judge**. The Codex has a **Host** tab. Placeholder floors, obstacles a
 `--stage=silver_stair|wheel_of_thrones|empyrean`, `--boss=seraiel|throne|voice`, `--spawn=` with `lesser_light`, `virtue`,
 `power`, `choir_angel`, `herald`, `dominion`, `judge`; lines `judgment`, `hallowed light`, `grace`, `last trumpet`, `host
 kinds`, `host stage`. Phase 2 brief: `docs/host/BRIEF_PHASE2.md`.
+
+#### The Silver Stair (stage 37, playable)
+
+A stair of light rising from hell's ashes into the clouds, in four zones: **the Ashen Foot**, **the Stair**, **the Cloud
+Shelf** and **the Gate of Pearl**. **The Stair:** every zone is a wider step: the Light's shafts grow wider with each one,
+and low cloud banks settle near you every half minute or so: their shadows hide your ring from the light. **Cherubs**
+(four faces, wings full of eyes) plant themselves and turn their flaming swords in a full circle: stay out of their reach.
+At 12:00 **the Cherub of the Gate** comes down: its sword never stops turning, a full circle every six seconds. **Seraiel,
+Warden of the Gate** arrives at 17:00: **the Sword** sweeps across your ring (an arc of marks shows where), from two thirds
+of his health **the Gate** splits the stair into lanes that close one by one, a wall of light sweeping each, until only
+one is left (its walls are dawn rose: go there), and **the Trial** fills the scales by a third for every phase of his you
+let run past 40 s. Slaying him unlocks the spell **Flaming Sword** (a spectral sword sweeps a wide arc at the nearest foe;
+evolves into **Sword at the Gate**, a full circle that sweeps back, with the passive **Fallen Light**) and so the **Fallen
+Herald** (innate Torn Wing: the sword reaches 20 px farther). **Without Sin** (slay Seraiel with the scales never past
+their first third) unlocks **Absolution** (your sins weigh up to 30% less; offered only on the Host). Autotest lines
+`silver stair`, `cherubs`, `seraiel`, `act XIII spell`, `act XIII passives`; `--spawn=cherub@T`, `cherub_of_the_gate@T`.
 
 ### Act XIV (temporary number): the Age of Titans (foundation)
 
@@ -3660,6 +3676,9 @@ scripts/
     host_glyphs.gd          Code-drawn fallbacks of the Host's kinds and the stubs' obstacles (Act XIII)
     host_report.gd          The autotest's Host lines (judgment, hallowed light, grace, last trumpet, host kinds,
                             host stage; Act XIII)
+    silver_stair_ground.gd  The Silver Stair's four zone floors (tiles/silver_stair_<style>, wider steps; Act XIII)
+    silver_stair_report.gd  The autotest's Silver Stair lines (silver stair, cherubs, seraiel) and the Flaming Sword /
+                            Fallen Light / Absolution item lines (Act XIII)
     primeval_ground.gd      The Titans stubs' placeholder floor (styles fern / plain / ash; Act XIV, temporary)
     primeval_glyphs.gd      Code-drawn fallbacks of the Titans' kinds and the stubs' obstacles (Act XIV)
     primeval_report.gd      The autotest's Titans lines (packs, herds, scavengers, stampede of ash, primeval kinds,
@@ -4168,6 +4187,11 @@ scripts/
       host_kit.gd           Base kit: the halo (seen kinds), registration, the code-drawn halo ring
       lesser_light_kit.gd, virtue_kit.gd, power_kit.gd, choir_angel_kit.gd, herald_kit.gd, dominion_kit.gd,
       judge_kit.gd          The shared kinds (the Power's lunge, the Herald's blast, the Judge's hunt)
+      cherub_kit.gd         The Cherub and the Cherub of the Gate: the turning sword, sweep() (the one blade test,
+                            Seraiel's Sword too) (the Silver Stair)
+      silver_stair_director.gd  The Silver Stair: the Stair's steps and low cloud banks, Without Sin, the Cherub of
+                            the Gate (game.enemies.silver_stair)
+      boss_seraiel.gd       Seraiel, Warden of the Gate: the Sword, the Gate (lanes closed by shafts), the Trial
     primeval/               The Age of Titans (Act XIV, temporary number): its kits ("<id>_kit.gd", loaded by name
                             after the Host's) and bosses ("boss_<id>.gd", phase 2), and the act's shared rules:
       primeval_rules.gd     Game.primeval: owns Packs, Herds, Scavengers and the Stampede of Ash; the one telegraph
@@ -4472,6 +4496,9 @@ scripts/
     linen_bind_data.gd      Linen Bind / Eternal Shroud rules, Natron Salts keys, Linen Ward key (Act XII,
                             temporary; the spell node is abilities/spells/linen_bind.gd)
     anubis_data.gd          Anubis, Opener of the Way: his row, phases and numbers (Act XII, temporary)
+    flaming_sword_data.gd   Flaming Sword / Sword at the Gate rules, Fallen Light keys, Torn Wing key (Act XIII,
+                            temporary; the spell node is abilities/spells/flaming_sword.gd)
+    seraiel_data.gd         Seraiel, Warden of the Gate: his row, phases, the Sword, the Gate, the Trial (Act XIII)
     tractor_lift_data.gd    Tractor Beam / Abduction rules, Starseed keys, Deserter's Signal key (Act IX; the
                             spell node is abilities/spells/tractor_lift.gd, the lift helper abilities/enemy_lift.gd)
     burning_eye_data.gd     Burning Eye / Eye of Retribution rules, Desert Fury keys, Lioness's Gaze key (Act XII,
@@ -4549,12 +4576,14 @@ scripts/
     host_enemy_data.gd      The Celestial Host's shared kinds (Lesser Light, Virtue, Power, Choir Angel, Herald,
                             Dominion, Judge); the group / halo / regrows / judge / lunge / blast keys; the Last
                             Trumpet's kind and companions (Act XIII, temporary; silver_stair_ / wheel_of_thrones_ /
-                            empyrean_enemy_data.gd: each stage's own, empty until phase 2)
+                            empyrean_enemy_data.gd: each stage's own; the Silver Stair's holds the Cherub of the Gate,
+                            and its block in the shared file the Cherub)
     host_rules_data.gd      Act XIII's shared rules: JUDGMENT, LIGHT, CLOUDS, GRACE, TRUMPET, the SOUNDS map, the
                             Absolution / Smoked Glass keys
     stages/silver_stair_stage.gd     Act XIII stubs: the Silver Stair, the Wheel of Thrones and the Empyrean; act 13,
     stages/wheel_of_thrones_stage.gd "host": true, zones, the rule overrides, a timeline of the shared kinds, the Last
-    stages/empyrean_stage.gd         Trumpet, placeholder floors / bosses ("playable": false)
+    stages/empyrean_stage.gd         Trumpet, placeholder floors / bosses ("playable": false; the Silver Stair is built:
+                                     its zones, the Stair, the Cherub of the Gate, Seraiel, "playable": true)
     primeval_enemy_data.gd  The Age of Titans' shared kinds (Scuttler, Razorclaw, Frill-Spitter, Longneck, Duckbill,
                             Skyraider, Tyrant); the group / pack / herd / fright / scavenger keys; the Stampede of
                             Ash's kind and companions (Act XIV, temporary; fern_basin_ / great_plain_ /
@@ -4990,14 +5019,14 @@ uptime.
 time, and everything that ships waits for all of them (GDD §15.0 "Parallel CI and lean testing": about 8-10 minutes from a push to
 the live build instead of about 30):
 
-1. **test:** thirty-four parallel jobs, one per playthrough. Each imports the project with Godot 4.3 headless and runs
+1. **test:** thirty-five parallel jobs, one per playthrough. Each imports the project with Godot 4.3 headless and runs
    one full 20-minute autotest: the Graveyard with the naive and the army policy, the Crimson March
    (`--stage=crimson_march`), the Sanctum (`--stage=sanctum --policy=army`) and each stage of Acts II, IV-IX and X-XII with
    the army policy (`--stage=harbour`, `archive`, `spire`, `ilion`, `olympus`, `underworld`, `province`, `kurogane`,
    `sun_road`, `burning_gate`, `silk_palace`, `pandemonium`, `ravensmoor`, `witchwood`, `castle_sanguis`, `skid_row`,
    `fort_kessler`, `liberty_heights`, `crash_site`, `proving_moon`, `ark`, the Black Tide's `cutter`, `galleon`,
    `maelstrom`, the Hall of the Slain's `barrow_fields`, `valgard`, `vigrid` and the Necropolis Dynasty's `necropolis`,
-   `lioness_temple`, `two_truths`; the other last acts get theirs as they go live) (`--quit-after 15000`, at most 10-15
+   `lioness_temple`, `two_truths`, and the Celestial Host's `silver_stair`; the other last acts get theirs as they go live) (`--quit-after 15000`, at most 10-15
    wall-clock minutes per run).
    A job fails on any `SCRIPT ERROR`, `ERROR:` or `WARNING:` line, or if its run doesn't complete; one failure does
    not cancel the others. Logs: `test-logs-<id>`.

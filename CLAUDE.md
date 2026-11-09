@@ -178,8 +178,9 @@ Autotest options (full table in the README):
   `barrow_fields|valgard|vigrid` the Hall of the Slain, Act XI (`--boss=hrimgar|sigrun|odin`, `--character=rune_seer|shield_maiden_hero|berserker_hero`,
   `--spawn=muspel_giant|fenrir|odin_raven@T`); `necropolis|lioness_temple|two_truths` the
   Necropolis Dynasty, Act XII (`--boss=anubis|sekhmet|osiris`, `--character=the_embalmer|lion_priestess|pharaohs_shade`);
-  `silver_stair|wheel_of_thrones|empyrean` the Celestial Host's stubs, Act XIII (`--boss=seraiel|throne|voice`, `--spawn=` with
-  `lesser_light|virtue|power|choir_angel|herald|dominion|judge`); `fern_basin|great_plain|last_day` the Age of Titans' stubs,
+  `silver_stair|wheel_of_thrones|empyrean` the Celestial Host, Act XIII (the Silver Stair built, the other two stubs;
+  `--boss=seraiel|throne|voice`, `--character=fallen_herald`, `--spawn=` with
+  `lesser_light|virtue|power|choir_angel|herald|dominion|judge|cherub|cherub_of_the_gate`); `fern_basin|great_plain|last_day` the Age of Titans' stubs,
   Act XIV (`--boss=scarmaw|ironbrow|gravejaw`, `--spawn=` with `scuttler|razorclaw|frill_spitter|longneck|duckbill|skyraider|tyrant`))
 - `--unlocks=all|none` (Act II's lockable spells / passives / classes in the card pool; forced items
   are open either way)
@@ -214,10 +215,10 @@ Autotest options (full table in the README):
 the autotests for the area a change touches plus one default run; run the full "Done" set (every stage,
 the same-seed gates) once per batch of changes, before `main` moves; multi-seed batches only for balance.
 
-CI (`.github/workflows/ci.yml`) runs the import and, as thirty-four **parallel** matrix jobs, the Graveyard
+CI (`.github/workflows/ci.yml`) runs the import and, as thirty-five **parallel** matrix jobs, the Graveyard
 autotest with the naive and army policies, a Crimson March autotest, a Sanctum of Judgment autotest (army
 policy) and one army autotest per Act II, Act IV, V, VI, VII, VIII, IX, X (the Black Tide), XI (the Hall of the Slain) and XII (the
-Necropolis Dynasty) stage; beside them, the Windows/Linux/Web exports (artifacts
+Necropolis Dynasty) stage and the Celestial Host's Silver Stair; beside them, the Windows/Linux/Web exports (artifacts
 `Necropathy-windows` / `-linux` / `-web`) and an exported-build smoke test; also the co-op jobs `coop-net` (relay
 protocol + two-process transport test) and `coop-lockstep` (the two-process full-run determinism gate, ~10 min, not
 waited on by the publish jobs) and, on `main` pushes, `deploy-relay` (the Worker, secrets `CLOUDFLARE_API_TOKEN` /
@@ -710,6 +711,13 @@ tiny tweaks.
   Embalmed Bones), **the Temple of the Lioness** (the Awakening Statues, the Lion Warden, Sekhmet; Burning Eye / Eye of
   Retribution + Desert Fury, the Lion-Priestess, Names Taken → Dune Walkers) and **the Hall of Two Truths** (above). One CI
   army job each (34 matrix jobs). Stages 1–33 same-seed summaries unchanged.
+- **The Silver Stair, playable** (the Celestial Host's first stage, temporarily Act XIII, final slot X; GDD §15.0 from "The
+  Silver Stair (Act XIII phase 2)" to "Without Sin and Absolution"; brief `docs/host/BRIEF_PHASE2.md`): the four zones
+  (`SilverStairGround`), **the Stair** (`SilverStairDirector`: each zone a wider step, the Light widens; low cloud banks
+  through `CloudShade.add_shade()`), the Cherub (shared, group `guardians`) and the Cherub of the Gate (miniboss) on one
+  `CherubKit` (`sweep()`, the one blade test), **Seraiel** (`boss_seraiel.gd`: the Sword, the Gate's lanes closed by
+  `HallowedLight.add_shaft()`, the Trial through `Judgment.add()`), Flaming Sword / Sword at the Gate + Fallen Light, the
+  Fallen Herald, Without Sin → Absolution. One CI army job (35 matrix jobs). Stages 1–36 same-seed summaries unchanged.
 
 **Next, in priority order:**
 1. **Playtest feedback** from the owner and friends (actively playtesting); it outranks everything below.

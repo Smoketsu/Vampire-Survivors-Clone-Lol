@@ -42,9 +42,9 @@ The constants are already in `scripts/data/palette.gd` (`HOST_*`); the ramps mus
 | `host/herald` | 32x48 | male | support: long silver trumpet, two wings | walk | yes |
 | `host/dominion` | 34x54 | male | elite: sceptre, a crown of light rings (rings, not a crown of metal) | walk | yes |
 | `host/judge` | 34x56 | male | Judgment's elite: a sword and a set of scales held high, mirror mask | walk | yes |
-| `host/cherub` | 48x56 | none (a creature) | phase 2 (guardians): four faces (lion, ox, eagle, man), four wings covered in eyes, a flaming white sword | walk | phase 2 |
+| `host/cherub` | 48x56 | none (a creature) | phase 2 (guardians): four faces (lion, ox, eagle, man), four wings covered in eyes, a flaming white sword | walk | yes (Silver Stair; `HostGlyphs` until drawn) |
 | `host/ophan` | 52x52 | none (a wheel) | phase 2 (guardians): a burning silver wheel within a wheel, rims covered in eyes; rolls | roll (8 frames) | phase 2 |
-| `host/cherub_of_the_gate` | 64x76 | none | Silver Stair miniboss: a larger Cherub, its sword turning a full circle | walk | phase 2 |
+| `host/cherub_of_the_gate` | 64x76 | none | Silver Stair miniboss: a larger Cherub, its sword turning a full circle | walk | yes (Silver Stair; `HostGlyphs` until drawn) |
 | `host/dominion_of_the_spheres` | 44x70 | male | Wheel of Thrones miniboss: a larger Dominion among crystal rings | walk | phase 2 |
 | `host/herald_of_the_seventh_trumpet` | 44x70 | male | Empyrean miniboss: a larger Herald, a great trumpet | walk | phase 2 |
 
@@ -110,8 +110,8 @@ The halo over each angel is drawn by the code (`HostKit.draw_over()`: a ring of 
 
 | Key | Size | What | Loaded now |
 |---|---|---|---|
-| `obstacles/host_pillar` | 30x46 | a pillar of white stone with a band of light (circle kind; casts a pillar's shadow, safe from the Light) | code |
-| `obstacles/host_cloudstone` + `_v` | 52x30 | a cloud-wrapped block of the stair | code |
+| `obstacles/host_pillar` | 30x46 | a pillar of white stone with a band of light (circle kind; casts a pillar's shadow, safe from the Light) | yes on the Silver Stair, as `host_pillar_m` (one size); code on the stubs |
+| `obstacles/host_cloudstone` + `_v` | 52x30 | a cloud-wrapped block of the stair | yes on the Silver Stair, as `host_cloudstone_m` / `_m_v`; code on the stubs |
 | `obstacles/host_crystal` + `_v` | 44x26 | a shard of a sphere's crystal (cerulean, see-through edge) | code |
 | `obstacles/host_petal` + `_v` | 56x24 | a standing petal of light | code |
 | `obstacles/host_pearl_gate` | 96x80 | the Gate of Pearl (Silver Stair set piece) | phase 2 |
