@@ -70,8 +70,8 @@ const LIGHT := {
 	"start_offset": 540.0,  # TUNING (not in GDD) px from the necromancer the shaft starts (off his side)
 	"travel": 1080.0,  # TUNING (not in GDD) px the shaft sweeps before it fades
 	"tick": 0.5,  # TUNING (not in GDD) s between two burns
-	"summon_burn": 7.0,  # TUNING (not in GDD) per tick to a summon in the light, before the time scaling
-	"player_burn": 4.0,  # TUNING (not in GDD) per tick to the necromancer in the light, before the time scaling
+	"summon_burn": 3.5,  # TUNING (not in GDD) per tick to a summon in the light, before the time scaling; pass 1 7.0 (melted rings without Warder barriers)
+	"player_burn": 2.5,  # TUNING (not in GDD) per tick to the necromancer in the light, before the time scaling; pass 1 4.0
 	"angel_heal": 0.04,  # Owner-approved proposal: "angels in the light are healed"; TUNING (not in GDD) share of max HP per tick
 	"orb_reach": 70.0,  # TUNING (not in GDD) px around the necromancer: a charged Orb Shield orb this close takes a burn for him (spent)
 	"pillar_pad": 18.0,  # TUNING (not in GDD) px: a body this close to an obstacle (a pillar's shadow) is shaded
