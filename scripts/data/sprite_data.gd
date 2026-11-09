@@ -759,6 +759,12 @@ const FLAT_SIZES: Dictionary = {
 	"host/cherub": 56.0,  # TUNING (not in GDD) Host guardian (no sex, a creature): four faces, four wings full of eyes, a flaming white sword; walk strip (about 48 wide)
 	"host/cherub_of_the_gate": 76.0,  # TUNING (not in GDD) Silver Stair miniboss: a larger Cherub, its sword turning a full circle; walk strip (about 64 wide)
 	"host/seraiel": 96.0,  # TUNING (not in GDD) Silver Stair boss, male: a towering four-winged archangel in silver armour, a flaming white sword; walk strip, pose 1 (sword raised) (about 64 wide)
+	# --- Act XIII (temporary number): the Wheel of Thrones (phase 2; art pending, HostGlyphs / the boss's glyph until then) ---
+	"host/ophan": 52.0,  # TUNING (not in GDD) Host guardian (no sex, a wheel): a burning silver wheel within a wheel, rims covered in eyes; roll strip (about 52 wide)
+	"host/dominion_of_the_spheres": 70.0,  # TUNING (not in GDD) Wheel of Thrones miniboss, male: a larger Dominion among crystal rings; walk strip (about 44 wide)
+	"host/throne": 96.0,  # TUNING (not in GDD) Wheel of Thrones boss: a colossal wheel within a wheel of silver and blue fire, rims covered in eyes; roll strip, pose 1 (the wheels open) (about 96 wide)
+	"host/throne_core": 32.0,  # TUNING (not in GDD) the Throne's burning eye at its centre (drawn over it while the Core is open)
+	"player/blind_saint": 56.0,  # TUNING (not in GDD) female (figure style): violet gown, a violet blindfold, a staff ringed with a bone wheel of closed eyes (about 36 wide); walk and idle strips
 	"player/fallen_herald": 56.0,  # TUNING (not in GDD) male: violet robe and torn cope, one broken bone-white wing, a trumpet-headed staff with a soul flame (about 40 wide); walk strip
 	"markers/host_halo": 6.0,  # TUNING (not in GDD) the halo ring over an angel (cerulean light, silver rim), 16 x 6 (not drawn yet: the code ring stays)
 	"markers/host_halo_cracked": 6.0,  # TUNING (not in GDD) the halo with two gaps, 16 x 6

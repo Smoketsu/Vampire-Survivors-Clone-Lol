@@ -228,7 +228,9 @@ const ORDER := ["grave_dominion", "necrotic_vigor", "dark_command", "soul_recycl
 	# --- Act XII (temporary number): the Hall of Two Truths ---
 	"heavy_heart", "answering_words",
 	# --- Act XIII (temporary number): the Silver Stair ---
-	"fallen_light", "absolution"]
+	"fallen_light", "absolution",
+	# --- Act XIII (temporary number): the Wheel of Thrones ---
+	"all_seeing", "smoked_glass"]
 
 ## Passives that only help summons (a "dead" level-up card while no summon
 ## class is owned, see AbilityManager.build_offers()).
@@ -2391,6 +2393,48 @@ const PASSIVES := {
 			{"fill_cut": 0.18},  # TUNING (not in GDD)
 			{"fill_cut": 0.24},  # TUNING (not in GDD)
 			{"fill_cut": 0.30},  # Owner-approved proposal: "the scales fill 30% slower" at full
+		],
+	},
+	# --- Act XIII (temporary number): the Wheel of Thrones ---
+	# All-Seeing (Wheel of Eyes' paired passive; owner-approved proposal:
+	# "Ophanim (+ All-Seeing)"; unlocked with the spell by the Throne and
+	# offered on every stage). Own decision on its effect: the wheels' eyes see
+	# every foe: every strike deals wheel_damage more and every wheel rolls
+	# wheel_life longer (WheelOfEyes._damage() / _cast(), the one read). Read
+	# only by WheelOfEyes: nothing without the spell.
+	"all_seeing": {
+		"display_name": "All-Seeing",  # Owner-approved proposal
+		"icon": "all_seeing",
+		"description": "Every eye opens on your wheels: Wheel of Eyes strikes harder and rolls longer.",
+		"labels": {"wheel_damage": ["Wheel of Eyes damage", "pct"], "wheel_life": ["Wheel of Eyes roll time", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"wheel_damage": 0.06, "wheel_life": 0.06},  # TUNING (not in GDD)
+			{"wheel_damage": 0.12, "wheel_life": 0.12},  # TUNING (not in GDD)
+			{"wheel_damage": 0.18, "wheel_life": 0.18},  # TUNING (not in GDD)
+			{"wheel_damage": 0.24, "wheel_life": 0.24},  # TUNING (not in GDD)
+			{"wheel_damage": 0.30, "wheel_life": 0.30},  # TUNING (not in GDD)
+		],
+	},
+	# The Celestial Host's counter-passive Smoked Glass (owner-approved
+	# proposal: "Hallowed Light burns summons for half"; unlocked by the Wheel
+	# of Thrones achievement The Wheel Breaks, owner answer Nov 9, 2026: the
+	# Host's other achievement; offered only on the Host through its card row's
+	# "act"). The foundation's hook reads it: HostRules.smoked_glass_mult() (x
+	# the Light's burn on summons, 1 - burn_cut, in HallowedLight._burn()).
+	"smoked_glass": {
+		"display_name": "Smoked Glass",  # Owner-approved proposal
+		"icon": "smoked_glass",
+		"description": "Your dead look on heaven through smoked glass: Hallowed Light burns them for less.",
+		"labels": {"burn_cut": ["Light's burn on your summons", "neg_pct"]},
+		"act": 13,  # Owner-approved: the act's counter-passives are offered only in this act (Unlocks.act_allows(); temporary number, the reorder renumbers)
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"burn_cut": 0.1},  # TUNING (not in GDD)
+			{"burn_cut": 0.2},  # TUNING (not in GDD)
+			{"burn_cut": 0.3},  # TUNING (not in GDD)
+			{"burn_cut": 0.4},  # TUNING (not in GDD)
+			{"burn_cut": 0.5},  # Owner-approved proposal: "burns summons for half" at full
 		],
 	},
 }

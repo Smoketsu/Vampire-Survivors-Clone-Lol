@@ -464,7 +464,9 @@ const ACHIEVEMENT_ORDER := ["bone_legion", "heretics_bane", "dread_sovereign", "
 	# --- Act XII (temporary number): the Hall of Two Truths ---
 	"a_light_heart",
 	# --- Act XIII (temporary number): the Silver Stair ---
-	"without_sin"]
+	"without_sin",
+	# --- Act XIII (temporary number): the Wheel of Thrones ---
+	"the_wheel_breaks"]
 
 ## Achievement definitions (GDD §9.4 "Example Achievement Unlocks"). Each
 ## achievement is tracked and recorded in the save and pays a one-time Soul
@@ -807,6 +809,17 @@ const ACHIEVEMENTS := {
 	# answer, Nov 9, 2026).
 	"without_sin": {"display_name": "Without Sin", "description": "Slay Seraiel on the Silver Stair without the scales of Judgment ever passing their first third",
 		"stat": "without_sin_runs", "goal": 1, "unlock": "The Absolution passive", "bounty": 300},  # Owner-approved proposal; bounty TUNING (not in GDD) as No Jars Left
+	# --- Act XIII (temporary number): the Wheel of Thrones ---
+	# The Host's achievement "The Wheel Breaks" (owner-approved proposal: "beat
+	# the Throne by its core alone"): a Wheel of Thrones run in which the Throne
+	# fell to a blow on its open Core with at least ThroneData.WHEEL_BREAKS_SHARE
+	# of its health lost while the Core was open (own reading of "alone": the
+	# rims can be chipped; WheelOfThronesDirector sets the run stat
+	# wheel_of_thrones_wheel_breaks; MetaProgress counts the runs, lifetime
+	# wheel_breaks_runs). It unlocks the counter-passive Smoked Glass (owner
+	# answer, Nov 9, 2026: the Host's other achievement).
+	"the_wheel_breaks": {"display_name": "The Wheel Breaks", "description": "Break the Throne by its open Core, with most of its health lost while the Core was open",
+		"stat": "wheel_breaks_runs", "goal": 1, "unlock": "The Smoked Glass passive", "bounty": 300},  # Owner-approved proposal; bounty TUNING (not in GDD) as Without Sin
 }
 
 # --- Content wave 2: B. Achievement rewards ---

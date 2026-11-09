@@ -56,6 +56,11 @@
 ## those obstacles (_fixed_obstacle(); at most one per cell, each at least
 ## ArenaData.CELL_MARGIN from its cell's edges) instead of the hashed scatter.
 ## Without a deck and a fixed list (every other stage) nothing here changes.
+## Act XIII, the Wheel of Thrones (GDD §15.0 "The Wheel of Thrones (Act XIII
+## phase 2)"): when a WheelOfThronesDirector is set as `wheel`, resolve_all()
+## ends with wheel.contain_all(): its turning crystal rings are MOVING WALLS
+## with gaps (bodies put back on their side, sliding toward the gaps). Null on
+## every other stage, so nothing changes there.
 class_name Arena
 extends Node2D
 
@@ -134,6 +139,10 @@ var citadel: CitadelDirector = null
 ## The city-block layout (CityBlocks; created in _ready() when the stage's zone
 ## layout has "blocks", null on every other stage): see the header.
 var city_blocks: CityBlocks = null
+# --- Act XIII (temporary number): the Wheel of Thrones ---
+## The turning spheres' director (set by WheelOfThronesDirector, null on every
+## other stage): its crystal rings are moving walls (see the header).
+var wheel: WheelOfThronesDirector = null
 
 
 func _ready() -> void:
@@ -490,6 +499,8 @@ func resolve_all(delta: float) -> void:
 		citadel.contain_all()  # Act III, the Iron Citadel: the Shield Gate walls.
 	if game.deck != null:
 		game.deck.contain_all()  # Act X, the Black Tide: the rail is the edge of the world (and drowns).
+	if wheel != null:
+		wheel.contain_all(delta)  # Act XIII, the Wheel of Thrones: the turning spheres' moving walls.
 
 
 # --- Act VIII: the Last Line ---

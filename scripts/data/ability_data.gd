@@ -130,7 +130,9 @@ const SPELL_ORDER := ["shadow_bolt", "orb_shield", "shadow_blast",
 	# --- Act XII (temporary number): the Hall of Two Truths ---
 	"feathers_verdict",
 	# --- Act XIII (temporary number): the Silver Stair ---
-	"flaming_sword"]
+	"flaming_sword",
+	# --- Act XIII (temporary number): the Wheel of Thrones ---
+	"wheel_of_eyes"]
 
 ## Spell definitions.
 ##   display_name — UI name.
@@ -1204,6 +1206,30 @@ const SPELLS := {
 			{"damage": 37.0, "arc": 150.0, "radius": 130.0, "cooldown": 2.0},  # TUNING (not in GDD)
 			{"damage": 45.0, "arc": 160.0, "radius": 138.0, "cooldown": 1.9},  # TUNING (not in GDD)
 			{"damage": 54.0, "arc": 170.0, "radius": 145.0, "cooldown": 1.8},  # TUNING (not in GDD) Burning Eye Lv5 52 / 2.2 s (a longer, narrower beam)
+		],
+	},
+	# --- Act XIII (temporary number): the Wheel of Thrones ---
+	# Wheel of Eyes (GDD §15.0 "Wheel of Eyes, Ophanim, All-Seeing and the
+	# Blind Saint"; owner-approved proposal: "a burning wheel rolls out in a
+	# line and rebounds off walls"; unlocked by slaying the Throne, then offered
+	# on every stage). Every `cooldown` s, a foe in range, `count` burning
+	# wheels roll toward the nearest foe at `speed` px/s for `life` s, `radius`
+	# px wide (spell area widens them), striking every foe under them for
+	# `damage` (once each 0.5 s a wheel) and rebounding off obstacles and the
+	# edge of the sight. Logic: WheelOfEyes; fixed rules: WheelOfEyesData. A
+	# roaming area spell that keeps returning across the ring's front.
+	"wheel_of_eyes": {
+		"display_name": "Wheel of Eyes",  # Owner-approved proposal
+		"icon": "wheel_of_eyes",
+		"description": "A burning wheel rolls out at the nearest foe and rebounds off every wall, cutting all it rolls over.",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Wheel damage", "count": "Wheels", "radius": "Size (px)", "life": "Rolls for (s)", "cooldown": "Cooldown (s)"},
+		"levels": [
+			{"damage": 16.0, "count": 1, "speed": 230.0, "life": 2.6, "radius": 16.0, "cooldown": 2.6},  # TUNING (not in GDD) owner-approved proposal: "a burning wheel"
+			{"damage": 20.0, "count": 1, "speed": 235.0, "life": 2.8, "radius": 17.0, "cooldown": 2.5},  # TUNING (not in GDD)
+			{"damage": 24.0, "count": 2, "speed": 240.0, "life": 2.8, "radius": 17.0, "cooldown": 2.5},  # TUNING (not in GDD)
+			{"damage": 29.0, "count": 2, "speed": 245.0, "life": 3.0, "radius": 18.0, "cooldown": 2.3},  # TUNING (not in GDD)
+			{"damage": 34.0, "count": 2, "speed": 250.0, "life": 3.2, "radius": 20.0, "cooldown": 2.1},  # TUNING (not in GDD) about Flaming Sword's Lv5 damage a second, spread over the field
 		],
 	},
 }

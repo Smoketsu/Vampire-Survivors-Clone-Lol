@@ -457,6 +457,12 @@
 ##                        the Stair's steps and low cloud banks, Without Sin,
 ##                        the "cherub_gate" event); ground "silver_stair" is
 ##                        its SilverStairGround (four zone floors).
+## --- Act XIII (temporary number): the Wheel of Thrones ---
+##   wheel_of_thrones   — WheelOfThronesDirector config
+##                        (WheelOfThronesStage.SPHERES: the turning spheres'
+##                        crystal rings per zone, the "spheres_dominion" event,
+##                        The Wheel Breaks); ground "wheel_of_thrones" is its
+##                        WheelOfThronesGround (four zone floors).
 ## --- Act XIV (temporary number): the Age of Titans ---
 ##   primeval           — true: the Age of Titans' shared rules
 ##                        (PrimevalRules as Game.primeval: Packs, Herds,

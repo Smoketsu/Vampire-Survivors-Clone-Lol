@@ -138,6 +138,11 @@ const SOUNDS := {
 	"seraiel_sword": "power_lunge",  # Host pack (reused): Seraiel's sword sweep.
 	"gate_raise": "verdict",  # Host pack (reused): the Gate's walls of light rise (a deep struck bell).
 	"trial": "scales_tip",  # Host pack (reused): Seraiel's Trial tips the scales.
+	# --- Act XIII (temporary number): the Wheel of Thrones ---
+	"ophan_roll": "power_lunge",  # Host pack (reused): an Ophan sets off rolling.
+	"sphere_turn": "halo_regrow",  # Host pack (reused): a crystal sphere comes turning in (a rising shimmer).
+	"throne_roll": "pillar_fall",  # Host pack (reused): the Throne rolls (a white roar).
+	"throne_core": "judge_slain",  # Host pack (reused): the wheels open on the burning eye (glass ringing).
 }
 
 # --- The counter-passives (phase 2 builds them; HostRules' hooks read them) ----------------

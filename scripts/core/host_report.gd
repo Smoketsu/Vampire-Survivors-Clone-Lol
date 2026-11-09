@@ -20,7 +20,8 @@
 ##   host stage:      the Host stage itself (stub status, boss, Soul Ash, the
 ##                    Reckoning)
 ## Phase 2 adds one line per stage system here (each stage in its own block):
-## the Silver Stair's are SilverStairReport's.
+## the Silver Stair's are SilverStairReport's, the Wheel of Thrones'
+## WheelOfThronesReport's.
 ## Read-only: it never changes the run.
 class_name HostReport
 extends RefCounted
@@ -55,6 +56,8 @@ static func print_lines(game: Game, st: Dictionary) -> void:
 	# Phase 2: each Host stage's own lines go here (its stage, kinds and boss).
 	# --- Act XIII (temporary number): the Silver Stair --- (its stage, the Cherubs, Seraiel; SilverStairReport)
 	SilverStairReport.stage_lines(game, st)
+	# --- Act XIII (temporary number): the Wheel of Thrones --- (its stage, the Ophans and the Dominion, the Throne; WheelOfThronesReport)
+	WheelOfThronesReport.stage_lines(game, st)
 
 
 ## The "judgment" line (Judgment).

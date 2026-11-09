@@ -1771,6 +1771,8 @@ func finish(summary: Dictionary) -> void:
 	TwoTruthsReport.item_lines(game, st)  # Feather's Verdict, Heavy Heart, the Ushabti Sentinel, Answering Words (only when used; the stage's own lines are DynastyReport's).
 	# --- Act XIII (temporary number): the Silver Stair ---
 	SilverStairReport.item_lines(game, st)  # Flaming Sword, Fallen Light, Absolution (only when taken; the stage's own lines are HostReport's).
+	# --- Act XIII (temporary number): the Wheel of Thrones ---
+	WheelOfThronesReport.item_lines(game, st)  # Wheel of Eyes, All-Seeing, Smoked Glass (only when taken; the stage's own lines are HostReport's).
 	if game.enemies.boss is BossSeraphine:
 		print("[autotest] seraphine: %s" % BossSeraphine.summary_line(st))
 	var fired := game.enemies.stage.fired

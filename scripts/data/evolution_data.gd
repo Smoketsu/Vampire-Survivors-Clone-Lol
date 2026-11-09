@@ -128,7 +128,9 @@ const ORDER := ["void_barrage", "eclipse_ward", "abyssal_detonation",
 	# --- Act XII (temporary number): the Hall of Two Truths ---
 	"heart_devoured",
 	# --- Act XIII (temporary number): the Silver Stair ---
-	"sword_at_the_gate"]
+	"sword_at_the_gate",
+	# --- Act XIII (temporary number): the Wheel of Thrones ---
+	"ophanim"]
 
 ## Evolution definitions.
 ##   base         — spell id that evolves (AbilityData.SPELLS key).
@@ -1030,6 +1032,25 @@ const EVOLUTIONS := {
 		"stats": {
 			"damage": 72.0, "arc": 360.0, "radius": 165.0, "cooldown": 1.7,  # TUNING (not in GDD) a full circle
 			"echo_share": 0.5, "echo_delay": 0.3,  # TUNING (not in GDD) the evolution flag: share of the damage the way back strikes, s after the first sweep
+		},
+	},
+	# --- Act XIII (temporary number): the Wheel of Thrones ---
+	# Ophanim (GDD §15.0 "Wheel of Eyes, Ophanim, All-Seeing and the Blind
+	# Saint"; owner-approved proposal "Wheel of Eyes -> Ophanim (+
+	# All-Seeing)"): Wheel of Eyes + All-Seeing (a NEW passive, owner rule: at
+	# Lv 5). Own decision on its kit: three larger wheels within wheels, and
+	# every rebound FLARES: every foe within flare_radius px of the wall takes
+	# flare_share of the damage. Detected by the "flare_share" key.
+	"ophanim": {
+		"base": "wheel_of_eyes",
+		"passive": "all_seeing",
+		"display_name": "Ophanim",  # Owner-approved proposal
+		"icon": "ophanim",
+		"description": "Three great wheels within wheels roll out, and they flare at every wall they rebound from.",
+		"labels": {"damage": "Wheel damage", "count": "Wheels", "radius": "Size (px)", "cooldown": "Cooldown (s)", "flare_share": "Flare damage"},
+		"stats": {
+			"damage": 46.0, "count": 3, "speed": 260.0, "life": 3.6, "radius": 26.0, "cooldown": 2.0,  # TUNING (not in GDD) three great wheels
+			"flare_share": 0.6, "flare_radius": 60.0,  # TUNING (not in GDD) the evolution flag: share of the damage a rebound's flare strikes, px round the wall
 		},
 	},
 }

@@ -478,6 +478,11 @@ var two_truths: TwoTruthsDirector = null
 ## Sin, the Cherub of the Gate; StageRegistry "silver_stair"; null on every
 ## other stage).
 var silver_stair: SilverStairDirector = null
+# --- Act XIII (temporary number): the Wheel of Thrones ---
+## The Wheel of Thrones' mechanics (the turning spheres' moving walls, the
+## Dominion of the Spheres, The Wheel Breaks; StageRegistry "wheel_of_thrones";
+## null on every other stage).
+var wheel_of_thrones: WheelOfThronesDirector = null
 ## Sanctum kit bookkeeping: recent deaths, Confessor revivals, danger hints.
 var rites: CovenantRites
 ## The living miniboss shown on the HUD's miniboss bar (the Cathedral
@@ -742,6 +747,12 @@ func _ready() -> void:
 		silver_stair.game = game
 		silver_stair.config = stage_def["silver_stair"]
 		add_child(silver_stair)  # The Silver Stair's director.
+	# --- Act XIII (temporary number): the Wheel of Thrones ---
+	if not (stage_def.get("wheel_of_thrones", {}) as Dictionary).is_empty():
+		wheel_of_thrones = WheelOfThronesDirector.new()
+		wheel_of_thrones.game = game
+		wheel_of_thrones.config = stage_def["wheel_of_thrones"]
+		add_child(wheel_of_thrones)  # The Wheel of Thrones' director.
 
 
 # =====================================================================================
@@ -922,6 +933,9 @@ func step(delta: float) -> void:
 	# --- Act XIII (temporary number): the Silver Stair ---
 	if silver_stair != null:
 		silver_stair.step(delta)  # The Stair's steps and banks, Without Sin, the Cherub of the Gate.
+	# --- Act XIII (temporary number): the Wheel of Thrones ---
+	if wheel_of_thrones != null:
+		wheel_of_thrones.step(delta)  # The turning spheres, the Dominion of the Spheres, The Wheel Breaks.
 
 
 ## The Archive kinds' world hazards (ArchiveHazards), created on first use.
@@ -1107,6 +1121,9 @@ func objective_text() -> String:
 	# --- Act XIII (temporary number): the Silver Stair ---
 	if silver_stair != null and silver_stair.objective_override() != "":
 		return silver_stair.objective_override()  # The Cherub of the Gate.
+	# --- Act XIII (temporary number): the Wheel of Thrones ---
+	if wheel_of_thrones != null and wheel_of_thrones.objective_override() != "":
+		return wheel_of_thrones.objective_override()  # The Dominion of the Spheres.
 	if boss != null and not boss.active:
 		return String(boss_info["dead_objective"])
 	return segments[segment_index]["objective"]
@@ -1432,6 +1449,12 @@ func _run_event(ev: Dictionary) -> void:
 				silver_stair.start_event(ev)
 			game.stat_add("wave_events", 1.0)
 			return  # The Silver Stair's miniboss (SilverStairDirector).
+		# --- Act XIII (temporary number): the Wheel of Thrones ---
+		"spheres_dominion":
+			if wheel_of_thrones != null:
+				wheel_of_thrones.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return  # The Wheel of Thrones' miniboss (WheelOfThronesDirector).
 	show_banner(ev["banner"])
 	var groups: Array = ev["groups"]
 	if game.shogunate != null:

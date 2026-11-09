@@ -27,6 +27,10 @@
 ##   cherub       — the guardians (no sex, a creature), an elite: four faces,
 ##                  four wings full of eyes and a flaming sword that SWEEPS
 ##                  ALL AROUND IT (CherubKit, row "sword"); GRACE.
+## Added by the Wheel of Thrones (phase 2, its block at the end):
+##   ophan        — the guardians (no sex, a wheel), a heavy: a burning wheel
+##                  within a wheel that ROLLS STRAIGHT THROUGH THE RING, then
+##                  turns (OphanKit, row "roll"); GRACE.
 ## The Reckoning, the Last Trumpet, has no kind of its own: its heavy is the
 ## Dominion (RECKONING_KIND) with the shared kinds as companions.
 ## Each stage's own kinds live in its own file (SilverStairEnemyData,
@@ -64,6 +68,12 @@
 ##              for one full circle), turns (full circles a sweep), reach
 ##              (px), damage_summon, damage_player (per body a pass, before
 ##              the time scaling).
+##   roll     — Dictionary: the Ophan's roll (OphanKit): first (s after it
+##              arrives), every (s between two rolls), trigger (px to its
+##              target), windup (s of telegraph), speed (px/s), length (px),
+##              turn (s it stands turning after a roll), tick (s between two
+##              strikes on the same bodies), damage_summon, damage_player
+##              (per strike, before the time scaling).
 ##   miniboss — true: the stage miniboss (the HUD bar, the chest); with
 ##              reward_xp / reward_crystals, its XP burst (CherubKit).
 ##   fodder   — true: fodder (reports).
@@ -94,6 +104,9 @@ const JUDGE: String = "judge"
 # --- Act XIII (temporary number): the Silver Stair ---
 ## Kind id of the Cherub (the guardians; a shared row, the Silver Stair's block).
 const CHERUB: String = "cherub"
+# --- Act XIII (temporary number): the Wheel of Thrones ---
+## Kind id of the Ophan (the guardians; a shared row, the Wheel of Thrones' block).
+const OPHAN: String = "ophan"
 ## Sprite folder of the Host's kinds (assets/sprites/host/).
 const SPRITE_DIR: String = "host/"
 
@@ -369,4 +382,49 @@ const ENEMIES := {
 			"damage_player": 8.0,  # TUNING (not in GDD) before the time scaling
 		},
 	},  # The Cherub.
+	# --- Act XIII (temporary number): the Wheel of Thrones ---
+	# The guardians (a wheel, no sex), a heavy: a burning silver wheel within a
+	# wheel, its rims covered in eyes (owner-approved proposal: "Heavy | A
+	# burning wheel within a wheel that rolls straight through the ring, then
+	# turns | Bone Wall; Grave Step"). OphanKit: every roll.every s, once its
+	# target is within roll.trigger px, it marks its line for roll.windup s,
+	# then ROLLS STRAIGHT at roll.speed px/s for roll.length px, through the
+	# ring (summons do not stop it; obstacles and Bone Wall segments push it
+	# out like any enemy), striking every summon and necromancer under its rim
+	# every roll.tick s, then stands roll.turn s turning toward its next line.
+	"ophan": {
+		"display_name": "Ophan",
+		"max_hp": 170.0,  # TUNING (not in GDD) a heavy (the Cherub 200; Grace's halo on top)
+		"move_speed": 40.0,  # TUNING (not in GDD) px/s between two rolls
+		"damage": 8.0,  # TUNING (not in GDD) a blow of the rim in reach, before the time scaling
+		"attack_interval": 1.4,  # TUNING (not in GDD) s
+		"attack_range": 8.0,  # TUNING (not in GDD) px
+		"radius": 14.0,  # TUNING (not in GDD) px (~52 px sprite)
+		"armor": 0.25,  # TUNING (not in GDD) silver rims
+		"xp": 12,  # TUNING (not in GDD)
+		"behavior": "melee",
+		"projectile_speed": 0.0,
+		"undead_damage_mult": 1.0,
+		"heal_amount": 0.0,
+		"heal_interval": 0.0,
+		"heal_radius": 0.0,
+		"target_priority": 0.8,  # TUNING (not in GDD) 0..1
+		"mass": 4.0,  # TUNING (not in GDD)
+		"faction": FACTION,
+		"kit": "ophan",
+		"group": "guardians",
+		"halo": true,  # Owner-approved proposal: Grace (every angel)
+		"roll": {
+			"first": 2.5,  # TUNING (not in GDD) s after it arrives
+			"every": 6.0,  # TUNING (not in GDD) s between two rolls
+			"trigger": 240.0,  # TUNING (not in GDD) px to its target
+			"windup": 0.8,  # TUNING (not in GDD) s of telegraph (its line)
+			"speed": 240.0,  # TUNING (not in GDD) px/s
+			"length": 300.0,  # TUNING (not in GDD) px: "straight through the ring"
+			"turn": 1.0,  # TUNING (not in GDD) s it stands turning after a roll ("then turns")
+			"tick": 0.4,  # TUNING (not in GDD) s between two strikes on the same bodies
+			"damage_summon": 10.0,  # TUNING (not in GDD) per strike, before the time scaling
+			"damage_player": 8.0,  # TUNING (not in GDD) before the time scaling
+		},
+	},  # The Ophan.
 }

@@ -380,6 +380,15 @@ const UNLOCKS := {
 	"flaming_sword": {"type": "spell", "boss": "seraiel", "text": "Slay Seraiel on the Silver Stair to unlock."},  # Owner-approved proposal
 	"fallen_light": {"type": "passive", "boss": "seraiel", "text": "Slay Seraiel on the Silver Stair to unlock."},  # Flaming Sword's paired passive (owner-approved proposal), unlocked with it
 	"absolution": {"type": "passive", "achievement": "without_sin", "text": "Earn Without Sin: slay Seraiel on the Silver Stair with the scales never past their first third."},  # Owner answer (Nov 9, 2026): Without Sin unlocks Absolution
+	# --- Act XIII (temporary number): the Wheel of Thrones ---
+	# The Throne's fall (owner-approved proposal "Rewards": Wheel of Eyes is the
+	# Throne's) with its paired passive, offered on every stage; the stage's
+	# achievement The Wheel Breaks earns the Host's other counter-passive Smoked
+	# Glass (owner answer Nov 9, 2026; offered only in the act through its card
+	# row's "act").
+	"wheel_of_eyes": {"type": "spell", "boss": "throne", "text": "Break the Throne on the Wheel of Thrones to unlock."},  # Owner-approved proposal
+	"all_seeing": {"type": "passive", "boss": "throne", "text": "Break the Throne on the Wheel of Thrones to unlock."},  # Wheel of Eyes' paired passive (owner-approved proposal), unlocked with it
+	"smoked_glass": {"type": "passive", "achievement": "the_wheel_breaks", "text": "Earn The Wheel Breaks: break the Throne by its open Core."},  # Owner answer (Nov 9, 2026): the Host's other achievement unlocks Smoked Glass
 }
 
 ## End-screen plate heading of a newly unlocked item, by type.

@@ -415,6 +415,9 @@ const SPELLS := {
 	# --- Act XIII (temporary number): the Silver Stair ---
 	"flaming_sword": {"every": 2, "clock": "cooldown", "aim": "nearest", "pattern": "fan", "counts": [3, 4, 6], "spread": 24.0, "speed": 300.0,
 		"life": 0.5, "share": 0.3, "pierce": 1, "radius": 3.0, "style": "shard", "color": Color(0.45, 0.95, 0.85)},  # TUNING (not in GDD) a fan of soul-flame shards after every other sweep (FlamingSwordData.FLAME)
+	# --- Act XIII (temporary number): the Wheel of Thrones ---
+	"wheel_of_eyes": {"every": 2, "clock": "cooldown", "aim": "nearest", "pattern": "ring", "counts": [4, 6, 8], "speed": 220.0,
+		"life": 0.5, "share": 0.3, "pierce": 1, "radius": 3.0, "style": "orb", "color": Color(0.45, 0.95, 0.85)},  # TUNING (not in GDD) a ring of soul-fire eyes after every other cast (WheelOfEyesData.FIRE)
 }
 ## Range (px) within which a spell echo looks for its target (no target, no echo).
 const SPELL_RANGE: float = 340.0  # TUNING (not in GDD)

@@ -416,7 +416,9 @@ const HOST_ORDERS: Array[String] = ["dominion", "judge"]
 ## the Ophan; the stage minibosses of the Silver Stair).
 const HOST_GUARDIANS: Array[String] = [
 	# --- Act XIII (temporary number): the Silver Stair ---
-	"cherub", "cherub_of_the_gate"]
+	"cherub", "cherub_of_the_gate",
+	# --- Act XIII (temporary number): the Wheel of Thrones ---
+	"ophan", "dominion_of_the_spheres"]
 ## Host stage bosses (StageRegistry.BOSS_ARRIVALS ids).
 const HOST_BOSSES: Array[String] = ["seraiel", "throne", "voice"]
 # --- Act XIV (temporary number): the Age of Titans ---
@@ -785,6 +787,9 @@ const DESCRIPTIONS: Dictionary = {
 	# --- Act XIII (temporary number): the Silver Stair ---
 	"cherub": "Four faces and four wings full of eyes: its flaming sword sweeps all around it. Stay out of its reach.",  # Owner-approved proposal
 	"cherub_of_the_gate": "The guardian of the Gate of Pearl: its flaming sword turns a full circle every six seconds.",  # Owner-approved proposal (miniboss)
+	# --- Act XIII (temporary number): the Wheel of Thrones ---
+	"ophan": "A burning wheel within a wheel: it marks its line, rolls straight through your ring, then turns. A Bone Wall stops it; step aside.",  # Owner-approved proposal
+	"dominion_of_the_spheres": "A Dominion among the turning spheres: while he stands, every halo in the zone keeps coming back.",  # Owner-approved proposal (miniboss)
 	"seraiel": "Seraiel, Warden of the Gate: an archangel with a flaming sword who splits the way with walls of light.",  # Proposal
 	"throne": "The Throne: a colossal wheel within a wheel, its rims covered in eyes. It rolls, it gazes, and its core burns.",  # Proposal
 	"voice": "The Voice: a six-winged seraph whose face is never seen. When it lowers its wings, your dead stand still.",  # Proposal
@@ -1148,6 +1153,8 @@ const ACHIEVEMENT_ICONS: Dictionary = {
 	"a_light_heart": "ach_a_light_heart",  # TUNING (not in GDD)
 	# --- Act XIII (temporary number): the Silver Stair ---
 	"without_sin": "ach_without_sin",  # TUNING (not in GDD)
+	# --- Act XIII (temporary number): the Wheel of Thrones ---
+	"the_wheel_breaks": "ach_the_wheel_breaks",  # TUNING (not in GDD)
 }
 ## IconGlyph kind drawn when an achievement badge PNG is missing.
 const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
@@ -1229,6 +1236,8 @@ const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
 	"a_light_heart": "feathers_verdict",
 	# --- Act XIII (temporary number): the Silver Stair ---
 	"without_sin": "absolution",
+	# --- Act XIII (temporary number): the Wheel of Thrones ---
+	"the_wheel_breaks": "smoked_glass",
 }
 ## Screen title (TITLE tier).
 const TITLE: String = "Codex"  # TUNING (not in GDD)

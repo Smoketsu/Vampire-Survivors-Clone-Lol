@@ -580,6 +580,9 @@ func _ready() -> void:
 		# --- Act XIII (temporary number): the Silver Stair ---
 		"silver_stair":
 			ground = SilverStairGround.new()  # The Silver Stair's four zone floors (SilverStairStage.ZONES).
+		# --- Act XIII (temporary number): the Wheel of Thrones ---
+		"wheel_of_thrones":
+			ground = WheelOfThronesGround.new()  # The Wheel of Thrones' four zone floors (WheelOfThronesStage.ZONES).
 		_:
 			ground = Ground.new()
 	add_child(ground)

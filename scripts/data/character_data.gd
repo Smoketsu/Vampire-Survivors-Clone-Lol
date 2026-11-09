@@ -116,7 +116,9 @@ const ORDER := ["gravecaller", "umbral_warden", "voidcaller", "bone_oracle", "fa
 	# --- Act XII (temporary number): the Hall of Two Truths ---
 	"pharaohs_shade",
 	# --- Act XIII (temporary number): the Silver Stair ---
-	"fallen_herald"]
+	"fallen_herald",
+	# --- Act XIII (temporary number): the Wheel of Thrones ---
+	"blind_saint"]
 ## The default character (RunConfig, fresh saves, the autotest): today's game.
 const DEFAULT_ID: String = "gravecaller"
 ## Spell level that unlocks a character (owner rule: reach Lv 5 with its spell
@@ -192,6 +194,8 @@ const STAT_LABELS := {
 ##                           lasts; Act XII, temporary)
 ##   sword_reach_bonus       FlamingSword._reach (px more reach on every sweep;
 ##                           Act XIII, temporary)
+##   wheel_radius_bonus      WheelOfEyes._cast (px more radius on every wheel;
+##                           Act XIII, temporary)
 const INNATE_KEYS := ["orb_projectile_destroy", "blast_echo_delay", "blast_echo_damage", "spear_shard_max",
 	"spear_shard_cooldown", "summon_corpses", "grace_share", "grace_targets", "grace_range", "contagion_range",
 	"contagion_duration", "death_mark_slow", "bone_wall_duration", "soul_chains_extra_jumps", "wither_rot",
@@ -263,7 +267,9 @@ const INNATE_KEYS := ["orb_projectile_destroy", "blast_echo_delay", "blast_echo_
 	# --- Act XII (temporary number): the Hall of Two Truths ---
 	"verdict_execute_bonus",
 	# --- Act XIII (temporary number): the Silver Stair ---
-	"sword_reach_bonus"]
+	"sword_reach_bonus",
+	# --- Act XIII (temporary number): the Wheel of Thrones ---
+	"wheel_radius_bonus"]
 
 ## Orbit radius (px) of the Bone Oracle's Ossuary Ward shards around him.
 const SHARD_ORBIT_RADIUS: float = 27.0  # TUNING (not in GDD)
@@ -1246,6 +1252,32 @@ const CHARACTERS := {
 		"stats": {"max_hp": 5.0, "move_speed": 0.03},  # TUNING (not in GDD) a herald's stride: a little quicker
 		"sprite": "player/fallen_herald",
 		"tint": Color(0.80, 0.84, 0.94),  # TUNING (not in GDD) a pale fallen silver over the violet (his art replaces it)
+		"starts_unlocked": false,
+	},
+	# --- Act XIII (temporary number): the Wheel of Thrones ---
+	# The Blind Saint (Wheel of Eyes' character; owner-approved proposal
+	# "Rewards": "The Throne | Wheel of Eyes ... | The Blind Saint (female,
+	# figure style)"; docs/last_acts/PLAN.md: every playable character is a
+	# necromancer of the act's theme, never one of the Host): FEMALE, in the
+	# figure-redesign style (fully clothed): a violet gown, a violet blindfold,
+	# a staff ringed with a bone wheel of closed eyes (art player/blind_saint,
+	# walk and idle strips, docs/host/ART_MANIFEST.md). Wheel of Eyes must be
+	# unlocked (the Throne) before she can be earned, by the usual Lv 5 rule.
+	# Own decision on her innate (the proposal names none): Inner Sight, she
+	# who closed her eyes to the Throne's sees with the wheel's: her wheels are
+	# larger (WheelOfEyes._cast()).
+	"blind_saint": {
+		"display_name": "The Blind Saint",  # Owner-approved proposal
+		"title": "She would not look on the Throne. Now its eyes look for her.",
+		"spell": "wheel_of_eyes",
+		"innate": {
+			"id": "inner_sight", "name": "Inner Sight",
+			"description": "Wheel of Eyes' wheels are 6 px larger.",
+			"values": {"wheel_radius_bonus": 6.0},  # TUNING (not in GDD) px more radius on every wheel
+		},
+		"stats": {"max_hp": -5.0, "spell_area": 0.05},  # TUNING (not in GDD) a frail saint whose sight reaches wide
+		"sprite": "player/blind_saint",
+		"tint": Color(0.86, 0.82, 0.96),  # TUNING (not in GDD) a pale lilac over the violet (her art replaces it)
 		"starts_unlocked": false,
 	},
 }

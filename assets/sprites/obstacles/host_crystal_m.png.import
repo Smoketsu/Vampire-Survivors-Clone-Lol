@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ciycfg0t2kyxu"
-path="res://.godot/imported/host_crystal_v.png-637f20e7f89681a3c2dad993f0740a2b.ctex"
+uid="uid://b4a50sx5vr7xq"
+path="res://.godot/imported/host_crystal_m.png-a6d58b89905ff4f0396aa253c7908b93.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/obstacles/host_crystal_v.png"
-dest_files=["res://.godot/imported/host_crystal_v.png-637f20e7f89681a3c2dad993f0740a2b.ctex"]
+source_file="res://assets/sprites/obstacles/host_crystal_m.png"
+dest_files=["res://.godot/imported/host_crystal_m.png-a6d58b89905ff4f0396aa253c7908b93.ctex"]
 
 [params]
 

@@ -14,8 +14,10 @@
 ##     kind lands in full. Works wherever a Host kind is (a forced --spawn=).
 ##   * step(): THE REGROWTH (the Dominion's: "their halos come back after
 ##     10 s"): every regrow_check s, every halo within a live regrower's
-##     aura_radius that shrugged nothing off for GRACE regrow s is whole again
-##     (its seen kinds forgotten).
+##     aura_radius (its row's regrow_radius when it has one: the Wheel of
+##     Thrones' Dominion of the Spheres, "across the whole zone") that
+##     shrugged nothing off for GRACE regrow s is whole again (its seen kinds
+##     forgotten).
 ## Never touches the army: summons get no act-only rule. Determinism: game
 ## time only (no RNG).
 class_name Grace
@@ -100,9 +102,12 @@ func step(delta: float) -> void:
 	for r in regrowers:
 		if not r.active:
 			continue
-		game.enemy_grid.query(r.position, r.aura_radius, _tmp)
+		var reach := r.aura_radius  # px of the regrowth round him (his aura).
+		if r.kit != null:
+			reach = float(r.kit.d.get("regrow_radius", reach))  # The Wheel of Thrones' miniboss: the whole zone.
+		game.enemy_grid.query(r.position, reach, _tmp)
 		for e: Enemy in _tmp:
-			if not e.active or e.position.distance_to(r.position) > r.aura_radius:
+			if not e.active or e.position.distance_to(r.position) > reach:
 				continue
 			var k := e.kit as HostKit
 			if k == null or k.seen.is_empty() or game.elapsed - k.last_absorb < wait:

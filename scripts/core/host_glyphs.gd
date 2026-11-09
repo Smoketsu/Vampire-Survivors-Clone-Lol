@@ -31,6 +31,14 @@ static func draw_enemy(ci: CanvasItem, kind: String, o: Vector2, r: float, flash
 		# --- Act XIII (temporary number): the Silver Stair ---
 		"cherub", "cherub_of_the_gate":
 			_cherub(ci, o, r, flash)
+		# --- Act XIII (temporary number): the Wheel of Thrones ---
+		"ophan":
+			_ophan(ci, o, r, flash)
+		"dominion_of_the_spheres":
+			for k in 3:
+				SpriteBank.draw_disc(ci, o + Vector2((float(k) - 1.0) * r * 0.9, r * 0.6), r * 0.22, Glyphs._c(Color(Palette.HOST_CERULEAN, 0.6), flash))  # Crystal rings about him.
+			_angel(ci, o, r, flash, Palette.HOST_SILVER, Palette.HOST_CERULEAN, false)
+			ci.draw_rect(Rect2(o + Vector2(r * 0.55, -r * 1.1), Vector2(2.0, r * 1.8)), Glyphs._c(Palette.HOST_STARLIGHT, flash))  # The sceptre.
 		"lesser_light":
 			_light(ci, o, r, flash)
 		"power":
@@ -74,6 +82,20 @@ static func _cherub(ci: CanvasItem, o: Vector2, r: float, flash: bool) -> void:
 	for f: Vector2 in [Vector2(0.0, -0.3), Vector2(0.3, 0.0), Vector2(0.0, 0.3), Vector2(-0.3, 0.0)]:
 		SpriteBank.draw_disc(ci, o + f * r, r * 0.13, Glyphs._c(Palette.HOST_STARLIGHT, flash))  # The four faces.
 	ci.draw_rect(Rect2(o + Vector2(r * 0.7, -r * 1.1), Vector2(2.5, r * 1.6)), Glyphs._c(Palette.HOST_STARLIGHT, flash))  # The flaming sword.
+
+
+# --- Act XIII (temporary number): the Wheel of Thrones ---
+## An Ophan: a silver wheel within a wheel, its rims marked with eyes, a
+## cerulean fire between them (disc textures only; its roll's turning eyes are
+## OphanKit's).
+static func _ophan(ci: CanvasItem, o: Vector2, r: float, flash: bool) -> void:
+	SpriteBank.draw_disc(ci, o, r * 1.05, Glyphs._c(INK, flash))
+	SpriteBank.draw_disc(ci, o, r * 0.98, Glyphs._c(Color(Palette.HOST_CERULEAN, 0.7), flash))
+	SpriteBank.draw_disc(ci, o, r * 0.6, Glyphs._c(INK, flash))
+	SpriteBank.draw_disc(ci, o, r * 0.5, Glyphs._c(Palette.HOST_SILVER, flash))
+	for i in 8:
+		SpriteBank.draw_disc(ci, o + Vector2.from_angle(TAU * float(i) / 8.0) * r * 0.8, r * 0.1, Glyphs._c(Palette.HOST_STARLIGHT, flash))  # Eyes on the rim.
+	SpriteBank.draw_disc(ci, o, r * 0.14, Glyphs._c(Palette.HOST_CERULEAN, flash))
 
 
 ## An angel: a robed body, two pairs of wings behind it, a mirror-mask head;
