@@ -53,7 +53,9 @@ const TABS: Array = [["feats", "Achievements"], ["spells", "Spells"], ["summons"
 		# --- Act XII (temporary number): the Necropolis Dynasty ---
 		["dynasty", "Dynasty"],
 		# --- Act XIII (temporary number): the Celestial Host ---
-		["host", "Host"]]  # TUNING (not in GDD) Act XIII (temporary) the Host's; Act II adds the Ancient Eye tab, Act III the Electronic Empire's, Act IV the Olympian Republic's, Act V the Shogunate's, Act VI the Inferno's, Act VII the Sanguine Court's, Act VIII the Last Line's, Act IX the Concord's, Act XII (temporary) the Dynasty's
+		["host", "Host"],
+		# --- Act XIV (temporary number): the Age of Titans ---
+		["primeval", "Titans"]]  # TUNING (not in GDD) Act XIV (temporary) the Titans'; Act XIII (temporary) the Host's; Act II adds the Ancient Eye tab, Act III the Electronic Empire's, Act IV the Olympian Republic's, Act V the Shogunate's, Act VI the Inferno's, Act VII the Sanguine Court's, Act VIII the Last Line's, Act IX the Concord's, Act XII (temporary) the Dynasty's
 
 ## Summon classes shown on the Summons page (UnitData ids, card order). The
 ## Profane Bishop is a merge evolution, so it sits with the evolutions.
@@ -412,6 +414,23 @@ const HOST_CHOIR: Array[String] = ["choir_angel", "herald"]
 const HOST_ORDERS: Array[String] = ["dominion", "judge"]
 ## Host stage bosses (StageRegistry.BOSS_ARRIVALS ids).
 const HOST_BOSSES: Array[String] = ["seraiel", "throne", "voice"]
+# --- Act XIV (temporary number): the Age of Titans ---
+## The Age of Titans (GDD §15.0 "The Age of Titans foundation (phase 1)"; the
+## Titans tab), GROUPED BY GROUP (PrimevalRulesData.GROUPS): the swarms, the
+## hunters, the herds, the fliers, the titans, then its stage bosses
+## (StageRegistry.BOSS_ARRIVALS ids). Each Titans stage adds its own as it is
+## built (phase 2).
+const PRIMEVAL_SWARM: Array[String] = ["scuttler"]
+## The hunters (group "hunters": the pack predators and the spitters).
+const PRIMEVAL_HUNTERS: Array[String] = ["razorclaw", "frill_spitter"]
+## The herds (group "herds": the neutral giants).
+const PRIMEVAL_HERDS: Array[String] = ["longneck", "duckbill"]
+## The fliers (group "fliers").
+const PRIMEVAL_FLIERS: Array[String] = ["skyraider"]
+## The titans (group "titans").
+const PRIMEVAL_TITANS: Array[String] = ["tyrant"]
+## Titans stage bosses (StageRegistry.BOSS_ARRIVALS ids).
+const PRIMEVAL_BOSSES: Array[String] = ["scarmaw", "ironbrow", "gravejaw"]
 
 ## Section headers of each page: page id -> [[section id, header text], ...].
 const SECTIONS: Dictionary = {
@@ -446,6 +465,9 @@ const SECTIONS: Dictionary = {
 	# --- Act XIII (temporary number): the Celestial Host (grouped by group) ---
 	"host": [["host_lights", "Lesser Lights"], ["host_soldiers", "Soldiers of Light"], ["host_choir", "The Choir"],
 		["host_orders", "The High Orders"], ["host_bosses", "Bosses"]],  # TUNING (not in GDD) Act XIII
+	# --- Act XIV (temporary number): the Age of Titans (grouped by group) ---
+	"primeval": [["primeval_swarm", "Swarms"], ["primeval_hunters", "Hunters"], ["primeval_herds", "Herds"],
+		["primeval_fliers", "Fliers"], ["primeval_titans", "Titans"], ["primeval_bosses", "Bosses"]],  # TUNING (not in GDD) Act XIV
 }
 
 ## One-sentence descriptions of the Covenant (the enemy data has none),
@@ -758,6 +780,17 @@ const DESCRIPTIONS: Dictionary = {
 	"seraiel": "Seraiel, Warden of the Gate: an archangel with a flaming sword who splits the way with walls of light.",  # Proposal
 	"throne": "The Throne: a colossal wheel within a wheel, its rims covered in eyes. It rolls, it gazes, and its core burns.",  # Proposal
 	"voice": "The Voice: a six-winged seraph whose face is never seen. When it lowers its wings, your dead stand still.",  # Proposal
+	# --- Act XIV (temporary number): the Age of Titans ---
+	"scuttler": "A tiny, fast, chittering beast. They come in swarms of twelve.",  # Proposal
+	"razorclaw": "A feathered hunter that runs in packs. The pack circles, holds, then rushes from the flanks: kill the alpha and it charges in blind.",  # Proposal (Packs)
+	"frill_spitter": "A frilled lizard that spits venom from range. Kill it on approach.",  # Proposal
+	"longneck": "A giant of the herds. It never attacks, but hurt it and the whole herd stampedes. Its bones rise as a Fossil Giant for you.",  # Proposal (Herds)
+	"duckbill": "A smaller herd beast whose crest horn hears a fight from far off and sends its herd running.",  # Proposal (Herds)
+	"skyraider": "A pterosaur thief. It dives on your crystals and flies them to its nest: shoot it down and the pile drops.",  # Proposal (Scavengers)
+	"tyrant": "A tyrant of the old world, all teeth and hunger. When the sky burns, they roam.",  # Proposal
+	"scarmaw": "Scarmaw, the Great Raptor: the alpha of every pack in the basin. She hunts from the ferns.",  # Proposal
+	"ironbrow": "Old Ironbrow, the Horned Titan: he leads the stampede himself, and his charge breaks rock.",  # Proposal
+	"gravejaw": "Old Gravejaw, the Tyrant King: his roar calls every beast on the map, and he hunts only you.",  # Proposal
 }
 
 ## Sprite key of an entry whose art is not "<category folder>/<id>":
@@ -866,6 +899,13 @@ const LOCKED_HINT: Dictionary = {
 	"host_choir": "Slay one to record it.",  # TUNING (not in GDD) Act XIII choir
 	"host_orders": "Slay one to record it.",  # TUNING (not in GDD) Act XIII orders
 	"host_bosses": "Face it to record it.",  # TUNING (not in GDD) Act XIII bosses
+	# --- Act XIV (temporary number): the Age of Titans ---
+	"primeval_swarm": "Slay one to record it.",  # TUNING (not in GDD) Act XIV
+	"primeval_hunters": "Slay one to record it.",  # TUNING (not in GDD) Act XIV hunters
+	"primeval_herds": "Slay one to record it.",  # TUNING (not in GDD) Act XIV herds
+	"primeval_fliers": "Slay one to record it.",  # TUNING (not in GDD) Act XIV fliers
+	"primeval_titans": "Slay one to record it.",  # TUNING (not in GDD) Act XIV titans
+	"primeval_bosses": "Face it to record it.",  # TUNING (not in GDD) Act XIV bosses
 	"evolution": "Undiscovered.",  # TUNING (not in GDD) owner rule: no hint
 }
 ## Name shown for a locked entry.
@@ -938,6 +978,13 @@ const TAGS: Dictionary = {
 	"host_choir": "The choir",  # TUNING (not in GDD) Act XIII
 	"host_orders": "The high orders",  # TUNING (not in GDD) Act XIII
 	"host_bosses": "Stage boss",  # TUNING (not in GDD) Act XIII bosses
+	# --- Act XIV (temporary number): the Age of Titans ---
+	"primeval_swarm": "Swarm",  # TUNING (not in GDD) Act XIV
+	"primeval_hunters": "Hunter",  # TUNING (not in GDD) Act XIV
+	"primeval_herds": "Herd beast",  # TUNING (not in GDD) Act XIV
+	"primeval_fliers": "Flier",  # TUNING (not in GDD) Act XIV
+	"primeval_titans": "Titan",  # TUNING (not in GDD) Act XIV
+	"primeval_bosses": "Stage boss",  # TUNING (not in GDD) Act XIV bosses
 }
 
 # --- Layout (layout px at 1280x720; TUNING, not in GDD) -----------------------------
@@ -1219,13 +1266,16 @@ static func is_known(cat: String, id: String) -> bool:
 					or DYNASTY_DEAD.has(id) or DYNASTY_BEASTS.has(id) or DYNASTY_GUARD.has(id) \
 					or DYNASTY_PRIESTS.has(id) or DYNASTY_STONE.has(id) \
 					or HOST_LIGHTS.has(id) or HOST_SOLDIERS.has(id) or HOST_CHOIR.has(id) \
-					or HOST_ORDERS.has(id)  # Act IV to Act XIII (temporary numbers)
+					or HOST_ORDERS.has(id) \
+					or PRIMEVAL_SWARM.has(id) or PRIMEVAL_HUNTERS.has(id) or PRIMEVAL_HERDS.has(id) \
+					or PRIMEVAL_FLIERS.has(id) or PRIMEVAL_TITANS.has(id)  # Act IV to Act XIV (temporary numbers)
 		BOSS:
 			return BOSSES.has(id) or EYE_BOSSES.has(id) or EMPIRE_BOSSES.has(id) or PANTHEON_BOSSES.has(id) \
 					or SHOGUNATE_BOSSES.has(id) or INFERNO_BOSSES.has(id) or COURT_BOSSES.has(id) \
 					or CITY_BOSSES.has(id) or CONCORD_BOSSES.has(id) or CORSAIR_BOSSES.has(id) \
 					or NORSE_BOSSES.has(id) or DYNASTY_BOSSES.has(id) \
-					or HOST_BOSSES.has(id)  # (Act XIII, temporary, last)
+					or HOST_BOSSES.has(id) \
+					or PRIMEVAL_BOSSES.has(id)  # (Act XIV, temporary, last)
 	return false
 
 
@@ -1252,13 +1302,16 @@ static func total(cat: String) -> int:
 					+ DYNASTY_DEAD.size() + DYNASTY_BEASTS.size() + DYNASTY_GUARD.size() \
 					+ DYNASTY_PRIESTS.size() + DYNASTY_STONE.size() \
 					+ HOST_LIGHTS.size() + HOST_SOLDIERS.size() + HOST_CHOIR.size() \
-					+ HOST_ORDERS.size()  # Act IV to Act XIII (temporary numbers)
+					+ HOST_ORDERS.size() \
+					+ PRIMEVAL_SWARM.size() + PRIMEVAL_HUNTERS.size() + PRIMEVAL_HERDS.size() \
+					+ PRIMEVAL_FLIERS.size() + PRIMEVAL_TITANS.size()  # Act IV to Act XIV (temporary numbers)
 		BOSS:
 			return BOSSES.size() + EYE_BOSSES.size() + EMPIRE_BOSSES.size() + PANTHEON_BOSSES.size() \
 					+ SHOGUNATE_BOSSES.size() + INFERNO_BOSSES.size() + COURT_BOSSES.size() \
 					+ CITY_BOSSES.size() + CONCORD_BOSSES.size() + CORSAIR_BOSSES.size() \
 					+ NORSE_BOSSES.size() + DYNASTY_BOSSES.size() \
-					+ HOST_BOSSES.size()  # (Act XIII, temporary, last)
+					+ HOST_BOSSES.size() \
+					+ PRIMEVAL_BOSSES.size()  # (Act XIV, temporary, last)
 	return 0
 
 
@@ -1306,6 +1359,9 @@ static func enemy_row(id: String) -> Dictionary:
 	var host := EnemyDirector.host_def(id)  # Act XIII (temporary) kinds ({} when none).
 	if not host.is_empty():
 		return host
+	var primeval := EnemyDirector.primeval_def(id)  # Act XIV (temporary) kinds ({} when none).
+	if not primeval.is_empty():
+		return primeval
 	match id:
 		"alaric":
 			return EnemyData.BOSS

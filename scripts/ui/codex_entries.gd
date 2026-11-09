@@ -183,6 +183,15 @@ static func section_entries(section: String) -> Array:
 				var b := _boss(id)
 				b["section"] = section
 				out.append(b)  # Act XIII bosses.
+		# --- Act XIV (temporary number): the Age of Titans (grouped by group) ---
+		"primeval_swarm", "primeval_hunters", "primeval_herds", "primeval_fliers", "primeval_titans":
+			for id: String in _primeval_list(section):
+				out.append(_covenant(id, section))  # Act XIV kinds, by group.
+		"primeval_bosses":
+			for id: String in CodexData.PRIMEVAL_BOSSES:
+				var b := _boss(id)
+				b["section"] = section
+				out.append(b)  # Act XIV bosses.
 	return out
 
 
@@ -326,6 +335,21 @@ static func _host_list(section: String) -> Array[String]:
 	return CodexData.HOST_ORDERS
 
 
+# --- Act XIV (temporary number): the Age of Titans ---
+## The Titans kinds of group section `section` (CodexData.PRIMEVAL_*).
+static func _primeval_list(section: String) -> Array[String]:
+	match section:
+		"primeval_swarm":
+			return CodexData.PRIMEVAL_SWARM
+		"primeval_hunters":
+			return CodexData.PRIMEVAL_HUNTERS
+		"primeval_herds":
+			return CodexData.PRIMEVAL_HERDS
+		"primeval_fliers":
+			return CodexData.PRIMEVAL_FLIERS
+	return CodexData.PRIMEVAL_TITANS
+
+
 static func _covenant(id: String, section: String) -> Dictionary:
 	var d := CodexData.enemy_row(id)
 	var stats: Array = [[_t("hp"), num(float(d.get("max_hp", 0.0)))]]
@@ -360,6 +384,8 @@ static func _covenant(id: String, section: String) -> Dictionary:
 		sprite = "dynasty/" + id  # ...a Necropolis Dynasty kind (Act XII, temporary)...
 	elif not SpriteBank.has(sprite) and SpriteBank.has("host/" + id):
 		sprite = "host/" + id  # ...a Celestial Host kind (Act XIII, temporary)...
+	elif not SpriteBank.has(sprite) and SpriteBank.has("primeval/" + id):
+		sprite = "primeval/" + id  # ...an Age of Titans kind (Act XIV, temporary)...
 	elif not SpriteBank.has(sprite):
 		sprite = "structures/" + id  # ...or a structure.
 	var kills := Meta.codex_kill_count(id)  # Lifetime kills of this kind.

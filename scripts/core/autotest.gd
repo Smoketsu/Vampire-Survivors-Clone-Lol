@@ -306,6 +306,15 @@
 ##     summary adds the "judgment", "hallowed light", "grace", "host kinds",
 ##     "last trumpet" (after 0:00) and (on a Host stage) "host stage" lines
 ##     (HostReport).
+##   * Act XIV (temporary number), the Age of Titans (GDD §15.0 "The Age of
+##     Titans foundation (phase 1)"): --stage=fern_basin|great_plain|last_day,
+##     --spawn= with its kinds (scuttler, razorclaw, frill_spitter, longneck,
+##     duckbill, skyraider, tyrant), --boss=scarmaw|ironbrow|gravejaw. The bot
+##     steps sideways out of a stampede's path and out of the bomb circles
+##     (PrimevalRules.danger_push()). When the Titans' rules ran, the summary
+##     adds the "packs", "herds", "scavengers", "primeval kinds", "stampede of
+##     ash" (after 0:00) and (on a Titans stage) "primeval stage" lines
+##     (PrimevalReport).
 class_name Autotest
 extends Node
 
@@ -1293,6 +1302,8 @@ func _danger_at(pos: Vector2) -> Vector2:
 		danger += game.dynasty.danger_push(pos)  # Act XII (temporary): the Devourer's lanes (null elsewhere).
 	if game.host != null:
 		danger += game.host.danger_push(pos)  # Act XIII (temporary): the Verdict's pillars and the shafts (null elsewhere).
+	if game.primeval != null:
+		danger += game.primeval.danger_push(pos)  # Act XIV (temporary): the stampedes' paths and the bomb circles (null elsewhere).
 	return danger
 
 
@@ -1410,6 +1421,8 @@ func get_move_vector() -> Vector2:
 		danger += game.dynasty.danger_push(p)  # Act XII (temporary): the Devourer's lanes (null elsewhere).
 	if game.host != null:
 		danger += game.host.danger_push(p)  # Act XIII (temporary): the Verdict's pillars and the shafts (null elsewhere).
+	if game.primeval != null:
+		danger += game.primeval.danger_push(p)  # Act XIV (temporary): the stampedes' paths and the bomb circles (null elsewhere).
 	var objective := Vector2.ZERO
 	# Walk to shrines any time, to graves under consecration only when calm.
 	var goal := game.enemies.stage.seek_point(p, OBJECTIVE_SEEK_RADIUS, away.length() < 0.2)
@@ -1653,6 +1666,7 @@ func finish(summary: Dictionary) -> void:
 	NorseReport.print_lines(game, st_all)  # The Hall of the Slain: the long winter, the fury, the stones, ragnarok, kinds, the stage (only when the Norse rules ran).
 	DynastyReport.print_lines(game, st_all)  # Act XII (temporary): rebirth, the black land, heka, the devourer's hour, kinds, the stage (only when the Dynasty ran).
 	HostReport.print_lines(game, st_all)  # Act XIII (temporary): judgment, the light, grace, the last trumpet, kinds, the stage (only when the Host ran).
+	PrimevalReport.print_lines(game, st_all)  # Act XIV (temporary): packs, herds, scavengers, the stampede of ash, kinds, the stage (only when the Titans' rules ran).
 	WastesReport.print_items(game, st_all)  # Act III, the Scrap Wastes: Death Ray and its passives (only when taken).
 	IlionReport.print_items(game, st_all)  # Act IV, the Shores of Ilion: Paris's Arrow and its passives (only when taken).
 	# --- Act V: the Burning Province ---

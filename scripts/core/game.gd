@@ -111,6 +111,11 @@
 ## Hallowed Light, Grace, the Last Trumpet), stepped after the Dynasty's and
 ## before the obstacle push-out; null on every other act unless a Host kind
 ## forced there asks for it (host_rules()).
+## Temporary Act XIV (GDD §15.0 "The Age of Titans foundation (phase 1)"):
+## `primeval` (PrimevalRules) runs the Age of Titans' shared rules (Packs,
+## Herds, Scavengers, the Stampede of Ash), stepped after the Host's and before
+## the obstacle push-out; null on every other act unless a Titans kind forced
+## there asks for it (primeval_rules()).
 ## Online co-op (docs/coop/DESIGN.md): `coop` (CoopSession) holds two player
 ## slots in this one simulation; the per-player fields below (player, horde,
 ## abilities, grave_step, dread_rally, ultimates, stance, character, innates,
@@ -309,6 +314,11 @@ var dynasty: DynastyRules = null
 ## has "host": true, or a Host kind spawned on another stage asked for it
 ## through host_rules(); no other act creates it).
 var host: HostRules = null
+# --- Act XIV (temporary number): the Age of Titans ---
+## The Age of Titans' shared rules (PrimevalRules; null unless the stage's
+## STAGE has "primeval": true, or a Titans kind spawned on another stage asked
+## for it through primeval_rules(); no other act creates it).
+var primeval: PrimevalRules = null
 ## Content wave 2: the run counters of the one-run achievements (RunRewards;
 ## never null once _ready ran; reads the run only, never changes gameplay).
 var rewards: RunRewards
@@ -553,6 +563,11 @@ func _ready() -> void:
 			var hog := HostGround.new()  # The Host stubs' placeholder floor (the STAGE's "floor").
 			hog.look = stage_def.get("floor", {})
 			ground = hog
+		# --- Act XIV (temporary number): the Age of Titans ---
+		"primeval":
+			var prg := PrimevalGround.new()  # The Titans stubs' placeholder floor (the STAGE's "floor").
+			prg.look = stage_def.get("floor", {})
+			ground = prg
 		# --- Act XII (temporary number): the Necropolis of Sand ---
 		"necropolis":
 			ground = NecropolisGround.new()  # The Necropolis of Sand's four zone floors (NecropolisStage.ZONES).
@@ -662,6 +677,8 @@ func _ready() -> void:
 		dynasty_rules()  # Act XII (temporary): the Necropolis Dynasty's shared rules.
 	if bool(stage_def.get("host", false)):
 		host_rules()  # Act XIII (temporary): the Celestial Host's shared rules.
+	if bool(stage_def.get("primeval", false)):
+		primeval_rules()  # Act XIV (temporary): the Age of Titans' shared rules.
 
 	if autotest != null:
 		player.invulnerable = not GameState.autotest_mortal
@@ -977,6 +994,8 @@ func _physics_process(delta: float) -> void:
 		dynasty.step(delta)  # Act XII (temporary): the Devourer's Hour, the Sandstorm, the cartouches, the glyphs, the quicksand (returned bodies pushed out next).
 	if host != null:
 		host.step(delta)  # Act XIII (temporary): the Last Trumpet, the scales, the Light, the halos (pushed summons pushed out next).
+	if primeval != null:
+		primeval.step(delta)  # Act XIV (temporary): the Stampede of Ash, the packs, the herds, the Skyraiders (trampled summons pushed out next).
 	if pf != null:
 		tl = pf.lap(PerfProbe.SEC_ENEMIES, tl)
 	arena.resolve_all(delta)
@@ -1203,6 +1222,18 @@ func host_rules() -> HostRules:
 		host = HostRules.new(self)
 		add_child(host)
 	return host
+
+
+# --- Act XIV (temporary number): the Age of Titans ---
+## The Age of Titans' shared rules, created on first use: at the start of a
+## Titans run, or when a Titans kind forced onto another stage is activated
+## (PrimevalKit.reset()), so its pack, herd or theft works there (the clocks
+## stay off off the act).
+func primeval_rules() -> PrimevalRules:
+	if primeval == null:
+		primeval = PrimevalRules.new(self)
+		add_child(primeval)
+	return primeval
 
 
 # --- Act IV: the Asphodel Underworld ---

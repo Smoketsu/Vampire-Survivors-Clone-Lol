@@ -71,6 +71,10 @@ const STAGES := {
 	"silver_stair": {"title": "The Gate Stands Open", "boss_line": "Seraiel lays down his sword before the Gate of Pearl."},  # TUNING (not in GDD) Act XIII placeholder
 	"wheel_of_thrones": {"title": "The Wheel Breaks", "boss_line": "The Throne stops turning, and its eyes close."},  # TUNING (not in GDD) Act XIII placeholder
 	"empyrean": {"title": "Heaven Is Silent", "boss_line": "The Voice folds its wings and is silent."},  # TUNING (not in GDD) Act XIII placeholder
+	# --- Act XIV (temporary number): the Age of Titans (placeholders until each stage is built) ---
+	"fern_basin": {"title": "The Pack Is Broken", "boss_line": "Scarmaw falls in the ferns, and her packs scatter."},  # TUNING (not in GDD) Act XIV placeholder
+	"great_plain": {"title": "The Herd Runs On", "boss_line": "Old Ironbrow falls, and the herd breaks around him."},  # TUNING (not in GDD) Act XIV placeholder
+	"last_day": {"title": "The Sky Fell", "boss_line": "Old Gravejaw falls before the meteor does."},  # TUNING (not in GDD) Act XIV placeholder
 }
 ## Title of a victory on a stage missing from STAGES.
 const DEFAULT_TITLE: String = "Victory"  # TUNING (not in GDD)
@@ -99,6 +103,8 @@ const ACT_LINES := {
 	12: "You outlasted the Dynasty. The Devourer ate you at last.",  # TUNING (not in GDD) Act XII
 	# --- Act XIII (temporary number): the Celestial Host ---
 	13: "You outlasted heaven. The Last Trumpet sounded for you at last.",  # TUNING (not in GDD) Act XIII
+	# --- Act XIV (temporary number): the Age of Titans ---
+	14: "You outlasted the old world. The Stampede of Ash ran you down at last.",  # TUNING (not in GDD) Act XIV
 }
 
 # --- The last stand (LastStand; seconds of real time from its start) ----------------

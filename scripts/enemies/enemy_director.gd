@@ -160,6 +160,13 @@
 ##     Dynasty's folder. Its shared rules (Judgment, Hallowed Light, Grace,
 ##     the Last Trumpet) live in HostRules (Game.host); its Judges and squads
 ##     spawn through spawn_at().
+##   * Act XIV (temporary number), the Age of Titans (GDD §15.0 "The Age of
+##     Titans foundation (phase 1)"): its kinds are looked up through
+##     primeval_def() (PrimevalEnemyData, then each Titans stage's table) after
+##     the Host's, and its bosses load by name from PRIMEVAL_BOSS_DIR after the
+##     Host's folder. Its shared rules (Packs, Herds, Scavengers, the Stampede
+##     of Ash) live in PrimevalRules (Game.primeval); its herds spawn through
+##     spawn_at().
 ##   * Act VII, Ravensmoor (GDD §15.0 "Ravensmoor (Act VII phase 2)"): on a
 ##     stage with a "ravensmoor" config it creates the RavensmoorDirector (the
 ##     sleeping coffins, Coffin Nails, the ghoul packs, Old Greymane;
@@ -255,6 +262,9 @@ const DYNASTY_BOSS_DIR: String = "res://scripts/enemies/dynasty/"
 # --- Act XIII (temporary number): the Celestial Host ---
 ## Folder of the Celestial Host's boss scripts ("boss_<id>.gd", each a Boss).
 const HOST_BOSS_DIR: String = "res://scripts/enemies/host/"
+# --- Act XIV (temporary number): the Age of Titans ---
+## Folder of the Age of Titans' boss scripts ("boss_<id>.gd", each a Boss).
+const PRIMEVAL_BOSS_DIR: String = "res://scripts/enemies/primeval/"
 
 ## The boss entered the arena.
 signal boss_spawned(boss: Boss)
@@ -1507,7 +1517,8 @@ func _spawn_boss() -> void:
 	# Last Line boss from CITY_BOSS_DIR (Act VIII), else a Concord of Stars boss
 	# from CONCORD_BOSS_DIR (Act IX), else a Necropolis Dynasty boss from
 	# DYNASTY_BOSS_DIR (Act XII, temporary), else a Celestial Host boss from
-	# HOST_BOSS_DIR (Act XIII, temporary); Sir Alaric when none exists.
+	# HOST_BOSS_DIR (Act XIII, temporary), else an Age of Titans boss from
+	# PRIMEVAL_BOSS_DIR (Act XIV, temporary); Sir Alaric when none exists.
 	var sid := String(boss_info.get("script", boss_info["id"]))  # Boss script id.
 	match sid:
 		"vael":
@@ -1540,6 +1551,8 @@ func _spawn_boss() -> void:
 				path = DYNASTY_BOSS_DIR + "boss_" + sid + ".gd"  # Act XII (temporary): a Necropolis Dynasty boss script.
 			if not ResourceLoader.exists(path):
 				path = HOST_BOSS_DIR + "boss_" + sid + ".gd"  # Act XIII (temporary): a Celestial Host boss script.
+			if not ResourceLoader.exists(path):
+				path = PRIMEVAL_BOSS_DIR + "boss_" + sid + ".gd"  # Act XIV (temporary): an Age of Titans boss script.
 			boss = (load(path) as Script).new() as Boss if ResourceLoader.exists(path) else BossAlaric.new()
 	add_child(boss)
 	boss.setup_boss(game, _ring_point(randf() * TAU), game.difficulty.boss_hp_mult() * float(stage_def["enemy_hp_mult"]), _next_slot)
@@ -1652,6 +1665,7 @@ func spawn_at(kind: String, pos: Vector2, elite: bool) -> Enemy:
 ## Slain's (the Norse act: norse_def()),
 ## then the Necropolis Dynasty's (Act XII, temporary: dynasty_def()),
 ## then the Celestial Host's (Act XIII, temporary: host_def()),
+## then the Age of Titans' (Act XIV, temporary: primeval_def()),
 ## then SanctumEnemyData.ENEMIES (the Sanctum of Judgment's soldiers and the
 ## Cathedral Guardian).
 func enemy_def(kind: String) -> Dictionary:
@@ -1700,6 +1714,9 @@ func enemy_def(kind: String) -> Dictionary:
 	var host := host_def(kind)  # Act XIII (temporary) kinds ({} when not a Host kind).
 	if not host.is_empty():
 		return host
+	var primeval := primeval_def(kind)  # Act XIV (temporary) kinds ({} when not a Titans kind).
+	if not primeval.is_empty():
+		return primeval
 	return SanctumEnemyData.ENEMIES[kind]
 
 
@@ -1894,6 +1911,22 @@ static func host_def(kind: String) -> Dictionary:
 	return {}
 
 
+# --- Act XIV (temporary number): the Age of Titans ---
+## Design row of Age of Titans kind `kind` (real id), or {} when it is none:
+## PrimevalEnemyData (the shared kinds) first, then each Titans stage's own
+## table (phase 2 fills them).
+static func primeval_def(kind: String) -> Dictionary:
+	if PrimevalEnemyData.ENEMIES.has(kind):
+		return PrimevalEnemyData.ENEMIES[kind]
+	if FernBasinEnemyData.ENEMIES.has(kind):
+		return FernBasinEnemyData.ENEMIES[kind]
+	if GreatPlainEnemyData.ENEMIES.has(kind):
+		return GreatPlainEnemyData.ENEMIES[kind]
+	if LastDayEnemyData.ENEMIES.has(kind):
+		return LastDayEnemyData.ENEMIES[kind]
+	return {}
+
+
 ## True if `kind` is a spawnable enemy kind of any stage's data (real ids;
 ## stage aliases are not resolved here).
 static func is_known_kind(kind: String) -> bool:
@@ -1909,7 +1942,8 @@ static func is_known_kind(kind: String) -> bool:
 			or not corsair_def(kind).is_empty() \
 			or not norse_def(kind).is_empty() \
 			or not dynasty_def(kind).is_empty() \
-			or not host_def(kind).is_empty()  # Act V to Act IX, the Black Tide, the Norse act, the Dynasty, the Host
+			or not host_def(kind).is_empty() \
+			or not primeval_def(kind).is_empty()  # Act V to Act IX, the Black Tide, the Norse act, the Dynasty, the Host, the Titans
 
 
 ## Registers `e` as the living miniboss (GuardianKit; the HUD shows its bar

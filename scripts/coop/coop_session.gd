@@ -438,6 +438,9 @@ func step(delta: float) -> void:
 	if game.host != null:
 		bind_primary()
 		game.host.step(delta)  # Act XIII (temporary): the Last Trumpet, the scales, the Light, the halos (before the push-out, as in solo).
+	if game.primeval != null:
+		bind_primary()
+		game.primeval.step(delta)  # Act XIV (temporary): the Stampede of Ash, the packs, the herds, the Skyraiders (before the push-out, as in solo).
 	if pf != null:
 		tl = pf.lap(PerfProbe.SEC_ENEMIES, tl)
 	bind_primary()

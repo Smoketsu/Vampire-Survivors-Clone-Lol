@@ -203,6 +203,10 @@ const STAGE_LINES: Dictionary = {
 	"silver_stair": "Heaven comes down a stair of light to weigh your sins.",  # TUNING (not in GDD) Act XIII
 	"wheel_of_thrones": "Through the turning spheres, where the Throne has eyes on every rim.",  # TUNING (not in GDD) Act XIII
 	"empyrean": "In the white rose at the top of heaven, the Voice waits in silence.",  # TUNING (not in GDD) Act XIII
+	# --- Act XIV (temporary number): the Age of Titans ---
+	"fern_basin": "Follow the Harvesters' log to the day before the sky fell.",  # TUNING (not in GDD) Act XIV
+	"great_plain": "Where the herds run, and an old titan leads them.",  # TUNING (not in GDD) Act XIV
+	"last_day": "Under a white sky, the meteor is yours to call.",  # TUNING (not in GDD) Act XIV
 }
 
 ## Size (px) of an act tab button on the stage select (Act I / Act II / Act III).
@@ -614,6 +618,33 @@ const VIGNETTES: Dictionary = {
 		],
 		"fx": "motes", "fx_color": Color8(242, 184, 198),
 	},  # TUNING (not in GDD) dawn-rose motes
+	# --- Act XIV (temporary number): the Age of Titans (placeholder scenes
+	# from the shared kinds' art until each stage brings its own floor, props
+	# and boss; a missing sprite or tile is skipped) ---
+	"fern_basin": {
+		"tile": "tiles/primeval_fern",
+		"items": [
+			["primeval/razorclaw", 196, 112, true], ["primeval/razorclaw", 232, 140, true], ["primeval/longneck", 160, 176, true],
+			["summons/warrior", 46, 214, false], ["summons/archer", 88, 224, false],
+		],
+		"fx": "motes", "fx_color": Color8(77, 133, 52),
+	},  # TUNING (not in GDD) fern spores
+	"great_plain": {
+		"tile": "tiles/primeval_plain",
+		"items": [
+			["primeval/duckbill", 204, 112, true], ["primeval/longneck", 232, 176, true], ["primeval/skyraider", 168, 96, true],
+			["summons/warrior", 46, 214, false], ["summons/mage", 90, 224, false],
+		],
+		"fx": "motes", "fx_color": Color8(200, 148, 72),
+	},  # TUNING (not in GDD) dust motes
+	"last_day": {
+		"tile": "tiles/primeval_ash",
+		"items": [
+			["primeval/tyrant", 206, 120, true], ["primeval/razorclaw", 170, 188, true], ["primeval/scuttler", 228, 196, true],
+			["summons/warrior", 46, 214, false], ["summons/archer", 88, 224, false],
+		],
+		"fx": "motes", "fx_color": Color8(239, 107, 28),
+	},  # TUNING (not in GDD) ember motes
 }
 ## Ambient motes of a vignette: most at once, seconds between two (random in
 ## range), life (s), rise speed (px/s), sideways sway (px).

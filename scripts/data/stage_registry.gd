@@ -24,8 +24,10 @@
 ## Necropolis of Sand -> the Temple of the Lioness -> the Hall of Two Truths,
 ## opened by defeating Odin; temporary Act XIII, GDD §15.0 "The Celestial
 ## Host foundation (phase 1)": the Silver Stair -> the Wheel of Thrones -> the
-## Empyrean, opened by defeating Osiris; the reorder pass moves the four acts
-## to their final slots). One
+## Empyrean, opened by defeating Osiris; temporary Act XIV, GDD §15.0 "The
+## Age of Titans foundation (phase 1)": the Fern Basin -> the Great Plain ->
+## the Last Day, opened by defeating the Voice; the reorder pass moves the
+## five acts to their final slots). One
 ## entry per stage, each
 ## the STAGE dictionary of its file under scripts/data/stages/. A run reads
 ## its stage through RunConfig.stage_def() as `Game.stage_def`; nothing else
@@ -80,7 +82,8 @@
 ##                        8 = the Last Line, 9 = the Concord of Stars,
 ##                        10 = the Black Tide, 11 = the Hall of the Slain,
 ##                        12 = the Necropolis Dynasty, 13 = the Celestial
-##                        Host (TEMPORARY until the reorder pass,
+##                        Host, 14 = the Age of Titans (TEMPORARY until the
+##                        reorder pass,
 ##                        docs/last_acts/PLAN.md);
 ##                        absent = 1). The stage select shows one
 ##                        act at a time; Act II-only cards (PassiveData "act")
@@ -449,6 +452,21 @@
 ##                        "chance" 0 = no fixed cloud banks).
 ##   grace              — any key of HostRulesData.GRACE ({} = defaults).
 ##   zones              — the Host stubs too: the planned zones.
+## --- Act XIV (temporary number): the Age of Titans ---
+##   primeval           — true: the Age of Titans' shared rules
+##                        (PrimevalRules as Game.primeval: Packs, Herds,
+##                        Scavengers, and the Stampede of Ash when the
+##                        RECKONING has a "stampede_of_ash" key); ground
+##                        "primeval" is the placeholder PrimevalGround (from
+##                        the "floor" dictionary, styles fern / plain / ash),
+##                        on the normal scattered-obstacle arena (every
+##                        obstacle shelters from a stampede).
+##   packs              — any key of PrimevalRulesData.PACKS ({} = defaults).
+##   herds              — any key of PrimevalRulesData.HERDS ({} = defaults;
+##                        "cap" 0 = no herd comes on its own).
+##   scavengers         — any key of PrimevalRulesData.SCAVENGERS ({} =
+##                        defaults).
+##   zones              — the Titans stubs too: the planned zones.
 class_name StageRegistry
 extends RefCounted
 
@@ -475,7 +493,9 @@ const ORDER := ["graveyard", "crimson_march", "sanctum", "harbour", "archive", "
 	# --- Act XII (temporary number): the Necropolis Dynasty ---
 	"necropolis", "lioness_temple", "two_truths",
 	# --- Act XIII (temporary number): the Celestial Host ---
-	"silver_stair", "wheel_of_thrones", "empyrean"]
+	"silver_stair", "wheel_of_thrones", "empyrean",
+	# --- Act XIV (temporary number): the Age of Titans ---
+	"fern_basin", "great_plain", "last_day"]
 ## Stage used when none (or an unknown id) is given.
 const DEFAULT_ID: String = "graveyard"
 ## Stage id -> STAGE dictionary.
@@ -530,6 +550,10 @@ const STAGES := {
 	"silver_stair": SilverStairStage.STAGE,
 	"wheel_of_thrones": WheelOfThronesStage.STAGE,
 	"empyrean": EmpyreanStage.STAGE,  # Temporary Act XIII, the finale (the end of Part One)
+	# --- Act XIV (temporary number): the Age of Titans ---
+	"fern_basin": FernBasinStage.STAGE,
+	"great_plain": GreatPlainStage.STAGE,
+	"last_day": LastDayStage.STAGE,  # Temporary Act XIV, the finale
 }
 
 ## Acts in order: act number -> {name, subtitle} (stage select tabs).
@@ -558,6 +582,8 @@ const ACTS := {
 	12: {"name": "Act XII", "subtitle": "The Necropolis Dynasty"},
 	# --- Act XIII (temporary number; final slot X): the Celestial Host ---
 	13: {"name": "Act XIII", "subtitle": "The Celestial Host"},
+	# --- Act XIV (temporary number; final slot XIV): the Age of Titans ---
+	14: {"name": "Act XIV", "subtitle": "The Age of Titans"},
 }
 
 
@@ -651,4 +677,9 @@ const BOSS_ARRIVALS := {
 	"seraiel": SilverStairStage.BOSS,
 	"throne": WheelOfThronesStage.BOSS,
 	"voice": EmpyreanStage.BOSS,  # The act's finale boss
+	# --- Act XIV (temporary number): the Age of Titans (stubs: each stage's
+	# BOSS until phase 2 gives the boss its own data file) ---
+	"scarmaw": FernBasinStage.BOSS,
+	"ironbrow": GreatPlainStage.BOSS,
+	"gravejaw": LastDayStage.BOSS,  # The act's finale boss
 }

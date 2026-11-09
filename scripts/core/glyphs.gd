@@ -162,7 +162,8 @@ static func draw_enemy(ci: CanvasItem, kind: String, o: Vector2, r: float, flash
 			or SpriteBank.draw(ci, "corsair/" + kind, o, flash) \
 			or SpriteBank.draw(ci, "norse/" + kind, o, flash) \
 			or SpriteBank.draw(ci, "dynasty/" + kind, o, flash) \
-			or SpriteBank.draw(ci, "host/" + kind, o, flash):  # Act XII / XIII (temporary): the Necropolis Dynasty's, the Celestial Host's.
+			or SpriteBank.draw(ci, "host/" + kind, o, flash) \
+			or SpriteBank.draw(ci, "primeval/" + kind, o, flash):  # Act XII / XIII / XIV (temporary): the Necropolis Dynasty's, the Celestial Host's, the Age of Titans'.
 		return
 	match kind:
 		"recruit":
@@ -193,7 +194,8 @@ static func draw_enemy(ci: CanvasItem, kind: String, o: Vector2, r: float, flash
 													if not NorseGlyphs.draw_enemy(ci, kind, o, r, flash):  # ... else the Hall of the Slain's ...
 														if not DynastyGlyphs.draw_enemy(ci, kind, o, r, flash):  # ... else the Necropolis Dynasty's (Act XII, temporary) ...
 															if not HostGlyphs.draw_enemy(ci, kind, o, r, flash):  # ... else the Celestial Host's (Act XIII, temporary) ...
-																EyeGlyphs.draw_enemy(ci, kind, o, r, flash)  # ... else the Ancient Eye's (Act II).
+																if not PrimevalGlyphs.draw_enemy(ci, kind, o, r, flash):  # ... else the Age of Titans' (Act XIV, temporary) ...
+																	EyeGlyphs.draw_enemy(ci, kind, o, r, flash)  # ... else the Ancient Eye's (Act II).
 
 
 ## Covenant Recruit: small crimson round body, ivory tabard, silver helm, spear.

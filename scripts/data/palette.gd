@@ -515,3 +515,28 @@ const HOST_ROSE := Color(0.949, 0.722, 0.776)  # #F2B8C6
 const HOST_CLOUD := Color(0.863, 0.894, 0.941)  # #DCE4F0
 ## Cloud shadow: the safe dark ground under a cloud bank (Hallowed Light).
 const HOST_SHADE := Color(0.102, 0.133, 0.212)  # #1A2236
+
+# --- Act XIV (temporary number): the Age of Titans ---
+# GDD §15.0 "The Age of Titans foundation (phase 1)": the act's look (docs/proposals/LAST_SIX_ACTS.md XIV: "fern green,
+# volcanic orange, tar black, dust ochre and bone white, with a white streak in the sky that grows through the act").
+# These are the values the art pass's tools/palette.json ramps primeval_* must use (docs/titans/ART_MANIFEST.md). Gold
+# keeps its meaning (evolution, chest, victory), crimson stays danger, and no beast wears the necromancer's violet.
+
+## Titans outline ink (tar black, darkest): every Titans sprite's outline.
+const PRIMEVAL_INK := Color(0.071, 0.059, 0.051)  # #120F0D
+## Tar: the tar seeps, the Bog Croc's hide, the ground's dark trim.
+const PRIMEVAL_TAR := Color(0.137, 0.110, 0.094)  # #231C18
+## Fern green: ferns, the hunters' feathers, the Fern Basin's floor.
+const PRIMEVAL_FERN := Color(0.302, 0.522, 0.204)  # #4D8534
+## Fern in shade: the jungle's deep tone, the packs' rustling ferns.
+const PRIMEVAL_FERN_DARK := Color(0.141, 0.271, 0.122)  # #24451F
+## Dust ochre: the Great Plain, the herds' hides, a stampede's dust line.
+const PRIMEVAL_OCHRE := Color(0.784, 0.580, 0.282)  # #C89448
+## Ochre in shade: hides in shadow, the plain's dark grass.
+const PRIMEVAL_OCHRE_DARK := Color(0.494, 0.333, 0.165)  # #7E552A
+## Volcanic orange: lava, volcanic bombs, a Tyrant's throat.
+const PRIMEVAL_LAVA := Color(0.937, 0.420, 0.110)  # #EF6B1C
+## Bone white: skeletons, Fossil Giants, horns, the alphas' mark.
+const PRIMEVAL_BONE := Color(0.906, 0.871, 0.788)  # #E7DEC9
+## Sky streak: the meteor's white streak (never the UI gold).
+const PRIMEVAL_STREAK := Color(0.973, 0.965, 0.933)  # #F8F6EE
