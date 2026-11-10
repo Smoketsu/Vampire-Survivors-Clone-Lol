@@ -128,7 +128,7 @@ const BLOOM := {
 	"autumn_spread": 0.02,  # TUNING (not in GDD) blight a second a full cell gives each of its 4 neighbours in Autumn
 	"full": 0.8,  # TUNING (not in GDD) a cell this blighted is dead ground (no heal, thickets wither, Autumn spreads)
 	"living": 0.4,  # TUNING (not in GDD) a cell under this is living ground (the Wild heals there)
-	"heal": 0.02,  # Owner-approved proposal: "the Wild's creatures heal on living ground"; TUNING (not in GDD) share of max HP a second
+	"heal": 0.01,  # Owner-approved proposal: "the Wild's creatures heal on living ground"; TUNING (not in GDD) share of max HP a second (first try 0.02: a naive army never killed a Treant on the World-Tree, seed 7)
 	"max_cells": 900,  # TUNING (not in GDD) most blighted cells kept (the oldest regrow first)
 }
 

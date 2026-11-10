@@ -48,7 +48,7 @@ static func print_lines(game: Game, st: Dictionary) -> void:
 		int(st.get("thickets_burnt", 0.0)), int(st.get("thickets_withered", 0.0)), int(st.get("thicket_spreads", 0.0)),
 		int(st.get("thicket_catches", 0.0))])
 	if w.returns.running():
-		print("[autotest] spring returns: began %s | sproutings %d | burials %d (dmg %d)" % [
+		print("[autotest] spring returns: began %s | sproutings %d | burials %d (raw dmg %d)" % [
 			EmpireReport._clock(w.returns.started_at), w.returns.sproutings, w.returns.buried, int(st.get("returns_bury_dmg", 0.0))])
 	var kinds_line := kinds_line_of(game, st)
 	if kinds_line != "":
@@ -71,7 +71,7 @@ static func year_line(game: Game, st: Dictionary) -> String:
 	var seen := PackedStringArray()
 	for e: Array in sc.entered:
 		seen.append("%s %s" % [WildRulesData.SEASON_IDS[int(e[0])], EmpireReport._clock(float(e[1]))])
-	return "%s | seasons %s | roots: you %d, summons %d, enemies %d | wildfires %d: burned summons %d (dmg %d), you %d, enemies %d (killed %d) | snow refreshes %d | blizzards %d | wave groups held %d" % [
+	return "%s | seasons %s | roots: you %d, summons %d, enemies %d | wildfires %d: burned summons %d (raw dmg %d), you %d, enemies %d (killed %d) | snow refreshes %d | blizzards %d | wave groups held %d" % [
 		"on" if sc.enabled else "off (not a Wild stage)", ", ".join(seen) if not seen.is_empty() else "-",
 		int(st.get("roots_you", 0.0)), int(st.get("roots_summons", 0.0)), int(st.get("roots_enemies", 0.0)),
 		sc.fires, int(st.get("wildfire_summons", 0.0)), int(st.get("wildfire_summon_dmg", 0.0)), int(st.get("wildfire_player", 0.0)),

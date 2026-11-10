@@ -111,7 +111,8 @@ func step(_delta: float) -> void:
 				game.stat_add("thickets_withered", 1.0)
 		elif now >= th.next_spread:
 			th.next_spread = now + float(cfg["spread_every"])
-			_spread(th)
+			if seeds.size() + thickets.size() < int(cfg["cap"]):
+				_spread(th)  # (At the cap the thicket waits for its next turn.)
 		j -= 1
 	_catch()
 
