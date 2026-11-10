@@ -183,3 +183,18 @@ sprite is needed), `player/horned_herald` (+ walk), `obstacles/wild_grove_tree` 
 `GreenwoodDirector` on the grove's ring; never an obstacle; a dead grove draws grey stumps by code) and the four zone tiles
 `tiles/greenwood_glade` / `_deep_wood` / `_hunting_grounds` / `_stags_hollow` (until then the act's `tiles/wild_greenwood`
 floors every zone). Icons, the sound pack and the obstacles were already made.
+
+## Status (the Fae Court, phase 2, Nov 2026)
+
+The Fae Court is built and loads these keys as soon as their PNGs exist (code shapes until then; sizes in
+`SpriteData.FLAT_SIZES`): `wild/winter_prince` (+ walk; the miniboss, male), `wild/masked_courtier` (+ walk; a fae
+courtier in a gown of roses, female, figure style, fully clothed; drawn as `wild/summer_queen_mask` while masked),
+`wild/summer_queen` (+ glide, idle; pose 1 `wild/summer_queen_bargain`: a hand held out with the bargain, `BossPoseData`;
+female, figure style, fully clothed), `wild/summer_queen_mask` (her masked face, the same 64x80 frame: the Masque's
+courtiers wear it too, so it must read as her), `player/changeling_princess` (+ walk, idle; violet necromancer, female,
+figure style, fully clothed), `obstacles/wild_rose_hedge_m` and `_m_v` (96x32, a one-size rect kind, so the `_m` key; the
+rose-maze hedge), `tiles/wild_fairy_ring` (a fairy ring's patch, drawn stretched over the ring's 160 px circle by
+`FaeCourtDirector`) and the four zone tiles `tiles/fae_court_rose_maze` / `_revel` / `_mirror_lake` / `_throne_of_blossoms`
+(until then the act's `tiles/wild_fae` floors every zone). Glamour's copies draw the caster's own art in a pale violet
+tint (no new sprite). Icons (`glamour`, `court_of_masks`, `changeling`, `deadwood`, `ach_a_fair_bargain`) and the sound
+pack were already made.

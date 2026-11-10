@@ -184,9 +184,9 @@ Autotest options (full table in the README):
   Act XIV (all three built; `--boss=scarmaw|ironbrow|gravejaw`,
   `--character=fern_huntress|herd_warden|skywatcher`, `--classes=bonehorn`, `--spawn=` with
   `scuttler|razorclaw|frill_spitter|longneck|duckbill|skyraider|tyrant|bog_croc|ironjaw|primeval_nest|scarmaw_guard|horncharger|clubtail|mother_clubtail|stormwing|thunderwing`);
-  `greenwood|fae_court|world_tree` the Turning Year, Act XV (the Greenwood built, the other two stubs; `--boss=stag_king|summer_queen|green_mother`,
-  `--character=horned_herald`, `--spawn=` with
-  `thornling|dryad|treant|corpse_bloom|fae_knight|winter_fae|great_stag|wild_rider|will_o_wisp|spore_mother|hunt_hound|huntsman|antler_thicket`))
+  `greenwood|fae_court|world_tree` the Turning Year, Act XV (the Greenwood and the Fae Court built, the World-Tree a stub; `--boss=stag_king|summer_queen|green_mother`,
+  `--character=horned_herald|changeling_princess`, `--spawn=` with
+  `thornling|dryad|treant|corpse_bloom|fae_knight|winter_fae|great_stag|wild_rider|will_o_wisp|spore_mother|hunt_hound|huntsman|antler_thicket|winter_prince|masked_courtier`))
 - `--unlocks=all|none` (Act II's lockable spells / passives / classes in the card pool; forced items
   are open either way)
 - `--boss=alaric|vael|seraphine` (puts that boss in the stage's slot, e.g. test Seraphine on the Graveyard)
@@ -220,10 +220,10 @@ Autotest options (full table in the README):
 the autotests for the area a change touches plus one default run; run the full "Done" set (every stage,
 the same-seed gates) once per batch of changes, before `main` moves; multi-seed batches only for balance.
 
-CI (`.github/workflows/ci.yml`) runs the import and, as forty-one **parallel** matrix jobs, the Graveyard
+CI (`.github/workflows/ci.yml`) runs the import and, as forty-two **parallel** matrix jobs, the Graveyard
 autotest with the naive and army policies, a Crimson March autotest, a Sanctum of Judgment autotest (army
 policy) and one army autotest per Act II, Act IV, V, VI, VII, VIII, IX, X (the Black Tide), XI (the Hall of the Slain) and XII (the
-Necropolis Dynasty) stage, the three Celestial Host stages, the three Age of Titans stages and the Greenwood; beside them, the Windows/Linux/Web exports (artifacts
+Necropolis Dynasty) stage, the three Celestial Host stages, the three Age of Titans stages, the Greenwood and the Fae Court; beside them, the Windows/Linux/Web exports (artifacts
 `Necropathy-windows` / `-linux` / `-web`) and an exported-build smoke test; also the co-op jobs `coop-net` (relay
 protocol + two-process transport test) and `coop-lockstep` (the two-process full-run determinism gate, ~10 min, not
 waited on by the publish jobs) and, on `main` pushes, `deploy-relay` (the Worker, secrets `CLOUDFLARE_API_TOKEN` /
@@ -786,6 +786,16 @@ tiny tweaks.
   cracking trees into thickets, the Antler Crown of `antler_thicket` thorns heard by fire through `Thickets.ring_burns`), Wild
   Hunt / The Endless Hunt + Horn of the Hunt, the Horned Herald, Scorched Earth → the counter-passive Fallow Ground (act 15 only).
   One CI army job (41 matrix jobs). Stages 1–42 same-seed summaries unchanged.
+- **The Fae Court, playable** (the Turning Year's second stage, temporarily Act XV, final slot XV; GDD §15.0 from "The Fae Court
+  (Act XV phase 2)" to "The Fae Court tests and gate"): the four zones (`FaeCourtGround`), **the endless summer** (`FaeCourtDirector`:
+  `SeasonCycle.set_override(SUMMER, run end)`, its fronts spaced by STAGE `seasons` `wildfire_every`), **the fairy rings** (a pure hash,
+  `ring_in()`: half speed inside for both armies through `TerrainSlow` / `Enemy.apply_slow()`), the Winter Prince (miniboss,
+  `WinterPrinceKit`; his minute of winter through `set_override(WINTER, now + 60)`), **the Summer Queen** (`boss_summer_queen.gd`: petals,
+  the Masque with `masked_courtier`s, **the Bargain** through `ConfirmDialog` and the level-up pause in solo, `CoopLockstep.Cmd.BARGAIN` in
+  co-op, the one bargain path `WildRules.take_bargain()` read by `compute_stats()` and `CombatResolver.heal_unit()`, a price through
+  `CombatResolver.pay_life()`; the Court in Bloom), Glamour / Court of Masks + Changeling (copies are temporary Warrior bodies through
+  `spawn_temporary()` that taunt through `ColossusKit`), the Changeling Princess, A Fair Bargain → the counter-passive Deadwood (act 15
+  only). One CI army job (42 matrix jobs). Stages 1–43 same-seed summaries unchanged.
 
 **Next, in priority order:**
 1. **Playtest feedback** from the owner and friends (actively playtesting); it outranks everything below.
