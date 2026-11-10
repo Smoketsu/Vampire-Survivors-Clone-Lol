@@ -1168,7 +1168,7 @@ RIGS = {
     "wild/stag_king": dict(mode="robe", hip=62, rigid=[(0, 10, 0, None)], sway=1, dip=1),
     "wild/winter_prince": dict(mode="robe", hip=38, rigid=[(26, 40, 38, None)], sway=1, dip=1),
     "wild/masked_courtier": dict(mode="robe", hip=32, rigid=[], sway=1, dip=1,
-                                 bust=(11, 23, 13, 20, 1), bust_exclude=[(0, 11, 10, 50), (23, 38, 10, 50)]),
+                                 bust=(18, 30, 12, 19, 1), bust_exclude=[(0, 17, 10, 50), (31, 46, 10, 50)]),
     "wild/summer_queen": dict(mode="robe", hip=40, rigid=[], sway=1, dip=1, float=1,
                               bust=(23, 35, 16, 24, 2), bust_exclude=[(0, 22, 10, 50), (36, 56, 10, 50)],
                               wings=[dict(box=(0, 21, 4, 46), pivot=(21, 24), degrees=10.0, seam=2), dict(box=(37, 46, 4, 34), pivot=(37, 24), degrees=-10.0, seam=2)]),

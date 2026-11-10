@@ -31,6 +31,9 @@ WALK = ["wild/hunt_hound", "wild/huntsman", "wild/stag_king", "wild/winter_princ
 IDLE = ["wild/masked_courtier", "wild/summer_queen", "wild/green_mother", "player/changeling_princess", "player/gravegardener"]  # Bust rigs: idle strips.
 
 
+FORCE = {"masked_courtier": 52}  # Raw ids whose art height is forced to the SpriteData height (her thorn rapier makes the width fit give 46; the width then runs to ~43 px).
+
+
 def run(a: list) -> None:
     print("+", " ".join(a), flush=True)
     subprocess.run([sys.executable] + a, cwd=ROOT, check=True)
@@ -46,7 +49,7 @@ def units(only: list = None) -> None:
     heights = {}
     for raw, key, mw, mh, ramps, base in U:
         src = HERE / "raw" / (raw + ".png")
-        h = heights[base] if base in heights else fit_height(src, mw, mh)
+        h = heights[base] if base in heights else FORCE.get(raw) or fit_height(src, mw, mh)
         heights[raw] = h
         if only and raw not in only:
             continue
@@ -67,7 +70,7 @@ def props() -> None:
     assert len(spans) >= 3, spans
     for (x0, x1), (key, w, mh) in zip(spans[:3], [("obstacles/wild_grove_tree", 40, 48), ("obstacles/wild_rose_hedge_m", 96, 32), ("obstacles/wild_great_root_m", 96, 28)]):
         part = mp.crop_tight(im.crop((x0, 0, x1, im.height)))
-        h = max(6, min(mh - 2, round((w - 2) * part.height / part.width)))
+        h = mh if "tree" in key else max(6, min(mh - 2, round((w - 2) * part.height / part.width)))  # The grove tree takes its full SpriteData height (48).
         p = mp.SCRATCH / (key.replace("/", "_") + ".png")
         part.save(p)
         run(["tools/prepare_sprite.py", str(p), key, "--art-height", str(h), "--ink-l", "0.15", "--ramps", mp.RAMPS])
