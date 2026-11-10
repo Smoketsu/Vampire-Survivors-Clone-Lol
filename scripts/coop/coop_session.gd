@@ -441,6 +441,9 @@ func step(delta: float) -> void:
 	if game.primeval != null:
 		bind_primary()
 		game.primeval.step(delta)  # Act XIV (temporary): the Stampede of Ash, the packs, the herds, the Skyraiders (before the push-out, as in solo).
+	if game.wild != null:
+		bind_primary()
+		game.wild.step(delta)  # Act XV (temporary): Spring Returns, the seasons, the blight, the thickets (before the push-out, as in solo).
 	if pf != null:
 		tl = pf.lap(PerfProbe.SEC_ENEMIES, tl)
 	bind_primary()

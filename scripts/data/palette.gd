@@ -540,3 +540,34 @@ const PRIMEVAL_LAVA := Color(0.937, 0.420, 0.110)  # #EF6B1C
 const PRIMEVAL_BONE := Color(0.906, 0.871, 0.788)  # #E7DEC9
 ## Sky streak: the meteor's white streak (never the UI gold).
 const PRIMEVAL_STREAK := Color(0.973, 0.965, 0.933)  # #F8F6EE
+
+# --- Act XV (temporary number): the Turning Year ---
+# GDD §15.0 "The Turning Year foundation (phase 1)": the act's look (docs/proposals/LAST_SIX_ACTS.md XV: "moss, bark,
+# blossom pink, gold leaves and frost white, and each season repaints the arena"), with the blight a dead grey that reads
+# strongly against the living green (the doc's note: "the blight should read stronger than this in the game"). These are
+# the values the art pass's tools/palette.json ramps wild_* must use (docs/year/ART_MANIFEST.md). Gold keeps its meaning
+# (evolution, chest, victory): the leaves are a warmer amber; crimson stays danger; the fae never wear the necromancer's
+# violet (the playable characters do).
+
+## Wild outline ink (deep bark, darkest): every Wild sprite's outline.
+const WILD_INK := Color(0.078, 0.063, 0.047)  # #14100C
+## Bark: treants, thickets, the roots' shoots.
+const WILD_BARK := Color(0.333, 0.235, 0.153)  # #553C27
+## Moss green: living ground, dryads, spring.
+const WILD_MOSS := Color(0.349, 0.588, 0.255)  # #599641
+## Moss in shade: deep wood, the sprouts' shadow.
+const WILD_MOSS_DARK := Color(0.153, 0.302, 0.141)  # #274D24
+## Blossom pink: the Fae Court, the Summer Queen, Spring Returns.
+const WILD_BLOSSOM := Color(0.937, 0.651, 0.765)  # #EFA6C3
+## Gold leaf (amber, never the UI gold): summer's dry grass, autumn's leaves.
+const WILD_GOLD_LEAF := Color(0.851, 0.584, 0.235)  # #D9953C
+## Wildfire orange-red: the fronts.
+const WILD_FIRE := Color(0.890, 0.361, 0.149)  # #E35C26
+## Frost white: winter, the Winter Court, the blizzard.
+const WILD_FROST := Color(0.894, 0.929, 0.961)  # #E4EDF5
+## Blight: the dead grey ground under the army.
+const WILD_BLIGHT := Color(0.192, 0.180, 0.173)  # #312E2C
+## Ash grey: dead grass, the smoke line.
+const WILD_ASH := Color(0.525, 0.502, 0.478)  # #86807A
+## Bone white: antlers, the wheel's hand.
+const WILD_BONE := Color(0.910, 0.882, 0.816)  # #E8E1D0

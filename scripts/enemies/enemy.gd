@@ -650,8 +650,9 @@ func motion_lunge(dir: Vector2, power: float) -> void:
 ## in city/ (Act VIII), a Concord of Stars kind's in concord/ (Act IX), a
 ## Black Tide kind's in corsair/ (Act X), a Hall of the Slain kind's in
 ## norse/ (Act XI), a Necropolis Dynasty kind's in dynasty/ (Act XII) and a
-## Celestial Host kind's in host/ (Act XIII) and an Age of Titans kind's in
-## primeval/ (Act XIV; the five numbers are temporary until the reorder): used
+## Celestial Host kind's in host/ (Act XIII), an Age of Titans kind's in
+## primeval/ (Act XIV) and a Turning Year kind's in wild/ (Act XV; the six
+## numbers are temporary until the reorder): used
 ## when it has no enemies/ art (visual only;
 ## every Act I kind keeps its enemies/ key).
 func motion_sprite_key() -> String:
@@ -685,6 +686,8 @@ func motion_sprite_key() -> String:
 			return "host/" + kind  # Act XIII (temporary): a Celestial Host kind's art.
 		if SpriteBank.has("primeval/" + kind):
 			return "primeval/" + kind  # Act XIV (temporary): an Age of Titans kind's art.
+		if SpriteBank.has("wild/" + kind):
+			return "wild/" + kind  # Act XV (temporary): a Turning Year kind's art.
 	return key
 
 

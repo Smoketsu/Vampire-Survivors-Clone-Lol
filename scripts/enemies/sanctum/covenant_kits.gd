@@ -31,7 +31,8 @@
 ## CELESTIAL HOST kit (Act XIII, temporary): HOST_KIT_DIR + "<id>_kit.gd"
 ## (e.g. "virtue" -> VirtueKit), else an AGE OF TITANS kit (Act XIV,
 ## temporary): PRIMEVAL_KIT_DIR + "<id>_kit.gd" (e.g. "razorclaw" ->
-## RazorclawKit).
+## RazorclawKit), else a TURNING YEAR kit (Act XV, temporary):
+## WILD_KIT_DIR + "<id>_kit.gd" (e.g. "dryad" -> DryadKit).
 ## Kit ids must be unique across every folder.
 ## Enemy only ever talks to this file and the CovenantKit base class.
 class_name CovenantKits
@@ -74,6 +75,9 @@ const HOST_KIT_DIR: String = "res://scripts/enemies/host/"
 # --- Act XIV (temporary number): the Age of Titans ---
 ## Folder of the Age of Titans' kit scripts ("<id>_kit.gd", each a PrimevalKit).
 const PRIMEVAL_KIT_DIR: String = "res://scripts/enemies/primeval/"
+# --- Act XV (temporary number): the Turning Year ---
+## Folder of the Turning Year's kit scripts ("<id>_kit.gd", each a WildKit).
+const WILD_KIT_DIR: String = "res://scripts/enemies/wild/"
 
 ## Eye / Empire kit id -> its loaded Script (null when no file exists), filled on first use.
 static var _eye_scripts: Dictionary = {}
@@ -121,7 +125,9 @@ static func for_enemy(current: CovenantKit, id: String) -> CovenantKit:
 ## Necropolis Dynasty kit `id` (DYNASTY_KIT_DIR + "<id>_kit.gd", Act XII,
 ## temporary), else of Celestial Host kit `id` (HOST_KIT_DIR + "<id>_kit.gd",
 ## Act XIII, temporary), else of Age of Titans kit `id` (PRIMEVAL_KIT_DIR +
-## "<id>_kit.gd", Act XIV, temporary), or null when no such script exists.
+## "<id>_kit.gd", Act XIV, temporary), else of Turning Year kit `id`
+## (WILD_KIT_DIR + "<id>_kit.gd", Act XV, temporary), or null when no such
+## script exists.
 static func _eye_kit(id: String) -> CovenantKit:
 	if not _eye_scripts.has(id):
 		var path := EYE_KIT_DIR + id + "_kit.gd"  # Expected script location.
@@ -149,6 +155,8 @@ static func _eye_kit(id: String) -> CovenantKit:
 			path = HOST_KIT_DIR + id + "_kit.gd"  # Act XIII (temporary): a Celestial Host kit.
 		if not ResourceLoader.exists(path):
 			path = PRIMEVAL_KIT_DIR + id + "_kit.gd"  # Act XIV (temporary): an Age of Titans kit.
+		if not ResourceLoader.exists(path):
+			path = WILD_KIT_DIR + id + "_kit.gd"  # Act XV (temporary): a Turning Year kit.
 		_eye_scripts[id] = load(path) if ResourceLoader.exists(path) else null
 	var scr: Script = _eye_scripts[id]
 	if scr == null:

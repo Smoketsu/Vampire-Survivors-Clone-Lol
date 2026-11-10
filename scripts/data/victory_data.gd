@@ -75,6 +75,10 @@ const STAGES := {
 	"fern_basin": {"title": "The Pack Is Broken", "boss_line": "Scarmaw falls in the ferns, and her packs scatter."},  # TUNING (not in GDD) Act XIV placeholder
 	"great_plain": {"title": "The Herd Runs On", "boss_line": "Old Ironbrow falls, and the herd breaks around him."},  # TUNING (not in GDD) Act XIV placeholder
 	"last_day": {"title": "The Sky Fell", "boss_line": "Old Gravejaw falls before the meteor does."},  # TUNING (not in GDD) Act XIV placeholder
+	# --- Act XV (temporary number): the Turning Year (placeholders until each stage is built) ---
+	"greenwood": {"title": "The Hunt Is Over", "boss_line": "The Stag King falls in the snow, and the Wild Hunt scatters."},  # TUNING (not in GDD) Act XV placeholder
+	"fae_court": {"title": "The Summer Ends", "boss_line": "The Summer Queen's masks fall, and her court wilts."},  # TUNING (not in GDD) Act XV placeholder
+	"world_tree": {"title": "The First Spring", "boss_line": "The Green Mother gives you the last claim: your dead are planted now."},  # TUNING (not in GDD) Act XV placeholder
 }
 ## Title of a victory on a stage missing from STAGES.
 const DEFAULT_TITLE: String = "Victory"  # TUNING (not in GDD)
@@ -105,6 +109,8 @@ const ACT_LINES := {
 	13: "You outlasted heaven. The Last Trumpet sounded for you at last.",  # TUNING (not in GDD) Act XIII
 	# --- Act XIV (temporary number): the Age of Titans ---
 	14: "You outlasted the old world. The Stampede of Ash ran you down at last.",  # TUNING (not in GDD) Act XIV
+	# --- Act XV (temporary number): the Turning Year ---
+	15: "You outlasted the turning year. Spring returned and buried you at last.",  # TUNING (not in GDD) Act XV
 }
 
 # --- The last stand (LastStand; seconds of real time from its start) ----------------

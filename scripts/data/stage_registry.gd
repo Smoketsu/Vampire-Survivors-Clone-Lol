@@ -26,8 +26,10 @@
 ## Host foundation (phase 1)": the Silver Stair -> the Wheel of Thrones -> the
 ## Empyrean, opened by defeating Osiris; temporary Act XIV, GDD §15.0 "The
 ## Age of Titans foundation (phase 1)": the Fern Basin -> the Great Plain ->
-## the Last Day, opened by defeating the Voice; the reorder pass moves the
-## five acts to their final slots). One
+## the Last Day, opened by defeating the Voice; temporary Act XV, GDD §15.0
+## "The Turning Year foundation (phase 1)": the Greenwood -> the Fae Court ->
+## the World-Tree, opened by defeating Old Gravejaw; the reorder pass moves the
+## six acts to their final slots). One
 ## entry per stage, each
 ## the STAGE dictionary of its file under scripts/data/stages/. A run reads
 ## its stage through RunConfig.stage_def() as `Game.stage_def`; nothing else
@@ -82,8 +84,8 @@
 ##                        8 = the Last Line, 9 = the Concord of Stars,
 ##                        10 = the Black Tide, 11 = the Hall of the Slain,
 ##                        12 = the Necropolis Dynasty, 13 = the Celestial
-##                        Host, 14 = the Age of Titans (TEMPORARY until the
-##                        reorder pass,
+##                        Host, 14 = the Age of Titans, 15 = the Turning
+##                        Year (TEMPORARY until the reorder pass,
 ##                        docs/last_acts/PLAN.md);
 ##                        absent = 1). The stage select shows one
 ##                        act at a time; Act II-only cards (PassiveData "act")
@@ -503,6 +505,24 @@
 ##                        zone floors); its RECKONING "extinction" is the
 ##                        Extinction (PrimevalRules), the meteor that ends the
 ##                        run in victory.
+## --- Act XV (temporary number): the Turning Year ---
+##   wild               — true: the Turning Year's shared rules (WildRules
+##                        as Game.wild: the seasons, Bloom and Blight,
+##                        Overgrowth, and Spring Returns when the RECKONING
+##                        has a "spring_returns" key); ground "wild" is the
+##                        placeholder WildGround (from the "floor" dictionary,
+##                        styles greenwood / fae / tree), on the normal
+##                        scattered-obstacle arena (the thickets grow into its
+##                        empty cells, Arena.add_obstacle()).
+##   seasons            — any key of WildRulesData.SEASONS ({} = defaults;
+##                        "length" 150 = the World-Tree's year turning twice).
+##   bloom              — any key of WildRulesData.BLOOM ({} = defaults).
+##   thickets           — any key of WildRulesData.THICKETS ({} = defaults).
+##   zones              — the Wild stubs too: the planned zones.
+##   (segments)         — a segment's optional "season_weights" (season id ->
+##                        {kind: weight}) join its weights in that season, and
+##                        a row's "season" keeps its kind to that season
+##                        (SeasonCycle.timeline_weights(), the one helper).
 class_name StageRegistry
 extends RefCounted
 
@@ -531,7 +551,9 @@ const ORDER := ["graveyard", "crimson_march", "sanctum", "harbour", "archive", "
 	# --- Act XIII (temporary number): the Celestial Host ---
 	"silver_stair", "wheel_of_thrones", "empyrean",
 	# --- Act XIV (temporary number): the Age of Titans ---
-	"fern_basin", "great_plain", "last_day"]
+	"fern_basin", "great_plain", "last_day",
+	# --- Act XV (temporary number): the Turning Year ---
+	"greenwood", "fae_court", "world_tree"]
 ## Stage used when none (or an unknown id) is given.
 const DEFAULT_ID: String = "graveyard"
 ## Stage id -> STAGE dictionary.
@@ -590,6 +612,10 @@ const STAGES := {
 	"fern_basin": FernBasinStage.STAGE,
 	"great_plain": GreatPlainStage.STAGE,
 	"last_day": LastDayStage.STAGE,  # Temporary Act XIV, the finale
+	# --- Act XV (temporary number): the Turning Year ---
+	"greenwood": GreenwoodStage.STAGE,
+	"fae_court": FaeCourtStage.STAGE,
+	"world_tree": WorldTreeStage.STAGE,  # Temporary Act XV, the finale (the campaign finale)
 }
 
 ## Acts in order: act number -> {name, subtitle} (stage select tabs).
@@ -620,6 +646,8 @@ const ACTS := {
 	13: {"name": "Act XIII", "subtitle": "The Celestial Host"},
 	# --- Act XIV (temporary number; final slot XIV): the Age of Titans ---
 	14: {"name": "Act XIV", "subtitle": "The Age of Titans"},
+	# --- Act XV (temporary number; final slot XV): the Turning Year ---
+	15: {"name": "Act XV", "subtitle": "The Turning Year"},
 }
 
 
@@ -718,4 +746,9 @@ const BOSS_ARRIVALS := {
 	"scarmaw": FernBasinStage.BOSS,
 	"ironbrow": GreatPlainStage.BOSS,
 	"gravejaw": LastDayStage.BOSS,  # The act's finale boss
+	# --- Act XV (temporary number): the Turning Year (stubs: each stage's
+	# BOSS until phase 2 gives the boss its own data file) ---
+	"stag_king": GreenwoodStage.BOSS,
+	"summer_queen": FaeCourtStage.BOSS,
+	"green_mother": WorldTreeStage.BOSS,  # The act's finale boss (the campaign's)
 }

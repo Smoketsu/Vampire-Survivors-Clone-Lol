@@ -116,6 +116,11 @@
 ## Herds, Scavengers, the Stampede of Ash), stepped after the Host's and before
 ## the obstacle push-out; null on every other act unless a Titans kind forced
 ## there asks for it (primeval_rules()).
+## Temporary Act XV (GDD §15.0 "The Turning Year foundation (phase 1)"):
+## `wild` (WildRules) runs the Turning Year's shared rules (the seasons, Bloom
+## and Blight, Overgrowth, Spring Returns), stepped after the Titans' and
+## before the obstacle push-out; null on every other act unless a Wild kind
+## forced there asks for it (wild_rules()).
 ## Online co-op (docs/coop/DESIGN.md): `coop` (CoopSession) holds two player
 ## slots in this one simulation; the per-player fields below (player, horde,
 ## abilities, grave_step, dread_rally, ultimates, stance, character, innates,
@@ -319,6 +324,11 @@ var host: HostRules = null
 ## STAGE has "primeval": true, or a Titans kind spawned on another stage asked
 ## for it through primeval_rules(); no other act creates it).
 var primeval: PrimevalRules = null
+# --- Act XV (temporary number): the Turning Year ---
+## The Turning Year's shared rules (WildRules; null unless the stage's STAGE
+## has "wild": true, or a Wild kind spawned on another stage asked for it
+## through wild_rules(); no other act creates it).
+var wild: WildRules = null
 ## Content wave 2: the run counters of the one-run achievements (RunRewards;
 ## never null once _ready ran; reads the run only, never changes gameplay).
 var rewards: RunRewards
@@ -568,6 +578,11 @@ func _ready() -> void:
 			var prg := PrimevalGround.new()  # The Titans stubs' placeholder floor (the STAGE's "floor").
 			prg.look = stage_def.get("floor", {})
 			ground = prg
+		# --- Act XV (temporary number): the Turning Year ---
+		"wild":
+			var wdg := WildGround.new()  # The Wild stubs' placeholder floor (the STAGE's "floor").
+			wdg.look = stage_def.get("floor", {})
+			ground = wdg
 		# --- Act XII (temporary number): the Necropolis of Sand ---
 		"necropolis":
 			ground = NecropolisGround.new()  # The Necropolis of Sand's four zone floors (NecropolisStage.ZONES).
@@ -697,6 +712,8 @@ func _ready() -> void:
 		host_rules()  # Act XIII (temporary): the Celestial Host's shared rules.
 	if bool(stage_def.get("primeval", false)):
 		primeval_rules()  # Act XIV (temporary): the Age of Titans' shared rules.
+	if bool(stage_def.get("wild", false)):
+		wild_rules()  # Act XV (temporary): the Turning Year's shared rules.
 
 	if autotest != null:
 		player.invulnerable = not GameState.autotest_mortal
@@ -1014,6 +1031,8 @@ func _physics_process(delta: float) -> void:
 		host.step(delta)  # Act XIII (temporary): the Last Trumpet, the scales, the Light, the halos (pushed summons pushed out next).
 	if primeval != null:
 		primeval.step(delta)  # Act XIV (temporary): the Stampede of Ash, the packs, the herds, the Skyraiders (trampled summons pushed out next).
+	if wild != null:
+		wild.step(delta)  # Act XV (temporary): Spring Returns, the seasons, the blight, the thickets (bodies in a new thicket pushed out next).
 	if pf != null:
 		tl = pf.lap(PerfProbe.SEC_ENEMIES, tl)
 	arena.resolve_all(delta)
@@ -1252,6 +1271,17 @@ func primeval_rules() -> PrimevalRules:
 		primeval = PrimevalRules.new(self)
 		add_child(primeval)
 	return primeval
+
+
+# --- Act XV (temporary number): the Turning Year ---
+## The Turning Year's shared rules, created on first use: at the start of a
+## Wild run, or when a Wild kind forced onto another stage is activated
+## (WildKit.reset()), so its seeds grow there (the clocks stay off off the act).
+func wild_rules() -> WildRules:
+	if wild == null:
+		wild = WildRules.new(self)
+		add_child(wild)
+	return wild
 
 
 # --- Act IV: the Asphodel Underworld ---

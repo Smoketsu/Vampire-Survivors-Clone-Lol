@@ -207,6 +207,10 @@ const STAGE_LINES: Dictionary = {
 	"fern_basin": "Follow the Harvesters' log to the day before the sky fell.",  # TUNING (not in GDD) Act XIV
 	"great_plain": "Where the herds run, and an old titan leads them.",  # TUNING (not in GDD) Act XIV
 	"last_day": "Under a white sky, the meteor is yours to call.",  # TUNING (not in GDD) Act XIV
+	# --- Act XV (temporary number): the Turning Year ---
+	"greenwood": "The world itself rises in an old forest to take its dead back.",  # TUNING (not in GDD) Act XV
+	"fae_court": "Endless summer, a court of masks, and a queen who bargains.",  # TUNING (not in GDD) Act XV
+	"world_tree": "At the centre of the world, the Green Mother remembers every claim.",  # TUNING (not in GDD) Act XV
 }
 
 ## Size (px) of an act tab button on the stage select (Act I / Act II / Act III).
@@ -218,7 +222,7 @@ const ACT_TAB_SIZE: Vector2 = Vector2(300.0, 40.0)  # TUNING (not in GDD)
 ## fits six acts at 1280 x 600 layout px (GDD §15.0 "Act IV foundation (phase 1)").
 const ACT_TABS_FULL_MAX: int = 3  # TUNING (not in GDD)
 ## Size (px) of a compact act tab ("Act IV").
-const ACT_TAB_COMPACT_SIZE: Vector2 = Vector2(62.0, 40.0)  # TUNING (not in GDD) Act IX: 104 -> 98, so nine tabs keep a margin at 1280 px; wave 1 of the last acts (Acts X-XII, temporary numbers): 98 -> 70, so twelve tabs fit at 1280 px until the reorder pass groups them by Part; Act XIV (temporary): 70 -> 62, so the fourteen-tab row stays under 1280 layout px (at 70 it was 1,370 px and the screen shrank to fit)
+const ACT_TAB_COMPACT_SIZE: Vector2 = Vector2(56.0, 40.0)  # TUNING (not in GDD) Act IX: 104 -> 98, so nine tabs keep a margin at 1280 px; wave 1 of the last acts (Acts X-XII, temporary numbers): 98 -> 70, so twelve tabs fit at 1280 px until the reorder pass groups them by Part; Act XIV (temporary): 70 -> 62, so the fourteen-tab row stays under 1280 layout px (at 70 it was 1,370 px and the screen shrank to fit); Act XV (temporary): 62 -> 56, so the fifteen-tab row stays under 1280 layout px
 ## Lock line of a registered stage that is not yet playable (StageRegistry "playable").
 const COMING_SOON: String = "Coming soon"  # TUNING (not in GDD)
 
@@ -645,6 +649,33 @@ const VIGNETTES: Dictionary = {
 		],
 		"fx": "motes", "fx_color": Color8(239, 107, 28),
 	},  # TUNING (not in GDD) ember motes
+	# --- Act XV (temporary number): the Turning Year (placeholder scenes from
+	# the shared kinds' art until each stage brings its own floor, props and
+	# boss; a missing sprite or tile is skipped) ---
+	"greenwood": {
+		"tile": "tiles/wild_greenwood",
+		"items": [
+			["wild/treant", 200, 120, true], ["wild/dryad", 168, 168, true], ["wild/thornling", 232, 190, true],
+			["summons/warrior", 46, 214, false], ["summons/archer", 88, 224, false],
+		],
+		"fx": "motes", "fx_color": Color8(89, 150, 65),
+	},  # TUNING (not in GDD) drifting leaves
+	"fae_court": {
+		"tile": "tiles/wild_fae",
+		"items": [
+			["wild/fae_knight", 204, 116, true], ["wild/will_o_wisp", 170, 96, true], ["wild/dryad", 232, 176, true],
+			["summons/warrior", 46, 214, false], ["summons/mage", 90, 224, false],
+		],
+		"fx": "motes", "fx_color": Color8(239, 166, 195),
+	},  # TUNING (not in GDD) blossom petals
+	"world_tree": {
+		"tile": "tiles/wild_tree",
+		"items": [
+			["wild/treant", 206, 120, true], ["wild/winter_fae", 170, 180, true], ["wild/great_stag", 232, 196, true],
+			["summons/warrior", 46, 214, false], ["summons/archer", 88, 224, false],
+		],
+		"fx": "motes", "fx_color": Color8(217, 149, 60),
+	},  # TUNING (not in GDD) gold leaves
 }
 ## Ambient motes of a vignette: most at once, seconds between two (random in
 ## range), life (s), rise speed (px/s), sideways sway (px).

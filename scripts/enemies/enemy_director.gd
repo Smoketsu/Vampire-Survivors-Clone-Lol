@@ -167,6 +167,14 @@
 ##     Host's folder. Its shared rules (Packs, Herds, Scavengers, the Stampede
 ##     of Ash) live in PrimevalRules (Game.primeval); its herds spawn through
 ##     spawn_at().
+##   * Act XV (temporary number), the Turning Year (GDD §15.0 "The Turning
+##     Year foundation (phase 1)"): its kinds are looked up through wild_def()
+##     (WildEnemyData, then each Wild stage's table) after the Titans', and its
+##     bosses load by name from WILD_BOSS_DIR after the Titans' folder. Its
+##     shared rules (the seasons, Bloom and Blight, Overgrowth, Spring Returns)
+##     live in WildRules (Game.wild); the trickle's weights and the waves'
+##     groups pass its season's timeline helper (SeasonCycle.timeline_weights()
+##     / filter_groups(): who comes in which season), as the Shogunate's night.
 ##   * Act VII, Ravensmoor (GDD §15.0 "Ravensmoor (Act VII phase 2)"): on a
 ##     stage with a "ravensmoor" config it creates the RavensmoorDirector (the
 ##     sleeping coffins, Coffin Nails, the ghoul packs, Old Greymane;
@@ -265,6 +273,9 @@ const HOST_BOSS_DIR: String = "res://scripts/enemies/host/"
 # --- Act XIV (temporary number): the Age of Titans ---
 ## Folder of the Age of Titans' boss scripts ("boss_<id>.gd", each a Boss).
 const PRIMEVAL_BOSS_DIR: String = "res://scripts/enemies/primeval/"
+# --- Act XV (temporary number): the Turning Year ---
+## Folder of the Turning Year's boss scripts ("boss_<id>.gd", each a Boss).
+const WILD_BOSS_DIR: String = "res://scripts/enemies/wild/"
 
 ## The boss entered the arena.
 signal boss_spawned(boss: Boss)
@@ -1240,6 +1251,8 @@ func _spawn_trickle(delta: float) -> void:
 		var weights: Dictionary = seg["weights"]  # The segment's kind weights.
 		if game.shogunate != null:
 			weights = game.shogunate.sun.timeline_weights(seg)  # Act V: night kinds only at night (the one timeline helper).
+		if game.wild != null:
+			weights = game.wild.seasons.timeline_weights(seg)  # Act XV (temporary): each season's kinds (the one timeline helper; the weights unchanged off the act).
 		var kind := _pick_kind(game.difficulty.trickle_weights(weights, game.elapsed))
 		var pos := _ring_point(randf() * TAU) if game.coop == null else _ring_point_at(game.coop.spawn_anchor(), randf() * TAU)  # Spawn point on the ring (co-op: each necromancer in turn).
 		var elite := elite_chance > 0.0 and randf() < elite_chance  # Promoted by the level.
@@ -1549,6 +1562,8 @@ func _run_event(ev: Dictionary) -> void:
 	var groups: Array = ev["groups"]
 	if game.shogunate != null:
 		groups = game.shogunate.sun.filter_groups(groups)  # Act V: night kinds only at night (the one timeline helper).
+	if game.wild != null:
+		groups = game.wild.seasons.filter_groups(groups)  # Act XV (temporary): other seasons' kinds held back (the one timeline helper).
 	if harbour != null and harbour.wave_mult() < 1.0:
 		groups = _scaled_groups(groups, harbour.wave_mult())  # Act II: sunk bell buoys shrink the Eye's waves.
 	if assembly != null and assembly.wave_mult() < 1.0:
@@ -1654,7 +1669,8 @@ func _spawn_boss() -> void:
 	# from CONCORD_BOSS_DIR (Act IX), else a Necropolis Dynasty boss from
 	# DYNASTY_BOSS_DIR (Act XII, temporary), else a Celestial Host boss from
 	# HOST_BOSS_DIR (Act XIII, temporary), else an Age of Titans boss from
-	# PRIMEVAL_BOSS_DIR (Act XIV, temporary); Sir Alaric when none exists.
+	# PRIMEVAL_BOSS_DIR (Act XIV, temporary), else a Turning Year boss from
+	# WILD_BOSS_DIR (Act XV, temporary); Sir Alaric when none exists.
 	var sid := String(boss_info.get("script", boss_info["id"]))  # Boss script id.
 	match sid:
 		"vael":
@@ -1689,6 +1705,8 @@ func _spawn_boss() -> void:
 				path = HOST_BOSS_DIR + "boss_" + sid + ".gd"  # Act XIII (temporary): a Celestial Host boss script.
 			if not ResourceLoader.exists(path):
 				path = PRIMEVAL_BOSS_DIR + "boss_" + sid + ".gd"  # Act XIV (temporary): an Age of Titans boss script.
+			if not ResourceLoader.exists(path):
+				path = WILD_BOSS_DIR + "boss_" + sid + ".gd"  # Act XV (temporary): a Turning Year boss script.
 			boss = (load(path) as Script).new() as Boss if ResourceLoader.exists(path) else BossAlaric.new()
 	add_child(boss)
 	boss.setup_boss(game, _ring_point(randf() * TAU), game.difficulty.boss_hp_mult() * float(stage_def["enemy_hp_mult"]), _next_slot)
@@ -1802,6 +1820,7 @@ func spawn_at(kind: String, pos: Vector2, elite: bool) -> Enemy:
 ## then the Necropolis Dynasty's (Act XII, temporary: dynasty_def()),
 ## then the Celestial Host's (Act XIII, temporary: host_def()),
 ## then the Age of Titans' (Act XIV, temporary: primeval_def()),
+## then the Turning Year's (Act XV, temporary: wild_def()),
 ## then SanctumEnemyData.ENEMIES (the Sanctum of Judgment's soldiers and the
 ## Cathedral Guardian).
 func enemy_def(kind: String) -> Dictionary:
@@ -1853,6 +1872,9 @@ func enemy_def(kind: String) -> Dictionary:
 	var primeval := primeval_def(kind)  # Act XIV (temporary) kinds ({} when not a Titans kind).
 	if not primeval.is_empty():
 		return primeval
+	var wild := wild_def(kind)  # Act XV (temporary) kinds ({} when not a Wild kind).
+	if not wild.is_empty():
+		return wild
 	return SanctumEnemyData.ENEMIES[kind]
 
 
@@ -2063,6 +2085,22 @@ static func primeval_def(kind: String) -> Dictionary:
 	return {}
 
 
+# --- Act XV (temporary number): the Turning Year ---
+## Design row of Turning Year kind `kind` (real id), or {} when it is none:
+## WildEnemyData (the shared kinds) first, then each Wild stage's own table
+## (phase 2 fills them).
+static func wild_def(kind: String) -> Dictionary:
+	if WildEnemyData.ENEMIES.has(kind):
+		return WildEnemyData.ENEMIES[kind]
+	if GreenwoodEnemyData.ENEMIES.has(kind):
+		return GreenwoodEnemyData.ENEMIES[kind]
+	if FaeCourtEnemyData.ENEMIES.has(kind):
+		return FaeCourtEnemyData.ENEMIES[kind]
+	if WorldTreeEnemyData.ENEMIES.has(kind):
+		return WorldTreeEnemyData.ENEMIES[kind]
+	return {}
+
+
 ## True if `kind` is a spawnable enemy kind of any stage's data (real ids;
 ## stage aliases are not resolved here).
 static func is_known_kind(kind: String) -> bool:
@@ -2079,7 +2117,8 @@ static func is_known_kind(kind: String) -> bool:
 			or not norse_def(kind).is_empty() \
 			or not dynasty_def(kind).is_empty() \
 			or not host_def(kind).is_empty() \
-			or not primeval_def(kind).is_empty()  # Act V to Act IX, the Black Tide, the Norse act, the Dynasty, the Host, the Titans
+			or not primeval_def(kind).is_empty() \
+			or not wild_def(kind).is_empty()  # Act V to Act IX, the Black Tide, the Norse act, the Dynasty, the Host, the Titans, the Turning Year
 
 
 ## Registers `e` as the living miniboss (GuardianKit; the HUD shows its bar

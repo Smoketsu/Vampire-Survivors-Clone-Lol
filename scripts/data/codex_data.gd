@@ -55,7 +55,9 @@ const TABS: Array = [["feats", "Achievements"], ["spells", "Spells"], ["summons"
 		# --- Act XIII (temporary number): the Celestial Host ---
 		["host", "Host"],
 		# --- Act XIV (temporary number): the Age of Titans ---
-		["primeval", "Titans"]]  # TUNING (not in GDD) Act XIV (temporary) the Titans'; Act XIII (temporary) the Host's; Act II adds the Ancient Eye tab, Act III the Electronic Empire's, Act IV the Olympian Republic's, Act V the Shogunate's, Act VI the Inferno's, Act VII the Sanguine Court's, Act VIII the Last Line's, Act IX the Concord's, Act XII (temporary) the Dynasty's
+		["primeval", "Titans"],
+		# --- Act XV (temporary number): the Turning Year ---
+		["wild", "Wild"]]  # TUNING (not in GDD) Act XV (temporary) the Turning Year's; Act XIV (temporary) the Titans'; Act XIII (temporary) the Host's; Act II adds the Ancient Eye tab, Act III the Electronic Empire's, Act IV the Olympian Republic's, Act V the Shogunate's, Act VI the Inferno's, Act VII the Sanguine Court's, Act VIII the Last Line's, Act IX the Concord's, Act XII (temporary) the Dynasty's
 
 ## Summon classes shown on the Summons page (UnitData ids, card order). The
 ## Profane Bishop is a merge evolution, so it sits with the evolutions.
@@ -454,6 +456,20 @@ const PRIMEVAL_TITANS: Array[String] = ["tyrant",
 	"horncharger", "clubtail", "mother_clubtail"]
 ## Titans stage bosses (StageRegistry.BOSS_ARRIVALS ids).
 const PRIMEVAL_BOSSES: Array[String] = ["scarmaw", "ironbrow", "gravejaw"]
+# --- Act XV (temporary number): the Turning Year ---
+## The Turning Year (GDD §15.0 "The Turning Year foundation (phase 1)"; the
+## Wild tab), GROUPED BY GROUP (WildRulesData.GROUPS): what grows, the fae, the
+## Wild Hunt, the spirits, then its stage bosses (StageRegistry.BOSS_ARRIVALS
+## ids). Each Wild stage adds its own as it is built (phase 2).
+const WILD_GROWTH: Array[String] = ["thornling", "dryad", "treant", "corpse_bloom"]
+## The fae (group "fae": the knights and the Winter Court).
+const WILD_FAE: Array[String] = ["fae_knight", "winter_fae"]
+## The Wild Hunt (group "hunt").
+const WILD_HUNT: Array[String] = ["great_stag", "wild_rider"]
+## The spirits (group "spirits").
+const WILD_SPIRITS: Array[String] = ["will_o_wisp", "spore_mother"]
+## Wild stage bosses (StageRegistry.BOSS_ARRIVALS ids).
+const WILD_BOSSES: Array[String] = ["stag_king", "summer_queen", "green_mother"]
 
 ## Section headers of each page: page id -> [[section id, header text], ...].
 const SECTIONS: Dictionary = {
@@ -491,6 +507,9 @@ const SECTIONS: Dictionary = {
 	# --- Act XIV (temporary number): the Age of Titans (grouped by group) ---
 	"primeval": [["primeval_swarm", "Swarms"], ["primeval_hunters", "Hunters"], ["primeval_herds", "Herds"],
 		["primeval_fliers", "Fliers"], ["primeval_titans", "Titans"], ["primeval_bosses", "Bosses"]],  # TUNING (not in GDD) Act XIV
+	# --- Act XV (temporary number): the Turning Year (grouped by group) ---
+	"wild": [["wild_growth", "What Grows"], ["wild_fae", "The Fae"], ["wild_hunt", "The Wild Hunt"],
+		["wild_spirits", "Spirits"], ["wild_bosses", "Bosses"]],  # TUNING (not in GDD) Act XV
 }
 
 ## One-sentence descriptions of the Covenant (the enemy data has none),
@@ -831,6 +850,20 @@ const DESCRIPTIONS: Dictionary = {
 	"scarmaw": "Scarmaw, the Great Raptor: the alpha of every pack in the basin. She hunts from the ferns.",  # Proposal
 	"ironbrow": "Old Ironbrow, the Horned Titan: he leads the stampede himself, and his charge breaks rock.",  # Proposal
 	"gravejaw": "Old Gravejaw, the Tyrant King: his roar calls every beast on the map, and he hunts only you.",  # Proposal
+	# --- Act XV (temporary number): the Turning Year ---
+	"thornling": "A twig creature of the Wild. They crawl out of the undergrowth in swarms of twelve.",  # Proposal
+	"dryad": "A spirit of the trees who plants thorn seeds round your army and heals the Wild. Kill her first.",  # Proposal (Overgrowth)
+	"treant": "A slow, walking oak. What it strikes, it roots in place.",  # Proposal
+	"corpse_bloom": "A great flower that feeds on the dead of the field and buds Thornlings. Break it.",  # Proposal
+	"fae_knight": "A knight of the fae in leaf armour, with a sword of thorn.",  # Proposal
+	"winter_fae": "A lady of the Winter Court. She comes only in winter, with bolts of frost.",  # Proposal (the Turning Year)
+	"great_stag": "A great stag of the old wood. Its antler charge scatters your ring.",  # Proposal
+	"wild_rider": "A spectral horseman of the Wild Hunt and his two hounds. The Hunt sweeps the wood in a line.",  # Proposal
+	"will_o_wisp": "A drifting light that draws your dead away from you. Kill it.",  # Proposal
+	"spore_mother": "A mushroom matron whose spores rot your dead and whose mould kills your blight.",  # Proposal
+	"stag_king": "The Stag King, the antlered lord of the Greenwood. He leads the Wild Hunt himself.",  # Proposal
+	"summer_queen": "The Summer Queen of the fae. She wears many faces, and she will offer you a bargain.",  # Proposal
+	"green_mother": "The Green Mother, grown from the World-Tree: the whole year in one figure, half in bloom and half in frost.",  # Proposal
 	# --- Act XIV (temporary number): the Last Day ---
 	"stormwing": "A great pterosaur. Her wing gust blows your ring apart; she lands to peck, and then she can be hit.",  # Owner-approved proposal
 	"thunderwing": "Thunderwing, the Sky King: a giant pterosaur whose wing gusts clear the whole ring.",  # Owner-approved proposal (miniboss)
@@ -949,6 +982,12 @@ const LOCKED_HINT: Dictionary = {
 	"primeval_fliers": "Slay one to record it.",  # TUNING (not in GDD) Act XIV fliers
 	"primeval_titans": "Slay one to record it.",  # TUNING (not in GDD) Act XIV titans
 	"primeval_bosses": "Face it to record it.",  # TUNING (not in GDD) Act XIV bosses
+	# --- Act XV (temporary number): the Turning Year ---
+	"wild_growth": "Slay one to record it.",  # TUNING (not in GDD) Act XV
+	"wild_fae": "Slay one to record it.",  # TUNING (not in GDD) Act XV
+	"wild_hunt": "Slay one to record it.",  # TUNING (not in GDD) Act XV
+	"wild_spirits": "Slay one to record it.",  # TUNING (not in GDD) Act XV
+	"wild_bosses": "Face it to record it.",  # TUNING (not in GDD) Act XV bosses
 	"evolution": "Undiscovered.",  # TUNING (not in GDD) owner rule: no hint
 }
 ## Name shown for a locked entry.
@@ -1028,6 +1067,12 @@ const TAGS: Dictionary = {
 	"primeval_fliers": "Flier",  # TUNING (not in GDD) Act XIV
 	"primeval_titans": "Titan",  # TUNING (not in GDD) Act XIV
 	"primeval_bosses": "Stage boss",  # TUNING (not in GDD) Act XIV bosses
+	# --- Act XV (temporary number): the Turning Year ---
+	"wild_growth": "What grows",  # TUNING (not in GDD) Act XV
+	"wild_fae": "Fae",  # TUNING (not in GDD) Act XV
+	"wild_hunt": "The Wild Hunt",  # TUNING (not in GDD) Act XV
+	"wild_spirits": "Spirit",  # TUNING (not in GDD) Act XV
+	"wild_bosses": "Stage boss",  # TUNING (not in GDD) Act XV bosses
 }
 
 # --- Layout (layout px at 1280x720; TUNING, not in GDD) -----------------------------
@@ -1333,14 +1378,16 @@ static func is_known(cat: String, id: String) -> bool:
 					or HOST_LIGHTS.has(id) or HOST_SOLDIERS.has(id) or HOST_CHOIR.has(id) \
 					or HOST_ORDERS.has(id) or HOST_GUARDIANS.has(id) \
 					or PRIMEVAL_SWARM.has(id) or PRIMEVAL_HUNTERS.has(id) or PRIMEVAL_HERDS.has(id) \
-					or PRIMEVAL_FLIERS.has(id) or PRIMEVAL_TITANS.has(id)  # Act IV to Act XIV (temporary numbers)
+					or PRIMEVAL_FLIERS.has(id) or PRIMEVAL_TITANS.has(id) \
+					or WILD_GROWTH.has(id) or WILD_FAE.has(id) or WILD_HUNT.has(id) or WILD_SPIRITS.has(id)  # Act IV to Act XV (temporary numbers)
 		BOSS:
 			return BOSSES.has(id) or EYE_BOSSES.has(id) or EMPIRE_BOSSES.has(id) or PANTHEON_BOSSES.has(id) \
 					or SHOGUNATE_BOSSES.has(id) or INFERNO_BOSSES.has(id) or COURT_BOSSES.has(id) \
 					or CITY_BOSSES.has(id) or CONCORD_BOSSES.has(id) or CORSAIR_BOSSES.has(id) \
 					or NORSE_BOSSES.has(id) or DYNASTY_BOSSES.has(id) \
 					or HOST_BOSSES.has(id) \
-					or PRIMEVAL_BOSSES.has(id)  # (Act XIV, temporary, last)
+					or PRIMEVAL_BOSSES.has(id) \
+					or WILD_BOSSES.has(id)  # (Act XV, temporary, last)
 	return false
 
 
@@ -1369,14 +1416,16 @@ static func total(cat: String) -> int:
 					+ HOST_LIGHTS.size() + HOST_SOLDIERS.size() + HOST_CHOIR.size() \
 					+ HOST_ORDERS.size() + HOST_GUARDIANS.size() \
 					+ PRIMEVAL_SWARM.size() + PRIMEVAL_HUNTERS.size() + PRIMEVAL_HERDS.size() \
-					+ PRIMEVAL_FLIERS.size() + PRIMEVAL_TITANS.size()  # Act IV to Act XIV (temporary numbers)
+					+ PRIMEVAL_FLIERS.size() + PRIMEVAL_TITANS.size() \
+					+ WILD_GROWTH.size() + WILD_FAE.size() + WILD_HUNT.size() + WILD_SPIRITS.size()  # Act IV to Act XV (temporary numbers)
 		BOSS:
 			return BOSSES.size() + EYE_BOSSES.size() + EMPIRE_BOSSES.size() + PANTHEON_BOSSES.size() \
 					+ SHOGUNATE_BOSSES.size() + INFERNO_BOSSES.size() + COURT_BOSSES.size() \
 					+ CITY_BOSSES.size() + CONCORD_BOSSES.size() + CORSAIR_BOSSES.size() \
 					+ NORSE_BOSSES.size() + DYNASTY_BOSSES.size() \
 					+ HOST_BOSSES.size() \
-					+ PRIMEVAL_BOSSES.size()  # (Act XIV, temporary, last)
+					+ PRIMEVAL_BOSSES.size() \
+					+ WILD_BOSSES.size()  # (Act XV, temporary, last)
 	return 0
 
 
@@ -1427,6 +1476,9 @@ static func enemy_row(id: String) -> Dictionary:
 	var primeval := EnemyDirector.primeval_def(id)  # Act XIV (temporary) kinds ({} when none).
 	if not primeval.is_empty():
 		return primeval
+	var wild := EnemyDirector.wild_def(id)  # Act XV (temporary) kinds ({} when none).
+	if not wild.is_empty():
+		return wild
 	match id:
 		"alaric":
 			return EnemyData.BOSS

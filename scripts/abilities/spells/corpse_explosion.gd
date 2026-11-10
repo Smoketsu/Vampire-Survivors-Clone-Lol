@@ -18,6 +18,10 @@
 ## The Carrion Lord's Grave Harvest innate (CharacterInnates) adds the
 ## corpses of fallen summons through add_summon_corpse(); they detonate like
 ## any other corpse (stat carrion_summon_bursts).
+## Act XV (temporary number), the Turning Year: a corpse's life is
+## corpse_life(), which asks the Turning Year's one season path
+## (SeasonCycle.corpse_life(): Autumn's 3 s rot, Spring Returns' burial) and is
+## AbilityData.CORPSE_LIFE everywhere else.
 class_name CorpseExplosion
 extends NecroSpell
 
@@ -134,7 +138,7 @@ func _cast(stats: Dictionary) -> bool:
 	_cands.clear()
 	for k in AbilityData.CORPSE_MAX:
 		var t := _corpse_time[k]  # Death time of this slot.
-		if t < 0.0 or game.elapsed - t > AbilityData.CORPSE_LIFE or _corpse_pos[k].distance_to(p) > reach:
+		if t < 0.0 or game.elapsed - t > corpse_life() or _corpse_pos[k].distance_to(p) > reach:
 			continue
 		var n := count_enemies(_corpse_pos[k], r)  # Live enemies the burst would hit.
 		if n > 0:
@@ -220,12 +224,21 @@ func _step_zones(delta: float) -> void:
 			i += 1
 
 
+## Seconds a corpse lasts now: AbilityData.CORPSE_LIFE, except on a Turning
+## Year stage, where the season decides (SeasonCycle.corpse_life()).
+func corpse_life() -> float:
+	if game.wild == null:
+		return AbilityData.CORPSE_LIFE
+	return game.wild.seasons.corpse_life(AbilityData.CORPSE_LIFE)
+
+
 func _draw() -> void:
 	var now := game.elapsed  # For corpse fading.
+	var life := corpse_life()  # s, a corpse's life now.
 	for k in AbilityData.CORPSE_MAX:
 		var t := _corpse_time[k]  # Death time of this slot.
-		if t >= 0.0 and now - t <= AbilityData.CORPSE_LIFE:
-			SpellGlyphs.draw_corpse(self, _corpse_pos[k], 1.0 - (now - t) / AbilityData.CORPSE_LIFE, k)
+		if t >= 0.0 and now - t <= life:
+			SpellGlyphs.draw_corpse(self, _corpse_pos[k], 1.0 - (now - t) / life, k)
 	for z in _zones:
 		SpellGlyphs.draw_spike_field(self, z.pos, z.radius, z.time_left / maxf(z.duration, 0.01), now)
 	for b in _blasts:

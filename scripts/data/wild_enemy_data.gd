@@ -1,0 +1,348 @@
+## WildEnemyData — immutable design data for the kinds THE TURNING YEAR fields
+## on every one of its stages (temporary Act XV, final slot XV, the campaign
+## finale; GDD §15.0 "The Turning Year foundation (phase 1)"; design
+## docs/proposals/LAST_SIX_ACTS.md section XV, "Roster"). The world itself
+## rises to take its dead back: moss, bark, blossom pink, gold leaves and frost
+## white; the beasts are few and fae-touched (the Titans own the herds), and
+## winter is the fae's Winter Court (the Norse act owns the giants and wolves).
+## The shared kinds of phase 1:
+##   thornling    — growth: twig creatures in swarms of 12; fodder.
+##   dryad        — growth (female, figure style): plants thicket SEEDS
+##                  (OVERGROWTH, DryadKit) and heals the Wild ("healer").
+##   treant       — growth: the slow heavy; the Reckoning's heavy (Spring
+##                  Returns); phase 2 adds the root on its strike.
+##   corpse_bloom — growth: a structure; phase 2 makes it eat corpses on the
+##                  field and spawn thornlings.
+##   fae_knight   — fae (male): leaf armour and a thorn sword; phase 2 adds the
+##                  short blinks through the ring.
+##   winter_fae   — fae (female, figure style): frost bolts from range; WINTER
+##                  ONLY (row "season": SeasonCycle's timeline helper keeps it
+##                  out of every other season); phase 2 adds the chill.
+##   great_stag   — hunt (male): an elite; phase 2 adds the antler charge.
+##   wild_rider   — hunt (male): a spectral horseman; phase 2 adds the two
+##                  hounds and the sweep across the arena.
+##   will_o_wisp  — spirits: a lure; phase 2 draws summons away from the ring
+##                  through the existing SummonedUnit.misdirect() hook.
+##   spore_mother — spirits (female, figure style): phase 2 adds the spores
+##                  that rot summons and the mould that kills blight.
+## Each stage's own kinds live in its own file (GreenwoodEnemyData,
+## FaeCourtEnemyData, WorldTreeEnemyData; empty until phase 2: the stage
+## minibosses and the bosses' allies); EnemyDirector.enemy_def() looks them up
+## through wild_def(), this file first, after the Age of Titans' tables.
+##
+## Rows have every key of an EnemyData.ENEMIES row (same meaning) plus the
+## optional Turning Year keys (absent = off):
+##   faction    — "wild" (the Codex's Wild tab, the reports; every Wild kind
+##                heals on living ground, BloomField).
+##   kit        — a CovenantKit id; a Turning Year kit lives in
+##                scripts/enemies/wild/<kit>_kit.gd (CovenantKits loads it by
+##                name after the Titans' folder, so kit ids must be unique
+##                across every kit folder). Every kind has one (a WildKit).
+##   group      — String, one of WildRulesData.GROUPS.
+##   season     — String, one of WildRulesData.SEASON_IDS: the kind comes in
+##                the trickle and the waves only in that season
+##                (SeasonCycle.timeline_weights() / filter_groups()).
+##   no_bloom   — true: never heals on living ground (bosses set it until
+##                phase 2 decides).
+##   plant_*    — a planter's seeds (DryadKit -> Thickets.plant()).
+##   fodder     — true: fodder (reports).
+## The GDD gives no numbers: everything is TUNING (not in GDD) unless marked as
+## the owner-approved proposal. Tuned for the act's FINAL slot XV (the hardest
+## act), not its temporary number.
+class_name WildEnemyData
+extends RefCounted
+
+## Faction id of the Turning Year's kinds (row "faction").
+const FACTION: String = WildRulesData.FACTION
+## Kind id of the Thornling (the swarm).
+const THORNLING: String = "thornling"
+## Kind id of the Dryad (the planter).
+const DRYAD: String = "dryad"
+## Kind id of the Treant (the heavy; the Reckoning's).
+const TREANT: String = "treant"
+## Kind id of the Fae Knight.
+const FAE_KNIGHT: String = "fae_knight"
+## Kind id of the Will-o'-Wisp.
+const WISP: String = "will_o_wisp"
+## Kind id of the Great Stag.
+const GREAT_STAG: String = "great_stag"
+## Kind id of the Rider of the Wild Hunt.
+const WILD_RIDER: String = "wild_rider"
+## Kind id of the Spore Mother.
+const SPORE_MOTHER: String = "spore_mother"
+## Kind id of the Winter Fae (winter only).
+const WINTER_FAE: String = "winter_fae"
+## Kind id of the Corpse-Bloom (a structure).
+const CORPSE_BLOOM: String = "corpse_bloom"
+## Sprite folder of the Turning Year's kinds (assets/sprites/wild/).
+const SPRITE_DIR: String = "wild/"
+
+## Spring Returns' heavy (the RECKONING "kind" of every Wild stage; "everything grows back").
+const RECKONING_KIND: String = TREANT
+## Spring Returns' companions (the RECKONING "companions": all of them).
+const RECKONING_COMPANIONS: Array = [
+	{"kind": THORNLING, "count": 12, "growth": 2.0},  # TUNING (not in GDD) a swarm of 12, as the roster says
+	{"kind": DRYAD, "count": 2, "growth": 1.0},  # TUNING (not in GDD) more seeds
+	{"kind": FAE_KNIGHT, "count": 3, "growth": 1.0},  # TUNING (not in GDD)
+]
+
+## The Turning Year's shared kinds, keyed by kind id.
+const ENEMIES := {
+	# Growth: the swarm (owner-approved proposal: "Thornling | Fodder swarm |
+	# Twig creatures in swarms of 12 | Anything").
+	"thornling": {
+		"display_name": "Thornling",
+		"max_hp": 11.0,  # TUNING (not in GDD) fodder (a Scuttler 10; slot XV is the hardest)
+		"move_speed": 80.0,  # TUNING (not in GDD) px/s
+		"damage": 2.5,  # TUNING (not in GDD) a scratch, before the time scaling
+		"attack_interval": 0.9,  # TUNING (not in GDD) s
+		"attack_range": 4.0,  # TUNING (not in GDD) px
+		"radius": 6.0,  # TUNING (not in GDD) px (~22 px sprite)
+		"armor": 0.0,
+		"xp": 1,  # TUNING (not in GDD)
+		"behavior": "melee",
+		"projectile_speed": 0.0,
+		"undead_damage_mult": 1.0,
+		"heal_amount": 0.0,
+		"heal_interval": 0.0,
+		"heal_radius": 0.0,
+		"target_priority": 0.2,  # TUNING (not in GDD) 0..1, fodder
+		"mass": 0.4,  # TUNING (not in GDD)
+		"faction": FACTION,
+		"kit": "thornling",
+		"group": "growth",
+		"fodder": true,
+	},  # The Thornling.
+	# Growth: the planter (owner-approved proposal: "Dryad (female, figure
+	# style) | Support | Plants thicket seeds; heals the Wild on living ground |
+	# Priority target"). OVERGROWTH's seeds; the heal is the plain healer's.
+	"dryad": {
+		"display_name": "Dryad",
+		"max_hp": 40.0,  # TUNING (not in GDD) a support
+		"move_speed": 48.0,  # TUNING (not in GDD) px/s
+		"damage": 3.0,  # TUNING (not in GDD) a weak lash
+		"attack_interval": 1.4,  # TUNING (not in GDD) s
+		"attack_range": 6.0,  # TUNING (not in GDD) px
+		"radius": 10.0,  # TUNING (not in GDD) px (~52 px sprite)
+		"armor": 0.05,  # TUNING (not in GDD)
+		"xp": 4,  # TUNING (not in GDD)
+		"behavior": "healer",
+		"projectile_speed": 0.0,
+		"undead_damage_mult": 1.0,
+		"heal_amount": 8.0,  # TUNING (not in GDD) HP a heal
+		"heal_interval": 3.0,  # TUNING (not in GDD) s
+		"heal_radius": 150.0,  # TUNING (not in GDD) px
+		"target_priority": 0.8,  # TUNING (not in GDD) 0..1; "priority target"
+		"mass": 0.8,  # TUNING (not in GDD)
+		"faction": FACTION,
+		"kit": "dryad",
+		"group": "growth",
+		"plant_first": 5.0,  # TUNING (not in GDD) s after it comes on
+		"plant_every": 14.0,  # TUNING (not in GDD) s between two seeds
+		"plant_reach": 260.0,  # TUNING (not in GDD) px from the nearest necromancer at which it plants
+		"plant_ahead": 120.0,  # TUNING (not in GDD) px toward him from itself the seed lands
+	},  # The Dryad.
+	# Growth: the heavy (owner-approved proposal: "Treant | Heavy | Slow; roots
+	# the summon it strikes | Fire, Wither, Siegecraft"). The root on its strike
+	# is phase 2's.
+	"treant": {
+		"display_name": "Treant",
+		"max_hp": 420.0,  # TUNING (not in GDD) a heavy
+		"move_speed": 34.0,  # TUNING (not in GDD) px/s; slow
+		"damage": 14.0,  # TUNING (not in GDD) a branch, before the time scaling
+		"attack_interval": 1.6,  # TUNING (not in GDD) s
+		"attack_range": 12.0,  # TUNING (not in GDD) px
+		"radius": 18.0,  # TUNING (not in GDD) px (~80 px sprite)
+		"armor": 0.3,  # TUNING (not in GDD) bark
+		"xp": 16,  # TUNING (not in GDD)
+		"behavior": "melee",
+		"projectile_speed": 0.0,
+		"undead_damage_mult": 1.0,
+		"heal_amount": 0.0,
+		"heal_interval": 0.0,
+		"heal_radius": 0.0,
+		"target_priority": 0.9,  # TUNING (not in GDD) 0..1
+		"mass": 5.0,  # TUNING (not in GDD)
+		"faction": FACTION,
+		"kit": "treant",
+		"group": "growth",
+	},  # The Treant.
+	# Growth: the structure (owner-approved proposal: "Corpse-Bloom | Structure
+	# | Eats corpses on the field and spawns thornlings | Break it"). The eating
+	# is phase 2's; not in the stubs' timelines (--spawn= fields it).
+	"corpse_bloom": {
+		"display_name": "Corpse-Bloom",
+		"max_hp": 380.0,  # TUNING (not in GDD) a structure (x the time and stage scaling)
+		"move_speed": 0.0,
+		"damage": 0.0,  # It never attacks.
+		"attack_interval": 1.0,
+		"attack_range": 0.0,
+		"radius": 16.0,  # TUNING (not in GDD) px (~48 px sprite)
+		"armor": 0.1,  # TUNING (not in GDD)
+		"xp": 10,  # TUNING (not in GDD)
+		"behavior": "structure",  # It never moves.
+		"projectile_speed": 0.0,
+		"undead_damage_mult": 1.0,
+		"heal_amount": 0.0,
+		"heal_interval": 0.0,
+		"heal_radius": 0.0,
+		"target_priority": 0.85,  # TUNING (not in GDD) 0..1; break it
+		"mass": 60.0,  # Immovable.
+		"is_structure": true,  # No corpse, no knockback.
+		"faction": FACTION,
+		"kit": "corpse_bloom",
+		"group": "growth",
+	},  # The Corpse-Bloom.
+	# The fae: the soldier (owner-approved proposal: "Fae Knight (male) |
+	# Soldier | Leaf armour and a thorn sword; short blinks through the ring |
+	# Blockers inside the ring"). The blinks are phase 2's.
+	"fae_knight": {
+		"display_name": "Fae Knight",
+		"max_hp": 70.0,  # TUNING (not in GDD) a soldier
+		"move_speed": 64.0,  # TUNING (not in GDD) px/s
+		"damage": 8.0,  # TUNING (not in GDD) a thorn sword, before the time scaling
+		"attack_interval": 1.0,  # TUNING (not in GDD) s
+		"attack_range": 8.0,  # TUNING (not in GDD) px
+		"radius": 10.0,  # TUNING (not in GDD) px (~52 px sprite)
+		"armor": 0.2,  # TUNING (not in GDD) leaf armour
+		"xp": 5,  # TUNING (not in GDD)
+		"behavior": "melee",
+		"projectile_speed": 0.0,
+		"undead_damage_mult": 1.0,
+		"heal_amount": 0.0,
+		"heal_interval": 0.0,
+		"heal_radius": 0.0,
+		"target_priority": 0.65,  # TUNING (not in GDD) 0..1
+		"mass": 1.2,  # TUNING (not in GDD)
+		"faction": FACTION,
+		"kit": "fae_knight",
+		"group": "fae",
+	},  # The Fae Knight.
+	# The fae: the Winter Court (owner-approved proposal: "Winter Fae (female,
+	# figure style) | Ranged | Frost bolts that chill summons; winter only |
+	# Fire; Mages"). The chill is phase 2's.
+	"winter_fae": {
+		"display_name": "Winter Fae",
+		"max_hp": 34.0,  # TUNING (not in GDD) ranged
+		"move_speed": 50.0,  # TUNING (not in GDD) px/s
+		"damage": 4.5,  # TUNING (not in GDD) a frost bolt, before the time scaling
+		"attack_interval": 2.8,  # TUNING (not in GDD) s
+		"attack_range": 260.0,  # TUNING (not in GDD) px
+		"radius": 9.0,  # TUNING (not in GDD) px (~52 px sprite)
+		"armor": 0.05,  # TUNING (not in GDD)
+		"xp": 4,  # TUNING (not in GDD)
+		"behavior": "ranged",
+		"projectile_speed": 280.0,  # TUNING (not in GDD) px/s
+		"undead_damage_mult": 1.0,
+		"heal_amount": 0.0,
+		"heal_interval": 0.0,
+		"heal_radius": 0.0,
+		"target_priority": 0.65,  # TUNING (not in GDD) 0..1
+		"mass": 0.8,  # TUNING (not in GDD)
+		"faction": FACTION,
+		"kit": "winter_fae",
+		"group": "fae",
+		"season": "winter",  # Owner-approved proposal: "winter only"
+	},  # The Winter Fae.
+	# The Wild Hunt: the elite beast (owner-approved proposal: "Great Stag
+	# (male) | Elite | A telegraphed antler charge that scatters the ring |
+	# Grave Step; Bone Wall"). The charge is phase 2's.
+	"great_stag": {
+		"display_name": "Great Stag",
+		"max_hp": 300.0,  # TUNING (not in GDD) an elite
+		"move_speed": 70.0,  # TUNING (not in GDD) px/s
+		"damage": 12.0,  # TUNING (not in GDD) antlers, before the time scaling
+		"attack_interval": 1.3,  # TUNING (not in GDD) s
+		"attack_range": 10.0,  # TUNING (not in GDD) px
+		"radius": 16.0,  # TUNING (not in GDD) px (~72 px sprite)
+		"armor": 0.15,  # TUNING (not in GDD)
+		"xp": 14,  # TUNING (not in GDD)
+		"behavior": "melee",
+		"projectile_speed": 0.0,
+		"undead_damage_mult": 1.0,
+		"heal_amount": 0.0,
+		"heal_interval": 0.0,
+		"heal_radius": 0.0,
+		"target_priority": 0.85,  # TUNING (not in GDD) 0..1
+		"mass": 3.0,  # TUNING (not in GDD)
+		"faction": FACTION,
+		"kit": "great_stag",
+		"group": "hunt",
+	},  # The Great Stag.
+	# The Wild Hunt: the rider (owner-approved proposal: "Rider of the Wild Hunt
+	# (male) | Elite | A spectral horseman and two hounds; sweeps across the
+	# arena in a line | Step out of the line; Archers"). The hounds and the
+	# sweep are phase 2's.
+	"wild_rider": {
+		"display_name": "Rider of the Wild Hunt",
+		"max_hp": 240.0,  # TUNING (not in GDD) an elite
+		"move_speed": 82.0,  # TUNING (not in GDD) px/s
+		"damage": 11.0,  # TUNING (not in GDD) a spear, before the time scaling
+		"attack_interval": 1.2,  # TUNING (not in GDD) s
+		"attack_range": 10.0,  # TUNING (not in GDD) px
+		"radius": 15.0,  # TUNING (not in GDD) px (~72 px sprite)
+		"armor": 0.15,  # TUNING (not in GDD)
+		"xp": 12,  # TUNING (not in GDD)
+		"behavior": "melee",
+		"projectile_speed": 0.0,
+		"undead_damage_mult": 1.0,
+		"heal_amount": 0.0,
+		"heal_interval": 0.0,
+		"heal_radius": 0.0,
+		"target_priority": 0.8,  # TUNING (not in GDD) 0..1
+		"mass": 3.0,  # TUNING (not in GDD)
+		"faction": FACTION,
+		"kit": "wild_rider",
+		"group": "hunt",
+	},  # The Rider of the Wild Hunt.
+	# The spirits: the lure (owner-approved proposal: "Will-o'-Wisp | Lure |
+	# Draws summons away from the ring (the existing misdirect() hook) | Kill
+	# it; area damage"). The lure is phase 2's.
+	"will_o_wisp": {
+		"display_name": "Will-o'-Wisp",
+		"max_hp": 18.0,  # TUNING (not in GDD) fragile
+		"move_speed": 72.0,  # TUNING (not in GDD) px/s
+		"damage": 2.0,  # TUNING (not in GDD) a cold touch
+		"attack_interval": 1.2,  # TUNING (not in GDD) s
+		"attack_range": 6.0,  # TUNING (not in GDD) px
+		"radius": 7.0,  # TUNING (not in GDD) px (~28 px sprite)
+		"armor": 0.0,
+		"xp": 2,  # TUNING (not in GDD)
+		"behavior": "melee",
+		"projectile_speed": 0.0,
+		"undead_damage_mult": 1.0,
+		"heal_amount": 0.0,
+		"heal_interval": 0.0,
+		"heal_radius": 0.0,
+		"target_priority": 0.7,  # TUNING (not in GDD) 0..1; "kill it"
+		"mass": 0.3,  # TUNING (not in GDD)
+		"faction": FACTION,
+		"kit": "will_o_wisp",
+		"group": "spirits",
+	},  # The Will-o'-Wisp.
+	# The spirits: the rot (owner-approved proposal: "Spore Mother (female,
+	# figure style) | Support | Spores that rot summons and spread
+	# blight-killing mould | Kill early"). The spores are phase 2's.
+	"spore_mother": {
+		"display_name": "Spore Mother",
+		"max_hp": 60.0,  # TUNING (not in GDD) a support
+		"move_speed": 40.0,  # TUNING (not in GDD) px/s
+		"damage": 4.0,  # TUNING (not in GDD) a spore puff, before the time scaling
+		"attack_interval": 1.6,  # TUNING (not in GDD) s
+		"attack_range": 8.0,  # TUNING (not in GDD) px
+		"radius": 11.0,  # TUNING (not in GDD) px (~52 px sprite)
+		"armor": 0.05,  # TUNING (not in GDD)
+		"xp": 6,  # TUNING (not in GDD)
+		"behavior": "melee",
+		"projectile_speed": 0.0,
+		"undead_damage_mult": 1.0,
+		"heal_amount": 0.0,
+		"heal_interval": 0.0,
+		"heal_radius": 0.0,
+		"target_priority": 0.8,  # TUNING (not in GDD) 0..1; "kill early"
+		"mass": 1.0,  # TUNING (not in GDD)
+		"faction": FACTION,
+		"kit": "spore_mother",
+		"group": "spirits",
+	},  # The Spore Mother.
+}

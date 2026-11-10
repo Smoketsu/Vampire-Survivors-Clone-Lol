@@ -192,6 +192,15 @@ static func section_entries(section: String) -> Array:
 				var b := _boss(id)
 				b["section"] = section
 				out.append(b)  # Act XIV bosses.
+		# --- Act XV (temporary number): the Turning Year (grouped by group) ---
+		"wild_growth", "wild_fae", "wild_hunt", "wild_spirits":
+			for id: String in _wild_list(section):
+				out.append(_covenant(id, section))  # Act XV kinds, by group.
+		"wild_bosses":
+			for id: String in CodexData.WILD_BOSSES:
+				var b := _boss(id)
+				b["section"] = section
+				out.append(b)  # Act XV bosses.
 	return out
 
 
@@ -352,6 +361,19 @@ static func _primeval_list(section: String) -> Array[String]:
 	return CodexData.PRIMEVAL_TITANS
 
 
+# --- Act XV (temporary number): the Turning Year ---
+## The Wild kinds of group section `section` (CodexData.WILD_*).
+static func _wild_list(section: String) -> Array[String]:
+	match section:
+		"wild_growth":
+			return CodexData.WILD_GROWTH
+		"wild_fae":
+			return CodexData.WILD_FAE
+		"wild_hunt":
+			return CodexData.WILD_HUNT
+	return CodexData.WILD_SPIRITS
+
+
 static func _covenant(id: String, section: String) -> Dictionary:
 	var d := CodexData.enemy_row(id)
 	var stats: Array = [[_t("hp"), num(float(d.get("max_hp", 0.0)))]]
@@ -388,6 +410,8 @@ static func _covenant(id: String, section: String) -> Dictionary:
 		sprite = "host/" + id  # ...a Celestial Host kind (Act XIII, temporary)...
 	elif not SpriteBank.has(sprite) and SpriteBank.has("primeval/" + id):
 		sprite = "primeval/" + id  # ...an Age of Titans kind (Act XIV, temporary)...
+	elif not SpriteBank.has(sprite) and SpriteBank.has("wild/" + id):
+		sprite = "wild/" + id  # ...a Turning Year kind (Act XV, temporary)...
 	elif not SpriteBank.has(sprite):
 		sprite = "structures/" + id  # ...or a structure.
 	var kills := Meta.codex_kill_count(id)  # Lifetime kills of this kind.

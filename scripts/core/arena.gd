@@ -61,6 +61,10 @@
 ## ends with wheel.contain_all(): its turning crystal rings are MOVING WALLS
 ## with gaps (bodies put back on their side, sliding toward the gaps). Null on
 ## every other stage, so nothing changes there.
+## Act XV (temporary number), the Turning Year (GDD §15.0 "Overgrowth"): the
+## thorn thickets grow mid-run through add_obstacle() (one obstacle a cell,
+## put into the cell table, so every lookup sees it) and leave through
+## remove_obstacle(). Nothing calls it on any other stage.
 class_name Arena
 extends Node2D
 
@@ -296,6 +300,24 @@ func remove_obstacle(o: Obstacle) -> bool:
 		return false
 	_cells[key] = _empty
 	_removed[Vector3i(key.x, key.y, int(_layout.get("layout_seed", 0)))] = true
+	queue_redraw()
+	return true
+
+
+# --- Act XV (temporary number): the Turning Year ---
+## Puts obstacle `o` (built by the caller, its centre inside its cell's inner
+## square: ArenaData.CELL_MARGIN from each edge) into the layout mid-run: THE
+## path for an obstacle added on a scattered layout (the Turning Year's thorn
+## thickets, Thickets._grow(); at most one obstacle a cell, as the city's
+## wrecks). False when the cell already holds one, or the layout is a city or
+## a fixed deck (no free cells). Taken out again with remove_obstacle().
+## Nothing on any other stage calls it.
+func add_obstacle(o: Obstacle) -> bool:
+	if city_blocks != null or _layout.has("fixed"):
+		return false
+	if obstacle_at(o.center) != null:
+		return false  # Generates (and caches) the cell first: taken.
+	_cells[Vector2i(floori(o.center.x * _inv_cell), floori(o.center.y * _inv_cell))] = o
 	queue_redraw()
 	return true
 
@@ -699,6 +721,9 @@ func _draw_obstacle(o: Obstacle) -> void:
 	# --- Act XIV (temporary number): the Age of Titans ---
 	if PrimevalGlyphs.draw_obstacle(self, o):
 		return  # A Titans stub's placeholder obstacle kind.
+	# --- Act XV (temporary number): the Turning Year ---
+	if WildGlyphs.draw_obstacle(self, o):
+		return  # A Turning Year thorn thicket or stub's placeholder obstacle kind.
 	# --- Act IX: the Proving Moon ---
 	if ProvingMoonGlyphs.draw_obstacle(self, o):
 		return  # A Proving Moon obstacle kind (Act IX).

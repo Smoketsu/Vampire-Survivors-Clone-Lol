@@ -315,6 +315,15 @@
 ##     adds the "packs", "herds", "scavengers", "primeval kinds", "stampede of
 ##     ash" (after 0:00) and (on a Titans stage) "primeval stage" lines
 ##     (PrimevalReport).
+##   * Act XV (temporary number), the Turning Year (GDD §15.0 "The Turning Year
+##     foundation (phase 1)"): --stage=greenwood|fae_court|world_tree, --spawn=
+##     with its kinds (thornling, dryad, treant, corpse_bloom, fae_knight,
+##     winter_fae, great_stag, wild_rider, will_o_wisp, spore_mother),
+##     --boss=stag_king|summer_queen|green_mother. The bot steps sideways out of
+##     a wildfire's path (WildRules.danger_push()). When the Wild's rules ran,
+##     the summary adds the "turning year", "bloom and blight", "overgrowth",
+##     "spring returns" (after 0:00), "wild kinds", "wild damage" and (on a Wild
+##     stage) "wild stage" lines (WildReport).
 class_name Autotest
 extends Node
 
@@ -1306,6 +1315,8 @@ func _danger_at(pos: Vector2) -> Vector2:
 		danger += game.host.danger_push(pos)  # Act XIII (temporary): the Verdict's pillars and the shafts (null elsewhere).
 	if game.primeval != null:
 		danger += game.primeval.danger_push(pos)  # Act XIV (temporary): the stampedes' paths and the bomb circles (null elsewhere).
+	if game.wild != null:
+		danger += game.wild.danger_push(pos)  # Act XV (temporary): the wildfires' paths (null elsewhere).
 	return danger
 
 
@@ -1425,6 +1436,8 @@ func get_move_vector() -> Vector2:
 		danger += game.host.danger_push(p)  # Act XIII (temporary): the Verdict's pillars and the shafts (null elsewhere).
 	if game.primeval != null:
 		danger += game.primeval.danger_push(p)  # Act XIV (temporary): the stampedes' paths and the bomb circles (null elsewhere).
+	if game.wild != null:
+		danger += game.wild.danger_push(p)  # Act XV (temporary): the wildfires' paths (null elsewhere).
 	var objective := Vector2.ZERO
 	# Walk to shrines any time, to graves under consecration only when calm.
 	var goal := game.enemies.stage.seek_point(p, OBJECTIVE_SEEK_RADIUS, away.length() < 0.2)
@@ -1683,6 +1696,7 @@ func finish(summary: Dictionary) -> void:
 	DynastyReport.print_lines(game, st_all)  # Act XII (temporary): rebirth, the black land, heka, the devourer's hour, kinds, the stage (only when the Dynasty ran).
 	HostReport.print_lines(game, st_all)  # Act XIII (temporary): judgment, the light, grace, the last trumpet, kinds, the stage (only when the Host ran).
 	PrimevalReport.print_lines(game, st_all)  # Act XIV (temporary): packs, herds, scavengers, the stampede of ash, kinds, the stage (only when the Titans' rules ran).
+	WildReport.print_lines(game, st_all)  # Act XV (temporary): the year, the blight, the thickets, spring returns, kinds, the stage, the damage (only when the Wild's rules ran).
 	WastesReport.print_items(game, st_all)  # Act III, the Scrap Wastes: Death Ray and its passives (only when taken).
 	IlionReport.print_items(game, st_all)  # Act IV, the Shores of Ilion: Paris's Arrow and its passives (only when taken).
 	# --- Act V: the Burning Province ---
