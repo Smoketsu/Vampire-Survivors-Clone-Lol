@@ -83,7 +83,7 @@ const ENEMIES := {
 	# no corpse.
 	"antler_thicket": {
 		"display_name": "Antler Thicket",
-		"max_hp": 160.0,  # TUNING (not in GDD) per thorn (x the time and stage scaling; the crown's eight)
+		"max_hp": 120.0,  # TUNING (not in GDD) per thorn (x the time and stage scaling; the crown's eight; first pass 160: the crowns held 70-90 s and the army bot left him on 2,000 HP, seeds 3 and 7)
 		"move_speed": 0.0,
 		"damage": 0.0,  # It never attacks.
 		"attack_interval": 1.0,
