@@ -854,12 +854,13 @@ const ACHIEVEMENTS := {
 	"trampled": {"display_name": "Trampled", "description": "Let the stampedes kill 100 enemies in one run on an Age of Titans stage",
 		"stat": "trampled_runs", "goal": 1, "unlock": "The Thick Marrow passive", "bounty": 300},  # Owner-approved proposal; bounty TUNING (not in GDD) as Nothing Taken
 	# The Titans' finale achievement "The Day the Sky Fell" (owner-approved
-	# proposal: "reach the Extinction with no summon lost"): a Last Day run that
-	# reached the impact with an army raised and not one of its own summons
-	# lost (Extinction sets the run stat last_day_sky_fell; MetaProgress counts
+	# proposal, narrowed by the owner's answer of Nov 2026: no summon lost after the
+	# boss arrives): a Last Day run that reached the impact with an army raised and
+	# not one of its own summons lost since Old Gravejaw came (Extinction sets the
+	# run stat last_day_sky_fell; MetaProgress counts
 	# the runs, lifetime sky_fell_runs). It only records the clear until the
 	# reorder pass writes the act's epilogue part (docs/last_acts/PLAN.md).
-	"the_day_the_sky_fell": {"display_name": "The Day the Sky Fell", "description": "Reach the Extinction on the Last Day without losing a single summon",
+	"the_day_the_sky_fell": {"display_name": "The Day the Sky Fell", "description": "Reach the Extinction on the Last Day without losing a summon after Old Gravejaw arrives",
 		"stat": "sky_fell_runs", "goal": 1, "unlock": "", "bounty": 500},  # Owner-approved proposal; bounty TUNING (not in GDD) as The Last Word (an act's finale)
 }
 

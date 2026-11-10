@@ -26,10 +26,10 @@ static func stage_lines(game: Game, st: Dictionary) -> void:
 		print("[autotest] last day: %s" % en.last_day.summary_line())
 	var ex := game.primeval.extinction
 	if ex.running():
-		var lost := 0  # The necromancers' own summons lost this run.
+		var lost := -int(st.get(Extinction.LOST_AT_BOSS_STAT, 0.0))  # The necromancers' own summons lost since Old Gravejaw arrived.
 		for hd in game.all_hordes:
 			lost += hd.total_deaths
-		print("[autotest] extinction: fell %s | impact %s (the white-out %.0f s, under the ward) | enemies killed %d (taken off %d) | boss left %s | fossil host risen %d (capped %d, too far %d), life %.0f s, dmg %d | ended %s | the day the sky fell %s (summons lost %d)" % [
+		print("[autotest] extinction: fell %s | impact %s (the white-out %.0f s, under the ward) | enemies killed %d (taken off %d) | boss left %s | fossil host risen %d (capped %d, too far %d), life %.0f s, dmg %d | ended %s | the day the sky fell %s (summons lost after the boss %d)" % [
 			EmpireReport._clock(ex.started_at), EmpireReport._clock(ex.landed_at) if ex.landed else "no", float(ex.cfg["warn"]),
 			ex.killed, int(st.get("extinction_despawned", 0.0)),
 			("%d%%" % roundi(100.0 * ex.boss_left)) if ex.boss_left >= 0.0 else "none alive",

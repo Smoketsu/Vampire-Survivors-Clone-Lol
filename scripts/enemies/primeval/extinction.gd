@@ -28,10 +28,12 @@
 ##   4. VICTORY: `host_life` s after the impact the run ends in victory
 ##      (Game.end_run(true, END_REASON)). Dying at any point after 0:00 is a
 ##      victory anyway (the run structure).
-## THE DAY THE SKY FELL (the act's achievement: "reach the Extinction with no
-## summon lost"): at the impact, with an army raised this run and not one of
-## the necromancers' own summons lost, the run stat DAY_THE_SKY_FELL_STAT is
-## set (MetaProgress counts it; it only records the clear until the reorder).
+## THE DAY THE SKY FELL (the act's achievement; owner answer Nov 2026: "no summon
+## lost after the boss arrives"): at the impact, with an army raised this run and
+## not one of the necromancers' own summons lost since Old Gravejaw arrived
+## (BossGravejaw.setup_boss() records the losses so far as LOST_AT_BOSS_STAT), the
+## run stat DAY_THE_SKY_FELL_STAT is set (MetaProgress counts it; it only records
+## the clear until the reorder).
 ## The 20:00 clock, the boss at 3:00 and "dying after 0:00 is a victory" stay.
 ## Summons get no rule of their own here: the Fossil Host is a temporary summon
 ## through the one raise path. Determinism: game time and the field's order
@@ -46,6 +48,10 @@ const END_REASON: String = "extinction"
 ## Run stat set (1) by a run that reached the impact with no summon lost (The
 ## Day the Sky Fell; MetaProgress counts it).
 const DAY_THE_SKY_FELL_STAT: String = "last_day_sky_fell"
+## Run stat: the necromancers' summons lost before Old Gravejaw arrived (set once
+## by BossGravejaw.setup_boss(); 0 if he never came). The Day the Sky Fell counts
+## only the losses after it.
+const LOST_AT_BOSS_STAT: String = "last_day_lost_at_boss"
 
 ## Owning run.
 var game: Game
@@ -136,7 +142,7 @@ func _begin(now: float) -> void:
 func _impact(now: float) -> void:
 	landed = true
 	landed_at = now
-	var lost := 0  # Summons of the necromancers' own armies lost this run.
+	var lost := -int(game.stats.get(LOST_AT_BOSS_STAT, 0.0))  # Summons of the necromancers' own armies lost since the boss arrived.
 	for hd in game.all_hordes:
 		lost += hd.total_deaths
 	if lost == 0 and game.peak_army > 0:

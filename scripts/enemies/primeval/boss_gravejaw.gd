@@ -75,6 +75,11 @@ func setup_boss(p_game: Game, pos: Vector2, hp_mult: float, slot: int) -> void:
 	_roar_cd = float(boss_def["roar_first"])
 	_base_speed = move_speed
 	_spawn_time = p_game.elapsed
+	if not p_game.stats.has(Extinction.LOST_AT_BOSS_STAT):  # The Day the Sky Fell counts only the losses after his arrival.
+		var lost := 0  # Summons of the necromancers' own armies lost before he came.
+		for hd in p_game.all_hordes:
+			lost += hd.total_deaths
+		p_game.stats[Extinction.LOST_AT_BOSS_STAT] = float(lost)
 	p_game.primeval_rules()  # His herds and his jaws are the Titans rules' (created on another stage too).
 	game.enemies.boss_defeated.connect(_on_defeated)
 	game.enemies.show_banner(String(boss_def["arrive_banner"]))

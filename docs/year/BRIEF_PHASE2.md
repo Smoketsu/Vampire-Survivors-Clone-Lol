@@ -236,3 +236,11 @@ in the lockstep simulation (no machine-local state). Exact member names above (`
   tree of bone that roots in place as a blocker and lashes everything around it with thorns; evolution World-Root Warden; a
   class special that works everywhere; its Ossuary mastery). **Achievement: The First Spring** (beat the Green Mother; it
   only records the clear until the reorder pass writes the final epilogue part).
+
+## Owner answers (Nov 2026; GDD §15.0 "Wave 3 owner answers")
+- **The Last Claim replays a random 7 of the 14 acts** (pick them with the run's seeded RNG, each act at most once, in a
+  seeded order; 8 s each, from a third of the Green Mother's HP). Not all 14. The other acts' slots stay written, only 7 run.
+- The Norse slot is **Berserkergang**.
+- **Scorched Earth → Fallow Ground, A Fair Bargain → Deadwood.**
+- The blizzard is **drawn only**.
+- Spring roots on the necromancer: the built **85% slow that Grave Step breaks** (not a true hold).
