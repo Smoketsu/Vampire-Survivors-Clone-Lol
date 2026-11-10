@@ -1160,6 +1160,28 @@ RIGS = {
     "wild/will_o_wisp": dict(mode="hover", bob=2, parts=[]),
     "wild/spore_mother": dict(mode="robe", hip=36, rigid=[], sway=1, dip=1,
                               bust=(8, 19, 14, 22, 1), bust_exclude=[(0, 8, 10, 28), (19, 28, 10, 28)]),
+    # --- Act XV slot, phase 2 (Turning Year art): the Greenwood, Fae Court and World-Tree units, the three violet necromancers, the Ossuary Oak family ---
+    # Wings must visibly move (owner rule): the Summer Queen's butterfly wings turn about their shoulder roots in the walk and the idle strips. The three
+    # figure-style women (courtier, queen, Green Mother) and the two female characters carry bust boxes and idle strips (boxes checked with tools/bust_check.py).
+    "wild/hunt_hound": dict(mode="legs", hip=16, back=(0, 20), front=(20, 40), rigid=[], spread=2, lift=2, dip=1),
+    "wild/huntsman": dict(mode="legs", hip=46, back=(0, 32), front=(32, 64), rigid=[], spread=2, lift=2, dip=1),
+    "wild/stag_king": dict(mode="robe", hip=62, rigid=[(0, 10, 0, None)], sway=1, dip=1),
+    "wild/winter_prince": dict(mode="robe", hip=38, rigid=[(26, 40, 38, None)], sway=1, dip=1),
+    "wild/masked_courtier": dict(mode="robe", hip=32, rigid=[], sway=1, dip=1,
+                                 bust=(11, 23, 13, 20, 1), bust_exclude=[(0, 11, 10, 50), (23, 38, 10, 50)]),
+    "wild/summer_queen": dict(mode="robe", hip=40, rigid=[], sway=1, dip=1, float=1,
+                              bust=(23, 35, 16, 24, 2), bust_exclude=[(0, 22, 10, 50), (36, 56, 10, 50)],
+                              wings=[dict(box=(0, 21, 4, 46), pivot=(21, 24), degrees=10.0, seam=2), dict(box=(37, 46, 4, 34), pivot=(37, 24), degrees=-10.0, seam=2)]),
+    "wild/gardener_of_roots": dict(mode="legs", hip=62, back=(0, 28), front=(28, 56), rigid=[], spread=1, lift=1, dip=1),
+    "wild/green_mother": dict(mode="robe", hip=100, rigid=[], sway=2, dip=1,
+                              bust=(38, 58, 45, 58, 3), bust_exclude=[(0, 36, 40, 90), (60, 96, 40, 90)]),
+    "player/horned_herald": dict(mode="robe", hip=40, rigid=[(29, 42, 0, None)], sway=1, dip=1),
+    "player/changeling_princess": dict(mode="robe", hip=40, rigid=[], sway=1, dip=1,
+                                       bust=(15, 26, 15, 22, 1), bust_exclude=[(0, 14, 10, 50), (27, 40, 10, 50)]),
+    "player/gravegardener": dict(mode="robe", hip=40, rigid=[(29, 38, 0, None)], sway=1, dip=1,
+                                 bust=(13, 24, 15, 22, 1), bust_exclude=[(0, 12, 12, 50), (26, 40, 12, 50)]),
+    "summons/ossuary_oak": dict(mode="legs", hip=40, back=(0, 14), front=(14, 28), rigid=[], spread=1, lift=1, dip=1),
+    "summons/world_root_warden": dict(mode="legs", hip=46, back=(0, 18), front=(18, 36), rigid=[], spread=1, lift=1, dip=1),
 }
 
 # Skins (SkinData, cosmetic): skin sprite key -> its character's sprite key. A skin keeps
