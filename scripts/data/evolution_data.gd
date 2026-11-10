@@ -132,7 +132,9 @@ const ORDER := ["void_barrage", "eclipse_ward", "abyssal_detonation",
 	# --- Act XIII (temporary number): the Wheel of Thrones ---
 	"ophanim",
 	# --- Act XIII (temporary number): the Empyrean ---
-	"be_not_afraid"]
+	"be_not_afraid",
+	# --- Act XIV (temporary number): the Fern Basin ---
+	"apex_pack"]
 
 ## Evolution definitions.
 ##   base         — spell id that evolves (AbilityData.SPELLS key).
@@ -1073,6 +1075,26 @@ const EVOLUTIONS := {
 		"stats": {
 			"damage": 24.0, "stun": 1.5, "weaken_slow": 0.25, "weaken_cut": 0.25, "weaken_time": 5.0, "cooldown": 6.5,  # TUNING (not in GDD) first passes 52 (513k in a run) and 28 (376k; Flaming Sword 320k)
 			"echo_share": 0.5, "echo_delay": 1.0,  # TUNING (not in GDD) the evolution flag: share of the damage the second flash strikes, s after the first
+		},
+	},
+	# --- Act XIV (temporary number): the Fern Basin ---
+	# Apex Pack (GDD §15.0 "Pack Leap, Apex Pack, Pack Instinct and the Fern
+	# Huntress"; owner-approved proposal "Pack Leap -> Apex Pack (+ Pack
+	# Instinct)"): Pack Leap + Pack Instinct (a NEW passive, owner rule: at
+	# Lv 5). Own decision on its kit: five raptors, and each one that lands
+	# leaps on to the nearest unmarked foe within chain_reach px for chain_share
+	# of the damage (Scarmaw's packs never stop at one kill). Detected by the
+	# "chain_share" key.
+	"apex_pack": {
+		"base": "pack_leap",
+		"passive": "pack_instinct",
+		"display_name": "Apex Pack",  # Owner-approved proposal
+		"icon": "apex_pack",
+		"description": "Five raptors leap on the strongest foes, and each leaps on to another.",
+		"labels": {"damage": "Leap damage", "raptors": "Raptors", "radius": "Pounce (px)", "cooldown": "Cooldown (s)", "chain_share": "Second leap"},
+		"stats": {
+			"damage": 70.0, "raptors": 5, "range": 380.0, "radius": 36.0, "pounce_share": 0.5, "cooldown": 2.0,  # TUNING (not in GDD)
+			"chain_share": 0.6, "chain_reach": 160.0,  # TUNING (not in GDD) the evolution flag: share of the damage the second leap strikes, px it looks for its foe
 		},
 	},
 }

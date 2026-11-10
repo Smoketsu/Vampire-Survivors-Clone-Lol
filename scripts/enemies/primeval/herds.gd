@@ -20,7 +20,12 @@
 ##   * THE STAMPEDE (launch()): when one beast is hurt, or one stands within
 ##     its row's `fright` px of a standing necromancer, its whole herd
 ##     stampedes (once every `cooldown` s): the run's line points from the
-##     herd's centre at that necromancer; for `lead` s the dust line shows
+##     herd's centre AWAY from what frightened it (owner answer, Nov 9, 2026:
+##     "stampedes run away from whatever hurt the herd"; _fright_point(): for
+##     a hurt beast the nearest summon within fright_probe px of it when one
+##     is nearer than the necromancer, else that necromancer); the Stampede of
+##     Ash and the bosses aim theirs (launch() takes the point to run at); for
+##     `lead` s the dust line shows
 ##     where the front will be (WARN: the beasts paw the ground), then the
 ##     front runs `run_length` px at `run_speed` px/s (RUN: each beast runs the
 ##     line, over the ring: Enemy.vehicle, the Convoy's flag, while it runs).
@@ -38,6 +43,9 @@
 ##     (HordeDirector.raise_corpse(): giant `class` x hp_mult, `life` s), at
 ##     most giant `cap` alive; the corpse path's own gates apply
 ##     (Enemy.leaves_corpse()).
+##   * THE TAR (Act XIV, the Fern Basin): a beast the tar holds
+##     (HerdBeastKit.stuck_until, FernBasinDirector) stands where it is in
+##     every state and never frightens its herd: a free kill.
 ## The Stampede of Ash (the Reckoning) brings its own herds through
 ## spawn_herd(..., launch) over the cap. Summons never get a rule here: the
 ## trample is a hazard through CombatResolver, and the Fossil Giant a temporary
@@ -106,6 +114,8 @@ var _forming: Herd = null
 var _next: float = INF
 ## True when this build draws (never headless).
 var _draws: bool = false
+## Scratch buffer for grid queries (_fright_point()).
+var _buf: Array = []
 
 
 ## Builds Herds for `p_game`; `p_enabled`: a Titans stage.
@@ -203,9 +213,9 @@ func step(delta: float) -> void:
 		match h.state:
 			GRAZE:
 				if game.elapsed >= h.ready_at:
-					var pl := _frightened_by(h)
-					if pl != null:
-						launch(h, pl.position)
+					var from := _frightened_by(h)
+					if from != Vector2.INF:
+						launch(h, centre(h) * 2.0 - from)  # Owner answer: away from what frightened the herd.
 			WARN:
 				if h.state_t >= float(cfg["lead"]):
 					h.state = RUN
@@ -244,24 +254,44 @@ func _alive(h: Herd) -> bool:
 	return false
 
 
-## The necromancer whose fight frightens herd `h` (a beast hurt since the last
-## tick, or one within its row's `fright` px of him), or null. Clears the
-## beasts' hurt flags.
-func _frightened_by(h: Herd) -> Necromancer:
-	var who: Necromancer = null
+## The point that frightens herd `h` (Vector2.INF = none): for a beast hurt
+## since the last tick, or one within its row's `fright` px of a standing
+## necromancer, _fright_point() of the first such beast. Clears the beasts'
+## hurt flags. A beast the tar holds frightens nobody (Act XIV, the Fern Basin).
+func _frightened_by(h: Herd) -> Vector2:
+	var from := Vector2.INF
 	for i in h.members.size():
 		var m := h.members[i]
 		if not m.active or m.generation != h.gens[i]:
 			continue
 		var kit := m.kit as HerdBeastKit
 		var pl := game.nearest_player(m.position)
-		if pl == null or pl.dead:
+		if pl == null or pl.dead or kit.stuck_until > game.elapsed:
 			kit.hurt = false
 			continue
-		if who == null and (kit.hurt or m.position.distance_to(pl.position) <= float(kit.d.get("fright", 0.0))):
-			who = pl
+		if from == Vector2.INF and kit.hurt:
+			from = _fright_point(m, pl)
+		elif from == Vector2.INF and m.position.distance_to(pl.position) <= float(kit.d.get("fright", 0.0)):
+			from = pl.position
 		kit.hurt = false
-	return who
+	return from
+
+
+## What hurt beast `m` (owner answer: the stampede runs away from it): the
+## nearest live summon within fright_probe px of it when that summon is
+## nearer than necromancer `pl`, else `pl`'s position (his spells, his ring).
+func _fright_point(m: Enemy, pl: Necromancer) -> Vector2:
+	var best := pl.position
+	var best_d := m.position.distance_to(pl.position)
+	game.ally_grid.query(m.position, float(cfg["fright_probe"]), _buf)
+	for u: SummonedUnit in _buf:
+		if not u.active or u.state == SummonedUnit.State.DEAD:
+			continue
+		var dd := u.position.distance_to(m.position)
+		if dd < best_d:
+			best_d = dd
+			best = u.position
+	return best
 
 
 ## THE stampede: herd `h` runs at `toward` (see the header).
@@ -371,8 +401,9 @@ func steer(e: Enemy, kit: HerdBeastKit, delta: float) -> bool:
 		kit.hurt = true
 	kit.last_hp = e.hp
 	var h := kit.herd
-	if h == null:
-		kit.hold(e)
+	kit.trapped = kit.stuck_until > game.elapsed
+	if h == null or kit.trapped:
+		kit.hold(e)  # No herd, or the tar holds it (Act XIV, the Fern Basin).
 		return true
 	match h.state:
 		WARN:
@@ -403,6 +434,8 @@ func _drift(e: Enemy) -> Vector2:
 ## rise as a Fossil Giant (see the header).
 func on_killed(e: Enemy) -> void:
 	game.stat_add("herd_kills", 1.0)
+	if (e.kit as HerdBeastKit).stuck_until > game.elapsed:
+		game.stat_add("herd_kills_trapped", 1.0)  # Act XIV, the Fern Basin: a free kill in the tar.
 	if not e.leaves_corpse():
 		return
 	var gc: Dictionary = cfg["giant"]

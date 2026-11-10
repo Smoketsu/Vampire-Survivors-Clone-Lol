@@ -180,8 +180,9 @@ Autotest options (full table in the README):
   Necropolis Dynasty, Act XII (`--boss=anubis|sekhmet|osiris`, `--character=the_embalmer|lion_priestess|pharaohs_shade`);
   `silver_stair|wheel_of_thrones|empyrean` the Celestial Host, Act XIII (all three built; `--boss=seraiel|throne|voice`,
   `--character=fallen_herald|blind_saint|the_unveiled`, `--classes=bound_ophan`, `--spawn=` with
-  `lesser_light|virtue|power|choir_angel|herald|dominion|judge|cherub|cherub_of_the_gate|ophan|dominion_of_the_spheres|herald_of_the_seventh_trumpet`); `fern_basin|great_plain|last_day` the Age of Titans' stubs,
-  Act XIV (`--boss=scarmaw|ironbrow|gravejaw`, `--spawn=` with `scuttler|razorclaw|frill_spitter|longneck|duckbill|skyraider|tyrant`))
+  `lesser_light|virtue|power|choir_angel|herald|dominion|judge|cherub|cherub_of_the_gate|ophan|dominion_of_the_spheres|herald_of_the_seventh_trumpet`); `fern_basin|great_plain|last_day` the Age of Titans,
+  Act XIV (the Fern Basin built, the other two stubs; `--boss=scarmaw|ironbrow|gravejaw`, `--character=fern_huntress`, `--spawn=` with
+  `scuttler|razorclaw|frill_spitter|longneck|duckbill|skyraider|tyrant|bog_croc|ironjaw|primeval_nest|scarmaw_guard`))
 - `--unlocks=all|none` (Act II's lockable spells / passives / classes in the card pool; forced items
   are open either way)
 - `--boss=alaric|vael|seraphine` (puts that boss in the stage's slot, e.g. test Seraphine on the Graveyard)
@@ -215,10 +216,10 @@ Autotest options (full table in the README):
 the autotests for the area a change touches plus one default run; run the full "Done" set (every stage,
 the same-seed gates) once per batch of changes, before `main` moves; multi-seed batches only for balance.
 
-CI (`.github/workflows/ci.yml`) runs the import and, as thirty-seven **parallel** matrix jobs, the Graveyard
+CI (`.github/workflows/ci.yml`) runs the import and, as thirty-eight **parallel** matrix jobs, the Graveyard
 autotest with the naive and army policies, a Crimson March autotest, a Sanctum of Judgment autotest (army
 policy) and one army autotest per Act II, Act IV, V, VI, VII, VIII, IX, X (the Black Tide), XI (the Hall of the Slain) and XII (the
-Necropolis Dynasty) stage and the three Celestial Host stages; beside them, the Windows/Linux/Web exports (artifacts
+Necropolis Dynasty) stage, the three Celestial Host stages and the Age of Titans' Fern Basin; beside them, the Windows/Linux/Web exports (artifacts
 `Necropathy-windows` / `-linux` / `-web`) and an exported-build smoke test; also the co-op jobs `coop-net` (relay
 protocol + two-process transport test) and `coop-lockstep` (the two-process full-run determinism gate, ~10 min, not
 waited on by the publish jobs) and, on `main` pushes, `deploy-relay` (the Worker, secrets `CLOUDFLARE_API_TOKEN` /
@@ -736,6 +737,16 @@ tiny tweaks.
   Unveiled, the finale class **Bound Ophan** / Throne of Bones + Turning Bones (`BoundOphanBehavior` "orbit_roll": it
   circles the ring, then rolls through the densest pack; its Ossuary mastery), The Last Word (records the clear; no
   epilogue part until the reorder). One CI army job (37 matrix jobs). Stages 1–38 same-seed summaries unchanged.
+- **The Fern Basin, playable** (the Age of Titans' first stage, temporarily Act XIV, final slot XIV; GDD §15.0 from "The Fern
+  Basin (Act XIV phase 2)" to "The Fern Basin tests and gate"; brief `docs/titans/BRIEF_PHASE2.md`): the four zones
+  (`FernBasinGround`), **the Tar Seeps** (`FernBasinDirector`: pools from one pure hash, `pool_in()`, drawn and slowing alike;
+  `TerrainSlow` for the necromancer and summons, `Enemy.apply_slow()` for enemies; a herd beast in tar is trapped through
+  `HerdBeastKit.stuck_until`, read by `Herds`), the Bog Croc (shared, `BogCrocKit`: submerged, then a lunge; `bite_first()`,
+  the one lunge bite), Ironjaw the Nest Mother (miniboss, `IronjawKit`) and her nest (`PrimevalNestKit`), **Scarmaw**
+  (`boss_scarmaw.gd`: the Hunt's packs and leap, the Ambush from fern patches, Blood Up and the alpha-guard), Pack Leap / Apex
+  Pack + Pack Instinct, the Fern Huntress; **stampedes now run away from what hurt the herd** (owner answer, shared
+  `Herds`); the `primeval damage` line. No achievement of its own. One CI army job (38 matrix jobs). Stages 1–39 same-seed
+  summaries unchanged.
 
 **Next, in priority order:**
 1. **Playtest feedback** from the owner and friends (actively playtesting); it outranks everything below.

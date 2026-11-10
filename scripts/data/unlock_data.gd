@@ -399,6 +399,13 @@ const UNLOCKS := {
 	"seventh_seal": {"type": "passive", "boss": "voice", "text": "Silence the Voice in the Empyrean to unlock."},  # Revelation's paired passive (owner-approved proposal), unlocked with it
 	"bound_ophan": {"type": "class", "boss": "voice", "text": "Silence the Voice in the Empyrean to unlock."},  # Owner-approved proposal: the finale's reward
 	"turning_bones": {"type": "passive", "boss": "voice", "text": "Silence the Voice in the Empyrean to unlock."},  # Its paired passive (own decision), unlocked with it
+	# --- Act XIV (temporary number): the Fern Basin ---
+	# Scarmaw's fall (owner-approved proposal "Rewards": Pack Leap is
+	# Scarmaw's) with its paired passive, offered on every stage. The stage has
+	# no achievement of its own (the act's are the Great Plain's and the Last
+	# Day's).
+	"pack_leap": {"type": "spell", "boss": "scarmaw", "text": "Slay Scarmaw in the Fern Basin to unlock."},  # Owner-approved proposal
+	"pack_instinct": {"type": "passive", "boss": "scarmaw", "text": "Slay Scarmaw in the Fern Basin to unlock."},  # Pack Leap's paired passive (owner-approved proposal), unlocked with it
 }
 
 ## End-screen plate heading of a newly unlocked item, by type.

@@ -14,11 +14,20 @@ var herd: Herds.Herd = null
 var last_hp: float = 0.0
 ## True when it was hurt since Herds last looked (Herds._frightened_by()).
 var hurt: bool = false
+## Act XIV, the Fern Basin: game time (s) until which the tar holds it
+## (FernBasinDirector writes it while it stands in a pool; Herds reads it: a
+## trapped beast neither grazes away, runs nor frightens its herd). -INF = free.
+var stuck_until: float = -INF
+## True while the tar held it at its last tick (Herds.steer() writes it; the
+## autotest's stuck check skips a trapped beast through is_busy()).
+var trapped: bool = false
 
 
 func reset(e: Enemy, def: Dictionary) -> void:
 	herd = null
 	hurt = false
+	stuck_until = -INF
+	trapped = false
 	super.reset(e, def)
 
 
@@ -31,7 +40,7 @@ func physics(e: Enemy, delta: float) -> bool:
 	return rules(e).herds.steer(e, self, delta)
 
 
-## True while its herd paws the ground or runs (the autotest's stuck check
-## skips it).
+## True while its herd paws the ground or runs, or the tar holds it (the
+## autotest's stuck check skips it).
 func is_busy() -> bool:
-	return herd != null and herd.state != Herds.GRAZE
+	return trapped or (herd != null and herd.state != Herds.GRAZE)

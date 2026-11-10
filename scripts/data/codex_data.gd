@@ -431,15 +431,21 @@ const HOST_BOSSES: Array[String] = ["seraiel", "throne", "voice"]
 ## hunters, the herds, the fliers, the titans, then its stage bosses
 ## (StageRegistry.BOSS_ARRIVALS ids). Each Titans stage adds its own as it is
 ## built (phase 2).
-const PRIMEVAL_SWARM: Array[String] = ["scuttler"]
+const PRIMEVAL_SWARM: Array[String] = ["scuttler",
+	# --- Act XIV (temporary number): the Fern Basin ---
+	"primeval_nest"]
 ## The hunters (group "hunters": the pack predators and the spitters).
-const PRIMEVAL_HUNTERS: Array[String] = ["razorclaw", "frill_spitter"]
+const PRIMEVAL_HUNTERS: Array[String] = ["razorclaw", "frill_spitter",
+	# --- Act XIV (temporary number): the Fern Basin ---
+	"bog_croc", "scarmaw_guard"]
 ## The herds (group "herds": the neutral giants).
 const PRIMEVAL_HERDS: Array[String] = ["longneck", "duckbill"]
 ## The fliers (group "fliers").
 const PRIMEVAL_FLIERS: Array[String] = ["skyraider"]
 ## The titans (group "titans").
-const PRIMEVAL_TITANS: Array[String] = ["tyrant"]
+const PRIMEVAL_TITANS: Array[String] = ["tyrant",
+	# --- Act XIV (temporary number): the Fern Basin ---
+	"ironjaw"]
 ## Titans stage bosses (StageRegistry.BOSS_ARRIVALS ids).
 const PRIMEVAL_BOSSES: Array[String] = ["scarmaw", "ironbrow", "gravejaw"]
 
@@ -807,6 +813,11 @@ const DESCRIPTIONS: Dictionary = {
 	"duckbill": "A smaller herd beast whose crest horn hears a fight from far off and sends its herd running.",  # Proposal (Herds)
 	"skyraider": "A pterosaur thief. It dives on your crystals and flies them to its nest: shoot it down and the pile drops.",  # Proposal (Scavengers)
 	"tyrant": "A tyrant of the old world, all teeth and hunger. When the sky burns, they roam.",  # Proposal
+	# --- Act XIV (temporary number): the Fern Basin ---
+	"bog_croc": "A crocodile that lies in the tar with only its eyes above it, then lunges at the edge of your ring.",  # Owner-approved proposal
+	"scarmaw_guard": "Scarmaw's alpha-guard: while she lives, every raptor you kill comes back to the great alpha. Kill her first.",  # Owner-approved proposal (Blood Up)
+	"ironjaw": "Ironjaw, the Nest Mother: a bulky predator who guards her nest. While it stands she shrugs off half of every blow.",  # Owner-approved proposal (miniboss)
+	"primeval_nest": "Ironjaw's nest of fern and eggshells. It hatches Scuttlers until it is broken.",  # Owner-approved proposal
 	"scarmaw": "Scarmaw, the Great Raptor: the alpha of every pack in the basin. She hunts from the ferns.",  # Proposal
 	"ironbrow": "Old Ironbrow, the Horned Titan: he leads the stampede himself, and his charge breaks rock.",  # Proposal
 	"gravejaw": "Old Gravejaw, the Tyrant King: his roar calls every beast on the map, and he hunts only you.",  # Proposal

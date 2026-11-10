@@ -738,6 +738,14 @@ const FLAT_SIZES: Dictionary = {
 	"primeval/duckbill": 56.0,  # TUNING (not in GDD) herd, no sex: a crested hadrosaur (about 48 wide); walk strip
 	"primeval/skyraider": 36.0,  # TUNING (not in GDD) flier, male: a pterosaur clutching a crystal; flap strip (about 40 wide); walk strip
 	"primeval/tyrant": 72.0,  # TUNING (not in GDD) titan, one sprite: a great tyrant, orange throat (about 86 wide); walk strip
+	# --- Act XIV (temporary number): the Fern Basin (phase 2; art pending, PrimevalGlyphs / the kits' code shapes until then) ---
+	"primeval/bog_croc": 30.0,  # TUNING (not in GDD) hunter, male: a tar-black crocodile (about 72 wide); walk strip, `_submerged` still (its eyes above the tar)
+	"primeval/bog_croc_submerged": 12.0,  # TUNING (not in GDD) the Bog Croc under the tar: eyes and a ripple (about 32 wide)
+	"primeval/ironjaw": 60.0,  # TUNING (not in GDD) Fern Basin miniboss, female (a beast: no figure style): a bulky tar-dark predator, an iron-grey jaw (about 80 wide); walk strip
+	"primeval/primeval_nest": 32.0,  # TUNING (not in GDD) Ironjaw's nest: a mound of fern and eggshells (about 48 wide); `_dead` still
+	"primeval/scarmaw_guard": 40.0,  # TUNING (not in GDD) Scarmaw's alpha-guard, female: a great Razorclaw with a bone crest (about 44 wide); walk strip (the alpha's art until then)
+	"primeval/scarmaw": 60.0,  # TUNING (not in GDD) Fern Basin boss, female (a beast): a huge feathered raptor, a bone crest, a scarred muzzle (about 72 wide); walk strip, pose 1 (the leap)
+	"player/fern_huntress": 56.0,  # TUNING (not in GDD) female (figure style): violet hunting leathers, a violet fur-trimmed cloak, a raptor-skull headdress, a bone spear-staff with a soul flame (about 40 wide); walk and idle strips
 	"summons/ushabti_sentinel": 46.0,  # TUNING (not in GDD) summon class, the necromancer's stone servant (no sex) (about 20 wide)
 	"summons/eternal_guard": 58.0,  # TUNING (not in GDD) its evolution: a taller gold-trimmed stone guardian (about 32 wide)
 	# --- Act XIII (temporary number): the Empyrean (art pending, SummonGlyphs' bone wheel until then) ---

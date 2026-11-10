@@ -134,7 +134,9 @@ const SPELL_ORDER := ["shadow_bolt", "orb_shield", "shadow_blast",
 	# --- Act XIII (temporary number): the Wheel of Thrones ---
 	"wheel_of_eyes",
 	# --- Act XIII (temporary number): the Empyrean ---
-	"revelation"]
+	"revelation",
+	# --- Act XIV (temporary number): the Fern Basin ---
+	"pack_leap"]
 
 ## Spell definitions.
 ##   display_name — UI name.
@@ -1258,6 +1260,30 @@ const SPELLS := {
 			{"damage": 20.0, "stun": 1.0, "weaken_slow": 0.2, "weaken_cut": 0.2, "weaken_time": 4.0, "cooldown": 7.0},  # TUNING (not in GDD) every foe in sight, so lighter per foe than a single-target spell (first pass 14-34: the evolved run dealt 513k, Flaming Sword 320k)
 		],
 	},
+	# --- Act XIV (temporary number): the Fern Basin ---
+	# Pack Leap (GDD §15.0 "Pack Leap, Apex Pack, Pack Instinct and the Fern
+	# Huntress"; owner-approved proposal: "three spectral raptors leap at marked
+	# enemies"; unlocked by slaying Scarmaw, then offered on every stage). Every
+	# `cooldown` s, a foe within `range` px, it MARKS the `raptors` strongest
+	# foes in reach (distinct while there are enough); mark_time s later a
+	# spectral raptor lands on each: `damage` to the mark and pounce_share of it
+	# to every other foe within `radius` px (the pounce) (`radius`: spell area widens it). Logic:
+	# PackLeap; fixed rules: PackLeapData. Strong single-target damage spread
+	# over the toughest foes in reach.
+	"pack_leap": {
+		"display_name": "Pack Leap",  # Owner-approved proposal
+		"icon": "pack_leap",
+		"description": "Spectral raptors mark the strongest foes near you and leap on them.",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Leap damage", "raptors": "Raptors", "radius": "Pounce (px)", "cooldown": "Cooldown (s)"},
+		"levels": [
+			{"damage": 26.0, "raptors": 3, "range": 320.0, "radius": 24.0, "pounce_share": 0.35, "cooldown": 2.6},  # Owner-approved proposal: "three spectral raptors"; TUNING (not in GDD) the rest
+			{"damage": 32.0, "raptors": 3, "range": 330.0, "radius": 26.0, "pounce_share": 0.35, "cooldown": 2.5},  # TUNING (not in GDD)
+			{"damage": 39.0, "raptors": 3, "range": 340.0, "radius": 28.0, "pounce_share": 0.4, "cooldown": 2.4},  # TUNING (not in GDD)
+			{"damage": 47.0, "raptors": 4, "range": 350.0, "radius": 30.0, "pounce_share": 0.4, "cooldown": 2.3},  # TUNING (not in GDD)
+			{"damage": 56.0, "raptors": 4, "range": 360.0, "radius": 32.0, "pounce_share": 0.45, "cooldown": 2.2},  # TUNING (not in GDD) about Flaming Sword's Lv5 on fewer, tougher foes
+		],
+	},
 }
 
 ## Stat keys shown as a percentage on cards (fractions: 0.25 -> 25%).
@@ -1300,7 +1326,9 @@ const PERCENT_KEYS := ["lifesteal", "rot", "burst", "zone_damage", "zone_slow", 
 	# --- Act XII (temporary number): the Hall of Two Truths ---
 	"execute",
 	# --- Act XIII (temporary number): the Empyrean ---
-	"weaken_cut", "weaken_slow"]
+	"weaken_cut", "weaken_slow",
+	# --- Act XIV (temporary number): the Fern Basin ---
+	"pounce_share"]
 ## Stat keys that are spell durations (s): the Lingering Malediction passive
 ## lengthens them (AbilityManager.apply_spell_mods()).
 const DURATION_KEYS := ["duration", "zone_duration", "slow_duration"]

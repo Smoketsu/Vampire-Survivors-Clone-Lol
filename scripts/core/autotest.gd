@@ -1457,6 +1457,9 @@ func get_move_vector() -> Vector2:
 	# --- Act XII (temporary number): the Necropolis of Sand ---
 	if goal == Vector2.INF and game.enemies.necropolis != null and away.length() < 0.3 and policy() in SANCTUM_SEEK_POLICIES:
 		goal = game.enemies.necropolis.seek_point(p, OBJECTIVE_SEEK_RADIUS)  # The Necropolis: break the Canopic Jars when calm.
+	# --- Act XIV (temporary number): the Fern Basin ---
+	if goal == Vector2.INF and game.enemies.fern_basin != null and away.length() < 0.3 and policy() in SANCTUM_SEEK_POLICIES:
+		goal = game.enemies.fern_basin.seek_point(p, OBJECTIVE_SEEK_RADIUS)  # The Fern Basin: bring the army to Ironjaw's nest when calm.
 	# --- Act XIII (temporary number): the Silver Stair --- into Seraiel's open lane while the Gate stands (every policy).
 	if game.enemies.boss is BossSeraiel and game.enemies.boss.active:
 		var lane := (game.enemies.boss as BossSeraiel).gate_point(p)
@@ -1781,6 +1784,8 @@ func finish(summary: Dictionary) -> void:
 	WheelOfThronesReport.item_lines(game, st)  # Wheel of Eyes, All-Seeing, Smoked Glass (only when taken; the stage's own lines are HostReport's).
 	# --- Act XIII (temporary number): the Empyrean ---
 	EmpyreanReport.item_lines(game, st)  # Revelation, Seventh Seal, the Bound Ophan, Turning Bones (only when taken; the stage's own lines are HostReport's).
+	# --- Act XIV (temporary number): the Fern Basin ---
+	FernBasinReport.item_lines(game, st)  # Pack Leap, Pack Instinct (only when taken; the stage's own lines are PrimevalReport's).
 	if game.enemies.boss is BossSeraphine:
 		print("[autotest] seraphine: %s" % BossSeraphine.summary_line(st))
 	var fired := game.enemies.stage.fired

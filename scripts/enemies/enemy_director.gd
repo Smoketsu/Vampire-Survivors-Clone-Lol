@@ -487,6 +487,10 @@ var wheel_of_thrones: WheelOfThronesDirector = null
 ## The Empyrean's mechanics (the Choir, the Herald of the Seventh Trumpet, The
 ## Last Word; StageRegistry "empyrean"; null on every other stage).
 var empyrean: EmpyreanDirector = null
+# --- Act XIV (temporary number): the Fern Basin ---
+## The Fern Basin's mechanics (the Tar Seeps, the Bog Crocs, Ironjaw and her
+## nest; StageRegistry "fern_basin"; null on every other stage).
+var fern_basin: FernBasinDirector = null
 ## Sanctum kit bookkeeping: recent deaths, Confessor revivals, danger hints.
 var rites: CovenantRites
 ## The living miniboss shown on the HUD's miniboss bar (the Cathedral
@@ -763,6 +767,12 @@ func _ready() -> void:
 		empyrean.game = game
 		empyrean.config = stage_def["empyrean"]
 		add_child(empyrean)  # The Empyrean's director.
+	# --- Act XIV (temporary number): the Fern Basin ---
+	if not (stage_def.get("fern_basin", {}) as Dictionary).is_empty():
+		fern_basin = FernBasinDirector.new()
+		fern_basin.game = game
+		fern_basin.config = stage_def["fern_basin"]
+		add_child(fern_basin)  # The Fern Basin's director.
 
 
 # =====================================================================================
@@ -949,6 +959,9 @@ func step(delta: float) -> void:
 	# --- Act XIII (temporary number): the Empyrean ---
 	if empyrean != null:
 		empyrean.step(delta)  # The Choir, the Herald of the Seventh Trumpet, The Last Word.
+	# --- Act XIV (temporary number): the Fern Basin ---
+	if fern_basin != null:
+		fern_basin.step(delta)  # The Tar Seeps, the Bog Crocs, Ironjaw and her nest.
 
 
 ## The Archive kinds' world hazards (ArchiveHazards), created on first use.
@@ -1140,6 +1153,9 @@ func objective_text() -> String:
 	# --- Act XIII (temporary number): the Empyrean ---
 	if empyrean != null and empyrean.objective_override() != "":
 		return empyrean.objective_override()  # The Herald of the Seventh Trumpet.
+	# --- Act XIV (temporary number): the Fern Basin ---
+	if fern_basin != null and fern_basin.objective_override() != "":
+		return fern_basin.objective_override()  # Ironjaw and her nest.
 	if boss != null and not boss.active:
 		return String(boss_info["dead_objective"])
 	return segments[segment_index]["objective"]
@@ -1477,6 +1493,12 @@ func _run_event(ev: Dictionary) -> void:
 				empyrean.start_event(ev)
 			game.stat_add("wave_events", 1.0)
 			return  # The Empyrean's miniboss (EmpyreanDirector).
+		# --- Act XIV (temporary number): the Fern Basin ---
+		"nest_mother":
+			if fern_basin != null:
+				fern_basin.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return  # The Fern Basin's miniboss and her nest (FernBasinDirector).
 	show_banner(ev["banner"])
 	var groups: Array = ev["groups"]
 	if game.shogunate != null:

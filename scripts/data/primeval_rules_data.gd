@@ -69,6 +69,7 @@ const HERDS := {
 	"run_length": 1500.0,  # TUNING (not in GDD) px the front runs before the herd settles
 	"front_back": 40.0,  # TUNING (not in GDD) px behind the herd's centre the front starts
 	"cooldown": 45.0,  # TUNING (not in GDD) s a herd grazes after a run before it can stampede again (first pass 20: 77 stampedes, 99k trample damage on summons in the seed-7 army run)
+	"fright_probe": 260.0,  # TUNING (not in GDD) px round a hurt beast looked at for the summon that hurt it (the stampede runs away from it; owner answer, Nov 9, 2026)
 	"shelter_len": 110.0,  # TUNING (not in GDD) px: an obstacle this close upstream of a body (toward the oncoming front) shelters it
 	"trample_summon": 12.0,  # TUNING (not in GDD) per summon, before the time scaling
 	"trample_player": 8.0,  # TUNING (not in GDD) before the time scaling (Grave Step's i-frames dodge it)
@@ -147,6 +148,12 @@ const SOUNDS := {
 	"bomb_warn": "bomb_warn",  # Titans pack id "bomb_warn" (a falling roar of fire).
 	"bomb_land": "bomb_land",  # Titans pack id "bomb_land" (a molten crack and a splash of embers).
 	"ash_stampede": "ash_horn",  # Titans pack id "ash_horn" (the sky burns: a long low roar of herds).
+	# --- Act XIV (temporary number): the Fern Basin ---
+	"scarmaw_leap": "pack_rush",  # Titans pack (reused): Scarmaw springs over the ring (claws on earth, a shriek).
+	"scarmaw_rustle": "pack_rustle",  # Titans pack (reused): the fern patch she hides in rustles.
+	"scarmaw_lunge": "pack_hiss",  # Titans pack (reused): she bursts out of the ferns.
+	"croc_lunge": "pack_hiss",  # Titans pack (reused): a Bog Croc rears out of the tar.
+	"ironjaw_bite": "pack_rush",  # Titans pack (reused): Ironjaw lunges.
 }
 
 # --- The counter-passives (phase 2 builds them; PrimevalRules' hooks read them) -------------

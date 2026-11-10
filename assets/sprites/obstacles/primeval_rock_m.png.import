@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://d0y4jo428n1m4"
-path="res://.godot/imported/primeval_rock.png-95eec62145a5ca0a6cfe8d344c4ec785.ctex"
+path="res://.godot/imported/primeval_rock_m.png-7e49a202312ce4a625f93bfb78af3503.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/obstacles/primeval_rock.png"
-dest_files=["res://.godot/imported/primeval_rock.png-95eec62145a5ca0a6cfe8d344c4ec785.ctex"]
+source_file="res://assets/sprites/obstacles/primeval_rock_m.png"
+dest_files=["res://.godot/imported/primeval_rock_m.png-7e49a202312ce4a625f93bfb78af3503.ctex"]
 
 [params]
 

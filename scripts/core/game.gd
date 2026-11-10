@@ -586,6 +586,9 @@ func _ready() -> void:
 		# --- Act XIII (temporary number): the Empyrean ---
 		"empyrean":
 			ground = EmpyreanGround.new()  # The Empyrean's four zone floors (EmpyreanStage.ZONES).
+		# --- Act XIV (temporary number): the Fern Basin ---
+		"fern_basin":
+			ground = FernBasinGround.new()  # The Fern Basin's four zone floors and its tar pools (FernBasinStage.ZONES).
 		_:
 			ground = Ground.new()
 	add_child(ground)

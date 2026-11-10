@@ -2935,8 +2935,8 @@ The Ark's vault holds a log of every world the Harvesters reaped; the oldest ent
 through a rift to the day before the meteor and takes the Call for himself. No gods, no armies, no walls: only animals the
 size of houses, and every one that falls leaves a skeleton (design `docs/proposals/LAST_SIX_ACTS.md` section XIV and
 `docs/proposals/NEW_ACTS_AND_ORDER.md` Part 2; final slot XIV of the fifteen-act order, temporary act number 14 until the
-reorder pass, `docs/last_acts/PLAN.md`). Three stub stages are registered under an **Act XIV** tab, hidden as "Coming
-soon" until phase 2 builds them: **the Fern Basin** (`fern_basin`, Scarmaw, the Great Raptor), **the Great Plain**
+reorder pass, `docs/last_acts/PLAN.md`). Three stages are registered under an **Act XIV** tab, hidden as "Coming
+soon" until phase 2 builds them (the Fern Basin is built and playable): **the Fern Basin** (`fern_basin`, Scarmaw, the Great Raptor), **the Great Plain**
 (`great_plain`, Old Ironbrow, the Horned Titan) and **the Last Day** (`last_day`, Old Gravejaw, the Tyrant King); the
 Voice's fall in the Empyrean opens the first, each boss the next. Every Titans stage runs three shared rules
 (`Game.primeval`, `PrimevalRules`):
@@ -2945,7 +2945,7 @@ Voice's fall in the Empyrean opens the first, each boss the next. Every Titans s
   alpha and the pack loses all of it and charges straight in.
 - **Herds.** Longnecks and Duckbills graze the field as **neutral** giants: they never attack, and drop big XP. Hurt one, or
   fight close to it, and its whole herd **stampedes**: a dust line shows where the 600 px front will be in 2 s, then it runs
-  straight at you, trampling everyone it crosses, your army and the hunters alike. A rock or a fossil arch on its side
+  straight away from whatever hurt it (owner answer), trampling everyone it crosses, your army and the hunters alike. A rock or a fossil arch on its side
   shelters you. A herd beast killed near you rises as a **Fossil Giant** for 30 s (four times the HP, at most two).
 - **Scavengers.** Skyraiders circle out of reach and every 8 s one dives (its shadow first) on a pile of up to ten XP
   crystals and carries it to its nest. Shoot it down and the pile drops where it dies; anything within 200 px of you is
@@ -2958,8 +2958,26 @@ the **Longneck** and the **Duckbill** (the herds), the **Skyraider** and the **T
 Placeholder floors, obstacles and code-drawn fallbacks until the art pass (`docs/titans/ART_MANIFEST.md`); music "The
 Reaping Stars" until the act's own score. Autotest: `--stage=fern_basin|great_plain|last_day`,
 `--boss=scarmaw|ironbrow|gravejaw`, `--spawn=` with `scuttler`, `razorclaw`, `frill_spitter`, `longneck`, `duckbill`,
-`skyraider`, `tyrant`; lines `packs`, `herds`, `scavengers`, `stampede of ash`, `primeval kinds`, `primeval stage`. Phase
-2 brief: `docs/titans/BRIEF_PHASE2.md`.
+`skyraider`, `tyrant`; lines `packs`, `herds`, `scavengers`, `stampede of ash`, `primeval kinds`, `primeval stage` and
+`primeval damage` (every source of damage to you and to your summons, the largest first, the rules included). Phase 2
+brief: `docs/titans/BRIEF_PHASE2.md`.
+
+#### The Fern Basin (stage 40, playable)
+
+A river basin deep in jungle, in four zones: **the Fern Floor**, **the Tar Seep**, **the River Ford** and **the Nesting
+Hollow**. **Tar Seeps:** black pools (brown water at the ford) slow everyone who wades in, you, your army and the hunters,
+by about a third, and a grazing Longneck or Duckbill that walks into one is stuck there for good: it never runs and never
+frightens its herd, a free kill and a free heavy corpse. From the Tar Seep on, **Bog Crocs** come up in the pools and lie
+with only their eyes above the tar: when your ring passes close, one rears up and lunges at its edge. At 11:40 **Ironjaw,
+the Nest Mother** comes with her nest, which hatches Scuttlers until you break it; while it stands she shrugs off part of
+every blow. **Scarmaw, the Great Raptor** arrives at 17:00: **the Hunt** calls a pack of Razorclaws from each of three sides
+in turn while she leaps over your ring onto a landing circle beside you; from 70% of her health **the Ambush**: she
+vanishes into marked fern patches round you and lunges out of the one that rustles every 8 s; at half health **Blood Up**:
+her alpha-guard comes, and while it lives every Razorclaw you kill comes back and she runs faster (kill the guard). Slaying
+her unlocks the spell **Pack Leap** (spectral raptors mark the strongest foes near you and leap on them; evolves into
+**Apex Pack**, five raptors that each leap on to a second foe, with the passive **Pack Instinct**) and so the **Fern
+Huntress** (innate Hunter's Mark: one more raptor). Autotest lines `fern basin`, `scarmaw`, `act XIV spell`, `act XIV
+passive`; `--spawn=bog_croc@T`, `ironjaw@T`, `primeval_nest@T`, `scarmaw_guard@T`; `--character=fern_huntress`.
 
 ### The illustrated epilogue
 
@@ -3725,7 +3743,11 @@ scripts/
     primeval_ground.gd      The Titans stubs' placeholder floor (styles fern / plain / ash; Act XIV, temporary)
     primeval_glyphs.gd      Code-drawn fallbacks of the Titans' kinds and the stubs' obstacles (Act XIV)
     primeval_report.gd      The autotest's Titans lines (packs, herds, scavengers, stampede of ash, primeval kinds,
-                            primeval stage; Act XIV)
+                            primeval stage, primeval damage; Act XIV)
+    fern_basin_ground.gd    The Fern Basin's four zone floors (tiles/fern_basin_<style>) and its tar pools (the
+                            director's pool_in(); Act XIV)
+    fern_basin_report.gd    The autotest's Fern Basin lines (fern basin, scarmaw) and the Pack Leap / Pack Instinct
+                            item lines (Act XIV)
     proving_moon_glyphs.gd  Code fallbacks of the Warbeast, Vrask'Tal and his skull belt, and the stage's obstacles (Act IX)
     proving_moon_report.gd  The autotest's Proving Moon lines (proving moon, warbeast, threats, vrask'tal; the Soul Caster
                             and passives' item lines; Act IX)
@@ -4252,6 +4274,13 @@ scripts/
       primeval_kit.gd       Base kit: registration, move(); herd_beast_kit.gd the herd beasts' base
       scuttler_kit.gd, razorclaw_kit.gd, frill_spitter_kit.gd, longneck_kit.gd, duckbill_kit.gd, skyraider_kit.gd,
       tyrant_kit.gd         The shared kinds (the alpha's look, the herds' steering, the Skyraider's dive)
+      bog_croc_kit.gd       The Bog Croc: submerged in the tar, the lunge; bite_first() (the one lunge bite, Ironjaw's
+                            and Scarmaw's too) (the Fern Basin)
+      ironjaw_kit.gd        Ironjaw, the Nest Mother: the Iron Jaw lunge, the nest's ward, the miniboss bar
+      primeval_nest_kit.gd  Ironjaw's nest: hatches Scuttlers until it is broken
+      fern_basin_director.gd  The Fern Basin: the Tar Seeps (pool_in(), the slows, the trapped beasts), the Bog Crocs,
+                            Ironjaw and her nest (game.enemies.fern_basin)
+      boss_scarmaw.gd       Scarmaw, the Great Raptor: the Hunt (packs, the leap), the Ambush (fern patches), Blood Up
     pantheon/               The Olympian Republic (Act IV): its kits ("<id>_kit.gd", loaded by name after the
                             Eye's and the Empire's) and bosses ("boss_<id>.gd"), and the act's shared rules:
       pantheon_rules.gd     Game.pantheon: owns the wrath, the Phalanx and Glory, the one front test
@@ -4550,6 +4579,9 @@ scripts/
     wheel_of_eyes_data.gd   Wheel of Eyes / Ophanim rules, All-Seeing keys, Inner Sight key (Act XIII, temporary;
                             the spell node is abilities/spells/wheel_of_eyes.gd)
     throne_data.gd          The Throne: its row, the cycle, the Rolling, the Gaze, the Core, The Wheel Breaks share (Act XIII)
+    pack_leap_data.gd       Pack Leap / Apex Pack rules, Pack Instinct keys, Hunter's Mark key (Act XIV, temporary;
+                            the spell node is abilities/spells/pack_leap.gd)
+    scarmaw_data.gd         Scarmaw, the Great Raptor: her row, the Hunt, the Ambush, Blood Up (Act XIV)
     tractor_lift_data.gd    Tractor Beam / Abduction rules, Starseed keys, Deserter's Signal key (Act IX; the
                             spell node is abilities/spells/tractor_lift.gd, the lift helper abilities/enemy_lift.gd)
     burning_eye_data.gd     Burning Eye / Eye of Retribution rules, Desert Fury keys, Lioness's Gaze key (Act XII,
@@ -4639,13 +4671,15 @@ scripts/
                                      Seventh Trumpet and Voice (empyrean_enemy_data.gd, voice_data.gd, revelation_data.gd)
     primeval_enemy_data.gd  The Age of Titans' shared kinds (Scuttler, Razorclaw, Frill-Spitter, Longneck, Duckbill,
                             Skyraider, Tyrant); the group / pack / herd / fright / scavenger keys; the Stampede of
-                            Ash's kind and companions (Act XIV, temporary; fern_basin_ / great_plain_ /
-                            last_day_enemy_data.gd: each stage's own, empty until phase 2)
+                            Ash's kind and companions; the Fern Basin's block the Bog Croc (Act XIV, temporary;
+                            fern_basin_ / great_plain_ / last_day_enemy_data.gd: each stage's own; the Fern Basin's
+                            holds Ironjaw, her nest and Scarmaw's alpha-guard)
     primeval_rules_data.gd  Act XIV's shared rules: PACKS, HERDS, SCAVENGERS, ASH, the SOUNDS map, the Hoarder's
                             Bones / Thick Marrow keys
     stages/fern_basin_stage.gd       Act XIV stubs: the Fern Basin, the Great Plain and the Last Day; act 14,
     stages/great_plain_stage.gd      "primeval": true, zones, the rule overrides, a timeline of the shared kinds, the
-    stages/last_day_stage.gd         Stampede of Ash, placeholder floors / bosses ("playable": false)
+    stages/last_day_stage.gd         Stampede of Ash, placeholder floors / bosses ("playable": false; the Fern Basin is
+                                     built: its zones and tar, the Bog Crocs, Ironjaw, Scarmaw, "playable": true)
     stages/ravensmoor_stage.gd     Act VII stubs: Ravensmoor, the Witchwood and Castle Sanguis; act 7,
     stages/witchwood_stage.gd      "court": true, zones, the "moon" overrides, a timeline of the shared kinds,
     stages/castle_sanguis_stage.gd the Endless Feast, placeholder floors / bosses (the Witchwood built: four
@@ -5072,14 +5106,15 @@ uptime.
 time, and everything that ships waits for all of them (GDD §15.0 "Parallel CI and lean testing": about 8-10 minutes from a push to
 the live build instead of about 30):
 
-1. **test:** thirty-six parallel jobs, one per playthrough. Each imports the project with Godot 4.3 headless and runs
+1. **test:** thirty-eight parallel jobs, one per playthrough. Each imports the project with Godot 4.3 headless and runs
    one full 20-minute autotest: the Graveyard with the naive and the army policy, the Crimson March
    (`--stage=crimson_march`), the Sanctum (`--stage=sanctum --policy=army`) and each stage of Acts II, IV-IX and X-XII with
    the army policy (`--stage=harbour`, `archive`, `spire`, `ilion`, `olympus`, `underworld`, `province`, `kurogane`,
    `sun_road`, `burning_gate`, `silk_palace`, `pandemonium`, `ravensmoor`, `witchwood`, `castle_sanguis`, `skid_row`,
    `fort_kessler`, `liberty_heights`, `crash_site`, `proving_moon`, `ark`, the Black Tide's `cutter`, `galleon`,
    `maelstrom`, the Hall of the Slain's `barrow_fields`, `valgard`, `vigrid` and the Necropolis Dynasty's `necropolis`,
-   `lioness_temple`, `two_truths`, and the Celestial Host's `silver_stair`, `wheel_of_thrones`; the other last acts get theirs as they go live) (`--quit-after 15000`, at most 10-15
+   `lioness_temple`, `two_truths`, the Celestial Host's `silver_stair`, `wheel_of_thrones`, `empyrean` and the Age of
+   Titans' `fern_basin`; the other last acts get theirs as they go live) (`--quit-after 15000`, at most 10-15
    wall-clock minutes per run).
    A job fails on any `SCRIPT ERROR`, `ERROR:` or `WARNING:` line, or if its run doesn't complete; one failure does
    not cancel the others. Logs: `test-logs-<id>`.

@@ -232,7 +232,9 @@ const ORDER := ["grave_dominion", "necrotic_vigor", "dark_command", "soul_recycl
 	# --- Act XIII (temporary number): the Wheel of Thrones ---
 	"all_seeing", "smoked_glass",
 	# --- Act XIII (temporary number): the Empyrean ---
-	"seventh_seal", "turning_bones"]
+	"seventh_seal", "turning_bones",
+	# --- Act XIV (temporary number): the Fern Basin ---
+	"pack_instinct"]
 
 ## Passives that only help summons (a "dead" level-up card while no summon
 ## class is owned, see AbilityManager.build_offers()).
@@ -2482,6 +2484,27 @@ const PASSIVES := {
 			{"turn_damage": 0.18, "turn_haste": 0.15},  # TUNING (not in GDD)
 			{"turn_damage": 0.24, "turn_haste": 0.20},  # TUNING (not in GDD)
 			{"turn_damage": 0.30, "turn_haste": 0.25},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act XIV (temporary number): the Fern Basin ---
+	# Pack Instinct (Pack Leap's paired passive; owner-approved proposal: "Apex
+	# Pack (+ Pack Instinct)"; unlocked with the spell by Scarmaw and offered on
+	# every stage). Own decision on its effect: the raptors hunt as one: every
+	# leap strikes instinct_bonus harder and its pounce reaches pounce_bonus px
+	# wider (PackLeap, the one read). Read only by PackLeap: nothing without the
+	# spell.
+	"pack_instinct": {
+		"display_name": "Pack Instinct",  # Owner-approved proposal
+		"icon": "pack_instinct",
+		"description": "Your raptors hunt as one: Pack Leap strikes harder and pounces wider.",
+		"labels": {"instinct_bonus": ["Pack Leap damage", "pct"], "pounce_bonus": ["Pack Leap pounce (px)", "num"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"instinct_bonus": 0.06, "pounce_bonus": 3.0},  # TUNING (not in GDD)
+			{"instinct_bonus": 0.12, "pounce_bonus": 6.0},  # TUNING (not in GDD)
+			{"instinct_bonus": 0.18, "pounce_bonus": 9.0},  # TUNING (not in GDD)
+			{"instinct_bonus": 0.24, "pounce_bonus": 12.0},  # TUNING (not in GDD)
+			{"instinct_bonus": 0.30, "pounce_bonus": 15.0},  # TUNING (not in GDD)
 		],
 	},
 }

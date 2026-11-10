@@ -116,6 +116,9 @@
 ## and the Empyrean's (temporary Act XIII, EMPYREAN_IDS: stepped only; its own
 ## autotest line, EmpyreanReport.item_lines()):
 ##   Revelation       -> Revelation       (evolves into Be Not Afraid)
+## and the Fern Basin's (temporary Act XIV, FERN_BASIN_IDS: stepped only; its
+## own autotest line, FernBasinReport.item_lines()):
+##   Pack Leap        -> PackLeap         (evolves into Apex Pack)
 ## Game calls after_physics() once per tick after obstacles are resolved
 ## (Bone Wall holds enemies there).
 ## Each spell node is created the first time its spell is learned and reads
@@ -289,6 +292,10 @@ const WHEEL_OF_THRONES_IDS := ["wheel_of_eyes"]
 ## The Empyrean's unlockable spell (the Voice's reward): stepped only (no kill
 ## or after-physics hook), reported by EmpyreanReport.
 const EMPYREAN_IDS := ["revelation"]
+# --- Act XIV (temporary number): the Fern Basin ---
+## The Fern Basin's unlockable spell (Scarmaw's reward): stepped only (no kill
+## or after-physics hook), reported by FernBasinReport.
+const FERN_BASIN_IDS := ["pack_leap"]
 ## Damage-source stat tags of each spell (CombatResolver "dmg_<tag>"), base
 ## spell first, then its evolution's. Used for the autotest summary.
 const SOURCES := {
@@ -373,6 +380,8 @@ const SOURCES := {
 	"wheel_of_eyes": ["wheel_of_eyes", "ophanim"],
 	# --- Act XIII (temporary number): the Empyrean ---
 	"revelation": ["revelation", "be_not_afraid"],
+	# --- Act XIV (temporary number): the Fern Basin ---
+	"pack_leap": ["pack_leap", "apex_pack"],
 }
 
 ## Owning run.
@@ -664,6 +673,15 @@ func step(delta: float) -> void:
 			node = _create(id)
 		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
 		node.step(delta, ab.spell_stats(id))  # The Empyrean's spell.
+	# --- Act XIV (temporary number): the Fern Basin ---
+	for id: String in FERN_BASIN_IDS:
+		if ab.spell_level(id) <= 0:
+			continue
+		var node: NecroSpell = nodes.get(id)  # The spell's node (created lazily).
+		if node == null:
+			node = _create(id)
+		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
+		node.step(delta, ab.spell_stats(id))  # The Fern Basin's spell.
 
 
 ## Content wave 2: the Bone Wall node, created when missing (the Ossuary
@@ -802,6 +820,9 @@ func _create(id: String) -> NecroSpell:
 		# --- Act XIII (temporary number): the Empyrean ---
 		"revelation":
 			node = Revelation.new()  # The Empyrean's spell.
+		# --- Act XIV (temporary number): the Fern Basin ---
+		"pack_leap":
+			node = PackLeap.new()  # The Fern Basin's spell.
 		_:
 			node = PlagueCloud.new()
 	node.game = game

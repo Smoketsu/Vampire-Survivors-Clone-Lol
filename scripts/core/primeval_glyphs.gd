@@ -27,6 +27,16 @@ static func draw_enemy(ci: CanvasItem, kind: String, o: Vector2, r: float, flash
 	# Phase 2: each Titans stage's own fallbacks go here, before the shared
 	# kinds' (as CourtGlyphs asks RavensmoorGlyphs first).
 	match kind:
+		# --- Act XIV (temporary number): the Fern Basin ---
+		"bog_croc":
+			_beast(ci, o, r, flash, Palette.PRIMEVAL_TAR, Palette.PRIMEVAL_FERN_DARK, 0.9, 0.0)
+			ci.draw_rect(Rect2(o + Vector2(r * 0.7, -r * 0.4), Vector2(r * 0.8, r * 0.25)), Glyphs._c(Palette.PRIMEVAL_TAR, flash))  # The long snout.
+		"ironjaw":
+			_beast(ci, o, r, flash, Palette.PRIMEVAL_TAR, Palette.PRIMEVAL_OCHRE_DARK, 1.1, 0.0)
+			ci.draw_rect(Rect2(o + Vector2(r * 0.6, -r * 0.3), Vector2(r * 0.6, r * 0.18)), Glyphs._c(Palette.PRIMEVAL_BONE.darkened(0.35), flash))  # The iron jaw.
+		"scarmaw_guard":
+			if not SpriteBank.draw(ci, "primeval/razorclaw_alpha", o, flash):  # The alpha's art until her own.
+				_beast(ci, o, r, flash, Palette.PRIMEVAL_FERN_DARK, Palette.PRIMEVAL_BONE, 0.9, 1.0)
 		"scuttler":
 			_beast(ci, o, r, flash, Palette.PRIMEVAL_OCHRE_DARK, Palette.PRIMEVAL_OCHRE, 0.5, 0.0)
 		"frill_spitter":
@@ -77,6 +87,16 @@ static func draw_obstacle(ci: CanvasItem, o: Arena.Obstacle) -> bool:
 	# Phase 2: each Titans stage's own obstacle glyphs go here first.
 	var c := o.center
 	match o.kind:
+		# --- Act XIV (temporary number): the Fern Basin ---
+		"primeval_tree_fern":
+			var r := o.radius
+			SpriteBank.draw_disc(ci, c + Vector2(3, 4), r * 1.6, Color(0, 0, 0, 0.3))
+			SpriteBank.draw_disc(ci, c, r, INK)
+			SpriteBank.draw_disc(ci, c, r - 1.5, Palette.PRIMEVAL_OCHRE_DARK)  # The trunk.
+			for i in 6:
+				var a := float(i) * 1.047
+				ci.draw_rect(Rect2(c + Vector2.from_angle(a) * r * 0.6 - Vector2(1.5, 1.5), Vector2(3.0, 3.0)) , Palette.PRIMEVAL_FERN_DARK)
+				SpriteBank.draw_disc(ci, c + Vector2.from_angle(a) * r * 1.4, r * 0.45, Color(Palette.PRIMEVAL_FERN, 0.85))  # A frond.
 		"primeval_rock":
 			var r := o.radius
 			SpriteBank.draw_disc(ci, c + Vector2(3, 4), r, Color(0, 0, 0, 0.3))

@@ -44,4 +44,6 @@ const POSES: Dictionary = {
 	# --- Act XIII: the Celestial Host ---
 	"host/seraiel": {1: "raised"},  # TUNING (not in GDD) the sword raised overhead (BossSeraiel: the sword's windup, the sweep and the Gate's cast)
 	"host/throne": {1: "open"},  # TUNING (not in GDD) the wheels parted, the Core open (BossThrone)
+	# --- Act XIV (temporary number): the Fern Basin ---
+	"primeval/scarmaw": {1: "leap"},  # TUNING (not in GDD) crouched to spring / in the air (BossScarmaw: the leap's windup and flight, the ambush lunge)
 }

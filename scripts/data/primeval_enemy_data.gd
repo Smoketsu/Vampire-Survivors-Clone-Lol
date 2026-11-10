@@ -20,6 +20,9 @@
 ##   tyrant        — a titan (female / male): the Reckoning's heavy (the
 ##                   Stampede of Ash: "Tyrants roam"); phase 2 (the Last Day)
 ##                   gives it the swallow and the roar.
+## Phase 2's shared kinds, each stage in its own block:
+##   bog_croc      — a hunter (male), the Fern Basin's: an ambusher that lies
+##                   submerged in the tar and lunges at the rail of the ring.
 ## Each stage's own kinds live in its own file (FernBasinEnemyData,
 ## GreatPlainEnemyData, LastDayEnemyData; empty until phase 2: the Bog Croc,
 ## the Horncharger, the Clubtail, the Stormwing, the stage minibosses and the
@@ -45,6 +48,7 @@
 ##   scavenger  — bool: a crystal thief (Scavengers schedules its dives;
 ##                SCAVENGERS).
 ##   fodder     — true: fodder (reports).
+##   swims      — true: the Fern Basin's tar and river never slow it.
 ## The GDD gives no numbers: everything is TUNING (not in GDD) unless marked as
 ## the owner-approved proposal. Tuned for the act's FINAL slot XIV (above the
 ## Concord of Stars), not its temporary number.
@@ -67,6 +71,9 @@ const DUCKBILL: String = "duckbill"
 const SKYRAIDER: String = "skyraider"
 ## Kind id of the Tyrant (the Reckoning's heavy).
 const TYRANT: String = "tyrant"
+# --- Act XIV (temporary number): the Fern Basin ---
+## Kind id of the Bog Croc (the ambusher of the tar; a shared row, the Fern Basin's block).
+const BOG_CROC: String = "bog_croc"
 ## Sprite folder of the Age of Titans' kinds (assets/sprites/primeval/).
 const SPRITE_DIR: String = "primeval/"
 
@@ -274,4 +281,44 @@ const ENEMIES := {
 		"kit": "tyrant",
 		"group": "titans",
 	},  # The Tyrant.
+	# --- Act XIV (temporary number): the Fern Basin ---
+	# An ambusher (male; owner-approved proposal: "Bog Croc (male) | Ambush |
+	# Hides in tar and river tiles; lunges at the rail of the ring | Wither,
+	# Area, avoid the tar"). BogCrocKit: it lies SUBMERGED where it came up
+	# (untargetable, only its eyes show) until a summon or a necromancer comes
+	# within lunge_reach px (or max_wait s pass: enemies always advance), then
+	# EMERGES for emerge_time s (a telegraph) and LUNGES lunge_speed px/s up to
+	# lunge_len px at the nearest body (the rail of the ring): the first summon
+	# or necromancer it touches takes lunge_damage / lunge_player once (x the
+	# time scaling); then the shared melee AI. It swims: the tar never slows it.
+	"bog_croc": {
+		"display_name": "Bog Croc",
+		"max_hp": 130.0,  # TUNING (not in GDD) an ambusher worth an Area spell
+		"move_speed": 56.0,  # TUNING (not in GDD) px/s on land
+		"damage": 8.0,  # TUNING (not in GDD) a bite, before the time scaling
+		"attack_interval": 1.3,  # TUNING (not in GDD) s
+		"attack_range": 10.0,  # TUNING (not in GDD) px
+		"radius": 14.0,  # TUNING (not in GDD) px (~72 x 30 px sprite)
+		"armor": 0.2,  # TUNING (not in GDD) scaled hide
+		"xp": 6,  # TUNING (not in GDD)
+		"behavior": "melee",
+		"projectile_speed": 0.0,
+		"undead_damage_mult": 1.0,
+		"heal_amount": 0.0,
+		"heal_interval": 0.0,
+		"heal_radius": 0.0,
+		"target_priority": 0.7,  # TUNING (not in GDD) 0..1
+		"mass": 3.0,  # TUNING (not in GDD)
+		"faction": FACTION,
+		"kit": "bog_croc",
+		"group": "hunters",
+		"swims": true,  # The tar and the river never slow it (FernBasinDirector skips it).
+		"lunge_reach": 150.0,  # TUNING (not in GDD) px: a body this close wakes it
+		"max_wait": 12.0,  # TUNING (not in GDD) s submerged at most (then it comes up and advances)
+		"emerge_time": 0.55,  # TUNING (not in GDD) s of telegraph (it rears out of the pool)
+		"lunge_speed": 340.0,  # TUNING (not in GDD) px/s
+		"lunge_len": 180.0,  # TUNING (not in GDD) px at most
+		"lunge_damage": 11.0,  # TUNING (not in GDD) to the summon it seizes, before the time scaling (first pass 14)
+		"lunge_player": 9.0,  # TUNING (not in GDD) to the necromancer, before the time scaling
+	},  # The Bog Croc.
 }

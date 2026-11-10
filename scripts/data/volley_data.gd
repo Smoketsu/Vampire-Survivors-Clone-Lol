@@ -427,6 +427,9 @@ const SPELLS := {
 	# --- Act XIII (temporary number): the Empyrean ---
 	"revelation": {"every": 1, "clock": "cooldown", "aim": "nearest", "pattern": "ring", "counts": [6, 8, 10], "speed": 240.0,
 		"life": 0.5, "share": 0.3, "pierce": 1, "radius": 3.0, "style": "orb", "color": Color(0.55, 1.0, 0.9)},  # TUNING (not in GDD) a ring of soul-light with every flash (RevelationData.LIGHT)
+	# --- Act XIV (temporary number): the Fern Basin ---
+	"pack_leap": {"every": 2, "clock": "cooldown", "aim": "strongest", "pattern": "fan", "counts": [3, 4, 6], "spread": 20.0, "speed": 300.0,
+		"life": 0.5, "share": 0.3, "pierce": 1, "radius": 3.0, "style": "shard", "color": Color(0.45, 0.95, 0.85)},  # TUNING (not in GDD) a fan of spirit claws after every other cast (PackLeapData.SPIRIT)
 }
 ## Range (px) within which a spell echo looks for its target (no target, no echo).
 const SPELL_RANGE: float = 340.0  # TUNING (not in GDD)

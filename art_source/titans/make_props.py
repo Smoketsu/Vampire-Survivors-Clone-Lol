@@ -14,8 +14,9 @@ SCRATCH = HERE / "_work"  # Temporary crops (deleted at the end).
 RAMPS = "primeval_fern,primeval_ochre,primeval_tar,primeval_lava,primeval_bone"  # Obstacle ramps.
 ICON_RAMPS = RAMPS + ",soul"  # Icon ramps (soul-teal for the Bonehorn and Fossil Tyrant).
 # Obstacle sheet left to right: (key, max art width, max art height). Rect kinds also get a `_v` (the horizontal one turned 90 degrees).
-OBSTACLES = [("obstacles/primeval_rock", 36, 36), ("obstacles/primeval_fossil", 52, 30)]
-VERTICAL = ["obstacles/primeval_fossil"]
+# The Fern Basin's kinds carry the one-size suffix `_m` (EnvironmentArtData: its arena uses one size of each).
+OBSTACLES = [("obstacles/primeval_rock_m", 36, 36), ("obstacles/primeval_fossil_m", 52, 30)]
+VERTICAL = ["obstacles/primeval_fossil_m"]
 # Badge sheets: file -> the first four symbols left to right: (icon id, frame icon). Violet frame = spells, passives, counter-passives
 # and summon classes; gold frame = evolutions and achievements (as the existing icons).
 VIOLET, GOLD = "icons/bone_spear", "icons/ossuary_lance"

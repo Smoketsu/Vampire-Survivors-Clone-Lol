@@ -19,7 +19,13 @@
 ##                     summons, grouped by group
 ##   primeval stage:   the Titans stage itself (stub status, boss, Soul Ash,
 ##                     the Reckoning)
-## Phase 2 adds one line per stage system here (each stage in its own block).
+##   primeval damage:  EVERY source of damage to the necromancer and to the
+##                     summons this run, the largest first: enemy kinds, the
+##                     boss and its attacks, and the rules (the trample, the
+##                     bombs, ...), each "source you/summons" (so a balance
+##                     pass sees the rules too, not only the kinds)
+## Phase 2 adds one line per stage system here (each stage in its own block):
+## the Fern Basin's are FernBasinReport's.
 ## Read-only: it never changes the run.
 class_name PrimevalReport
 extends RefCounted
@@ -50,7 +56,37 @@ static func print_lines(game: Game, st: Dictionary) -> void:
 			String(boss["id"]), String(boss.get("script", boss["id"])), float(sd["enemy_hp_mult"]), float(sd["enemy_damage_mult"]),
 			EmpireReport._clock(float(sd.get("enemy_mult_from", 0.0))), float(sd["ash_mult"]),
 			String((sd["reckoning"] as Dictionary).get("kind", "inquisitor")), str(not pr.ash.cfg.is_empty())])
+	print("[autotest] primeval damage (you/summons): %s" % damage_line(st))
 	# Phase 2: each Titans stage's own lines go here (its stage, kinds and boss).
+	# --- Act XIV (temporary number): the Fern Basin --- (its stage, Scarmaw; FernBasinReport)
+	FernBasinReport.stage_lines(game, st)
+
+
+## The "primeval damage" line: every damage source to the necromancer
+## (player_dmg_from_<source>) and to the summons (summon_dmg_from_<source>),
+## sorted by their sum, largest first ("none" when nothing hurt either).
+static func damage_line(st: Dictionary) -> String:
+	var you := {}  # Source -> damage to the necromancer.
+	var army := {}  # Source -> damage to the summons.
+	for k: String in st:
+		if k.begins_with("player_dmg_from_"):
+			you[k.substr(16)] = float(st[k])
+		elif k.begins_with("summon_dmg_from_"):
+			army[k.substr(16)] = float(st[k])
+	var srcs: Array = []
+	for s: String in you:
+		srcs.append(s)
+	for s: String in army:
+		if not you.has(s):
+			srcs.append(s)
+	srcs.sort_custom(func(a: String, b: String) -> bool:
+		var ta := float(you.get(a, 0.0)) + float(army.get(a, 0.0))
+		var tb := float(you.get(b, 0.0)) + float(army.get(b, 0.0))
+		return ta > tb or (ta == tb and a < b))
+	var parts := PackedStringArray()
+	for s: String in srcs:
+		parts.append("%s %d/%d" % [s, int(you.get(s, 0.0)), int(army.get(s, 0.0))])
+	return ", ".join(parts) if not parts.is_empty() else "none"
 
 
 ## The "herds" line (Herds).

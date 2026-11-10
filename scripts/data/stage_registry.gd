@@ -483,6 +483,12 @@
 ##   scavengers         — any key of PrimevalRulesData.SCAVENGERS ({} =
 ##                        defaults).
 ##   zones              — the Titans stubs too: the planned zones.
+## --- Act XIV (temporary number): the Fern Basin ---
+##   fern_basin         — FernBasinDirector config (FernBasinStage.FERN: the
+##                        Tar Seeps, the Bog Crocs, the "nest_mother" event);
+##                        ground "fern_basin" is its FernBasinGround (four
+##                        zone floors and the tar pools, from each zone's
+##                        "ground" "tar").
 class_name StageRegistry
 extends RefCounted
 

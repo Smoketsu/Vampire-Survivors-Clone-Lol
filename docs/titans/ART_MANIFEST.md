@@ -110,9 +110,9 @@ The constants are already in `scripts/data/palette.gd` (`PRIMEVAL_*`); the ramps
 
 | Key | Size | What | Loaded now |
 |---|---|---|---|
-| `obstacles/primeval_rock` | 36x36 | a mossy boulder (circle kind; scorched on the Last Day) | code |
-| `obstacles/primeval_fossil` + `_v` | 52x30 | a fossil rib arch (bone ribs over a dark rock) | code |
-| `obstacles/primeval_tree_fern` | 40x48 | phase 2 (the Fern Basin): a tree fern trunk | phase 2 |
+| `obstacles/primeval_rock_m` | 36x36 | a mossy boulder (circle kind; scorched on the Last Day); renamed with the one-size suffix `_m` by the Fern Basin (its arena uses one size; the Great Plain / Last Day stubs keep their two-size code glyphs until their agents do the same) | yes (the Fern Basin) |
+| `obstacles/primeval_fossil_m` + `_m_v` | 52x30 | a fossil rib arch (bone ribs over a dark rock); `_m` as above | yes (the Fern Basin) |
+| `obstacles/primeval_tree_fern_m` | 40x48 | the Fern Basin: a tree fern trunk (circle kind, footprint radius 10 px; one size, so `_m`) | no (PrimevalGlyphs) |
 | `obstacles/primeval_canyon_wall` + `_v` | 96x32 | phase 2 (the Great Plain): a canyon wall segment (the narrow lanes) | phase 2 |
 | `obstacles/primeval_lava_rock` | 40x40 | phase 2 (the Last Day): a cooling lava boulder | phase 2 |
 
@@ -168,3 +168,18 @@ Razorclaw 40x34, Longneck 88x80, Tyrant 86x72, Skyraider 40x36, Scuttler 20x12).
 `stormwing`, `ironjaw`, `primeval_nest`, `mother_clubtail`, `thunderwing`, the three bosses, the three characters, the summon class sprites
 (`bonehorn`, `fossil_tyrant`, `fossil_giant`; the two icons exist), the zone floors, `primeval_tar`, `primeval_tree_fern`, `primeval_canyon_wall`,
 `primeval_lava_rock`.
+
+## Status (the Fern Basin, phase 2)
+
+Built and playable with code fallbacks (`PrimevalGlyphs`, the kits' `draw_body()`, `FernBasinGround`, BossScarmaw's code
+shape). The art it still needs, all loaded by the code as soon as the file exists:
+- units: `primeval/bog_croc` (+ walk strip) and `primeval/bog_croc_submerged` (a still: eyes and a ripple over tar, about
+  32x12), `primeval/ironjaw` (+ walk), `primeval/primeval_nest` (+ `_dead`), `primeval/scarmaw_guard` (a great female
+  Razorclaw with a bone crest, 44x40, + walk; the alpha's art is drawn until then), `primeval/scarmaw` (+ walk strip and
+  the pose still `primeval/scarmaw_leap`, `BossPoseData`);
+- the character `player/fern_huntress` (female, figure style: walk strip and the 24-frame idle strip, bust rig);
+- floors `tiles/fern_basin_fern_floor`, `_tar_seep`, `_river_ford`, `_nesting_hollow` and the tar patch `tiles/primeval_tar`
+  (drawn stretched over each pool; the River Ford's pools are drawn as brown water in code and do not use it);
+- the obstacle `obstacles/primeval_tree_fern_m`.
+The icons `pack_leap`, `apex_pack`, `pack_instinct` exist. Sounds: the stage reuses the Titans pack (`PrimevalRulesData.SOUNDS`,
+the Fern Basin's block).
