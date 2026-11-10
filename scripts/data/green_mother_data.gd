@@ -38,8 +38,8 @@
 ##     `slots` of the fourteen other acts' signature rules (picked with the
 ##     run's seeded RNG, each at most once, in a seeded order; owner answer),
 ##     `slot_time` s each, through each act's ONE existing path. During a slot
-##     her Turning and Burial rest (her melee stays); she can be hurt
-##     throughout.
+##     her Turning and Burial rest (her melee stays) and the claimed power
+##     wards her (slot_ward of every hit); she can be hurt throughout.
 ## Beaten, she does not die: she sinks into the roots and gives the
 ## necromancer the one claim left (the short ending text; at 0:00 the FIRST
 ## SPRING, WildRules.first_spring, instead of Spring Returns). Slaying her
@@ -76,7 +76,7 @@ const FROST := Color(0.86, 0.94, 0.98)  # TUNING (not in GDD) visual only
 const SEASON_COLORS: Array[Color] = [Color(0.55, 0.85, 0.42), Color(1.0, 0.55, 0.2), Color(0.78, 0.55, 0.25), Color(0.86, 0.94, 0.98)]  # TUNING (not in GDD) visual only
 
 ## The Green Mother's base max HP (x the boss HP multiplier and the stage's HP multiplier).
-const MAX_HP: float = 8500.0  # TUNING (not in GDD) the campaign's last boss, over the Summer Queen's 8,000: the Last Claim's slots need her alive a while (first pass 11,000: the army bot left her on 1,450 HP at 0:00, seed 7)
+const MAX_HP: float = 13000.0  # TUNING (not in GDD) the campaign's last boss, over the Summer Queen's 8,000: the army bot slays her in about two minutes, the Last Claim's slots running for most of the last (first passes 11,000, 8,500 and 10,000: slain in 60-100 s, the Last Claim cut to one to five slots, seeds 3, 7 and 11)
 
 ## Her row (keys as an EnemyData row, plus her fight's; see the header).
 const BOSS := {
@@ -108,7 +108,7 @@ const BOSS := {
 	"arrive_banner": "THE GREEN MOTHER wakes in the World-Tree! The whole year turns in her hands.",  # TUNING (not in GDD)
 	"turn_first": 4.0,  # TUNING (not in GDD) s after she arrives
 	"turn_every": 13.0,  # TUNING (not in GDD) s between two seasons cast
-	"turn_time": 11.0,  # TUNING (not in GDD) s each cast season holds (SeasonCycle.set_override())
+	"turn_time": 13.0,  # TUNING (not in GDD) s each cast season holds (SeasonCycle.set_override()): until the next cast (first pass 11: the clock's season flashed back between casts)
 	"turn_count": 4,  # TUNING (not in GDD) circles a cast
 	"turn_spread": 220.0,  # TUNING (not in GDD) px round the necromancer
 	"turn_lead": 1.3,  # TUNING (not in GDD) s a circle shows before it bursts
@@ -139,6 +139,8 @@ const BOSS := {
 ##   slots       — slots replayed (each act at most once, seeded order).
 ##   slot_time   — s each slot lasts.
 ##   gap         — s between two slots (her breath).
+##   slot_ward   — share of a hit she still takes while a slot runs (the
+##                 claimed power wards her; she can be hurt throughout).
 ##   banner      — banner when it begins.
 ## SLOTS: one row per act, in campaign order (the final slots), each: id (the
 ## report's and the stats' key, last_claim_<id>), act (its name), banner, and
@@ -150,6 +152,7 @@ const LAST_CLAIM := {
 	"slots": 7,  # Owner answer: "a random 7 of the 14 acts"
 	"slot_time": 8.0,  # Owner answer: "8 s each"
 	"gap": 1.0,  # TUNING (not in GDD) s
+	"slot_ward": 0.5,  # TUNING (not in GDD) own decision: half damage during a slot, so a strong army sees the replays before she falls
 	"banner": "THE LAST CLAIM: the Green Mother remembers every power that ever claimed the dead!",  # TUNING (not in GDD)
 }
 

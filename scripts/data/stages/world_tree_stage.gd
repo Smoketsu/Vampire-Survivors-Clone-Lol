@@ -33,10 +33,10 @@ const BOSS_TIME: float = 1020.0  # TUNING (not in GDD) 17:00, as on every stage
 
 ## Enemy max-HP multiplier of this stage on top of the shared time scaling
 ## (slot XV is the hardest act: above the Age of Titans' 2.2; the step is in HP).
-const ENEMY_HP_MULT: float = 2.3  # TUNING (not in GDD) phase 2 (the stub's 2.6: the naive bot died at ~8:30): the Fae Court's 2.2 and up; the Gardener, the Turning, the Burial and the Last Claim are the step up
+const ENEMY_HP_MULT: float = 2.2  # TUNING (not in GDD) phase 2 (the stub's 2.6, a first pass 2.3: the army bot's ring melted from 9:00, seed 11): the Fae Court's 2.2; the year twice as fast, the Gardener, the Turning, the Burial and the Last Claim are the step up
 ## Enemy damage multiplier of this stage on top of the shared time scaling
 ## (the Age of Titans' 1.4 and up).
-const ENEMY_DAMAGE_MULT: float = 1.45  # TUNING (not in GDD) phase 2 (the stub's 1.8): the Fae Court's 1.4 and up
+const ENEMY_DAMAGE_MULT: float = 1.4  # TUNING (not in GDD) phase 2 (the stub's 1.8, a first pass 1.45): the Fae Court's 1.4; the rules are the step up
 ## Elapsed game seconds from which the two multipliers apply to regular
 ## enemies (the boss always gets them).
 const ENEMY_MULT_FROM: float = 420.0  # TUNING (not in GDD) as Acts III to XIV (7:00)
@@ -65,14 +65,14 @@ const ZONES := [
 		"blurb": "The tree's roots run through the dead of every age",
 		"ground": {"style": "roots", "base": Color(0.11, 0.12, 0.09), "line": Color(0.20, 0.16, 0.11),
 			"accent": Palette.WILD_MOSS, "trim": Palette.WILD_BARK},  # TUNING (not in GDD)
-		"arena": {"density": 0.15, "clear_radius": 220.0, "layout_seed": 4545,  # TUNING (not in GDD) the densest zone
-			"kinds": {"wild_great_root": {"weight": 0.5, "shape": "rect", "sizes": [46.0], "short": 11.0},
-				"wild_oak": {"weight": 0.5, "shape": "circle", "sizes": [14.0, 20.0]}}}},  # TUNING (not in GDD)
+		"arena": {"density": 0.12, "clear_radius": 220.0, "layout_seed": 4545,  # TUNING (not in GDD) the densest zone (first pass 0.15 with roots 0.5: the thickets and the roots walled the army bot in, seed 11)
+			"kinds": {"wild_great_root": {"weight": 0.35, "shape": "rect", "sizes": [46.0], "short": 11.0},
+				"wild_oak": {"weight": 0.65, "shape": "circle", "sizes": [14.0, 20.0]}}}},  # TUNING (not in GDD)
 	{"start": 300.0, "numeral": "II", "name": "The Trunk Stair", "id": "trunk_stair",  # Owner-approved proposal (zones)
 		"blurb": "Ledges of bark climbing the great trunk",
 		"ground": {"style": "trunk_stair", "base": Color(0.15, 0.12, 0.09), "line": Color(0.24, 0.18, 0.12),
 			"accent": Palette.WILD_GOLD_LEAF, "trim": Palette.WILD_BARK},  # TUNING (not in GDD)
-		"arena": {"density": 0.13, "clear_radius": 220.0, "layout_seed": 4555,  # TUNING (not in GDD)
+		"arena": {"density": 0.11, "clear_radius": 220.0, "layout_seed": 4555,  # TUNING (not in GDD) (first pass 0.13)
 			"kinds": {"wild_great_root": {"weight": 0.4, "shape": "rect", "sizes": [46.0], "short": 11.0},
 				"wild_stone": {"weight": 0.3, "shape": "rect", "sizes": [18.0, 26.0], "short": 12.0},
 				"wild_oak": {"weight": 0.3, "shape": "circle", "sizes": [14.0, 20.0]}}}},  # TUNING (not in GDD)
@@ -87,7 +87,7 @@ const ZONES := [
 		"blurb": "The heart of the tree, where the whole year sleeps in one seed",
 		"ground": {"style": "seed", "base": Color(0.14, 0.13, 0.10), "line": Color(0.22, 0.19, 0.13),
 			"accent": Palette.WILD_FROST, "trim": Palette.WILD_GOLD_LEAF},  # TUNING (not in GDD)
-		"arena": {"density": 0.12, "clear_radius": 240.0, "layout_seed": 4575,  # TUNING (not in GDD) room for her fight
+		"arena": {"density": 0.1, "clear_radius": 240.0, "layout_seed": 4575,  # TUNING (not in GDD) room for her fight (first pass 0.12)
 			"kinds": {"wild_great_root": {"weight": 0.5, "shape": "rect", "sizes": [46.0], "short": 11.0},
 				"wild_stone": {"weight": 0.5, "shape": "rect", "sizes": [18.0, 26.0], "short": 12.0}}}},  # TUNING (not in GDD)
 ]
@@ -137,9 +137,9 @@ const RECKONING_OBJECTIVE: String = "SPRING RETURNS: the year turns back to its 
 ## corpse-blooms (not in the trickle: a structure); winter the Winter Court).
 const SEASON_WEIGHTS := {
 	"spring": {"treant": 0.012},  # TUNING (not in GDD) (the stub's 0.03: 135 Treants, the army bot's worst foe, seed 7)
-	"summer": {"fae_knight": 0.04, "wild_rider": 0.006, "great_stag": 0.006},  # TUNING (not in GDD) (the stub's 0.06 / 0.015 / 0.01)
-	"autumn": {"spore_mother": 0.05, "will_o_wisp": 0.05},  # TUNING (not in GDD)
-	"winter": {"winter_fae": 0.12},  # TUNING (not in GDD) the Winter Court
+	"summer": {"fae_knight": 0.035, "wild_rider": 0.004, "great_stag": 0.004},  # TUNING (not in GDD) (the stub's 0.06 / 0.015 / 0.01)
+	"autumn": {"spore_mother": 0.03, "will_o_wisp": 0.04},  # TUNING (not in GDD) (the stub's 0.05 / 0.05: the spores ate the army bot's ring, seed 7)
+	"winter": {"winter_fae": 0.05},  # TUNING (not in GDD) the Winter Court (the stub's 0.12, then 0.07: with the snow and the 7:00 step the naive bot fell at 9:03-9:46 to the frost bolts, seeds 7 and 11)
 }
 
 ## Continuous spawning segments (keys as GraveyardStage.SEGMENTS, plus
@@ -161,18 +161,18 @@ const SEGMENTS := [
 		"season_weights": SEASON_WEIGHTS,
 		"objective": "Where your army stands, the ground dies into blight: the Wild cannot heal there"},
 	{"start": 300.0, "rate": 2.3, "max_alive": 60,  # TUNING (not in GDD)
-		"weights": {"thornling": 0.82, "dryad": 0.1, "fae_knight": 0.05, "treant": 0.015},
+		"weights": {"thornling": 0.835, "dryad": 0.1, "fae_knight": 0.035, "treant": 0.015},
 		"season_weights": SEASON_WEIGHTS,
 		"objective": "The Trunk Stair: every season comes twice as fast"},
-	{"start": 600.0, "rate": 2.7, "max_alive": 72,  # TUNING (not in GDD)
-		"weights": {"thornling": 0.79, "dryad": 0.1, "fae_knight": 0.05, "spore_mother": 0.025, "treant": 0.015},
+	{"start": 600.0, "rate": 2.5, "max_alive": 66,  # TUNING (not in GDD) (the stub's 2.7 / 72: the army bot's ring melted, seeds 7 and 11)
+		"weights": {"thornling": 0.805, "dryad": 0.1, "fae_knight": 0.035, "spore_mother": 0.025, "treant": 0.015},
 		"season_weights": SEASON_WEIGHTS,
 		"objective": "The Crown: in autumn the dead rot in three seconds. Raise them fast"},
-	{"start": 900.0, "rate": 3.0, "max_alive": 84,  # TUNING (not in GDD)
-		"weights": {"thornling": 0.77, "dryad": 0.1, "fae_knight": 0.06, "treant": 0.015, "spore_mother": 0.025},
+	{"start": 900.0, "rate": 2.7, "max_alive": 76,  # TUNING (not in GDD) (the stub's 3.0 / 84)
+		"weights": {"thornling": 0.785, "dryad": 0.1, "fae_knight": 0.045, "treant": 0.015, "spore_mother": 0.025},
 		"season_weights": SEASON_WEIGHTS,
 		"objective": "The Seed: the year turns for the last time"},
-	{"start": BOSS_TIME, "rate": 2.4, "max_alive": 64,  # TUNING (not in GDD) thinner during the boss fight
+	{"start": BOSS_TIME, "rate": 2.2, "max_alive": 58,  # TUNING (not in GDD) thinner during the boss fight (the stub's 2.4 / 64)
 		"weights": {"thornling": 0.85, "dryad": 0.15},
 		"season_weights": SEASON_WEIGHTS,
 		"objective": "The Green Mother remembers every power that ever claimed the dead"},
@@ -192,7 +192,7 @@ const EVENTS := [
 	{"time": 330.0, "type": "wave", "banner": "The Fae Knights ride out of the summer wood!", "formation": "arc",  # TUNING (not in GDD)
 		"groups": [{"kind": "fae_knight", "count": 5, "elite": false}, {"kind": "dryad", "count": 2, "elite": false}]},
 	{"time": 480.0, "type": "wave", "banner": "The Wild Hunt sweeps past!", "formation": "arc",  # TUNING (not in GDD)
-		"groups": [{"kind": "wild_rider", "count": 2, "elite": false}, {"kind": "great_stag", "count": 1, "elite": false}]},
+		"groups": [{"kind": "wild_rider", "count": 1, "elite": false}, {"kind": "fae_knight", "count": 2, "elite": false}]},  # (the stub's two riders and a stag)
 	{"time": 640.0, "type": "wave", "banner": "Will-o'-Wisps and Spore Mothers drift through the falling leaves!", "formation": "ring",  # TUNING (not in GDD)
 		"groups": [{"kind": "will_o_wisp", "count": 6, "elite": false}, {"kind": "spore_mother", "count": 3, "elite": false}]},
 	{"time": 680.0, "type": "gardener", "banner": "THE GARDENER OF ROOTS wakes! Near him the roots grab in every season!",  # Owner-approved proposal (miniboss); 8:40 left
@@ -200,9 +200,9 @@ const EVENTS := [
 	{"time": 800.0, "type": "wave", "banner": "A Treant and its Dryads climb the trunk!", "formation": "line",  # TUNING (not in GDD)
 		"groups": [{"kind": "treant", "count": 1, "elite": false}, {"kind": "dryad", "count": 3, "elite": false}]},
 	{"time": 930.0, "type": "wave", "banner": "The Winter Court comes out of the snow!", "formation": "ring",  # TUNING (not in GDD)
-		"groups": [{"kind": "winter_fae", "count": 6, "elite": false}, {"kind": "fae_knight", "count": 4, "elite": false}]},
+		"groups": [{"kind": "winter_fae", "count": 6, "elite": false}, {"kind": "fae_knight", "count": 2, "elite": false}]},
 	{"time": 990.0, "type": "wave", "banner": "Every creature of the Wild gathers before the Green Mother!", "formation": "ring",  # TUNING (not in GDD)
-		"groups": [{"kind": "great_stag", "count": 1, "elite": false}, {"kind": "wild_rider", "count": 2, "elite": false}, {"kind": "thornling", "count": 12, "elite": false}]},
+		"groups": [{"kind": "great_stag", "count": 1, "elite": false}, {"kind": "wild_rider", "count": 1, "elite": false}, {"kind": "thornling", "count": 12, "elite": false}]},
 ]
 
 ## The Green Mother's arrival (keys as GraveyardStage.BOSS; StageRegistry
@@ -229,12 +229,12 @@ const FLOOR := {
 	"trim": Palette.WILD_BARK,  # TUNING (not in GDD)
 }
 
-## This stage's thorn thickets (any key of WildRulesData.THICKETS): the act's
-## cap, spreading a little slower (the World-Tree's maze without walling the
-## ring in).
+## This stage's thorn thickets (any key of WildRulesData.THICKETS): the
+## Greenwood's cap, spreading slower (the World-Tree's maze without walling the
+## ring in; first pass cap 28, every 50 s: the army bot was walled in, seed 11).
 const THICKETS := {
-	"cap": 28,  # TUNING (not in GDD) (the default 30)
-	"spread_every": 50.0,  # TUNING (not in GDD) s (the default 45)
+	"cap": 22,  # TUNING (not in GDD) (the default 30)
+	"spread_every": 60.0,  # TUNING (not in GDD) s (the default 45)
 }
 
 ## This stage's living ground (any key of WildRulesData.BLOOM): the Fae Court's

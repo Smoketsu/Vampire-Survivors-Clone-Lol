@@ -21,7 +21,8 @@
 ##     holds it until the ring cuts it down or burial_time s x Deadwood pass.
 ##   * THE LAST CLAIM (from a third of her HP, once): LastClaim (`claim`)
 ##     replays seven of the fourteen other acts' rules, 8 s each; while a slot
-##     runs her Turning and Burial rest (her melee stays).
+##     runs her Turning and Burial rest (her melee stays) and the claimed power
+##     wards her (damage_taken_mult(): slot_ward).
 ## The Wild's rules exist wherever she fights (Game.wild_rules()). Beaten, she
 ## does not die (the ending text: she sinks into the roots and plants the dead);
 ## beaten before 0:00 she sets GreenMotherData.BEATEN_STAT, and at 0:00 the
@@ -96,6 +97,14 @@ func is_walking() -> bool:
 ## Sprite key of her art (engine-motion pivot).
 func motion_sprite_key() -> String:
 	return GreenMotherData.SPRITE
+
+
+## THE LAST CLAIM's ward: while a slot runs she takes slot_ward of every hit.
+func damage_taken_mult(source: String) -> float:
+	var m := super.damage_taken_mult(source)
+	if claim != null and claim.in_slot():
+		m *= float(GreenMotherData.LAST_CLAIM["slot_ward"])
+	return m
 
 
 ## Damage multiplier of her specials: the time scaling and her buffs.
