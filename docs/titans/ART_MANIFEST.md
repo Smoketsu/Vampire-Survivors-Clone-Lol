@@ -47,11 +47,11 @@ The constants are already in `scripts/data/palette.gd` (`PRIMEVAL_*`); the ramps
 | `primeval/horncharger` | 64x48 | male | phase 2 (the Great Plain): a ceratopsian, three horns, a bone frill; telegraphed charge | walk | phase 2 |
 | `primeval/clubtail` | 64x44 | female | phase 2 (the Great Plain): an ankylosaur, armour plates, a bone club tail | walk | phase 2 |
 | `primeval/bog_croc` | 72x30 | male | phase 2 (the Fern Basin): a crocodile, tar-black, eyes above the tar; lunges from the seeps | walk, `_submerged` still | phase 2 |
-| `primeval/stormwing` | 72x44 | female | phase 2 (the Last Day): a larger pterosaur, a wing gust, lands to peck | fly, `_landed` still | phase 2 |
+| `primeval/stormwing` | 72x44 | female | the Last Day: a larger pterosaur, a wing gust, lands to peck (code-drawn by `PrimevalGlyphs` until it exists) | fly, `_landed` still | yes (the Last Day) |
 | `primeval/ironjaw` | 80x60 | female | Fern Basin miniboss: Ironjaw, the Nest Mother, a bulky predator | walk | phase 2 |
 | `primeval/primeval_nest` | 48x32 | none | the Nest Mother's nest (a structure that spawns Scuttlers until destroyed), with `_dead` | none | phase 2 |
 | `primeval/mother_clubtail` | 88x60 | female | Great Plain miniboss: Mother Clubtail, an armoured matriarch | walk | phase 2 |
-| `primeval/thunderwing` | 112x64 | male | Last Day miniboss: Thunderwing, the Sky King, a giant pterosaur | fly | phase 2 |
+| `primeval/thunderwing` | 112x64 | male | Last Day miniboss: Thunderwing, the Sky King, a giant pterosaur (code-drawn until it exists) | fly | yes (the Last Day) |
 
 ## Bosses (`assets/sprites/primeval/<id>.png`; phase 2 wires them, `BossPoseData` poses by the stage agents)
 
@@ -59,7 +59,7 @@ The constants are already in `scripts/data/palette.gd` (`PRIMEVAL_*`); the ramps
 |---|---|---|---|---|
 | `primeval/scarmaw` | 72x60 | female | Scarmaw, the Great Raptor: a huge feathered raptor, a bone crest, scarred muzzle (the Hunt, the Ambush, Blood Up) | walk, leap pose |
 | `primeval/ironbrow` | 112x80 | male | Old Ironbrow, the Horned Titan: a giant ceratopsian with one horn broken off (`_broken` still after the Break) | walk |
-| `primeval/gravejaw` | 128x104 | male | Old Gravejaw, the Tyrant King: the greatest tyrant, scarred, a lava glow in the throat (the Roar, the Hunt, the Last Day) | walk, roar pose |
+| `primeval/gravejaw` | 128x104 | male | Old Gravejaw, the Tyrant King: the greatest tyrant, scarred, a lava glow in the throat (the Roar, the Hunt, the Last Day); pose 1 `gravejaw_roar` (`BossPoseData`: the Roar's windup and at the Mound) | walk, roar pose |
 
 ## Playable characters (`assets/sprites/player/`; PLAN.md's convention: violet necromancers of the act's theme, never a beast; bone-white and soul-teal accents, pale undead-touched skin, a casting focus, 56 px tall, at most ~46 px wide)
 
@@ -110,11 +110,11 @@ The constants are already in `scripts/data/palette.gd` (`PRIMEVAL_*`); the ramps
 
 | Key | Size | What | Loaded now |
 |---|---|---|---|
-| `obstacles/primeval_rock_m` | 36x36 | a mossy boulder (circle kind; scorched on the Last Day); renamed with the one-size suffix `_m` by the Fern Basin (its arena uses one size; the Great Plain uses it too; the Last Day stub keeps its two-size code glyphs until its agent does the same) | yes (the Fern Basin) |
+| `obstacles/primeval_rock_m` | 36x36 | a mossy boulder (circle kind; scorched on the Last Day); renamed with the one-size suffix `_m` by the Fern Basin (its arena uses one size; the Great Plain and the Last Day use it too, scorched on the Last Day in a later redo) | yes (the Fern Basin) |
 | `obstacles/primeval_fossil_m` + `_m_v` | 52x30 | a fossil rib arch (bone ribs over a dark rock); `_m` as above | yes (the Fern Basin) |
 | `obstacles/primeval_tree_fern_m` | 40x48 | the Fern Basin: a tree fern trunk (circle kind, footprint radius 10 px; one size, so `_m`) | no (PrimevalGlyphs) |
 | `obstacles/primeval_canyon_wall_m` + `_m_v` | 96x32 | the Great Plain: a red-rock canyon wall segment (the narrow lanes; one size, so `_m`) | no (PrimevalGlyphs) |
-| `obstacles/primeval_lava_rock` | 40x40 | phase 2 (the Last Day): a cooling lava boulder | phase 2 |
+| `obstacles/primeval_lava_rock_m` | 40x40 | the Last Day: a cooling lava boulder, black with glowing cracks (circle kind, footprint radius 16 px; one size, so `_m`; the Lava Fields and the Impact Rim) | no (PrimevalGlyphs) |
 
 ## Icons (`assets/sprites/icons/<id>.png`, 32x32 badges on the approved frames: violet = spells / passives / counter-passives / classes, gold = evolutions and achievements)
 
@@ -136,6 +136,7 @@ The constants are already in `scripts/data/palette.gd` (`PRIMEVAL_*`); the ramps
 | `icons/ach_the_day_the_sky_fell` | achievement The Day the Sky Fell |
 | `icons/bonehorn` | summon class icon |
 | `icons/fossil_tyrant` | its evolution icon |
+| `icons/petrified_horns` | the Bonehorn's paired passive (Petrified Horns: stone horns; the Last Day's own decision) |
 
 ## Audio
 

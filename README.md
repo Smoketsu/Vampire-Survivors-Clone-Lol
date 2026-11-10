@@ -2936,7 +2936,7 @@ through a rift to the day before the meteor and takes the Call for himself. No g
 size of houses, and every one that falls leaves a skeleton (design `docs/proposals/LAST_SIX_ACTS.md` section XIV and
 `docs/proposals/NEW_ACTS_AND_ORDER.md` Part 2; final slot XIV of the fifteen-act order, temporary act number 14 until the
 reorder pass, `docs/last_acts/PLAN.md`). Three stages are registered under an **Act XIV** tab, hidden as "Coming
-soon" until phase 2 builds them (the Fern Basin and the Great Plain are built and playable): **the Fern Basin** (`fern_basin`, Scarmaw, the Great Raptor), **the Great Plain**
+soon" until phase 2 builds them (all three are built and playable): **the Fern Basin** (`fern_basin`, Scarmaw, the Great Raptor), **the Great Plain**
 (`great_plain`, Old Ironbrow, the Horned Titan) and **the Last Day** (`last_day`, Old Gravejaw, the Tyrant King); the
 Voice's fall in the Empyrean opens the first, each boss the next. Every Titans stage runs three shared rules
 (`Game.primeval`, `PrimevalRules`):
@@ -2951,7 +2951,8 @@ Voice's fall in the Empyrean opens the first, each boss the next. Every Titans s
   crystals and carries it to its nest. Shoot it down and the pile drops where it dies; anything within 200 px of you is
   safe.
 - **The Stampede of Ash.** At 0:00 the sky burns: herds come stampeding from every side, volcanic bombs fall on
-  telegraphed circles, the packs double and Tyrants roam (the Last Day's own Reckoning, the Extinction, is phase 2's).
+  telegraphed circles, the packs double and Tyrants roam (on the Fern Basin and the Great Plain; the Last Day's own
+  Reckoning is the Extinction, below).
 
 The shared kinds so far: the **Scuttler** (swarms of twelve), the **Razorclaw**, the **Frill-Spitter** (venom from range),
 the **Longneck** and the **Duckbill** (the herds), the **Skyraider** and the **Tyrant**. The Codex has a **Titans** tab.
@@ -3000,6 +3001,33 @@ farther). The achievement **Nothing Taken** (reach 0:00 on the Great Plain witho
 Skyraider) opens the Titans' counter-passive **Hoarder's Bones** (offered in this act only: nothing within 220-300 px of
 you is snatched, and a thief drops its pile after 3-1.4 s of flight). Autotest lines `great plain`, `ironbrow`, `act XIV
 spell`, `act XIV passive`; `--spawn=horncharger@T`, `clubtail@T`, `mother_clubtail@T`; `--character=herd_warden`.
+
+#### The Last Day (stage 42, the act's finale, playable)
+
+The impact basin under a white sky, in four zones: **the Scorched Plain**, **the Ash Forest**, **the Lava Fields** and
+**the Impact Rim**. **Fire from the Sky:** from 0:30 small meteorites fall on telegraphed circles round you (every 12 s,
+then 10, 8 and 6.5 s zone by zone), burning both armies; a small growing meteor beside the HUD clock shows the big one
+coming. The **Stormwing** circles over your ring, beats her wings (a circle shows the gust) and blows your summons 100 px
+out from you, then lands at the ring's edge to peck: hit her then. The **Tyrant** now swallows a summon whole (it is held
+inside for 4 s, still striking; burst the Tyrant and it cuts its way out) and roars your ring still for 1.2 s. At 11:30
+**Thunderwing, the Sky King** comes: a giant pterosaur whose gusts clear the whole ring. **Old Gravejaw, the Tyrant King**
+arrives at 17:00: **the Hunt** (he walks only at you, no summon draws him; his bite lunges through the ring, swallows the
+first summon it reaches and gores the rest), **the Roar** (the ring round him stunned, the herds near him stampede away,
+and beasts answer from the edge of the screen) and **the Last Day** (at 1:00 left he turns toward the impact and
+rampages to the Mound, where he stands exposed, roaring at the sky). **The Extinction** is this stage's Reckoning: at 0:00
+your meteor falls, a 5 s white-out under a one-time ward, then every enemy on the map dies, every corpse near you rises as
+the **Fossil Host** (at most 60, for 30 s) and the run ends in **victory**. A Gravejaw still alive at the impact lies broken
+on 10% of his health, out of reach: only one slain before the fall gives his rewards, the spell **Meteor Call** (a
+telegraphed meteor on the densest group; evolves into **Extinction Event**, three meteors at once, with the passive
+**Cosmic Dust**), the **Skywatcher** (innate Star Reader: her meteors strike 30% wider) and the finale's summon class,
+the **Bonehorn** (a skeletal horned charger that tramples through a pack and trots back to the ring, on every stage;
+evolves into the **Fossil Tyrant**, which roars and stuns where its charge ends, with the passive **Petrified Horns**; it
+has its Ossuary mastery). Achievements: **Trampled** (the stampedes kill 100 enemies in one run, any Titans stage; opens
+the counter-passive **Thick Marrow**, offered in this act only: your summons take 10-40% less from tramples, charges,
+sweeps, gusts, swallows, bombs and meteorites) and **The Day the Sky Fell** (reach the Extinction with no summon lost;
+it records the clear until the reorder pass writes the act's epilogue part). Autotest lines `last day`, `extinction`,
+`gravejaw`, `act XIV spell`, `act XIV passive`, `bonehorn`; `--spawn=stormwing@T`, `thunderwing@T`;
+`--character=skywatcher`, `--classes=bonehorn`.
 
 ### The illustrated epilogue
 
@@ -3773,6 +3801,9 @@ scripts/
     great_plain_ground.gd   The Great Plain's four zone floors (tiles/great_plain_<style>; Act XIV)
     great_plain_report.gd   The autotest's Great Plain lines (great plain, ironbrow) and the Stampede / Calcified
                             Hide / Hoarder's Bones item lines (Act XIV)
+    last_day_ground.gd      The Last Day's four zone floors (tiles/last_day_<style>; Act XIV)
+    last_day_report.gd      The autotest's Last Day lines (last day, extinction, gravejaw) and the Meteor Call /
+                            Cosmic Dust / Petrified Horns / Thick Marrow / Bonehorn item lines (Act XIV)
     proving_moon_glyphs.gd  Code fallbacks of the Warbeast, Vrask'Tal and his skull belt, and the stage's obstacles (Act IX)
     proving_moon_report.gd  The autotest's Proving Moon lines (proving moon, warbeast, threats, vrask'tal; the Soul Caster
                             and passives' item lines; Act IX)
@@ -3910,6 +3941,8 @@ scripts/
                             Mothership's three beams and two lifts; Crop Circles' key
     behaviors/ushabti_sentinel_behavior.gd  Act XII (temporary): the Ushabti Sentinel's reassembly (on_lethal(), the
                             rubble, the shockwave); Eternal Guard's keys; Answering Words' key
+    behaviors/bonehorn_behavior.gd  Act XIV (temporary): the Bonehorn's trampling charge through the densest pack
+                            and its trot back; Fossil Tyrant's roar; Petrified Horns' keys
     golem_kit.gd            Content wave 2: Ossuary Hunger, the Ossuary Titan's heal, barrier and
                             collapse wall (HordeDirector.golems, created by the first Golem)
     golem_texts.gd          Content wave 2: Bone Golem / Grave Masonry / Ossuary Titan card and
@@ -4314,6 +4347,13 @@ scripts/
                             the Canyon's narrow front, Mother Clubtail, Nothing Taken (game.enemies.great_plain)
       boss_ironbrow.gd      Old Ironbrow, the Horned Titan: the Charge (into a rock), the Herd, the Break (shards, the
                             stump)
+      stormwing_kit.gd      The Stormwing and Thunderwing, the Sky King: the circle, the wing gust, the landing (the
+                            Last Day)
+      last_day_director.gd  The Last Day: Fire from the Sky, the growing meteor (meteor_dial.gd), Thunderwing
+                            (game.enemies.last_day)
+      extinction.gd         The Extinction, the Last Day's Reckoning (PrimevalRules.extinction): the white-out, the
+                            ward, the impact, the Fossil Host, the victory
+      boss_gravejaw.gd      Old Gravejaw, the Tyrant King: the Hunt (the bite, the swallow), the Roar, the Last Day
     pantheon/               The Olympian Republic (Act IV): its kits ("<id>_kit.gd", loaded by name after the
                             Eye's and the Empire's) and bosses ("boss_<id>.gd"), and the act's shared rules:
       pantheon_rules.gd     Game.pantheon: owns the wrath, the Phalanx and Glory, the one front test
@@ -4618,6 +4658,9 @@ scripts/
     stampede_data.gd        Stampede / Herd of Ages rules, Calcified Hide keys, Lead Bull key (Act XIV, temporary;
                             the spell node is abilities/spells/stampede.gd)
     ironbrow_data.gd        Old Ironbrow, the Horned Titan: his row, the Charge, the Herd, the Break (Act XIV)
+    meteor_call_data.gd     Meteor Call / Extinction Event rules, Cosmic Dust keys, Star Reader key (Act XIV,
+                            temporary; the spell node is abilities/spells/meteor_call.gd)
+    gravejaw_data.gd        Old Gravejaw, the Tyrant King: his row, the Hunt, the Roar, the Last Day (Act XIV)
     tractor_lift_data.gd    Tractor Beam / Abduction rules, Starseed keys, Deserter's Signal key (Act IX; the
                             spell node is abilities/spells/tractor_lift.gd, the lift helper abilities/enemy_lift.gd)
     burning_eye_data.gd     Burning Eye / Eye of Retribution rules, Desert Fury keys, Lioness's Gaze key (Act XII,
@@ -4710,14 +4753,16 @@ scripts/
                             Ash's kind and companions; the Fern Basin's block the Bog Croc, the Great Plain's the
                             Horncharger and the Clubtail (Act XIV, temporary; fern_basin_ / great_plain_ /
                             last_day_enemy_data.gd: each stage's own; the Fern Basin's holds Ironjaw, her nest and
-                            Scarmaw's alpha-guard, the Great Plain's Mother Clubtail)
-    primeval_rules_data.gd  Act XIV's shared rules: PACKS, HERDS, SCAVENGERS, ASH, the SOUNDS map, the Hoarder's
-                            Bones / Thick Marrow keys
+                            Scarmaw's alpha-guard, the Great Plain's Mother Clubtail; the Last Day's block the
+                            Stormwing and the Tyrant's swallow / roar keys, its own table Thunderwing)
+    primeval_rules_data.gd  Act XIV's shared rules: PACKS, HERDS, SCAVENGERS, ASH, EXTINCTION (the Last Day's
+                            Reckoning), the SOUNDS map, the Hoarder's Bones / Thick Marrow keys
     stages/fern_basin_stage.gd       Act XIV stubs: the Fern Basin, the Great Plain and the Last Day; act 14,
     stages/great_plain_stage.gd      "primeval": true, zones, the rule overrides, a timeline of the shared kinds, the
     stages/last_day_stage.gd         Stampede of Ash, placeholder floors / bosses ("playable": false; the Fern Basin is
                                      built: its zones and tar, the Bog Crocs, Ironjaw, Scarmaw, "playable": true; the
-                                     Great Plain too: its zones, the Watering Hole, the Canyon, Mother Clubtail, Ironbrow)
+                                     Great Plain too: its zones, the Watering Hole, the Canyon, Mother Clubtail, Ironbrow;
+                                     and the Last Day: Fire from the Sky, Thunderwing, Gravejaw, the Extinction)
     stages/ravensmoor_stage.gd     Act VII stubs: Ravensmoor, the Witchwood and Castle Sanguis; act 7,
     stages/witchwood_stage.gd      "court": true, zones, the "moon" overrides, a timeline of the shared kinds,
     stages/castle_sanguis_stage.gd the Endless Feast, placeholder floors / bosses (the Witchwood built: four
@@ -5152,7 +5197,7 @@ the live build instead of about 30):
    `fort_kessler`, `liberty_heights`, `crash_site`, `proving_moon`, `ark`, the Black Tide's `cutter`, `galleon`,
    `maelstrom`, the Hall of the Slain's `barrow_fields`, `valgard`, `vigrid` and the Necropolis Dynasty's `necropolis`,
    `lioness_temple`, `two_truths`, the Celestial Host's `silver_stair`, `wheel_of_thrones`, `empyrean` and the Age of
-   Titans' `fern_basin` and `great_plain`; the other last acts get theirs as they go live) (`--quit-after 15000`, at most 10-15
+   Titans' `fern_basin`, `great_plain` and `last_day`; the other last acts get theirs as they go live) (`--quit-after 15000`, at most 10-15
    wall-clock minutes per run).
    A job fails on any `SCRIPT ERROR`, `ERROR:` or `WARNING:` line, or if its run doesn't complete; one failure does
    not cancel the others. Logs: `test-logs-<id>`.

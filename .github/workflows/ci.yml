@@ -16,8 +16,8 @@
 #               galleon, maelstrom; army policy; the Black Tide, temporary act number), the three Hall of the Slain
 #               stages (barrow_fields, valgard, vigrid) and the three Necropolis Dynasty stages (necropolis,
 #               lioness_temple, two_truths) and the three Celestial Host stages (silver_stair,
-#               wheel_of_thrones, empyrean) and the Age of Titans' Fern Basin and Great Plain (fern_basin,
-#               great_plain); army policy.
+#               wheel_of_thrones, empyrean) and the Age of Titans' three stages (fern_basin, great_plain,
+#               last_day); army policy.
 #               Fails on any script error/warning or if a run
 #               doesn't complete.
 #   2. export - builds single-file Windows (.exe) and Linux executables and the
@@ -134,6 +134,7 @@ jobs:
           # The Age of Titans (temporarily Act XIV, stage 40 in the registry; final slot XIV).
           - {id: fern_basin, name: "Act XIV Stage 40, the Fern Basin", args: "--stage=fern_basin --policy=army", timeout: 900}
           - {id: great_plain, name: "Act XIV Stage 41, the Great Plain", args: "--stage=great_plain --policy=army", timeout: 900}
+          - {id: last_day, name: "Act XIV Stage 42, the Last Day", args: "--stage=last_day --policy=army", timeout: 900}
     steps:
       - uses: actions/checkout@v4
 
