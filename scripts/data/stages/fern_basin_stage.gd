@@ -195,8 +195,8 @@ const SEGMENTS := [
 	{"start": 900.0, "rate": 3.0, "max_alive": 84,  # TUNING (not in GDD)
 		"weights": {"scuttler": 0.905, "frill_spitter": 0.045, "skyraider": 0.05},
 		"objective": "The Nesting Hollow: the whole basin hunts you"},
-	{"start": BOSS_TIME, "rate": 2.0, "max_alive": 56,  # TUNING (not in GDD) thinner during the boss fight (the stub's 2.4 / 64: the army bot's lowest HP came in Scarmaw's fight on seed 11)
-		"weights": {"scuttler": 0.9, "frill_spitter": 0.06, "skyraider": 0.04},
+	{"start": BOSS_TIME, "rate": 1.7, "max_alive": 48,  # TUNING (not in GDD) thinner during the boss fight (the stub's 2.4 / 64, then 2.0 / 56: the army bot's lowest HP came in Scarmaw's fight on seed 11; balance pass 1: a Scuttler swarm killed it there on seed 7)
+		"weights": {"scuttler": 0.915, "frill_spitter": 0.045, "skyraider": 0.04},
 		"objective": "Scarmaw has come for you"},
 ]
 
