@@ -496,6 +496,13 @@
 ##                        "great_plain" is its GreatPlainGround (four zone
 ##                        floors); a zone's "canyon": true narrows the
 ##                        stampedes' front there.
+## --- Act XIV (temporary number): the Last Day ---
+##   last_day           — LastDayDirector config (LastDayStage.LAST_DAY: Fire
+##                        from the Sky, the growing meteor, the "sky_king"
+##                        event); ground "last_day" is its LastDayGround (four
+##                        zone floors); its RECKONING "extinction" is the
+##                        Extinction (PrimevalRules), the meteor that ends the
+##                        run in victory.
 class_name StageRegistry
 extends RefCounted
 

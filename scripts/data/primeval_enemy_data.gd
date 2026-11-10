@@ -28,6 +28,11 @@
 ##                   runs into a rock leaves it stuck 2 s.
 ##   clubtail      — a titan (female), the Great Plain's: an ankylosaur, flat
 ##                   armour 5, a tail sweep that knocks summons back.
+##   stormwing     — a flier elite (female), the Last Day's: a great pterosaur
+##                   whose wing gust pushes the Bone Ring 100 px away from the
+##                   necromancer; she lands to peck (hit her then).
+## The Last Day also gives the TYRANT its swallow and its roar (TyrantKit,
+## the row's swallow_* / roar_* keys).
 ## Each stage's own kinds live in its own file (FernBasinEnemyData,
 ## GreatPlainEnemyData, LastDayEnemyData; empty until phase 2: the Bog Croc,
 ## the Horncharger, the Clubtail, the Stormwing, the stage minibosses and the
@@ -263,9 +268,14 @@ const ENEMIES := {
 	},  # The Skyraider.
 	# A titan (female / male; owner-approved proposal: "Tyrant | Miniboss kind
 	# | Bite that swallows a summon for 4 s; a roar that stuns the ring 1.2 s |
-	# Burst; Bone Wall; the swallowed summon cuts its way out"). Phase 1: the
-	# Stampede of Ash's heavy, a plain heavy biter; phase 2 (the Last Day)
-	# builds the swallow and the roar in its kit.
+	# Burst; Bone Wall; the swallowed summon cuts its way out"). The Stampede
+	# of Ash's heavy; the Last Day built its kit (TyrantKit): THE SWALLOW (every
+	# swallow_every s a grounded summon in reach is swallowed: held and stunned
+	# swallow_time s inside it, taking swallow_dps a second x the time scaling;
+	# the Tyrant losing cut_share of its max HP meanwhile cuts it out early)
+	# and THE ROAR (every roar_every s, with a summon within roar_radius px, a
+	# roar_windup s telegraph, then every grounded summon within roar_radius
+	# px is stunned roar_stun s through CombatResolver.stun_unit()).
 	"tyrant": {
 		"display_name": "Tyrant",
 		"max_hp": 520.0,  # TUNING (not in GDD) a titan
@@ -290,6 +300,17 @@ const ENEMIES := {
 		"faction": FACTION,
 		"kit": "tyrant",
 		"group": "titans",
+		"swallow_first": 4.0,  # TUNING (not in GDD) s after it comes on
+		"swallow_every": 9.0,  # TUNING (not in GDD) s between two swallows
+		"swallow_reach": 30.0,  # TUNING (not in GDD) px edge to edge: a summon this close may be swallowed
+		"swallow_time": 4.0,  # Owner-approved proposal: "a summon for 4 s"
+		"swallow_dps": 5.0,  # TUNING (not in GDD) damage a second to the swallowed summon, before the time scaling
+		"cut_share": 0.12,  # Owner-approved proposal: "the swallowed summon cuts its way out"; TUNING (not in GDD) share of its max HP lost that frees it
+		"roar_first": 6.0,  # TUNING (not in GDD) s after it comes on
+		"roar_every": 12.0,  # TUNING (not in GDD) s between two roars
+		"roar_windup": 0.8,  # TUNING (not in GDD) s of telegraph
+		"roar_radius": 110.0,  # TUNING (not in GDD) px round it
+		"roar_stun": 1.2,  # Owner-approved proposal: "a roar that stuns the ring 1.2 s"
 	},  # The Tyrant.
 	# --- Act XIV (temporary number): the Fern Basin ---
 	# An ambusher (male; owner-approved proposal: "Bog Croc (male) | Ambush |
@@ -416,4 +437,48 @@ const ENEMIES := {
 		"sweep_player": 5.0,  # TUNING (not in GDD) to the necromancer, before the time scaling (first pass 7)
 		"sweep_knock": 40.0,  # Owner-approved proposal: "knocks summons back"; TUNING (not in GDD) px (first pass 60)
 	},  # The Clubtail.
+	# --- Act XIV (temporary number): the Last Day ---
+	# The Stormwing (owner-approved proposal: "Stormwing (female) | Flier elite
+	# | Wing gust that pushes the ring 100 px; lands to peck | Hit her at the
+	# landing circle"): a great pterosaur (a beast: no figure style). StormwingKit:
+	# she CIRCLES hover_radius px from the nearest necromancer over the Bone
+	# Ring; every gust_every s she beats her wings for gust_windup s (a circle
+	# shows the gust round the necromancer), then the GUST: every grounded
+	# summon within gust_radius px of him is pushed gust_push px straight away
+	# from him (gust_damage x the time scaling x Thick Marrow); then she LANDS
+	# at the ring's edge for land_time s (grounded: every blow lands, blockers
+	# hold her) and pecks with the shared melee AI, then takes off again.
+	"stormwing": {
+		"display_name": "Stormwing",
+		"max_hp": 150.0,  # TUNING (not in GDD) a flier elite
+		"move_speed": 110.0,  # TUNING (not in GDD) px/s in the air
+		"damage": 7.0,  # TUNING (not in GDD) a peck, before the time scaling
+		"attack_interval": 1.0,  # TUNING (not in GDD) s
+		"attack_range": 10.0,  # TUNING (not in GDD) px
+		"radius": 14.0,  # TUNING (not in GDD) px (~72 x 44 px sprite)
+		"armor": 0.1,  # TUNING (not in GDD)
+		"xp": 8,  # TUNING (not in GDD)
+		"behavior": "melee",
+		"projectile_speed": 0.0,
+		"undead_damage_mult": 1.0,
+		"heal_amount": 0.0,
+		"heal_interval": 0.0,
+		"heal_radius": 0.0,
+		"target_priority": 0.8,  # TUNING (not in GDD) 0..1
+		"mass": 2.0,  # TUNING (not in GDD)
+		"flies": true,  # Owner-approved proposal: "Pterosaurs share the flies flag" (grounded while she lands)
+		"faction": FACTION,
+		"kit": "stormwing",
+		"group": "fliers",
+		"hover_radius": 190.0,  # TUNING (not in GDD) px from the necromancer she circles (over the ring)
+		"hover_orbit": 0.8,  # TUNING (not in GDD) rad/s
+		"gust_first": 4.0,  # TUNING (not in GDD) s after she comes on
+		"gust_every": 10.0,  # TUNING (not in GDD) s between two gusts
+		"gust_windup": 1.0,  # TUNING (not in GDD) s of telegraph
+		"gust_radius": 160.0,  # TUNING (not in GDD) px round the necromancer (the Bone Ring is 60-150 px)
+		"gust_push": 100.0,  # Owner-approved proposal: "pushes the ring 100 px"
+		"gust_damage": 3.0,  # TUNING (not in GDD) to each summon pushed, before the time scaling
+		"land_time": 3.0,  # TUNING (not in GDD) s she stands at the landing circle and pecks
+		"land_speed": 220.0,  # TUNING (not in GDD) px/s she swoops down to the landing circle
+	},  # The Stormwing.
 }

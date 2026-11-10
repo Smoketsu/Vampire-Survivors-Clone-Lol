@@ -14,6 +14,7 @@
 ##                 nests; kill one in the air and its pile drops (Scavengers).
 ##   ASH         — the Reckoning of the first two stages, the Stampede of Ash
 ##                 (StampedeOfAsh).
+##   EXTINCTION  — the Last Day's own Reckoning, the Extinction (Extinction).
 ## A stage's STAGE "packs" / "herds" / "scavengers" dictionaries override any
 ## key here; its RECKONING "stampede_of_ash" overrides ASH. Data only, no
 ## logic. Every value is TUNING (not in GDD) unless it is marked as the
@@ -131,6 +132,33 @@ const ASH := {
 ## Damage source tag of a volcanic bomb.
 const BOMB_SOURCE: String = "primeval_bomb"
 
+# --- Act XIV (temporary number): the Last Day --- The Extinction ---------------------------
+## The Extinction (the Last Day's RECKONING "extinction" overrides any key):
+## at 0:00 the necromancer's meteor falls (a white-out under a one-time ward),
+## every enemy dies, every corpse rises as a Fossil Host, and the run ends in
+## victory (Extinction's header).
+const EXTINCTION := {
+	"warn": 5.0,  # Owner-approved proposal: "a 5 s telegraph"
+	"ring_every": 1.0,  # TUNING (not in GDD) s between two shock rings (drawing only)
+	"ring_radius": 640.0,  # TUNING (not in GDD) px a shock ring spreads to (drawing only)
+	"white_alpha": 0.6,  # TUNING (not in GDD) 0..1 strength of the white-out (an additive flat rect, drawing only)
+	"boss_hp_share": 0.1,  # Owner-approved proposal: "a boss still alive drops to 10% HP"
+	"host_cap": 60,  # Owner-approved proposal: "Fossil Host (cap 60)"
+	"host_life": 30.0,  # Owner answer (Nov 9, 2026): "the Extinction lasts 30 s" (the Fossil Host's lifetime; the run ends then)
+	"host_reach": 900.0,  # TUNING (not in GDD) px from a standing necromancer a corpse rises for him
+	"host_hp_mult": 1.5,  # TUNING (not in GDD) x the class's HP
+	"host_dmg_mult": 1.0,  # TUNING (not in GDD)
+	"host_classes": {  # TUNING (not in GDD) the existing class each beast rises as, by its row "group" ("" = any other kind)
+		"swarm": "bone_hound", "hunters": "rogue", "herds": "abomination", "fliers": "gargoyle", "titans": "abomination", "": "warrior",
+	},
+	"tag": "fossil_host",  # Damage-source tag of a Fossil Host (CombatResolver stats)
+	"impact_banner": "THE IMPACT! Every beast is dead, and the dead rise for you!",  # TUNING (not in GDD)
+}
+## Damage source tag of the impact (every enemy it kills).
+const EXTINCTION_SOURCE: String = "extinction"
+## Kills by stampedes in one run that earn the achievement Trampled (owner-approved proposal: "a stampede kills 100 enemies in one run").
+const TRAMPLED_KILLS: int = 100
+
 ## Sound of each Age of Titans event: each is an id of the lazy "titans" pack (SoundData.TITANS_SOUNDS, rendered with the score
 ## "primordial"; the comment names what it sounds like).
 const SOUNDS := {
@@ -158,6 +186,16 @@ const SOUNDS := {
 	"horn_charge": "stampede_warn",  # Titans pack (reused): a Horncharger paws the ground and bellows.
 	"club_sweep": "trample",  # Titans pack (reused): a Clubtail's club swings (a heavy thud).
 	"ironbrow_charge": "stampede_run",  # Titans pack (reused): Old Ironbrow charges (heavy footfalls).
+	# --- Act XIV (temporary number): the Last Day ---
+	"extinction_fall": "bomb_warn",  # Titans pack (reused): the meteor falls (a falling roar of fire).
+	"extinction_impact": "bomb_land",  # Titans pack (reused): the impact (a molten crack and a splash of embers).
+	"meteorite_warn": "bomb_warn",  # Titans pack (reused): a meteorite falls on its circle.
+	"meteorite_land": "bomb_land",  # Titans pack (reused): a meteorite strikes.
+	"wing_gust": "skyraider_dive",  # Titans pack (reused): a Stormwing's wing gust (a falling whistle and a screech).
+	"tyrant_roar": "ash_horn",  # Titans pack (reused): a Tyrant roars (a long low roar).
+	"tyrant_swallow": "trample",  # Titans pack (reused): a Tyrant's jaws close on a summon (a heavy thud, bones cracking).
+	"gravejaw_roar": "ash_horn",  # Titans pack (reused): Old Gravejaw's Roar.
+	"gravejaw_bite": "pack_rush",  # Titans pack (reused): Old Gravejaw bites through the ring.
 }
 
 # --- The counter-passives (phase 2 builds them; PrimevalRules' hooks read them) -------------

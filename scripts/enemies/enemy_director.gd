@@ -496,6 +496,11 @@ var fern_basin: FernBasinDirector = null
 ## Mother Clubtail, Nothing Taken; StageRegistry "great_plain"; null on every
 ## other stage).
 var great_plain: GreatPlainDirector = null
+# --- Act XIV (temporary number): the Last Day ---
+## The Last Day's mechanics (Fire from the Sky, the growing meteor,
+## Thunderwing the Sky King; StageRegistry "last_day"; null on every other
+## stage).
+var last_day: LastDayDirector = null
 ## Sanctum kit bookkeeping: recent deaths, Confessor revivals, danger hints.
 var rites: CovenantRites
 ## The living miniboss shown on the HUD's miniboss bar (the Cathedral
@@ -784,6 +789,12 @@ func _ready() -> void:
 		great_plain.game = game
 		great_plain.config = stage_def["great_plain"]
 		add_child(great_plain)  # The Great Plain's director.
+	# --- Act XIV (temporary number): the Last Day ---
+	if not (stage_def.get("last_day", {}) as Dictionary).is_empty():
+		last_day = LastDayDirector.new()
+		last_day.game = game
+		last_day.config = stage_def["last_day"]
+		add_child(last_day)  # The Last Day's director.
 
 
 # =====================================================================================
@@ -976,6 +987,9 @@ func step(delta: float) -> void:
 	# --- Act XIV (temporary number): the Great Plain ---
 	if great_plain != null:
 		great_plain.step(delta)  # The Watering Hole, the Canyon, Mother Clubtail, Nothing Taken.
+	# --- Act XIV (temporary number): the Last Day ---
+	if last_day != null:
+		last_day.step(delta)  # Fire from the Sky, the growing meteor, Thunderwing.
 
 
 ## The Archive kinds' world hazards (ArchiveHazards), created on first use.
@@ -1173,6 +1187,9 @@ func objective_text() -> String:
 	# --- Act XIV (temporary number): the Great Plain ---
 	if great_plain != null and great_plain.objective_override() != "":
 		return great_plain.objective_override()  # Mother Clubtail.
+	# --- Act XIV (temporary number): the Last Day ---
+	if last_day != null and last_day.objective_override() != "":
+		return last_day.objective_override()  # Thunderwing, the Sky King.
 	if boss != null and not boss.active:
 		return String(boss_info["dead_objective"])
 	return segments[segment_index]["objective"]
@@ -1522,6 +1539,12 @@ func _run_event(ev: Dictionary) -> void:
 				great_plain.start_event(ev)
 			game.stat_add("wave_events", 1.0)
 			return  # The Great Plain's miniboss and her herd (GreatPlainDirector).
+		# --- Act XIV (temporary number): the Last Day ---
+		"sky_king":
+			if last_day != null:
+				last_day.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return  # The Last Day's miniboss (LastDayDirector).
 	show_banner(ev["banner"])
 	var groups: Array = ev["groups"]
 	if game.shogunate != null:

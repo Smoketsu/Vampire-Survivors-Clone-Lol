@@ -592,6 +592,9 @@ func _ready() -> void:
 		# --- Act XIV (temporary number): the Great Plain ---
 		"great_plain":
 			ground = GreatPlainGround.new()  # The Great Plain's four zone floors (GreatPlainStage.ZONES).
+		# --- Act XIV (temporary number): the Last Day ---
+		"last_day":
+			ground = LastDayGround.new()  # The Last Day's four zone floors (LastDayStage.ZONES).
 		_:
 			ground = Ground.new()
 	add_child(ground)

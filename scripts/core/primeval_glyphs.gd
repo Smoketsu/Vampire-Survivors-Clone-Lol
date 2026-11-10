@@ -48,6 +48,14 @@ static func draw_enemy(ci: CanvasItem, kind: String, o: Vector2, r: float, flash
 			for i in 3:
 				ci.draw_rect(Rect2(o + Vector2(-r * 0.6 + float(i) * r * 0.45, -r * 0.75), Vector2(r * 0.3, r * 0.2)), Glyphs._c(Palette.PRIMEVAL_BONE.darkened(0.3), flash))  # Armour plates.
 			SpriteBank.draw_disc(ci, o + Vector2(-r * 1.3, -r * 0.1), r * 0.3, Glyphs._c(Palette.PRIMEVAL_BONE, flash))  # The tail club.
+		# --- Act XIV (temporary number): the Last Day ---
+		"stormwing", "thunderwing":
+			for s: float in [-1.0, 1.0]:
+				ci.draw_rect(Rect2(o + Vector2(s * r * 0.3 - (r * 1.4 if s < 0.0 else 0.0), -r * 0.45), Vector2(r * 1.4, r * 0.3)), Glyphs._c(Palette.PRIMEVAL_TAR, flash))  # A wing.
+			SpriteBank.draw_disc(ci, o, r * 0.45, Glyphs._c(INK, flash))
+			SpriteBank.draw_disc(ci, o, r * 0.37, Glyphs._c(Palette.PRIMEVAL_OCHRE_DARK, flash))
+			ci.draw_rect(Rect2(o + Vector2(-r * 0.1, -r * 0.75), Vector2(r * 0.25, r * 0.35)), Glyphs._c(Palette.PRIMEVAL_LAVA, flash))  # The crest.
+			ci.draw_rect(Rect2(o + Vector2(r * 0.2, -r * 0.2), Vector2(r * 0.7, 2.0)), Glyphs._c(Palette.PRIMEVAL_BONE, flash))  # The beak.
 		"scuttler":
 			_beast(ci, o, r, flash, Palette.PRIMEVAL_OCHRE_DARK, Palette.PRIMEVAL_OCHRE, 0.5, 0.0)
 		"frill_spitter":
@@ -115,6 +123,14 @@ static func draw_obstacle(ci: CanvasItem, o: Arena.Obstacle) -> bool:
 			SpriteBank.draw_disc(ci, c, r - 1.5, Palette.PRIMEVAL_OCHRE_DARK)
 			SpriteBank.draw_disc(ci, c + Vector2(-r * 0.3, -r * 0.3), r * 0.4, Palette.PRIMEVAL_OCHRE)
 			SpriteBank.draw_disc(ci, c + Vector2(r * 0.2, -r * 0.5), r * 0.3, Color(Palette.PRIMEVAL_FERN, 0.6))  # Moss.
+		# --- Act XIV (temporary number): the Last Day ---
+		"primeval_lava_rock":
+			var r := o.radius
+			SpriteBank.draw_disc(ci, c + Vector2(3, 4), r, Color(0, 0, 0, 0.3))
+			SpriteBank.draw_disc(ci, c, r, INK)
+			SpriteBank.draw_disc(ci, c, r - 1.5, Palette.PRIMEVAL_TAR)  # Cooling black rock.
+			ci.draw_rect(Rect2(c + Vector2(-r * 0.5, -r * 0.1), Vector2(r * 0.7, 2.0)), Palette.PRIMEVAL_LAVA)  # A glowing crack.
+			ci.draw_rect(Rect2(c + Vector2(r * 0.1, -r * 0.5), Vector2(2.0, r * 0.6)), Color(Palette.PRIMEVAL_LAVA, 0.8))
 		# --- Act XIV (temporary number): the Great Plain ---
 		"primeval_canyon_wall":
 			var wall := Rect2(c - o.half, o.half * 2.0)

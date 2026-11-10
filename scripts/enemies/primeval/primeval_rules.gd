@@ -16,6 +16,8 @@
 ##                 pool; snatch, drop, nest).
 ##   ash         — StampedeOfAsh: the Reckoning of the first two stages
 ##                 (RECKONING "stampede_of_ash").
+##   extinction  — Extinction: the Last Day's own Reckoning (RECKONING
+##                 "extinction": the meteor, the Fossil Host, the victory).
 ## It also draws every world-space telegraph of the act on one layer (the
 ## stampedes' dust lines and fronts, the dives' shadows, the bombs; rects and
 ## disc textures only, redrawn only while one shows).
@@ -45,6 +47,8 @@ var herds: Herds
 var scavengers: Scavengers
 ## The Stampede of Ash (the Reckoning).
 var ash: StampedeOfAsh
+## The Extinction (the Last Day's Reckoning).
+var extinction: Extinction
 ## Titans kind -> game time (s) of its first activation this run (the
 ## autotest's "primeval kinds" line).
 var first_seen: Dictionary = {}
@@ -67,6 +71,7 @@ func _init(p_game: Game) -> void:
 	herds = Herds.new(p_game, enabled)
 	scavengers = Scavengers.new(p_game)
 	ash = StampedeOfAsh.new(p_game, enabled)
+	extinction = Extinction.new(p_game, enabled)
 	_draws = DisplayServer.get_name() != "headless"
 
 
@@ -74,6 +79,7 @@ func _init(p_game: Game) -> void:
 ## the Stampede of Ash's clock, the packs, the herds, the thefts.
 func step(delta: float) -> void:
 	ash.step(delta)
+	extinction.step(delta)
 	packs.step(delta)
 	herds.step(delta)
 	scavengers.step(delta)
@@ -133,9 +139,12 @@ func play_sound(event: String, pos: Vector2 = Vector2.INF, gap: float = 0.0) -> 
 
 
 ## The autotest autopilot's push away from every live Titans telegraph at `p`:
-## the stampedes' paths and the bombs.
+## the stampedes' paths and the bombs (and the Last Day's meteorites).
 func danger_push(p: Vector2) -> Vector2:
-	return herds.danger_push(p) + ash.danger_push(p)
+	var push := herds.danger_push(p) + ash.danger_push(p)
+	if game.enemies.last_day != null:
+		push += game.enemies.last_day.danger_push(p)  # Act XIV, the Last Day: Fire from the Sky.
+	return push
 
 
 func _draw() -> void:
