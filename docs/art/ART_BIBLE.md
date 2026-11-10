@@ -3277,3 +3277,16 @@ on the approved violet / gold frames, 3 floors (`tiles/wild_greenwood`, `wild_fa
 huntsman, winter prince, gardener, the three bosses, the three characters, the Ossuary Oak summons, the zone floors and grove / hedge / root obstacles. Tools: `gen_prompts.py`,
 `gen_sheets.py`, `make_art.py`, `make_props.py`, `year_tiles.py` in `art_source/year/`; 17 API images (about $0.25, ledger `docs/art/generation_ledger.csv`).
 Known flaws: the Dryad is 36 px wide (box 34); the Winter Fae and the Wild Rider read bluish-grey; the dead Corpse-Bloom is brown rather than grey.
+
+### Act XV slot, phase 2: the Turning Year's stage art (Nov 2026)
+
+| Items | Notes |
+|---|---|
+| `wild/hunt_hound`, `huntsman`, `antler_thicket`, `winter_prince`, `gardener_of_roots` | creatures and minibosses (hound / Huntsman / Prince male or none, the Gardener a treant); legs rigs, the Prince and the Stag King robe rigs (cloaks) |
+| `wild/stag_king` (+ `_horn`) | male boss, robe rig with the staff rigid; the horn pose reuses the base's art height |
+| `wild/summer_queen` (+ `_mask`, `_bargain`) | **female**, figure style, fully clothed; floating robe rig, bust box (23-35, rows 16-24), **butterfly wings beat** (`wings` entries, walk and idle) |
+| `wild/masked_courtier`, `wild/green_mother` (+ `_cast`, `_burial`) | female, figure style; bust boxes on the chest (checked with `tools/bust_check.py` at scale 8), idle strips; the courtier is 46 x 52 (her rapier widens her) |
+| `player/horned_herald`, `changeling_princess`, `gravegardener` | violet necromancers (42 / 40 / 40 x 56), the two women with bust rigs and idle strips |
+| `summons/ossuary_oak`, `world_root_warden` | bone trees (28 x 56, 36 x 64), `legs` walk strips |
+| floors (13) | `art_source/year/year_floors.py`: glade (flowers), deep wood (mushrooms, roots), hunting grounds (hoof prints, shed antlers), stag's hollow (dais, bones), rose maze (flagged paths, petals), revel (dance rings, confetti), mirror lake (ripples, lily pads), throne of blossoms (petal carpet), roots, trunk stair (bark ledges), crown (canopy), seed (soul-teal rings), fairy ring (round patch, transparent outside) |
+Known flaws: the Changeling Princess's crossed arms sit under her bust box; art_check lightness FAILs are against the Covenant floors only (the Wild stages have their own).

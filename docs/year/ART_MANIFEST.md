@@ -213,3 +213,10 @@ tree) and the four zone tiles `tiles/world_tree_roots` / `_trunk_stair` / `_crow
 `icons/heartwood` (the Ossuary Oak's paired passive, own decision: the proposal names none). Icons `root_and_rot`,
 `return_to_earth`, `compost_heart`, `ossuary_oak`, `world_root_warden`, `ach_the_first_spring` and the sound pack were already
 made. The Last Claim draws nothing of its own: each slot uses its act's own drawing.
+
+## Status (art agent, phase 2, Nov 2026)
+
+Made (GDD §15.0 "The Turning Year art (phase 2)"; `art_source/year/gen_phase2.py`, `make_phase2.py`, `year_floors.py`): `wild/hunt_hound`, `huntsman`, `antler_thicket`, `stag_king` (+ `_horn` pose), `winter_prince`,
+`masked_courtier` (+ idle), `summer_queen` (+ `_mask`, `_bargain`, idle, wings beat), `gardener_of_roots`, `green_mother` (+ `_cast`, `_burial`, idle), all with walk strips; `player/horned_herald`,
+`changeling_princess`, `gravegardener` (+ walk, idle); `summons/ossuary_oak`, `world_root_warden` (+ walk); `obstacles/wild_grove_tree`, `wild_rose_hedge_m` (+ `_v`), `wild_great_root_m` (+ `_v`);
+`icons/heartwood`; the 12 zone floors and `tiles/wild_fairy_ring`. Not made: the `_rooted` stills of the two oaks (not wired), `fx/` extras, `wild/stag_king_crown` (not needed).
