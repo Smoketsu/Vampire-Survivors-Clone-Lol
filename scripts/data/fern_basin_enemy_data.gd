@@ -106,6 +106,7 @@ const ENEMIES := {
 		"brood_every": 5.5,  # TUNING (not in GDD) s (first pass 4.5)
 		"brood": 2,  # TUNING (not in GDD) Scuttlers a hatching (first pass 3)
 		"brood_cap": 8,  # TUNING (not in GDD) of its own Scuttlers alive at most (first pass 14)
+		"brood_total": 30,  # TUNING (not in GDD) Scuttlers it hatches in all, then it lies spent (balance pass 1: an unbroken nest hatched 146; broken ones 8-22)
 		"brood_kind": PrimevalEnemyData.SCUTTLER,  # Owner-approved proposal: "spawns Scuttlers"
 		"reward_xp": 60,  # TUNING (not in GDD)
 		"reward_crystals": 5,  # TUNING (not in GDD)

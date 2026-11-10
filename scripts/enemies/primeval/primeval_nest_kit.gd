@@ -4,7 +4,9 @@
 ## Scuttlers until it is destroyed"). A structure (it never moves or attacks):
 ## every brood_every s (the first after brood_first s) it hatches `brood`
 ## Scuttlers (brood_kind) round it through EnemyDirector.spawn_at(), while
-## fewer than brood_cap of its own are alive. Destroyed, it drops a small XP
+## fewer than brood_cap of its own are alive, the stage is under its alive cap
+## (EnemyDirector.soft_cap(), as the trickle) and it has hatched fewer than
+## brood_total in all (balance pass 1: unbroken, it hatched 146). Destroyed, it drops a small XP
 ## burst (reward_xp in reward_crystals). FernBasinDirector lays it beside
 ## Ironjaw and keeps it on the field (Enemy.is_objective: never recycled).
 ## Determinism: no RNG (the hatchlings' angles turn with its count). Stats:
@@ -41,6 +43,8 @@ func physics(e: Enemy, delta: float) -> bool:
 	cd = float(d.get("brood_every", 4.5))
 	brood = brood.filter(func(b: Array) -> bool: return (b[0] as Enemy).active and (b[0] as Enemy).generation == int(b[1]))
 	var room := int(d.get("brood_cap", 14)) - brood.size()
+	room = mini(room, e.game.enemies.soft_cap() - e.game.enemies.regular_alive())  # The stage's alive cap, as the trickle.
+	room = mini(room, int(d.get("brood_total", 30)) - hatched)  # Its lifetime clutch.
 	for i in mini(int(d.get("brood", 3)), room):
 		var at := e.position + Vector2.from_angle(float(hatched) * 2.4) * (e.radius + 10.0)
 		var s := e.game.enemies.spawn_at(String(d.get("brood_kind", PrimevalEnemyData.SCUTTLER)), e.game.arena.free_point(at, 8.0), false)
