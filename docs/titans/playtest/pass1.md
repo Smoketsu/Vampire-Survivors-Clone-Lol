@@ -71,3 +71,25 @@ is easier than asked (0 of 3, lowest HP 21).
   or a lifetime), left to the owner since it changes how the miniboss fight reads.
 - The Fern Basin's newspells death (seed 11, 11:51) is early and spread over Scuttlers, a Tyrant and the spitters.
 - Evolve / summon builds were not re-run (neither died in pass 1, and the Frill-Spitter barely touched them).
+
+## Pass 3: Ironjaw's nest respects the alive cap (`pass3_report.md`, `pass3_logs/`)
+
+The nest hatched past the stage's alive cap (it checked only its own `brood_cap` of 8 alive), so an unbroken nest kept
+adding Scuttlers on top of a full field. A correctness fix, not a design change: `PrimevalNestKit` now hatches only
+into the room under `EnemyDirector.soft_cap() - regular_alive()`, the same check as the trickle and the Assembly's
+fabricators, and at most **`brood_total` 30** in all (`fern_basin_enemy_data.gd`, `# TUNING (not in GDD)`; broken
+nests hatched 8-22). The miniboss fight is otherwise unchanged.
+
+The Fern Basin, died of 3 / boss slain / lowest HP per seed (3, 7, 11):
+
+| build | fern_basin |
+|---|---|
+| army | 0/2 · 111, 71, 112 |
+| newclasses | 0/3 · 69, 83, 87 |
+| newspells | 1/1 · 66, 46, 28 |
+| naive | 1/0 · 0, 31, 39 |
+
+Zero `SCRIPT ERROR` / `ERROR:` / `WARNING:`, `stuck_units=0`. Seed 7's army now survives Scarmaw's fight (nest capped at
+30, lowest HP 34 → 71). Non-naive deaths are 1 of 9: the same early newspells death on seed 11 (11:51, before the nest
+matters). Naive is 1 of 3 (seed 3 died at 18:17 to Frill-Spitters and Scuttlers after the runs diverged; it is the
+goal, nothing was made harder for it).
