@@ -1,0 +1,200 @@
+Godot Engine v4.3.stable.official.77dcf97d8 - https://godotengine.org
+
+[autotest] start: seed=7 speed=8x mortal=true timeout=1500s policy=naive meta=none oath=0 pact=false classes=- spells=-
+[autotest] stage: fern_basin
+[autotest] difficulty: necromancer | modifiers: none
+[autotest] character: gravecaller (starting spell shadow_bolt)
+[audio] main-thread startup 6.4 ms; 59 sfx ready after 393 ms, music loop after 346 ms (worker threads); display: headless
+[metric] t=60 avg_horde=3.3 now=6 cap=6 w2/2 a0/0 m1/1 m1/1 w0/0 b0/0 a0/0 r1/1 g0/0 f1/1 b0/0 b0/0 c0/0 deaths_win=1 lvl=5 kills=97 enemies=23 hp=119 boss_hp=-1 crystals=2 xp=103
+[metric]    summon dmg taken this window: scuttler=132 frill_spitter=36
+[metric]    alive by kind: { "scuttler": 20, "duckbill": 2, "longneck": 1 } within260=3
+[autotest] t=01:00 lvl=5 kills=97 enemies=23 summons=6/6 projectiles=1 hp=119 step_avg=0.64ms
+[autotest]    unit FSM: { "ENGAGING": 6 }
+[metric] t=120 avg_horde=8.3 now=9 cap=9 w3/3 a0/0 m2/2 m2/2 w0/0 b0/0 a0/0 r1/1 g0/0 f1/1 b0/0 b0/0 c0/0 deaths_win=0 lvl=9 kills=224 enemies=27 hp=120 boss_hp=-1 crystals=5 xp=256
+[metric]    summon dmg taken this window: scuttler=118 frill_spitter=25 razorclaw=27
+[metric]    alive by kind: { "scuttler": 22, "duckbill": 3, "longneck": 2 } within260=3
+[autotest] t=02:00 lvl=9 kills=224 enemies=27 summons=9/9 projectiles=1 hp=120 step_avg=0.73ms
+[autotest]    unit FSM: { "ENGAGING": 5, "REPOSITIONING": 2, "FOLLOWING": 2 }
+[metric] t=180 avg_horde=9.3 now=10 cap=10 w3/3 a0/0 m3/3 m2/2 w0/0 b0/0 a0/0 r1/1 g0/0 f1/1 b0/0 b0/0 c0/0 deaths_win=0 lvl=12 kills=362 enemies=26 hp=120 boss_hp=-1 crystals=3 xp=401
+[metric]    summon dmg taken this window: scuttler=102 frill_spitter=22
+[metric]    alive by kind: { "scuttler": 18, "frill_spitter": 3, "duckbill": 3, "longneck": 2 } within260=2
+[autotest] t=03:00 lvl=12 kills=362 enemies=26 summons=10/10 projectiles=0 hp=120 step_avg=0.81ms
+[autotest]    unit FSM: { "ENGAGING": 2, "FOLLOWING": 6, "REPOSITIONING": 2 }
+[metric] t=240 avg_horde=11.2 now=12 cap=12 w4/4 a0/0 m3/3 m2/2 w0/0 b0/0 a0/0 r2/2 g0/0 f1/1 b0/0 b0/0 c0/0 deaths_win=0 lvl=15 kills=499 enemies=44 hp=120 boss_hp=-1 crystals=4 xp=551
+[metric]    summon dmg taken this window: scuttler=170 frill_spitter=28
+[metric]    alive by kind: { "scuttler": 27, "duckbill": 3, "razorclaw": 5, "longneck": 2, "frill_spitter": 5, "skyraider": 2 } within260=9
+[autotest] t=04:00 lvl=15 kills=499 enemies=44 summons=12/12 projectiles=1 hp=120 step_avg=0.86ms
+[autotest]    unit FSM: { "ENGAGING": 8, "FOLLOWING": 1, "ACQUIRING": 1, "CASTING": 1, "REPOSITIONING": 1 }
+[metric] t=300 avg_horde=12.4 now=13 cap=12 w4/4 a0/0 m3/3 m2/2 w0/0 b0/0 a0/0 r2/2 g0/0 f1/1 b0/0 b0/0 c0/0 deaths_win=0 lvl=18 kills=650 enemies=38 hp=120 boss_hp=-1 crystals=7 xp=736
+[metric]    summon dmg taken this window: scuttler=209 frill_spitter=53 razorclaw=102
+[metric]    alive by kind: { "scuttler": 30, "duckbill": 2, "longneck": 2, "skyraider": 3, "frill_spitter": 1 } within260=7
+[autotest] t=05:00 lvl=18 kills=650 enemies=38 summons=13/12 projectiles=1 hp=120 step_avg=0.91ms
+[autotest]    unit FSM: { "ENGAGING": 7, "CASTING": 4, "ACQUIRING": 2 }
+[metric] t=360 avg_horde=12.1 now=12 cap=12 w4/4 a0/0 m3/3 m2/2 w0/0 b0/0 a0/0 r2/2 g0/0 f1/1 b0/0 b0/0 c0/0 deaths_win=0 lvl=21 kills=829 enemies=43 hp=115 boss_hp=-1 crystals=4 xp=936
+[metric]    summon dmg taken this window: scuttler=537 frill_spitter=47 razorclaw=79
+[metric]    alive by kind: { "scuttler": 35, "skyraider": 2, "duckbill": 2, "longneck": 2, "frill_spitter": 2 } within260=14
+[autotest] t=06:00 lvl=21 kills=829 enemies=43 summons=12/12 projectiles=0 hp=115 step_avg=0.94ms
+[autotest]    unit FSM: { "ENGAGING": 11, "CASTING": 1 }
+[metric] t=420 avg_horde=12.0 now=12 cap=12 w4/4 a0/0 m3/3 m2/2 w0/0 b0/0 a0/0 r2/2 g0/0 f1/1 b0/0 b0/0 c0/0 deaths_win=0 lvl=23 kills=992 enemies=50 hp=120 boss_hp=-1 crystals=9 xp=1112
+[metric]    summon dmg taken this window: scuttler=472 frill_spitter=73
+[metric]    alive by kind: { "scuttler": 40, "frill_spitter": 4, "duckbill": 2, "longneck": 2, "skyraider": 2 } within260=4
+[autotest] t=07:00 lvl=23 kills=992 enemies=50 summons=12/12 projectiles=0 hp=120 step_avg=0.98ms
+[autotest]    unit FSM: { "ENGAGING": 7, "FOLLOWING": 1, "ACQUIRING": 2, "REPOSITIONING": 2 }
+[metric] t=480 avg_horde=11.1 now=12 cap=12 w4/4 a0/0 m3/3 m2/2 w0/0 b0/0 a0/0 r2/2 g0/0 f1/1 b0/0 b0/0 c0/0 deaths_win=10 lvl=24 kills=1150 enemies=67 hp=112 boss_hp=-1 crystals=20 xp=1252
+[metric]    summon dmg taken this window: scuttler=1414 frill_spitter=83
+[metric]    alive by kind: { "razorclaw": 6, "skyraider": 9, "scuttler": 46, "duckbill": 2, "longneck": 2, "frill_spitter": 2 } within260=16
+[autotest] t=08:00 lvl=24 kills=1150 enemies=67 summons=12/12 projectiles=1 hp=112 step_avg=1.01ms
+[autotest]    unit FSM: { "CASTING": 3, "ENGAGING": 9 }
+[metric] t=540 avg_horde=6.5 now=9 cap=13 w4/4 a0/0 m1/3 m2/2 w0/0 b0/0 a0/0 r0/2 g0/0 f2/2 b0/0 b0/0 c0/0 deaths_win=32 lvl=25 kills=1263 enemies=69 hp=92 boss_hp=-1 crystals=33 xp=1346
+[metric]    summon dmg taken this window: scuttler=1404 frill_spitter=194 razorclaw=391 bog_croc=77
+[metric]    alive by kind: { "scuttler": 44, "frill_spitter": 10, "duckbill": 2, "longneck": 2, "skyraider": 7, "bog_croc": 3, "razorclaw": 1 } within260=23
+[autotest] t=09:00 lvl=25 kills=1263 enemies=69 summons=9/13 projectiles=1 hp=92 step_avg=1.08ms
+[autotest]    unit FSM: { "ENGAGING": 7, "CASTING": 1, "ACQUIRING": 1 }
+[metric] t=600 avg_horde=5.8 now=5 cap=15 w1/6 a0/0 m1/3 m1/2 w0/0 b0/0 a0/0 r1/2 g0/0 f1/2 b0/0 b0/0 c0/0 deaths_win=43 lvl=26 kills=1350 enemies=88 hp=100 boss_hp=-1 crystals=52 xp=1413
+[metric]    summon dmg taken this window: scuttler=1896 frill_spitter=338 razorclaw=48 bog_croc=128
+[metric]    alive by kind: { "scuttler": 60, "frill_spitter": 13, "duckbill": 2, "skyraider": 6, "longneck": 2, "bog_croc": 4, "tyrant": 1 } within260=36
+[autotest] t=10:00 lvl=26 kills=1350 enemies=88 summons=5/15 projectiles=1 hp=100 step_avg=1.14ms
+[autotest]    unit FSM: { "ENGAGING": 2, "CASTING": 1, "FOLLOWING": 1, "SPAWNING": 1 }
+[metric] t=660 avg_horde=5.6 now=4 cap=15 w1/6 a0/0 m1/3 m1/2 w0/0 b0/0 a0/0 r0/2 g0/0 f1/2 b0/0 b0/0 c0/0 deaths_win=42 lvl=27 kills=1494 enemies=81 hp=111 boss_hp=-1 crystals=79 xp=1502
+[metric]    summon dmg taken this window: scuttler=1835 frill_spitter=525 bog_croc=173
+[metric]    alive by kind: { "scuttler": 55, "frill_spitter": 13, "duckbill": 2, "longneck": 2, "skyraider": 6, "bog_croc": 2, "tyrant": 1 } within260=27
+[autotest] t=11:00 lvl=27 kills=1494 enemies=81 summons=4/15 projectiles=2 hp=111 step_avg=1.21ms
+[autotest]    unit FSM: { "ENGAGING": 2, "CASTING": 1, "SPAWNING": 1 }
+[metric] t=720 avg_horde=3.0 now=6 cap=15 w1/6 a0/0 m3/3 m1/2 w0/0 b0/0 a0/0 r0/2 g0/0 f1/2 b0/0 b0/0 c0/0 deaths_win=38 lvl=28 kills=1575 enemies=68 hp=113 boss_hp=-1 crystals=85 xp=1566
+[metric]    summon dmg taken this window: scuttler=1502 frill_spitter=360 bog_croc=95 tyrant=76
+[metric]    alive by kind: { "primeval_nest": 1, "scuttler": 45, "frill_spitter": 12, "duckbill": 2, "longneck": 2, "ironjaw": 1, "skyraider": 2, "bog_croc": 2, "tyrant": 1 } within260=13
+[autotest] t=12:00 lvl=28 kills=1575 enemies=68 summons=6/15 projectiles=1 hp=113 step_avg=1.26ms
+[autotest]    unit FSM: { "RETURNING": 3, "ACQUIRING": 1, "CASTING": 1, "ENGAGING": 1 }
+[metric] t=780 avg_horde=6.9 now=3 cap=15 w1/6 a0/0 m0/3 m1/2 w0/0 b0/0 a0/0 r0/2 g0/0 f1/2 b0/0 b0/0 c0/0 deaths_win=46 lvl=28 kills=1699 enemies=92 hp=90 boss_hp=-1 crystals=101 xp=1648
+[metric]    summon dmg taken this window: scuttler=1864 frill_spitter=384 razorclaw=173 bog_croc=323 tyrant=28 ironjaw=84
+[metric]    alive by kind: { "primeval_nest": 1, "scuttler": 54, "skyraider": 2, "duckbill": 2, "frill_spitter": 17, "longneck": 2, "razorclaw": 8, "ironjaw": 1, "bog_croc": 4, "tyrant": 1 } within260=49
+[autotest] t=13:00 lvl=28 kills=1699 enemies=92 summons=3/15 projectiles=4 hp=90 step_avg=1.30ms
+[autotest]    unit FSM: { "ENGAGING": 1, "RETURNING": 1, "CASTING": 1 }
+[metric] t=840 avg_horde=3.9 now=6 cap=16 w1/6 a0/0 m2/3 m1/3 w0/0 b0/0 a0/0 r0/2 g0/0 f2/2 b0/0 b0/0 c0/0 deaths_win=44 lvl=29 kills=1751 enemies=91 hp=109 boss_hp=-1 crystals=53 xp=1752
+[metric]    summon dmg taken this window: scuttler=1500 frill_spitter=490 razorclaw=137 bog_croc=93 tyrant=62 ironjaw=21
+[metric]    alive by kind: { "primeval_nest": 1, "scuttler": 49, "duckbill": 2, "frill_spitter": 23, "longneck": 2, "razorclaw": 8, "ironjaw": 1, "bog_croc": 4, "tyrant": 1 } within260=47
+[autotest] t=14:00 lvl=29 kills=1751 enemies=91 summons=6/16 projectiles=0 hp=109 step_avg=1.35ms
+[autotest]    unit FSM: { "ENGAGING": 4, "RETURNING": 1, "SPAWNING": 1 }
+[metric] t=900 avg_horde=5.1 now=5 cap=16 w2/6 a0/0 m1/3 m1/3 w0/0 b0/0 a0/0 r0/2 g0/0 f1/2 b0/0 b0/0 c0/0 deaths_win=44 lvl=30 kills=1850 enemies=90 hp=97 boss_hp=-1 crystals=53 xp=1830
+[metric]    summon dmg taken this window: scuttler=1348 frill_spitter=599 razorclaw=440 bog_croc=69 tyrant=52
+[metric]    alive by kind: { "primeval_nest": 1, "scuttler": 40, "razorclaw": 14, "bog_croc": 4, "duckbill": 2, "frill_spitter": 24, "longneck": 2, "ironjaw": 1, "skyraider": 1, "tyrant": 1 } within260=39
+[autotest] t=15:00 lvl=30 kills=1850 enemies=90 summons=5/16 projectiles=0 hp=97 step_avg=1.39ms
+[autotest]    unit FSM: { "FOLLOWING": 1, "CASTING": 2, "ENGAGING": 1, "SPAWNING": 1 }
+[metric] t=960 avg_horde=5.4 now=5 cap=16 w1/6 a0/0 m2/3 m1/3 w0/0 b0/0 a0/0 r1/2 g0/0 f0/2 b0/0 b0/0 c0/0 deaths_win=46 lvl=31 kills=1945 enemies=105 hp=98 boss_hp=-1 crystals=74 xp=1903
+[metric]    summon dmg taken this window: scuttler=1747 frill_spitter=471 razorclaw=338 bog_croc=164 tyrant=24 ironjaw=39
+[metric]    alive by kind: { "primeval_nest": 1, "scuttler": 64, "razorclaw": 4, "bog_croc": 4, "duckbill": 2, "frill_spitter": 24, "longneck": 2, "ironjaw": 1, "tyrant": 1, "skyraider": 2 } within260=47
+[autotest] t=16:00 lvl=31 kills=1945 enemies=105 summons=5/16 projectiles=10 hp=98 step_avg=1.44ms
+[autotest]    unit FSM: { "CASTING": 1, "ENGAGING": 4 }
+[autotest] boss spawned at 1020.0 s
+[autotest] Shadow Bolt aim switched to Strongest
+[metric] t=1020 avg_horde=3.0 now=3 cap=16 w1/6 a0/0 m1/3 m1/3 w0/0 b0/0 a0/0 r0/2 g0/0 f0/2 b0/0 b0/0 c0/0 deaths_win=46 lvl=31 kills=1999 enemies=105 hp=88 boss_hp=23100 crystals=79 xp=1942
+[metric]    summon dmg taken this window: scuttler=1656 frill_spitter=362 razorclaw=308 bog_croc=6
+[metric]    alive by kind: { "primeval_nest": 1, "scuttler": 57, "razorclaw": 12, "bog_croc": 4, "duckbill": 2, "frill_spitter": 24, "longneck": 2, "ironjaw": 1, "tyrant": 1, "boss": 1 } within260=85
+[autotest] t=17:00 lvl=31 kills=1999 enemies=105 summons=3/16 projectiles=11 hp=88 step_avg=1.48ms
+[autotest]    unit FSM: { "ACQUIRING": 1, "RETURNING": 2 }
+[metric] t=1080 avg_horde=4.5 now=7 cap=17 w2/7 a0/0 m2/3 m0/3 w0/0 b0/0 a0/0 r1/2 g0/0 f2/2 b0/0 b0/0 c0/0 deaths_win=42 lvl=32 kills=2076 enemies=70 hp=71 boss_hp=22218 crystals=95 xp=2025
+[metric]    summon dmg taken this window: scuttler=538 frill_spitter=777 razorclaw=512 bog_croc=4 tyrant=112 ironjaw=56 scarmaw_leap=210 boss=147
+[metric]    alive by kind: { "primeval_nest": 1, "razorclaw": 12, "scuttler": 21, "bog_croc": 4, "duckbill": 2, "frill_spitter": 25, "longneck": 2, "ironjaw": 1, "boss": 1, "tyrant": 1 } within260=18
+[autotest] t=18:00 lvl=32 kills=2076 enemies=70 summons=7/17 projectiles=1 hp=71 step_avg=1.50ms
+[autotest]    unit FSM: { "RETURNING": 2, "ENGAGING": 4, "FOLLOWING": 1 }
+[metric] t=1140 avg_horde=2.8 now=1 cap=17 w0/7 a0/0 m1/3 m0/3 w0/0 b0/0 a0/0 r0/2 g0/0 f0/2 b0/0 b0/0 c0/0 deaths_win=50 lvl=32 kills=2096 enemies=72 hp=79 boss_hp=21787 crystals=92 xp=2068
+[metric]    summon dmg taken this window: scuttler=1184 frill_spitter=945 razorclaw=952 bog_croc=185 tyrant=51 ironjaw=54 scarmaw_leap=225 boss=121
+[metric]    alive by kind: { "primeval_nest": 1, "razorclaw": 12, "scuttler": 22, "bog_croc": 3, "frill_spitter": 25, "duckbill": 3, "longneck": 3, "ironjaw": 1, "boss": 1, "tyrant": 1 } within260=62
+[autotest] t=19:00 lvl=32 kills=2096 enemies=72 summons=1/17 projectiles=11 hp=79 step_avg=1.51ms
+[autotest]    unit FSM: { "RETURNING": 1 }
+[autotest] countdown reached 0:00 at 1200.0 s - THE RECKONING begins
+[metric] t=1200 avg_horde=3.7 now=3 cap=17 w1/7 a0/0 m0/3 m0/3 w0/0 b0/0 a0/0 r1/2 g0/0 f1/2 b0/0 b0/0 c0/0 deaths_win=44 lvl=32 kills=2136 enemies=90 hp=84 boss_hp=21467 crystals=88 xp=2122
+[metric]    summon dmg taken this window: scuttler=890 frill_spitter=798 razorclaw=187 bog_croc=122 tyrant=40 ironjaw=89 scarmaw_leap=118 boss=125
+[metric]    alive by kind: { "primeval_nest": 1, "razorclaw": 16, "scuttler": 37, "bog_croc": 4, "frill_spitter": 22, "duckbill": 3, "longneck": 3, "ironjaw": 1, "boss": 1, "tyrant": 2 } within260=43
+[autotest] t=20:00 lvl=32 kills=2136 enemies=90 summons=3/17 projectiles=19 hp=84 step_avg=1.52ms
+[autotest]    unit FSM: { "REPOSITIONING": 1, "ENGAGING": 1, "SPAWNING": 1 }
+[autotest] ===== NECROPATHY AUTOTEST SUMMARY =====
+[autotest] result: VICTORY / RUN COMPLETE (run_complete)
+[autotest] time reached: 20:14 elapsed (1214.2 s game time, 144.5 s real time); past 0:00: 14.2 s; Reckoning waves: 2
+[autotest] kills: 2167 | level: 33
+[autotest] level pacing: 01:00=L5 03:00=L12 05:00=L18 10:00=L26 15:00=L30 17:00=L31 20:00=L32 | reached: L2@00:22 L5@00:54 L10@02:03 L15@03:48 L20@05:32 L25@08:01 L30@14:07
+[autotest] build complete: no
+[autotest] horde: 3 alive / capacity 17 (warrior 2/7, archer 0/0, mage 0/3, mender 1/3, warder 0/0, bishop 0/0, abomination 0/0, rogue 0/2, gargoyle 0/0, frost_wraith 0/2, bone_hound 0/0, banshee 0/0, corpse_catapult 0/0)
+[autotest] summons spawned: 542, died: 539, hard recalls: 0 (stall recalls: 0)
+[autotest] boss spawned: yes at 1020.0 s | boss defeated: no | boss HP left: 21357 / 23100
+[autotest] player HP: 0 / 120 (invulnerable: false)
+[autotest] picks (35): mage 1, frost_wraith 1, mender 1, rogue 1, unholy_resilience 1, grave_dominion 1, warding_ritual 1, siegecraft 1, soul_recycling 1, shade_stride 1, mage 2, warrior 2, mender 2, rogue 2, frost_wraith 2, warding_ritual 2, soul_recycling 2, shade_stride 2, siegecraft 2, unholy_resilience 2, rogue 3, shadow_bolt 2, mage 3, shade_stride 3, frost_wraith 3, warrior 3, siegecraft 3, soul_recycling 3, mender 3, shadow_bolt 3, frost_wraith 4, unholy_resilience 3, warrior 4, warding_ritual 3, mender 4
+[autotest] wards on you: 0 total, absorbed 0 dmg | 0 wards in 0 s with 2+ Warders/Bishops alive (0.0 / min) | heal casts: 554 | ally barriers: 0, barrier dmg absorbed: 0
+[autotest] evolutions: none
+[autotest] evolutions by type: spell: none | summon: none
+[autotest] summon evolutions: lich raised 0 (capped 0) | merge converted 0, dissolved 0 | aura pulses 0 | merged classes: none
+[autotest] winter revenant: shatters 0 (capped 0), shatter hits 0, shatter dmg 0 | death novas 0, nova hits 0, nova freezes 0, nova dmg 0
+[autotest] summon output by source (dmg/heal/shield): warrior=9152/0/0 mage=56422/0/0 mender=629/4377/0 rogue=3491/0/0 frost_wraith=12509/0/0 bash=3073/0/0
+[autotest] summon output by class (dmg/heal/shield): warrior=12226/0/0 mage=56422/0/0 mender=629/4377/0 rogue=3491/0/0 frost_wraith=12509/0/0
+[autotest] recipe book: 0 / 79 discovered (none) | Recipes view rows built: 79 (saved: false)
+[autotest] codex: 13 entries met this run (spell 1, summon 5, enemy 6, boss 1) | new to the save 13 | save: spell 1/51, summon 5/29, enemy 6/245, boss 1/42, evolutions 0/79
+[autotest] epilogue: parts=5 open=0 seen=0 panels=19 autoplay_pending=false
+[autotest] volleys: shots 3934 | hits 2747 | dmg 12283 | peak 34/320 | capped volleys 0 | boss hits capped 14 | barrages 7 | frost_wraith 4806, mage 2975, shadow_bolt 2368, warrior 1372, mender 570, rogue 190
+[visual] adaptive quality: level 0, peak 0, steps down 0, up 0
+[autotest] victory screen: title=The Pack Is Broken best_overtime=14 new_record=true highlights=3
+[autotest] packs: formed 11 | circles 10 | rushes 10 | alphas slain 8 (members charged in blind 20) | peak live 4
+[autotest] herds: on | herds 4 (peak beasts 10) | stampedes 33 | trampled: summons 0 (dmg 0), you 0, enemies 151 (killed 28) | sheltered 1 | beasts killed 3 | fossil giants 3 (capped 0, too far 0)
+[autotest] scavengers: thieves peak 10 | dives 89 (empty 6) | snatched 82 piles, 205 crystals, 238 xp | dropped by a kill 0 piles, 0 crystals, 0 xp | to the nests 82 piles, 238 xp lost
+[autotest] stampede of ash: began 20:00 | herds 1 | bombs 8 (hits on summons 2, on you 1, on enemies 16)
+[autotest] primeval kinds (spawned/killed): swarm: scuttler 2047/2000 first 0:01 (dmg to you 376, to summons 20660), primeval_nest 1/0 first 11:40 (dmg to you 0, to summons 0) | hunters: razorclaw 62/44 first 1:15 (dmg to you 49, to summons 3821), frill_spitter 114/107 first 0:14 (dmg to you 569, to summons 6752), bog_croc 9/7 first 8:00 (dmg to you 0, to summons 1444) | herds: longneck 5/0 first 0:40 (dmg to you 0, to summons 0), duckbill 8/3 first 0:40 (dmg to you 0, to summons 0) | fliers: skyraider 88/6 first 1:09 (dmg to you 0, to summons 0) | titans: tyrant 4/0 first 10:00 (dmg to you 0, to summons 448), ironjaw 1/0 first 11:40 (dmg to you 41, to summons 346)
+[autotest] primeval stage: fern_basin (The Fern Basin) | act 14 | playable true | boss scarmaw (script scarmaw) | enemy x2.20 HP / x1.40 dmg from 7:00 | soul ash x1.00 | reckoning kind tyrant, stampede of ash true
+[autotest] primeval damage (you/summons): scuttler 376/20660, frill_spitter 569/6752, razorclaw 49/3821, bog_croc 0/1444, scarmaw_leap 0/578, tyrant 0/448, boss 0/394, ironjaw 41/346, primeval_bomb 60/104
+[autotest] fern basin: tar checks 10972: slowed you 421, summons 1815, enemies 50824 | beasts trapped 38 (killed in the tar 0) | bog crocs 9 (ambushes 5, came up tired 4, lunges 9: bit summons 4, you 0) | ironjaw spawned 1, killed 0 (bites 24: summons 4, you 0; warded hits 129) | nest killed 0 (hatched 100) | events: 11:40 nest_mother
+[autotest] scarmaw: the Hunt: packs 2, leaps 21 (landed on summons 17, you 0) | the Ambush not reached: hides 0 (0 s hidden), lunges 0 (bit summons 0, you 0) | Blood Up not reached (ended no): razorclaws back 0 | killed no | dmg to you 0, to summons 972
+[autotest] gravebow / bone colossus: gravebow volleys 0, splits 0 (+0 arrows), pierce hits 0, dmg 0 | curses applied 0 (refreshed 0), curse bonus dmg 0 | colossus dmg 0, stomps 6 | taunted enemies 0 | shrapnel bursts 0, hits 0, dmg 0
+[autotest] necro spells: bone_spear: not taken | soul_siphon: not taken | corpse_explosion: not taken | plague_cloud: not taken
+[autotest] later spells: death_mark: not taken | bone_wall: not taken | soul_chains: not taken | wither: not taken | raise_dead: not taken
+[autotest] later spell passives: grim_ledger Lv0 bonus_dmg=0 | spirit_binding Lv0 | restless_dead Lv0 | temporary summons spawned=3
+[autotest] horde passives: bone_plating Lv 0 (dmg prevented 0) | unholy_precision Lv 0 (crits 0, crit bonus dmg 0) | unholy_resilience Lv 3 (dmg prevented 0: area 0, holy 0) | bound_souls Lv 0 (soft recalls 65, hard recalls 0)
+[autotest] class passives: blood_scent Lv 0 (fast: Archers, Rogues, Gargoyles, Bone Hounds, Grave Drones, Succubi, Blood Spawn, Fallen Heroes, Ghost Saucers, Powder Wraiths, Bound Ophans, Bonehorns) | mournsong Lv 0 (extra debuff s 0) | siegecraft Lv 3 (siege bonus dmg 102) | summon dmg to structures 0 (catapults 0)
+[autotest] synergies active at end: deathless, cold_blood | activations: deathless@03:23, cold_blood@04:06
+[autotest] synergy bonus: flesh_rampart hits=0 dmg=0 | killing_field hits=0 dmg=0 | death_from_above hits=0 dmg=0 | wild_hunt hits=0 dmg=0 | cold_blood hits=55 dmg=204 | shatterfall hits=0 dmg=0 | requiem hits=0 dmg=0 | charnel_menagerie hits=0 dmg=0 | baying frenzies=0 | marks staggered=0 swooped=0 | dash resets=0 | requiem +0s
+[autotest] level-up offers: hands 32, new-item cards 19, later items 7 (37%) in 5 hands (16%), distinct later items offered 6
+[autotest] level-up actions: rerolls used 0/2, banishes used 0/2 (banished: none), skips 0
+[autotest] shadow bolt: 20048 dmg in Nearest mode, 7693 dmg in Strongest mode; to boss: 940 of 1742 total boss dmg
+[autotest] stats: abom_stomp_hits=24 abom_stomps=6 ash_bomb_enemy_hits=16 ash_bomb_player_hits=1 ash_bomb_summon_hits=2 ash_bombs=8 ash_stampedes=1 boss_atk_hunt=2 boss_atk_leap=21 bossdmg_abom_stomp=17 bossdmg_bash=17 bossdmg_bolt=940 bossdmg_frost_wraith=201 bossdmg_mage=304 bossdmg_mender=2 bossdmg_rogue=76 bossdmg_rogue_dash=49 bossdmg_shadow_bolt=71 bossdmg_warrior=59 bot_dash_crowd=27 bot_dash_hit=18 bot_dash_telegraph=7 chest_count_1=3 chest_items=3 chests_opened=3 chests_pity=3 chests_spawned=3 croc_ambushes=5 croc_lunge_hits=4 croc_lunges=9 croc_tired=4 crocs_spawned=9 damage_dealt=134728 damage_to_player=1096 damage_to_summons=34551 dash_distance=5719 dash_hits_avoided=13 dashes=52 death_abomination_by_frill_spitter=1 death_frost_wraith_by_bog_croc=3 death_frost_wraith_by_frill_spitter=18 death_frost_wraith_by_ironjaw=1 death_frost_wraith_by_razorclaw=7 death_frost_wraith_by_scarmaw_leap=3 death_frost_wraith_by_scuttler=28 death_frost_wraith_by_tyrant=1 death_mage_by_bog_croc=6 death_mage_by_boss=1 death_mage_by_frill_spitter=24 death_mage_by_ironjaw=2 death_mage_by_primeval_bomb=1 death_mage_by_razorclaw=9 death_mage_by_scarmaw_leap=2 death_mage_by_scuttler=36 death_mage_by_tyrant=4 death_mender_by_bog_croc=9 death_mender_by_frill_spitter=20 death_mender_by_ironjaw=1 death_mender_by_razorclaw=7 death_mender_by_scarmaw_leap=3 death_mender_by_scuttler=18 death_mender_by_tyrant=2 death_rogue_by_bog_croc=6 death_rogue_by_boss=3 death_rogue_by_frill_spitter=10 death_rogue_by_ironjaw=1 death_rogue_by_razorclaw=19 death_rogue_by_scarmaw_leap=2 death_rogue_by_scuttler=74 death_rogue_by_tyrant=4 death_warrior_by_bog_croc=13 death_warrior_by_boss=2 death_warrior_by_frill_spitter=17 death_warrior_by_ironjaw=3 death_warrior_by_primeval_bomb=1 death_warrior_by_razorclaw=27 death_warrior_by_scarmaw_leap=2 death_warrior_by_scuttler=147 death_warrior_by_tyrant=2 deathless_regen=2738 dmg_abom_stomp=476 dmg_bash=3073 dmg_bolt=27741 dmg_fossil_giant=149 dmg_frost_wraith=12509 dmg_mage=56422 dmg_mender=629 dmg_primeval_bomb=1857 dmg_primeval_trample=12910 dmg_resisted_boss=154 dmg_resisted_ironjaw=528 dmg_rogue=3491 dmg_rogue_bleed=244 dmg_rogue_dash=3701 dmg_shadow_bolt=2368 dmg_warrior=9152 fossil_giants=3 frost_boss_freezes=4 frost_chills=252 frost_deep_freezes=70 frost_freezes=968 frost_frozen_seconds=1471 heal_by_mender=4377 herd_kills=3 herd_stampedes=33 herds_spawned=4 ironjaw_bite_hits=4 ironjaw_bites=24 ironjaw_warded_hits=129 kill_bog_croc=7 kill_duckbill=3 kill_frill_spitter=107 kill_razorclaw=44 kill_scuttler=2000 kill_skyraider=6 kills_by_abom_stomp=5 kills_by_bash=64 kills_by_bolt=547 kills_by_fossil_giant=4 kills_by_frost_wraith=265 kills_by_mage=755 kills_by_mender=6 kills_by_primeval_bomb=8 kills_by_primeval_trample=28 kills_by_rogue=112 kills_by_rogue_bleed=5 kills_by_rogue_dash=89 kills_by_shadow_bolt=8 kills_by_warrior=271 mage_explosions=639 march_zones_entered=3 minibossdmg_bash=3 minibossdmg_bolt=302 minibossdmg_frost_wraith=46 minibossdmg_mage=304 minibossdmg_mender=7 minibossdmg_rogue=10 minibossdmg_rogue_bleed=18 minibossdmg_rogue_dash=18 minibossdmg_shadow_bolt=45 minibossdmg_warrior=35 nest_hatched=100 nest_mother_spawned=1 overkill_redirects=104 pack_alphas_slain=8 pack_broken_members=20 pack_circles=10 pack_rushes=10 packs_formed=11 player_dmg_from_frill_spitter=569 player_dmg_from_ironjaw=41 player_dmg_from_primeval_bomb=60 player_dmg_from_razorclaw=49 player_dmg_from_scuttler=376 player_healing=572 priest_heals=554 priest_wards=0 pu_collected_feast=2 pu_collected_frenzy=1 pu_collected_stasis=3 pu_expired_feast=2 pu_expired_hyper=1 pu_expired_magnet=1 pu_expired_nova=1 pu_expired_stasis=1 pu_pity_drops=6 pu_spawned_feast=4 pu_spawned_frenzy=1 pu_spawned_hyper=1 pu_spawned_magnet=1 pu_spawned_nova=1 pu_spawned_stasis=4 pu_uptime_frenzy=12 pu_uptime_stasis=15 rallies=7 rally_buff_time=56 rally_heal=366 rally_knockbacks=50 rally_meter_fills=7 rally_minion_dmg=8902 rally_raised=24 rally_recalled=7 reckoning_spawned=46 replacements=501 rogue_dash_hits=171 rogue_dashes=135 scarmaw_leap_hits=17 scav_crystals_taken=205 scav_dives=89 scav_dives_empty=6 scav_nests=82 scav_snatches=82 scav_xp_lost=238 scav_xp_taken=238 siege_bonus_dmg=102 spawned_bog_croc=9 spawned_duckbill=8 spawned_frill_spitter=114 spawned_ironjaw=1 spawned_longneck=5 spawned_primeval_nest=1 spawned_razorclaw=62 spawned_scuttler=2047 spawned_skyraider=88 spawned_tyrant=4 summon_dmg_from_bog_croc=1444 summon_dmg_from_boss=394 summon_dmg_from_frill_spitter=6752 summon_dmg_from_ironjaw=346 summon_dmg_from_primeval_bomb=104 summon_dmg_from_razorclaw=3821 summon_dmg_from_scarmaw_leap=578 summon_dmg_from_scuttler=20660 summon_dmg_from_tyrant=448 summon_healing=6909 summon_soft_recalls=65 summon_specials_cancelled=3 summon_stunned_seconds=17 summon_stuns=15 summon_stuns_tyrant=15 syn_cold_blood_bonus_dmg=204 syn_cold_blood_hits=55 synergies_activated=2 tar_checks=10972 tar_slows_enemies=50824 tar_slows_summons=1815 tar_slows_you=421 tar_trapped=38 temporary_expired=2 trample_enemies=151 trample_kills=28 trample_sheltered=1 tyrant_digest_dmg=25 tyrant_roar_stuns=15 tyrant_roars=31 tyrant_swallows=12 volley_barrages=7 ward_absorbed=0 warrior_bashes=586 warrior_kills=335 wave_events=11 xp_collected=2140 xp_dropped=2555
+[autotest] boss attacks: hunt=2 leap=21 ambush=0 lunge=0 blood_up=0 blood_respawn=0 | wrath: no | hammer soaked by undead: 0 | charges stopped by undead: 0 (shielding the player: 0) | judgment hits: 0 | call soldiers: 0 | holy zones boss/grave: 0/0
+[autotest] crimson march: zones entered 3 (final: Zone IV  -  The Nesting Hollow) | placed/destroyed/escaped: outposts 0/0/0 generators 0/0/0 carts 0/0/0 standards 0/0/0 | outpost reinforcements 0 | ward zones 0
+[autotest] march enemies: aura buff pulses 0 | halberd cleave hits 0 | dmg resisted: shieldbearer 0, boss 154 | kills: shieldbearer=0 banner_bearer=0 halberdier=0
+[autotest] marshal vael: last stand no | cleave summon hits 0, soaked for the player 0 | command soldiers 0
+[autotest] march events (3): 5:00 zone_II, 10:00 zone_III, 15:00 zone_IV
+[autotest] stage events fired (0): 
+[autotest] templar charges: 0 (body-blocked by warriors: 0) | temporary summons spawned: 3
+[autotest] obstacle collisions resolved: player=0 summons=552 enemies=6147
+[autotest] class abomination: Lv 0, alive 0/0, deaths 1 | dmg 476 (abomination=0 abom_stomp=476) | abom_stomps=6 abom_stomp_hits=24
+[autotest] class rogue: Lv 3, alive 0/2, deaths 119 | dmg 7436 (rogue=3491 rogue_dash=3701 rogue_bleed=244) | rogue_dashes=135 rogue_dash_hits=171
+[autotest] class gargoyle: Lv 0, alive 0/0, deaths 0 | dmg 0 (gargoyle=0 gargoyle_swoop=0) | gargoyle_swoops=0 gargoyle_swoop_hits=0
+[autotest] class frost_wraith: Lv 4, alive 0/2, deaths 61 | dmg 12509 (frost_wraith=12509) | frost_deep_freezes=70 frost_freezes=968 frost_boss_freezes=4 frost_frozen_seconds=1471 frost_chills=252
+[autotest] class bone_hound: Lv 0, alive 0/0, deaths 0 | dmg 0 (bone_hound=0 hellhound=0 hellhound_burn=0 hellhound_trail=0) | hound_bites=0 hound_pack_bites=0 hound_pack_bonus_dmg=0 hellhound_burns=0 hellhound_trail_patches=0
+[autotest] class banshee: Lv 0, alive 0/0, deaths 0 | dmg 0 (banshee=0 keening_lady=0) | banshee_dirges=0 banshee_dirge_hits=0 dirge_debuff_seconds=0 keening_waves=0 keening_silenced=0 keening_heals_silenced=0
+[autotest] class corpse_catapult: Lv 0, alive 0/0, deaths 0 | dmg 0 (corpse_catapult=0 ossuary_engine=0 ossuary_shards=0) | catapult_volleys=0 catapult_boulders=0 catapult_boulder_hits=0 catapult_structure_dmg=0 ossuary_shard_fields=0 hazards_dropped=0
+[autotest] class specials: cancelled by recall 3 | ended inside an obstacle 0
+[autotest] special evolutions: shadow reaper: chain dashes 0, cooldown resets 0, bleed stacks added 0, max stacks 0, rogue bleed dmg (all) 244 | cathedral horror: stuns 0 (boss 0), stunned s 0.0, stone forms 0, stone s 0.0, dmg prevented by stone 0
+[autotest] grave step: dashes 52 (bot: crowd 27, hit 18, telegraph 7) | hits avoided in dash i-frames 13 | blocked 0, shortened by obstacles 0, ended inside an obstacle 0, avg length 110 px | charges 1, cooldown 5.00 s
+[autotest] dread rally: rallies 7 | meter fills 7, fill times s [128 98 86 93 133 146 183] (avg 124 s), meter now 90% | knockbacks 50 | summons called back 7 | heal 366 | minion dmg under buff 8902 (est. +dmg part 2543) | buff time 56 s
+[autotest] army formation: bone_ring: 1214s kills 2167 army_dmg 34551 recalls 0 spread max 422 mean 122
+[autotest] character: gravecaller (The Gravecaller) | starting spell shadow_bolt Lv 3 | Baseline stats (Max HP 120, move speed 110) | innate: none | characters unlocked this run: none | unlocked in the profile: gravecaller (saved: false)
+[autotest] stuck_units=0 (touching an obstacle: 0) {  }
+[metric] boss_hp_at_0=21467 min_hp_before_0=14
+[autotest] peaks: enemies=125 summons=16 projectiles=24 effects=21 crystals=119
+[autotest] nodes created (pools): enemies=125 summons=16 projectiles=24 effects=22 crystals=119
+[autotest] simulation step: avg 1.53 ms, worst 22.09 ms
+[autotest] power-ups: spawned 12 (magnet=1 feast=4 hyper=1 stasis=4 frenzy=1 nova=1) | collected 6 (magnet=0 feast=2 hyper=0 stasis=3 frenzy=1 nova=0) | expired (magnet=1 feast=2 hyper=1 stasis=1 frenzy=0 nova=1) | lost at cap 0 | pity drops 6 | crystals pulled by Soul Magnet 0
+[autotest] buff uptime: hyper=0s (0.0%, refreshed 0) stasis=15s (1.2%, refreshed 0) frenzy=12s (1.0%, refreshed 0) | soul nova kills: 0
+[autotest] chests: spawned 3, opened 3 (x1=3 x3=0 x5=0), items granted 3 (evolutions 0), pity 3, lost at cap 0, left on ground 0
+[autotest]    chest 06:10 x1: rogue 3
+[autotest]    chest 15:34 x1: frost_wraith 4
+[autotest]    chest 18:01 x1: warding_ritual 3
+[autotest] chest beacon: chests marked 3, seen on screen 3 | max off-screen arrows at once 1 | ticks with an arrow 11876 (197.9 s)
+[autotest] profane pact: taken no (final Lv 0; never offered or never picked) | oath tier 0 | extra XP from pact 0, from oath 0 | extra soul ash from pact 0, from oath 0
+[autotest] meta upgrades (--meta=none): none | revivals used: 0
+[autotest] soul ash: +250 (time 150 [20:00] + kills 65 [2167] + elites 0 [0] + boss 0 + reckoning 35 [14.2 s] = 250, bonus +0% = +0, pact +0, oath +0) | bounty 0 | new total 250 | saved: false
+[autotest] difficulty: Necromancer (necromancer) | modifiers: none | foes: HP x0.800 (growth x1.00), dmg x1.000 (growth x1.00), spawn x1.250, speed x1.00, elite chance 0.000, boss HP x1.000 | XP x1.000 | soul ash: difficulty +0%, modifiers +0%, total x1.00
+[autotest] difficulty results: soul ash difficulty +0, modifiers +0 | trickle elites promoted: 0 | holy retribution bursts: 0 (dmg to you 0, to summons 0) | player max HP at start: 120
+[autotest] stage: The Fern Basin | soul ash stage bonus +0 (x1.00) | stages unlocked by this run: none
+[autotest] hyper: off (Necromancer) | foes: HP growth x1.00, dmg growth x1.00, boss HP x1.000 | at 0:00 vs the standard game: HP x1.00, dmg x1.00 | soul ash hyper +0 (+0%) | Reckoning lasted 14.2 s past 0:00 | unlocked: false (by this run: false) | hyper clear recorded: no
+[autotest] skins: character gravecaller, worn default | this run: rot kills 0, high confessors slain 0, seraphine slain with all 4 roles 0 | lifetime: rot 0/5000, confessors 0/50, seraphine full army 0/1 | unlocked 51/208 (new: none) | setup row cards 6
+[autotest] rewards: achievements=0 (none) titles=0 unlocks=none | run: temp raised 3, min HP before 0:00 12%, evolutions 0, boss slain never after arrival | one-run achievements met: none (not checked: --rewards=on) | worn title: none | title row choices 1
+[autotest] demo: on=false | acts=1 | stages=graveyard,crimson_march,sanctum | save=user://save.cfg | full_game_offers=0
+[autotest] feedback: url_set=true | report_chars=122/213/304 (main menu / pause / results samples built, max 1500) | url_chars=597 | opened=never (autotest)
+exit 0
