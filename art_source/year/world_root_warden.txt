@@ -1,0 +1,12 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, a WORLD-ROOT WARDEN: a huge tree of BONE, an evolved Ossuary Oak: a thick bone-white trunk with a skull-like face knot with soul-teal glowing eyes, great spreading bone branches with moss and a few leaves, huge bone roots, soul-teal knots, imposing.
+
+LOW-RESOLUTION pixel art: the whole SUBJECT is only 64 pixels tall and about 56 pixels wide, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no soft glow haze.
+
+Subject sex: no sex (a tree).
+
+Colours: ONLY flat fills: bone white #9C9078 #E7DEC9 #F8F6EE; bark brown #553C27 #86603E #B08A60; moss #274D24 #599641; soul teal #1C6B58 #3DCC94 (knots and eyes only). NO red, NO gold, NO purple.
+
+Outline: a clean 1-pixel dark outline around the whole subject in deep bark #14100C. Light from the top-left. Keep the main shapes clearly brighter than a near-black ground.
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, no dark glow around the subject), one subject only, centred, filling about 85% of the image. No ground, no cast shadow, no text, no frame. Draw ONLY ONE subject (no companions, no hounds, no extra creatures).
+Attached: (1) a game sprite of this game for pixel size, outline weight and flat look; (2) concept art of this unit for its shape and colours only (keep it flat, chunky and low-resolution; ignore any neighbouring figures in it).
