@@ -76,7 +76,10 @@ const CLASS_ORDER := ["warrior", "archer", "mage", "mender", "warder", "bishop",
 		"ushabti_sentinel",
 		# --- Act XIII (temporary number): the Empyrean ---
 		# Unlockable (UnlockData: defeating the Voice), so a fresh save never offers it.
-		"bound_ophan"]
+		"bound_ophan",
+		# --- Act XIV (temporary number): the Last Day ---
+		# Unlockable (UnlockData: slaying Old Gravejaw), so a fresh save never offers it.
+		"bonehorn"]
 ## The four GDD §4.2 summon ROLES ("all 4 classes": the Dread Sovereign
 ## achievement), in SynergyManager.classes_met() format: an entry that is an
 ## Array means "any one of these", so after the priest split either priest
@@ -1611,6 +1614,62 @@ const UNITS := {
 			"roll_knockback": 120.0,  # TUNING (not in GDD) px/s impulse sideways, divided by the foe's mass
 		},
 	},
+	# --- Act XIV (temporary number): the Last Day ---
+	# The Bonehorn (owner-approved proposal: "Finale summon class: the
+	# Bonehorn, a skeletal ceratopsian that charges in a straight line through
+	# a pack, trampling and knocking back, then trots back to the ring
+	# (evolution Fossil Tyrant). It is a class special, so it works on every
+	# stage."; GDD §15.0 "The Bonehorn, Fossil Tyrant and Petrified Horns"): a
+	# skeletal horned charger, bone-white with soul-teal eye sockets, no sex,
+	# the necromancer's own (art summons/bonehorn). A ground body on the Bone
+	# Ring's front posts; its class special ("trample_charge",
+	# BonehornBehavior) works on every stage: with a pack within charge_range
+	# px of its necromancer it paws for charge_windup s, then CHARGES straight
+	# through the pack and charge_past px beyond (each foe trampled once a
+	# charge, knocked along the run), then trots back to the ring.
+	# Unlockable (UnlockData), then offered on every stage.
+	"bonehorn": {
+		"display_name": "Bonehorn",  # Owner-approved proposal
+		"plural": "Bonehorns",
+		"description": "A skeletal horned charger that tramples through packs and trots back.",  # Card text: one short sentence (owner rule).
+		"max_hp": 95.0,  # TUNING (not in GDD) a bone charger (Bound Ophan 90)
+		"damage": 10.0,  # TUNING (not in GDD) a horn blow (melee)
+		"attack_interval": 1.1,  # TUNING (not in GDD) s
+		"attack_range": 12.0,  # TUNING (not in GDD) edge-to-edge reach (px)
+		"move_speed": 96.0,  # TUNING (not in GDD) px/s; it trots back fast
+		"radius": 12.0,  # TUNING (not in GDD) px (~40 x 34 px sprite)
+		"acquisition_range": 180.0,  # TUNING (not in GDD) px
+		"replenish_interval": 12.0,  # TUNING (not in GDD) s
+		"band_min": 45.0,  # TUNING (not in GDD) px, with the front
+		"band_max": 100.0,  # TUNING (not in GDD)
+		"w_pursuit": 1.0,  # TUNING (not in GDD)
+		"w_formation": 0.4,  # TUNING (not in GDD)
+		"w_separation": 0.8,  # TUNING (not in GDD)
+		"w_threat": 0.0,  # TUNING (not in GDD) a charger never shies away
+		"attack_profile": "melee",
+		"target_profile": "skirmisher",
+		"windup": 0.15,  # TUNING (not in GDD) s
+		"projectile_speed": 0.0,
+		"splash_radius": 0.0,
+		"heal_amount": 0.0,
+		"kite_distance": 0.0,
+		"heal_role_priority": 0.6,  # TUNING (not in GDD)
+		"formation": "front",  # Owner-approved proposal: it trots back to the ring
+		"capacity_bonus_mult": 0.5,  # TUNING (not in GDD) Grave Dominion V: +2
+		"behavior": "trample_charge",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"special": {
+			"charge_damage": 22.0,  # TUNING (not in GDD) to every foe it tramples (once a charge; the Bound Ophan's roll 22)
+			"charge_cooldown": 6.5,  # TUNING (not in GDD) s between two charges
+			"charge_windup": 0.45,  # TUNING (not in GDD) s it paws before it runs
+			"charge_speed": 320.0,  # TUNING (not in GDD) px/s straight through the pack
+			"charge_range": 260.0,  # TUNING (not in GDD) px from its necromancer it looks for a pack
+			"charge_past": 60.0,  # TUNING (not in GDD) px it runs on beyond the pack's centre
+			"charge_min_enemies": 3,  # TUNING (not in GDD) foes round the pick (an elite or the boss alone also counts)
+			"charge_rim": 8.0,  # TUNING (not in GDD) px beyond its radius its horns strike
+			"charge_knockback": 160.0,  # Owner-approved proposal: "trampling and knocking back"; TUNING (not in GDD) px/s impulse along the run, divided by the foe's mass
+		},
+	},
 }
 
 ## Summon-ability progression, one entry per skill level (index 0 = level 1).
@@ -1893,6 +1952,15 @@ const LEVELS := {
 	# --- Act XIII (temporary number): the Empyrean ---
 	# TUNING (not in GDD): 1 -> 3 Bound Ophans; harder rims, then quicker rolls.
 	"bound_ophan": [
+		{"count": 1},
+		{"count": 2},
+		{"count": 2, "hp_bonus": 0.2, "special_bonus": 0.25},
+		{"count": 3, "hp_bonus": 0.25, "special_bonus": 0.3, "special_area": 0.15},
+		{"count": 3, "hp_bonus": 0.3, "damage_bonus": 0.25, "special_bonus": 0.5, "special_area": 0.2, "special_haste": 0.2},
+	],
+	# --- Act XIV (temporary number): the Last Day ---
+	# TUNING (not in GDD): 1 -> 3 Bonehorns; harder horns, then quicker charges.
+	"bonehorn": [
 		{"count": 1},
 		{"count": 2},
 		{"count": 2, "hp_bonus": 0.2, "special_bonus": 0.25},

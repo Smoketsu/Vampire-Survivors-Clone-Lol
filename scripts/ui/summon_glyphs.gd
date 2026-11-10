@@ -85,6 +85,8 @@ static func draw_summon(ci: CanvasItem, kind: String, o: Vector2, r: float, flas
 			EmpireGlyphs.draw_gunner(ci, o, r, flash)  # Act III: a cyborg raised with its rifle.
 		"bound_ophan", "throne_of_bones":
 			_draw_bone_wheel(ci, o, r, flash, kind == "throne_of_bones")  # Act XIII (temporary): the Bound Ophan.
+		"bonehorn", "fossil_tyrant":
+			_draw_bone_charger(ci, o, r, flash, kind == "fossil_tyrant")  # Act XIV (temporary): the Bonehorn.
 		_:
 			return SpireGlyphs.draw_summon(ci, kind, o, r, flash)  # Act II: Ul-Thalos summons (false when unknown).
 	return true
@@ -104,6 +106,24 @@ static func _draw_bone_wheel(ci: CanvasItem, o: Vector2, r: float, flash: bool, 
 	for i in 6:
 		SpriteBank.draw_disc(ci, o + Vector2.from_angle(TAU * float(i) / 6.0) * rim * 0.78, r * 0.14, Glyphs._c(WheelOfEyesData.FIRE, flash))  # A soul-teal eye on the rim.
 	SpriteBank.draw_disc(ci, o, r * 0.2, Glyphs._c(WheelOfEyesData.FIRE, flash))
+
+
+## The Bonehorn (Act XIV, temporary: the Last Day) without its art: a bone
+## body, a frill and three horns, soul-teal eye sockets; `tyrant` gives the
+## Fossil Tyrant's great jaw instead of the horns (disc textures and rects).
+static func _draw_bone_charger(ci: CanvasItem, o: Vector2, r: float, flash: bool, tyrant: bool) -> void:
+	for s: float in [-0.5, 0.3]:
+		ci.draw_rect(Rect2(o + Vector2(s * r, r * 0.3), Vector2(r * 0.2, r * 0.7)), Glyphs._c(Palette.BONE, flash))  # A leg.
+	SpriteBank.draw_disc(ci, o, r * 0.85, Glyphs._c(Glyphs.OUTLINE, flash))
+	SpriteBank.draw_disc(ci, o, r * 0.75, Glyphs._c(Palette.BONE, flash))
+	SpriteBank.draw_disc(ci, o + Vector2(r * 0.7, -r * 0.25), r * 0.45, Glyphs._c(Palette.BONE, flash))  # The skull.
+	SpriteBank.draw_disc(ci, o + Vector2(r * 0.8, -r * 0.35), r * 0.12, Glyphs._c(WheelOfEyesData.FIRE, flash))  # A soul-teal eye socket.
+	if tyrant:
+		ci.draw_rect(Rect2(o + Vector2(r * 0.8, -r * 0.05), Vector2(r * 0.7, r * 0.18)), Glyphs._c(Palette.BONE, flash))  # The great jaw.
+	else:
+		ci.draw_rect(Rect2(o + Vector2(r * 0.3, -r * 1.0), Vector2(r * 0.25, r * 0.5)), Glyphs._c(Palette.BONE, flash))  # The frill.
+		for k in 2:
+			ci.draw_rect(Rect2(o + Vector2(r * 1.0, -r * (0.6 - 0.25 * float(k))), Vector2(r * 0.55, 2.0)), Glyphs._c(Palette.BONE, flash))  # A horn.
 
 
 ## Draws UI icon `kind` centred at `c` with half-size `s`. Returns false if

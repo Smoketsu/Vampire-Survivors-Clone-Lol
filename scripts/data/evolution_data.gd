@@ -136,7 +136,9 @@ const ORDER := ["void_barrage", "eclipse_ward", "abyssal_detonation",
 	# --- Act XIV (temporary number): the Fern Basin ---
 	"apex_pack",
 	# --- Act XIV (temporary number): the Great Plain ---
-	"herd_of_ages"]
+	"herd_of_ages",
+	# --- Act XIV (temporary number): the Last Day ---
+	"extinction_event"]
 
 ## Evolution definitions.
 ##   base         — spell id that evolves (AbilityData.SPELLS key).
@@ -1116,6 +1118,25 @@ const EVOLUTIONS := {
 		"stats": {
 			"damage": 66.0, "range": 380.0, "length": 460.0, "speed": 580.0, "radius": 32.0, "cooldown": 2.4,  # TUNING (not in GDD)
 			"herd": 3, "stun": 0.6,  # TUNING (not in GDD) the evolution flag: chargers abreast, s every trampled foe is stunned
+		},
+	},
+	# --- Act XIV (temporary number): the Last Day ---
+	# Extinction Event (GDD §15.0 "Meteor Call, Extinction Event, Cosmic Dust
+	# and the Skywatcher"; owner-approved proposal "Meteor Call -> Extinction
+	# Event (+ Cosmic Dust)"): Meteor Call + Cosmic Dust (a NEW passive, owner
+	# rule: at Lv 5). Own decision on its kit: `meteors` meteors a cast, each on
+	# a distinct dense group (the end of a world, in small). Detected by the
+	# "meteors" key.
+	"extinction_event": {
+		"base": "meteor_call",
+		"passive": "cosmic_dust",
+		"display_name": "Extinction Event",  # Owner-approved proposal
+		"icon": "extinction_event",
+		"description": "Three meteors fall at once, each on its own dense group of foes.",
+		"labels": {"damage": "Meteor damage", "radius": "Radius (px)", "cooldown": "Cooldown (s)", "meteors": "Meteors"},
+		"stats": {
+			"damage": 96.0, "range": 420.0, "radius": 68.0, "delay": 0.8, "cooldown": 2.8,  # TUNING (not in GDD)
+			"meteors": 3,  # TUNING (not in GDD) the evolution flag: meteors a cast
 		},
 	},
 }

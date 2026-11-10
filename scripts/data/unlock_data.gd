@@ -414,6 +414,18 @@ const UNLOCKS := {
 	"stampede": {"type": "spell", "boss": "ironbrow", "text": "Slay Old Ironbrow on the Great Plain to unlock."},  # Owner-approved proposal
 	"calcified_hide": {"type": "passive", "boss": "ironbrow", "text": "Slay Old Ironbrow on the Great Plain to unlock."},  # Stampede's paired passive (owner-approved proposal), unlocked with it
 	"hoarders_bones": {"type": "passive", "achievement": "nothing_taken", "text": "Earn Nothing Taken: finish the Great Plain without losing a crystal pile to a Skyraider."},  # Owner answer (Nov 9, 2026): Nothing Taken unlocks Hoarder's Bones
+	# --- Act XIV (temporary number): the Last Day ---
+	# Old Gravejaw's fall BEFORE the impact (owner-approved proposal "Rewards":
+	# Meteor Call is his; "only a Gravejaw killed before the impact gives his
+	# spell": the Extinction leaves him broken, out of reach), with its paired
+	# passive, and the finale's summon class with its paired passive, offered
+	# on every stage; the counter-passive Thick Marrow by the act's achievement
+	# Trampled (owner answer, Nov 9, 2026), offered only in the act.
+	"meteor_call": {"type": "spell", "boss": "gravejaw", "text": "Slay Old Gravejaw on the Last Day, before the meteor falls, to unlock."},  # Owner-approved proposal
+	"cosmic_dust": {"type": "passive", "boss": "gravejaw", "text": "Slay Old Gravejaw on the Last Day, before the meteor falls, to unlock."},  # Meteor Call's paired passive (owner-approved proposal), unlocked with it
+	"bonehorn": {"type": "class", "boss": "gravejaw", "text": "Slay Old Gravejaw on the Last Day, before the meteor falls, to unlock."},  # Owner-approved proposal: the finale's reward
+	"petrified_horns": {"type": "passive", "boss": "gravejaw", "text": "Slay Old Gravejaw on the Last Day, before the meteor falls, to unlock."},  # Its paired passive (own decision), unlocked with it
+	"thick_marrow": {"type": "passive", "achievement": "trampled", "text": "Earn Trampled: let the stampedes kill 100 enemies in one run."},  # Owner answer (Nov 9, 2026): Trampled unlocks Thick Marrow
 }
 
 ## End-screen plate heading of a newly unlocked item, by type.

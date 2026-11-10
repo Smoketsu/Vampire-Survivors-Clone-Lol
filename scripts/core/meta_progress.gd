@@ -466,6 +466,9 @@ func award_run(summary: Dictionary, mods: MetaModifiers) -> Dictionary:
 	_add_lifetime("last_word_runs", 1.0 if float(st.get(EmpyreanDirector.LAST_WORD_STAT, 0.0)) > 0.0 else 0.0)  # The Last Word (the Empyrean)
 	# --- Act XIV (temporary number): the Great Plain ---
 	_add_lifetime("nothing_taken_runs", 1.0 if float(st.get(GreatPlainDirector.NOTHING_TAKEN_STAT, 0.0)) > 0.0 else 0.0)  # Nothing Taken (the Great Plain)
+	# --- Act XIV (temporary number): the Last Day ---
+	_add_lifetime("trampled_runs", 1.0 if float(st.get("trample_kills", 0.0)) >= float(PrimevalRulesData.TRAMPLED_KILLS) else 0.0)  # Trampled (any Titans stage)
+	_add_lifetime("sky_fell_runs", 1.0 if float(st.get(Extinction.DAY_THE_SKY_FELL_STAT, 0.0)) > 0.0 else 0.0)  # The Day the Sky Fell (the Last Day)
 	_add_run_counters(summary)  # Content wave 2: the one-run achievements' lifetime counters.
 	var slew_unlock_boss := bool(summary.get("boss_defeated", false)) and String(summary.get("boss_id", "")) == HyperData.UNLOCK_BOSS_ID  # Seraphine slain.
 	if slew_unlock_boss:
@@ -1704,6 +1707,9 @@ static func _default_lifetime() -> Dictionary:
 		"last_word_runs": 0.0,  # Empyrean runs that silenced the Voice (The Last Word)
 		# --- Act XIV (temporary number): the Great Plain ---
 		"nothing_taken_runs": 0.0,  # Great Plain runs that reached 0:00 with no crystal pile lost to a Skyraider (Nothing Taken)
+		# --- Act XIV (temporary number): the Last Day ---
+		"trampled_runs": 0.0,  # runs whose stampedes killed at least 100 enemies (Trampled)
+		"sky_fell_runs": 0.0,  # Last Day runs that reached the Extinction with no summon lost (The Day the Sky Fell)
 		# --- Content wave 2: B. Achievement rewards (MetaProgress.run_counters()) ---
 		"best_temp_raised": 0.0,  # most temporary undead raised in one run (Mass Grave)
 		"untouchable_runs": 0.0,  # runs that reached 0:00 never below half HP (Untouchable)

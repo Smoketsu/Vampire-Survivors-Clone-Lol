@@ -124,7 +124,9 @@ const ORDER := ["gravecaller", "umbral_warden", "voidcaller", "bone_oracle", "fa
 	# --- Act XIV (temporary number): the Fern Basin ---
 	"fern_huntress",
 	# --- Act XIV (temporary number): the Great Plain ---
-	"herd_warden"]
+	"herd_warden",
+	# --- Act XIV (temporary number): the Last Day ---
+	"skywatcher"]
 ## The default character (RunConfig, fresh saves, the autotest): today's game.
 const DEFAULT_ID: String = "gravecaller"
 ## Spell level that unlocks a character (owner rule: reach Lv 5 with its spell
@@ -206,6 +208,8 @@ const STAT_LABELS := {
 ##                           Act XIII, temporary)
 ##   pack_leap_raptors       PackLeap._cast (raptors more on every cast;
 ##                           Act XIV, temporary)
+##   meteor_radius_bonus     MeteorCall._cast (share more radius of every
+##                           meteor; Act XIV, temporary)
 ##   stampede_length_bonus   Stampede._cast (share more run length of every
 ##                           charger; Act XIV, temporary)
 const INNATE_KEYS := ["orb_projectile_destroy", "blast_echo_delay", "blast_echo_damage", "spear_shard_max",
@@ -287,7 +291,9 @@ const INNATE_KEYS := ["orb_projectile_destroy", "blast_echo_delay", "blast_echo_
 	# --- Act XIV (temporary number): the Fern Basin ---
 	"pack_leap_raptors",
 	# --- Act XIV (temporary number): the Great Plain ---
-	"stampede_length_bonus"]
+	"stampede_length_bonus",
+	# --- Act XIV (temporary number): the Last Day ---
+	"meteor_radius_bonus"]
 
 ## Orbit radius (px) of the Bone Oracle's Ossuary Ward shards around him.
 const SHARD_ORBIT_RADIUS: float = 27.0  # TUNING (not in GDD)
@@ -1372,6 +1378,32 @@ const CHARACTERS := {
 		"stats": {"max_hp": 10.0, "move_speed": -0.05},  # TUNING (not in GDD) a heavy warden: tough, a little slow
 		"sprite": "player/herd_warden",
 		"tint": Color(0.94, 0.86, 0.72),  # TUNING (not in GDD) a pale dust ochre over the violet (his art replaces it)
+		"starts_unlocked": false,
+	},
+	# --- Act XIV (temporary number): the Last Day ---
+	# The Skywatcher (Meteor Call's character; owner-approved proposal
+	# "Rewards": "Old Gravejaw | Meteor Call ... | The Skywatcher (female,
+	# figure style)"; docs/last_acts/PLAN.md: every playable character is a
+	# necromancer of the act's theme in violet, never a beast): FEMALE, in the
+	# figure-redesign style (fully clothed): a violet star-robed dress, a bone
+	# astrolabe at the hip, a staff crowned with a small falling-star stone (art
+	# player/skywatcher, walk and idle strips, docs/titans/ART_MANIFEST.md).
+	# Meteor Call must be unlocked (Old Gravejaw, slain before the impact)
+	# before she can be earned, by the usual Lv 5 rule. Own decision on her
+	# innate (the proposal names none): Star Reader, her meteors fall wider
+	# (MeteorCall._cast()).
+	"skywatcher": {
+		"display_name": "The Skywatcher",  # Owner-approved proposal
+		"title": "She read the falling star in the sky, and called it down herself.",
+		"spell": "meteor_call",
+		"innate": {
+			"id": "star_reader", "name": "Star Reader",
+			"description": "Meteor Call's meteors strike 30% wider.",
+			"values": {"meteor_radius_bonus": 0.3},  # TUNING (not in GDD) share more radius
+		},
+		"stats": {"max_hp": -5.0, "spell_area": 0.05},  # TUNING (not in GDD) a stargazer: frail, a wide reach
+		"sprite": "player/skywatcher",
+		"tint": Color(0.86, 0.84, 0.98),  # TUNING (not in GDD) a pale star-violet (her art replaces it)
 		"starts_unlocked": false,
 	},
 }

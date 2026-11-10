@@ -92,7 +92,9 @@ const SUMMON_ORDER: Array[String] = ["warrior", "archer", "mage", "mender", "war
 		# --- Act XII (temporary number): the Hall of Two Truths --- (a silhouette naming its unlock until met)
 		"ushabti_sentinel",
 		# --- Act XIII (temporary number): the Empyrean --- (a silhouette naming its unlock until met)
-		"bound_ophan"]
+		"bound_ophan",
+		# --- Act XIV (temporary number): the Last Day --- (a silhouette naming its unlock until met)
+		"bonehorn"]
 
 ## Covenant soldiers (enemy kinds), in the order the stages bring them.
 const SOLDIERS: Array[String] = ["recruit", "footman", "archer", "chaplain", "purifier", "templar",
@@ -441,7 +443,9 @@ const PRIMEVAL_HUNTERS: Array[String] = ["razorclaw", "frill_spitter",
 ## The herds (group "herds": the neutral giants).
 const PRIMEVAL_HERDS: Array[String] = ["longneck", "duckbill"]
 ## The fliers (group "fliers").
-const PRIMEVAL_FLIERS: Array[String] = ["skyraider"]
+const PRIMEVAL_FLIERS: Array[String] = ["skyraider",
+	# --- Act XIV (temporary number): the Last Day ---
+	"stormwing", "thunderwing"]
 ## The titans (group "titans").
 const PRIMEVAL_TITANS: Array[String] = ["tyrant",
 	# --- Act XIV (temporary number): the Fern Basin ---
@@ -814,7 +818,7 @@ const DESCRIPTIONS: Dictionary = {
 	"longneck": "A giant of the herds. It never attacks, but hurt it and the whole herd stampedes. Its bones rise as a Fossil Giant for you.",  # Proposal (Herds)
 	"duckbill": "A smaller herd beast whose crest horn hears a fight from far off and sends its herd running.",  # Proposal (Herds)
 	"skyraider": "A pterosaur thief. It dives on your crystals and flies them to its nest: shoot it down and the pile drops.",  # Proposal (Scavengers)
-	"tyrant": "A tyrant of the old world, all teeth and hunger. When the sky burns, they roam.",  # Proposal
+	"tyrant": "A tyrant of the old world, all teeth and hunger. It swallows a summon whole and roars your ring still; burst it and the swallowed cut their way out.",  # Proposal
 	# --- Act XIV (temporary number): the Fern Basin ---
 	"bog_croc": "A crocodile that lies in the tar with only its eyes above it, then lunges at the edge of your ring.",  # Owner-approved proposal
 	"scarmaw_guard": "Scarmaw's alpha-guard: while she lives, every raptor you kill comes back to the great alpha. Kill her first.",  # Owner-approved proposal (Blood Up)
@@ -827,6 +831,9 @@ const DESCRIPTIONS: Dictionary = {
 	"scarmaw": "Scarmaw, the Great Raptor: the alpha of every pack in the basin. She hunts from the ferns.",  # Proposal
 	"ironbrow": "Old Ironbrow, the Horned Titan: he leads the stampede himself, and his charge breaks rock.",  # Proposal
 	"gravejaw": "Old Gravejaw, the Tyrant King: his roar calls every beast on the map, and he hunts only you.",  # Proposal
+	# --- Act XIV (temporary number): the Last Day ---
+	"stormwing": "A great pterosaur. Her wing gust blows your ring apart; she lands to peck, and then she can be hit.",  # Owner-approved proposal
+	"thunderwing": "Thunderwing, the Sky King: a giant pterosaur whose wing gusts clear the whole ring.",  # Owner-approved proposal (miniboss)
 }
 
 ## Sprite key of an entry whose art is not "<category folder>/<id>":
@@ -1182,6 +1189,9 @@ const ACHIEVEMENT_ICONS: Dictionary = {
 	"the_last_word": "ach_the_last_word",  # TUNING (not in GDD)
 	# --- Act XIV (temporary number): the Great Plain ---
 	"nothing_taken": "ach_nothing_taken",  # TUNING (not in GDD)
+	# --- Act XIV (temporary number): the Last Day ---
+	"trampled": "ach_trampled",  # TUNING (not in GDD)
+	"the_day_the_sky_fell": "ach_the_day_the_sky_fell",  # TUNING (not in GDD)
 }
 ## IconGlyph kind drawn when an achievement badge PNG is missing.
 const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
@@ -1269,6 +1279,9 @@ const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
 	"the_last_word": "revelation",
 	# --- Act XIV (temporary number): the Great Plain ---
 	"nothing_taken": "hoarders_bones",
+	# --- Act XIV (temporary number): the Last Day ---
+	"trampled": "thick_marrow",
+	"the_day_the_sky_fell": "meteor_call",
 }
 ## Screen title (TITLE tier).
 const TITLE: String = "Codex"  # TUNING (not in GDD)

@@ -48,4 +48,6 @@ const POSES: Dictionary = {
 	"primeval/scarmaw": {1: "leap"},  # TUNING (not in GDD) crouched to spring / in the air (BossScarmaw: the leap's windup and flight, the ambush lunge)
 	# --- Act XIV (temporary number): the Great Plain ---
 	"primeval/ironbrow": {1: "broken"},  # TUNING (not in GDD) one horn snapped off (BossIronbrow: every frame after the Break)
+	# --- Act XIV (temporary number): the Last Day ---
+	"primeval/gravejaw": {1: "roar"},  # TUNING (not in GDD) jaws wide, head up (BossGravejaw: the Roar's windup, at the Mound)
 }

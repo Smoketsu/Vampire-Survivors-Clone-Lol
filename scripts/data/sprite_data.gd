@@ -750,6 +750,13 @@ const FLAT_SIZES: Dictionary = {
 	"primeval/clubtail": 44.0,  # TUNING (not in GDD) titan, female (a beast): an ankylosaur, armour plates, a bone club tail (about 64 wide); walk strip
 	"primeval/mother_clubtail": 60.0,  # TUNING (not in GDD) Great Plain miniboss, female (a beast): an armoured matriarch (about 88 wide); walk strip
 	"primeval/ironbrow": 80.0,  # TUNING (not in GDD) Great Plain boss, male: a giant ceratopsian (about 112 wide); walk strip, pose 1 `_broken` (one horn snapped)
+	# --- Act XIV (temporary number): the Last Day (phase 2; art pending, PrimevalGlyphs / the boss's and the class's code shapes until then) ---
+	"primeval/stormwing": 44.0,  # TUNING (not in GDD) flier elite, female (a beast): a great pterosaur, a lava crest (about 72 wide); fly strip, `_landed` still
+	"primeval/thunderwing": 64.0,  # TUNING (not in GDD) Last Day miniboss, male: a giant pterosaur (about 112 wide); fly strip
+	"primeval/gravejaw": 104.0,  # TUNING (not in GDD) Last Day boss, male: the greatest tyrant, scarred, a lava glow in the throat (about 128 wide); walk strip, pose 1 `_roar`
+	"player/skywatcher": 56.0,  # TUNING (not in GDD) female (figure style): a violet star-robed dress, a bone astrolabe, a falling-star staff (about 38 wide); walk and idle strips
+	"summons/bonehorn": 34.0,  # TUNING (not in GDD) summon class (no sex, a skeleton): a skeletal horned charger, soul-teal eye sockets (about 40 wide); walk strip
+	"summons/fossil_tyrant": 44.0,  # TUNING (not in GDD) its evolution: the skeleton of a tyrant in soul-teal fire (about 52 wide); walk strip
 	"player/herd_warden": 56.0,  # TUNING (not in GDD) male: heavy violet robes over a bone-plated mantle, a ceratopsian skull shoulder piece, a horn-topped staff (about 42 wide); walk strip
 	"player/fern_huntress": 56.0,  # TUNING (not in GDD) female (figure style): violet hunting leathers, a violet fur-trimmed cloak, a raptor-skull headdress, a bone spear-staff with a soul flame (about 40 wide); walk and idle strips
 	"summons/ushabti_sentinel": 46.0,  # TUNING (not in GDD) summon class, the necromancer's stone servant (no sex) (about 20 wide)

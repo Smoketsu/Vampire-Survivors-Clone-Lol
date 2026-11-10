@@ -23,6 +23,7 @@
 ##   "frost_axe" Draugr Thane     DraugrThaneBehavior (Vigrid, the Hall of the Slain)
 ##   "reassemble" Ushabti Sentinel UshabtiSentinelBehavior (Act XII, temporary: the Hall of Two Truths)
 ##   "orbit_roll" Bound Ophan     BoundOphanBehavior (Act XIII, temporary: the Empyrean)
+##   "trample_charge" Bonehorn    BonehornBehavior (Act XIV, temporary: the Last Day)
 ## It creates / reuses the per-unit instance and builds the class-specific
 ## level-up card lines (AbilityManager._summon_offer()), so the shared code
 ## only ever talks to this file and the SummonBehavior base class.
@@ -101,6 +102,9 @@ static func for_unit(current: SummonBehavior, kind: String) -> SummonBehavior:
 		# --- Act XIII (temporary number): the Empyrean ---
 		"orbit_roll":
 			b = BoundOphanBehavior.new()  # The Bound Ophan.
+		# --- Act XIV (temporary number): the Last Day ---
+		"trample_charge":
+			b = BonehornBehavior.new()  # The Bonehorn.
 	if b != null:
 		b.kind = kind
 	return b
@@ -281,6 +285,14 @@ static func card_lines(cls: String, cur: Dictionary, nxt: Dictionary) -> PackedS
 			else:
 				_delta(out, "Roll damage", a, b, "roll_damage")
 				_delta(out, "Roll cooldown (s)", a, b, "roll_cooldown")
+		# --- Act XIV (temporary number): the Last Day ---
+		"trample_charge":
+			if a.is_empty():
+				out.append("Charges through a pack, then trots back")
+				out.append("Charge: %s dmg to every foe it tramples, every %ss" % [_f(b["charge_damage"]), _f(b["charge_cooldown"])])
+			else:
+				_delta(out, "Charge damage", a, b, "charge_damage")
+				_delta(out, "Charge cooldown (s)", a, b, "charge_cooldown")
 	return out
 
 

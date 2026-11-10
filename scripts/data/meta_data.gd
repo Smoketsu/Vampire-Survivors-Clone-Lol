@@ -470,7 +470,9 @@ const ACHIEVEMENT_ORDER := ["bone_legion", "heretics_bane", "dread_sovereign", "
 	# --- Act XIII (temporary number): the Empyrean ---
 	"the_last_word",
 	# --- Act XIV (temporary number): the Great Plain ---
-	"nothing_taken"]
+	"nothing_taken",
+	# --- Act XIV (temporary number): the Last Day ---
+	"trampled", "the_day_the_sky_fell"]
 
 ## Achievement definitions (GDD §9.4 "Example Achievement Unlocks"). Each
 ## achievement is tracked and recorded in the save and pays a one-time Soul
@@ -843,6 +845,22 @@ const ACHIEVEMENTS := {
 	# (owner answer, Nov 9, 2026).
 	"nothing_taken": {"display_name": "Nothing Taken", "description": "Reach the end of the Great Plain without losing a single crystal pile to a Skyraider",
 		"stat": "nothing_taken_runs", "goal": 1, "unlock": "The Hoarder's Bones passive", "bounty": 300},  # Owner-approved proposal; bounty TUNING (not in GDD) as Without Sin
+	# --- Act XIV (temporary number): the Last Day ---
+	# The Titans' achievement "Trampled" (owner-approved proposal: "a stampede
+	# kills 100 enemies in one run"; any Titans stage): a run whose stampedes
+	# killed at least PrimevalRulesData.TRAMPLED_KILLS enemies (the run stat
+	# trample_kills; MetaProgress counts the runs, lifetime trampled_runs). It
+	# unlocks the counter-passive Thick Marrow (owner answer, Nov 9, 2026).
+	"trampled": {"display_name": "Trampled", "description": "Let the stampedes kill 100 enemies in one run on an Age of Titans stage",
+		"stat": "trampled_runs", "goal": 1, "unlock": "The Thick Marrow passive", "bounty": 300},  # Owner-approved proposal; bounty TUNING (not in GDD) as Nothing Taken
+	# The Titans' finale achievement "The Day the Sky Fell" (owner-approved
+	# proposal: "reach the Extinction with no summon lost"): a Last Day run that
+	# reached the impact with an army raised and not one of its own summons
+	# lost (Extinction sets the run stat last_day_sky_fell; MetaProgress counts
+	# the runs, lifetime sky_fell_runs). It only records the clear until the
+	# reorder pass writes the act's epilogue part (docs/last_acts/PLAN.md).
+	"the_day_the_sky_fell": {"display_name": "The Day the Sky Fell", "description": "Reach the Extinction on the Last Day without losing a single summon",
+		"stat": "sky_fell_runs", "goal": 1, "unlock": "", "bounty": 500},  # Owner-approved proposal; bounty TUNING (not in GDD) as The Last Word (an act's finale)
 }
 
 # --- Content wave 2: B. Achievement rewards ---

@@ -236,7 +236,9 @@ const ORDER := ["grave_dominion", "necrotic_vigor", "dark_command", "soul_recycl
 	# --- Act XIV (temporary number): the Fern Basin ---
 	"pack_instinct",
 	# --- Act XIV (temporary number): the Great Plain ---
-	"calcified_hide", "hoarders_bones"]
+	"calcified_hide", "hoarders_bones",
+	# --- Act XIV (temporary number): the Last Day ---
+	"cosmic_dust", "petrified_horns", "thick_marrow"]
 
 ## Passives that only help summons (a "dead" level-up card while no summon
 ## class is owned, see AbilityManager.build_offers()).
@@ -306,7 +308,9 @@ const ARMY_PASSIVES := ["grave_dominion", "necrotic_vigor", "dark_command", "sou
 	# --- Act XII (temporary number): the Hall of Two Truths ---
 	"answering_words",
 	# --- Act XIII (temporary number): the Empyrean ---
-	"turning_bones"]
+	"turning_bones",
+	# --- Act XIV (temporary number): the Last Day ---
+	"petrified_horns", "thick_marrow"]
 
 # --- Act III: the Assembly Halls ---
 ## Overclock (paired with the Grave Drone): a summon class is "ranged" (and
@@ -387,7 +391,9 @@ const MINION_SPECIAL_SOURCES := ["bash", "abom_stomp", "rogue_dash", "gargoyle_s
 	# --- Act XII (temporary number): the Hall of Two Truths --- (the Ushabti Sentinel's and Eternal Guard's shockwaves, UshabtiSentinelBehavior)
 	"ushabti_reform", "eternal_guard_reform",
 	# --- Act XIII (temporary number): the Empyrean --- (the Bound Ophan's and Throne of Bones' rolls, BoundOphanBehavior)
-	"bound_ophan_roll", "throne_of_bones_roll"]
+	"bound_ophan_roll", "throne_of_bones_roll",
+	# --- Act XIV (temporary number): the Last Day --- (the Bonehorn's and Fossil Tyrant's charges, BonehornBehavior)
+	"bonehorn_charge", "fossil_tyrant_charge"]
 ## Unholy Resilience: enemy damage-source tags (CombatResolver.damage_unit
 ## `source`) that count as AREA or HOLY damage, tag -> category ("area" |
 ## "holy"; the category only splits the summary stats). Every other source
@@ -2551,6 +2557,69 @@ const PASSIVES := {
 			{"safe_radius": 260.0, "drop_after": 2.2},  # TUNING (not in GDD)
 			{"safe_radius": 280.0, "drop_after": 1.8},  # TUNING (not in GDD)
 			{"safe_radius": 300.0, "drop_after": 1.4},  # Owner-approved proposal: "within 300 px cannot be snatched" at full
+		],
+	},
+	# --- Act XIV (temporary number): the Last Day ---
+	# Cosmic Dust (Meteor Call's paired passive; owner-approved proposal:
+	# "Extinction Event (+ Cosmic Dust)"; unlocked with the spell by Old
+	# Gravejaw and offered on every stage). Own decision on its effect: the
+	# dust of the stars falls with every meteor: each strikes dust_bonus harder
+	# and dust_radius px wider (MeteorCall, the one read). Read only by Meteor
+	# Call: nothing without the spell.
+	"cosmic_dust": {
+		"display_name": "Cosmic Dust",  # Owner-approved proposal
+		"icon": "cosmic_dust",
+		"description": "Star dust falls with your meteors: Meteor Call strikes harder and wider.",
+		"labels": {"dust_bonus": ["Meteor Call damage", "pct"], "dust_radius": ["Meteor Call radius (px)", "num"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"dust_bonus": 0.06, "dust_radius": 2.0},  # TUNING (not in GDD)
+			{"dust_bonus": 0.12, "dust_radius": 4.0},  # TUNING (not in GDD)
+			{"dust_bonus": 0.18, "dust_radius": 6.0},  # TUNING (not in GDD)
+			{"dust_bonus": 0.24, "dust_radius": 8.0},  # TUNING (not in GDD)
+			{"dust_bonus": 0.30, "dust_radius": 10.0},  # TUNING (not in GDD)
+		],
+	},
+	# Petrified Horns (the Bonehorn's paired passive; own decision, the
+	# proposal names none; owner rule: every evolution needs its paired passive
+	# maxed; unlocked with the class by Old Gravejaw and offered on every
+	# stage). Its effect: the horns turn to stone: every charge of a Bonehorn /
+	# Fossil Tyrant strikes horns_damage harder and comes horns_haste sooner
+	# (BonehornBehavior, the one read). Nothing without the class.
+	"petrified_horns": {
+		"display_name": "Petrified Horns",  # Own decision
+		"icon": "petrified_horns",
+		"description": "Your chargers' horns turn to stone: the Bonehorn charges harder and more often.",
+		"labels": {"horns_damage": ["Bonehorn charge damage", "pct"], "horns_haste": ["Bonehorn charge recharge", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"horns_damage": 0.06, "horns_haste": 0.05},  # TUNING (not in GDD)
+			{"horns_damage": 0.12, "horns_haste": 0.10},  # TUNING (not in GDD)
+			{"horns_damage": 0.18, "horns_haste": 0.15},  # TUNING (not in GDD)
+			{"horns_damage": 0.24, "horns_haste": 0.20},  # TUNING (not in GDD)
+			{"horns_damage": 0.30, "horns_haste": 0.25},  # TUNING (not in GDD)
+		],
+	},
+	# The Age of Titans' counter-passive Thick Marrow (owner-approved proposal:
+	# "summons take less damage from trampling, charges and stomps"; unlocked
+	# by the achievement Trampled, owner answer Nov 9, 2026; offered only in the
+	# Titans act through its card row's "act"). The foundation's hook reads it:
+	# PrimevalRules.thick_marrow_mult() (x 1 - trample_cut on the trample, the
+	# bombs, the charges, the sweeps, the gusts, the swallow and the
+	# meteorites on the necromancer's summons).
+	"thick_marrow": {
+		"display_name": "Thick Marrow",  # Owner-approved proposal
+		"icon": "thick_marrow",
+		"description": "Your undead have thick bones: tramples, charges and stomps hurt them less.",
+		"labels": {"trample_cut": ["Less from tramples and charges", "pct"]},
+		"act": 14,  # Owner-approved: the act's counter-passives are offered only in this act (Unlocks.act_allows(); temporary number, the reorder renumbers)
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"trample_cut": 0.10},  # TUNING (not in GDD)
+			{"trample_cut": 0.18},  # TUNING (not in GDD)
+			{"trample_cut": 0.26},  # TUNING (not in GDD)
+			{"trample_cut": 0.33},  # TUNING (not in GDD)
+			{"trample_cut": 0.40},  # TUNING (not in GDD)
 		],
 	},
 }

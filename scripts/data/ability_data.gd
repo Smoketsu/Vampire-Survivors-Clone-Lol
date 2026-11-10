@@ -138,7 +138,9 @@ const SPELL_ORDER := ["shadow_bolt", "orb_shield", "shadow_blast",
 	# --- Act XIV (temporary number): the Fern Basin ---
 	"pack_leap",
 	# --- Act XIV (temporary number): the Great Plain ---
-	"stampede"]
+	"stampede",
+	# --- Act XIV (temporary number): the Last Day ---
+	"meteor_call"]
 
 ## Spell definitions.
 ##   display_name — UI name.
@@ -1307,6 +1309,29 @@ const SPELLS := {
 			{"damage": 43.0, "range": 340.0, "length": 380.0, "speed": 540.0, "radius": 26.0, "cooldown": 2.8},  # TUNING (not in GDD)
 			{"damage": 51.0, "range": 350.0, "length": 400.0, "speed": 540.0, "radius": 28.0, "cooldown": 2.6},  # TUNING (not in GDD)
 			{"damage": 60.0, "range": 360.0, "length": 420.0, "speed": 560.0, "radius": 30.0, "cooldown": 2.5},  # TUNING (not in GDD) a line through a pack, about Pack Leap's Lv5 on many foes
+		],
+	},
+	# --- Act XIV (temporary number): the Last Day ---
+	# Meteor Call (GDD §15.0 "Meteor Call, Extinction Event, Cosmic Dust and
+	# the Skywatcher"; owner-approved proposal: "a telegraphed meteor lands on
+	# the densest group"; unlocked by slaying Old Gravejaw before the impact,
+	# then offered on every stage). Every `cooldown` s, a foe within `range`
+	# px, a soul-teal circle of `radius` px (spell area widens it) shows on the
+	# densest group for `delay` s, then the meteor strikes every foe inside it
+	# once for `damage` and knocks it out. Logic: MeteorCall; fixed rules:
+	# MeteorCallData. Slow, heavy area damage on packs.
+	"meteor_call": {
+		"display_name": "Meteor Call",  # Owner-approved proposal
+		"icon": "meteor_call",
+		"description": "A telegraphed meteor falls on the densest group of foes.",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Meteor damage", "radius": "Radius (px)", "cooldown": "Cooldown (s)"},
+		"levels": [
+			{"damage": 44.0, "range": 360.0, "radius": 50.0, "delay": 0.9, "cooldown": 3.6},  # Owner-approved proposal: "a telegraphed meteor"; TUNING (not in GDD) the numbers
+			{"damage": 53.0, "range": 370.0, "radius": 53.0, "delay": 0.9, "cooldown": 3.4},  # TUNING (not in GDD)
+			{"damage": 63.0, "range": 380.0, "radius": 56.0, "delay": 0.85, "cooldown": 3.2},  # TUNING (not in GDD)
+			{"damage": 75.0, "range": 390.0, "radius": 60.0, "delay": 0.85, "cooldown": 3.0},  # TUNING (not in GDD)
+			{"damage": 88.0, "range": 400.0, "radius": 64.0, "delay": 0.8, "cooldown": 2.8},  # TUNING (not in GDD) a slow, heavy blow on a pack (Stampede's Lv5 60 on a line)
 		],
 	},
 }

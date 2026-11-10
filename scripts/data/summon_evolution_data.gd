@@ -89,7 +89,9 @@ const ORDER := ["death_knight", "lich", "profane_bishop",
 	# --- Act XII (temporary number): the Hall of Two Truths ---
 	"eternal_guard",
 	# --- Act XIII (temporary number): the Empyrean ---
-	"throne_of_bones"]
+	"throne_of_bones",
+	# --- Act XIV (temporary number): the Last Day ---
+	"fossil_tyrant"]
 
 ## Summon skill level every base class needs (user rule: Lv 5).
 const BASE_LEVEL_REQUIRED: int = 5  # TUNING (not in GDD) user rule
@@ -1133,6 +1135,43 @@ const EVOLUTIONS := {
 		"special_set": {
 			"roll_back": 1,  # The return pass through the pack.
 			"throne": 1,  # The evolution flag (its roll's source tag).
+		},
+	},
+	# --- Act XIV (temporary number): the Last Day ---
+	# Fossil Tyrant (owner-approved proposal: "the Bonehorn ... (evolution
+	# Fossil Tyrant)"; GDD §15.0 "The Bonehorn, Fossil Tyrant and Petrified
+	# Horns"): Bonehorn Lv 5 + Petrified Horns Lv 5 (a NEW passive, own
+	# decision, owner rule: maxed). The skeleton of a tyrant, risen in
+	# soul-teal fire (art summons/fossil_tyrant). It charges harder and wider,
+	# and where each charge ends it ROARS (BonehornBehavior reads these
+	# special_set keys, final):
+	#   tyrant      — the evolution flag (its charge's source tag, the roar);
+	#   roar_radius — px round it the roar stuns;
+	#   roar_stun   — s every foe in reach is stunned (bosses / elites less).
+	"fossil_tyrant": {
+		"mode": "transform",
+		"bases": ["bonehorn"],
+		"passive": "petrified_horns",
+		"passive_level": 5,  # Owner rule: every evolution needs its paired passive maxed
+		"display_name": "Fossil Tyrant",  # Owner-approved proposal
+		"plural": "Fossil Tyrants",
+		"icon": "fossil_tyrant",
+		"description": "The skeleton of a tyrant: it tramples through every pack and roars where it stops.",
+		"mult": {
+			"max_hp": 1.5,  # TUNING (not in GDD)
+			"damage": 1.3,  # TUNING (not in GDD)
+		},
+		"set": {
+			"radius": 16.0,  # TUNING (not in GDD) Bonehorn 12 (~52 x 44 px sprite)
+		},
+		"special_mult": {
+			"charge_damage": 1.4,  # TUNING (not in GDD)
+			"charge_rim": 1.5,  # TUNING (not in GDD) wider jaws
+		},
+		"special_set": {
+			"tyrant": 1,  # The evolution flag (its charge's source tag, the roar).
+			"roar_radius": 80.0,  # TUNING (not in GDD) px
+			"roar_stun": 0.8,  # TUNING (not in GDD) s
 		},
 	},
 }

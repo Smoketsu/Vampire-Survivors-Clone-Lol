@@ -25,7 +25,8 @@
 ##                     bombs, ...), each "source you/summons" (so a balance
 ##                     pass sees the rules too, not only the kinds)
 ## Phase 2 adds one line per stage system here (each stage in its own block):
-## the Fern Basin's are FernBasinReport's, the Great Plain's GreatPlainReport's.
+## the Fern Basin's are FernBasinReport's, the Great Plain's GreatPlainReport's,
+## the Last Day's (and the Extinction's) LastDayReport's.
 ## Read-only: it never changes the run.
 class_name PrimevalReport
 extends RefCounted
@@ -62,6 +63,8 @@ static func print_lines(game: Game, st: Dictionary) -> void:
 	FernBasinReport.stage_lines(game, st)
 	# --- Act XIV (temporary number): the Great Plain --- (its stage, Old Ironbrow; GreatPlainReport)
 	GreatPlainReport.stage_lines(game, st)
+	# --- Act XIV (temporary number): the Last Day --- (its stage, the Extinction, Old Gravejaw; LastDayReport)
+	LastDayReport.stage_lines(game, st)
 
 
 ## The "primeval damage" line: every damage source to the necromancer

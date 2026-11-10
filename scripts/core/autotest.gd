@@ -1790,6 +1790,8 @@ func finish(summary: Dictionary) -> void:
 	FernBasinReport.item_lines(game, st)  # Pack Leap, Pack Instinct (only when taken; the stage's own lines are PrimevalReport's).
 	# --- Act XIV (temporary number): the Great Plain ---
 	GreatPlainReport.item_lines(game, st)  # Stampede, Calcified Hide, Hoarder's Bones (only when taken; the stage's own lines are PrimevalReport's).
+	# --- Act XIV (temporary number): the Last Day ---
+	LastDayReport.item_lines(game, st)  # Meteor Call, Cosmic Dust, Petrified Horns, Thick Marrow, the Bonehorn (only when taken; the stage's own lines are PrimevalReport's).
 	if game.enemies.boss is BossSeraphine:
 		print("[autotest] seraphine: %s" % BossSeraphine.summary_line(st))
 	var fired := game.enemies.stage.fired

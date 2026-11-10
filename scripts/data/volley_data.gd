@@ -221,6 +221,9 @@ const CLASSES := {
 	# --- Act XIII (temporary number): the Empyrean ---
 	"bound_ophan": {"trigger": "special", "every": 1, "pattern": "ring", "counts": [5, 7], "speed": 260.0,
 		"life": 0.45, "share": 0.3, "pierce": 1, "radius": 3.5, "style": "orb", "color": Color(0.45, 0.95, 0.85)},  # TUNING (not in GDD) a ring of soul-fire eyes where a roll ends
+	# --- Act XIV (temporary number): the Last Day ---
+	"bonehorn": {"trigger": "special", "every": 1, "pattern": "ring", "counts": [5, 7], "speed": 260.0,
+		"life": 0.45, "share": 0.3, "pierce": 1, "radius": 3.5, "style": "shard", "color": Color(0.92, 0.90, 0.80)},  # TUNING (not in GDD) a burst of bone shards where a charge ends
 }
 
 ## Summon evolution id -> its showpiece volley (replaces the class volley once evolved;
@@ -296,6 +299,9 @@ const EVOLVED := {
 	# --- Act XIII (temporary number): the Empyrean ---
 	"throne_of_bones": {"trigger": "special", "every": 1, "pattern": "ring", "counts": [10], "speed": 300.0,
 		"life": 0.5, "share": 0.3, "pierce": 2, "radius": 4.0, "style": "orb", "color": Color(0.45, 0.95, 0.85)},  # TUNING (not in GDD) a full ring of soul-fire eyes where each roll ends
+	# --- Act XIV (temporary number): the Last Day ---
+	"fossil_tyrant": {"trigger": "special", "every": 1, "pattern": "ring", "counts": [10], "speed": 300.0,
+		"life": 0.5, "share": 0.3, "pierce": 2, "radius": 4.0, "style": "shard", "color": Color(0.92, 0.90, 0.80)},  # TUNING (not in GDD) a full ring of bone shards with each roar
 }
 
 # --- Spell echoes (every owned spell from LEVEL_ON) --------------------------------------
@@ -433,6 +439,9 @@ const SPELLS := {
 	# --- Act XIV (temporary number): the Great Plain ---
 	"stampede": {"every": 2, "clock": "cooldown", "aim": "nearest", "pattern": "fan", "counts": [3, 4, 6], "spread": 16.0, "speed": 300.0,
 		"life": 0.5, "share": 0.3, "pierce": 2, "radius": 3.0, "style": "shard", "color": Color(0.45, 0.95, 0.85)},  # TUNING (not in GDD) a fan of spirit horns after every other cast (StampedeData.SPIRIT)
+	# --- Act XIV (temporary number): the Last Day ---
+	"meteor_call": {"every": 2, "clock": "cooldown", "aim": "strongest", "pattern": "ring", "counts": [6, 8, 10], "speed": 260.0,
+		"life": 0.5, "share": 0.3, "pierce": 1, "radius": 3.0, "style": "orb", "color": Color(0.45, 0.95, 0.85)},  # TUNING (not in GDD) a ring of star-fire after every other cast (MeteorCallData.FIRE)
 }
 ## Range (px) within which a spell echo looks for its target (no target, no echo).
 const SPELL_RANGE: float = 340.0  # TUNING (not in GDD)
