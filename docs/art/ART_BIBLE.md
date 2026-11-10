@@ -3256,3 +3256,23 @@ of light, no features, `art_source/host/voice_unveiled.txt`). Review page genera
 Made by `art_source/titans/gen_phase2.py` (prompts + raw API images), `make_phase2.py` (pixelate + `prepare_sprite.py`, stills, props, strips), `titans_floors.py`; rigs "Act XIV slot,
 phase 2" in `walk_cycle.py`. Known flaws: the Scarmaw leap and the Ironbrow `_broken` poses read close to their bases (the model kept the pose; the Ironbrow's horn stump is the
 orange X crack), the two women's figure style is faint at 36-38 px wide (cloak and hat dominate), the Bog Croc / Gravejaw tar-dark hides sit near the dark floors' value, the Herd-Warden is 44 px wide (box 42).
+
+### Act XV slot: the Turning Year (art and audio, foundation, Nov 2026)
+
+The Wild's look (GDD §15.0 "The Turning Year art and audio (foundation)"; approved concepts `art_source/concepts/final5/year_*.png`): **moss, bark,
+blossom pink, amber leaf and frost white**, with the blight a dead grey that reads strongly against the green; never crimson (the wildfire is orange-red),
+never the UI gold (the leaves are amber), never the necromancer's violet. Ink `#14100C` (`wild_ink`). **Palette:** seven one-hue ramps `wild_moss`, `wild_bark`,
+`wild_blossom`, `wild_leaf`, `wild_frost`, `wild_blight`, `wild_fire` (tools/palette.json; `prepare_sprite.py` folder `wild/` takes these, the figures add `skin` through
+`KEY_RAMPS`; the values are the `WILD_*` constants of `palette.gd`). **Sprites** (`assets/sprites/wild/`, heights in `FLAT_SIZES`): the ten shared kinds (Thornling,
+Dryad, Treant, Corpse-Bloom + `_dead`, Fae Knight, Winter Fae, Great Stag, Wild Rider, Will-o'-Wisp, Spore Mother), one API image each (the lineup crop plus a
+style sprite as references, prompts beside the raws in `art_source/year/`), all but the Thornling and the Wisp through `pixelate_source.py` first; 8-frame walk
+strips (`legs` rigs for the Thornling, Treant, Knight, Stag and Rider; `robe` for the three women; the Wisp glides as a `hover` rig, its still padded with 2 empty
+rows), and 24-frame idle strips for the Dryad, Winter Fae and Spore Mother (bust boxes checked with `tools/bust_check.py`); the Winter Fae's two frost wings beat
+(`wings`, walk and idle). Also 3 obstacle kinds (the oak and the standing stone in two sizes `_s` / `_l`, the stone with `_v`; the thorn thicket `_m`), 16 icon badges
+on the approved violet / gold frames, 3 floors (`tiles/wild_greenwood`, `wild_fae`, `wild_tree`: seamless 128 px, neutral and darker than the Titans' so the four
+`WildRulesData.SEASON_TINTS` read; ferns, fallen leaves and roots / petals and a toadstool ring / bark roots and cracks), 4 markers (`wild_roots`, `wild_sprout`,
+`wild_blight` tiling, `wild_season_wheel`) and 7 effect files (`fx/wild_smoke_line`, `wild_fire_front`, `wild_blizzard`, `wild_snowfall`, `wild_leaves`,
+`wild_thicket_burn`, `wild_bury`) drawn by `art_source/year/year_tiles.py` (seeded, reproducible). Not made (phase 2 in `docs/year/ART_MANIFEST.md`): the hunt hound,
+huntsman, winter prince, gardener, the three bosses, the three characters, the Ossuary Oak summons, the zone floors and grove / hedge / root obstacles. Tools: `gen_prompts.py`,
+`gen_sheets.py`, `make_art.py`, `make_props.py`, `year_tiles.py` in `art_source/year/`; 17 API images (about $0.25, ledger `docs/art/generation_ledger.csv`).
+Known flaws: the Dryad is 36 px wide (box 34); the Winter Fae and the Wild Rider read bluish-grey; the dead Corpse-Bloom is brown rather than grey.

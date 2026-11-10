@@ -163,3 +163,12 @@ The constants are already in `scripts/data/palette.gd` (`WILD_*`); the ramps mus
   (thorns crackling to ash), `bury` (earth closing, a deep thud), `spring_horn` (Spring Returns: every bird and leaf at
   once, a vast green chord).
 - Art and audio agents run no Godot (PLAN.md); the lead's integration imports their files and the owner hears the loop.
+
+## Status (art + audio agent, foundation, Nov 2026)
+
+Made (ART_BIBLE "Act XV slot: the Turning Year"): the palette ramps; the ten shared kinds with walk / glide strips and the Dryad, Winter Fae and Spore Mother idle strips
+(`wild/thornling` ... `wild/spore_mother`, `wild/corpse_bloom_dead`); obstacles `wild_oak_s` / `_l`, `wild_stone_s` / `_l` (+ `_v`) and `wild_thicket_m` (the stages' two `sizes` pick
+`_s` / `_l`); all 16 icons; floors `wild_greenwood`, `wild_fae`, `wild_tree`; markers `wild_roots`, `wild_sprout`, `wild_blight`, `wild_season_wheel`; effects `wild_smoke_line`, `wild_fire_front`,
+`wild_blizzard`, `wild_snowfall`, `wild_leaves`, `wild_thicket_burn`, `wild_bury`; the score (music key `wildwood`) and the pack, wired. Not made (phase 2): `wild/hunt_hound`, `huntsman`,
+`winter_prince`, `gardener_of_roots`; the three bosses and their poses / `_crown` / `_mask` / `_burial`; the three characters; the Ossuary Oak and World-Root Warden; the zone floors and
+`wild_fairy_ring`; `wild_grove_tree`, `wild_rose_hedge`, `wild_great_root`. The score uses the default heartbeat job instead of a swelling "drums" (the jobs cannot swell inside one loop).
