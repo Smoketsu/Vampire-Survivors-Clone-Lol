@@ -97,7 +97,7 @@ const BOSS := {
 	"charge_speed": 340.0,  # TUNING (not in GDD) px/s (the herd's front runs at Herds run_speed behind him)
 	"charge_len": 460.0,  # TUNING (not in GDD) px at most (through the ring)
 	"charge_damage": 11.0,  # TUNING (not in GDD) to the necromancer, before the time scaling
-	"charge_damage_summon": 12.0,  # TUNING (not in GDD) to each summon he crosses, before the time scaling
+	"charge_damage_summon": 10.0,  # TUNING (not in GDD) to each summon he crosses, before the time scaling (first pass 12: 9.8k on the army bot's summons, seed 7)
 	"charge_stun": 1.2,  # TUNING (not in GDD) s each summon he crosses is stunned
 	"charge_knock": 40.0,  # TUNING (not in GDD) px a summon he crosses is thrown aside
 	"rock_stun": 3.0,  # Owner-approved proposal: "missing into a rock stuns him for 3 s"

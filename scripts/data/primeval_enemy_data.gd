@@ -345,9 +345,9 @@ const ENEMIES := {
 	# STUCK stuck_time s (the counterplay: Grave Step aside). HornchargerKit.
 	"horncharger": {
 		"display_name": "Horncharger",
-		"max_hp": 240.0,  # TUNING (not in GDD) a heavy (between the Bog Croc and the Tyrant)
+		"max_hp": 200.0,  # TUNING (not in GDD) a heavy (between the Bog Croc and the Tyrant; first pass 240)
 		"move_speed": 46.0,  # TUNING (not in GDD) px/s walking
-		"damage": 9.0,  # TUNING (not in GDD) a horn in reach, before the time scaling
+		"damage": 6.0,  # TUNING (not in GDD) a horn in reach, before the time scaling (first passes 9, 7)
 		"attack_interval": 1.5,  # TUNING (not in GDD) s
 		"attack_range": 10.0,  # TUNING (not in GDD) px
 		"radius": 16.0,  # TUNING (not in GDD) px (~64 x 48 px sprite)
@@ -365,14 +365,14 @@ const ENEMIES := {
 		"kit": "horncharger",
 		"group": "titans",
 		"charge_first": 2.5,  # TUNING (not in GDD) s after it comes on
-		"charge_every": 7.0,  # TUNING (not in GDD) s between two charges
+		"charge_every": 9.0,  # TUNING (not in GDD) s between two charges (first pass 7: the naive bot died at 6:49 on seed 7, the Horncharger its top damage)
 		"charge_trigger": 260.0,  # TUNING (not in GDD) px: a body this close starts a charge
 		"charge_windup": 0.9,  # Owner-approved proposal: "telegraphed"; TUNING (not in GDD) s
 		"charge_len": 240.0,  # TUNING (not in GDD) px at most
 		"charge_speed": 330.0,  # TUNING (not in GDD) px/s
-		"charge_damage": 9.0,  # TUNING (not in GDD) to each summon it crosses, before the time scaling
-		"charge_player": 8.0,  # TUNING (not in GDD) to the necromancer, before the time scaling
-		"charge_stun": 1.0,  # Owner-approved proposal: "stuns summons"; TUNING (not in GDD) s
+		"charge_damage": 7.0,  # TUNING (not in GDD) to each summon it crosses, before the time scaling (first pass 9)
+		"charge_player": 4.0,  # TUNING (not in GDD) to the necromancer, before the time scaling (first passes 8, 5)
+		"charge_stun": 0.6,  # Owner-approved proposal: "stuns summons"; TUNING (not in GDD) s (first passes 1.0, 0.8)
 		"charge_knock": 30.0,  # TUNING (not in GDD) px a summon it crosses is thrown aside
 		"stuck_time": 2.0,  # Owner-approved proposal: "stuck in a rock for 2 s on a miss"
 	},  # The Horncharger.
@@ -388,7 +388,7 @@ const ENEMIES := {
 	# shrugs off the first 5 of every hit. ClubtailKit.
 	"clubtail": {
 		"display_name": "Clubtail",
-		"max_hp": 200.0,  # TUNING (not in GDD) a heavy (her flat armour is the rest of her toughness)
+		"max_hp": 160.0,  # TUNING (not in GDD) a heavy (her flat armour is the rest of her toughness; first pass 200)
 		"move_speed": 40.0,  # TUNING (not in GDD) px/s; slow
 		"damage": 8.0,  # TUNING (not in GDD) a bite in reach, before the time scaling
 		"attack_interval": 1.6,  # TUNING (not in GDD) s
@@ -412,8 +412,8 @@ const ENEMIES := {
 		"sweep_every": 5.0,  # TUNING (not in GDD) s between two sweeps
 		"sweep_windup": 0.7,  # TUNING (not in GDD) s of telegraph
 		"sweep_radius": 54.0,  # TUNING (not in GDD) px round her
-		"sweep_damage": 7.0,  # TUNING (not in GDD) to each summon in reach, before the time scaling
-		"sweep_player": 7.0,  # TUNING (not in GDD) to the necromancer, before the time scaling
-		"sweep_knock": 60.0,  # Owner-approved proposal: "knocks summons back"; TUNING (not in GDD) px
+		"sweep_damage": 5.0,  # TUNING (not in GDD) to each summon in reach, before the time scaling (first pass 7: 7.7k on the army bot's summons, seed 7)
+		"sweep_player": 5.0,  # TUNING (not in GDD) to the necromancer, before the time scaling (first pass 7)
+		"sweep_knock": 40.0,  # Owner-approved proposal: "knocks summons back"; TUNING (not in GDD) px (first pass 60)
 	},  # The Clubtail.
 }

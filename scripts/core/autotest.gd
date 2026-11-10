@@ -912,6 +912,8 @@ func _summon_wants_move(u: SummonedUnit) -> bool:
 func _enemy_wants_move(e: Enemy) -> bool:
 	if e.engaged_timer > 0.0 or (e.kit != null and e.kit.is_busy()):
 		return false  # Fighting a blocker, or standing in a Sanctum windup / cast.
+	if e.kit is HerdBeastKit:
+		return false  # Act XIV: a herd beast never advances; grazing is a slow drift by design (Herds; a running herd is busy).
 	var sig := game.enemies.boss as BossSigrun  # Valgard's boss, else null.
 	if sig != null and not e.is_boss and sig.holmgang != null and sig.holmgang.active \
 			and sig.holmgang.overlaps(e.position, e.radius + Holmgang.ENEMY_BAND + Holmgang.OUT_GAP + 4.0):

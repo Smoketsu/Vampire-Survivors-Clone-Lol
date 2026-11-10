@@ -36,10 +36,10 @@ const BOSS_TIME: float = 1020.0  # TUNING (not in GDD) 17:00, as on every stage
 ## Enemy max-HP multiplier of this stage on top of the shared time scaling
 ## (slot XIV sits above the Concord: the Crash Site's 2.15 and up; the step is
 ## in HP).
-const ENEMY_HP_MULT: float = 2.3  # TUNING (not in GDD) phase 2 (the stub's 2.4): a step over the Fern Basin's 2.2
+const ENEMY_HP_MULT: float = 2.2  # TUNING (not in GDD) phase 2 (the stub's 2.4, first passes 2.3, 2.25: the naive bot died on seeds 3, 7 and 11): the Fern Basin's 2.2; the heavies, Mother Clubtail and the watering hole are this stage's step up
 ## Enemy damage multiplier of this stage on top of the shared time scaling
 ## (the Crash Site's 1.5 and up).
-const ENEMY_DAMAGE_MULT: float = 1.45  # TUNING (not in GDD) phase 2 (the stub's 1.7): a step over the Fern Basin's 1.4
+const ENEMY_DAMAGE_MULT: float = 1.4  # TUNING (not in GDD) phase 2 (the stub's 1.7, a first pass 1.45): the Fern Basin's 1.4; the heavies (Hornchargers, Clubtails) and Mother Clubtail are this stage's extra weight
 ## Elapsed game seconds from which the two multipliers apply to regular
 ## enemies (the boss always gets them).
 const ENEMY_MULT_FROM: float = 420.0  # TUNING (not in GDD) as Acts III to XIII (7:00)
@@ -86,7 +86,7 @@ const ZONES := [
 		"blurb": "Red rock walls, and the herds run between them",
 		"ground": {"style": "canyon", "base": Color(0.30, 0.18, 0.11), "line": Color(0.38, 0.24, 0.14),
 			"accent": Color(0.52, 0.23, 0.06), "trim": Palette.PRIMEVAL_TAR},  # TUNING (not in GDD) red rock (the lava ramp darkened)
-		"arena": {"density": 0.26, "clear_radius": 220.0, "layout_seed": 4160,  # TUNING (not in GDD) the narrow lanes
+		"arena": {"density": 0.2, "clear_radius": 220.0, "layout_seed": 4160,  # TUNING (not in GDD) the narrow lanes (first pass 0.26: the naive bot died in the Canyon on seeds 3 and 7)
 			"kinds": {"primeval_canyon_wall": {"weight": 0.6, "shape": "rect", "sizes": [88.0], "short": 14.0},
 				"primeval_rock": {"weight": 0.4, "shape": "circle", "sizes": [15.0]}}}},  # TUNING (not in GDD)
 	{"start": 900.0, "numeral": "IV", "name": "The Bone Gate", "id": "bone_gate",  # Owner-approved proposal (zones)
@@ -166,27 +166,28 @@ const RECKONING_OBJECTIVE: String = "THE STAMPEDE OF ASH: the sky burns and ever
 
 ## Continuous spawning segments (keys as GraveyardStage.SEGMENTS): a ramp
 ## of the shared kinds with the plain's heavies (the Horncharger and the
-## Clubtail) from 3:00. The packs come in the EVENTS (a pack is a group that
+## Clubtail) from 5:00 (one Horncharger comes alone at 3:30). The packs come in the EVENTS (a pack is a group that
 ## arrives together), the herds from Herds and the watering hole, never from
-## these weights.
+## these weights. The heavies weigh little (a first pass at 0.02-0.03 piled six
+## of each up by 12:00 and broke the army bot's ring on seed 7).
 const SEGMENTS := [
 	{"start": 0.0, "rate": 1.4, "max_alive": 30,  # TUNING (not in GDD)
-		"weights": {"scuttler": 0.95, "frill_spitter": 0.05},
+		"weights": {"scuttler": 0.96, "frill_spitter": 0.04},
 		"objective": "The Dust Flats: the beasts are hungry, and your army smells of meat"},
 	{"start": 60.0, "rate": 1.7, "max_alive": 40,  # TUNING (not in GDD)
-		"weights": {"scuttler": 0.91, "frill_spitter": 0.06, "skyraider": 0.03},
+		"weights": {"scuttler": 0.925, "frill_spitter": 0.045, "skyraider": 0.03},
 		"objective": "Skyraiders dive on your crystals: shoot one down and its pile drops. Near you, nothing is taken"},
 	{"start": 180.0, "rate": 2.0, "max_alive": 50,  # TUNING (not in GDD)
-		"weights": {"scuttler": 0.87, "frill_spitter": 0.06, "skyraider": 0.03, "horncharger": 0.02, "clubtail": 0.02},
-		"objective": "Hornchargers charge in a line: step aside, and let them run into a rock"},
+		"weights": {"scuttler": 0.925, "frill_spitter": 0.045, "skyraider": 0.03},
+		"objective": "The herds stampede when a fight comes close: shelter behind a rock, or lure the hunters into their path"},
 	{"start": 300.0, "rate": 2.3, "max_alive": 60,  # TUNING (not in GDD)
-		"weights": {"scuttler": 0.85, "frill_spitter": 0.06, "skyraider": 0.04, "horncharger": 0.025, "clubtail": 0.025},
-		"objective": "The Watering Hole: the herds gather to drink, and a fight near the water sets them running"},
+		"weights": {"scuttler": 0.903, "frill_spitter": 0.045, "skyraider": 0.04, "horncharger": 0.006, "clubtail": 0.006},
+		"objective": "The Watering Hole: the herds gather to drink, and a fight near the water sets them running. Hornchargers charge in a line: let them hit a rock"},
 	{"start": 600.0, "rate": 2.7, "max_alive": 72,  # TUNING (not in GDD)
-		"weights": {"scuttler": 0.84, "frill_spitter": 0.06, "skyraider": 0.04, "horncharger": 0.03, "clubtail": 0.03},
+		"weights": {"scuttler": 0.899, "frill_spitter": 0.045, "skyraider": 0.04, "horncharger": 0.008, "clubtail": 0.008},
 		"objective": "The Canyon: the walls make the lanes narrow. Shelter behind the rock when the herds run"},
 	{"start": 900.0, "rate": 3.0, "max_alive": 84,  # TUNING (not in GDD)
-		"weights": {"scuttler": 0.83, "frill_spitter": 0.06, "skyraider": 0.05, "horncharger": 0.03, "clubtail": 0.03},
+		"weights": {"scuttler": 0.889, "frill_spitter": 0.045, "skyraider": 0.05, "horncharger": 0.008, "clubtail": 0.008},
 		"objective": "The Bone Gate: the whole plain hunts you"},
 	{"start": BOSS_TIME, "rate": 2.0, "max_alive": 56,  # TUNING (not in GDD) thinner during the boss fight (as the Fern Basin)
 		"weights": {"scuttler": 0.9, "frill_spitter": 0.06, "skyraider": 0.04},
@@ -208,19 +209,19 @@ const EVENTS := [
 	{"time": 150.0, "type": "wave", "banner": "Skyraiders circle over your crystals!", "formation": "arc",  # TUNING (not in GDD)
 		"groups": [{"kind": "skyraider", "count": 3, "elite": false}, {"kind": "scuttler", "count": 12, "elite": false}]},
 	{"time": 210.0, "type": "wave", "banner": "Hornchargers lower their horns: step out of the line!", "formation": "line",  # TUNING (not in GDD)
-		"groups": [{"kind": "horncharger", "count": 2, "elite": false}, {"kind": "scuttler", "count": 10, "elite": false}]},
+		"groups": [{"kind": "horncharger", "count": 1, "elite": false}, {"kind": "scuttler", "count": 10, "elite": false}]},  # TUNING (not in GDD) first pass 2
 	{"time": 270.0, "type": "wave", "banner": "A bigger pack, and Frill-Spitters behind it!", "formation": "arc",  # TUNING (not in GDD)
 		"groups": [{"kind": "razorclaw", "count": 5, "elite": false}, {"kind": "frill_spitter", "count": 3, "elite": false}]},
 	{"time": 360.0, "type": "wave", "banner": "Clubtails lumber in: their armour shrugs off the small blows!", "formation": "arc",  # TUNING (not in GDD)
-		"groups": [{"kind": "clubtail", "count": 3, "elite": false}, {"kind": "razorclaw", "count": 4, "elite": false}]},
+		"groups": [{"kind": "clubtail", "count": 2, "elite": false}, {"kind": "razorclaw", "count": 4, "elite": false}]},  # TUNING (not in GDD) first pass 3 Clubtails
 	{"time": 460.0, "type": "wave", "banner": "The Razorclaws come back with Skyraiders above them!", "formation": "arc",  # TUNING (not in GDD)
 		"groups": [{"kind": "razorclaw", "count": 6, "elite": false}, {"kind": "skyraider", "count": 3, "elite": false}]},
-	{"time": 600.0, "type": "wave", "banner": "A Tyrant walks out of the heat haze!", "formation": "line",  # TUNING (not in GDD)
-		"groups": [{"kind": "tyrant", "count": 1, "elite": false}, {"kind": "scuttler", "count": 12, "elite": false}]},
+	{"time": 600.0, "type": "wave", "banner": "A pack hunts you down the Canyon's lanes!", "formation": "arc",  # TUNING (not in GDD) the stub's Tyrant dropped (with the Canyon's heavies and Mother Clubtail it broke the naive bot's army before 12:00)
+		"groups": [{"kind": "razorclaw", "count": 5, "elite": false}, {"kind": "scuttler", "count": 12, "elite": false}]},
 	{"time": 700.0, "type": "herd_mother", "banner": "MOTHER CLUBTAIL! While her herd grazes by her, she shrugs off your blows: drive it off!",  # Owner-approved proposal (miniboss); 8:20 left
 		"kind": GreatPlainEnemyData.MOTHER, "mother_dist": 260.0, "elite": false,  # TUNING (not in GDD) px she comes in ahead of the necromancer
 		"herd": ["duckbill", "longneck", "duckbill"],  # TUNING (not in GDD) the herd she guards
-		"escort": [{"kind": "clubtail", "count": 2}]},  # TUNING (not in GDD)
+		"escort": [{"kind": "scuttler", "count": 8}]},  # TUNING (not in GDD) first pass 2 Clubtails (with her they broke the army bot's priest-less ring on seed 7)
 	{"time": 780.0, "type": "wave", "banner": "The great pack of the plain!", "formation": "ring",  # TUNING (not in GDD)
 		"groups": [{"kind": "razorclaw", "count": 8, "elite": false}, {"kind": "frill_spitter", "count": 4, "elite": false}]},
 	{"time": 860.0, "type": "wave", "banner": "Every flier on the plain dives at once!", "formation": "ring",  # TUNING (not in GDD)
