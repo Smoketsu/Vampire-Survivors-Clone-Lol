@@ -165,8 +165,8 @@ const ENEMIES := {
 		"display_name": "Frill-Spitter",
 		"max_hp": 30.0,  # TUNING (not in GDD) ranged
 		"move_speed": 50.0,  # TUNING (not in GDD) px/s
-		"damage": 5.0,  # TUNING (not in GDD) one venom bolt, before the time scaling
-		"attack_interval": 2.6,  # TUNING (not in GDD) s
+		"damage": 4.0,  # TUNING (not in GDD) one venom bolt, before the time scaling (balance pass 1: was 5, the top killer of the necromancer; now the plain Archer's 4)
+		"attack_interval": 3.2,  # TUNING (not in GDD) s (balance pass 1: was 2.6; a lobbed glob, slower than an arrow)
 		"attack_range": 250.0,  # TUNING (not in GDD) px
 		"radius": 9.0,  # TUNING (not in GDD) px (~40 px sprite)
 		"armor": 0.05,  # TUNING (not in GDD)

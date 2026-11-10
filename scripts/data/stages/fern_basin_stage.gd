@@ -174,25 +174,26 @@ const RECKONING_OBJECTIVE: String = "THE STAMPEDE OF ASH: the sky burns and ever
 ## Continuous spawning segments (keys as GraveyardStage.SEGMENTS): a ramp
 ## of the shared kinds. The packs come in the EVENTS (a pack is
 ## a group that arrives together), the herds from Herds, never from these
-## weights.
+## weights. The Frill-Spitters stay at 4.5% (balance pass 1: they rose to 7%,
+## more than the Great Plain's, and were the top killer of the necromancer).
 const SEGMENTS := [
 	{"start": 0.0, "rate": 1.4, "max_alive": 30,  # TUNING (not in GDD)
 		"weights": {"scuttler": 0.96, "frill_spitter": 0.04},
 		"objective": "The Fern Floor: the beasts are hungry, and your army smells of meat"},
 	{"start": 60.0, "rate": 1.7, "max_alive": 40,  # TUNING (not in GDD)
-		"weights": {"scuttler": 0.92, "frill_spitter": 0.05, "skyraider": 0.03},
+		"weights": {"scuttler": 0.925, "frill_spitter": 0.045, "skyraider": 0.03},
 		"objective": "Skyraiders dive on your crystals: shoot one down and its pile drops. Near you, nothing is taken"},
 	{"start": 180.0, "rate": 2.0, "max_alive": 50,  # TUNING (not in GDD)
-		"weights": {"scuttler": 0.91, "frill_spitter": 0.06, "skyraider": 0.03},
+		"weights": {"scuttler": 0.925, "frill_spitter": 0.045, "skyraider": 0.03},
 		"objective": "The herds stampede when a fight comes close: shelter behind a rock, or lure the hunters into their path"},
 	{"start": 300.0, "rate": 2.3, "max_alive": 60,  # TUNING (not in GDD)
-		"weights": {"scuttler": 0.9, "frill_spitter": 0.06, "skyraider": 0.04},
+		"weights": {"scuttler": 0.915, "frill_spitter": 0.045, "skyraider": 0.04},
 		"objective": "The Tar Seep: tar slows everyone, and holds a grazing giant fast. Bog Crocs lie in the pools"},
 	{"start": 600.0, "rate": 2.7, "max_alive": 72,  # TUNING (not in GDD)
-		"weights": {"scuttler": 0.89, "frill_spitter": 0.07, "skyraider": 0.04},
+		"weights": {"scuttler": 0.915, "frill_spitter": 0.045, "skyraider": 0.04},
 		"objective": "The River Ford: a fallen giant rises as a Fossil Giant for you. A pack circles, holds, then rushes: kill the alpha"},
 	{"start": 900.0, "rate": 3.0, "max_alive": 84,  # TUNING (not in GDD)
-		"weights": {"scuttler": 0.88, "frill_spitter": 0.07, "skyraider": 0.05},
+		"weights": {"scuttler": 0.905, "frill_spitter": 0.045, "skyraider": 0.05},
 		"objective": "The Nesting Hollow: the whole basin hunts you"},
 	{"start": BOSS_TIME, "rate": 2.0, "max_alive": 56,  # TUNING (not in GDD) thinner during the boss fight (the stub's 2.4 / 64: the army bot's lowest HP came in Scarmaw's fight on seed 11)
 		"weights": {"scuttler": 0.9, "frill_spitter": 0.06, "skyraider": 0.04},
