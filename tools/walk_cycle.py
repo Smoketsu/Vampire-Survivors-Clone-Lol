@@ -1122,6 +1122,28 @@ RIGS = {
     "primeval/duckbill": dict(mode="legs", hip=40, back=(0, 24), front=(24, 48), rigid=[], spread=2, lift=2, dip=1),
     "primeval/skyraider": dict(mode="hover", bob=0, parts=[dict(kind="flap", box=(0, 22, 0, 22), root=22, amp=4)]),
     "primeval/tyrant": dict(mode="legs", hip=52, back=(0, 43), front=(43, 86), rigid=[], spread=2, lift=2, dip=1),
+    # --- Act XIV slot, phase 2 (Age of Titans art): the Fern Basin, Great Plain and Last Day beasts, the three violet necromancers, the Bonehorn family ---
+    # Beasts stride like the foundation ones (hind legs left of the middle, front legs right); the Stormwing and Thunderwing flap like the Skyraider
+    # (the wing on the left of the still hinged at the body: owner, Host round: wings must move). The two women carry bust boxes and idle strips.
+    "primeval/bog_croc": dict(mode="legs", hip=20, back=(0, 22), front=(22, 44), rigid=[], spread=1, lift=1, dip=1),
+    "primeval/ironjaw": dict(mode="legs", hip=43, back=(0, 36), front=(36, 72), rigid=[], spread=2, lift=2, dip=1),
+    "primeval/scarmaw_guard": dict(mode="legs", hip=29, back=(0, 16), front=(16, 32), rigid=[], spread=2, lift=2, dip=1),
+    "primeval/scarmaw": dict(mode="legs", hip=43, back=(0, 30), front=(30, 60), rigid=[], spread=2, lift=2, dip=1),
+    "primeval/horncharger": dict(mode="legs", hip=34, back=(0, 27), front=(27, 54), rigid=[], spread=2, lift=2, dip=1),
+    "primeval/clubtail": dict(mode="legs", hip=31, back=(0, 24), front=(24, 48), rigid=[], spread=2, lift=1, dip=1),
+    "primeval/mother_clubtail": dict(mode="legs", hip=43, back=(0, 34), front=(34, 68), rigid=[], spread=2, lift=1, dip=1),
+    "primeval/ironbrow": dict(mode="legs", hip=57, back=(0, 46), front=(46, 92), rigid=[], spread=2, lift=2, dip=1),
+    "primeval/gravejaw": dict(mode="legs", hip=75, back=(0, 51), front=(51, 102), rigid=[], spread=3, lift=3, dip=1),
+    "primeval/stormwing": dict(mode="hover", bob=0, parts=[dict(kind="flap", box=(0, 28, 0, 30), root=28, amp=5)]),
+    "primeval/thunderwing": dict(mode="hover", bob=0, parts=[dict(kind="flap", box=(0, 40, 0, 46), root=40, amp=7)]),
+    "player/fern_huntress": dict(mode="robe", hip=40, rigid=[(27, 38, 0, None)], sway=1, dip=1,
+                                 bust=(10, 25, 17, 25, 1), bust_exclude=[(0, 10, 12, 50), (25, 38, 12, 50)]),
+    "player/skywatcher": dict(mode="robe", hip=40, rigid=[(26, 36, 0, None)], sway=1, dip=1,
+                              bust=(9, 23, 17, 25, 1), bust_exclude=[(0, 9, 12, 50), (23, 36, 12, 50)]),
+    "player/herd_warden": dict(mode="robe", hip=40, rigid=[(33, 44, 0, None)], sway=1, dip=1),
+    "summons/bonehorn": dict(mode="legs", hip=24, back=(0, 20), front=(20, 40), rigid=[], spread=2, lift=2, dip=1),
+    "summons/fossil_tyrant": dict(mode="legs", hip=31, back=(0, 24), front=(24, 48), rigid=[], spread=2, lift=2, dip=1),
+    "summons/fossil_giant": dict(mode="legs", hip=34, back=(0, 24), front=(24, 48), rigid=[], spread=2, lift=2, dip=1),
 }
 
 # Skins (SkinData, cosmetic): skin sprite key -> its character's sprite key. A skin keeps

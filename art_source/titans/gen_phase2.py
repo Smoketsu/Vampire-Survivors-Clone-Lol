@@ -82,7 +82,7 @@ def main() -> None:
             txt, out = HERE / (uid + ".txt"), HERE / "raw" / (uid + ".png")
             txt.write_text(text(uid))
             if uid in CHARS:
-                refs = ["--ref", str(ROOT / "assets/sprites/player/necromancer.png"), "--ref", str(ROOT / "assets/sprites/player/" + ("wither_witch.png" if uid != "herd_warden" else "bone_oracle.png"))]
+                refs = ["--ref", str(ROOT / "assets/sprites/player/necromancer.png"), "--ref", str(ROOT / "assets/sprites/player" / ("wither_witch.png" if uid != "herd_warden" else "bone_oracle.png"))]
             else:
                 rname = (SUMMONS.get(uid) or U[uid])[2]
                 refs = ["--ref", str(HERE / "refs" / "style_beast.png")]
