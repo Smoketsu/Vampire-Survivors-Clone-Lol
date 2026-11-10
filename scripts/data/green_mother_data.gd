@@ -83,8 +83,8 @@ const BOSS := {
 	"display_name": "The Green Mother",
 	"max_hp": MAX_HP,
 	"move_speed": 30.0,  # TUNING (not in GDD) px/s (a colossus grown from the tree: slow)
-	"damage": 14.0,  # TUNING (not in GDD) a root-hand in reach, before the time scaling
-	"attack_interval": 1.5,  # TUNING (not in GDD) s
+	"damage": 9.0,  # TUNING (not in GDD) a root-hand in reach, before the time scaling (first pass 14: 250 on the army bot in one fight, its lowest HP 28, seed 3)
+	"attack_interval": 1.8,  # TUNING (not in GDD) s (first pass 1.5)
 	"attack_range": 18.0,  # TUNING (not in GDD) px
 	"radius": 34.0,  # TUNING (not in GDD) px (the sprite 128x144)
 	"armor": 0.2,  # TUNING (not in GDD)
