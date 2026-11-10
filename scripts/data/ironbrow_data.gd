@@ -59,14 +59,14 @@ const ENDING_ANNOUNCE := ["THE HERD BREAKS", "Old Ironbrow, the Horned Titan, fa
 const LATE_ANNOUNCE := ["THE HERD BREAKS", "Old Ironbrow falls as the sky burns.", "The plain runs without its leader now, straight into the fire."]  # TUNING (not in GDD) the words
 
 ## Old Ironbrow's base max HP (x the boss HP multiplier and the stage's HP multiplier).
-const MAX_HP: float = 11000.0  # TUNING (not in GDD) Scarmaw's 10,500 and a step (x the stage's 2.3)
+const MAX_HP: float = 10000.0  # TUNING (not in GDD) under Scarmaw's 10,500: his herd and his charges are the fight (x the stage's 2.2; first pass 11,000: not slain on seed 3)
 
 ## Old Ironbrow's design row.
 const BOSS := {
 	"display_name": "Old Ironbrow, the Horned Titan",
 	"max_hp": MAX_HP,
 	"move_speed": 48.0,  # TUNING (not in GDD) px/s; a titan's walk
-	"damage": 13.0,  # TUNING (not in GDD) a horn in reach, before the time scaling
+	"damage": 11.0,  # TUNING (not in GDD) a horn in reach, before the time scaling (first pass 13)
 	"attack_interval": 1.4,  # TUNING (not in GDD) s
 	"attack_range": 16.0,  # TUNING (not in GDD) px
 	"radius": 26.0,  # TUNING (not in GDD) px (the sprite 112x80)
@@ -85,20 +85,20 @@ const BOSS := {
 	"reward_xp": 600,  # TUNING (not in GDD) as Scarmaw
 	"reward_crystals": 26,  # TUNING (not in GDD)
 	"slow_resist": 0.5,  # TUNING (not in GDD) like every boss
-	"recover_time": 0.6,  # TUNING (not in GDD) s he stands after a charge
+	"recover_time": 1.2,  # TUNING (not in GDD) s he stands after a charge (the army's window; first pass 0.6)
 	"advance_range": 460.0,  # TUNING (not in GDD) px; farther than this he strides faster
 	"advance_speed_mult": 1.8,  # TUNING (not in GDD)
 	"arrive_banner": "THE HERD: Old Ironbrow leads the stampede at you! Make him charge into a rock!",  # TUNING (not in GDD)
 	# The Charge.
 	"charge_first": 5.0,  # TUNING (not in GDD) s after he arrives
-	"charge_every": 7.5,  # TUNING (not in GDD) s between two charges
+	"charge_every": 8.5,  # TUNING (not in GDD) s between two charges (first pass 7.5)
 	"charge_trigger": 520.0,  # TUNING (not in GDD) px to the necromancer for a charge to start
 	"charge_windup": 1.0,  # TUNING (not in GDD) s he lowers his horns (the line shows)
 	"charge_speed": 340.0,  # TUNING (not in GDD) px/s (the herd's front runs at Herds run_speed behind him)
-	"charge_len": 460.0,  # TUNING (not in GDD) px at most (through the ring)
+	"charge_len": 380.0,  # TUNING (not in GDD) px at most (through the ring; first pass 460 took him too far from the army: not slain on seed 3)
 	"charge_damage": 11.0,  # TUNING (not in GDD) to the necromancer, before the time scaling
-	"charge_damage_summon": 10.0,  # TUNING (not in GDD) to each summon he crosses, before the time scaling (first pass 12: 9.8k on the army bot's summons, seed 7)
-	"charge_stun": 1.2,  # TUNING (not in GDD) s each summon he crosses is stunned
+	"charge_damage_summon": 8.0,  # TUNING (not in GDD) to each summon he crosses, before the time scaling (first passes 12, 10: 12k on the army bot's summons, seed 7)
+	"charge_stun": 0.9,  # TUNING (not in GDD) s each summon he crosses is stunned (first pass 1.2)
 	"charge_knock": 40.0,  # TUNING (not in GDD) px a summon he crosses is thrown aside
 	"rock_stun": 3.0,  # Owner-approved proposal: "missing into a rock stuns him for 3 s"
 	# The Herd.
