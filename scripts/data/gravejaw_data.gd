@@ -69,7 +69,7 @@ const BOSS := {
 	"max_hp": MAX_HP,
 	"move_speed": 50.0,  # TUNING (not in GDD) px/s; a titan's walk
 	"damage": 5.0,  # TUNING (not in GDD) a bite in reach, before the time scaling (passes 12, 7: his hunt reaches the necromancer, and the bites in reach took the army bot to 55 HP, the Bonehorn and the priest-less bots to their deaths, seed 7)
-	"attack_interval": 1.6,  # TUNING (not in GDD) s (first pass 1.4)
+	"attack_interval": 2.4,  # TUNING (not in GDD) s (passes 1.4, 1.6: hunting only the necromancer he stays in reach of him; the Bonehorn bot fell to 26 HP, seed 7)
 	"attack_range": 18.0,  # TUNING (not in GDD) px
 	"radius": 28.0,  # TUNING (not in GDD) px (the sprite 128x104)
 	"armor": 0.25,  # TUNING (not in GDD) a scarred hide
