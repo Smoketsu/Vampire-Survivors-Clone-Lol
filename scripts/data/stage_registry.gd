@@ -534,6 +534,13 @@
 ##                        "winter_prince" event); ground "fae_court" is its
 ##                        FaeCourtGround (four zone floors over the act's fae
 ##                        style). A STAGE "seasons" may carry "wildfire_every".
+## --- Act XV (temporary number): the World-Tree ---
+##   world_tree         — WorldTreeDirector config (WorldTreeStage.WORLD_TREE:
+##                        the "gardener" event's objective); ground
+##                        "world_tree" is its WorldTreeGround (four zone floors
+##                        over the act's tree style). Its RECKONING may carry
+##                        "first_spring" (FirstSpring: the ending once the Green
+##                        Mother is beaten).
 class_name StageRegistry
 extends RefCounted
 

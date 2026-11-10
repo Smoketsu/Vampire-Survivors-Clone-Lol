@@ -79,7 +79,10 @@ const CLASS_ORDER := ["warrior", "archer", "mage", "mender", "warder", "bishop",
 		"bound_ophan",
 		# --- Act XIV (temporary number): the Last Day ---
 		# Unlockable (UnlockData: slaying Old Gravejaw), so a fresh save never offers it.
-		"bonehorn"]
+		"bonehorn",
+		# --- Act XV (temporary number): the World-Tree ---
+		# Unlockable (UnlockData: slaying the Green Mother), so a fresh save never offers it.
+		"ossuary_oak"]
 ## The four GDD §4.2 summon ROLES ("all 4 classes": the Dread Sovereign
 ## achievement), in SynergyManager.classes_met() format: an entry that is an
 ## Array means "any one of these", so after the priest split either priest
@@ -1670,6 +1673,60 @@ const UNITS := {
 			"charge_knockback": 160.0,  # Owner-approved proposal: "trampling and knocking back"; TUNING (not in GDD) px/s impulse along the run, divided by the foe's mass
 		},
 	},
+	# --- Act XV (temporary number): the World-Tree ---
+	# The Ossuary Oak (owner-approved proposal: "Finale summon class the Ossuary
+	# Oak: a slow tree of bone that roots in place as a blocker and lashes
+	# everything around it with thorns (evolution World-Root Warden)"; GDD §15.0
+	# "The Ossuary Oak, World-Root Warden and Heartwood"): a slow tree of bone
+	# with soul-teal knots, no sex, the necromancer's own (art
+	# summons/ossuary_oak). A physical blocker on the Bone Ring's front posts; its
+	# class special ("root_lash", OssuaryOakBehavior) works on every stage: with
+	# foes round it, it roots in place (root_mass) and lashes every foe within
+	# lash_radius px every lash_cooldown s. Unlockable (UnlockData), then
+	# offered on every stage.
+	"ossuary_oak": {
+		"display_name": "Ossuary Oak",  # Owner-approved proposal
+		"plural": "Ossuary Oaks",
+		"description": "A slow tree of bone that roots in place and lashes every foe around it.",  # Card text: one short sentence (owner rule).
+		"max_hp": 320.0,  # TUNING (not in GDD) a blocker of bone (Bone Golem 420, Abomination 260)
+		"damage": 14.0,  # TUNING (not in GDD) a branch blow (melee)
+		"attack_interval": 1.6,  # TUNING (not in GDD) s
+		"attack_range": 16.0,  # TUNING (not in GDD) edge-to-edge reach (px)
+		"move_speed": 44.0,  # Owner-approved proposal: "slow"; TUNING (not in GDD) px/s
+		"rejoin_speed_mult": 1.7,  # TUNING (not in GDD) optional key: catch-up and return speed factor (as the Golem)
+		"radius": 16.0,  # TUNING (not in GDD) px (~48 x 56 px sprite); <= UnitData.MAX_BLOCK_RADIUS
+		"acquisition_range": 150.0,  # TUNING (not in GDD) px; an anchor does not chase far
+		"replenish_interval": 20.0,  # TUNING (not in GDD) s
+		"band_min": 45.0,  # TUNING (not in GDD) with the frontline (px)
+		"band_max": 95.0,  # TUNING (not in GDD)
+		"w_pursuit": 1.0,  # TUNING (not in GDD)
+		"w_formation": 0.35,  # TUNING (not in GDD)
+		"w_separation": 0.8,  # TUNING (not in GDD)
+		"w_threat": 0.0,  # TUNING (not in GDD) a tree never shies away
+		"attack_profile": "melee",
+		"target_profile": "fortress",  # The nearest foes first (an anchor fights what reaches it).
+		"windup": 0.3,  # TUNING (not in GDD) s
+		"projectile_speed": 0.0,
+		"splash_radius": 0.0,
+		"heal_amount": 0.0,
+		"kite_distance": 0.0,
+		"heal_role_priority": 0.8,  # TUNING (not in GDD)
+		"block_radius": 20.0,  # Owner-approved proposal: "as a blocker"; TUNING (not in GDD) px (the Abomination 20)
+		"block_mass": 8.0,  # TUNING (not in GDD) the Abomination 8; rooted it holds with root_mass
+		"engaged_speed_mult": 0.45,  # TUNING (not in GDD) touching enemies move at 45%
+		"formation": "front",  # Owner-approved proposal: a blocker on the ring
+		"capacity_bonus_mult": 0.2,  # TUNING (not in GDD) Grave Dominion V: +1 (a 1-2 body class)
+		"behavior": "root_lash",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"special": {
+			"root_reach": 90.0,  # TUNING (not in GDD) px; foes this close make it root (not area-scaled)
+			"lash_trigger": 2,  # TUNING (not in GDD) foes within root_reach to root (an elite / the boss alone also counts)
+			"root_mass": 300.0,  # Owner-approved proposal: "roots in place as a blocker"; TUNING (not in GDD) block mass while rooted
+			"lash_radius": 70.0,  # Owner-approved proposal: "lashes everything around it with thorns"; TUNING (not in GDD) px (area-scaled)
+			"lash_damage": 12.0,  # TUNING (not in GDD) to every foe in reach, each lash
+			"lash_cooldown": 2.4,  # TUNING (not in GDD) s between two lashes
+		},
+	},
 }
 
 ## Summon-ability progression, one entry per skill level (index 0 = level 1).
@@ -1966,6 +2023,15 @@ const LEVELS := {
 		{"count": 2, "hp_bonus": 0.2, "special_bonus": 0.25},
 		{"count": 3, "hp_bonus": 0.25, "special_bonus": 0.3, "special_area": 0.15},
 		{"count": 3, "hp_bonus": 0.3, "damage_bonus": 0.25, "special_bonus": 0.5, "special_area": 0.2, "special_haste": 0.2},
+	],
+	# --- Act XV (temporary number): the World-Tree ---
+	# TUNING (not in GDD): 1 -> 2 Ossuary Oaks; harder thorns, then wider and quicker lashes.
+	"ossuary_oak": [
+		{"count": 1},
+		{"count": 1, "hp_bonus": 0.2, "special_bonus": 0.2},
+		{"count": 2, "hp_bonus": 0.2, "special_bonus": 0.25},
+		{"count": 2, "hp_bonus": 0.3, "special_bonus": 0.35, "special_area": 0.15},
+		{"count": 2, "hp_bonus": 0.4, "damage_bonus": 0.25, "special_bonus": 0.5, "special_area": 0.2, "special_haste": 0.2},
 	],
 }
 

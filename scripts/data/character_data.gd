@@ -130,7 +130,9 @@ const ORDER := ["gravecaller", "umbral_warden", "voidcaller", "bone_oracle", "fa
 	# --- Act XV (temporary number): the Greenwood ---
 	"horned_herald",
 	# --- Act XV (temporary number): the Fae Court ---
-	"changeling_princess"]
+	"changeling_princess",
+	# --- Act XV (temporary number): the World-Tree ---
+	"gravegardener"]
 ## The default character (RunConfig, fresh saves, the autotest): today's game.
 const DEFAULT_ID: String = "gravecaller"
 ## Spell level that unlocks a character (owner rule: reach Lv 5 with its spell
@@ -220,6 +222,8 @@ const STAT_LABELS := {
 ##                           Act XV, temporary)
 ##   glamour_copies          Glamour._cast (copies more in every cast;
 ##                           Act XV, temporary)
+##   root_and_rot_radius_bonus RootAndRot._cast (share more radius of every
+##                           ring; Act XV, temporary)
 const INNATE_KEYS := ["orb_projectile_destroy", "blast_echo_delay", "blast_echo_damage", "spear_shard_max",
 	"spear_shard_cooldown", "summon_corpses", "grace_share", "grace_targets", "grace_range", "contagion_range",
 	"contagion_duration", "death_mark_slow", "bone_wall_duration", "soul_chains_extra_jumps", "wither_rot",
@@ -305,7 +309,9 @@ const INNATE_KEYS := ["orb_projectile_destroy", "blast_echo_delay", "blast_echo_
 	# --- Act XV (temporary number): the Greenwood ---
 	"wild_hunt_riders",
 	# --- Act XV (temporary number): the Fae Court ---
-	"glamour_copies"]
+	"glamour_copies",
+	# --- Act XV (temporary number): the World-Tree ---
+	"root_and_rot_radius_bonus"]
 
 ## Orbit radius (px) of the Bone Oracle's Ossuary Ward shards around him.
 const SHARD_ORBIT_RADIUS: float = 27.0  # TUNING (not in GDD)
@@ -1466,6 +1472,31 @@ const CHARACTERS := {
 		"stats": {"max_hp": -5.0, "move_speed": 0.04},  # TUNING (not in GDD) a quick, slight changeling
 		"sprite": "player/changeling_princess",
 		"tint": Color(0.98, 0.84, 0.94),  # TUNING (not in GDD) a pale blossom pink over the violet (her art replaces it)
+		"starts_unlocked": false,
+	},
+	# --- Act XV (temporary number): the World-Tree ---
+	# The Gravegardener (Root and Rot's character; owner-approved proposal
+	# "Rewards": "The Green Mother | Root and Rot ... | The Gravegardener (female,
+	# figure style)"; docs/last_acts/PLAN.md: every playable character is a
+	# necromancer of the act's theme in violet): FEMALE, in the figure-redesign
+	# style, fully clothed: a violet gardener's robe with an apron of roots, a
+	# bone trowel-staff with a sprouting soul seed, a wide-brimmed violet hat (art
+	# player/gravegardener, walk and idle strips, docs/year/ART_MANIFEST.md). Root
+	# and Rot must be unlocked (the Green Mother) before she can be earned, by the
+	# usual Lv 5 rule. Own decision on her innate (the proposal names none): Green
+	# Thumb, her rings grow 25% wider (RootAndRot._cast()).
+	"gravegardener": {
+		"display_name": "The Gravegardener",  # Owner-approved proposal
+		"title": "She tends the dead as a gardener tends seeds, and waits for spring.",
+		"spell": "root_and_rot",
+		"innate": {
+			"id": "green_thumb", "name": "Green Thumb",
+			"description": "Root and Rot's rings grow 25% wider.",
+			"values": {"root_and_rot_radius_bonus": 0.25},  # TUNING (not in GDD) share more radius
+		},
+		"stats": {"max_hp": 5.0, "move_speed": -0.03},  # TUNING (not in GDD) a patient gardener: sturdy, unhurried
+		"sprite": "player/gravegardener",
+		"tint": Color(0.84, 0.94, 0.78),  # TUNING (not in GDD) a pale leaf green over the violet (her art replaces it)
 		"starts_unlocked": false,
 	},
 }

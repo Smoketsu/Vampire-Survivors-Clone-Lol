@@ -439,6 +439,14 @@ const UNLOCKS := {
 	"glamour": {"type": "spell", "boss": "summer_queen", "text": "Slay the Summer Queen at the Fae Court to unlock."},  # Owner-approved proposal
 	"changeling": {"type": "passive", "boss": "summer_queen", "text": "Slay the Summer Queen at the Fae Court to unlock."},  # Glamour's paired passive (owner-approved proposal), unlocked with it
 	"deadwood": {"type": "passive", "achievement": "a_fair_bargain", "text": "Earn A Fair Bargain: accept every bargain the Summer Queen offers and still win."},  # Owner answer (Nov 2026): A Fair Bargain unlocks Deadwood
+	# --- Act XV (temporary number): the World-Tree ---
+	# The Green Mother's fall (owner-approved proposal "Rewards": Root and Rot is
+	# the Green Mother's) with its paired passive, and the finale's summon class
+	# (the Ossuary Oak) with its paired passive, offered on every stage.
+	"root_and_rot": {"type": "spell", "boss": "green_mother", "text": "Defeat the Green Mother at the World-Tree to unlock."},  # Owner-approved proposal
+	"compost_heart": {"type": "passive", "boss": "green_mother", "text": "Defeat the Green Mother at the World-Tree to unlock."},  # Root and Rot's paired passive (owner-approved proposal), unlocked with it
+	"ossuary_oak": {"type": "class", "boss": "green_mother", "text": "Defeat the Green Mother at the World-Tree to unlock."},  # Owner-approved proposal: the finale's reward
+	"heartwood": {"type": "passive", "boss": "green_mother", "text": "Defeat the Green Mother at the World-Tree to unlock."},  # Its paired passive (own decision), unlocked with it
 	"bonehorn": {"type": "class", "boss": "gravejaw", "text": "Slay Old Gravejaw on the Last Day, before the meteor falls, to unlock."},  # Owner-approved proposal: the finale's reward
 	"petrified_horns": {"type": "passive", "boss": "gravejaw", "text": "Slay Old Gravejaw on the Last Day, before the meteor falls, to unlock."},  # Its paired passive (own decision), unlocked with it
 	"thick_marrow": {"type": "passive", "achievement": "trampled", "text": "Earn Trampled: let the stampedes kill 100 enemies in one run."},  # Owner answer (Nov 9, 2026): Trampled unlocks Thick Marrow

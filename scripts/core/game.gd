@@ -616,6 +616,9 @@ func _ready() -> void:
 		# --- Act XV (temporary number): the Fae Court ---
 		"fae_court":
 			ground = FaeCourtGround.new()  # The Fae Court's four zone floors (FaeCourtStage.ZONES).
+		# --- Act XV (temporary number): the World-Tree ---
+		"world_tree":
+			ground = WorldTreeGround.new()  # The World-Tree's four zone floors (WorldTreeStage.ZONES).
 		_:
 			ground = Ground.new()
 	add_child(ground)
@@ -1296,8 +1299,9 @@ func wild_rules() -> WildRules:
 ## when he arrives, so his Reclaiming turns the summons he marks into his shades
 ## through the same HordeDirector.claim_fallen() path (GDD §15.0 "The Asphodel
 ## Underworld (Act IV phase 2)"). An Act II stage still creates `claims` from
-## its STAGE key in _ready() exactly as before (this returns that one); no other
-## caller exists, so Acts I and III never create it.
+## its STAGE key in _ready() exactly as before (this returns that one). Its one
+## other caller is the World-Tree's Green Mother (Act XV, temporary: the Last
+## Claim's Ancient Eye slot, LastClaim), so Acts I and III never create it.
 func claims_rules() -> EyeClaims:
 	if claims == null:
 		claims = EyeClaims.new(self)

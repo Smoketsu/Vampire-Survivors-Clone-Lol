@@ -87,6 +87,8 @@ static func draw_summon(ci: CanvasItem, kind: String, o: Vector2, r: float, flas
 			_draw_bone_wheel(ci, o, r, flash, kind == "throne_of_bones")  # Act XIII (temporary): the Bound Ophan.
 		"bonehorn", "fossil_tyrant":
 			_draw_bone_charger(ci, o, r, flash, kind == "fossil_tyrant")  # Act XIV (temporary): the Bonehorn.
+		"ossuary_oak", "world_root_warden":
+			_draw_bone_oak(ci, o, r, flash, kind == "world_root_warden")  # Act XV (temporary): the Ossuary Oak.
 		_:
 			return SpireGlyphs.draw_summon(ci, kind, o, r, flash)  # Act II: Ul-Thalos summons (false when unknown).
 	return true
@@ -124,6 +126,20 @@ static func _draw_bone_charger(ci: CanvasItem, o: Vector2, r: float, flash: bool
 		ci.draw_rect(Rect2(o + Vector2(r * 0.3, -r * 1.0), Vector2(r * 0.25, r * 0.5)), Glyphs._c(Palette.BONE, flash))  # The frill.
 		for k in 2:
 			ci.draw_rect(Rect2(o + Vector2(r * 1.0, -r * (0.6 - 0.25 * float(k))), Vector2(r * 0.55, 2.0)), Glyphs._c(Palette.BONE, flash))  # A horn.
+
+
+## The Ossuary Oak (Act XV, temporary: the World-Tree) without its art: a bone
+## trunk, branches of bone and soul-teal knots; `warden` gives the World-Root
+## Warden's wider crown (disc textures and rects).
+static func _draw_bone_oak(ci: CanvasItem, o: Vector2, r: float, flash: bool, warden: bool) -> void:
+	SpriteBank.draw_disc(ci, o, r * 0.85, Glyphs._c(Glyphs.OUTLINE, flash))
+	ci.draw_rect(Rect2(o + Vector2(-r * 0.25, -r * 0.6), Vector2(r * 0.5, r * 1.4)), Glyphs._c(Palette.BONE, flash))  # The trunk of bone.
+	var n := 5 if warden else 3
+	for k in n:
+		var a := -PI * 0.5 + (float(k) - float(n - 1) * 0.5) * 0.45
+		ci.draw_rect(Rect2(o + Vector2(cos(a), sin(a)) * r * 0.9 - Vector2(1.5, 1.5), Vector2(3.0, r * 0.5)), Glyphs._c(Palette.BONE, flash))  # A branch.
+	SpriteBank.draw_disc(ci, o + Vector2(0.0, -r * 0.2), r * 0.15, Glyphs._c(RootAndRotData.ROT, flash))  # A soul-teal knot.
+	SpriteBank.draw_disc(ci, o + Vector2(0.0, r * 0.3), r * 0.12, Glyphs._c(RootAndRotData.ROT, flash))
 
 
 ## Draws UI icon `kind` centred at `c` with half-size `s`. Returns false if

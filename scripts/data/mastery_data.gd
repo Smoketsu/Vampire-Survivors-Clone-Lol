@@ -63,6 +63,8 @@ const CLASSES: Array[String] = [
 	"bound_ophan",
 	# --- Act XIV (temporary number): the Last Day ---
 	"bonehorn",
+	# --- Act XV (temporary number): the World-Tree ---
+	"ossuary_oak",
 ]  # TUNING (not in GDD) every offerable summon class of all nine acts
 
 ## Evolved-only class -> the classes whose mastery it uses (the best level
@@ -112,6 +114,8 @@ const FLAVOUR := {
 	"bound_ophan": "A wheel of heaven that turns for you now.",  # TUNING (not in GDD) the Celestial Host's finale class
 	# --- Act XIV (temporary number): the Last Day ---
 	"bonehorn": "The old herds run again, and they run for you.",  # TUNING (not in GDD) the Age of Titans' finale class
+	# --- Act XV (temporary number): the World-Tree ---
+	"ossuary_oak": "A tree of bone that roots where your dead were planted.",  # TUNING (not in GDD) the Turning Year's finale class (the campaign's)
 }  # TUNING (not in GDD) flavour only
 
 ## Autotest profile "max" owns every level of every mastery; "none" and "mid"

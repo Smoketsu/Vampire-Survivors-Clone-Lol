@@ -91,7 +91,9 @@ const ORDER := ["death_knight", "lich", "profane_bishop",
 	# --- Act XIII (temporary number): the Empyrean ---
 	"throne_of_bones",
 	# --- Act XIV (temporary number): the Last Day ---
-	"fossil_tyrant"]
+	"fossil_tyrant",
+	# --- Act XV (temporary number): the World-Tree ---
+	"world_root_warden"]
 
 ## Summon skill level every base class needs (user rule: Lv 5).
 const BASE_LEVEL_REQUIRED: int = 5  # TUNING (not in GDD) user rule
@@ -1172,6 +1174,43 @@ const EVOLUTIONS := {
 			"tyrant": 1,  # The evolution flag (its charge's source tag, the roar).
 			"roar_radius": 80.0,  # TUNING (not in GDD) px
 			"roar_stun": 0.8,  # TUNING (not in GDD) s
+		},
+	},
+	# --- Act XV (temporary number): the World-Tree ---
+	# World-Root Warden (owner-approved proposal: "the Ossuary Oak ... (evolution
+	# World-Root Warden)"; GDD §15.0 "The Ossuary Oak, World-Root Warden and
+	# Heartwood"): Ossuary Oak Lv 5 + Heartwood Lv 5 (a NEW passive, own
+	# decision, owner rule: maxed). A warden of the world's roots in bone (art
+	# summons/world_root_warden). It lashes harder and wider, and every foe its
+	# lash strikes is held by its roots (OssuaryOakBehavior reads these
+	# special_set keys, final):
+	#   warden    — the evolution flag (its lash's source tag, the roots);
+	#   root_slow — 0..1 slow on every foe the lash strikes;
+	#   root_time — s the roots hold it.
+	"world_root_warden": {
+		"mode": "transform",
+		"bases": ["ossuary_oak"],
+		"passive": "heartwood",
+		"passive_level": 5,  # Owner rule: every evolution needs its paired passive maxed
+		"display_name": "World-Root Warden",  # Owner-approved proposal
+		"plural": "World-Root Wardens",
+		"icon": "world_root_warden",
+		"description": "A warden of the world's roots: its lashes strike wider and root every foe they hit.",
+		"mult": {
+			"max_hp": 1.5,  # TUNING (not in GDD)
+			"damage": 1.3,  # TUNING (not in GDD)
+		},
+		"set": {
+			"radius": 18.0,  # TUNING (not in GDD) Ossuary Oak 16 (~56 x 64 px sprite)
+		},
+		"special_mult": {
+			"lash_damage": 1.4,  # TUNING (not in GDD)
+			"lash_radius": 1.3,  # TUNING (not in GDD)
+		},
+		"special_set": {
+			"warden": 1,  # The evolution flag (its lash's source tag, the roots).
+			"root_slow": 0.5,  # TUNING (not in GDD) 0..1
+			"root_time": 1.2,  # TUNING (not in GDD) s
 		},
 	},
 }

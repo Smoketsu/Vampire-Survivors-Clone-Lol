@@ -54,4 +54,6 @@ const POSES: Dictionary = {
 	"wild/stag_king": {1: "horn"},  # TUNING (not in GDD) the hunting horn raised to his lips (BossStagKing: while a Hunt rides)
 	# --- Act XV (temporary number): the Fae Court ---
 	"wild/summer_queen": {1: "bargain"},  # TUNING (not in GDD) a hand held out with the bargain (BossSummerQueen: while an offer waits)
+	# --- Act XV (temporary number): the World-Tree ---
+	"wild/green_mother": {1: "cast", 2: "burial"},  # TUNING (not in GDD) arms raised with a season (BossGreenMother: just after the Turning casts) / hands pressed into the earth (just after a burial)
 }

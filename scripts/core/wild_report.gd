@@ -67,6 +67,8 @@ static func print_lines(game: Game, st: Dictionary) -> void:
 	GreenwoodReport.stage_lines(game, st)  # The sacred groves, the Huntsman, the kinds' specials, Scorched Earth, the Stag King.
 	# --- Act XV (temporary number): the Fae Court ---
 	FaeCourtReport.stage_lines(game, st)  # The endless summer, the fairy rings, the Winter Prince, the Summer Queen, A Fair Bargain.
+	# --- Act XV (temporary number): the World-Tree ---
+	WorldTreeReport.stage_lines(game, st)  # The Gardener of Roots, the Green Mother, the Last Claim, the First Spring.
 
 
 ## The "turning year" line (SeasonCycle).

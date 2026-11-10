@@ -26,6 +26,19 @@ static func draw_enemy(ci: CanvasItem, kind: String, o: Vector2, r: float, flash
 		return false
 	# Phase 2: each Wild stage's own fallbacks go here, before the shared kinds'.
 	match kind:
+		# --- Act XV (temporary number): the World-Tree ---
+		"gardener_of_roots":
+			if not SpriteBank.draw(ci, "wild/treant", o, flash):  # The Treant's art until his own.
+				_figure(ci, o, r, flash, Palette.WILD_BARK, Palette.WILD_MOSS_DARK)
+			for s: float in [-1.0, 1.0]:
+				ci.draw_rect(Rect2(o + Vector2(s * r * 0.9 - 1.5, r * 0.2), Vector2(3.0, r * 0.8)), Glyphs._c(Palette.WILD_BARK, flash))  # A root-hand.
+		"burial_thicket":
+			if not SpriteBank.draw(ci, "obstacles/wild_thicket_m", o, flash):  # The thicket's own art.
+				SpriteBank.draw_disc(ci, o, r, Glyphs._c(INK, flash))
+				SpriteBank.draw_disc(ci, o, r - 2.0, Glyphs._c(Palette.WILD_MOSS_DARK, flash))
+				for i in 6:
+					var a := TAU * float(i) / 6.0
+					ci.draw_rect(Rect2(o + Vector2(cos(a), sin(a)) * r * 0.6 - Vector2(1.0, 1.0), Vector2(r * 0.45, 2.0)), Glyphs._c(Palette.WILD_BARK, flash))  # A bramble.
 		# --- Act XV (temporary number): the Fae Court ---
 		"winter_prince":
 			_figure(ci, o, r, flash, Palette.WILD_FROST, Color(0.62, 0.78, 0.92))
@@ -104,6 +117,14 @@ static func draw_obstacle(ci: CanvasItem, o: Arena.Obstacle) -> bool:
 	# Phase 2: each Wild stage's own obstacle glyphs go here first.
 	var c := o.center
 	match o.kind:
+		# --- Act XV (temporary number): the World-Tree ---
+		"wild_great_root":
+			var rr := Rect2(c - o.half, o.half * 2.0)
+			ci.draw_rect(Rect2(rr.position + Vector2(3, 4), rr.size), Color(0, 0, 0, 0.3))
+			ci.draw_rect(rr, INK)
+			ci.draw_rect(rr.grow(-1.5), Palette.WILD_BARK)
+			var horiz := rr.size.x >= rr.size.y  # The root's long axis.
+			ci.draw_rect(Rect2(rr.position + Vector2(2, 2), Vector2(rr.size.x - 4.0, 2.0) if horiz else Vector2(2.0, rr.size.y - 4.0)), Color(Palette.WILD_MOSS, 0.6))  # Moss along it.
 		# --- Act XV (temporary number): the Fae Court ---
 		"wild_rose_hedge":
 			var rect := Rect2(c - o.half, o.half * 2.0)

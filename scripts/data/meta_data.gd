@@ -476,7 +476,9 @@ const ACHIEVEMENT_ORDER := ["bone_legion", "heretics_bane", "dread_sovereign", "
 	# --- Act XV (temporary number): the Greenwood ---
 	"scorched_earth",
 	# --- Act XV (temporary number): the Fae Court ---
-	"a_fair_bargain"]
+	"a_fair_bargain",
+	# --- Act XV (temporary number): the World-Tree ---
+	"the_first_spring"]
 
 ## Achievement definitions (GDD §9.4 "Example Achievement Unlocks"). Each
 ## achievement is tracked and recorded in the save and pays a one-time Soul
@@ -885,6 +887,14 @@ const ACHIEVEMENTS := {
 	# Deadwood (owner answer, Nov 2026).
 	"a_fair_bargain": {"display_name": "A Fair Bargain", "description": "Accept every bargain the Summer Queen offers and still win",
 		"stat": "fair_bargain_runs", "goal": 1, "unlock": "The Deadwood passive", "bounty": 300},  # Owner-approved proposal; bounty TUNING (not in GDD) as Scorched Earth
+	# --- Act XV (temporary number): the World-Tree ---
+	# The campaign's last achievement "The First Spring" (owner-approved
+	# proposal: "beat the Green Mother; opens the final epilogue part and the end
+	# of the campaign"): a run in which the Green Mother was slain (MetaProgress
+	# counts the runs, lifetime first_spring_runs). It only records the clear
+	# until the reorder pass writes the final epilogue part (docs/last_acts/PLAN.md).
+	"the_first_spring": {"display_name": "The First Spring", "description": "Defeat the Green Mother at the World-Tree",
+		"stat": "first_spring_runs", "goal": 1, "unlock": "", "bounty": 500},  # Owner-approved proposal; bounty TUNING (not in GDD) as The Last Word (an act's finale)
 }
 
 # --- Content wave 2: B. Achievement rewards ---

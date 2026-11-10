@@ -144,7 +144,9 @@ const SPELL_ORDER := ["shadow_bolt", "orb_shield", "shadow_blast",
 	# --- Act XV (temporary number): the Greenwood ---
 	"wild_hunt",
 	# --- Act XV (temporary number): the Fae Court ---
-	"glamour"]
+	"glamour",
+	# --- Act XV (temporary number): the World-Tree ---
+	"root_and_rot"]
 
 ## Spell definitions.
 ##   display_name — UI name.
@@ -1386,6 +1388,30 @@ const SPELLS := {
 			{"damage": 44.0, "copies": 3, "hp": 2.1, "life": 7.0, "taunt": 120.0, "range": 320.0, "radius": 56.0, "cooldown": 7.0},  # TUNING (not in GDD)
 			{"damage": 53.0, "copies": 3, "hp": 2.5, "life": 7.5, "taunt": 130.0, "range": 330.0, "radius": 60.0, "cooldown": 6.5},  # TUNING (not in GDD)
 			{"damage": 64.0, "copies": 4, "hp": 3.0, "life": 8.0, "taunt": 140.0, "range": 340.0, "radius": 64.0, "cooldown": 6.0},  # TUNING (not in GDD) four copies every 6 s: a wall of faces round the ring
+		],
+	},
+	# --- Act XV (temporary number): the World-Tree ---
+	# Root and Rot (GDD §15.0 "Root and Rot, Return to Earth, Compost Heart and
+	# the Gravegardener"; owner-approved proposal: "a ring of roots grows at the
+	# strongest enemy and rots everything inside"; unlocked by slaying the Green
+	# Mother, then offered on every stage). Every `cooldown` s, a foe within
+	# `range` px, a ring of roots of `radius` px (spell area widens it) grows at
+	# the strongest foe in reach: `damage` to every foe inside as it grows, then
+	# for `duration` s every foe inside is rotted (`rot` more damage taken, the
+	# one Rot path) and held by the roots (`slow`). Logic: RootAndRot; fixed
+	# rules: RootAndRotData. A setter: little damage of its own, the Rot is the point.
+	"root_and_rot": {
+		"display_name": "Root and Rot",  # Owner-approved proposal
+		"icon": "root_and_rot",
+		"description": "A ring of roots grows at the strongest foe and rots everything inside.",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Root damage", "rot": "Rot", "radius": "Radius (px)", "duration": "Ring time (s)", "cooldown": "Cooldown (s)"},
+		"levels": [
+			{"damage": 18.0, "rot": 0.12, "slow": 0.3, "radius": 56.0, "duration": 3.0, "range": 340.0, "cooldown": 5.0},  # Owner-approved proposal: "a ring of roots ... rots everything inside"; TUNING (not in GDD) the numbers
+			{"damage": 22.0, "rot": 0.14, "slow": 0.32, "radius": 58.0, "duration": 3.3, "range": 350.0, "cooldown": 4.7},  # TUNING (not in GDD)
+			{"damage": 27.0, "rot": 0.16, "slow": 0.34, "radius": 62.0, "duration": 3.6, "range": 360.0, "cooldown": 4.4},  # TUNING (not in GDD)
+			{"damage": 33.0, "rot": 0.18, "slow": 0.37, "radius": 66.0, "duration": 4.0, "range": 370.0, "cooldown": 4.1},  # TUNING (not in GDD)
+			{"damage": 40.0, "rot": 0.20, "slow": 0.4, "radius": 70.0, "duration": 4.5, "range": 380.0, "cooldown": 3.8},  # TUNING (not in GDD) a rotting ring on the toughest foe (Plague Cloud's Rot is the model)
 		],
 	},
 }

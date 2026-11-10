@@ -24,6 +24,7 @@
 ##   "reassemble" Ushabti Sentinel UshabtiSentinelBehavior (Act XII, temporary: the Hall of Two Truths)
 ##   "orbit_roll" Bound Ophan     BoundOphanBehavior (Act XIII, temporary: the Empyrean)
 ##   "trample_charge" Bonehorn    BonehornBehavior (Act XIV, temporary: the Last Day)
+##   "root_lash" Ossuary Oak      OssuaryOakBehavior (Act XV, temporary: the World-Tree)
 ## It creates / reuses the per-unit instance and builds the class-specific
 ## level-up card lines (AbilityManager._summon_offer()), so the shared code
 ## only ever talks to this file and the SummonBehavior base class.
@@ -105,6 +106,9 @@ static func for_unit(current: SummonBehavior, kind: String) -> SummonBehavior:
 		# --- Act XIV (temporary number): the Last Day ---
 		"trample_charge":
 			b = BonehornBehavior.new()  # The Bonehorn.
+		# --- Act XV (temporary number): the World-Tree ---
+		"root_lash":
+			b = OssuaryOakBehavior.new()  # The Ossuary Oak.
 	if b != null:
 		b.kind = kind
 	return b
@@ -293,6 +297,14 @@ static func card_lines(cls: String, cur: Dictionary, nxt: Dictionary) -> PackedS
 			else:
 				_delta(out, "Charge damage", a, b, "charge_damage")
 				_delta(out, "Charge cooldown (s)", a, b, "charge_cooldown")
+		# --- Act XV (temporary number): the World-Tree ---
+		"root_lash":
+			if a.is_empty():
+				out.append("Roots in place among foes and blocks")
+				out.append("Lash: %s dmg to every foe in reach, every %ss" % [_f(b["lash_damage"]), _f(b["lash_cooldown"])])
+			else:
+				_delta(out, "Lash damage", a, b, "lash_damage")
+				_delta(out, "Lash cooldown (s)", a, b, "lash_cooldown")
 	return out
 
 

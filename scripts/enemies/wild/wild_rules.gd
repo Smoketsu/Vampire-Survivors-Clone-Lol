@@ -16,6 +16,9 @@
 ##   thickets  — Thickets: OVERGROWTH (plant(), the one planting path; the
 ##               catches, the spread, the burning and the withering).
 ##   returns   — SpringReturns: the Reckoning (RECKONING "spring_returns").
+##   first_spring — FirstSpring: the World-Tree's ending (RECKONING
+##               "first_spring"): with the Green Mother beaten, it takes
+##               Spring Returns' place at 0:00.
 ## It draws the act's world-space marks on two layers: the UNDER layer (a child
 ## Node2D under the units: the blight and the sprouts, redrawn each bloom
 ## sample or while a sprout shows) and its own OVER layer (the roots, the
@@ -48,6 +51,8 @@ var bloom: BloomField
 var thickets: Thickets
 ## Spring Returns (the Reckoning).
 var returns: SpringReturns
+## The First Spring (the World-Tree's ending; off on every other stage).
+var first_spring: FirstSpring
 ## Wild kind -> game time (s) of its first activation this run (the autotest's
 ## "wild kinds" line).
 var first_seen: Dictionary = {}
@@ -85,6 +90,7 @@ func _init(p_game: Game) -> void:
 	bloom = BloomField.new(p_game, enabled)
 	thickets = Thickets.new(p_game)
 	returns = SpringReturns.new(p_game, enabled)
+	first_spring = FirstSpring.new(p_game, enabled)
 	_draws = DisplayServer.get_name() != "headless"
 	if _draws:
 		_under = Node2D.new()
@@ -117,7 +123,9 @@ func step(delta: float) -> void:
 		bargain_bonus = 0.0
 		bargain_no_heal = false
 		_recompute_armies()
-	returns.step(delta)
+	first_spring.step(delta)  # The World-Tree: with the Green Mother beaten, it takes Spring Returns' place.
+	if not first_spring.running():
+		returns.step(delta)
 	seasons.step(delta)
 	bloom.step(delta)
 	thickets.step(delta)

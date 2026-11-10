@@ -224,6 +224,9 @@ const CLASSES := {
 	# --- Act XIV (temporary number): the Last Day ---
 	"bonehorn": {"trigger": "special", "every": 1, "pattern": "ring", "counts": [5, 7], "speed": 260.0,
 		"life": 0.45, "share": 0.3, "pierce": 1, "radius": 3.5, "style": "shard", "color": Color(0.92, 0.90, 0.80)},  # TUNING (not in GDD) a burst of bone shards where a charge ends
+	# --- Act XV (temporary number): the World-Tree ---
+	"ossuary_oak": {"trigger": "special", "every": 2, "pattern": "ring", "counts": [5, 7], "speed": 240.0,
+		"life": 0.45, "share": 0.3, "pierce": 1, "radius": 3.5, "style": "shard", "color": Color(0.92, 0.90, 0.80)},  # TUNING (not in GDD) a ring of bone thorns after every other lash
 }
 
 ## Summon evolution id -> its showpiece volley (replaces the class volley once evolved;
@@ -302,6 +305,9 @@ const EVOLVED := {
 	# --- Act XIV (temporary number): the Last Day ---
 	"fossil_tyrant": {"trigger": "special", "every": 1, "pattern": "ring", "counts": [10], "speed": 300.0,
 		"life": 0.5, "share": 0.3, "pierce": 2, "radius": 4.0, "style": "shard", "color": Color(0.92, 0.90, 0.80)},  # TUNING (not in GDD) a full ring of bone shards with each roar
+	# --- Act XV (temporary number): the World-Tree ---
+	"world_root_warden": {"trigger": "special", "every": 1, "pattern": "ring", "counts": [10], "speed": 280.0,
+		"life": 0.5, "share": 0.3, "pierce": 2, "radius": 4.0, "style": "shard", "color": Color(0.45, 0.95, 0.85)},  # TUNING (not in GDD) a full ring of soul-teal thorns with each lash
 }
 
 # --- Spell echoes (every owned spell from LEVEL_ON) --------------------------------------
@@ -448,6 +454,9 @@ const SPELLS := {
 	# --- Act XV (temporary number): the Fae Court ---
 	"glamour": {"every": 1, "clock": "cooldown", "aim": "nearest", "pattern": "ring", "counts": [6, 8, 10], "speed": 240.0,
 		"life": 0.5, "share": 0.3, "pierce": 1, "radius": 3.0, "style": "shard", "color": Color(0.95, 0.70, 0.95)},  # TUNING (not in GDD) a ring of glamour glass after every cast (GlamourData.SHATTER)
+	# --- Act XV (temporary number): the World-Tree ---
+	"root_and_rot": {"every": 2, "clock": "cooldown", "aim": "strongest", "pattern": "ring", "counts": [6, 8, 10], "speed": 240.0,
+		"life": 0.5, "share": 0.3, "pierce": 1, "radius": 3.0, "style": "shard", "color": Color(0.45, 0.95, 0.85)},  # TUNING (not in GDD) a ring of soul-teal thorns after every other cast (RootAndRotData.ROT)
 }
 ## Range (px) within which a spell echo looks for its target (no target, no echo).
 const SPELL_RANGE: float = 340.0  # TUNING (not in GDD)

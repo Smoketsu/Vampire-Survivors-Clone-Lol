@@ -1810,6 +1810,8 @@ func finish(summary: Dictionary) -> void:
 	GreenwoodReport.item_lines(game, st)  # Wild Hunt, Horn of the Hunt, Fallow Ground (only when taken; the stage's own lines are WildReport's).
 	# --- Act XV (temporary number): the Fae Court ---
 	FaeCourtReport.item_lines(game, st)  # Glamour, Changeling, Deadwood (only when taken; the stage's own lines are WildReport's).
+	# --- Act XV (temporary number): the World-Tree ---
+	WorldTreeReport.item_lines(game, st)  # Root and Rot, Compost Heart, Heartwood, the Ossuary Oak (only when taken; the stage's own lines are WildReport's).
 	if game.enemies.boss is BossSeraphine:
 		print("[autotest] seraphine: %s" % BossSeraphine.summary_line(st))
 	var fired := game.enemies.stage.fired

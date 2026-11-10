@@ -35,6 +35,13 @@
 ## Each season repaints the arena (Game.ground.modulate; drawing only) and the
 ## HUD wheel (SeasonWheel) shows the year. Off the act (a forced Wild kind on
 ## another stage) the clock is off: season() is -1 and nothing here runs.
+## --- Act XV (temporary number): the World-Tree --- THE GARDENER'S CALL (one new
+## radius rule of the roots; owner-approved proposal: the Gardener of Roots
+## "calls every root in reach"): call_roots(e, radius) makes enemy `e` a root
+## caller for this tick and the next; outside Spring and Spring Returns the
+## roots then grab only the bodies within `radius` px of a living caller (with
+## Spring's numbers; stat gardener_roots). With no caller (every other stage)
+## nothing changes.
 ## Determinism: game time and the seeded gameplay RNG (the fronts' sides).
 ## Stats: season_turns, roots_you / roots_summons / roots_enemies,
 ## wildfire_fronts, wildfire_summons / wildfire_summon_dmg / wildfire_player /
@@ -75,6 +82,10 @@ var _next_blizzard: float = INF
 var blizzard_until: float = 0.0
 ## Fronts started this run.
 var fires: int = 0
+# --- Act XV (temporary number): the World-Tree ---
+## Root callers (the Gardener of Roots): [Enemy, generation, radius px, game s
+## the call lapses] each (call_roots(); empty on every other stage).
+var _callers: Array = []
 ## Blizzards this run.
 var blizzards: int = 0
 
@@ -196,6 +207,10 @@ func step(_delta: float) -> void:
 		if now >= _next_roots:
 			_next_roots = now + float(WildRulesData.ROOTS["sample"])
 			_roots_sample(game.wild.returns.still_time() if s == WildRulesData.RETURNS else float(WildRulesData.ROOTS["still_time"]))
+	elif not _callers.is_empty() and _prune_callers():
+		if now >= _next_roots:  # The World-Tree: the Gardener's call grabs in any season (Spring's numbers).
+			_next_roots = now + float(WildRulesData.ROOTS["sample"])
+			_roots_sample(float(WildRulesData.ROOTS["still_time"]), true)
 	elif not roots_drawn.is_empty():
 		roots_drawn = PackedVector2Array()
 		_still.clear()
@@ -237,26 +252,63 @@ func _enter(s: int) -> void:
 
 ## One stillness check of every body (see the header): a body still for
 ## `still_time` s is grabbed, then may not be grabbed again until it has stood
-## still that long after the hold.
-func _roots_sample(still_time: float) -> void:
+## still that long after the hold. `called` (the World-Tree): only the bodies
+## within a root caller's reach.
+func _roots_sample(still_time: float, called: bool = false) -> void:
 	var now := game.elapsed
 	var next: Dictionary = {}
 	roots_drawn = PackedVector2Array()
 	var grabbed := 0
 	for pl in game.all_players:
-		if not pl.dead:
+		if not pl.dead and (not called or _called(pl.position)):
 			grabbed += _track(next, pl, 0, pl.position, now, still_time, 0)
 	for hd in game.all_hordes:
 		for u in hd.units:
-			if u.active and u.state != SummonedUnit.State.SPAWNING and u.state != SummonedUnit.State.DEAD and not u.airborne and not u.flies:
+			if u.active and u.state != SummonedUnit.State.SPAWNING and u.state != SummonedUnit.State.DEAD and not u.airborne and not u.flies \
+					and (not called or _called(u.position)):
 				grabbed += _track(next, u, u.generation, u.position, now, still_time, 1)
 	for e in game.enemies.active:
 		if e.active and not e.is_boss and not e.is_miniboss and not e.is_structure and not e.is_objective \
-				and not e.flies and not e.floating and not e.untargetable:
+				and not e.flies and not e.floating and not e.untargetable and (not called or _called(e.position)):
 			grabbed += _track(next, e, e.generation, e.position, now, still_time, 2)
 	_still = next
 	if grabbed > 0:
+		if called:
+			game.stat_add("gardener_roots", float(grabbed))
 		game.wild.play_sound("roots_grab", game.player.position, 1.0)
+
+
+# --- Act XV (temporary number): the World-Tree: the Gardener's call ---
+
+## THE GARDENER'S CALL (see the header): enemy `e` calls the roots within
+## `radius` px of it for this tick and the next (its kit renews it every tick).
+func call_roots(e: Enemy, radius: float) -> void:
+	for c: Array in _callers:
+		if c[0] == e and int(c[1]) == e.generation:
+			c[2] = radius
+			c[3] = game.elapsed + 0.1
+			return
+	_callers.append([e, e.generation, radius, game.elapsed + 0.1])
+
+
+## Drops every caller that died or stopped calling; true while one remains.
+func _prune_callers() -> bool:
+	var i := _callers.size() - 1
+	while i >= 0:
+		var c: Array = _callers[i]
+		var e: Enemy = c[0]
+		if not e.active or e.generation != int(c[1]) or game.elapsed > float(c[3]):
+			_callers.remove_at(i)
+		i -= 1
+	return not _callers.is_empty()
+
+
+## True when world point `p` lies within a root caller's reach.
+func _called(p: Vector2) -> bool:
+	for c: Array in _callers:
+		if (c[0] as Enemy).position.distance_to(p) <= float(c[2]):
+			return true
+	return false
 
 
 ## Tracks one body (`type` 0 = necromancer, 1 = summon, 2 = enemy) into `next`;

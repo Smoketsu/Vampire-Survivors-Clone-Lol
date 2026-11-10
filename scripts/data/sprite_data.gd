@@ -830,6 +830,12 @@ const FLAT_SIZES: Dictionary = {
 	"wild/summer_queen": 80.0,  # TUNING (not in GDD) Fae Court boss, female (figure style): butterfly wings, a gown of roses, a crown of blossoms (about 64 wide); glide, idle strips, pose 1 (the bargain held out)
 	"wild/summer_queen_mask": 80.0,  # TUNING (not in GDD) her masked face the Masque's courtiers wear (same size as her)
 	"player/changeling_princess": 56.0,  # TUNING (not in GDD) female (figure style): violet gown with gossamer-leaf layers, a bone mask on a stick, a moth wand (about 38 wide); walk, idle strips
+	# --- Act XV (temporary number): the World-Tree (phase 2; art pending, WildGlyphs / the boss's and the class's code shapes until then) ---
+	"wild/gardener_of_roots": 88.0,  # TUNING (not in GDD) World-Tree miniboss (no sex): a great treant with root-hands (about 80 wide); walk strip
+	"wild/green_mother": 144.0,  # TUNING (not in GDD) World-Tree boss, female (figure style, fully clothed): a colossal goddess grown from the tree, half in bloom and half in frost (about 128 wide); idle strip, pose 1 `_cast`, pose 2 `_burial`
+	"player/gravegardener": 56.0,  # TUNING (not in GDD) female (figure style, fully clothed): a violet gardener's robe with an apron of roots, a bone trowel-staff with a sprouting soul seed, a wide-brimmed violet hat (about 40 wide); walk, idle strips
+	"summons/ossuary_oak": 56.0,  # TUNING (not in GDD) summon class (no sex): a slow tree of bone, thorn lashes, soul-teal knots (about 48 wide); walk strip, `_rooted` still
+	"summons/world_root_warden": 64.0,  # TUNING (not in GDD) its evolution (about 56 wide); walk strip, `_rooted` still
 	# The Turning Year's markers (not drawn until the stage agents wire them; the code shapes stay)
 	"markers/wild_roots": 16.0,  # TUNING (not in GDD) roots sprouting under a body that stood still, 24 x 16
 	"markers/wild_sprout": 32.0,  # TUNING (not in GDD) a thicket seed sprouting, 32 x 32

@@ -209,3 +209,30 @@ const DEADWOOD_KEY: String = "hold_cut"
 const FALLOW_GROUND: String = "fallow_ground"
 ## Fallow Ground's value key: + the blight's rise under the army (0..1; 1.0 = twice as fast at Lv 5).
 const FALLOW_GROUND_KEY: String = "blight_rise"
+
+# --- Act XV (temporary number): the World-Tree --------------------------------------------------
+## THE FIRST SPRING, the World-Tree's ending (FirstSpring, owned by WildRules
+## beside `returns`; a stage's RECKONING "first_spring" overrides any key;
+## absent = off; owner-approved proposal: "beaten, she does not die. She takes
+## the necromancer's dead back into the soil and gives him the one claim left:
+## the dead are planted, and in spring they rise to him. The campaign ends on
+## the first spring"): with the Green Mother beaten before 0:00, at 0:00 the
+## year turns to spring in place of Spring Returns (SeasonCycle.set_override()),
+## the blight is wiped, and round each standing necromancer `rise` planted dead
+## rise for him on a ring `ring` px wide (HordeDirector.raise_corpse(), the one
+## raise path: class `rise_class`, x rise_hp HP, x rise_dmg damage, `life` s,
+## tag `tag`); `end_after` s later the run ends in victory (Game.end_run(true,
+## "first_spring")). Not beaten: Spring Returns runs as on every Wild stage.
+const FIRST_SPRING := {
+	"rise": 10,  # TUNING (not in GDD) planted dead a necromancer
+	"ring": 90.0,  # TUNING (not in GDD) px
+	"rise_class": "warrior",  # TUNING (not in GDD) the dead rise as Risen warriors (the base class's look)
+	"rise_hp": 2.0,  # TUNING (not in GDD) x the class's HP
+	"rise_dmg": 1.5,  # TUNING (not in GDD) x the class's damage
+	"life": 25.0,  # TUNING (not in GDD) s
+	"end_after": 20.0,  # TUNING (not in GDD) s from 0:00 to the victory
+	"tag": "first_spring",  # The risen's source tag (SummonedUnit.dmg_source)
+	"banner": "THE FIRST SPRING: the dead you planted rise to you!",  # TUNING (not in GDD)
+}
+## Game.end_run() reason of a run the First Spring ended (FeedbackData words).
+const FIRST_SPRING_END: String = "first_spring"

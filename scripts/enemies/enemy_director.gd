@@ -520,6 +520,10 @@ var greenwood: GreenwoodDirector = null
 ## The Fae Court's mechanics (the endless summer, the fairy rings, the Winter
 ## Prince; StageRegistry "fae_court"; null on every other stage).
 var fae_court: FaeCourtDirector = null
+# --- Act XV (temporary number): the World-Tree ---
+## The World-Tree's mechanics (the Gardener of Roots; StageRegistry
+## "world_tree"; null on every other stage).
+var world_tree: WorldTreeDirector = null
 ## Sanctum kit bookkeeping: recent deaths, Confessor revivals, danger hints.
 var rites: CovenantRites
 ## The living miniboss shown on the HUD's miniboss bar (the Cathedral
@@ -826,6 +830,12 @@ func _ready() -> void:
 		fae_court.game = game
 		fae_court.config = stage_def["fae_court"]
 		add_child(fae_court)  # The Fae Court's director.
+	# --- Act XV (temporary number): the World-Tree ---
+	if not (stage_def.get("world_tree", {}) as Dictionary).is_empty():
+		world_tree = WorldTreeDirector.new()
+		world_tree.game = game
+		world_tree.config = stage_def["world_tree"]
+		add_child(world_tree)  # The World-Tree's director.
 
 
 # =====================================================================================
@@ -1027,6 +1037,9 @@ func step(delta: float) -> void:
 	# --- Act XV (temporary number): the Fae Court ---
 	if fae_court != null:
 		fae_court.step(delta)  # The endless summer, the fairy rings, the Winter Prince.
+	# --- Act XV (temporary number): the World-Tree ---
+	if world_tree != null:
+		world_tree.step(delta)  # The Gardener of Roots.
 
 
 ## The Archive kinds' world hazards (ArchiveHazards), created on first use.
@@ -1233,6 +1246,9 @@ func objective_text() -> String:
 	# --- Act XV (temporary number): the Fae Court ---
 	if fae_court != null and fae_court.objective_override() != "":
 		return fae_court.objective_override()  # The Winter Prince.
+	# --- Act XV (temporary number): the World-Tree ---
+	if world_tree != null and world_tree.objective_override() != "":
+		return world_tree.objective_override()  # The Gardener of Roots.
 	if boss != null and not boss.active:
 		return String(boss_info["dead_objective"])
 	return segments[segment_index]["objective"]
@@ -1602,6 +1618,12 @@ func _run_event(ev: Dictionary) -> void:
 				fae_court.start_event(ev)
 			game.stat_add("wave_events", 1.0)
 			return  # The Fae Court's miniboss and his minute of winter (FaeCourtDirector).
+		# --- Act XV (temporary number): the World-Tree ---
+		"gardener":
+			if world_tree != null:
+				world_tree.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return  # The World-Tree's miniboss (WorldTreeDirector).
 	show_banner(ev["banner"])
 	var groups: Array = ev["groups"]
 	if game.shogunate != null:

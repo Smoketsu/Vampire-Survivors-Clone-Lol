@@ -242,7 +242,9 @@ const ORDER := ["grave_dominion", "necrotic_vigor", "dark_command", "soul_recycl
 	# --- Act XV (temporary number): the Greenwood ---
 	"horn_of_the_hunt", "fallow_ground",
 	# --- Act XV (temporary number): the Fae Court ---
-	"changeling", "deadwood"]
+	"changeling", "deadwood",
+	# --- Act XV (temporary number): the World-Tree ---
+	"compost_heart", "heartwood"]
 
 ## Passives that only help summons (a "dead" level-up card while no summon
 ## class is owned, see AbilityManager.build_offers()).
@@ -314,7 +316,9 @@ const ARMY_PASSIVES := ["grave_dominion", "necrotic_vigor", "dark_command", "sou
 	# --- Act XIII (temporary number): the Empyrean ---
 	"turning_bones",
 	# --- Act XIV (temporary number): the Last Day ---
-	"petrified_horns", "thick_marrow"]
+	"petrified_horns", "thick_marrow",
+	# --- Act XV (temporary number): the World-Tree ---
+	"heartwood"]
 
 # --- Act III: the Assembly Halls ---
 ## Overclock (paired with the Grave Drone): a summon class is "ranged" (and
@@ -397,7 +401,9 @@ const MINION_SPECIAL_SOURCES := ["bash", "abom_stomp", "rogue_dash", "gargoyle_s
 	# --- Act XIII (temporary number): the Empyrean --- (the Bound Ophan's and Throne of Bones' rolls, BoundOphanBehavior)
 	"bound_ophan_roll", "throne_of_bones_roll",
 	# --- Act XIV (temporary number): the Last Day --- (the Bonehorn's and Fossil Tyrant's charges, BonehornBehavior)
-	"bonehorn_charge", "fossil_tyrant_charge"]
+	"bonehorn_charge", "fossil_tyrant_charge",
+	# --- Act XV (temporary number): the World-Tree --- (the Ossuary Oak's and World-Root Warden's lashes, OssuaryOakBehavior)
+	"ossuary_oak_lash", "world_root_lash"]
 ## Unholy Resilience: enemy damage-source tags (CombatResolver.damage_unit
 ## `source`) that count as AREA or HOLY damage, tag -> category ("area" |
 ## "holy"; the category only splits the summary stats). Every other source
@@ -2707,6 +2713,46 @@ const PASSIVES := {
 			{"hold_cut": 0.3},  # TUNING (not in GDD)
 			{"hold_cut": 0.4},  # TUNING (not in GDD)
 			{"hold_cut": 0.5},  # Owner-approved proposal: "hold summons half as long" at full
+		],
+	},
+	# --- Act XV (temporary number): the World-Tree ---
+	# Compost Heart (Root and Rot's paired passive; owner-approved proposal:
+	# "Return to Earth (+ Compost Heart)"; unlocked with the spell by the Green
+	# Mother and offered on every stage). Own decision on its effect: the dead
+	# feed the soil: every ring rots compost_rot harder and stands compost_time s
+	# longer (RootAndRot, the one read). Nothing without the spell.
+	"compost_heart": {
+		"display_name": "Compost Heart",  # Owner-approved proposal
+		"icon": "compost_heart",
+		"description": "The dead feed the soil: Root and Rot rots harder and its rings stand longer.",
+		"labels": {"compost_rot": ["Root and Rot rot", "pct"], "compost_time": ["Ring time (s)", "num"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"compost_rot": 0.03, "compost_time": 0.3},  # TUNING (not in GDD)
+			{"compost_rot": 0.06, "compost_time": 0.6},  # TUNING (not in GDD)
+			{"compost_rot": 0.09, "compost_time": 0.9},  # TUNING (not in GDD)
+			{"compost_rot": 0.12, "compost_time": 1.2},  # TUNING (not in GDD)
+			{"compost_rot": 0.15, "compost_time": 1.5},  # TUNING (not in GDD)
+		],
+	},
+	# Heartwood (the Ossuary Oak's paired passive; own decision, the proposal
+	# names none; owner rule: every evolution needs its paired passive maxed;
+	# unlocked with the class by the Green Mother and offered on every stage).
+	# Its effect: the bone wood hardens to the heart: every lash of an Ossuary
+	# Oak / World-Root Warden strikes heart_damage harder and heart_radius px
+	# wider (OssuaryOakBehavior, the one read). Nothing without the class.
+	"heartwood": {
+		"display_name": "Heartwood",  # Own decision
+		"icon": "heartwood",
+		"description": "Your oaks of bone harden to the heart: the Ossuary Oak lashes harder and wider.",
+		"labels": {"heart_damage": ["Ossuary Oak lash damage", "pct"], "heart_radius": ["Ossuary Oak lash radius (px)", "num"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"heart_damage": 0.06, "heart_radius": 2.0},  # TUNING (not in GDD)
+			{"heart_damage": 0.12, "heart_radius": 4.0},  # TUNING (not in GDD)
+			{"heart_damage": 0.18, "heart_radius": 6.0},  # TUNING (not in GDD)
+			{"heart_damage": 0.24, "heart_radius": 8.0},  # TUNING (not in GDD)
+			{"heart_damage": 0.30, "heart_radius": 10.0},  # TUNING (not in GDD)
 		],
 	},
 }

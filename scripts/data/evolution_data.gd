@@ -142,7 +142,9 @@ const ORDER := ["void_barrage", "eclipse_ward", "abyssal_detonation",
 	# --- Act XV (temporary number): the Greenwood ---
 	"the_endless_hunt",
 	# --- Act XV (temporary number): the Fae Court ---
-	"court_of_masks"]
+	"court_of_masks",
+	# --- Act XV (temporary number): the World-Tree ---
+	"return_to_earth"]
 
 ## Evolution definitions.
 ##   base         — spell id that evolves (AbilityData.SPELLS key).
@@ -1179,6 +1181,26 @@ const EVOLUTIONS := {
 		"stats": {
 			"damage": 78.0, "copies": 6, "hp": 3.6, "life": 9.0, "taunt": 150.0, "range": 360.0, "radius": 72.0, "cooldown": 5.5,  # TUNING (not in GDD)
 			"bewilder": 3.0,  # TUNING (not in GDD) the evolution flag: s each shattering bewilders
+		},
+	},
+	# --- Act XV (temporary number): the World-Tree ---
+	# Return to Earth (GDD §15.0 "Root and Rot, Return to Earth, Compost Heart
+	# and the Gravegardener"; owner-approved proposal "Root and Rot -> Return to
+	# Earth (+ Compost Heart)"): Root and Rot + Compost Heart (a NEW passive,
+	# owner rule: at Lv 5). Own decision on its kit: `rings` rings a cast, each
+	# at its own strong foe, and the roots bite every foe inside for `bite`
+	# every tick (the earth takes them back). Detected by the "rings" key.
+	"return_to_earth": {
+		"base": "root_and_rot",
+		"passive": "compost_heart",
+		"display_name": "Return to Earth",  # Owner-approved proposal
+		"icon": "return_to_earth",
+		"description": "Three rings of roots at once: they rot every foe inside and drag them back into the earth.",
+		"labels": {"damage": "Root damage", "rot": "Rot", "radius": "Radius (px)", "duration": "Ring time (s)", "cooldown": "Cooldown (s)", "rings": "Rings", "bite": "Root bite"},
+		"stats": {
+			"damage": 48.0, "rot": 0.22, "slow": 0.45, "radius": 76.0, "duration": 5.0, "range": 400.0, "cooldown": 3.6,  # TUNING (not in GDD)
+			"rings": 3,  # TUNING (not in GDD) the evolution flag: rings a cast
+			"bite": 6.0,  # TUNING (not in GDD) damage every tick (0.5 s) to every foe inside
 		},
 	},
 }

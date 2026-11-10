@@ -96,7 +96,9 @@ const SUMMON_ORDER: Array[String] = ["warrior", "archer", "mage", "mender", "war
 		# --- Act XIII (temporary number): the Empyrean --- (a silhouette naming its unlock until met)
 		"bound_ophan",
 		# --- Act XIV (temporary number): the Last Day --- (a silhouette naming its unlock until met)
-		"bonehorn"]
+		"bonehorn",
+		# --- Act XV (temporary number): the World-Tree --- (a silhouette naming its unlock until met)
+		"ossuary_oak"]
 
 ## Covenant soldiers (enemy kinds), in the order the stages bring them.
 const SOLDIERS: Array[String] = ["recruit", "footman", "archer", "chaplain", "purifier", "templar",
@@ -461,7 +463,9 @@ const PRIMEVAL_BOSSES: Array[String] = ["scarmaw", "ironbrow", "gravejaw"]
 ## Wild tab), GROUPED BY GROUP (WildRulesData.GROUPS): what grows, the fae, the
 ## Wild Hunt, the spirits, then its stage bosses (StageRegistry.BOSS_ARRIVALS
 ## ids). Each Wild stage adds its own as it is built (phase 2).
-const WILD_GROWTH: Array[String] = ["thornling", "dryad", "treant", "corpse_bloom"]
+const WILD_GROWTH: Array[String] = ["thornling", "dryad", "treant", "corpse_bloom",
+	# --- Act XV (temporary number): the World-Tree ---
+	"gardener_of_roots"]
 ## The fae (group "fae": the knights and the Winter Court).
 const WILD_FAE: Array[String] = ["fae_knight", "winter_fae",
 	# --- Act XV (temporary number): the Fae Court ---
@@ -874,6 +878,8 @@ const DESCRIPTIONS: Dictionary = {
 	"winter_prince": "The Winter Prince, the Summer Queen's rival. Where he walks, her summer freezes for one minute.",  # Owner-approved proposal (miniboss)
 	"summer_queen": "The Summer Queen of the fae. She wears many faces, and she will offer you a bargain.",  # Proposal
 	"green_mother": "The Green Mother, grown from the World-Tree: the whole year in one figure, half in bloom and half in frost.",  # Proposal
+	# --- Act XV (temporary number): the World-Tree ---
+	"gardener_of_roots": "The Gardener of Roots, a great treant that tends the World-Tree. Near him the roots grab in every season.",  # Owner-approved proposal (miniboss)
 	# --- Act XIV (temporary number): the Last Day ---
 	"stormwing": "A great pterosaur. Her wing gust blows your ring apart; she lands to peck, and then she can be hit.",  # Owner-approved proposal
 	"thunderwing": "Thunderwing, the Sky King: a giant pterosaur whose wing gusts clear the whole ring.",  # Owner-approved proposal (miniboss)
@@ -1251,6 +1257,8 @@ const ACHIEVEMENT_ICONS: Dictionary = {
 	"scorched_earth": "ach_scorched_earth",  # TUNING (not in GDD)
 	# --- Act XV (temporary number): the Fae Court ---
 	"a_fair_bargain": "ach_a_fair_bargain",  # TUNING (not in GDD)
+	# --- Act XV (temporary number): the World-Tree ---
+	"the_first_spring": "ach_the_first_spring",  # TUNING (not in GDD)
 }
 ## IconGlyph kind drawn when an achievement badge PNG is missing.
 const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
@@ -1345,6 +1353,8 @@ const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
 	"scorched_earth": "fallow_ground",
 	# --- Act XV (temporary number): the Fae Court ---
 	"a_fair_bargain": "deadwood",
+	# --- Act XV (temporary number): the World-Tree ---
+	"the_first_spring": "root_and_rot",
 }
 ## Screen title (TITLE tier).
 const TITLE: String = "Codex"  # TUNING (not in GDD)
