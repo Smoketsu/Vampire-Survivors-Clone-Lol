@@ -68,8 +68,8 @@ const BOSS := {
 	"display_name": "Old Gravejaw, the Tyrant King",
 	"max_hp": MAX_HP,
 	"move_speed": 50.0,  # TUNING (not in GDD) px/s; a titan's walk
-	"damage": 12.0,  # TUNING (not in GDD) a bite in reach, before the time scaling
-	"attack_interval": 1.4,  # TUNING (not in GDD) s
+	"damage": 5.0,  # TUNING (not in GDD) a bite in reach, before the time scaling (passes 12, 7: his hunt reaches the necromancer, and the bites in reach took the army bot to 55 HP, the Bonehorn and the priest-less bots to their deaths, seed 7)
+	"attack_interval": 1.6,  # TUNING (not in GDD) s (first pass 1.4)
 	"attack_range": 18.0,  # TUNING (not in GDD) px
 	"radius": 28.0,  # TUNING (not in GDD) px (the sprite 128x104)
 	"armor": 0.25,  # TUNING (not in GDD) a scarred hide
@@ -106,12 +106,12 @@ const BOSS := {
 	"cut_share": 0.04,  # TUNING (not in GDD) share of his max HP lost that frees it (a titan's belly is tougher; his HP is huge)
 	# The Roar.
 	"roar_first": 9.0,  # TUNING (not in GDD) s after he arrives
-	"roar_every": 14.0,  # TUNING (not in GDD) s between two roars
+	"roar_every": 16.0,  # TUNING (not in GDD) s between two roars (first pass 14)
 	"roar_windup": 1.0,  # TUNING (not in GDD) s of telegraph
 	"roar_radius": 220.0,  # Owner-approved proposal: "a roar that stuns the ring"; TUNING (not in GDD) px round him
 	"roar_stun": 1.2,  # TUNING (not in GDD) s (the Tyrant's 1.2)
 	"call_reach": 700.0,  # Owner-approved proposal: "calls every beast on the map to him"; TUNING (not in GDD) px: the herds within it stampede
-	"call": [{"kind": "razorclaw", "count": 4}, {"kind": "scuttler", "count": 8}],  # TUNING (not in GDD) the beasts that answer each roar
+	"call": [{"kind": "razorclaw", "count": 3}, {"kind": "scuttler", "count": 6}],  # TUNING (not in GDD) the beasts that answer each roar (first pass 4 + 8: the priest-less army bot fell in his fight on seeds 3 and 7)
 	"roar_banner": "THE ROAR: Old Gravejaw calls every beast on the map!",  # TUNING (not in GDD)
 	# The Last Day.
 	"last_day_time": 1140.0,  # Owner-approved proposal: "the sky is white"; TUNING (not in GDD) game s (1:00 left)

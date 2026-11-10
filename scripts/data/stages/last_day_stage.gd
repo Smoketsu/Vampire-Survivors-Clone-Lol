@@ -41,10 +41,10 @@ const BOSS_TIME: float = 1020.0  # TUNING (not in GDD) 17:00, as on every stage
 ## Enemy max-HP multiplier of this stage on top of the shared time scaling
 ## (slot XIV sits above the Concord: the Crash Site's 2.15 and up; the step is
 ## in HP).
-const ENEMY_HP_MULT: float = 2.3  # TUNING (not in GDD) phase 2 (the stub's 2.6): a step over the Great Plain's 2.2, the act's finale
+const ENEMY_HP_MULT: float = 2.2  # TUNING (not in GDD) phase 2 (the stub's 2.6, passes 2.3 and 2.25: the naive bot died on seeds 3, 7 and 11): the Great Plain's 2.2; the meteorites, the Stormwings, the Tyrants and Thunderwing are the finale's step up
 ## Enemy damage multiplier of this stage on top of the shared time scaling
 ## (the Crash Site's 1.5 and up).
-const ENEMY_DAMAGE_MULT: float = 1.5  # TUNING (not in GDD) phase 2 (the stub's 1.8): a step over the Great Plain's 1.4
+const ENEMY_DAMAGE_MULT: float = 1.4  # TUNING (not in GDD) phase 2 (the stub's 1.8, passes 1.5 and 1.45): the Great Plain's 1.4 (the stage's own hazards are its step up)
 ## Elapsed game seconds from which the two multipliers apply to regular
 ## enemies (the boss always gets them).
 const ENEMY_MULT_FROM: float = 420.0  # TUNING (not in GDD) as Acts III to XIII (7:00)
@@ -130,12 +130,12 @@ const MARCH := {
 const LAST_DAY := {
 	"meteor_first": 30.0,  # TUNING (not in GDD) s
 	"meteor_every": [12.0, 10.0, 8.0, 6.5],  # Owner-approved proposal: "every 12 s ... the interval shrinking each zone"; TUNING (not in GDD) the later steps
-	"meteor_count": [1, 2, 2, 3],  # TUNING (not in GDD) circles per necromancer, by zone
+	"meteor_count": [1, 1, 2, 2],  # TUNING (not in GDD) circles per necromancer, by zone (first pass 1, 2, 2, 3)
 	"meteor_spread": 300.0,  # TUNING (not in GDD) px
 	"meteor_warn": 1.6,  # Owner-approved proposal: "telegraphed circles"; TUNING (not in GDD) s
 	"meteor_radius": 56.0,  # TUNING (not in GDD) px
 	"meteor_player": 10.0,  # TUNING (not in GDD) before the time scaling (Grave Step's i-frames dodge it)
-	"meteor_summon": 14.0,  # Owner-approved proposal: "hurting both armies"; TUNING (not in GDD) per summon, before the time scaling
+	"meteor_summon": 11.0,  # Owner-approved proposal: "hurting both armies"; TUNING (not in GDD) per summon, before the time scaling (first pass 14: 14.5k on the army bot's summons, its largest source, seed 7)
 	"meteor_enemy_share": 0.35,  # TUNING (not in GDD) share of an enemy's max HP
 	"meteor_show": 0.3,  # TUNING (not in GDD) drawing only
 	"thunder_objective": "Thunderwing, the Sky King, blows your ring apart: strike him when he lands",  # TUNING (not in GDD)
@@ -165,28 +165,29 @@ const RECKONING_OBJECTIVE: String = "THE EXTINCTION: the dead rise for you. The 
 ## the shared kinds with the Stormwing from 3:30 and the plain's heavies; the
 ## packs come in the EVENTS (a pack is a group that arrives together), the
 ## herds from Herds, never from these weights. A thin trickle after 0:00 for
-## the Fossil Host to clean up.
+## the Fossil Host to clean up. (First pass: Frill-Spitters 0.05 and
+## Stormwings 0.005-0.007: the naive bot died before 12:10 on all three seeds.)
 const SEGMENTS := [
 	{"start": 0.0, "rate": 1.4, "max_alive": 30,  # TUNING (not in GDD)
-		"weights": {"scuttler": 0.95, "frill_spitter": 0.05},
+		"weights": {"scuttler": 0.955, "frill_spitter": 0.045},
 		"objective": "The Scorched Plain: the beasts are hungry, and your army smells of meat"},
 	{"start": 60.0, "rate": 1.7, "max_alive": 40,  # TUNING (not in GDD)
-		"weights": {"scuttler": 0.92, "frill_spitter": 0.05, "skyraider": 0.03},
+		"weights": {"scuttler": 0.925, "frill_spitter": 0.045, "skyraider": 0.03},
 		"objective": "Meteorites fall on the circles: they burn both armies. Step out"},
 	{"start": 180.0, "rate": 2.0, "max_alive": 50,  # TUNING (not in GDD)
-		"weights": {"scuttler": 0.915, "frill_spitter": 0.05, "skyraider": 0.03, "stormwing": 0.005},
+		"weights": {"scuttler": 0.922, "frill_spitter": 0.045, "skyraider": 0.03, "stormwing": 0.003},
 		"objective": "The herds stampede when a fight comes close: shelter behind a rock"},
 	{"start": 300.0, "rate": 2.3, "max_alive": 60,  # TUNING (not in GDD)
-		"weights": {"scuttler": 0.898, "frill_spitter": 0.05, "skyraider": 0.04, "stormwing": 0.006, "horncharger": 0.003, "clubtail": 0.003},
+		"weights": {"scuttler": 0.905, "frill_spitter": 0.045, "skyraider": 0.04, "stormwing": 0.004, "horncharger": 0.003, "clubtail": 0.003},
 		"objective": "The Ash Forest: Stormwings blow your ring open. Strike them when they land"},
 	{"start": 600.0, "rate": 2.7, "max_alive": 72,  # TUNING (not in GDD)
-		"weights": {"scuttler": 0.893, "frill_spitter": 0.05, "skyraider": 0.04, "stormwing": 0.007, "horncharger": 0.005, "clubtail": 0.005},
+		"weights": {"scuttler": 0.901, "frill_spitter": 0.045, "skyraider": 0.04, "stormwing": 0.004, "horncharger": 0.005, "clubtail": 0.005},
 		"objective": "The Lava Fields: a Tyrant swallows your summons whole. Burst it and they cut their way out"},
 	{"start": 900.0, "rate": 3.0, "max_alive": 84,  # TUNING (not in GDD)
-		"weights": {"scuttler": 0.888, "frill_spitter": 0.05, "skyraider": 0.045, "stormwing": 0.007, "horncharger": 0.005, "clubtail": 0.005},
+		"weights": {"scuttler": 0.896, "frill_spitter": 0.045, "skyraider": 0.045, "stormwing": 0.004, "horncharger": 0.005, "clubtail": 0.005},
 		"objective": "The Impact Rim: the last day of the world"},
 	{"start": BOSS_TIME, "rate": 2.0, "max_alive": 56,  # TUNING (not in GDD) thinner during the boss fight (as the other Titans stages)
-		"weights": {"scuttler": 0.9, "frill_spitter": 0.06, "skyraider": 0.04},
+		"weights": {"scuttler": 0.915, "frill_spitter": 0.045, "skyraider": 0.04},
 		"objective": "Old Gravejaw hunts you: slay him before the meteor falls, or his spell is lost"},
 	{"start": WaveData.RUN_DURATION, "rate": 1.0, "max_alive": 30,  # TUNING (not in GDD) the last beasts for the Fossil Host
 		"weights": {"scuttler": 0.9, "razorclaw": 0.1},

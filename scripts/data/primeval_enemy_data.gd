@@ -452,7 +452,7 @@ const ENEMIES := {
 		"display_name": "Stormwing",
 		"max_hp": 150.0,  # TUNING (not in GDD) a flier elite
 		"move_speed": 110.0,  # TUNING (not in GDD) px/s in the air
-		"damage": 7.0,  # TUNING (not in GDD) a peck, before the time scaling
+		"damage": 5.0,  # TUNING (not in GDD) a peck, before the time scaling (first pass 7)
 		"attack_interval": 1.0,  # TUNING (not in GDD) s
 		"attack_range": 10.0,  # TUNING (not in GDD) px
 		"radius": 14.0,  # TUNING (not in GDD) px (~72 x 44 px sprite)

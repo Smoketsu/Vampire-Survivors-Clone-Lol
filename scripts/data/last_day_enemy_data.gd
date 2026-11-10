@@ -33,7 +33,7 @@ const ENEMIES := {
 		"display_name": "Thunderwing, the Sky King",
 		"max_hp": 1100.0,  # TUNING (not in GDD) a miniboss (Mother Clubtail 1000; he spends most of his time in the air)
 		"move_speed": 120.0,  # TUNING (not in GDD) px/s in the air
-		"damage": 12.0,  # TUNING (not in GDD) a peck, before the time scaling
+		"damage": 9.0,  # TUNING (not in GDD) a peck, before the time scaling (first pass 12: the naive bot's second-largest source on seed 3)
 		"attack_interval": 1.2,  # TUNING (not in GDD) s
 		"attack_range": 14.0,  # TUNING (not in GDD) px
 		"radius": 24.0,  # TUNING (not in GDD) px (~112 x 64 px sprite)

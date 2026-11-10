@@ -165,8 +165,7 @@ func _step_walk(delta: float) -> void:
 	var pl := game.nearest_player(position)
 	var dist := position.distance_to(pl.position)
 	move_speed = _base_speed * (float(boss_def["advance_speed_mult"]) if dist > float(boss_def["advance_range"]) else 1.0)
-	_set_target(pl)
-	engaged_timer = 0.0  # No summon holds his attention.
+	_set_target(pl)  # No summon draws him (a blocker still holds his body and slows him).
 	super.physics_step(delta)
 	if stun_timer > 0.0:
 		return
