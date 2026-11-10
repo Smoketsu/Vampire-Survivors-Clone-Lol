@@ -39,7 +39,7 @@ const BOSS_TIME: float = 1020.0  # TUNING (not in GDD) 17:00, as on every stage
 const ENEMY_HP_MULT: float = 1.7  # TUNING (not in GDD) phase 2 (the stub's)
 ## Enemy damage multiplier of this stage on top of the shared time scaling
 ## (the Inferno's 1.5 and up).
-const ENEMY_DAMAGE_MULT: float = 1.5  # TUNING (not in GDD) phase 2 (the stub's)
+const ENEMY_DAMAGE_MULT: float = 1.35  # TUNING (not in GDD) balance pass 3 (phase 2 1.5): the act's first stage is its easiest, below the Wheel and the Empyrean's 1.5
 ## Elapsed game seconds from which the two multipliers apply to regular
 ## enemies (the boss always gets them).
 const ENEMY_MULT_FROM: float = 420.0  # TUNING (not in GDD) as Acts III to XII (7:00)

@@ -156,8 +156,8 @@ const ENEMIES := {
 		"display_name": "Virtue",
 		"max_hp": 40.0,  # TUNING (not in GDD) a soldier (khopesh guard 44: no Rebirth here, but a halo)
 		"move_speed": 50.0,  # TUNING (not in GDD) px/s
-		"damage": 5.0,  # TUNING (not in GDD) a spear thrust, before the time scaling; pass 1 6.0 (now ~4.2 dps, the Inferno soldier's)
-		"attack_interval": 1.2,  # TUNING (not in GDD) s
+		"damage": 5.0,  # TUNING (not in GDD) a spear thrust, before the time scaling; pass 1 6.0
+		"attack_interval": 1.3,  # TUNING (not in GDD) s; pass 2 1.2 (now ~3.8 dps, the Inferno soldier's pace)
 		"attack_range": 10.0,  # TUNING (not in GDD) px (a spear)
 		"radius": 10.0,  # TUNING (not in GDD) px (~48 px sprite)
 		"armor": 0.15,  # TUNING (not in GDD) silver mail

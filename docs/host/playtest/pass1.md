@@ -71,3 +71,32 @@ Non-naive deaths (army, evolve, newclasses, newspells): silver_stair 5, wheel_of
 - Army mean lowest HP is 88 on the Empyrean (target 90+, pass 1 91); the Empyrean army seed 7 and the Wheel army seed 3
   did not slay the boss.
 - Three seeds per cell is a small sample: the same build moves by a death between seeds after any change.
+
+## Pass 3 (the last iteration)
+
+The Silver Stair is the act's first stage and should be its easiest, but pass 2 left it the worst. Changes:
+
+| file | value | pass 2 | pass 3 |
+|---|---|---|---|
+| `scripts/data/host_enemy_data.gd` | Virtue `attack_interval` | 1.2 s | **1.3 s** (about 3.8 dps) |
+| `scripts/data/stages/silver_stair_stage.gd` | `ENEMY_DAMAGE_MULT` (Silver Stair only) | 1.5 | **1.35** |
+
+The interval alone was screened first on the Silver Stair (`pass3_screen/`: army, evolve, newclasses): 5 deaths in 9,
+newclasses 3 of 3 and an army death, all at 17:47-18:45 in Seraiel's window, Hallowed Light first in the newclasses
+ones. The Virtue's `max_hp` cut would not have touched the Light, so the Silver Stair-only damage multiplier was used
+instead (it scales every Host hit on the stage, the Light and the Verdict included). The Wheel and the Empyrean stay at 1.5.
+
+Pass 3 confirmation (`pass3_logs/`, `pass3_report.md`; 27 runs). Cells are died of 3 / boss slain / mean lowest HP:
+
+| build | silver_stair | wheel_of_thrones | empyrean |
+|---|---|---|---|
+| army | 0 / 3 / 114 | - | - |
+| evolve | 1 / 1 / 85 | 0 / 2 / 89 | 0 / 3 / 103 |
+| newclasses | 2 / 1 / 67 | - | - |
+| newspells | 0 / 3 / 108 | 0 / 2 / 77 | 1 / 2 / 89 |
+| naive | 0 / 0 / 97 | - | - |
+
+Every run, the screen included, has zero `SCRIPT ERROR` / `ERROR:` / `WARNING:` and `stuck_units=0`. Silver Stair non-naive deaths
+5 -> 3 of 12. Its newclasses build is still 2 of 3 (the Light and Seraiel's Sword at 17:57 / 18:04), and its naive bot
+survived all three (target about 1 of 3). The Wheel and the Empyrean evolve / newspells builds lost 1 of 12 (pass 2 6
+of 12). The pass stops here, as the coordinator asked; the rest waits for the owner's playtest.
