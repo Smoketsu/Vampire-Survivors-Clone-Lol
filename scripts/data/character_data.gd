@@ -128,7 +128,9 @@ const ORDER := ["gravecaller", "umbral_warden", "voidcaller", "bone_oracle", "fa
 	# --- Act XIV (temporary number): the Last Day ---
 	"skywatcher",
 	# --- Act XV (temporary number): the Greenwood ---
-	"horned_herald"]
+	"horned_herald",
+	# --- Act XV (temporary number): the Fae Court ---
+	"changeling_princess"]
 ## The default character (RunConfig, fresh saves, the autotest): today's game.
 const DEFAULT_ID: String = "gravecaller"
 ## Spell level that unlocks a character (owner rule: reach Lv 5 with its spell
@@ -216,6 +218,8 @@ const STAT_LABELS := {
 ##                           charger; Act XIV, temporary)
 ##   wild_hunt_riders        WildHunt._cast (riders more in every line;
 ##                           Act XV, temporary)
+##   glamour_copies          Glamour._cast (copies more in every cast;
+##                           Act XV, temporary)
 const INNATE_KEYS := ["orb_projectile_destroy", "blast_echo_delay", "blast_echo_damage", "spear_shard_max",
 	"spear_shard_cooldown", "summon_corpses", "grace_share", "grace_targets", "grace_range", "contagion_range",
 	"contagion_duration", "death_mark_slow", "bone_wall_duration", "soul_chains_extra_jumps", "wither_rot",
@@ -299,7 +303,9 @@ const INNATE_KEYS := ["orb_projectile_destroy", "blast_echo_delay", "blast_echo_
 	# --- Act XIV (temporary number): the Last Day ---
 	"meteor_radius_bonus",
 	# --- Act XV (temporary number): the Greenwood ---
-	"wild_hunt_riders"]
+	"wild_hunt_riders",
+	# --- Act XV (temporary number): the Fae Court ---
+	"glamour_copies"]
 
 ## Orbit radius (px) of the Bone Oracle's Ossuary Ward shards around him.
 const SHARD_ORBIT_RADIUS: float = 27.0  # TUNING (not in GDD)
@@ -1435,6 +1441,31 @@ const CHARACTERS := {
 		"stats": {"max_hp": 5.0, "move_speed": -0.03},  # TUNING (not in GDD) a herald of the hunt: sturdy, a little slower
 		"sprite": "player/horned_herald",
 		"tint": Color(0.82, 0.94, 0.80),  # TUNING (not in GDD) a pale moss green over the violet (his art replaces it)
+		"starts_unlocked": false,
+	},
+	# --- Act XV (temporary number): the Fae Court ---
+	# The Changeling Princess (Glamour's character; owner-approved proposal
+	# "Rewards": "The Summer Queen | Glamour ... | The Changeling Princess
+	# (female, figure style)"; docs/last_acts/PLAN.md: every playable character
+	# is a necromancer of the act's theme in violet, never a fae): FEMALE, in the
+	# figure-redesign style, fully clothed: a violet gown with gossamer-leaf
+	# layers, a bone mask held on a stick, a slim wand with a soul-teal moth (art
+	# player/changeling_princess, walk and idle strips, docs/year/ART_MANIFEST.md).
+	# Glamour must be unlocked (the Summer Queen) before she can be earned, by
+	# the usual Lv 5 rule. Own decision on her innate (the proposal names none):
+	# Many Faces, one more copy in every cast (Glamour._cast()).
+	"changeling_princess": {
+		"display_name": "The Changeling Princess",  # Owner-approved proposal
+		"title": "Left in a fae cradle, she grew up wearing other people's faces.",
+		"spell": "glamour",
+		"innate": {
+			"id": "many_faces", "name": "Many Faces",
+			"description": "Glamour sends one more copy of you in every cast.",
+			"values": {"glamour_copies": 1.0},  # TUNING (not in GDD) copies more in every cast
+		},
+		"stats": {"max_hp": -5.0, "move_speed": 0.04},  # TUNING (not in GDD) a quick, slight changeling
+		"sprite": "player/changeling_princess",
+		"tint": Color(0.98, 0.84, 0.94),  # TUNING (not in GDD) a pale blossom pink over the violet (her art replaces it)
 		"starts_unlocked": false,
 	},
 }

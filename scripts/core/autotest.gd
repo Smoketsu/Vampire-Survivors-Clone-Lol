@@ -1808,6 +1808,8 @@ func finish(summary: Dictionary) -> void:
 	LastDayReport.item_lines(game, st)  # Meteor Call, Cosmic Dust, Petrified Horns, Thick Marrow, the Bonehorn (only when taken; the stage's own lines are PrimevalReport's).
 	# --- Act XV (temporary number): the Greenwood ---
 	GreenwoodReport.item_lines(game, st)  # Wild Hunt, Horn of the Hunt, Fallow Ground (only when taken; the stage's own lines are WildReport's).
+	# --- Act XV (temporary number): the Fae Court ---
+	FaeCourtReport.item_lines(game, st)  # Glamour, Changeling, Deadwood (only when taken; the stage's own lines are WildReport's).
 	if game.enemies.boss is BossSeraphine:
 		print("[autotest] seraphine: %s" % BossSeraphine.summary_line(st))
 	var fired := game.enemies.stage.fired

@@ -445,6 +445,9 @@ const SPELLS := {
 	# --- Act XV (temporary number): the Greenwood ---
 	"wild_hunt": {"every": 2, "clock": "cooldown", "aim": "nearest", "pattern": "fan", "counts": [3, 4, 6], "spread": 18.0, "speed": 300.0,
 		"life": 0.5, "share": 0.3, "pierce": 2, "radius": 3.0, "style": "shard", "color": Color(0.45, 0.95, 0.85)},  # TUNING (not in GDD) a fan of spirit spears after every other cast (WildHuntData.SPIRIT)
+	# --- Act XV (temporary number): the Fae Court ---
+	"glamour": {"every": 1, "clock": "cooldown", "aim": "nearest", "pattern": "ring", "counts": [6, 8, 10], "speed": 240.0,
+		"life": 0.5, "share": 0.3, "pierce": 1, "radius": 3.0, "style": "shard", "color": Color(0.95, 0.70, 0.95)},  # TUNING (not in GDD) a ring of glamour glass after every cast (GlamourData.SHATTER)
 }
 ## Range (px) within which a spell echo looks for its target (no target, no echo).
 const SPELL_RANGE: float = 340.0  # TUNING (not in GDD)

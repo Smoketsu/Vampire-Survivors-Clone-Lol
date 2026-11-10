@@ -412,6 +412,11 @@ func compute_stats(cls: String, level: int, with_buffs: bool = true, with_evolut
 	if rally != null:
 		dmg_mult *= 1.0 + rally.bonus("damage")
 		spd_mult *= 1.0 + rally.bonus("attack_speed")
+	# --- Act XV (temporary number): the Fae Court --- the Summer Queen's bargain
+	# (WildRules.take_bargain()): its own timed category (0 unless one holds, so
+	# every other run is unchanged).
+	if with_buffs and game.wild != null and game.wild.bargain_damage() > 0.0:
+		dmg_mult *= 1.0 + game.wild.bargain_damage()
 	# Bound Souls (later horde passive): move speed is its own category; the
 	# leash scales the engagement radius and soft recall, and the return trip
 	# takes (1 - return_reduction) of the time (RETURNING speed divided by it).

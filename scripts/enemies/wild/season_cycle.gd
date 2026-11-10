@@ -200,7 +200,7 @@ func step(_delta: float) -> void:
 		roots_drawn = PackedVector2Array()
 		_still.clear()
 	if s == WildRulesData.SUMMER and now >= _next_fire:
-		_next_fire = now + float(WildRulesData.WILDFIRE["every"])
+		_next_fire = now + float(cfg.get("wildfire_every", WildRulesData.WILDFIRE["every"]))  # A stage may space its fronts (the Fae Court's endless summer: STAGE "seasons" "wildfire_every").
 		_start_fires()
 	_step_fronts()
 	if s == WildRulesData.WINTER:

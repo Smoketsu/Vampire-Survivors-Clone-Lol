@@ -463,7 +463,9 @@ const PRIMEVAL_BOSSES: Array[String] = ["scarmaw", "ironbrow", "gravejaw"]
 ## ids). Each Wild stage adds its own as it is built (phase 2).
 const WILD_GROWTH: Array[String] = ["thornling", "dryad", "treant", "corpse_bloom"]
 ## The fae (group "fae": the knights and the Winter Court).
-const WILD_FAE: Array[String] = ["fae_knight", "winter_fae"]
+const WILD_FAE: Array[String] = ["fae_knight", "winter_fae",
+	# --- Act XV (temporary number): the Fae Court ---
+	"masked_courtier", "winter_prince"]
 ## The Wild Hunt (group "hunt").
 const WILD_HUNT: Array[String] = ["great_stag", "wild_rider",
 	# --- Act XV (temporary number): the Greenwood ---
@@ -867,6 +869,9 @@ const DESCRIPTIONS: Dictionary = {
 	# --- Act XV (temporary number): the Greenwood ---
 	"hunt_hound": "A hound of the Wild Hunt. Two run with every Rider, and sweep his line beside him.",  # Owner-approved proposal
 	"huntsman": "The Huntsman of the Wild Hunt: he blows his horn and leads three riders across the wood in one sweeping line.",  # Owner-approved proposal (miniboss)
+	# --- Act XV (temporary number): the Fae Court ---
+	"masked_courtier": "A courtier of the Summer Queen wearing her face. Strike it, and the mask falls.",  # Owner-approved proposal (the Masque)
+	"winter_prince": "The Winter Prince, the Summer Queen's rival. Where he walks, her summer freezes for one minute.",  # Owner-approved proposal (miniboss)
 	"summer_queen": "The Summer Queen of the fae. She wears many faces, and she will offer you a bargain.",  # Proposal
 	"green_mother": "The Green Mother, grown from the World-Tree: the whole year in one figure, half in bloom and half in frost.",  # Proposal
 	# --- Act XIV (temporary number): the Last Day ---
@@ -1244,6 +1249,8 @@ const ACHIEVEMENT_ICONS: Dictionary = {
 	"the_day_the_sky_fell": "ach_the_day_the_sky_fell",  # TUNING (not in GDD)
 	# --- Act XV (temporary number): the Greenwood ---
 	"scorched_earth": "ach_scorched_earth",  # TUNING (not in GDD)
+	# --- Act XV (temporary number): the Fae Court ---
+	"a_fair_bargain": "ach_a_fair_bargain",  # TUNING (not in GDD)
 }
 ## IconGlyph kind drawn when an achievement badge PNG is missing.
 const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
@@ -1336,6 +1343,8 @@ const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
 	"the_day_the_sky_fell": "meteor_call",
 	# --- Act XV (temporary number): the Greenwood ---
 	"scorched_earth": "fallow_ground",
+	# --- Act XV (temporary number): the Fae Court ---
+	"a_fair_bargain": "deadwood",
 }
 ## Screen title (TITLE tier).
 const TITLE: String = "Codex"  # TUNING (not in GDD)

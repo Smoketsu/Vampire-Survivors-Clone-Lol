@@ -52,4 +52,6 @@ const POSES: Dictionary = {
 	"primeval/gravejaw": {1: "roar"},  # TUNING (not in GDD) jaws wide, head up (BossGravejaw: the Roar's windup, at the Mound)
 	# --- Act XV (temporary number): the Greenwood ---
 	"wild/stag_king": {1: "horn"},  # TUNING (not in GDD) the hunting horn raised to his lips (BossStagKing: while a Hunt rides)
+	# --- Act XV (temporary number): the Fae Court ---
+	"wild/summer_queen": {1: "bargain"},  # TUNING (not in GDD) a hand held out with the bargain (BossSummerQueen: while an offer waits)
 }

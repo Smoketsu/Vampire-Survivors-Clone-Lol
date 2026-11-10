@@ -240,7 +240,9 @@ const ORDER := ["grave_dominion", "necrotic_vigor", "dark_command", "soul_recycl
 	# --- Act XIV (temporary number): the Last Day ---
 	"cosmic_dust", "petrified_horns", "thick_marrow",
 	# --- Act XV (temporary number): the Greenwood ---
-	"horn_of_the_hunt", "fallow_ground"]
+	"horn_of_the_hunt", "fallow_ground",
+	# --- Act XV (temporary number): the Fae Court ---
+	"changeling", "deadwood"]
 
 ## Passives that only help summons (a "dead" level-up card while no summon
 ## class is owned, see AbilityManager.build_offers()).
@@ -2664,6 +2666,47 @@ const PASSIVES := {
 			{"blight_rise": 0.6},  # TUNING (not in GDD)
 			{"blight_rise": 0.8},  # TUNING (not in GDD)
 			{"blight_rise": 1.0},  # Owner-approved proposal: "blight spreads twice as fast" at full
+		],
+	},
+	# --- Act XV (temporary number): the Fae Court ---
+	# Changeling (Glamour's paired passive; owner-approved proposal: "Court of
+	# Masks (+ Changeling)"; unlocked with the spell by the Summer Queen and
+	# offered on every stage). Own decision on its effect: the copies are better
+	# changelings: each lasts copy_life s longer and has copy_hp more HP
+	# (Glamour, the one read). Read only by Glamour: nothing without the spell.
+	"changeling": {
+		"display_name": "Changeling",  # Owner-approved proposal
+		"icon": "changeling",
+		"description": "Your copies are better changelings: Glamour's copies last longer and take more blows.",
+		"labels": {"copy_life": ["Copy life (s)", "num"], "copy_hp": ["Copy HP", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"copy_life": 0.5, "copy_hp": 0.1},  # TUNING (not in GDD)
+			{"copy_life": 1.0, "copy_hp": 0.2},  # TUNING (not in GDD)
+			{"copy_life": 1.5, "copy_hp": 0.3},  # TUNING (not in GDD)
+			{"copy_life": 2.0, "copy_hp": 0.4},  # TUNING (not in GDD)
+			{"copy_life": 2.5, "copy_hp": 0.5},  # TUNING (not in GDD)
+		],
+	},
+	# The Turning Year's counter-passive Deadwood (owner-approved proposal:
+	# "Deadwood (roots and thickets hold summons half as long)"; unlocked by the
+	# Fae Court achievement A Fair Bargain, owner answer Nov 2026; offered only in
+	# the Turning Year through its card row's "act"). The foundation's hook reads
+	# it: WildRules.deadwood_mult() (x 1 - hold_cut on every root, thicket and
+	# burial hold on a summon: SeasonCycle, Thickets, SpringReturns).
+	"deadwood": {
+		"display_name": "Deadwood",  # Owner-approved proposal
+		"icon": "deadwood",
+		"description": "Roots and thorns rot on your dead: they hold your summons for less time.",
+		"labels": {"hold_cut": ["Root and thicket hold", "pct"]},
+		"act": 15,  # Owner-approved: the act's counter-passives are offered only in this act (Unlocks.act_allows(); temporary number, the reorder renumbers)
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"hold_cut": 0.1},  # TUNING (not in GDD)
+			{"hold_cut": 0.2},  # TUNING (not in GDD)
+			{"hold_cut": 0.3},  # TUNING (not in GDD)
+			{"hold_cut": 0.4},  # TUNING (not in GDD)
+			{"hold_cut": 0.5},  # Owner-approved proposal: "hold summons half as long" at full
 		],
 	},
 }

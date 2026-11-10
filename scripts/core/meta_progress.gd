@@ -471,6 +471,8 @@ func award_run(summary: Dictionary, mods: MetaModifiers) -> Dictionary:
 	_add_lifetime("sky_fell_runs", 1.0 if float(st.get(Extinction.DAY_THE_SKY_FELL_STAT, 0.0)) > 0.0 else 0.0)  # The Day the Sky Fell (the Last Day)
 	# --- Act XV (temporary number): the Greenwood ---
 	_add_lifetime("scorched_earth_runs", 1.0 if float(st.get(GreenwoodDirector.SCORCHED_STAT, 0.0)) > 0.0 else 0.0)  # Scorched Earth (the Greenwood)
+	# --- Act XV (temporary number): the Fae Court ---
+	_add_lifetime("fair_bargain_runs", 1.0 if FaeCourtReport.fair_bargain(st, bool(summary.get("victory", false))) else 0.0)  # A Fair Bargain (the Summer Queen)
 	_add_run_counters(summary)  # Content wave 2: the one-run achievements' lifetime counters.
 	var slew_unlock_boss := bool(summary.get("boss_defeated", false)) and String(summary.get("boss_id", "")) == HyperData.UNLOCK_BOSS_ID  # Seraphine slain.
 	if slew_unlock_boss:
@@ -1714,6 +1716,8 @@ static func _default_lifetime() -> Dictionary:
 		"sky_fell_runs": 0.0,  # Last Day runs that reached the Extinction with no summon lost (The Day the Sky Fell)
 		# --- Act XV (temporary number): the Greenwood ---
 		"scorched_earth_runs": 0.0,  # Greenwood runs whose blight covered half the Greenwood (Scorched Earth)
+		# --- Act XV (temporary number): the Fae Court ---
+		"fair_bargain_runs": 0.0,  # won runs that accepted every bargain the Summer Queen offered (A Fair Bargain)
 		# --- Content wave 2: B. Achievement rewards (MetaProgress.run_counters()) ---
 		"best_temp_raised": 0.0,  # most temporary undead raised in one run (Mass Grave)
 		"untouchable_runs": 0.0,  # runs that reached 0:00 never below half HP (Untouchable)

@@ -82,6 +82,10 @@ static func draw_summon(ci: CanvasItem, cls: String, o: Vector2, r: float, flash
 	if cls.begins_with(TemptData.GLYPH_PREFIX):
 		SilkPalaceGlyphs.draw_enthralled(ci, cls.substr(TemptData.GLYPH_PREFIX.length()), o, r, flash)
 		return  # Act VI: a thrall (Enthrall: the foe's own art, charmed pink, a heart over it).
+	if cls.begins_with(GlamourData.GLYPH_PREFIX):
+		if not SpriteBank.draw(ci, cls.substr(GlamourData.GLYPH_PREFIX.length()), o, flash, GlamourData.TINT):
+			SpriteBank.draw_disc(ci, o, r, GlamourData.TINT)
+		return  # Act XV: an illusory copy of the necromancer (Glamour: the caster's own art in its light).
 	if SpriteBank.draw(ci, "summons/" + cls, o, flash):
 		return  # Sprite art exists (assets/sprites/summons/<cls>.png).
 	match cls:

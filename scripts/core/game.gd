@@ -613,6 +613,9 @@ func _ready() -> void:
 		# --- Act XV (temporary number): the Greenwood ---
 		"greenwood":
 			ground = GreenwoodGround.new()  # The Greenwood's four zone floors (GreenwoodStage.ZONES).
+		# --- Act XV (temporary number): the Fae Court ---
+		"fae_court":
+			ground = FaeCourtGround.new()  # The Fae Court's four zone floors (FaeCourtStage.ZONES).
 		_:
 			ground = Ground.new()
 	add_child(ground)

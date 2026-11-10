@@ -142,7 +142,9 @@ const SPELL_ORDER := ["shadow_bolt", "orb_shield", "shadow_blast",
 	# --- Act XIV (temporary number): the Last Day ---
 	"meteor_call",
 	# --- Act XV (temporary number): the Greenwood ---
-	"wild_hunt"]
+	"wild_hunt",
+	# --- Act XV (temporary number): the Fae Court ---
+	"glamour"]
 
 ## Spell definitions.
 ##   display_name — UI name.
@@ -1359,6 +1361,31 @@ const SPELLS := {
 			{"damage": 32.0, "riders": 4, "range": 340.0, "length": 680.0, "speed": 620.0, "radius": 18.0, "cooldown": 3.3},  # TUNING (not in GDD)
 			{"damage": 38.0, "riders": 4, "range": 350.0, "length": 700.0, "speed": 620.0, "radius": 19.0, "cooldown": 3.2},  # TUNING (not in GDD)
 			{"damage": 45.0, "riders": 5, "range": 360.0, "length": 720.0, "speed": 640.0, "radius": 20.0, "cooldown": 3.0},  # TUNING (not in GDD) a wide line across the screen, under Stampede's Lv5 60 on its narrow one
+		],
+	},
+	# --- Act XV (temporary number): the Fae Court ---
+	# Glamour (GDD §15.0 "Glamour, Court of Masks, Changeling and the Changeling
+	# Princess"; owner-approved proposal: "illusory copies of the necromancer draw
+	# enemy attacks"; unlocked by slaying the Summer Queen, then offered on every
+	# stage). Every `cooldown` s, a foe within `range` px, `copies` illusory
+	# copies of the necromancer step out round him for `life` s: temporary
+	# Warrior bodies with `hp` x a Warrior's HP that never strike and draw every
+	# foe within `taunt` px (the one taunt path); each that falls or fades
+	# shatters for `damage` to every foe within `radius` px (spell area widens
+	# it). Logic: Glamour; fixed rules: GlamourData. A defensive spell: its
+	# damage is the shattering, lighter than a striking spell's.
+	"glamour": {
+		"display_name": "Glamour",  # Owner-approved proposal
+		"icon": "glamour",
+		"description": "Illusory copies of you step out and draw enemy attacks, then shatter.",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Shatter damage", "copies": "Copies", "hp": "Copy HP (x Warrior)", "life": "Copy life (s)", "cooldown": "Cooldown (s)"},
+		"levels": [
+			{"damage": 26.0, "copies": 2, "hp": 1.5, "life": 6.0, "taunt": 110.0, "range": 300.0, "radius": 52.0, "cooldown": 8.0},  # Owner-approved proposal: "illusory copies of the necromancer draw enemy attacks"; TUNING (not in GDD) the numbers
+			{"damage": 32.0, "copies": 2, "hp": 1.8, "life": 6.5, "taunt": 115.0, "range": 310.0, "radius": 54.0, "cooldown": 7.5},  # TUNING (not in GDD)
+			{"damage": 38.0, "copies": 3, "hp": 2.1, "life": 7.0, "taunt": 120.0, "range": 320.0, "radius": 56.0, "cooldown": 7.0},  # TUNING (not in GDD)
+			{"damage": 46.0, "copies": 3, "hp": 2.5, "life": 7.5, "taunt": 130.0, "range": 330.0, "radius": 60.0, "cooldown": 6.5},  # TUNING (not in GDD)
+			{"damage": 55.0, "copies": 4, "hp": 3.0, "life": 8.0, "taunt": 140.0, "range": 340.0, "radius": 64.0, "cooldown": 6.0},  # TUNING (not in GDD) four copies every 6 s: a wall of faces round the ring
 		],
 	},
 }

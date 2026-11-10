@@ -528,6 +528,12 @@
 ##                        the sacred groves, Scorched Earth, the "huntsman"
 ##                        event); ground "greenwood" is its GreenwoodGround
 ##                        (four zone floors over the act's greenwood style).
+## --- Act XV (temporary number): the Fae Court ---
+##   fae_court          — FaeCourtDirector config (FaeCourtStage.FAE_COURT:
+##                        the endless summer, the fairy rings, the
+##                        "winter_prince" event); ground "fae_court" is its
+##                        FaeCourtGround (four zone floors over the act's fae
+##                        style). A STAGE "seasons" may carry "wildfire_every".
 class_name StageRegistry
 extends RefCounted
 

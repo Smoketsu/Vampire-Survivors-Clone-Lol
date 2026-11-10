@@ -516,6 +516,10 @@ var last_day: LastDayDirector = null
 ## The Greenwood's mechanics (the sacred groves, the Huntsman of the Wild Hunt,
 ## Scorched Earth; StageRegistry "greenwood"; null on every other stage).
 var greenwood: GreenwoodDirector = null
+# --- Act XV (temporary number): the Fae Court ---
+## The Fae Court's mechanics (the endless summer, the fairy rings, the Winter
+## Prince; StageRegistry "fae_court"; null on every other stage).
+var fae_court: FaeCourtDirector = null
 ## Sanctum kit bookkeeping: recent deaths, Confessor revivals, danger hints.
 var rites: CovenantRites
 ## The living miniboss shown on the HUD's miniboss bar (the Cathedral
@@ -816,6 +820,12 @@ func _ready() -> void:
 		greenwood.game = game
 		greenwood.config = stage_def["greenwood"]
 		add_child(greenwood)  # The Greenwood's director.
+	# --- Act XV (temporary number): the Fae Court ---
+	if not (stage_def.get("fae_court", {}) as Dictionary).is_empty():
+		fae_court = FaeCourtDirector.new()
+		fae_court.game = game
+		fae_court.config = stage_def["fae_court"]
+		add_child(fae_court)  # The Fae Court's director.
 
 
 # =====================================================================================
@@ -1014,6 +1024,9 @@ func step(delta: float) -> void:
 	# --- Act XV (temporary number): the Greenwood ---
 	if greenwood != null:
 		greenwood.step(delta)  # The sacred groves, the Huntsman, Scorched Earth.
+	# --- Act XV (temporary number): the Fae Court ---
+	if fae_court != null:
+		fae_court.step(delta)  # The endless summer, the fairy rings, the Winter Prince.
 
 
 ## The Archive kinds' world hazards (ArchiveHazards), created on first use.
@@ -1217,6 +1230,9 @@ func objective_text() -> String:
 	# --- Act XV (temporary number): the Greenwood ---
 	if greenwood != null and greenwood.objective_override() != "":
 		return greenwood.objective_override()  # The Huntsman of the Wild Hunt.
+	# --- Act XV (temporary number): the Fae Court ---
+	if fae_court != null and fae_court.objective_override() != "":
+		return fae_court.objective_override()  # The Winter Prince.
 	if boss != null and not boss.active:
 		return String(boss_info["dead_objective"])
 	return segments[segment_index]["objective"]
@@ -1580,6 +1596,12 @@ func _run_event(ev: Dictionary) -> void:
 				greenwood.start_event(ev)
 			game.stat_add("wave_events", 1.0)
 			return  # The Greenwood's miniboss and his riders (GreenwoodDirector).
+		# --- Act XV (temporary number): the Fae Court ---
+		"winter_prince":
+			if fae_court != null:
+				fae_court.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return  # The Fae Court's miniboss and his minute of winter (FaeCourtDirector).
 	show_banner(ev["banner"])
 	var groups: Array = ev["groups"]
 	if game.shogunate != null:

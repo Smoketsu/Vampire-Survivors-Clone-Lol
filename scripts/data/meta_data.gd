@@ -474,7 +474,9 @@ const ACHIEVEMENT_ORDER := ["bone_legion", "heretics_bane", "dread_sovereign", "
 	# --- Act XIV (temporary number): the Last Day ---
 	"trampled", "the_day_the_sky_fell",
 	# --- Act XV (temporary number): the Greenwood ---
-	"scorched_earth"]
+	"scorched_earth",
+	# --- Act XV (temporary number): the Fae Court ---
+	"a_fair_bargain"]
 
 ## Achievement definitions (GDD §9.4 "Example Achievement Unlocks"). Each
 ## achievement is tracked and recorded in the save and pays a one-time Soul
@@ -874,6 +876,15 @@ const ACHIEVEMENTS := {
 	# answer, Nov 2026).
 	"scorched_earth": {"display_name": "Scorched Earth", "description": "Blight half the Greenwood in one run",
 		"stat": "scorched_earth_runs", "goal": 1, "unlock": "The Fallow Ground passive", "bounty": 300},  # Owner-approved proposal; bounty TUNING (not in GDD) as Nothing Taken
+	# --- Act XV (temporary number): the Fae Court ---
+	# The Turning Year's achievement "A Fair Bargain" (owner-approved proposal:
+	# "accept every bargain the Summer Queen offers and still win"): a won run
+	# (any stage where she fought) in which she offered at least one bargain and
+	# every one was accepted (FaeCourtReport.fair_bargain(); MetaProgress counts
+	# the runs, lifetime fair_bargain_runs). It unlocks the counter-passive
+	# Deadwood (owner answer, Nov 2026).
+	"a_fair_bargain": {"display_name": "A Fair Bargain", "description": "Accept every bargain the Summer Queen offers and still win",
+		"stat": "fair_bargain_runs", "goal": 1, "unlock": "The Deadwood passive", "bounty": 300},  # Owner-approved proposal; bounty TUNING (not in GDD) as Scorched Earth
 }
 
 # --- Content wave 2: B. Achievement rewards ---

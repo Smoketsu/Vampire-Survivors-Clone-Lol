@@ -65,6 +65,8 @@ static func print_lines(game: Game, st: Dictionary) -> void:
 	# Phase 2: each Wild stage's own lines go here (its stage, kinds and boss).
 	# --- Act XV (temporary number): the Greenwood ---
 	GreenwoodReport.stage_lines(game, st)  # The sacred groves, the Huntsman, the kinds' specials, Scorched Earth, the Stag King.
+	# --- Act XV (temporary number): the Fae Court ---
+	FaeCourtReport.stage_lines(game, st)  # The endless summer, the fairy rings, the Winter Prince, the Summer Queen, A Fair Bargain.
 
 
 ## The "turning year" line (SeasonCycle).

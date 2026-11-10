@@ -67,6 +67,9 @@ const SEASON_TINTS: Array[Color] = [
 ## The year (a stage's STAGE "seasons" overrides any key).
 const SEASONS := {
 	"length": 300.0,  # Owner-approved proposal: "four seasons of 5 minutes" (the World-Tree: "twice as fast", 150)
+	# Optional key a stage may add (absent here): "wildfire_every", s between two
+	# wildfire fronts in place of WILDFIRE "every" (the Fae Court's endless summer
+	# spaces its fronts out).
 }
 
 ## SPRING — the roots (owner-approved proposal: "roots grab anything that

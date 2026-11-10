@@ -824,6 +824,12 @@ const FLAT_SIZES: Dictionary = {
 	"wild/stag_king": 88.0,  # TUNING (not in GDD) Greenwood boss, male: stag-headed, antlered lord of the forest, a hunting horn, a mantle of leaves (about 72 wide); walk strip, pose 1 (the horn raised)
 	"player/horned_herald": 56.0,  # TUNING (not in GDD) male: violet hunting robes, a bone-antler hood, a bone hunting horn, an antler-tined soul staff (about 42 wide); walk strip
 	"obstacles/wild_grove_tree": 48.0,  # TUNING (not in GDD) a sacred grove's standing tree (40 x 48; drawn by GreenwoodDirector, never an obstacle)
+	# --- Act XV (temporary number): the Fae Court (phase 2; art pending, WildGlyphs / the boss's code shape until then) ---
+	"wild/winter_prince": 56.0,  # TUNING (not in GDD) Fae Court miniboss, male: frost armour, a cloak of snow, an icicle sword (about 40 wide); walk strip
+	"wild/masked_courtier": 52.0,  # TUNING (not in GDD) a fae courtier, female (figure style): a gown of roses, a thorn rapier (about 32 wide); walk strip (drawn as wild/summer_queen_mask while masked)
+	"wild/summer_queen": 80.0,  # TUNING (not in GDD) Fae Court boss, female (figure style): butterfly wings, a gown of roses, a crown of blossoms (about 64 wide); glide, idle strips, pose 1 (the bargain held out)
+	"wild/summer_queen_mask": 80.0,  # TUNING (not in GDD) her masked face the Masque's courtiers wear (same size as her)
+	"player/changeling_princess": 56.0,  # TUNING (not in GDD) female (figure style): violet gown with gossamer-leaf layers, a bone mask on a stick, a moth wand (about 38 wide); walk, idle strips
 	# The Turning Year's markers (not drawn until the stage agents wire them; the code shapes stay)
 	"markers/wild_roots": 16.0,  # TUNING (not in GDD) roots sprouting under a body that stood still, 24 x 16
 	"markers/wild_sprout": 32.0,  # TUNING (not in GDD) a thicket seed sprouting, 32 x 32

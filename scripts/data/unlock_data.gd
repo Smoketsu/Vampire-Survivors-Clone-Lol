@@ -431,6 +431,14 @@ const UNLOCKS := {
 	"wild_hunt": {"type": "spell", "boss": "stag_king", "text": "Slay the Stag King in the Greenwood to unlock."},  # Owner-approved proposal
 	"horn_of_the_hunt": {"type": "passive", "boss": "stag_king", "text": "Slay the Stag King in the Greenwood to unlock."},  # Wild Hunt's paired passive (owner-approved proposal), unlocked with it
 	"fallow_ground": {"type": "passive", "achievement": "scorched_earth", "text": "Earn Scorched Earth: blight half the Greenwood in one run."},  # Owner answer (Nov 2026): Scorched Earth unlocks Fallow Ground
+	# --- Act XV (temporary number): the Fae Court ---
+	# The Summer Queen's fall (owner-approved proposal "Rewards": Glamour is the
+	# Summer Queen's) with its paired passive, offered on every stage; the
+	# counter-passive Deadwood by the stage's achievement A Fair Bargain (owner
+	# answer, Nov 2026), offered only in the act.
+	"glamour": {"type": "spell", "boss": "summer_queen", "text": "Slay the Summer Queen at the Fae Court to unlock."},  # Owner-approved proposal
+	"changeling": {"type": "passive", "boss": "summer_queen", "text": "Slay the Summer Queen at the Fae Court to unlock."},  # Glamour's paired passive (owner-approved proposal), unlocked with it
+	"deadwood": {"type": "passive", "achievement": "a_fair_bargain", "text": "Earn A Fair Bargain: accept every bargain the Summer Queen offers and still win."},  # Owner answer (Nov 2026): A Fair Bargain unlocks Deadwood
 	"bonehorn": {"type": "class", "boss": "gravejaw", "text": "Slay Old Gravejaw on the Last Day, before the meteor falls, to unlock."},  # Owner-approved proposal: the finale's reward
 	"petrified_horns": {"type": "passive", "boss": "gravejaw", "text": "Slay Old Gravejaw on the Last Day, before the meteor falls, to unlock."},  # Its paired passive (own decision), unlocked with it
 	"thick_marrow": {"type": "passive", "achievement": "trampled", "text": "Earn Trampled: let the stampedes kill 100 enemies in one run."},  # Owner answer (Nov 9, 2026): Trampled unlocks Thick Marrow

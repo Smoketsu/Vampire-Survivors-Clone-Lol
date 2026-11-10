@@ -43,8 +43,9 @@ func _init(p_director: HordeDirector) -> void:
 func refresh() -> void:
 	_taunters.clear()
 	if director.evolutions.evolved.is_empty() and director.golems == null \
-			and director.game.abilities.passive_level("strings_of_the_dead") <= 0:
-		return  # (Act III: Strings of the Dead gives every temporary summon a taunt reach.)
+			and director.game.abilities.passive_level("strings_of_the_dead") <= 0 \
+			and director.game.abilities.spell_level(GlamourData.ID) <= 0:
+		return  # (Act III: Strings of the Dead gives every temporary summon a taunt reach; Act XV: Glamour's copies taunt.)
 	for u in director.units:
 		if not u.active or u.state == SummonedUnit.State.SPAWNING:
 			continue
@@ -76,6 +77,8 @@ func taunt_target(e: Enemy) -> SummonedUnit:
 ## Stats key that counts an enemy redirected onto taunter `u`: a Bone Golem's
 ## Bulwark has its own (golem_taunts), so the Colossus's count is unchanged.
 static func taunt_stat(u: SummonedUnit) -> String:
+	if u.glyph_kind.begins_with(GlamourData.GLYPH_PREFIX):
+		return "glamour_taunts"  # Act XV: an illusory copy of the necromancer (Glamour).
 	if u.is_temporary:
 		return "strings_taunts"  # Act III: a temporary summon taunting through Strings of the Dead.
 	return "golem_taunts" if u.unit_class == GolemKit.CLASS_ID else "colossus_taunts"

@@ -65,6 +65,13 @@ var _under_at: float = 0.0
 var _blizzard_tex: GradientTexture2D = null
 ## The HUD's season wheel (null headless or off the act).
 var _wheel: SeasonWheel = null
+# --- Act XV (temporary number): the Fae Court --- the Summer Queen's bargain (take_bargain()).
+## Army damage share a struck bargain adds (0 while none holds).
+var bargain_bonus: float = 0.0
+## Game time (s) a struck bargain ends (0 = none holds).
+var bargain_until: float = 0.0
+## True while a struck bargain forbids the army's healing.
+var bargain_no_heal: bool = false
 
 
 ## Builds the rules for `p_game` (call before add_child; Game does both).
@@ -105,6 +112,11 @@ func _init(p_game: Game) -> void:
 ## Per-tick update (Game, after the enemies, before the obstacle push-out):
 ## Spring Returns' clock, the year, the ground, the thickets; then the redraws.
 func step(delta: float) -> void:
+	if bargain_until > 0.0 and game.elapsed >= bargain_until:
+		bargain_until = 0.0  # The Summer Queen's bargain lapses (the Fae Court).
+		bargain_bonus = 0.0
+		bargain_no_heal = false
+		_recompute_armies()
 	returns.step(delta)
 	seasons.step(delta)
 	bloom.step(delta)
@@ -172,7 +184,10 @@ func tint_ground(c: Color) -> void:
 ## The autotest autopilot's push away from every live Wild telegraph at `p`
 ## (the wildfires' paths).
 func danger_push(p: Vector2) -> Vector2:
-	return seasons.danger_push(p)
+	var push := seasons.danger_push(p)
+	if game.enemies.fae_court != null:
+		push += game.enemies.fae_court.danger_push(p)  # The Fae Court: out of a fairy ring.
+	return push
 
 
 func _draw() -> void:
@@ -202,3 +217,42 @@ func deadwood_mult() -> float:
 ## Exactly 1 while the passive does not exist; BloomField._rise() reads it.
 func fallow_mult() -> float:
 	return 1.0 + game.abilities.passive_value(WildRulesData.FALLOW_GROUND, WildRulesData.FALLOW_GROUND_KEY)
+
+
+# =====================================================================================
+# The Summer Queen's bargain (the Fae Court; Act XV phase 2)
+# =====================================================================================
+
+## THE one bargain path (BossSummerQueen.answer_bargain()): for `time` s every
+## army deals `damage` more (HordeDirector.compute_stats() reads
+## bargain_damage(), its own category) and, when `no_heal`, heals no more
+## (CombatResolver.heal_unit() reads heal_barred()). A new bargain replaces the
+## one holding. Off the Fae Court nothing calls it, so both reads stay neutral.
+func take_bargain(damage: float, time: float, no_heal: bool) -> void:
+	bargain_bonus = damage
+	bargain_until = game.elapsed + time
+	bargain_no_heal = no_heal
+	_recompute_armies()
+
+
+## Army damage share of the bargain holding now (0 when none).
+func bargain_damage() -> float:
+	return bargain_bonus if game.elapsed < bargain_until else 0.0
+
+
+## True while a bargain forbids the army's healing.
+func heal_barred() -> bool:
+	return bargain_no_heal and game.elapsed < bargain_until
+
+
+## Every army's summons take their stats again (the bargain began or ended;
+## co-op: each slot bound in turn).
+func _recompute_armies() -> void:
+	if game.coop == null:
+		game.horde.recompute_all(game.horde.capacity_snapshot())
+		return
+	var prev := game.coop.bound
+	for i in game.coop.slots.size():
+		game.coop.bind(i)
+		game.horde.recompute_all(game.horde.capacity_snapshot())
+	game.coop.bind(prev)

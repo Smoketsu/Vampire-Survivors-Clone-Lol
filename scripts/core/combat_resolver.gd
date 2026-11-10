@@ -814,6 +814,11 @@ func _check_last_rites() -> void:
 func heal_unit(u: SummonedUnit, amount: float) -> float:
 	if not u.active:
 		return 0.0
+	# --- Act XV (temporary number): the Fae Court --- a struck bargain forbids the
+	# army's healing (WildRules.heal_barred(); false unless one holds).
+	if game.wild != null and game.wild.heal_barred():
+		game.stat_add("bargain_heals_barred", 1.0)
+		return 0.0
 	# --- Act VII: Castle Sanguis --- Thirst Eternal (0 while not owned).
 	var thirst := _thirst_eternal(u)  # Extra share of the heal (0..).
 	if thirst > 0.0:

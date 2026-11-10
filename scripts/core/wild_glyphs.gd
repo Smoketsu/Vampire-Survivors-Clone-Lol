@@ -26,6 +26,13 @@ static func draw_enemy(ci: CanvasItem, kind: String, o: Vector2, r: float, flash
 		return false
 	# Phase 2: each Wild stage's own fallbacks go here, before the shared kinds'.
 	match kind:
+		# --- Act XV (temporary number): the Fae Court ---
+		"winter_prince":
+			_figure(ci, o, r, flash, Palette.WILD_FROST, Color(0.62, 0.78, 0.92))
+			ci.draw_rect(Rect2(o + Vector2(r * 0.7, -r * 1.1), Vector2(2.0, r * 1.5)), Glyphs._c(Palette.WILD_FROST, flash))  # The icicle sword.
+		"masked_courtier":
+			_figure(ci, o, r, flash, Palette.WILD_BLOSSOM, Palette.WILD_GOLD_LEAF)
+			ci.draw_rect(Rect2(o + Vector2(r * 0.7, -r * 0.9), Vector2(1.5, r * 1.3)), Glyphs._c(Palette.WILD_BONE, flash))  # The thorn rapier.
 		# --- Act XV (temporary number): the Greenwood ---
 		"huntsman":
 			if not SpriteBank.draw(ci, "wild/wild_rider", o, flash):  # The Rider's art until his own.
@@ -97,6 +104,18 @@ static func draw_obstacle(ci: CanvasItem, o: Arena.Obstacle) -> bool:
 	# Phase 2: each Wild stage's own obstacle glyphs go here first.
 	var c := o.center
 	match o.kind:
+		# --- Act XV (temporary number): the Fae Court ---
+		"wild_rose_hedge":
+			var rect := Rect2(c - o.half, o.half * 2.0)
+			ci.draw_rect(Rect2(rect.position + Vector2(3, 4), rect.size), Color(0, 0, 0, 0.3))
+			ci.draw_rect(rect, INK)
+			ci.draw_rect(rect.grow(-1.5), Palette.WILD_MOSS_DARK)
+			var long := maxf(rect.size.x, rect.size.y)
+			var n := int(long / 12.0)
+			for i in n:
+				var t := (float(i) + 0.5) / float(n)
+				var rp := rect.position + (Vector2(rect.size.x * t, rect.size.y * 0.5) if rect.size.x >= rect.size.y else Vector2(rect.size.x * 0.5, rect.size.y * t))
+				SpriteBank.draw_disc(ci, rp, 2.5, Palette.WILD_BLOSSOM if (i + o.variant) % 2 == 0 else Color(0.85, 0.2, 0.3))  # A rose.
 		"wild_oak":
 			var r := o.radius
 			SpriteBank.draw_disc(ci, c + Vector2(3, 4), r, Color(0, 0, 0, 0.3))

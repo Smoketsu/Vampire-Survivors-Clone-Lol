@@ -140,7 +140,9 @@ const ORDER := ["void_barrage", "eclipse_ward", "abyssal_detonation",
 	# --- Act XIV (temporary number): the Last Day ---
 	"extinction_event",
 	# --- Act XV (temporary number): the Greenwood ---
-	"the_endless_hunt"]
+	"the_endless_hunt",
+	# --- Act XV (temporary number): the Fae Court ---
+	"court_of_masks"]
 
 ## Evolution definitions.
 ##   base         — spell id that evolves (AbilityData.SPELLS key).
@@ -1158,6 +1160,25 @@ const EVOLUTIONS := {
 		"stats": {
 			"damage": 50.0, "riders": 6, "range": 380.0, "length": 740.0, "speed": 660.0, "radius": 22.0, "cooldown": 2.8,  # TUNING (not in GDD)
 			"returns": 1,  # TUNING (not in GDD) the evolution flag: sweeps back after the first
+		},
+	},
+	# --- Act XV (temporary number): the Fae Court ---
+	# Court of Masks (GDD §15.0 "Glamour, Court of Masks, Changeling and the
+	# Changeling Princess"; owner-approved proposal "Glamour -> Court of Masks
+	# (+ Changeling)"): Glamour + Changeling (a NEW passive, owner rule: at Lv 5).
+	# Own decision on its kit: six sturdier copies, and each shattering also
+	# bewilders the foes it strikes for `bewilder` s (slower and weaker, through
+	# the one debuff path). Detected by the "bewilder" key.
+	"court_of_masks": {
+		"base": "glamour",
+		"passive": "changeling",
+		"display_name": "Court of Masks",  # Owner-approved proposal
+		"icon": "court_of_masks",
+		"description": "Six masked copies of you hold the ring, then shatter and bewilder the foes round them.",
+		"labels": {"damage": "Shatter damage", "copies": "Copies", "hp": "Copy HP (x Warrior)", "life": "Copy life (s)", "cooldown": "Cooldown (s)", "bewilder": "Bewilder (s)"},
+		"stats": {
+			"damage": 66.0, "copies": 6, "hp": 3.6, "life": 9.0, "taunt": 150.0, "range": 360.0, "radius": 72.0, "cooldown": 5.5,  # TUNING (not in GDD)
+			"bewilder": 3.0,  # TUNING (not in GDD) the evolution flag: s each shattering bewilders
 		},
 	},
 }
