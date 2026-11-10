@@ -328,7 +328,7 @@ func answer_bargain(accept: bool) -> void:
 		if cost > 0.0:
 			for pl in game.all_players:
 				if not pl.dead:
-					game.combat.damage_player(pl.hp * cost, SummerQueenData.BARGAIN_SOURCE, pl, self)
+					game.combat.pay_life(pl, cost, SummerQueenData.BARGAIN_SOURCE)
 		game.effects.ring(position, 120.0, SummerQueenData.PETAL, 0.6)
 		game.enemies.show_banner(String(boss_def["accept_banner"]))
 	else:

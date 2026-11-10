@@ -184,10 +184,7 @@ func tint_ground(c: Color) -> void:
 ## The autotest autopilot's push away from every live Wild telegraph at `p`
 ## (the wildfires' paths).
 func danger_push(p: Vector2) -> Vector2:
-	var push := seasons.danger_push(p)
-	if game.enemies.fae_court != null:
-		push += game.enemies.fae_court.danger_push(p)  # The Fae Court: out of a fairy ring.
-	return push
+	return seasons.danger_push(p)
 
 
 func _draw() -> void:

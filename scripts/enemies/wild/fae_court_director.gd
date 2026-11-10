@@ -148,18 +148,6 @@ func _step_rings() -> void:
 			game.stat_add("ring_slows_enemies", 1.0)
 
 
-## The autotest autopilot's push out of a fairy ring it stands in (the bot
-## walks round them: inside, its army and it would crawl).
-func danger_push(p: Vector2) -> Vector2:
-	var g := ring_in(cell_of(p), config)
-	if g.z <= 0.0:
-		return Vector2.ZERO
-	var rel := p - Vector2(g.x, g.y)
-	if rel.length() > g.z + 20.0:
-		return Vector2.ZERO
-	return (rel.normalized() if rel.length() > 1.0 else Vector2.RIGHT) * 0.8
-
-
 # =====================================================================================
 # The Winter Prince
 # =====================================================================================

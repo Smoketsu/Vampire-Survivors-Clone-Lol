@@ -1177,7 +1177,7 @@ const EVOLUTIONS := {
 		"description": "Six masked copies of you hold the ring, then shatter and bewilder the foes round them.",
 		"labels": {"damage": "Shatter damage", "copies": "Copies", "hp": "Copy HP (x Warrior)", "life": "Copy life (s)", "cooldown": "Cooldown (s)", "bewilder": "Bewilder (s)"},
 		"stats": {
-			"damage": 66.0, "copies": 6, "hp": 3.6, "life": 9.0, "taunt": 150.0, "range": 360.0, "radius": 72.0, "cooldown": 5.5,  # TUNING (not in GDD)
+			"damage": 78.0, "copies": 6, "hp": 3.6, "life": 9.0, "taunt": 150.0, "range": 360.0, "radius": 72.0, "cooldown": 5.5,  # TUNING (not in GDD)
 			"bewilder": 3.0,  # TUNING (not in GDD) the evolution flag: s each shattering bewilders
 		},
 	},

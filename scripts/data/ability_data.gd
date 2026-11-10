@@ -1381,11 +1381,11 @@ const SPELLS := {
 		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
 		"labels": {"damage": "Shatter damage", "copies": "Copies", "hp": "Copy HP (x Warrior)", "life": "Copy life (s)", "cooldown": "Cooldown (s)"},
 		"levels": [
-			{"damage": 26.0, "copies": 2, "hp": 1.5, "life": 6.0, "taunt": 110.0, "range": 300.0, "radius": 52.0, "cooldown": 8.0},  # Owner-approved proposal: "illusory copies of the necromancer draw enemy attacks"; TUNING (not in GDD) the numbers
-			{"damage": 32.0, "copies": 2, "hp": 1.8, "life": 6.5, "taunt": 115.0, "range": 310.0, "radius": 54.0, "cooldown": 7.5},  # TUNING (not in GDD)
-			{"damage": 38.0, "copies": 3, "hp": 2.1, "life": 7.0, "taunt": 120.0, "range": 320.0, "radius": 56.0, "cooldown": 7.0},  # TUNING (not in GDD)
-			{"damage": 46.0, "copies": 3, "hp": 2.5, "life": 7.5, "taunt": 130.0, "range": 330.0, "radius": 60.0, "cooldown": 6.5},  # TUNING (not in GDD)
-			{"damage": 55.0, "copies": 4, "hp": 3.0, "life": 8.0, "taunt": 140.0, "range": 340.0, "radius": 64.0, "cooldown": 6.0},  # TUNING (not in GDD) four copies every 6 s: a wall of faces round the ring
+			{"damage": 30.0, "copies": 2, "hp": 1.5, "life": 6.0, "taunt": 110.0, "range": 300.0, "radius": 52.0, "cooldown": 8.0},  # Owner-approved proposal: "illusory copies of the necromancer draw enemy attacks"; TUNING (not in GDD) the numbers
+			{"damage": 37.0, "copies": 2, "hp": 1.8, "life": 6.5, "taunt": 115.0, "range": 310.0, "radius": 54.0, "cooldown": 7.5},  # TUNING (not in GDD)
+			{"damage": 44.0, "copies": 3, "hp": 2.1, "life": 7.0, "taunt": 120.0, "range": 320.0, "radius": 56.0, "cooldown": 7.0},  # TUNING (not in GDD)
+			{"damage": 53.0, "copies": 3, "hp": 2.5, "life": 7.5, "taunt": 130.0, "range": 330.0, "radius": 60.0, "cooldown": 6.5},  # TUNING (not in GDD)
+			{"damage": 64.0, "copies": 4, "hp": 3.0, "life": 8.0, "taunt": 140.0, "range": 340.0, "radius": 64.0, "cooldown": 6.0},  # TUNING (not in GDD) four copies every 6 s: a wall of faces round the ring
 		],
 	},
 }

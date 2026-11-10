@@ -159,10 +159,16 @@ const RECKONING_OBJECTIVE: String = "SPRING RETURNS: the endless summer breaks a
 ## Each season's own kinds, added to every segment's weights in that season
 ## (owner-approved proposal, "Who comes": summer the fae knights and the Wild
 ## Hunt, winter the Winter Court). The Fae Court is summer all run but for the
-## Winter Prince's minute, so only these two seasons come.
+## Winter Prince's minute, so only these two seasons come; the court's knights
+## come lightly before 5:00 (SEASON_WEIGHTS_EARLY) and the Wild Hunt after.
 const SEASON_WEIGHTS := {
-	"summer": {"fae_knight": 0.07, "wild_rider": 0.008, "great_stag": 0.008},  # TUNING (not in GDD) the court's knights
+	"summer": {"fae_knight": 0.05, "wild_rider": 0.005, "great_stag": 0.006},  # TUNING (not in GDD) the court's knights and the Hunt (first pass 0.07 / 0.008 / 0.008 from 0:00: the naive bot died at 8:10, seed 7)
 	"winter": {"winter_fae": 0.15},  # TUNING (not in GDD) the Winter Court comes with its prince
+}
+## The season kinds of the segments before 5:00 (a summer's first knights only).
+const SEASON_WEIGHTS_EARLY := {
+	"summer": {"fae_knight": 0.02},  # TUNING (not in GDD)
+	"winter": {"winter_fae": 0.15},  # TUNING (not in GDD)
 }
 
 ## Continuous spawning segments (keys as GraveyardStage.SEGMENTS, plus
@@ -171,15 +177,15 @@ const SEASON_WEIGHTS := {
 const SEGMENTS := [
 	{"start": 0.0, "rate": 1.4, "max_alive": 30,  # TUNING (not in GDD)
 		"weights": {"thornling": 0.9, "dryad": 0.1},
-		"season_weights": SEASON_WEIGHTS,
+		"season_weights": SEASON_WEIGHTS_EARLY,
 		"objective": "The Fae Court: endless summer, and every face a mask"},
 	{"start": 60.0, "rate": 1.7, "max_alive": 40,  # TUNING (not in GDD)
 		"weights": {"thornling": 0.86, "dryad": 0.1, "will_o_wisp": 0.04},
-		"season_weights": SEASON_WEIGHTS,
+		"season_weights": SEASON_WEIGHTS_EARLY,
 		"objective": "Fairy rings: time runs at half speed inside the mushroom circles, for both armies"},
 	{"start": 180.0, "rate": 2.0, "max_alive": 50,  # TUNING (not in GDD)
 		"weights": {"thornling": 0.82, "dryad": 0.1, "will_o_wisp": 0.04, "treant": 0.02},
-		"season_weights": SEASON_WEIGHTS,
+		"season_weights": SEASON_WEIGHTS_EARLY,
 		"objective": "The summer never ends here: wildfires sweep the lawns. Step out of their path"},
 	{"start": 300.0, "rate": 2.3, "max_alive": 60,  # TUNING (not in GDD)
 		"weights": {"thornling": 0.78, "dryad": 0.1, "will_o_wisp": 0.03, "treant": 0.02},

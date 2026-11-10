@@ -777,6 +777,24 @@ func damage_player(amount: float, source: String, target: Necromancer = null, by
 		_check_last_rites()
 
 
+## A PRICE paid in life (Act XV, the Fae Court: a bargain struck with the Summer
+## Queen, SummerQueenData.BARGAINS "life_cost"): necromancer `pl` loses `share`
+## (0..1) of his current HP at once, never below 1 and never stopped by a ward,
+## a shield or i-frames (a price, not a blow); counted as player_dmg_from_<source>
+## and life_paid. Nothing else calls it.
+func pay_life(pl: Necromancer, share: float, source: String) -> void:
+	if pl.dead or share <= 0.0:
+		return
+	var lost := minf(pl.hp * share, pl.hp - 1.0)
+	if lost <= 0.0:
+		return
+	pl.hp -= lost
+	pl.queue_redraw()
+	game.stat_add("life_paid", lost)
+	game.stat_add("damage_to_player", lost)
+	game.stat_add("player_dmg_from_" + source, lost)
+
+
 ## Grave Ward (Ossuary expansion step 3, MetaModifiers "ward_hits"): spends one of
 ## the run's warded hits on a hit that would land (not during i-frames) and grants
 ## the normal post-hit i-frames, so one burst never eats two. False (no-op) when no

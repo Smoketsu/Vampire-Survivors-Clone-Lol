@@ -70,7 +70,7 @@ const LATE_ANNOUNCE := ["THE SUMMER ENDS", "The Summer Queen falls as spring ret
 const PETAL := Color(0.98, 0.70, 0.82)  # TUNING (not in GDD) visual only
 
 ## The Summer Queen's base max HP (x the boss HP multiplier and the stage's HP multiplier).
-const MAX_HP: float = 7800.0  # TUNING (not in GDD) a little over the Stag King's 7,600 (her Masque splits the army's fire, her Bargain can help it)
+const MAX_HP: float = 8000.0  # TUNING (not in GDD) a little over the Stag King's 7,600: her bargains lend the army their damage (first passes 7,800 and 7,000: never slain while the bot walked round the fairy rings, then slain in 53-73 s)
 
 ## The bargains she offers, in order (one at each share of bargain_at). Each:
 ##   title       — the dialog's title (TITLE tier).
@@ -78,7 +78,8 @@ const MAX_HP: float = 7800.0  # TUNING (not in GDD) a little over the Stag King'
 ##   damage      — + army damage share while it lasts (WildRules.take_bargain()).
 ##   time        — s the boon and the no-heal price last.
 ##   no_heal     — true: the army heals no more while it lasts.
-##   life_cost   — share (0..1) of each necromancer's current HP paid at once.
+##   life_cost   — share (0..1) of each necromancer's current HP paid at once
+##                 (CombatResolver.pay_life(): no ward or i-frame stops a price).
 const BARGAINS: Array[Dictionary] = [
 	{"title": "The Rose Oath", "text": "+30% army damage for 60 s, but your army cannot heal while it lasts.",
 		"damage": 0.3, "time": 60.0, "no_heal": true, "life_cost": 0.0},  # Owner-approved proposal: "+30% army damage for 60 s while the army no longer heals"
@@ -128,9 +129,9 @@ const BOSS := {
 	"petal_damage": 5.0,  # TUNING (not in GDD) per bolt, before the time scaling
 	# The Masque.
 	"masque_first": 14.0,  # TUNING (not in GDD) s after she arrives
-	"masque_every": 32.0,  # TUNING (not in GDD) s between two Masques (start to start)
+	"masque_every": 36.0,  # TUNING (not in GDD) s between two Masques (start to start; first pass 32)
 	"masque_faces": 4,  # Owner-approved proposal: "she and her court change faces"; TUNING (not in GDD) courtiers beside her
-	"masque_ring": 250.0,  # TUNING (not in GDD) px from the necromancer
+	"masque_ring": 170.0,  # TUNING (not in GDD) px from the necromancer (first pass 250: she spent the Masques walking back to the ring)
 	"masque_time": 18.0,  # TUNING (not in GDD) s at most she stays masked
 	"masque_banner": "THE MASQUE: the Summer Queen hides among her court! Only a hit shows which face is hers.",  # TUNING (not in GDD)
 	"reveal_banner": "Found! The Summer Queen's mask breaks, and her court's with it.",  # TUNING (not in GDD)
