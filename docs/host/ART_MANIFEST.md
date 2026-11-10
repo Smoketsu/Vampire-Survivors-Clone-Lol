@@ -66,7 +66,7 @@ The halo over each angel is drawn by the code (`HostKit.draw_over()`: a ring of 
 | Key | Size | Sex | What | Strips |
 |---|---|---|---|---|
 | `player/fallen_herald` | 40x56 | male | violet robe and a torn violet cope, one broken bone-white wing, a dark trumpet-headed staff with a soul flame (spell Flaming Sword, Seraiel) | walk |
-| `player/blind_saint` | 36x56 | female (figure style) | violet gown, a violet blindfold, a staff ringed with a bone wheel of closed eyes (Wheel of Eyes, the Throne) | walk, idle |
+| `player/blind_saint` | 36x56 | female (figure style) | violet gown, a violet blindfold, a staff ringed with a bone wheel of closed eyes (Wheel of Eyes, the Throne) | walk, idle (bust box moved onto the chest, round 4 redo) |
 | `player/the_unveiled` | 38x56 | female (figure style) | violet dress, a lowered violet veil, small grey wings folded, a staff of a dead star (Revelation, the Voice) | walk, idle |
 
 ## Summon class (finale reward; `assets/sprites/summons/`)

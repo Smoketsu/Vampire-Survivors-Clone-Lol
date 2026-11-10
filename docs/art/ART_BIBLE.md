@@ -3248,6 +3248,7 @@ of light, no features, `art_source/host/voice_unveiled.txt`). Review page genera
 | `primeval/stormwing` (52x44) + `_landed`, `thunderwing` (70x64) | the Last Day's pterosaurs: fly strips with moving wings (`hover` rig, `flap` part, as the Skyraider) |
 | `primeval/gravejaw` (102x104, walk) + `gravejaw_roar` pose | the Tyrant King |
 | `player/fern_huntress` (38x56), `skywatcher` (36x56) | violet necromancers, figure-redesign style, fully clothed, bust rigs, walk + idle strips (`tools/bust_check.py` boxes on the chest) |
+Bust box rule (round 4 redo of the Blind Saint, Fern Huntress, Skywatcher, Dryad; `tools/bust_check.py`): measured on the approved Wither Witch, Soulbinder and Battle Sister, the box starts 1-2 rows under the head / hood-mask bottom, is 6-8 rows tall (about 0.37-0.52 of the hip row for hooded robes), and stays above the waist / belt, 8-12 px wide on the torso columns over the brightest chest pixels, never on the head, arm, staff or focus.
 | `player/herd_warden` (44x56) | violet necromancer, male, walk strip |
 | `summons/bonehorn` (40x34), `fossil_tyrant` (48x44), `fossil_giant` (48x48) | skeletons in bone / soul-teal; walk strips |
 | `obstacles/primeval_tree_fern_m` (40x38), `primeval_canyon_wall_m` + `_v` (96x30), `primeval_lava_rock_m` (38x38), `icons/petrified_horns` | props and the Bonehorn's passive badge |

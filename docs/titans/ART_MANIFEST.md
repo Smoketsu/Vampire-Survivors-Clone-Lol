@@ -65,9 +65,9 @@ The constants are already in `scripts/data/palette.gd` (`PRIMEVAL_*`); the ramps
 
 | Key | Size | Sex | What | Strips |
 |---|---|---|---|---|
-| `player/fern_huntress` | 40x56 | female (figure style) | violet hunting leathers and a violet fur-trimmed cloak, a raptor-skull headdress, a bone spear-staff with a soul flame (spell Pack Leap, Scarmaw) | walk, idle |
+| `player/fern_huntress` | 40x56 | female (figure style) | violet hunting leathers and a violet fur-trimmed cloak, a raptor-skull headdress, a bone spear-staff with a soul flame (spell Pack Leap, Scarmaw) | walk, idle (bust box moved onto the chest, round 4 redo) |
 | `player/herd_warden` | 42x56 | male | heavy violet robes over a bone-plated mantle, a ceratopsian skull shoulder piece, a horn-topped staff (Stampede, Ironbrow) | walk |
-| `player/skywatcher` | 38x56 | female (figure style) | violet star-robed dress, a bone astrolabe at the hip, a staff crowned with a small falling-star stone (Meteor Call, Gravejaw) | walk, idle |
+| `player/skywatcher` | 38x56 | female (figure style) | violet star-robed dress, a bone astrolabe at the hip, a staff crowned with a small falling-star stone (Meteor Call, Gravejaw) | walk, idle (bust box moved onto the chest, round 4 redo) |
 
 ## Summon class (finale reward; `assets/sprites/summons/`)
 

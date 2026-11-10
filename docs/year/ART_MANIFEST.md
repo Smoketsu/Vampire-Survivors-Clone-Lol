@@ -43,7 +43,7 @@ The constants are already in `scripts/data/palette.gd` (`WILD_*`); the ramps mus
 | Key | Size (art px, w x h) | Sex | What it is | Strips | Loaded now |
 |---|---|---|---|---|---|
 | `wild/thornling` | 22x20 | none | fodder: a twig creature, bark body, moss tufts, thorn claws (swarms of 12) | walk | yes |
-| `wild/dryad` | 34x52 | female (figure style) | support: a tree spirit in a gown of bark and leaves, blossom in her hair, a seed pouch; plants thicket seeds | walk, idle | yes |
+| `wild/dryad` | 34x52 | female (figure style) | support: a tree spirit in a gown of bark and leaves, blossom in her hair, a seed pouch; plants thicket seeds | walk, idle (bust box moved onto the torso, round 4 redo) | yes |
 | `wild/treant` | 64x80 | none | heavy: a walking oak, a face in the bark, branch arms, moss | walk (slow, heavy) | yes |
 | `wild/corpse_bloom` | 48x48 | none | structure: a huge pink flower on a mound of bones, petals around a maw; with `_dead` | none | yes |
 | `wild/fae_knight` | 36x52 | male | soldier: leaf-plate armour, a thorn sword, a leaf-crested helm | walk | yes |
