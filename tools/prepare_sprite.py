@@ -241,6 +241,8 @@ FACTION_RAMPS = {
     "host": ["host_silver", "host_cerulean", "host_rose", "host_cloud", "host_skin"],
     # --- Act XIV slot: the Age of Titans (assets/sprites/primeval/): fern, dust ochre, tar, lava orange and bone; never crimson, gold or the player's violet ---
     "primeval": ["primeval_fern", "primeval_ochre", "primeval_tar", "primeval_lava", "primeval_bone"],
+    # --- Act XV slot: the Turning Year (assets/sprites/wild/): moss, bark, blossom, amber leaf, frost and blight; never crimson, UI gold or the player's violet ---
+    "wild": ["wild_moss", "wild_bark", "wild_blossom", "wild_leaf", "wild_frost", "wild_blight", "wild_fire"],
     "dynasty": ["night", "dyn_bronze", "lapis", "linen", "carnelian", "papyrus", "dynskin", "brown"],
 }
 # Per-key exceptions to FACTION_RAMPS: key -> (ramps added, ramps removed). The arcane
@@ -272,6 +274,11 @@ KEY_RAMPS = {
     "norse/wolf_of_the_wastes": ([], ["skin", "valk", "pine"]),  # grey fur, ice-blue eyes
     "norse/fenrir": (["hearth"], ["skin", "valk", "pine", "frost"]),  # black fur, burning yellow eyes
     "norse/raven": (["hearth"], ["skin", "valk", "frost", "draugr"]),
+    # --- Act XV slot: the Turning Year: the figures show a little skin ---
+    "wild/dryad": (["skin"], []),
+    "wild/winter_fae": (["skin"], []),
+    "wild/spore_mother": (["skin"], []),
+    "wild/fae_knight": (["skin"], []),
 }
 # Ramps holding less than this share (0-1) of the opaque pixels are dropped (re-snapped).
 RAMP_MIN_SHARE = 0.03

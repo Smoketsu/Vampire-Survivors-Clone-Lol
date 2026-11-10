@@ -1,0 +1,8 @@
+A sheet of 4 separate pixel-art game ICON SYMBOLS in one row, evenly spaced with a wide empty gap between them, on a FULLY TRANSPARENT background (real alpha). Each symbol is simple, bold and centred in its part of the image, drawn as chunky low-resolution pixel art (each symbol about 24 pixels wide on a coarse grid, shown enlarged with crisp square pixels, nearest-neighbour, 1-pixel dark outline, flat colours, at most 3 shades per colour, light from the top-left). No frame, no badge background, no text, no letters, no people.
+From left to right:
+1. WILD HUNT: three small spectral antlered horsemen in pale frost-white galloping in a line to the right, with soul-teal glints.
+2. GLAMOUR: a bone-white theatre mask in front with two fading copies of it behind, soul-teal sparkle.
+3. ROOT AND ROT: a ring of bark-brown roots around a bone skull, grey rot seeping through the ring.
+4. HORN OF THE HUNT: a curved bone-white hunting horn with a bark-brown mouthpiece band and three frost-blue sound arcs.
+Colours: moss green #274D24 #599641 #9CCB72; bark brown #553C27 #86603E #B08A60; blossom pink #9C5272 #EFA6C3 #FBD9E6; amber leaf #8A5420 #D9953C #F2C67A; frost #6F8AA4 #B9CEE0 #E4EDF5; bone #9C9078 #E7DEC9; dead grey #312E2C #57524D #86807A; wildfire orange #E35C26 only where named; ghost soul-teal #3DCC94 only where named. NO crimson, NO purple.
+Attached: an approved icon of this game: match its pixel size, outline weight and flat look (only the symbol, not its frame).

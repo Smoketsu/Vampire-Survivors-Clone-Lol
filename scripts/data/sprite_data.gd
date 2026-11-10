@@ -805,6 +805,18 @@ const FLAT_SIZES: Dictionary = {
 	"markers/primeval_alpha": 10.0,  # TUNING (not in GDD) the alpha's bone-white chevron over her head, 10 x 6
 	"markers/primeval_shadow": 48.0,  # TUNING (not in GDD) a diving Skyraider's shadow, 48 x 24
 	"markers/primeval_bomb": 64.0,  # TUNING (not in GDD) a volcanic bomb's landing ring, 64 x 64
+	# --- Act XV slot: the Turning Year (assets/sprites/wild/; the stage key wild; the three women have bust rigs and idle strips) ---
+	"wild/thornling": 20.0,  # TUNING (not in GDD) fodder, no sex: a twig creature (about 16 wide); walk strip
+	"wild/dryad": 52.0,  # TUNING (not in GDD) support, female (figure style): a tree spirit in a leaf gown (about 36 wide); walk, idle strips
+	"wild/treant": 80.0,  # TUNING (not in GDD) heavy, no sex: a walking oak (about 46 wide); walk strip
+	"wild/corpse_bloom": 48.0,  # TUNING (not in GDD) structure: a huge pink flower on bones (about 36 wide); no strip
+	"wild/corpse_bloom_dead": 48.0,  # TUNING (not in GDD) the same flower wilted (about 36 wide); no strip
+	"wild/fae_knight": 52.0,  # TUNING (not in GDD) soldier, male: leaf-plate armour and a thorn sword (about 32 wide); walk strip
+	"wild/winter_fae": 52.0,  # TUNING (not in GDD) ranged, female (figure style): frost-lace gown, frost wings that beat (about 28 wide); walk, idle strips
+	"wild/great_stag": 64.0,  # TUNING (not in GDD) elite, male: a huge stag with moss antlers (about 58 wide); walk strip
+	"wild/wild_rider": 64.0,  # TUNING (not in GDD) elite, male: a spectral horseman of the Wild Hunt (about 64 wide); walk strip
+	"wild/will_o_wisp": 30.0,  # TUNING (not in GDD) lure, no sex: a drifting cold light (about 20 wide, 2 empty rows on top for the glide); glide strip
+	"wild/spore_mother": 52.0,  # TUNING (not in GDD) support, female (figure style): a mushroom matron (about 28 wide); walk, idle strips
 }
 ## Longest side (px) for a flat sprite key missing from FLAT_SIZES.
 const DEFAULT_FLAT_SIZE: float = 20.0  # TUNING (not in GDD)

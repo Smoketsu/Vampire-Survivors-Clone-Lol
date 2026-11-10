@@ -1144,6 +1144,22 @@ RIGS = {
     "summons/bonehorn": dict(mode="legs", hip=24, back=(0, 20), front=(20, 40), rigid=[], spread=2, lift=2, dip=1),
     "summons/fossil_tyrant": dict(mode="legs", hip=31, back=(0, 24), front=(24, 48), rigid=[], spread=2, lift=2, dip=1),
     "summons/fossil_giant": dict(mode="legs", hip=34, back=(0, 24), front=(24, 48), rigid=[], spread=2, lift=2, dip=1),
+    # --- Act XV slot: the Turning Year (assets/sprites/wild/) ---
+    # Beasts and the treant stride (`legs`: hind legs left of the middle, front legs right); the wisp glides (`hover`); the three women carry
+    # bust boxes and idle strips (figure style); the Winter Fae's frost wings beat (`wings`, walk and idle: owner rule, wings must move).
+    "wild/thornling": dict(mode="legs", hip=13, back=(0, 8), front=(8, 16), rigid=[], spread=1, lift=1, dip=1),
+    "wild/dryad": dict(mode="robe", hip=34, rigid=[], sway=1, dip=1,
+                       bust=(10, 22, 13, 21, 1), bust_exclude=[(0, 10, 10, 28), (22, 36, 10, 28)]),
+    "wild/treant": dict(mode="legs", hip=56, back=(0, 23), front=(23, 46), rigid=[], spread=2, lift=2, dip=1),
+    "wild/fae_knight": dict(mode="legs", hip=36, back=(0, 16), front=(16, 32), rigid=[(22, 32, 36, None)], spread=2, lift=1, dip=1),
+    "wild/winter_fae": dict(mode="robe", hip=34, rigid=[], sway=1, dip=1, float=1,
+                            bust=(9, 19, 14, 22, 1), bust_exclude=[(0, 9, 10, 28), (19, 28, 10, 28)],
+                            wings=[dict(box=(0, 9, 0, 22), pivot=(9, 14), degrees=12.0, seam=2), dict(box=(19, 28, 0, 22), pivot=(19, 14), degrees=-12.0, seam=2)]),
+    "wild/great_stag": dict(mode="legs", hip=40, back=(0, 29), front=(29, 58), rigid=[], spread=2, lift=2, dip=1),
+    "wild/wild_rider": dict(mode="legs", hip=44, back=(0, 32), front=(32, 64), rigid=[], spread=2, lift=2, dip=1),
+    "wild/will_o_wisp": dict(mode="hover", bob=2, parts=[]),
+    "wild/spore_mother": dict(mode="robe", hip=36, rigid=[], sway=1, dip=1,
+                              bust=(8, 19, 14, 22, 1), bust_exclude=[(0, 8, 10, 28), (19, 28, 10, 28)]),
 }
 
 # Skins (SkinData, cosmetic): skin sprite key -> its character's sprite key. A skin keeps
