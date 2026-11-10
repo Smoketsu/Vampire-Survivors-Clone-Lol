@@ -175,3 +175,9 @@ Done: `host/cherub`, `cherub_of_the_gate`, `seraiel` (+ `seraiel_raised` pose), 
 `blind_saint`, `the_unveiled` (walk, idle for the women); `summons/bound_ophan`, `throne_of_bones` (roll strips); `icons/turning_bones`; `obstacles/host_pearl_gate` (72x80);
 all twelve zone floors (`tiles/silver_stair_*`, `wheel_*`, `empyrean_*`). `BossPoseData`: `host/seraiel` 1 = raised, `host/throne` 1 = open. Not done: `obstacles/host_crystal_ring`
 (the rings use turned `host_crystal_m`), the optional markers / fx of the foundation list that the code still draws.
+
+## Status (art review round 3, Nov 2026, commit `50cdff1b`)
+
+Done: `wings` rigs (walk, and idle where a strip exists) on every winged angel: `lesser_light`, `virtue`, `power`, `choir_angel`, `herald`, `judge`, `dominion`, `cherub`, `cherub_of_the_gate`,
+`seraiel`, `dominion_of_the_spheres`, `herald_of_the_seventh_trumpet`, `voice`, `the_unveiled`; the Blind Saint's and the Unveiled's bust boxes refit onto the chest; `host/virtue`
+redrawn (22 px wide); `host/voice_unveiled` redrawn as a woman (a face of pure light). Review page: `docs/last_acts/tools/make_wave2_review_r3.py` (merged into r4).

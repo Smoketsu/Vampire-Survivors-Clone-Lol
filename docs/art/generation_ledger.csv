@@ -1566,3 +1566,6 @@ utc,key,model,quality,size,refs,text_in,image_in,image_out,usd_est,file
 2026-11-10 06:47,titans2/gravejaw_roar,gpt-image-2.5-flare,medium,1024x1024,3,501,1827,439,0.0303,gravejaw_roar.png
 2026-11-10 06:47,titans2/scarmaw_leap,gpt-image-2.5-flare,medium,1024x1024,3,511,1987,439,0.0316,scarmaw_leap.png
 2026-11-10 06:47,titans2/ironbrow_broken,gpt-image-2.5-flare,medium,1024x1024,3,512,1891,439,0.0309,ironbrow_broken.png
+2026-11-10 06:48,titans2/fern_huntress,gpt-image-2.5-flare,medium,1024x1024,2,426,21,439,0.0155,fern_huntress.png
+2026-11-10 06:48,titans2/skywatcher,gpt-image-2.5-flare,medium,1024x1024,2,424,21,439,0.0155,skywatcher.png
+2026-11-10 06:48,titans2/herd_warden,gpt-image-2.5-flare,medium,1024x1024,2,403,24,439,0.0154,herd_warden.png

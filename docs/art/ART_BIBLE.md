@@ -3229,3 +3229,30 @@ summon class, zone floors, tree fern, canyon wall, lava rock, tar patch) is not 
 | `summons/bound_ophan`, `throne_of_bones` | bone wheels with soul-teal eyes / fire; roll strips |
 | `icons/turning_bones`, `obstacles/host_pearl_gate` (72x80) | the passive's badge; the Gate of Pearl |
 | `tiles/silver_stair_*`, `wheel_*`, `empyrean_*` (12) | procedural 128x128 floors (`host_floors.py`) |
+
+### Act X slot: the Celestial Host, art review round 3 (owner marks, Nov 2026)
+
+Round 1 marks redone (commit `50cdff1b`; 18 images on the review page, was / now): **wings beat on every winged angel** (the walk strips of the Lesser Light, Virtue, Power, Choir Angel,
+Herald, Judge, Dominion, Cherub, Cherub of the Gate, Seraiel, Dominion of the Spheres, Herald of the Seventh Trumpet and the Voice, the idle strips of the Choir Angel and Power, and the
+Unveiled's folded wing; `wings` entries in the `tools/walk_cycle.py` rigs "Act X slot": each wing turned about its shoulder pivot, laid behind the body, pixels only move); the bust boxes of
+the Blind Saint and the Unveiled refit onto the chest (`tools/bust_check.py`); the **Virtue redrawn** (28 -> 22 px wide, four wings) and the **unveiled Voice redrawn as a woman** (a face
+of light, no features, `art_source/host/voice_unveiled.txt`). Review page generator `docs/last_acts/tools/make_wave2_review_r3.py`.
+
+### Act XIV slot: the Age of Titans (phase 2 art, Nov 2026)
+
+| Key | What |
+|---|---|
+| `primeval/bog_croc` (44x30, walk), `bog_croc_submerged` (32x12, drawn on the grid), `ironjaw` (72x60, walk), `primeval_nest` (40x32) + `_dead` (derived: scorched grey), `scarmaw_guard` (32x40, walk) | the Fern Basin's hunter, miniboss, her nest and the boss's alpha-guard; animals, sex named in every prompt, no figure style |
+| `primeval/scarmaw` (60x60, walk) + `scarmaw_leap` pose | the Great Raptor (female), pose 1 for `BossPoseData` |
+| `primeval/horncharger` (54x48), `clubtail` (48x44), `mother_clubtail` (68x60), `ironbrow` (92x80) + `ironbrow_broken` pose | the Great Plain's titans; walk strips |
+| `primeval/stormwing` (52x44) + `_landed`, `thunderwing` (70x64) | the Last Day's pterosaurs: fly strips with moving wings (`hover` rig, `flap` part, as the Skyraider) |
+| `primeval/gravejaw` (102x104, walk) + `gravejaw_roar` pose | the Tyrant King |
+| `player/fern_huntress` (38x56), `skywatcher` (36x56) | violet necromancers, figure-redesign style, fully clothed, bust rigs, walk + idle strips (`tools/bust_check.py` boxes on the chest) |
+| `player/herd_warden` (44x56) | violet necromancer, male, walk strip |
+| `summons/bonehorn` (40x34), `fossil_tyrant` (48x44), `fossil_giant` (48x48) | skeletons in bone / soul-teal; walk strips |
+| `obstacles/primeval_tree_fern_m` (40x38), `primeval_canyon_wall_m` + `_v` (96x30), `primeval_lava_rock_m` (38x38), `icons/petrified_horns` | props and the Bonehorn's passive badge |
+| `tiles/fern_basin_*`, `great_plain_*`, `last_day_*` (12), `tiles/primeval_tar` | procedural 128x128 floors with visible features (fronds, tar bubbles, ripples, eggshells, cracks, hoof prints, strata, bones, embers, stumps, lava seams, impact cracks) by `titans_floors.py` |
+
+Made by `art_source/titans/gen_phase2.py` (prompts + raw API images), `make_phase2.py` (pixelate + `prepare_sprite.py`, stills, props, strips), `titans_floors.py`; rigs "Act XIV slot,
+phase 2" in `walk_cycle.py`. Known flaws: the Scarmaw leap and the Ironbrow `_broken` poses read close to their bases (the model kept the pose; the Ironbrow's horn stump is the
+orange X crack), the two women's figure style is faint at 36-38 px wide (cloak and hat dominate), the Bog Croc / Gravejaw tar-dark hides sit near the dark floors' value, the Herd-Warden is 44 px wide (box 42).

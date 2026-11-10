@@ -199,3 +199,11 @@ soon as the file exists:
 - the obstacle `obstacles/primeval_canyon_wall_m` + `_m_v` (96x32).
 The icons `stampede`, `herd_of_ages`, `calcified_hide`, `hoarders_bones`, `ach_nothing_taken` exist. Sounds: the stage reuses
 the Titans pack (`PrimevalRulesData.SOUNDS`, the Great Plain's block).
+
+## Status (art agent, phase 2, Nov 2026): DONE
+
+Every item above marked "phase 2" is made (ART_BIBLE "Act XIV slot: the Age of Titans (phase 2 art)"): `primeval/bog_croc` (+ walk, `bog_croc_submerged`), `ironjaw`, `primeval_nest` (+ `_dead`),
+`scarmaw_guard`, `scarmaw` (+ walk, `scarmaw_leap`), `horncharger`, `clubtail`, `mother_clubtail`, `ironbrow` (+ `ironbrow_broken`), `stormwing` (+ `_landed`, fly strip), `thunderwing`, `gravejaw`
+(+ `gravejaw_roar`), each with a walk (fly) strip; `player/fern_huntress`, `skywatcher` (walk + idle), `herd_warden` (walk); `summons/bonehorn`, `fossil_tyrant`, `fossil_giant` (+ walk); the
+obstacles `primeval_tree_fern_m`, `primeval_canyon_wall_m` (+ `_v`), `primeval_lava_rock_m`; `icons/petrified_horns`; the twelve zone floors and `tiles/primeval_tar`. Not made (the code keeps its shapes): the
+markers `primeval_alpha` / `primeval_shadow` / `primeval_bomb` were made in the foundation; no new marker or fx was asked for. Sizes are inside the boxes (the Herd-Warden is 44 wide, box 42).
