@@ -1106,7 +1106,7 @@ RIGS = {
                                                wings=[dict(box=(0, 22, 14, 68), pivot=(22, 22), degrees=9.0, seam=3), dict(box=(40, 54, 22, 62), pivot=(40, 26), degrees=-9.0, seam=3)]),  # R3: wings beat (the trumpet stays).
     "player/fallen_herald": dict(mode="robe", hip=40, rigid=[], sway=1, dip=1),
     "player/blind_saint": dict(mode="robe", hip=40, rigid=[(25, 38, 0, None)], sway=1, dip=1,
-                               bust=(13, 24, 13, 20, 1), bust_exclude=[(0, 13, 12, 50), (24, 38, 12, 50)]),  # Round 4 redo (bust box rule, ART_BIBLE): 1 row under the hood's mask, 7 rows, torso columns (was 12-24 x 14-22; cols 13-24 on the chest ornaments).
+                               bust=(13, 24, 16, 23, 1), bust_exclude=[(0, 13, 12, 50), (24, 38, 12, 50)]),  # Owner round 6: down ~5 screen px (3 art rows; was rows 13-20, before that 12-24 x 14-22).
     "player/the_unveiled": dict(mode="robe", hip=40, rigid=[(31, 42, 0, None)], sway=1, dip=1,
                                 bust=(15, 27, 14, 22, 1), bust_exclude=[(0, 15, 12, 50), (27, 42, 12, 50)],  # R3: box on the chest (was rows 19-27).
                                 wings=[dict(box=(0, 13, 9, 38), pivot=(13, 16), degrees=18.0, seam=2)]),  # R3: the folded wing sways (walk and idle).
@@ -1137,7 +1137,7 @@ RIGS = {
     "primeval/stormwing": dict(mode="hover", bob=0, parts=[dict(kind="flap", box=(0, 28, 0, 30), root=28, amp=5)]),
     "primeval/thunderwing": dict(mode="hover", bob=0, parts=[dict(kind="flap", box=(0, 40, 0, 46), root=40, amp=7)]),
     "player/fern_huntress": dict(mode="robe", hip=40, rigid=[(27, 38, 0, None)], sway=1, dip=1,
-                                 bust=(11, 25, 15, 22, 1), bust_exclude=[(0, 11, 12, 50), (25, 38, 12, 50)]),  # Round 4 redo: on the chest under the shoulders, off the belt (was 10-25 x 17-25).
+                                 bust=(16, 27, 15, 22, 1), bust_exclude=[(0, 16, 12, 50), (27, 38, 12, 50)]),  # Owner round 6: right ~9 screen px (5 art cols, ending at the staff's rigid strip; was cols 11-25, before that 10-25 x 17-25).
     "player/skywatcher": dict(mode="robe", hip=40, rigid=[(26, 36, 0, None)], sway=1, dip=1,
                               bust=(9, 23, 15, 22, 1), bust_exclude=[(0, 9, 12, 50), (23, 36, 12, 50)]),  # Round 4 redo: on the chest under the shoulders, off the belt (was rows 17-25).
     "player/herd_warden": dict(mode="robe", hip=40, rigid=[(33, 44, 0, None)], sway=1, dip=1),
