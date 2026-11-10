@@ -63,7 +63,7 @@ const LATE_ANNOUNCE := ["THE HUNT IS OVER", "The Stag King falls as spring retur
 const RIDER_TINT := Color(0.75, 0.88, 1.0, 0.7)  # TUNING (not in GDD) visual only
 
 ## The Stag King's base max HP (x the boss HP multiplier and the stage's HP multiplier).
-const MAX_HP: float = 9000.0  # TUNING (not in GDD) under Old Ironbrow's 10,000: the crown is his extra life (x the stage's HP multiplier; first pass 10,000: not slain by an evolved Wild Hunt build, seed 7)
+const MAX_HP: float = 8500.0  # TUNING (not in GDD) under Old Ironbrow's 10,000: the crown is his extra life (x the stage's HP multiplier; first passes 10,000 and 9,000: not slain by the army bot on seed 11 nor by an evolved Wild Hunt build on seed 7)
 
 ## The Stag King's design row.
 const BOSS := {
@@ -121,7 +121,7 @@ const BOSS := {
 	"hunt_len": 760.0,  # TUNING (not in GDD) px (through him and beyond)
 	"hunt_radius": 16.0,  # TUNING (not in GDD) px round a rider
 	"hunt_damage": 9.0,  # TUNING (not in GDD) to the necromancer, before the time scaling
-	"hunt_damage_summon": 7.0,  # TUNING (not in GDD) to each summon, before the time scaling
+	"hunt_damage_summon": 5.0,  # TUNING (not in GDD) to each summon, before the time scaling (first pass 7: 10-16k on the army bot's summons)
 	"hunt_stun": 0.3,  # TUNING (not in GDD) s
 	"hunt_knock": 20.0,  # TUNING (not in GDD) px
 	"hunt_split": 0.5,  # TUNING (not in GDD) HP share below which two lines cross

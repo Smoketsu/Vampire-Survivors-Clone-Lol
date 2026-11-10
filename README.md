@@ -3029,17 +3029,17 @@ it records the clear until the reorder pass writes the act's epilogue part). Aut
 `gravejaw`, `act XIV spell`, `act XIV passive`, `bonehorn`; `--spawn=stormwing@T`, `thunderwing@T`;
 `--character=skywatcher`, `--classes=bonehorn`.
 
-### Act XV (temporary number): the Turning Year (foundation)
+### Act XV (temporary number): the Turning Year
 
 <!-- --- Act XV (temporary number): the Turning Year --- -->
 A star fell once and the world buried everything under it. Now it remembers how to bury things: death was always part of
 the world's cycle, and the necromancer broke it. After heaven, hell, the stars and the deep past, **the world itself**
 rises to take its dead back: dryads and treants, the fae courts, the great stag, the Wild Hunt and the spirits of the four
 seasons (design `docs/proposals/LAST_SIX_ACTS.md` section XV; final slot XV of the fifteen-act order, **the campaign
-finale and the hardest act**, temporary act number 15 until the reorder pass, `docs/last_acts/PLAN.md`). Three stub
-stages are registered under an **Act XV** tab, hidden as "Coming soon" until phase 2 builds them: **the Greenwood**
-(`greenwood`, the Stag King), **the Fae Court** (`fae_court`, the Summer Queen) and **the World-Tree** (`world_tree`,
-the Green Mother); Old Gravejaw's fall on the Last Day opens the first, each boss the next. Every Wild stage runs three
+finale and the hardest act**, temporary act number 15 until the reorder pass, `docs/last_acts/PLAN.md`). Three stages
+are registered under an **Act XV** tab: **the Greenwood** (`greenwood`, the Stag King; built and playable, below), **the
+Fae Court** (`fae_court`, the Summer Queen) and **the World-Tree** (`world_tree`, the Green Mother), the last two still
+"Coming soon" until phase 2 builds them; Old Gravejaw's fall on the Last Day opens the first, each boss the next. Every Wild stage runs three
 shared rules (`Game.wild`, `WildRules`):
 - **The Turning Year.** The 20:00 clock is one year of four 5-minute seasons (the World-Tree's turns twice as fast),
   shown as a wheel left of the HUD clock, and each season repaints the arena. **Spring:** roots grab anything that stands
@@ -3055,14 +3055,34 @@ shared rules (`Game.wild`, `WildRules`):
 - **Spring Returns.** At 0:00 everything grows back at once: the blight is gone, thickets sprout round you, the roots grab
   twice as fast, the dead are buried at once and the earth pulls your summons down.
 
-The shared kinds so far: the **Thornling** (swarms of twelve), the **Dryad**, the **Treant**, the **Corpse-Bloom**, the
-**Fae Knight**, the **Winter Fae**, the **Great Stag**, the **Rider of the Wild Hunt**, the **Will-o'-Wisp** and the
-**Spore Mother** (their specials are phase 2's). The Codex has a **Wild** tab. Placeholder floors, obstacles and
-code-drawn fallbacks until the art pass (`docs/year/ART_MANIFEST.md`); music "primordial" (the Titans' score) until the
-act's own. Autotest: `--stage=greenwood|fae_court|world_tree`, `--boss=stag_king|summer_queen|green_mother`, `--spawn=`
-with `thornling`, `dryad`, `treant`, `corpse_bloom`, `fae_knight`, `winter_fae`, `great_stag`, `wild_rider`,
-`will_o_wisp`, `spore_mother`; lines `turning year`, `bloom and blight`, `overgrowth`, `spring returns`, `wild kinds`,
-`wild stage`, `wild damage`. Phase 2 brief (with the World-Tree's Last Claim): `docs/year/BRIEF_PHASE2.md`.
+The shared kinds: the **Thornling** (swarms of twelve), the **Dryad** (plants thicket seeds), the **Treant** (its strike
+roots the summon it hits), the **Corpse-Bloom** (eats the corpses near it, Corpse Explosion's too, and buds Thornlings),
+the **Fae Knight** (blinks through your ring: keep blockers inside it), the **Winter Fae** (its frost bolts chill your
+summons), the **Great Stag** (a telegraphed antler charge that scatters the ring), the **Rider of the Wild Hunt** (two
+hounds, a long sweep through you; after three sweeps the Hunt rides on), the **Will-o'-Wisp** (lures your summons away)
+and the **Spore Mother** (spores that rot your summons, mould that kills your blight). Rot, the Wither aura, a
+Hellhound's fire, Brimstone and Meteor Call burn thickets back. The Codex has a **Wild** tab. Music "The Turning Year".
+
+**The Greenwood** (stage 43): an old forest that has never been cut. Zones: the Glade, the Deep Wood, the Hunting
+Grounds and the Stag's Hollow. **Sacred groves** (rings of trees) heal the Wild inside them; hold your army in one until
+its ground is blighted for 10 s and it dies for the run. **The Huntsman of the Wild Hunt** (miniboss, 11:40) leads three
+riders in a sweeping line: step out of it. **The Stag King** comes with 3:00 left, in the dead of winter: **the Hunt**
+(spectral riders sweep through you in a line, two crossing lines below half his health), **the Rut** (a charge through
+your ring; into a tree it cracks it into new thickets) and **the Antler Crown** (a ring of thorns grows round him twice;
+while one stands he cannot be hurt: break them or burn them). Slaying him unlocks **Wild Hunt** (spectral riders sweep
+across the screen in a line; evolves into **The Endless Hunt** with **Horn of the Hunt**: the line turns and rides back)
+and so **the Horned Herald** (one more rider in every line). Achievement **Scorched Earth** (blight half the Greenwood in
+one run) unlocks the counter-passive **Fallow Ground** (blight spreads faster; offered only in this act).
+
+Art still to come for the Greenwood (code shapes until then): `wild/hunt_hound`, `wild/huntsman`, `wild/antler_thicket`,
+`wild/stag_king` (+ walk, pose `_horn`), `player/horned_herald` (+ walk), `obstacles/wild_grove_tree`, the zone tiles
+`tiles/greenwood_glade|deep_wood|hunting_grounds|stags_hollow` (`docs/year/ART_MANIFEST.md`). Autotest:
+`--stage=greenwood|fae_court|world_tree`, `--boss=stag_king|summer_queen|green_mother`, `--character=horned_herald`,
+`--spawn=` with `thornling`, `dryad`, `treant`, `corpse_bloom`, `fae_knight`, `winter_fae`, `great_stag`, `wild_rider`,
+`will_o_wisp`, `spore_mother`, `hunt_hound`, `huntsman`, `antler_thicket`; lines `turning year`, `bloom and blight`,
+`overgrowth`, `spring returns`, `wild kinds`, `wild stage`, `wild damage`, `greenwood`, `wild specials`, `stag king`, and
+on any stage `act XV spell` / `act XV passive` when Wild Hunt, Horn of the Hunt or Fallow Ground were taken. Phase 2 brief
+(with the World-Tree's Last Claim): `docs/year/BRIEF_PHASE2.md`.
 
 ### The illustrated epilogue
 
@@ -3843,6 +3863,10 @@ scripts/
     wild_glyphs.gd          Code-drawn fallbacks of the Wild's kinds, the stubs' obstacles and the thorn thicket (Act XV)
     wild_report.gd          The autotest's Wild lines (turning year, bloom and blight, overgrowth, spring returns,
                             wild kinds, wild stage, wild damage; Act XV)
+    greenwood_ground.gd     The Greenwood's four zone looks over the act's greenwood floor (tiles/greenwood_<style>,
+                            else tiles/wild_greenwood; Act XV)
+    greenwood_report.gd     The autotest's Greenwood lines (greenwood, wild specials, stag king) and the Wild Hunt /
+                            Horn of the Hunt / Fallow Ground item lines (Act XV)
     proving_moon_glyphs.gd  Code fallbacks of the Warbeast, Vrask'Tal and his skull belt, and the stage's obstacles (Act IX)
     proving_moon_report.gd  The autotest's Proving Moon lines (proving moon, warbeast, threats, vrask'tal; the Soul Caster
                             and passives' item lines; Act IX)
@@ -4404,9 +4428,15 @@ scripts/
       thickets.gd           OVERGROWTH: plant() (the one planting path), the thickets (Arena.add_obstacle()), the
                             catches, the spread, burn_line() / burn_at(), the withering
       spring_returns.gd     Spring Returns: the blight wiped, sprouting thickets, burials after 0:00
-      wild_kit.gd           Base kit: registration; dryad_kit.gd the seeds; winter_fae_kit.gd the frost bolt
-      thornling_kit.gd, treant_kit.gd, corpse_bloom_kit.gd, fae_knight_kit.gd, great_stag_kit.gd, wild_rider_kit.gd,
-      will_o_wisp_kit.gd, spore_mother_kit.gd  The other shared kinds (plain AI until phase 2)
+      wild_kit.gd           Base kit: registration, trample() (the one Wild trample), line_push(); dryad_kit.gd the
+                            seeds; winter_fae_kit.gd the chilling frost bolt
+      wild_charge_kit.gd    The Wild Hunt's shared charge (windup, line, trample) and lead() (a leader's line);
+                            great_stag_kit.gd, wild_rider_kit.gd (hounds, the Hunt passes), hunt_hound_kit.gd,
+                            huntsman_kit.gd (the Greenwood's miniboss, three riders in his line)
+      treant_kit.gd, fae_knight_kit.gd, will_o_wisp_kit.gd, spore_mother_kit.gd, corpse_bloom_kit.gd  The root, the
+                            blink, the lure, the spores and mould, the meals and buds; thornling_kit.gd plain
+      greenwood_director.gd The Greenwood: the sacred groves (grove_in(), heal, blight), the Huntsman, Scorched Earth
+      boss_stag_king.gd     The Stag King: the Hunt, the Rut, the Antler Crown (antler_thicket_kit.gd, crown_burn())
     pantheon/               The Olympian Republic (Act IV): its kits ("<id>_kit.gd", loaded by name after the
                             Eye's and the Empire's) and bosses ("boss_<id>.gd"), and the act's shared rules:
       pantheon_rules.gd     Game.pantheon: owns the wrath, the Phalanx and Glory, the one front test
@@ -4714,6 +4744,9 @@ scripts/
     meteor_call_data.gd     Meteor Call / Extinction Event rules, Cosmic Dust keys, Star Reader key (Act XIV,
                             temporary; the spell node is abilities/spells/meteor_call.gd)
     gravejaw_data.gd        Old Gravejaw, the Tyrant King: his row, the Hunt, the Roar, the Last Day (Act XIV)
+    wild_hunt_data.gd       Wild Hunt / The Endless Hunt rules, Horn of the Hunt keys, Call of the Horn key (Act XV,
+                            temporary; the spell node is abilities/spells/wild_hunt.gd)
+    stag_king_data.gd       The Stag King, Lord of the Greenwood: his row, the Rut, the Hunt, the Antler Crown (Act XV)
     tractor_lift_data.gd    Tractor Beam / Abduction rules, Starseed keys, Deserter's Signal key (Act IX; the
                             spell node is abilities/spells/tractor_lift.gd, the lift helper abilities/enemy_lift.gd)
     burning_eye_data.gd     Burning Eye / Eye of Retribution rules, Desert Fury keys, Lioness's Gaze key (Act XII,
@@ -4818,13 +4851,15 @@ scripts/
                                      and the Last Day: Fire from the Sky, Thunderwing, Gravejaw, the Extinction)
     wild_enemy_data.gd      The Turning Year's shared kinds (Thornling, Dryad, Treant, Corpse-Bloom, Fae Knight,
                             Winter Fae, Great Stag, Rider of the Wild Hunt, Will-o'-Wisp, Spore Mother); the group /
-                            season / plant keys; Spring Returns' kind and companions (Act XV, temporary; greenwood_ /
-                            fae_court_ / world_tree_enemy_data.gd: each stage's own, empty until phase 2)
+                            season / plant keys, the specials' keys and the Hound of the Wild Hunt; Spring Returns'
+                            kind and companions (Act XV, temporary; greenwood_enemy_data.gd: the Huntsman and the
+                            Antler Crown's thorn; fae_court_ / world_tree_enemy_data.gd: empty until phase 2)
     wild_rules_data.gd      Act XV's shared rules: SEASONS, ROOTS, WILDFIRE, AUTUMN_RULES, WINTER_RULES, BLOOM,
                             THICKETS, SPRING_RETURNS, the SOUNDS map, the Deadwood / Fallow Ground keys
-    stages/greenwood_stage.gd        Act XV stubs: the Greenwood, the Fae Court and the World-Tree; act 15,
-    stages/fae_court_stage.gd        "wild": true, zones, the rule overrides, a timeline of the shared kinds with
-    stages/world_tree_stage.gd       season weights, Spring Returns, placeholder floors / bosses ("playable": false)
+    stages/greenwood_stage.gd        Act XV: the Greenwood, the Fae Court and the World-Tree; act 15, "wild": true,
+    stages/fae_court_stage.gd        zones, the rule overrides, a timeline of the shared kinds with season weights,
+    stages/world_tree_stage.gd       Spring Returns (the Greenwood built: four zones, the groves, the Huntsman, the
+                                     Stag King, "playable": true; the other two stubs, "playable": false)
     stages/ravensmoor_stage.gd     Act VII stubs: Ravensmoor, the Witchwood and Castle Sanguis; act 7,
     stages/witchwood_stage.gd      "court": true, zones, the "moon" overrides, a timeline of the shared kinds,
     stages/castle_sanguis_stage.gd the Endless Feast, placeholder floors / bosses (the Witchwood built: four
@@ -5069,7 +5104,7 @@ Options (after `--`):
 | `--spells=a,b,...` | Any policy first takes these spells (ids from `AbilityData.SPELL_ORDER`, e.g. `bone_spear,soul_siphon,corpse_explosion,plague_cloud` or the later `death_mark,bone_wall,soul_chains` / `wither,raise_dead`) and their evolution passives, which also get ×8 card weight in hands and chests so they are offered reliably (a test-only hook; without `--spells` the draw is unchanged), never banishes them, and stops taking other new actives (or passives) once the free slots are down to the forced spells (or passives) still missing plus one spare, because chests can fill slots too (a hand with nothing else is rerolled or skipped). The `army`, `evolve` and `summon` bots never take a new item that is not on their build list (they reroll or skip), so the newer spells and the later summon classes do not change those baselines (`--classes` / `--spells` items are exempt); the `summon` and `army` bots also keep active slots free for the core classes they still lack (summon: Warriors, Mages, Menders, Warders; army: those plus Archers). Use it to exercise a spell and reach its evolution. |
 | `--passives=a,b,...` | Any policy first takes these passives (ids from `PassiveData.ORDER` except the Pact, e.g. `unholy_precision,unholy_resilience` or `blood_scent,mournsong,siegecraft`) exactly like the `--spells` items (score, ×8 card weight, slot reservation, never banished), so a passive's effect can be exercised. |
 | Bone Golem (content wave 2) | `--classes=bone_golem,...` and `--passives=grave_masonry` force the locked Golem and its passive. A run that had either prints a `bone golem` line: `absorbed=<n> max_growth=<%> bulwarks=<n> titan=<bool> bone_bastion_prevented=<dmg>`, then its level, alive / capacity, deaths, damage by source (slams with their volleys, splash, the Titan's wall), slams and slam hits, planted seconds, taunts, Grave Masonry's level and damage prevented, the Titan's heal, barriers and walls, and whether Bone Bastion was active. |
-| `--stage=ID` | Stage to play: `graveyard` (default), `crimson_march`, `sanctum`, the Act II stages `harbour`, `archive` and `spire`, the Act III stages `wastes`, `assembly` and `citadel`, the Act IV stages `ilion`, `olympus` and `underworld`, the Act V stages `province`, `kurogane` and `sun_road`, the Act VI stages `burning_gate`, `silk_palace` and `pandemonium`, the Act VII stages `ravensmoor`, `witchwood` and `castle_sanguis` (the summary adds the `bloodfeast`, `night wings`, `blood moon`, `court kinds`, `endless feast` and `court stage` lines; `--boss=vargr\|isolde\|carmilla`), the Act VIII stages `skid_row`, `fort_kessler` and `liberty_heights` (city blocks; the summary adds the `city blocks`, `armour`, `supers`, `civilians`, `escalation`, `city kinds`, `martial law` and `city stage` lines; `--boss=don_marrow\|harrow\|paragon`; `--spawn=` takes `civilian`, `street_thug`, `gang_gunner`, `riot_cop`, `squad_car`, `swat_breacher`, `field_medic`, `rifleman`, `tank`, `blitz` and `city_wreck`, Skid Row's `armoured_limo`, `big_sal` and `bounty_board`, and Fort Kessler's `machine_gunner`, `attack_helicopter` and `mammoth`; Skid Row adds `skid row` (Big Sal, the Bounty, No Witnesses), `tear gas`, `big sal` and `don marrow` lines, Fort Kessler adds the `fort kessler`, `fort kessler kinds`, `mammoth`, `fort kessler threats` (top summon-damage and summon-death sources) and `harrow` lines, and on any stage `act VIII spell` / `act VIII passives` when Hearse Run, Black Car, Kevlar Bones, Bone Mines, Tripwire or Armour-Piercing Bones were taken), the Act IX stages `crash_site`, `proving_moon` and `ark` (see *Act IX* above), the Act X stages `cutter`, `galleon` and `maelstrom` (see *Act X: the Black Tide* above), the Hall of the Slain's stages `barrow_fields`, `valgard` and `vigrid` (temporarily Act XI; see *The Hall of the Slain* above), or the temporary Act XII stages `necropolis`, `lioness_temple` and `two_truths` (see *Act XII: the Necropolis Dynasty* above), or the temporary Act XIII stages `silver_stair`, `wheel_of_thrones` and `empyrean` (see *Act XIII: the Celestial Host* above), or the temporary Act XIV stages `fern_basin`, `great_plain` (both built) and `last_day` (a stub; see *Act XIV: the Age of Titans* above), or the temporary Act XV stubs `greenwood`, `fae_court` and `world_tree` (see *Act XV: the Turning Year* above). Stage locks are ignored. Act II runs print a `dread` line (peak, average, end, Dread calmed by kills, seconds per 25-Dread step, Dread by source) and a `claims` line (claims, Thralls freed, expired, still risen at the end, refusals by the cap, claims by class). Gullhaven adds `tide` (level, seawall, High Water, surges and shoves, seconds in water for you / summons / enemies / swimmers), `harbour` and `harbour events` (buoys sunk and when, tolls, wave and trickle size, caches and chests, the Harbourmaster), `harbour kinds` / `harbour tricks` (also on any stage where a Harbour kind spawned, e.g. `--spawn=deep_kin@60x3`), `merrow` (when he is the boss, also `--boss=merrow`), `act II spell` (Undertow when learned) and `act II passives` (Salt of the Deep, Brinewalker). |
+| `--stage=ID` | Stage to play: `graveyard` (default), `crimson_march`, `sanctum`, the Act II stages `harbour`, `archive` and `spire`, the Act III stages `wastes`, `assembly` and `citadel`, the Act IV stages `ilion`, `olympus` and `underworld`, the Act V stages `province`, `kurogane` and `sun_road`, the Act VI stages `burning_gate`, `silk_palace` and `pandemonium`, the Act VII stages `ravensmoor`, `witchwood` and `castle_sanguis` (the summary adds the `bloodfeast`, `night wings`, `blood moon`, `court kinds`, `endless feast` and `court stage` lines; `--boss=vargr\|isolde\|carmilla`), the Act VIII stages `skid_row`, `fort_kessler` and `liberty_heights` (city blocks; the summary adds the `city blocks`, `armour`, `supers`, `civilians`, `escalation`, `city kinds`, `martial law` and `city stage` lines; `--boss=don_marrow\|harrow\|paragon`; `--spawn=` takes `civilian`, `street_thug`, `gang_gunner`, `riot_cop`, `squad_car`, `swat_breacher`, `field_medic`, `rifleman`, `tank`, `blitz` and `city_wreck`, Skid Row's `armoured_limo`, `big_sal` and `bounty_board`, and Fort Kessler's `machine_gunner`, `attack_helicopter` and `mammoth`; Skid Row adds `skid row` (Big Sal, the Bounty, No Witnesses), `tear gas`, `big sal` and `don marrow` lines, Fort Kessler adds the `fort kessler`, `fort kessler kinds`, `mammoth`, `fort kessler threats` (top summon-damage and summon-death sources) and `harrow` lines, and on any stage `act VIII spell` / `act VIII passives` when Hearse Run, Black Car, Kevlar Bones, Bone Mines, Tripwire or Armour-Piercing Bones were taken), the Act IX stages `crash_site`, `proving_moon` and `ark` (see *Act IX* above), the Act X stages `cutter`, `galleon` and `maelstrom` (see *Act X: the Black Tide* above), the Hall of the Slain's stages `barrow_fields`, `valgard` and `vigrid` (temporarily Act XI; see *The Hall of the Slain* above), or the temporary Act XII stages `necropolis`, `lioness_temple` and `two_truths` (see *Act XII: the Necropolis Dynasty* above), or the temporary Act XIII stages `silver_stair`, `wheel_of_thrones` and `empyrean` (see *Act XIII: the Celestial Host* above), or the temporary Act XIV stages `fern_basin`, `great_plain` and `last_day` (all built; see *Act XIV: the Age of Titans* above), or the temporary Act XV stages `greenwood` (built), `fae_court` and `world_tree` (stubs; see *Act XV: the Turning Year* above). Stage locks are ignored. Act II runs print a `dread` line (peak, average, end, Dread calmed by kills, seconds per 25-Dread step, Dread by source) and a `claims` line (claims, Thralls freed, expired, still risen at the end, refusals by the cap, claims by class). Gullhaven adds `tide` (level, seawall, High Water, surges and shoves, seconds in water for you / summons / enemies / swimmers), `harbour` and `harbour events` (buoys sunk and when, tolls, wave and trickle size, caches and chests, the Harbourmaster), `harbour kinds` / `harbour tricks` (also on any stage where a Harbour kind spawned, e.g. `--spawn=deep_kin@60x3`), `merrow` (when he is the boss, also `--boss=merrow`), `act II spell` (Undertow when learned) and `act II passives` (Salt of the Deep, Brinewalker). |
 | (the Hollow Archive) | `--stage=archive` adds `archive` (tomes burned and when, Nothing Unwritten, seconds in ink / spores, the orrery's risings, turns and pushes, the Librarian), `archive rifts` (opened and when, closed early, closed by themselves, cultists spat out) and `archive events` lines; any Archive kind adds `archive enemies` (spawned / killed per kind), `archive kits` (curses, wraith rises and dives, spore clouds and their summon damage, mass splits, Librarian beams, summons turned, lashes, kills) and `archive hazards`; the Archivist adds `archivist` (phase times, kill time, pages and their hits, Footnotes and the damage wasted on copies, Erasure steps and pushes); Forbidden Verse adds `act ii spells`, Marginalia / Iron Mind `act ii passives`. `--spawn=` takes `scribe`, `ink_wraith`, `spore_pilgrim`, `gibbering_mass`, `librarian`, `archive_rift`, `unwritten_one`; `--boss=archivist`; `--character=heretic_scribe`. |
 | (Act III) | `--stage=wastes\|assembly\|citadel` (the Act III stubs) prints `line of fire` (shots fired, rails, arcs; stopped by summons, absorbed by barriers, stopped by Bone Walls, Orb intercepts; reached you and the damage; expired, capped, peak), `lock-on` (lines painted on you / on summons, refused at the cap, fired, cancelled by a slain Spotter, rails stopped by summons or reaching you, most lines at once), `steel` (machine and cyborg kills, Grave Gunners raised per raising effect, their damage and kills), `purge protocol` (orbital salvos and strikes, hits), `empire kinds` (spawned / killed and damage per kind), `empire stage` and `ranged share` (the share of Empire spawns that attack from range; every Act III stage). The Empire's lines also print on any stage where an Empire kind was forced: `--spawn=scout_drone@60x10,line_trooper@90x6,spotter@120`. Grave Gunners need a raising effect, e.g. `--spells=death_mark` or `--ultimate=grave_tide`; `--boss=kestrel\|motherboard\|deus_ex_machina`. The Scrap Wastes (`--stage=wastes`) adds `wastes` (pylons raised / destroyed and when, the share of shooter reach samples boosted, shrunk or storm-halved, storms, the Trojan Horse, objective Soul Ash), `wastes kinds` (Aegis shield blocks and breaks, mortar shells, rockets launched / intercepted / hitting you / shot down, decoys; also wherever a Wastes kind was forced, e.g. `--spawn=aegis_bot@60x6,mortar_walker@90x2,trojan_horse@120`), `trojan horse` and `kestrel` (when she is the boss, also `--boss=kestrel`). On any stage, `act III spell` (Death Ray when learned, e.g. `--spells=death_ray`) and `act III passives` (Conductive Marrow, Lead-Lined Bones, e.g. `--passives=lead_lined_bones`). |
 | (Act IV) | `--stage=ilion\|olympus\|underworld` (the Act IV stubs) prints `divine wrath` (the stage's kind; salvos and strikes per kind: waves, bolts, fissures; damage to enemies with the kills, to summons and to you; fodder drowned, lightning chains, corpses swallowed, shades spat, capped strikes, whether the Twilight began), `phalanx` (walls formed, bodies locked, front hits by shots and melee with the damage prevented, flank breaks, most bodies locked at once), `glory` (stacks gained, the peak, heroes killed and with how many stacks, chests and Soul Ash bounty), `pantheon kinds` (spawned / killed and damage per kind) and `pantheon stage`. The lines also print on any stage where a Pantheon kind was forced: `--spawn=hoplite@60x8,hero@90,shade_of_dead@30x12,bronze_titan@120`; `--boss=achilles\|zeus\|hades` (placeholder boss scripts until phase 2). |

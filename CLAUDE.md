@@ -184,8 +184,9 @@ Autotest options (full table in the README):
   Act XIV (all three built; `--boss=scarmaw|ironbrow|gravejaw`,
   `--character=fern_huntress|herd_warden|skywatcher`, `--classes=bonehorn`, `--spawn=` with
   `scuttler|razorclaw|frill_spitter|longneck|duckbill|skyraider|tyrant|bog_croc|ironjaw|primeval_nest|scarmaw_guard|horncharger|clubtail|mother_clubtail|stormwing|thunderwing`);
-  `greenwood|fae_court|world_tree` the Turning Year's stubs, Act XV (`--boss=stag_king|summer_queen|green_mother`, `--spawn=` with
-  `thornling|dryad|treant|corpse_bloom|fae_knight|winter_fae|great_stag|wild_rider|will_o_wisp|spore_mother`))
+  `greenwood|fae_court|world_tree` the Turning Year, Act XV (the Greenwood built, the other two stubs; `--boss=stag_king|summer_queen|green_mother`,
+  `--character=horned_herald`, `--spawn=` with
+  `thornling|dryad|treant|corpse_bloom|fae_knight|winter_fae|great_stag|wild_rider|will_o_wisp|spore_mother|hunt_hound|huntsman|antler_thicket`))
 - `--unlocks=all|none` (Act II's lockable spells / passives / classes in the card pool; forced items
   are open either way)
 - `--boss=alaric|vael|seraphine` (puts that boss in the stage's slot, e.g. test Seraphine on the Graveyard)
@@ -219,10 +220,10 @@ Autotest options (full table in the README):
 the autotests for the area a change touches plus one default run; run the full "Done" set (every stage,
 the same-seed gates) once per batch of changes, before `main` moves; multi-seed batches only for balance.
 
-CI (`.github/workflows/ci.yml`) runs the import and, as forty **parallel** matrix jobs, the Graveyard
+CI (`.github/workflows/ci.yml`) runs the import and, as forty-one **parallel** matrix jobs, the Graveyard
 autotest with the naive and army policies, a Crimson March autotest, a Sanctum of Judgment autotest (army
 policy) and one army autotest per Act II, Act IV, V, VI, VII, VIII, IX, X (the Black Tide), XI (the Hall of the Slain) and XII (the
-Necropolis Dynasty) stage, the three Celestial Host stages and the three Age of Titans stages; beside them, the Windows/Linux/Web exports (artifacts
+Necropolis Dynasty) stage, the three Celestial Host stages, the three Age of Titans stages and the Greenwood; beside them, the Windows/Linux/Web exports (artifacts
 `Necropathy-windows` / `-linux` / `-web`) and an exported-build smoke test; also the co-op jobs `coop-net` (relay
 protocol + two-process transport test) and `coop-lockstep` (the two-process full-run determinism gate, ~10 min, not
 waited on by the publish jobs) and, on `main` pushes, `deploy-relay` (the Worker, secrets `CLOUDFLARE_API_TOKEN` /
@@ -774,6 +775,17 @@ tiny tweaks.
   The Day the Sky Fell (records the clear). No lit beacons (owner: later), no epilogue part or closing card. One CI army job (40
   matrix jobs). Stages 1–39 same-seed summaries unchanged; the Fern Basin's and the Great Plain's differ from their Tyrants on
   (the shared Tyrant's new kit).
+- **The Greenwood, playable** (the Turning Year's first stage, temporarily Act XV, final slot XV; GDD §15.0 from "The Greenwood
+  (Act XV phase 2)" to "The Greenwood tests and gate"; brief `docs/year/BRIEF_PHASE2.md`): the four zones (`GreenwoodGround`),
+  **the sacred groves** (`GreenwoodDirector`: rings from a pure hash that heal the Wild inside; held at 0.6 blight for 10 s through
+  `blight_at()` they die for the run), the shared kinds' specials (`WildKit.trample()`, the one Wild trample; `WildChargeKit` with
+  `lead()`: the Treant's root, the Fae Knight's blink, the Great Stag's charge, the Rider's sweep, hounds (`hunt_hound`) and its
+  passing, the Wisp's lure, the Spore Mother's spores and mould (`BloomField.mould()`), the Corpse-Bloom's meals and buds, the
+  Winter Fae's chill through `fire_hostile()`; Rot, Wither and the fire spells burn thickets through `Thickets.burn_at()`), the
+  Huntsman of the Wild Hunt (miniboss, `HuntsmanKit`), **the Stag King** (`boss_stag_king.gd`: the Hunt's spectral lines, the Rut
+  cracking trees into thickets, the Antler Crown of `antler_thicket` thorns heard by fire through `Thickets.ring_burns`), Wild
+  Hunt / The Endless Hunt + Horn of the Hunt, the Horned Herald, Scorched Earth → the counter-passive Fallow Ground (act 15 only).
+  One CI army job (41 matrix jobs). Stages 1–42 same-seed summaries unchanged.
 
 **Next, in priority order:**
 1. **Playtest feedback** from the owner and friends (actively playtesting); it outranks everything below.

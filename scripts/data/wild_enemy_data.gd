@@ -5,29 +5,33 @@
 ## rises to take its dead back: moss, bark, blossom pink, gold leaves and frost
 ## white; the beasts are few and fae-touched (the Titans own the herds), and
 ## winter is the fae's Winter Court (the Norse act owns the giants and wolves).
-## The shared kinds of phase 1:
+## The shared kinds (phase 1; their specials built in phase 2 by the Greenwood,
+## GDD §15.0 "The Turning Year's shared kinds: their specials (the Greenwood)"):
 ##   thornling    — growth: twig creatures in swarms of 12; fodder.
 ##   dryad        — growth (female, figure style): plants thicket SEEDS
 ##                  (OVERGROWTH, DryadKit) and heals the Wild ("healer").
 ##   treant       — growth: the slow heavy; the Reckoning's heavy (Spring
-##                  Returns); phase 2 adds the root on its strike.
-##   corpse_bloom — growth: a structure; phase 2 makes it eat corpses on the
-##                  field and spawn thornlings.
-##   fae_knight   — fae (male): leaf armour and a thorn sword; phase 2 adds the
-##                  short blinks through the ring.
-##   winter_fae   — fae (female, figure style): frost bolts from range; WINTER
-##                  ONLY (row "season": SeasonCycle's timeline helper keeps it
-##                  out of every other season); phase 2 adds the chill.
-##   great_stag   — hunt (male): an elite; phase 2 adds the antler charge.
-##   wild_rider   — hunt (male): a spectral horseman; phase 2 adds the two
-##                  hounds and the sweep across the arena.
-##   will_o_wisp  — spirits: a lure; phase 2 draws summons away from the ring
-##                  through the existing SummonedUnit.misdirect() hook.
-##   spore_mother — spirits (female, figure style): phase 2 adds the spores
-##                  that rot summons and the mould that kills blight.
+##                  Returns); its strike roots the summon it hits (TreantKit).
+##   corpse_bloom — growth: a structure that eats corpses near it and buds
+##                  Thornlings (CorpseBloomKit).
+##   fae_knight   — fae (male): leaf armour and a thorn sword; short blinks
+##                  through the ring (FaeKnightKit).
+##   winter_fae   — fae (female, figure style): frost bolts from range that
+##                  chill summons; WINTER ONLY (row "season").
+##   great_stag   — hunt (male): an elite with a telegraphed antler charge
+##                  that scatters the ring (GreatStagKit, WildChargeKit).
+##   wild_rider   — hunt (male): a spectral horseman with two hounds and a
+##                  long sweep; after leave_after sweeps it rides on
+##                  (WildRiderKit, WildChargeKit).
+##   will_o_wisp  — spirits: a lure that draws summons away from the ring
+##                  through SummonedUnit.misdirect() (WillOWispKit).
+##   spore_mother — spirits (female, figure style): spores that rot summons,
+##                  mould that kills blight (SporeMotherKit).
+##   hunt_hound   — hunt (phase 2): the Rider's hounds (HuntHoundKit).
+## The charge keys (charge_*) of the hunters: WildChargeKit's header.
 ## Each stage's own kinds live in its own file (GreenwoodEnemyData,
-## FaeCourtEnemyData, WorldTreeEnemyData; empty until phase 2: the stage
-## minibosses and the bosses' allies); EnemyDirector.enemy_def() looks them up
+## FaeCourtEnemyData, WorldTreeEnemyData: the stage minibosses and the
+## bosses' allies); EnemyDirector.enemy_def() looks them up
 ## through wild_def(), this file first, after the Age of Titans' tables.
 ##
 ## Rows have every key of an EnemyData.ENEMIES row (same meaning) plus the
@@ -146,12 +150,12 @@ const ENEMIES := {
 	},  # The Dryad.
 	# Growth: the heavy (owner-approved proposal: "Treant | Heavy | Slow; roots
 	# the summon it strikes | Fire, Wither, Siegecraft"). The root on its strike
-	# is phase 2's.
+	# is TreantKit's (the Greenwood).
 	"treant": {
 		"display_name": "Treant",
 		"max_hp": 420.0,  # TUNING (not in GDD) a heavy
 		"move_speed": 34.0,  # TUNING (not in GDD) px/s; slow
-		"damage": 12.0,  # TUNING (not in GDD) a branch, before the time scaling (the stub's 14: with its root it hit the naive bot hardest, seeds 7 and 11)
+		"damage": 11.0,  # TUNING (not in GDD) a branch, before the time scaling (the stub's 14, a first pass 12: with its root it hit the bots hardest, seeds 7 and 11)
 		"attack_interval": 1.6,  # TUNING (not in GDD) s
 		"attack_range": 12.0,  # TUNING (not in GDD) px
 		"radius": 18.0,  # TUNING (not in GDD) px (~80 px sprite)
@@ -173,7 +177,7 @@ const ENEMIES := {
 	},  # The Treant.
 	# Growth: the structure (owner-approved proposal: "Corpse-Bloom | Structure
 	# | Eats corpses on the field and spawns thornlings | Break it"). The eating
-	# is phase 2's; not in the stubs' timelines (--spawn= fields it).
+	# is CorpseBloomKit's (the Greenwood); not in the stubs' timelines (--spawn= fields it).
 	"corpse_bloom": {
 		"display_name": "Corpse-Bloom",
 		"max_hp": 380.0,  # TUNING (not in GDD) a structure (x the time and stage scaling)
@@ -206,7 +210,7 @@ const ENEMIES := {
 	},  # The Corpse-Bloom.
 	# The fae: the soldier (owner-approved proposal: "Fae Knight (male) |
 	# Soldier | Leaf armour and a thorn sword; short blinks through the ring |
-	# Blockers inside the ring"). The blinks are phase 2's.
+	# Blockers inside the ring"). The blinks: FaeKnightKit (the Greenwood).
 	"fae_knight": {
 		"display_name": "Fae Knight",
 		"max_hp": 70.0,  # TUNING (not in GDD) a soldier
@@ -239,7 +243,7 @@ const ENEMIES := {
 	},  # The Fae Knight.
 	# The fae: the Winter Court (owner-approved proposal: "Winter Fae (female,
 	# figure style) | Ranged | Frost bolts that chill summons; winter only |
-	# Fire; Mages"). The chill is phase 2's.
+	# Fire; Mages"). The chill: WinterFaeKit (the Greenwood).
 	"winter_fae": {
 		"display_name": "Winter Fae",
 		"max_hp": 34.0,  # TUNING (not in GDD) ranged
@@ -268,7 +272,7 @@ const ENEMIES := {
 	},  # The Winter Fae.
 	# The Wild Hunt: the elite beast (owner-approved proposal: "Great Stag
 	# (male) | Elite | A telegraphed antler charge that scatters the ring |
-	# Grave Step; Bone Wall"). The charge is phase 2's.
+	# Grave Step; Bone Wall"). The charge: GreatStagKit (the Greenwood).
 	"great_stag": {
 		"display_name": "Great Stag",
 		"max_hp": 300.0,  # TUNING (not in GDD) an elite
@@ -305,7 +309,7 @@ const ENEMIES := {
 	# The Wild Hunt: the rider (owner-approved proposal: "Rider of the Wild Hunt
 	# (male) | Elite | A spectral horseman and two hounds; sweeps across the
 	# arena in a line | Step out of the line; Archers"). The hounds and the
-	# sweep are phase 2's.
+	# sweep: WildRiderKit (the Greenwood).
 	"wild_rider": {
 		"display_name": "Rider of the Wild Hunt",
 		"max_hp": 200.0,  # TUNING (not in GDD) an elite (the stub's 240: with its sweep and hounds it outlived the naive bot's army)
@@ -345,7 +349,7 @@ const ENEMIES := {
 	},  # The Rider of the Wild Hunt.
 	# The spirits: the lure (owner-approved proposal: "Will-o'-Wisp | Lure |
 	# Draws summons away from the ring (the existing misdirect() hook) | Kill
-	# it; area damage"). The lure is phase 2's.
+	# it; area damage"). The lure: WillOWispKit (the Greenwood).
 	"will_o_wisp": {
 		"display_name": "Will-o'-Wisp",
 		"max_hp": 18.0,  # TUNING (not in GDD) fragile
@@ -369,15 +373,15 @@ const ENEMIES := {
 		"group": "spirits",
 		# --- Act XV (temporary number): the Greenwood --- the lure (WillOWispKit).
 		"lure_first": 1.5,  # TUNING (not in GDD) s after it comes on
-		"lure_every": 3.0,  # TUNING (not in GDD) s between two lures
+		"lure_every": 5.0,  # TUNING (not in GDD) s between two lures (first pass 3: 450 summons lured in the army bot's run, seed 11)
 		"lure_radius": 110.0,  # TUNING (not in GDD) px
-		"lure_cap": 3,  # TUNING (not in GDD) summons a lure takes at most
+		"lure_cap": 2,  # TUNING (not in GDD) summons a lure takes at most (first pass 3)
 		"lure_time": 1.6,  # Owner-approved proposal: "draws summons away from the ring"; TUNING (not in GDD) s
 		"lure_speed": 0.8,  # TUNING (not in GDD) x the summon's speed
 	},  # The Will-o'-Wisp.
 	# The spirits: the rot (owner-approved proposal: "Spore Mother (female,
 	# figure style) | Support | Spores that rot summons and spread
-	# blight-killing mould | Kill early"). The spores are phase 2's.
+	# blight-killing mould | Kill early"). The spores: SporeMotherKit (the Greenwood).
 	"spore_mother": {
 		"display_name": "Spore Mother",
 		"max_hp": 60.0,  # TUNING (not in GDD) a support
@@ -401,10 +405,10 @@ const ENEMIES := {
 		"group": "spirits",
 		# --- Act XV (temporary number): the Greenwood --- the spores and the mould (SporeMotherKit).
 		"spore_first": 2.5,  # TUNING (not in GDD) s after she comes on
-		"spore_every": 5.0,  # TUNING (not in GDD) s between two puffs
+		"spore_every": 6.0,  # TUNING (not in GDD) s between two puffs (first pass 5)
 		"spore_radius": 70.0,  # TUNING (not in GDD) px
 		"spore_damage": 3.0,  # TUNING (not in GDD) to each summon, before the time scaling
-		"spore_curse": 0.8,  # Owner-approved proposal: "spores that rot summons"; TUNING (not in GDD) x the summon's damage and speed
+		"spore_curse": 0.85,  # Owner-approved proposal: "spores that rot summons"; TUNING (not in GDD) x the summon's damage and speed (first pass 0.8)
 		"spore_time": 4.0,  # TUNING (not in GDD) s the rot lasts
 		"mould_radius": 90.0,  # Owner-approved proposal: "spread blight-killing mould"; TUNING (not in GDD) px
 		"mould_cut": 0.5,  # TUNING (not in GDD) blight a puff takes off each cell in reach

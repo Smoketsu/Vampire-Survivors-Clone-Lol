@@ -165,7 +165,7 @@ const RECKONING_OBJECTIVE: String = "SPRING RETURNS: the year turns back to its 
 const SEASON_WEIGHTS := {
 	"spring": {"treant": 0.02},  # TUNING (not in GDD) (the stub's 0.03: the Treants piled up, seed 3)
 	"summer": {"fae_knight": 0.06, "wild_rider": 0.01, "great_stag": 0.01},  # TUNING (not in GDD) (the stub's riders 0.015: their sweeps were the naive bot's killer)
-	"autumn": {"spore_mother": 0.05, "will_o_wisp": 0.05},  # TUNING (not in GDD)
+	"autumn": {"spore_mother": 0.03, "will_o_wisp": 0.05},  # TUNING (not in GDD) (the stub's spore mothers 0.05: with their spores, 14-17 alive rotted the whole ring, seed 11)
 	"winter": {"winter_fae": 0.12},  # TUNING (not in GDD) the Winter Court
 }
 
@@ -191,11 +191,11 @@ const SEGMENTS := [
 		"season_weights": SEASON_WEIGHTS,
 		"objective": "Summer: wildfires sweep the dry grass and burn the thickets. Step out of their path"},
 	{"start": 600.0, "rate": 2.7, "max_alive": 72,  # TUNING (not in GDD)
-		"weights": {"thornling": 0.74, "dryad": 0.1, "fae_knight": 0.08, "spore_mother": 0.04, "treant": 0.025},
+		"weights": {"thornling": 0.74, "dryad": 0.1, "fae_knight": 0.08, "spore_mother": 0.025, "treant": 0.025},
 		"season_weights": SEASON_WEIGHTS,
 		"objective": "Autumn: the dead rot in three seconds. Raise them fast"},
 	{"start": 900.0, "rate": 3.0, "max_alive": 84,  # TUNING (not in GDD)
-		"weights": {"thornling": 0.72, "dryad": 0.1, "fae_knight": 0.1, "treant": 0.025, "spore_mother": 0.04},
+		"weights": {"thornling": 0.72, "dryad": 0.1, "fae_knight": 0.1, "treant": 0.025, "spore_mother": 0.025},
 		"season_weights": SEASON_WEIGHTS,
 		"objective": "Winter: snow slows every step, and the Winter Court comes"},
 	{"start": BOSS_TIME, "rate": 2.4, "max_alive": 64,  # TUNING (not in GDD) thinner during the boss fight

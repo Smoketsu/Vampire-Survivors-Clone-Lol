@@ -172,3 +172,14 @@ Made (ART_BIBLE "Act XV slot: the Turning Year"): the palette ramps; the ten sha
 `wild_blizzard`, `wild_snowfall`, `wild_leaves`, `wild_thicket_burn`, `wild_bury`; the score (music key `wildwood`) and the pack, wired. Not made (phase 2): `wild/hunt_hound`, `huntsman`,
 `winter_prince`, `gardener_of_roots`; the three bosses and their poses / `_crown` / `_mask` / `_burial`; the three characters; the Ossuary Oak and World-Root Warden; the zone floors and
 `wild_fairy_ring`; `wild_grove_tree`, `wild_rose_hedge`, `wild_great_root`. The score uses the default heartbeat job instead of a swelling "drums" (the jobs cannot swell inside one loop).
+
+## Status (the Greenwood, phase 2, Nov 2026)
+
+The Greenwood is built and loads these keys as soon as their PNGs exist (code shapes until then; sizes in
+`SpriteData.FLAT_SIZES`): `wild/hunt_hound` (+ walk), `wild/huntsman` (+ walk; the Rider's art meanwhile),
+`wild/antler_thicket` (one thorn of the Stag King's Antler Crown, about 28 px, no strip), `wild/stag_king` (+ walk, pose 1
+`wild/stag_king_horn`: the horn raised while a Hunt rides, `BossPoseData`; the crown is the thorn units, so no `_crown`
+sprite is needed), `player/horned_herald` (+ walk), `obstacles/wild_grove_tree` (40x48, a sacred grove's tree, drawn by
+`GreenwoodDirector` on the grove's ring; never an obstacle; a dead grove draws grey stumps by code) and the four zone tiles
+`tiles/greenwood_glade` / `_deep_wood` / `_hunting_grounds` / `_stags_hollow` (until then the act's `tiles/wild_greenwood`
+floors every zone). Icons, the sound pack and the obstacles were already made.

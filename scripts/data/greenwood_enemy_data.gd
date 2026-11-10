@@ -65,12 +65,12 @@ const ENEMIES := {
 		"rider_kind": WildEnemyData.WILD_RIDER,  # Owner-approved proposal
 		"rider_spacing": 46.0,  # TUNING (not in GDD) px between two places in his line
 		"charge_first": 4.0,  # TUNING (not in GDD) s after he arrives
-		"charge_every": 9.0,  # TUNING (not in GDD) s between two sweeps
+		"charge_every": 11.0,  # TUNING (not in GDD) s between two sweeps (first pass 9: his lines broke the army bot's ring for good, seed 11)
 		"charge_trigger": 420.0,  # TUNING (not in GDD) px to the necromancer for a sweep to start
 		"charge_windup": 1.4,  # TUNING (not in GDD) s the line shows (his horn)
 		"charge_speed": 360.0,  # TUNING (not in GDD) px/s
 		"charge_len": 560.0,  # Owner-approved proposal: "a sweeping line"; TUNING (not in GDD) px
-		"charge_damage": 9.0,  # TUNING (not in GDD) to each summon he crosses, before the time scaling
+		"charge_damage": 7.0,  # TUNING (not in GDD) to each summon he crosses, before the time scaling (first pass 9)
 		"charge_player": 4.0,  # TUNING (not in GDD) to the necromancer, before the time scaling (first passes 10, 6: he was the naive bot's killer, seeds 3 and 11)
 		"charge_stun": 0.5,  # TUNING (not in GDD) s
 		"charge_knock": 30.0,  # TUNING (not in GDD) px
