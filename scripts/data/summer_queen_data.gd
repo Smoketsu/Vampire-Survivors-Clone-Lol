@@ -145,14 +145,14 @@ const BOSS := {
 	"refuse_banner": "You refuse her! The Summer Queen's smile turns to thorns: she strikes harder.",  # TUNING (not in GDD)
 	# The Court in Bloom.
 	"bloom_first": 8.0,  # TUNING (not in GDD) s after she arrives
-	"bloom_every": 9.0,  # TUNING (not in GDD) s between two sowings at full HP
-	"bloom_min_every": 4.5,  # Owner-approved proposal: "she floods the arena ... until she falls"; TUNING (not in GDD) s at no HP (it grows faster as she falls)
-	"bloom_count": 5,  # TUNING (not in GDD) blossoms a sowing
+	"bloom_every": 10.0,  # TUNING (not in GDD) s between two sowings at full HP (first pass 9)
+	"bloom_min_every": 5.5,  # Owner-approved proposal: "she floods the arena ... until she falls"; TUNING (not in GDD) s at no HP (it grows faster as she falls)
+	"bloom_count": 4,  # TUNING (not in GDD) blossoms a sowing (first pass 5: with her court and the Treants they broke the army bot's ring, seed 3)
 	"bloom_spread": 230.0,  # TUNING (not in GDD) px round the necromancer
 	"bloom_lead": 1.4,  # TUNING (not in GDD) s a blossom shows before it bursts
 	"bloom_radius": 46.0,  # TUNING (not in GDD) px
-	"bloom_damage": 7.0,  # TUNING (not in GDD) to the necromancer, before the time scaling
-	"bloom_damage_summon": 6.0,  # TUNING (not in GDD) to each summon, before the time scaling
-	"bloom_seed_every": 3,  # TUNING (not in GDD) every n-th blossom leaves a thicket seed
+	"bloom_damage": 6.0,  # TUNING (not in GDD) to the necromancer, before the time scaling (first pass 7)
+	"bloom_damage_summon": 5.0,  # TUNING (not in GDD) to each summon, before the time scaling (first pass 6)
+	"bloom_seed_every": 4,  # TUNING (not in GDD) every n-th blossom leaves a thicket seed (first pass 3)
 	"bloom_grow": 2.0,  # TUNING (not in GDD) s those seeds take to grow
 }

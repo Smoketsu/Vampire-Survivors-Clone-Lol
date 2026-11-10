@@ -34,10 +34,10 @@ const BOSS_TIME: float = 1020.0  # TUNING (not in GDD) 17:00, as on every stage
 
 ## Enemy max-HP multiplier of this stage on top of the shared time scaling
 ## (slot XV is the hardest act: the Greenwood's 2.2 and up; the step is in HP).
-const ENEMY_HP_MULT: float = 2.3  # TUNING (not in GDD) phase 2 (the stub's 2.5): a little over the Greenwood's 2.2
+const ENEMY_HP_MULT: float = 2.2  # TUNING (not in GDD) phase 2 (the stub's 2.5, a first pass 2.3: the naive bot died at 5:18-8:00 on two seeds of three): the Greenwood's 2.2; the endless summer, the fairy rings, the Masque and the Winter Prince are the step up
 ## Enemy damage multiplier of this stage on top of the shared time scaling
 ## (the Greenwood's 1.4 and up).
-const ENEMY_DAMAGE_MULT: float = 1.45  # TUNING (not in GDD) phase 2 (the stub's 1.7): a little over the Greenwood's 1.4
+const ENEMY_DAMAGE_MULT: float = 1.4  # TUNING (not in GDD) phase 2 (the stub's 1.7, a first pass 1.45: the naive bot collapsed at 7:00-8:30, seed 3): the Greenwood's 1.4; the endless summer's knights and Hunt, the Masque and the Winter Prince are the step up
 ## Elapsed game seconds from which the two multipliers apply to regular
 ## enemies (the boss always gets them).
 const ENEMY_MULT_FROM: float = 420.0  # TUNING (not in GDD) as Acts III to XIV (7:00)
@@ -66,9 +66,9 @@ const ZONES := [
 		"blurb": "Hedges of roses that never wilt, and lanes that close behind you",
 		"ground": {"style": "rose_maze", "base": Color(0.13, 0.17, 0.11), "line": Color(0.18, 0.24, 0.14),
 			"accent": Palette.WILD_BLOSSOM, "trim": Palette.WILD_MOSS_DARK},  # TUNING (not in GDD)
-		"arena": {"density": 0.2, "clear_radius": 220.0, "layout_seed": 4444,  # TUNING (not in GDD) the densest zone
-			"kinds": {"wild_rose_hedge": {"weight": 0.7, "shape": "rect", "sizes": [46.0], "short": 12.0},
-				"wild_oak": {"weight": 0.3, "shape": "circle", "sizes": [14.0, 20.0]}}}},  # TUNING (not in GDD)
+		"arena": {"density": 0.15, "clear_radius": 220.0, "layout_seed": 4444,  # TUNING (not in GDD) the densest hedges (first pass 0.2 with hedges 0.7: the army bot's ring broke on the long hedges and never grew, seed 7)
+			"kinds": {"wild_rose_hedge": {"weight": 0.5, "shape": "rect", "sizes": [46.0], "short": 12.0},
+				"wild_oak": {"weight": 0.5, "shape": "circle", "sizes": [14.0, 20.0]}}}},  # TUNING (not in GDD)
 	{"start": 300.0, "numeral": "II", "name": "The Revel", "id": "revel",  # Owner-approved proposal (zones)
 		"blurb": "Open lawns where the court dances under a sun that never sets",
 		"ground": {"style": "revel", "base": Color(0.15, 0.18, 0.11), "line": Color(0.21, 0.25, 0.14),
@@ -88,9 +88,9 @@ const ZONES := [
 		"blurb": "Her court of roses, where the Summer Queen waits",
 		"ground": {"style": "throne_of_blossoms", "base": Color(0.15, 0.15, 0.12), "line": Color(0.22, 0.20, 0.16),
 			"accent": Palette.WILD_BLOSSOM, "trim": Palette.WILD_GOLD_LEAF},  # TUNING (not in GDD)
-		"arena": {"density": 0.18, "clear_radius": 220.0, "layout_seed": 4474,  # TUNING (not in GDD)
-			"kinds": {"wild_rose_hedge": {"weight": 0.6, "shape": "rect", "sizes": [46.0], "short": 12.0},
-				"wild_stone": {"weight": 0.4, "shape": "rect", "sizes": [18.0, 26.0], "short": 12.0}}}},  # TUNING (not in GDD)
+		"arena": {"density": 0.14, "clear_radius": 220.0, "layout_seed": 4474,  # TUNING (not in GDD) (first pass 0.18 with hedges 0.6: her blossoms' thickets walled the army bot in with the Treants, seed 3)
+			"kinds": {"wild_stone": {"weight": 0.6, "shape": "rect", "sizes": [18.0, 26.0], "short": 12.0},
+				"wild_rose_hedge": {"weight": 0.4, "shape": "rect", "sizes": [46.0], "short": 12.0}}}},  # TUNING (not in GDD)
 ]
 
 ## Zone mechanics for MarchDirector (keys as SanctumStage.MARCH: no road,
@@ -160,14 +160,15 @@ const RECKONING_OBJECTIVE: String = "SPRING RETURNS: the endless summer breaks a
 ## (owner-approved proposal, "Who comes": summer the fae knights and the Wild
 ## Hunt, winter the Winter Court). The Fae Court is summer all run but for the
 ## Winter Prince's minute, so only these two seasons come; the court's knights
-## come lightly before 5:00 (SEASON_WEIGHTS_EARLY) and the Wild Hunt after.
+## and the Wild Hunt from 5:00 (SEASON_WEIGHTS_EARLY before).
 const SEASON_WEIGHTS := {
 	"summer": {"fae_knight": 0.05, "wild_rider": 0.005, "great_stag": 0.006},  # TUNING (not in GDD) the court's knights and the Hunt (first pass 0.07 / 0.008 / 0.008 from 0:00: the naive bot died at 8:10, seed 7)
 	"winter": {"winter_fae": 0.15},  # TUNING (not in GDD) the Winter Court comes with its prince
 }
-## The season kinds of the segments before 5:00 (a summer's first knights only).
+## The season kinds of the segments before 5:00 (none of the court yet: its
+## knights ride in at 5:30, as in the Greenwood's summer).
 const SEASON_WEIGHTS_EARLY := {
-	"summer": {"fae_knight": 0.02},  # TUNING (not in GDD)
+	"summer": {},  # TUNING (not in GDD) (first pass fae_knight 0.02: the naive bot's army never grew, seed 3)
 	"winter": {"winter_fae": 0.15},  # TUNING (not in GDD)
 }
 
@@ -184,19 +185,19 @@ const SEGMENTS := [
 		"season_weights": SEASON_WEIGHTS_EARLY,
 		"objective": "Fairy rings: time runs at half speed inside the mushroom circles, for both armies"},
 	{"start": 180.0, "rate": 2.0, "max_alive": 50,  # TUNING (not in GDD)
-		"weights": {"thornling": 0.82, "dryad": 0.1, "will_o_wisp": 0.04, "treant": 0.02},
+		"weights": {"thornling": 0.82, "dryad": 0.1, "will_o_wisp": 0.04, "treant": 0.015},
 		"season_weights": SEASON_WEIGHTS_EARLY,
 		"objective": "The summer never ends here: wildfires sweep the lawns. Step out of their path"},
 	{"start": 300.0, "rate": 2.3, "max_alive": 60,  # TUNING (not in GDD)
-		"weights": {"thornling": 0.78, "dryad": 0.1, "will_o_wisp": 0.03, "treant": 0.02},
+		"weights": {"thornling": 0.78, "dryad": 0.1, "will_o_wisp": 0.03, "treant": 0.015},
 		"season_weights": SEASON_WEIGHTS,
 		"objective": "Where your army stands, the ground dies into blight: the Wild cannot heal there"},
 	{"start": 600.0, "rate": 2.7, "max_alive": 72,  # TUNING (not in GDD)
-		"weights": {"thornling": 0.74, "dryad": 0.1, "spore_mother": 0.02, "treant": 0.02, "will_o_wisp": 0.03},
+		"weights": {"thornling": 0.74, "dryad": 0.1, "spore_mother": 0.02, "treant": 0.015, "will_o_wisp": 0.03},
 		"season_weights": SEASON_WEIGHTS,
 		"objective": "The Mirror Lake: the court's knights blink through your ring. Keep blockers inside it"},
 	{"start": 900.0, "rate": 3.0, "max_alive": 84,  # TUNING (not in GDD)
-		"weights": {"thornling": 0.72, "dryad": 0.1, "treant": 0.025, "spore_mother": 0.025},
+		"weights": {"thornling": 0.72, "dryad": 0.1, "treant": 0.015, "spore_mother": 0.025},
 		"season_weights": SEASON_WEIGHTS,
 		"objective": "The Throne of Blossoms: the Summer Queen is near"},
 	{"start": BOSS_TIME, "rate": 2.4, "max_alive": 64,  # TUNING (not in GDD) thinner during the boss fight
@@ -215,18 +216,18 @@ const EVENTS := [
 		"groups": [{"kind": "thornling", "count": 12, "elite": false}]},
 	{"time": 90.0, "type": "wave", "banner": "Dryads plant thorn seeds round you: kill them first!", "formation": "arc",  # TUNING (not in GDD)
 		"groups": [{"kind": "dryad", "count": 3, "elite": false}, {"kind": "thornling", "count": 12, "elite": false}]},
-	{"time": 200.0, "type": "wave", "banner": "The Fae Knights of the court ride to the revel: they blink through your ring!", "formation": "arc",  # TUNING (not in GDD)
-		"groups": [{"kind": "fae_knight", "count": 5, "elite": false}, {"kind": "dryad", "count": 2, "elite": false}]},
-	{"time": 330.0, "type": "wave", "banner": "A Treant wakes in the revel: its branches root what they strike!", "formation": "line",  # TUNING (not in GDD)
+	{"time": 200.0, "type": "wave", "banner": "A Treant wakes in the rose maze: its branches root what they strike!", "formation": "line",  # TUNING (not in GDD)
 		"groups": [{"kind": "treant", "count": 1, "elite": false}, {"kind": "thornling", "count": 12, "elite": false}]},
+	{"time": 330.0, "type": "wave", "banner": "The Fae Knights of the court ride to the revel: they blink through your ring!", "formation": "arc",  # TUNING (not in GDD) (first pass at 3:20: the naive bot died at 7:14, seed 3)
+		"groups": [{"kind": "fae_knight", "count": 5, "elite": false}, {"kind": "dryad", "count": 2, "elite": false}]},
 	{"time": 480.0, "type": "wave", "banner": "The Wild Hunt rides through the court: step out of the rider's line!", "formation": "arc",  # TUNING (not in GDD)
-		"groups": [{"kind": "wild_rider", "count": 1, "elite": false}, {"kind": "fae_knight", "count": 4, "elite": false}]},
+		"groups": [{"kind": "wild_rider", "count": 1, "elite": false}, {"kind": "fae_knight", "count": 2, "elite": false}]},  # (first pass four knights: the naive bot's collapse at 8:00, seed 3)
 	{"time": 620.0, "type": "wave", "banner": "Will-o'-Wisps rise from the Mirror Lake: they lure your dead away!", "formation": "ring",  # TUNING (not in GDD)
 		"groups": [{"kind": "will_o_wisp", "count": 6, "elite": false}, {"kind": "fae_knight", "count": 3, "elite": false}]},
 	{"time": 700.0, "type": "winter_prince", "banner": "THE WINTER PRINCE! The Summer Queen's rival brings one minute of winter into her summer!",  # Owner-approved proposal (miniboss); 8:20 left
 		"kind": FaeCourtEnemyData.WINTER_PRINCE, "prince_dist": 300.0, "elite": false},  # TUNING (not in GDD) px ahead of the necromancer
-	{"time": 820.0, "type": "wave", "banner": "Two Treants and their Dryads!", "formation": "line",  # TUNING (not in GDD)
-		"groups": [{"kind": "treant", "count": 2, "elite": false}, {"kind": "dryad", "count": 3, "elite": false}]},
+	{"time": 820.0, "type": "wave", "banner": "A Treant and its Dryads come out of the lake's reeds!", "formation": "line",  # TUNING (not in GDD) (first pass two Treants: they were the bots' worst foe, seeds 3 and 7)
+		"groups": [{"kind": "treant", "count": 1, "elite": false}, {"kind": "dryad", "count": 3, "elite": false}]},
 	{"time": 930.0, "type": "wave", "banner": "The Summer Queen's knights gather at her throne!", "formation": "ring",  # TUNING (not in GDD)
 		"groups": [{"kind": "fae_knight", "count": 6, "elite": false}, {"kind": "great_stag", "count": 1, "elite": false}]},
 	{"time": 990.0, "type": "wave", "banner": "Her court comes out to greet you, masks and all!", "formation": "ring",  # TUNING (not in GDD)
@@ -264,17 +265,17 @@ const SEASONS := {
 	"wildfire_every": 40.0,  # TUNING (not in GDD) s between two fronts (the act's 24)
 }
 
-## This stage's thorn thickets (any key of WildRulesData.THICKETS): a little
-## more than the Greenwood's maze (cap 24, a spread every 60 s).
+## This stage's thorn thickets (any key of WildRulesData.THICKETS): the
+## Greenwood's cap of 24, spreading a little sooner (it spreads every 60 s).
 const THICKETS := {
-	"cap": 26,  # TUNING (not in GDD) (the default 30)
+	"cap": 24,  # TUNING (not in GDD) (the default 30; first pass 26)
 	"spread_every": 55.0,  # TUNING (not in GDD) s (the default 45)
 }
 
-## This stage's living ground (any key of WildRulesData.BLOOM): a little more
-## heal than the Greenwood's 0.6% (the act's 1% overran the naive bot there).
+## This stage's living ground (any key of WildRulesData.BLOOM): the Greenwood's
+## gentler heal (the act's 1% overran the naive bot there).
 const BLOOM := {
-	"heal": 0.007,  # TUNING (not in GDD) share of max HP a second (the default 0.01)
+	"heal": 0.006,  # TUNING (not in GDD) share of max HP a second (the default 0.01; first pass 0.007: the naive bot died at 7:14 and 9:40, seeds 3 and 7)
 }
 
 ## The whole stage as one dictionary (StageRegistry documents every key).
