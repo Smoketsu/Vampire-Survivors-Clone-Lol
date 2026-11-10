@@ -1721,10 +1721,11 @@ const UNITS := {
 		"special": {
 			"root_reach": 90.0,  # TUNING (not in GDD) px; foes this close make it root (not area-scaled)
 			"lash_trigger": 2,  # TUNING (not in GDD) foes within root_reach to root (an elite / the boss alone also counts)
+			"root_leash": 170.0,  # TUNING (not in GDD) px; it roots only this near its necromancer (it never roots far behind the ring)
 			"root_mass": 300.0,  # Owner-approved proposal: "roots in place as a blocker"; TUNING (not in GDD) block mass while rooted
 			"lash_radius": 70.0,  # Owner-approved proposal: "lashes everything around it with thorns"; TUNING (not in GDD) px (area-scaled)
-			"lash_damage": 12.0,  # TUNING (not in GDD) to every foe in reach, each lash
-			"lash_cooldown": 2.4,  # TUNING (not in GDD) s between two lashes
+			"lash_damage": 7.0,  # TUNING (not in GDD) to every foe in reach, each lash (first pass 12 every 2.4 s: 70k of lash damage at Lv 5, more than a whole army bot's ring, seed 7)
+			"lash_cooldown": 3.0,  # TUNING (not in GDD) s between two lashes
 		},
 	},
 }

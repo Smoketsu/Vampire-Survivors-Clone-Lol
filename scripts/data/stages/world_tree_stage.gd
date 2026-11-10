@@ -39,7 +39,7 @@ const ENEMY_HP_MULT: float = 2.2  # TUNING (not in GDD) phase 2 (the stub's 2.6,
 const ENEMY_DAMAGE_MULT: float = 1.4  # TUNING (not in GDD) phase 2 (the stub's 1.8, a first pass 1.45): the Fae Court's 1.4; the rules are the step up
 ## Elapsed game seconds from which the two multipliers apply to regular
 ## enemies (the boss always gets them).
-const ENEMY_MULT_FROM: float = 420.0  # TUNING (not in GDD) as Acts III to XIV (7:00)
+const ENEMY_MULT_FROM: float = 480.0  # TUNING (not in GDD) 8:00 (Acts III to XV 7:00: the step met the year's first winter at 7:30 and the naive bot fell at 9:03-9:46, seeds 3, 7 and 11)
 ## Soul Ash multiplier of a run on this stage (its own end-screen line).
 const ASH_MULT: float = 1.5  # TUNING (not in GDD) owner decision Oct 2026 (GDD §15.0 "Ossuary expansion: owner decisions"): every act restarts, stage 3 of the act
 

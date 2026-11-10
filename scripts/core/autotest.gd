@@ -900,9 +900,14 @@ func _count_stuck(label: String, detail: String) -> void:
 ## True when a summon is trying to get somewhere (not idling in formation,
 ## casting or fighting in reach). A stunned summon (CombatResolver.stun_unit():
 ## Grey Overseer pulses, Gorgons, ...) cannot move, so it never counts: a pack
-## of Overseers chain-stunning the ring is not a pathing fault.
+## of Overseers chain-stunning the ring is not a pathing fault. Act XV
+## (temporary): neither does a summon held in place (SummonedUnit.held_until:
+## the World-Tree's burial) or rooted on purpose (SummonBehavior.rooted(): the
+## Ossuary Oak).
 func _summon_wants_move(u: SummonedUnit) -> bool:
 	if u.stunned_until > game.elapsed:
+		return false
+	if u.held_until > game.elapsed or (u.behavior != null and u.behavior.rooted()):
 		return false
 	match u.state:
 		SummonedUnit.State.RETURNING, SummonedUnit.State.RETREATING, SummonedUnit.State.REPOSITIONING:

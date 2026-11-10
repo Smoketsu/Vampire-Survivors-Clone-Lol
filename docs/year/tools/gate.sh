@@ -3,7 +3,7 @@
 # usage: gate.sh TREE OUTDIR [NAME...]
 # Runs seed 7 on the Graveyard (default and army), Gullhaven, Ul-Thalos, the Iron Citadel, the Asphodel Underworld,
 # the Road to the Sun, Pandemonium, Castle Sanguis, Liberty Heights, the Ark, the Maelstrom, Vigrid, the Necropolis of
-# Sand, the Hall of Two Truths, the Silver Stair, the Fern Basin, the Great Plain, the Last Day and the Greenwood (army): stages 1-43 (the Silver Stair stands for the Host stages). ONE Godot process per call (docs/last_acts/PLAN.md: several
+# Sand, the Hall of Two Truths, the Silver Stair, the Fern Basin, the Great Plain, the Last Day, the Greenwood and the Fae Court (army): stages 1-44 (the Silver Stair stands for the Host stages). ONE Godot process per call (docs/last_acts/PLAN.md: several
 # agents share the 4 cores); give run names to run only those (e.g. to split the gate over several calls). Keeps only
 # the [autotest] / [metric] lines (OUTDIR/<name>.sum). Compare two OUTDIRs with docs/act3/tools/same_seed_gate.py
 # A.log B.log (it masks the wall-clock bits).
@@ -30,8 +30,9 @@ declare -A ARGS=(
 	[great_plain_army]="--policy=army --stage=great_plain"
 	[last_day_army]="--policy=army --stage=last_day"
 	[greenwood_army]="--policy=army --stage=greenwood"
+	[fae_court_army]="--policy=army --stage=fae_court"
 )
-ALL="gy_default gy_army harbour_army spire_army citadel_army underworld_army sun_road_army pandemonium_army castle_sanguis_army liberty_heights_army ark_army maelstrom_army vigrid_army necropolis_army two_truths_army silver_stair_army fern_basin_army great_plain_army last_day_army greenwood_army"
+ALL="gy_default gy_army harbour_army spire_army citadel_army underworld_army sun_road_army pandemonium_army castle_sanguis_army liberty_heights_army ark_army maelstrom_army vigrid_army necropolis_army two_truths_army silver_stair_army fern_basin_army great_plain_army last_day_army greenwood_army fae_court_army"
 NAMES=${*:-$ALL}
 for name in $NAMES; do
 	timeout 1200 $G --headless --path $TREE --fixed-fps 60 --quit-after 15000 -- --autotest --seed=7 ${ARGS[$name]} > $OUT/$name.log 2>&1

@@ -9,7 +9,8 @@
 ## ground body all the way (the arena's push-out keeps it out of the obstacles,
 ## enemies can hit it):
 ##   1. ROOTED: while lash_trigger or more foes (or an elite / the boss) stand
-##      within root_reach px of it, it roots in place (rooted():
+##      within root_reach px of it and its necromancer stands within root_leash
+##      px (it never roots far behind the ring), it roots in place (rooted():
 ##      SummonedUnit._step_movement() keeps it still; it still thinks and
 ##      strikes) and blocks with root_mass (Enemy.resolve_blocking());
 ##   2. THE LASH: while rooted, every lash_cooldown s its thorns lash EVERY foe
@@ -79,9 +80,10 @@ func on_deactivate(u: SummonedUnit) -> void:
 	super.on_deactivate(u)
 
 
-## 5 Hz: roots when foes stand near it, uproots when none.
+## 5 Hz: roots when foes stand near it (and its necromancer is near), uproots
+## when none.
 func think(u: SummonedUnit) -> bool:
-	var want := _foes_near(u)
+	var want := u.position.distance_to(u.game.player.position) <= float(u.special.get("root_leash", 170.0)) and _foes_near(u)
 	if want and not _rooted:
 		_rooted = true
 		_base_mass = u.block_mass
