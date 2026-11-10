@@ -63,7 +63,7 @@ const LATE_ANNOUNCE := ["THE HUNT IS OVER", "The Stag King falls as spring retur
 const RIDER_TINT := Color(0.75, 0.88, 1.0, 0.7)  # TUNING (not in GDD) visual only
 
 ## The Stag King's base max HP (x the boss HP multiplier and the stage's HP multiplier).
-const MAX_HP: float = 8500.0  # TUNING (not in GDD) under Old Ironbrow's 10,000: the crown is his extra life (x the stage's HP multiplier; first passes 10,000 and 9,000: not slain by the army bot on seed 11 nor by an evolved Wild Hunt build on seed 7)
+const MAX_HP: float = 7600.0  # TUNING (not in GDD) under Old Ironbrow's 10,000: the Antler Crown is his extra life and the Hunt keeps the army busy (x the stage's HP multiplier; first passes 10,000, 9,000 and 8,500: the army bot slew him only after 0:00 or not at all)
 
 ## The Stag King's design row.
 const BOSS := {
@@ -112,7 +112,7 @@ const BOSS := {
 	"end_seeds": 1,  # TUNING (not in GDD) seeds where a charge ends in the open
 	# The Hunt.
 	"hunt_first": 12.0,  # TUNING (not in GDD) s after he arrives
-	"hunt_every": 15.0,  # TUNING (not in GDD) s between two Hunts
+	"hunt_every": 18.0,  # TUNING (not in GDD) s between two Hunts (first pass 15: 13k on the army bot's summons, seed 7)
 	"hunt_riders": 4,  # Owner-approved proposal: "he leads the Wild Hunt across the arena in sweeping lines"; TUNING (not in GDD) riders abreast
 	"hunt_spacing": 52.0,  # TUNING (not in GDD) px between two riders
 	"hunt_back": 380.0,  # TUNING (not in GDD) px from the necromancer the line starts
@@ -128,7 +128,7 @@ const BOSS := {
 	"hunt_banner": "The Stag King sounds his horn: the Wild Hunt rides!",  # TUNING (not in GDD)
 	# The Antler Crown.
 	"crown_at": [0.7, 0.35],  # TUNING (not in GDD) HP shares at which the crown grows (once each)
-	"crown_thorns": 8,  # TUNING (not in GDD) thorns in the ring
+	"crown_thorns": 6,  # TUNING (not in GDD) thorns in the ring (first pass 8: a crown held up to 88 s of his 180)
 	"crown_radius": 50.0,  # TUNING (not in GDD) px from his centre
 	"crown_speed": 0.6,  # TUNING (not in GDD) x his stride while crowned
 	"crown_banner": "THE ANTLER CROWN: thorns ring the Stag King! Break them, or burn them, before he can be hurt!",  # TUNING (not in GDD)
