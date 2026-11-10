@@ -817,6 +817,13 @@ const FLAT_SIZES: Dictionary = {
 	"wild/wild_rider": 64.0,  # TUNING (not in GDD) elite, male: a spectral horseman of the Wild Hunt (about 64 wide); walk strip
 	"wild/will_o_wisp": 30.0,  # TUNING (not in GDD) lure, no sex: a drifting cold light (about 20 wide, 2 empty rows on top for the glide); glide strip
 	"wild/spore_mother": 52.0,  # TUNING (not in GDD) support, female (figure style): a mushroom matron (about 28 wide); walk, idle strips
+	# --- Act XV (temporary number): the Greenwood (phase 2; art pending, WildGlyphs / the boss's code shape until then) ---
+	"wild/hunt_hound": 28.0,  # TUNING (not in GDD) the Rider's hounds, no sex (a beast): a spectral hound of the Wild Hunt (about 40 wide); walk strip
+	"wild/huntsman": 68.0,  # TUNING (not in GDD) Greenwood miniboss, male: the Huntsman of the Wild Hunt on a great antlered mount, a horn at his belt (about 80 wide); walk strip (the Rider's art until then)
+	"wild/antler_thicket": 28.0,  # TUNING (not in GDD) one thorn of the Stag King's Antler Crown: a knot of antler-shaped thorns (about 28 wide); no strip
+	"wild/stag_king": 88.0,  # TUNING (not in GDD) Greenwood boss, male: stag-headed, antlered lord of the forest, a hunting horn, a mantle of leaves (about 72 wide); walk strip, pose 1 (the horn raised)
+	"player/horned_herald": 56.0,  # TUNING (not in GDD) male: violet hunting robes, a bone-antler hood, a bone hunting horn, an antler-tined soul staff (about 42 wide); walk strip
+	"obstacles/wild_grove_tree": 48.0,  # TUNING (not in GDD) a sacred grove's standing tree (40 x 48; drawn by GreenwoodDirector, never an obstacle)
 	# The Turning Year's markers (not drawn until the stage agents wire them; the code shapes stay)
 	"markers/wild_roots": 16.0,  # TUNING (not in GDD) roots sprouting under a body that stood still, 24 x 16
 	"markers/wild_sprout": 32.0,  # TUNING (not in GDD) a thicket seed sprouting, 32 x 32

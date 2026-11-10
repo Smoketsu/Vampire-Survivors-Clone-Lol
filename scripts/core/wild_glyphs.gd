@@ -26,6 +26,23 @@ static func draw_enemy(ci: CanvasItem, kind: String, o: Vector2, r: float, flash
 		return false
 	# Phase 2: each Wild stage's own fallbacks go here, before the shared kinds'.
 	match kind:
+		# --- Act XV (temporary number): the Greenwood ---
+		"huntsman":
+			if not SpriteBank.draw(ci, "wild/wild_rider", o, flash):  # The Rider's art until his own.
+				SpriteBank.draw_disc(ci, o, r * 0.85, Glyphs._c(INK, flash))
+				SpriteBank.draw_disc(ci, o, r * 0.75, Glyphs._c(Palette.WILD_MOSS_DARK, flash))
+			for s: float in [-1.0, 1.0]:
+				ci.draw_rect(Rect2(o + Vector2(s * r * 0.35 - 1.0, -r * 1.5), Vector2(2.0, r * 0.6)), Glyphs._c(Palette.WILD_BONE, flash))  # His antlered helm.
+		"hunt_hound":
+			SpriteBank.draw_disc(ci, o, r, Glyphs._c(INK, flash))
+			SpriteBank.draw_disc(ci, o, r - 1.5, Glyphs._c(Palette.WILD_FROST.darkened(0.35), flash))
+			ci.draw_rect(Rect2(o + Vector2(r * 0.6, -r * 0.5), Vector2(r * 0.7, r * 0.4)), Glyphs._c(Palette.WILD_FROST.darkened(0.2), flash))  # The muzzle.
+		"antler_thicket":
+			SpriteBank.draw_disc(ci, o, r, Glyphs._c(INK, flash))
+			SpriteBank.draw_disc(ci, o, r - 1.5, Glyphs._c(Palette.WILD_BARK, flash))
+			for i in 4:
+				var a := TAU * float(i) / 4.0 + 0.4
+				ci.draw_rect(Rect2(o + Vector2(cos(a), sin(a)) * r * 0.7 - Vector2(1.5, 1.5), Vector2(3.0, 3.0)), Glyphs._c(Palette.WILD_BONE, flash))  # An antler tine.
 		"dryad":
 			_figure(ci, o, r, flash, Palette.WILD_MOSS, Palette.WILD_BLOSSOM)
 		"treant":

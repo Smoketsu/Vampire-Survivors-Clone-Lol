@@ -74,6 +74,8 @@ const SPORE_MOTHER: String = "spore_mother"
 const WINTER_FAE: String = "winter_fae"
 ## Kind id of the Corpse-Bloom (a structure).
 const CORPSE_BLOOM: String = "corpse_bloom"
+## Kind id of a Hound of the Wild Hunt (a Rider brings two; phase 2, the Greenwood).
+const HUNT_HOUND: String = "hunt_hound"
 ## Sprite folder of the Turning Year's kinds (assets/sprites/wild/).
 const SPRITE_DIR: String = "wild/"
 
@@ -166,6 +168,8 @@ const ENEMIES := {
 		"faction": FACTION,
 		"kit": "treant",
 		"group": "growth",
+		# --- Act XV (temporary number): the Greenwood --- the root on its strike (TreantKit).
+		"root_hold": 1.2,  # Owner-approved proposal: "roots the summon it strikes"; TUNING (not in GDD) s x Deadwood
 	},  # The Treant.
 	# Growth: the structure (owner-approved proposal: "Corpse-Bloom | Structure
 	# | Eats corpses on the field and spawns thornlings | Break it"). The eating
@@ -192,6 +196,13 @@ const ENEMIES := {
 		"faction": FACTION,
 		"kit": "corpse_bloom",
 		"group": "growth",
+		# --- Act XV (temporary number): the Greenwood --- the meals and the buds (CorpseBloomKit).
+		"eat_every": 2.0,  # TUNING (not in GDD) s between two meals
+		"eat_radius": 160.0,  # Owner-approved proposal: "eats corpses on the field"; TUNING (not in GDD) px
+		"eat_max": 3,  # TUNING (not in GDD) corpses of Corpse Explosion's store a meal at most
+		"bud_meals": 3,  # TUNING (not in GDD) meals a bud costs
+		"bud_count": 4,  # Owner-approved proposal: "spawns thornlings"; TUNING (not in GDD) Thornlings a bud
+		"bud_kind": THORNLING,  # Owner-approved proposal
 	},  # The Corpse-Bloom.
 	# The fae: the soldier (owner-approved proposal: "Fae Knight (male) |
 	# Soldier | Leaf armour and a thorn sword; short blinks through the ring |
@@ -217,6 +228,14 @@ const ENEMIES := {
 		"faction": FACTION,
 		"kit": "fae_knight",
 		"group": "fae",
+		# --- Act XV (temporary number): the Greenwood --- the blinks through the ring (FaeKnightKit).
+		"blink_first": 3.0,  # TUNING (not in GDD) s after it comes on
+		"blink_every": 7.0,  # TUNING (not in GDD) s between two blinks
+		"blink_min": 120.0,  # TUNING (not in GDD) px: nearer than this it walks
+		"blink_lane": 30.0,  # TUNING (not in GDD) px half width of the line a summon must stand in for it to blink
+		"blink_dist": 110.0,  # Owner-approved proposal: "short blinks through the ring"; TUNING (not in GDD) px
+		"blink_keep": 40.0,  # TUNING (not in GDD) px it lands at least from the necromancer's edge
+		"blink_warn": 0.35,  # TUNING (not in GDD) s it gathers itself (leaves swirl)
 	},  # The Fae Knight.
 	# The fae: the Winter Court (owner-approved proposal: "Winter Fae (female,
 	# figure style) | Ranged | Frost bolts that chill summons; winter only |
@@ -243,6 +262,9 @@ const ENEMIES := {
 		"kit": "winter_fae",
 		"group": "fae",
 		"season": "winter",  # Owner-approved proposal: "winter only"
+		# --- Act XV (temporary number): the Greenwood --- the frost bolt's chill (WinterFaeKit).
+		"chill_slow": 0.35,  # Owner-approved proposal: "frost bolts that chill summons"; TUNING (not in GDD) 0..1
+		"chill_time": 2.0,  # TUNING (not in GDD) s
 	},  # The Winter Fae.
 	# The Wild Hunt: the elite beast (owner-approved proposal: "Great Stag
 	# (male) | Elite | A telegraphed antler charge that scatters the ring |
@@ -268,6 +290,17 @@ const ENEMIES := {
 		"faction": FACTION,
 		"kit": "great_stag",
 		"group": "hunt",
+		# --- Act XV (temporary number): the Greenwood --- the antler charge (GreatStagKit, WildChargeKit).
+		"charge_first": 3.0,  # TUNING (not in GDD) s after it comes on
+		"charge_every": 8.0,  # TUNING (not in GDD) s between two charges
+		"charge_trigger": 240.0,  # TUNING (not in GDD) px to the necromancer for a charge to start
+		"charge_windup": 1.0,  # Owner-approved proposal: "a telegraphed antler charge"; TUNING (not in GDD) s
+		"charge_speed": 320.0,  # TUNING (not in GDD) px/s
+		"charge_len": 260.0,  # TUNING (not in GDD) px at most (through the ring)
+		"charge_damage": 8.0,  # TUNING (not in GDD) to each summon it crosses, before the time scaling
+		"charge_player": 8.0,  # TUNING (not in GDD) to the necromancer, before the time scaling
+		"charge_stun": 0.6,  # TUNING (not in GDD) s each summon it crosses is stunned
+		"charge_knock": 34.0,  # Owner-approved proposal: "scatters the ring"; TUNING (not in GDD) px a summon is thrown aside
 	},  # The Great Stag.
 	# The Wild Hunt: the rider (owner-approved proposal: "Rider of the Wild Hunt
 	# (male) | Elite | A spectral horseman and two hounds; sweeps across the
@@ -294,6 +327,20 @@ const ENEMIES := {
 		"faction": FACTION,
 		"kit": "wild_rider",
 		"group": "hunt",
+		# --- Act XV (temporary number): the Greenwood --- the sweep and the hounds (WildRiderKit, WildChargeKit).
+		"charge_first": 4.0,  # TUNING (not in GDD) s after it comes on
+		"charge_every": 11.0,  # TUNING (not in GDD) s between two sweeps
+		"charge_trigger": 360.0,  # TUNING (not in GDD) px to the necromancer for a sweep to start
+		"charge_windup": 1.2,  # TUNING (not in GDD) s the line shows
+		"charge_speed": 380.0,  # TUNING (not in GDD) px/s
+		"charge_len": 520.0,  # Owner-approved proposal: "sweeps across the arena in a line"; TUNING (not in GDD) px
+		"charge_damage": 7.0,  # TUNING (not in GDD) to each summon it crosses, before the time scaling
+		"charge_player": 8.0,  # TUNING (not in GDD) to the necromancer, before the time scaling
+		"charge_stun": 0.4,  # TUNING (not in GDD) s
+		"charge_knock": 24.0,  # TUNING (not in GDD) px
+		"hounds": 2,  # Owner-approved proposal: "a spectral horseman and two hounds"
+		"hound_kind": "hunt_hound",  # Its hounds' row (below)
+		"hound_side": 34.0,  # TUNING (not in GDD) px a hound sweeps to either side of it
 	},  # The Rider of the Wild Hunt.
 	# The spirits: the lure (owner-approved proposal: "Will-o'-Wisp | Lure |
 	# Draws summons away from the ring (the existing misdirect() hook) | Kill
@@ -319,6 +366,13 @@ const ENEMIES := {
 		"faction": FACTION,
 		"kit": "will_o_wisp",
 		"group": "spirits",
+		# --- Act XV (temporary number): the Greenwood --- the lure (WillOWispKit).
+		"lure_first": 1.5,  # TUNING (not in GDD) s after it comes on
+		"lure_every": 3.0,  # TUNING (not in GDD) s between two lures
+		"lure_radius": 110.0,  # TUNING (not in GDD) px
+		"lure_cap": 3,  # TUNING (not in GDD) summons a lure takes at most
+		"lure_time": 1.6,  # Owner-approved proposal: "draws summons away from the ring"; TUNING (not in GDD) s
+		"lure_speed": 0.8,  # TUNING (not in GDD) x the summon's speed
 	},  # The Will-o'-Wisp.
 	# The spirits: the rot (owner-approved proposal: "Spore Mother (female,
 	# figure style) | Support | Spores that rot summons and spread
@@ -344,5 +398,48 @@ const ENEMIES := {
 		"faction": FACTION,
 		"kit": "spore_mother",
 		"group": "spirits",
+		# --- Act XV (temporary number): the Greenwood --- the spores and the mould (SporeMotherKit).
+		"spore_first": 2.5,  # TUNING (not in GDD) s after she comes on
+		"spore_every": 5.0,  # TUNING (not in GDD) s between two puffs
+		"spore_radius": 70.0,  # TUNING (not in GDD) px
+		"spore_damage": 3.0,  # TUNING (not in GDD) to each summon, before the time scaling
+		"spore_curse": 0.8,  # Owner-approved proposal: "spores that rot summons"; TUNING (not in GDD) x the summon's damage and speed
+		"spore_time": 4.0,  # TUNING (not in GDD) s the rot lasts
+		"mould_radius": 90.0,  # Owner-approved proposal: "spread blight-killing mould"; TUNING (not in GDD) px
+		"mould_cut": 0.5,  # TUNING (not in GDD) blight a puff takes off each cell in reach
 	},  # The Spore Mother.
+	# --- Act XV (temporary number): the Greenwood (phase 2's shared kinds) ---
+	# The Wild Hunt: the Rider's hounds (owner-approved proposal: "Rider of the
+	# Wild Hunt (male) | Elite | A spectral horseman and two hounds"). Fast,
+	# light biters that sweep beside their Rider (HuntHoundKit: charge_every 0,
+	# they never charge on their own).
+	"hunt_hound": {
+		"display_name": "Hound of the Wild Hunt",
+		"max_hp": 48.0,  # TUNING (not in GDD) a light beast
+		"move_speed": 96.0,  # TUNING (not in GDD) px/s; fast
+		"damage": 4.0,  # TUNING (not in GDD) a bite, before the time scaling
+		"attack_interval": 0.8,  # TUNING (not in GDD) s
+		"attack_range": 6.0,  # TUNING (not in GDD) px
+		"radius": 9.0,  # TUNING (not in GDD) px (~28 px sprite)
+		"armor": 0.05,  # TUNING (not in GDD)
+		"xp": 3,  # TUNING (not in GDD)
+		"behavior": "melee",
+		"projectile_speed": 0.0,
+		"undead_damage_mult": 1.0,
+		"heal_amount": 0.0,
+		"heal_interval": 0.0,
+		"heal_radius": 0.0,
+		"target_priority": 0.55,  # TUNING (not in GDD) 0..1
+		"mass": 0.9,  # TUNING (not in GDD)
+		"faction": FACTION,
+		"kit": "hunt_hound",
+		"group": "hunt",
+		"charge_every": 0.0,  # Never on its own: it sweeps only when its Rider leads it
+		"charge_speed": 380.0,  # TUNING (not in GDD) px/s, as its Rider
+		"charge_len": 520.0,  # TUNING (not in GDD) px, as its Rider
+		"charge_damage": 4.0,  # TUNING (not in GDD) to each summon it crosses, before the time scaling
+		"charge_player": 5.0,  # TUNING (not in GDD) to the necromancer, before the time scaling
+		"charge_stun": 0.0,  # A bite in passing: no stun
+		"charge_knock": 10.0,  # TUNING (not in GDD) px
+	},  # The Hound of the Wild Hunt.
 }

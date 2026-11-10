@@ -149,6 +149,11 @@ const THICKETS := {
 }
 ## Obstacle kind of a thorn thicket (Arena; drawn by WildGlyphs until the art).
 const THICKET_KIND: String = "wild_thicket"
+## Phase 2 (the Greenwood): px round a rotting enemy within which its Rot burns
+## the thorn thickets back (CombatResolver.rot_enemy() -> Thickets.burn_at()).
+## The fires use their own reach (a Hellhound patch, a Brimstone pit, a Meteor
+## Call strike, the Wither aura).
+const BURN_ROT_REACH: float = 24.0  # Owner-approved proposal: "Fire, Rot and Wither burn them back"; TUNING (not in GDD) px
 
 # --- Spring Returns (the Reckoning) ---------------------------------------------------------
 ## Spring Returns (a stage's RECKONING "spring_returns" overrides any key):
@@ -183,6 +188,13 @@ const SOUNDS := {
 	"thicket_burn": "thicket_burn",  # Wild pack id "thicket_burn" (thorns crackling to ash).
 	"bury": "bury",  # Wild pack id "bury" (earth closing, a deep thud).
 	"spring_returns": "spring_horn",  # Wild pack id "spring_horn" (every bird and leaf at once, a vast green chord).
+	# --- Act XV (temporary number): the Greenwood ---
+	"hunt_charge": "roots_grab",  # Wild pack id "roots_grab" (turf torn up under hooves, a creak): a Wild Hunt charge or sweep begins.
+	"hunt_horn": "spring_horn",  # Wild pack id "spring_horn" (a vast horn call): the Stag King and the Huntsman sound the Hunt.
+	"grove_dies": "bury",  # Wild pack id "bury" (earth closing, a deep thud): a sacred grove dies.
+	"crown_grows": "thicket_grow",  # Wild pack id "thicket_grow" (thorns snaking up): the Antler Crown grows round the Stag King.
+	"crown_breaks": "thicket_burn",  # Wild pack id "thicket_burn" (thorns crackling to ash): the Antler Crown falls.
+	"blink": "season_turn",  # Wild pack id "season_turn" (a bell of wood and wind): a Fae Knight blinks.
 }
 
 # --- The counter-passives (phase 2 builds them; WildRules' hooks read them) -----------------

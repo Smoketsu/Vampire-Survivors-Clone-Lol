@@ -63,6 +63,8 @@ static func print_lines(game: Game, st: Dictionary) -> void:
 			String((sd["reckoning"] as Dictionary).get("kind", "inquisitor")), str(w.returns.on())])
 	print("[autotest] wild damage (you/summons): %s" % PrimevalReport.damage_line(st))
 	# Phase 2: each Wild stage's own lines go here (its stage, kinds and boss).
+	# --- Act XV (temporary number): the Greenwood ---
+	GreenwoodReport.stage_lines(game, st)  # The sacred groves, the Huntsman, the kinds' specials, Scorched Earth, the Stag King.
 
 
 ## The "turning year" line (SeasonCycle).

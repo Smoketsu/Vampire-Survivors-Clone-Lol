@@ -123,6 +123,8 @@ func _strike(stats: Dictionary, at: Vector2, r: float) -> void:
 		if o.active:
 			o.knockback += (off.normalized() if off.length() > 0.5 else Vector2.RIGHT) * MeteorCallData.KNOCK / maxf(o.mass, 0.1)
 	game.effects.impact(at, r, MeteorCallData.FIRE)
+	if game.wild != null:
+		game.wild.thickets.burn_at(at, r)  # Act XV: fire burns the thorn thickets back (Overgrowth's one burn hook).
 	Sfx.play("abom_stomp", at, 0.7)  # A startup-bank sound.
 
 

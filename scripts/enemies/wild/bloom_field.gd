@@ -76,6 +76,28 @@ func wipe() -> void:
 	cells.clear()
 
 
+## THE one path that lowers blight (phase 2, the Spore Mother's blight-killing
+## mould): every blighted cell whose centre lies within `r` px of `at` loses
+## `cut` blight (a cell at 0 is living ground again). Returns the cells touched.
+func mould(at: Vector2, r: float, cut: float) -> int:
+	var size := float(cfg["cell"])
+	var c0 := cell_of(at - Vector2.ONE * r)
+	var c1 := cell_of(at + Vector2.ONE * r)
+	var n := 0
+	for cy in range(c0.y, c1.y + 1):
+		for cx in range(c0.x, c1.x + 1):
+			var c := Vector2i(cx, cy)
+			if not cells.has(c) or (Vector2(c) * size + Vector2.ONE * size * 0.5).distance_to(at) > r:
+				continue
+			var v := float(cells[c]) - cut
+			if v <= 0.0:
+				cells.erase(c)
+			else:
+				cells[c] = v
+			n += 1
+	return n
+
+
 ## Per tick (WildRules.step()): one sample every `sample` s.
 func step(_delta: float) -> void:
 	if not enabled or game.elapsed < _next:

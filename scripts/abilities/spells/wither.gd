@@ -68,6 +68,8 @@ func _pulse(stats: Dictionary) -> void:
 		if e.active and e.position.distance_to(p) <= r + e.radius * 0.5:
 			victims.append(e)
 	_inside = victims.size()
+	if game.wild != null:
+		game.wild.thickets.burn_at(p, r)  # Act XV: the Wither aura burns the thorn thickets back (Overgrowth's one burn hook).
 	if victims.is_empty():
 		return
 	var until := game.elapsed + float(stats["cooldown"]) + GraveSpellData.WITHER_LINGER  # Shred expiry.

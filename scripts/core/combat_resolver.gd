@@ -895,6 +895,8 @@ func rot_enemy(e: Enemy, amount: float, until: float) -> void:
 	if e.rot_until <= game.elapsed or a >= e.rot_amp:
 		e.rot_amp = a
 	e.rot_until = maxf(e.rot_until, until)
+	if game.wild != null:
+		game.wild.thickets.burn_at(e.position, WildRulesData.BURN_ROT_REACH)  # Act XV: Rot burns the thorn thickets back (Overgrowth's one burn hook).
 
 
 ## Frost Wraith chill: a slow of `fraction` for `duration` s, shown as a

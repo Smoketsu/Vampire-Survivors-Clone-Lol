@@ -126,7 +126,9 @@ const ORDER := ["gravecaller", "umbral_warden", "voidcaller", "bone_oracle", "fa
 	# --- Act XIV (temporary number): the Great Plain ---
 	"herd_warden",
 	# --- Act XIV (temporary number): the Last Day ---
-	"skywatcher"]
+	"skywatcher",
+	# --- Act XV (temporary number): the Greenwood ---
+	"horned_herald"]
 ## The default character (RunConfig, fresh saves, the autotest): today's game.
 const DEFAULT_ID: String = "gravecaller"
 ## Spell level that unlocks a character (owner rule: reach Lv 5 with its spell
@@ -212,6 +214,8 @@ const STAT_LABELS := {
 ##                           meteor; Act XIV, temporary)
 ##   stampede_length_bonus   Stampede._cast (share more run length of every
 ##                           charger; Act XIV, temporary)
+##   wild_hunt_riders        WildHunt._cast (riders more in every line;
+##                           Act XV, temporary)
 const INNATE_KEYS := ["orb_projectile_destroy", "blast_echo_delay", "blast_echo_damage", "spear_shard_max",
 	"spear_shard_cooldown", "summon_corpses", "grace_share", "grace_targets", "grace_range", "contagion_range",
 	"contagion_duration", "death_mark_slow", "bone_wall_duration", "soul_chains_extra_jumps", "wither_rot",
@@ -293,7 +297,9 @@ const INNATE_KEYS := ["orb_projectile_destroy", "blast_echo_delay", "blast_echo_
 	# --- Act XIV (temporary number): the Great Plain ---
 	"stampede_length_bonus",
 	# --- Act XIV (temporary number): the Last Day ---
-	"meteor_radius_bonus"]
+	"meteor_radius_bonus",
+	# --- Act XV (temporary number): the Greenwood ---
+	"wild_hunt_riders"]
 
 ## Orbit radius (px) of the Bone Oracle's Ossuary Ward shards around him.
 const SHARD_ORBIT_RADIUS: float = 27.0  # TUNING (not in GDD)
@@ -1404,6 +1410,31 @@ const CHARACTERS := {
 		"stats": {"max_hp": -5.0, "spell_area": 0.05},  # TUNING (not in GDD) a stargazer: frail, a wide reach
 		"sprite": "player/skywatcher",
 		"tint": Color(0.86, 0.84, 0.98),  # TUNING (not in GDD) a pale star-violet (her art replaces it)
+		"starts_unlocked": false,
+	},
+	# --- Act XV (temporary number): the Greenwood ---
+	# The Horned Herald (Wild Hunt's character; owner-approved proposal
+	# "Rewards": "The Stag King | Wild Hunt ... | The Horned Herald (male)";
+	# docs/last_acts/PLAN.md: every playable character is a necromancer of the
+	# act's theme in violet, never a fae): MALE: violet hunting robes with a
+	# bone-antler hood, a hunting horn of bone at the hip, a staff with a soul
+	# flame between antler tines (art player/horned_herald, walk strip,
+	# docs/year/ART_MANIFEST.md). Wild Hunt must be unlocked (the Stag King)
+	# before he can be earned, by the usual Lv 5 rule. Own decision on his
+	# innate (the proposal names none): Call of the Horn, one more rider in
+	# every line (WildHunt._cast()).
+	"horned_herald": {
+		"display_name": "The Horned Herald",  # Owner-approved proposal
+		"title": "He blew the Stag King's horn, and the Hunt rode for him.",
+		"spell": "wild_hunt",
+		"innate": {
+			"id": "call_of_the_horn", "name": "Call of the Horn",
+			"description": "Wild Hunt sends one more rider in every line.",
+			"values": {"wild_hunt_riders": 1.0},  # TUNING (not in GDD) riders more in every line
+		},
+		"stats": {"max_hp": 5.0, "move_speed": -0.03},  # TUNING (not in GDD) a herald of the hunt: sturdy, a little slower
+		"sprite": "player/horned_herald",
+		"tint": Color(0.82, 0.94, 0.80),  # TUNING (not in GDD) a pale moss green over the violet (his art replaces it)
 		"starts_unlocked": false,
 	},
 }

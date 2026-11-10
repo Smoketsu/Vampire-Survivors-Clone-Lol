@@ -523,6 +523,11 @@
 ##                        {kind: weight}) join its weights in that season, and
 ##                        a row's "season" keeps its kind to that season
 ##                        (SeasonCycle.timeline_weights(), the one helper).
+## --- Act XV (temporary number): the Greenwood ---
+##   greenwood          — GreenwoodDirector config (GreenwoodStage.GREENWOOD:
+##                        the sacred groves, Scorched Earth, the "huntsman"
+##                        event); ground "greenwood" is its GreenwoodGround
+##                        (four zone floors over the act's greenwood style).
 class_name StageRegistry
 extends RefCounted
 

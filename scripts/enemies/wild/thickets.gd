@@ -21,7 +21,8 @@
 ##     cell (chosen by a pure hash of its cell and spread count).
 ##   * BURNING: a wildfire front burns every thicket and seed it crosses
 ##     (burn_line()); any other fire, Rot or Wither source calls burn_at()
-##     (phase 2 wires the burning spells); a thicket on dead ground
+##     (phase 2 wired the burning spells, Rot and Wither; a kit-drawn ring such
+##     as the Stag King's Antler Crown hears it through ring_burns); a thicket on dead ground
 ##     (BloomField.is_dead()) WITHERS away after `wither` s.
 ## Drawn: the thickets by the arena (WildGlyphs.draw_obstacle(), kind
 ## WildRulesData.THICKET_KIND), the sprouts on WildRules' under layer.
@@ -56,6 +57,11 @@ var seeds: Array = []
 var thickets: Array[Thicket] = []
 ## Most thickets standing at once this run.
 var peak: int = 0
+## Phase 2 (the Greenwood): the kit-drawn rings that burn like thickets (the
+## Stag King's Antler Crown): Callables (at: Vector2, r: float) -> int, each
+## called by burn_at() with the fire's point and reach; an owner removes its own
+## when it is gone. Empty on every stage without one.
+var ring_burns: Array[Callable] = []
 ## Game time (s) of the next catch / wither check.
 var _next_check: float = 0.0
 
@@ -219,6 +225,9 @@ func burn_at(at: Vector2, r: float) -> int:
 	if n > 0:
 		game.stat_add("thickets_burnt", float(n))
 		game.wild.play_sound("thicket_burn", at, 0.3)
+	for cb in ring_burns:
+		if cb.is_valid():
+			cb.call(at, r)  # A kit-drawn ring (the Antler Crown) burns like a thicket.
 	return n
 
 

@@ -1475,6 +1475,9 @@ func get_move_vector() -> Vector2:
 	# --- Act XIV (temporary number): the Fern Basin ---
 	if goal == Vector2.INF and game.enemies.fern_basin != null and away.length() < 0.3 and policy() in SANCTUM_SEEK_POLICIES:
 		goal = game.enemies.fern_basin.seek_point(p, OBJECTIVE_SEEK_RADIUS)  # The Fern Basin: bring the army to Ironjaw's nest when calm.
+	# --- Act XV (temporary number): the Greenwood ---
+	if goal == Vector2.INF and game.enemies.greenwood != null and away.length() < 0.3 and policy() in SANCTUM_SEEK_POLICIES:
+		goal = game.enemies.greenwood.seek_point(p, OBJECTIVE_SEEK_RADIUS)  # The Greenwood: bring the army into a living sacred grove when calm (to blight it).
 	# --- Act XIII (temporary number): the Silver Stair --- into Seraiel's open lane while the Gate stands (every policy).
 	if game.enemies.boss is BossSeraiel and game.enemies.boss.active:
 		var lane := (game.enemies.boss as BossSeraiel).gate_point(p)
@@ -1806,6 +1809,8 @@ func finish(summary: Dictionary) -> void:
 	GreatPlainReport.item_lines(game, st)  # Stampede, Calcified Hide, Hoarder's Bones (only when taken; the stage's own lines are PrimevalReport's).
 	# --- Act XIV (temporary number): the Last Day ---
 	LastDayReport.item_lines(game, st)  # Meteor Call, Cosmic Dust, Petrified Horns, Thick Marrow, the Bonehorn (only when taken; the stage's own lines are PrimevalReport's).
+	# --- Act XV (temporary number): the Greenwood ---
+	GreenwoodReport.item_lines(game, st)  # Wild Hunt, Horn of the Hunt, Fallow Ground (only when taken; the stage's own lines are WildReport's).
 	if game.enemies.boss is BossSeraphine:
 		print("[autotest] seraphine: %s" % BossSeraphine.summary_line(st))
 	var fired := game.enemies.stage.fired

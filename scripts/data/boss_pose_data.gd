@@ -50,4 +50,6 @@ const POSES: Dictionary = {
 	"primeval/ironbrow": {1: "broken"},  # TUNING (not in GDD) one horn snapped off (BossIronbrow: every frame after the Break)
 	# --- Act XIV (temporary number): the Last Day ---
 	"primeval/gravejaw": {1: "roar"},  # TUNING (not in GDD) jaws wide, head up (BossGravejaw: the Roar's windup, at the Mound)
+	# --- Act XV (temporary number): the Greenwood ---
+	"wild/stag_king": {1: "horn"},  # TUNING (not in GDD) the hunting horn raised to his lips (BossStagKing: while a Hunt rides)
 }

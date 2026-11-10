@@ -423,6 +423,14 @@ const UNLOCKS := {
 	# Trampled (owner answer, Nov 9, 2026), offered only in the act.
 	"meteor_call": {"type": "spell", "boss": "gravejaw", "text": "Slay Old Gravejaw on the Last Day, before the meteor falls, to unlock."},  # Owner-approved proposal
 	"cosmic_dust": {"type": "passive", "boss": "gravejaw", "text": "Slay Old Gravejaw on the Last Day, before the meteor falls, to unlock."},  # Meteor Call's paired passive (owner-approved proposal), unlocked with it
+	# --- Act XV (temporary number): the Greenwood ---
+	# The Stag King's fall (owner-approved proposal "Rewards": Wild Hunt is the
+	# Stag King's) with its paired passive, offered on every stage; the
+	# counter-passive Fallow Ground by the stage's achievement Scorched Earth
+	# (owner answer, Nov 2026), offered only in the act.
+	"wild_hunt": {"type": "spell", "boss": "stag_king", "text": "Slay the Stag King in the Greenwood to unlock."},  # Owner-approved proposal
+	"horn_of_the_hunt": {"type": "passive", "boss": "stag_king", "text": "Slay the Stag King in the Greenwood to unlock."},  # Wild Hunt's paired passive (owner-approved proposal), unlocked with it
+	"fallow_ground": {"type": "passive", "achievement": "scorched_earth", "text": "Earn Scorched Earth: blight half the Greenwood in one run."},  # Owner answer (Nov 2026): Scorched Earth unlocks Fallow Ground
 	"bonehorn": {"type": "class", "boss": "gravejaw", "text": "Slay Old Gravejaw on the Last Day, before the meteor falls, to unlock."},  # Owner-approved proposal: the finale's reward
 	"petrified_horns": {"type": "passive", "boss": "gravejaw", "text": "Slay Old Gravejaw on the Last Day, before the meteor falls, to unlock."},  # Its paired passive (own decision), unlocked with it
 	"thick_marrow": {"type": "passive", "achievement": "trampled", "text": "Earn Trampled: let the stampedes kill 100 enemies in one run."},  # Owner answer (Nov 9, 2026): Trampled unlocks Thick Marrow

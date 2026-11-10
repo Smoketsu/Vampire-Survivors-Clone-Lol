@@ -125,6 +125,9 @@
 ## and the Last Day's (temporary Act XIV, LAST_DAY_IDS: stepped only; its
 ## own autotest line, LastDayReport.item_lines()):
 ##   Meteor Call      -> MeteorCall       (evolves into Extinction Event)
+## and the Greenwood's (temporary Act XV, GREENWOOD_IDS: stepped only; its own
+## autotest line, GreenwoodReport.item_lines()):
+##   Wild Hunt        -> WildHunt         (evolves into The Endless Hunt)
 ## Game calls after_physics() once per tick after obstacles are resolved
 ## (Bone Wall holds enemies there).
 ## Each spell node is created the first time its spell is learned and reads
@@ -310,6 +313,10 @@ const GREAT_PLAIN_IDS := ["stampede"]
 ## The Last Day's unlockable spell (Old Gravejaw's reward): stepped only (no
 ## kill or after-physics hook), reported by LastDayReport.
 const LAST_DAY_IDS := ["meteor_call"]
+# --- Act XV (temporary number): the Greenwood ---
+## The Greenwood's unlockable spell (the Stag King's reward): stepped only (no
+## kill or after-physics hook), reported by GreenwoodReport.
+const GREENWOOD_IDS := ["wild_hunt"]
 ## Damage-source stat tags of each spell (CombatResolver "dmg_<tag>"), base
 ## spell first, then its evolution's. Used for the autotest summary.
 const SOURCES := {
@@ -400,6 +407,8 @@ const SOURCES := {
 	"stampede": ["stampede", "herd_of_ages"],
 	# --- Act XIV (temporary number): the Last Day ---
 	"meteor_call": ["meteor_call", "extinction_event"],
+	# --- Act XV (temporary number): the Greenwood ---
+	"wild_hunt": ["wild_hunt", "the_endless_hunt"],
 }
 
 ## Owning run.
@@ -718,6 +727,15 @@ func step(delta: float) -> void:
 			node = _create(id)
 		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
 		node.step(delta, ab.spell_stats(id))  # The Last Day's spell.
+	# --- Act XV (temporary number): the Greenwood ---
+	for id: String in GREENWOOD_IDS:
+		if ab.spell_level(id) <= 0:
+			continue
+		var node: NecroSpell = nodes.get(id)  # The spell's node (created lazily).
+		if node == null:
+			node = _create(id)
+		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
+		node.step(delta, ab.spell_stats(id))  # The Greenwood's spell.
 
 
 ## Content wave 2: the Bone Wall node, created when missing (the Ossuary
@@ -865,6 +883,9 @@ func _create(id: String) -> NecroSpell:
 		# --- Act XIV (temporary number): the Last Day ---
 		"meteor_call":
 			node = MeteorCall.new()  # The Last Day's spell.
+		# --- Act XV (temporary number): the Greenwood ---
+		"wild_hunt":
+			node = WildHunt.new()  # The Greenwood's spell.
 		_:
 			node = PlagueCloud.new()
 	node.game = game

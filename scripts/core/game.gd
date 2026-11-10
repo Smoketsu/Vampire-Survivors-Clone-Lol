@@ -610,6 +610,9 @@ func _ready() -> void:
 		# --- Act XIV (temporary number): the Last Day ---
 		"last_day":
 			ground = LastDayGround.new()  # The Last Day's four zone floors (LastDayStage.ZONES).
+		# --- Act XV (temporary number): the Greenwood ---
+		"greenwood":
+			ground = GreenwoodGround.new()  # The Greenwood's four zone floors (GreenwoodStage.ZONES).
 		_:
 			ground = Ground.new()
 	add_child(ground)

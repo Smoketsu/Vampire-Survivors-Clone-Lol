@@ -472,7 +472,9 @@ const ACHIEVEMENT_ORDER := ["bone_legion", "heretics_bane", "dread_sovereign", "
 	# --- Act XIV (temporary number): the Great Plain ---
 	"nothing_taken",
 	# --- Act XIV (temporary number): the Last Day ---
-	"trampled", "the_day_the_sky_fell"]
+	"trampled", "the_day_the_sky_fell",
+	# --- Act XV (temporary number): the Greenwood ---
+	"scorched_earth"]
 
 ## Achievement definitions (GDD §9.4 "Example Achievement Unlocks"). Each
 ## achievement is tracked and recorded in the save and pays a one-time Soul
@@ -862,6 +864,16 @@ const ACHIEVEMENTS := {
 	# reorder pass writes the act's epilogue part (docs/last_acts/PLAN.md).
 	"the_day_the_sky_fell": {"display_name": "The Day the Sky Fell", "description": "Reach the Extinction on the Last Day without losing a summon after Old Gravejaw arrives",
 		"stat": "sky_fell_runs", "goal": 1, "unlock": "", "bounty": 500},  # Owner-approved proposal; bounty TUNING (not in GDD) as The Last Word (an act's finale)
+	# --- Act XV (temporary number): the Greenwood ---
+	# The Turning Year's achievement "Scorched Earth" (owner-approved proposal:
+	# "blight half the Greenwood in one run"): a Greenwood run whose blight's
+	# peak covered half of the stage's area (GreenwoodStage.GREENWOOD
+	# "scorched_area"; GreenwoodDirector sets the run stat
+	# greenwood_scorched_earth; MetaProgress counts the runs, lifetime
+	# scorched_earth_runs). It unlocks the counter-passive Fallow Ground (owner
+	# answer, Nov 2026).
+	"scorched_earth": {"display_name": "Scorched Earth", "description": "Blight half the Greenwood in one run",
+		"stat": "scorched_earth_runs", "goal": 1, "unlock": "The Fallow Ground passive", "bounty": 300},  # Owner-approved proposal; bounty TUNING (not in GDD) as Nothing Taken
 }
 
 # --- Content wave 2: B. Achievement rewards ---

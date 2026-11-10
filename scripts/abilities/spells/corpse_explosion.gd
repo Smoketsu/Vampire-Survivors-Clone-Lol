@@ -232,6 +232,23 @@ func corpse_life() -> float:
 	return game.wild.seasons.corpse_life(AbilityData.CORPSE_LIFE)
 
 
+## Act XV (temporary number), the Greenwood: a Corpse-Bloom eats up to `most`
+## live corpses within `reach` px of `at` (oldest slot first); they are gone
+## for the spell. Returns how many it ate. Only a Corpse-Bloom calls it.
+func eat_near(at: Vector2, reach: float, most: int) -> int:
+	var n := 0
+	var life := corpse_life()
+	for k in AbilityData.CORPSE_MAX:
+		if n >= most:
+			break
+		var t := _corpse_time[k]
+		if t < 0.0 or game.elapsed - t > life or _corpse_pos[k].distance_to(at) > reach:
+			continue
+		_corpse_time[k] = -1.0
+		n += 1
+	return n
+
+
 func _draw() -> void:
 	var now := game.elapsed  # For corpse fading.
 	var life := corpse_life()  # s, a corpse's life now.

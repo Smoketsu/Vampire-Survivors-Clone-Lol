@@ -465,7 +465,9 @@ const WILD_GROWTH: Array[String] = ["thornling", "dryad", "treant", "corpse_bloo
 ## The fae (group "fae": the knights and the Winter Court).
 const WILD_FAE: Array[String] = ["fae_knight", "winter_fae"]
 ## The Wild Hunt (group "hunt").
-const WILD_HUNT: Array[String] = ["great_stag", "wild_rider"]
+const WILD_HUNT: Array[String] = ["great_stag", "wild_rider",
+	# --- Act XV (temporary number): the Greenwood ---
+	"hunt_hound", "huntsman"]
 ## The spirits (group "spirits").
 const WILD_SPIRITS: Array[String] = ["will_o_wisp", "spore_mother"]
 ## Wild stage bosses (StageRegistry.BOSS_ARRIVALS ids).
@@ -862,6 +864,9 @@ const DESCRIPTIONS: Dictionary = {
 	"will_o_wisp": "A drifting light that draws your dead away from you. Kill it.",  # Proposal
 	"spore_mother": "A mushroom matron whose spores rot your dead and whose mould kills your blight.",  # Proposal
 	"stag_king": "The Stag King, the antlered lord of the Greenwood. He leads the Wild Hunt himself.",  # Proposal
+	# --- Act XV (temporary number): the Greenwood ---
+	"hunt_hound": "A hound of the Wild Hunt. Two run with every Rider, and sweep his line beside him.",  # Owner-approved proposal
+	"huntsman": "The Huntsman of the Wild Hunt: he blows his horn and leads three riders across the wood in one sweeping line.",  # Owner-approved proposal (miniboss)
 	"summer_queen": "The Summer Queen of the fae. She wears many faces, and she will offer you a bargain.",  # Proposal
 	"green_mother": "The Green Mother, grown from the World-Tree: the whole year in one figure, half in bloom and half in frost.",  # Proposal
 	# --- Act XIV (temporary number): the Last Day ---
@@ -1237,6 +1242,8 @@ const ACHIEVEMENT_ICONS: Dictionary = {
 	# --- Act XIV (temporary number): the Last Day ---
 	"trampled": "ach_trampled",  # TUNING (not in GDD)
 	"the_day_the_sky_fell": "ach_the_day_the_sky_fell",  # TUNING (not in GDD)
+	# --- Act XV (temporary number): the Greenwood ---
+	"scorched_earth": "ach_scorched_earth",  # TUNING (not in GDD)
 }
 ## IconGlyph kind drawn when an achievement badge PNG is missing.
 const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
@@ -1327,6 +1334,8 @@ const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
 	# --- Act XIV (temporary number): the Last Day ---
 	"trampled": "thick_marrow",
 	"the_day_the_sky_fell": "meteor_call",
+	# --- Act XV (temporary number): the Greenwood ---
+	"scorched_earth": "fallow_ground",
 }
 ## Screen title (TITLE tier).
 const TITLE: String = "Codex"  # TUNING (not in GDD)

@@ -512,6 +512,10 @@ var great_plain: GreatPlainDirector = null
 ## Thunderwing the Sky King; StageRegistry "last_day"; null on every other
 ## stage).
 var last_day: LastDayDirector = null
+# --- Act XV (temporary number): the Greenwood ---
+## The Greenwood's mechanics (the sacred groves, the Huntsman of the Wild Hunt,
+## Scorched Earth; StageRegistry "greenwood"; null on every other stage).
+var greenwood: GreenwoodDirector = null
 ## Sanctum kit bookkeeping: recent deaths, Confessor revivals, danger hints.
 var rites: CovenantRites
 ## The living miniboss shown on the HUD's miniboss bar (the Cathedral
@@ -806,6 +810,12 @@ func _ready() -> void:
 		last_day.game = game
 		last_day.config = stage_def["last_day"]
 		add_child(last_day)  # The Last Day's director.
+	# --- Act XV (temporary number): the Greenwood ---
+	if not (stage_def.get("greenwood", {}) as Dictionary).is_empty():
+		greenwood = GreenwoodDirector.new()
+		greenwood.game = game
+		greenwood.config = stage_def["greenwood"]
+		add_child(greenwood)  # The Greenwood's director.
 
 
 # =====================================================================================
@@ -1001,6 +1011,9 @@ func step(delta: float) -> void:
 	# --- Act XIV (temporary number): the Last Day ---
 	if last_day != null:
 		last_day.step(delta)  # Fire from the Sky, the growing meteor, Thunderwing.
+	# --- Act XV (temporary number): the Greenwood ---
+	if greenwood != null:
+		greenwood.step(delta)  # The sacred groves, the Huntsman, Scorched Earth.
 
 
 ## The Archive kinds' world hazards (ArchiveHazards), created on first use.
@@ -1201,6 +1214,9 @@ func objective_text() -> String:
 	# --- Act XIV (temporary number): the Last Day ---
 	if last_day != null and last_day.objective_override() != "":
 		return last_day.objective_override()  # Thunderwing, the Sky King.
+	# --- Act XV (temporary number): the Greenwood ---
+	if greenwood != null and greenwood.objective_override() != "":
+		return greenwood.objective_override()  # The Huntsman of the Wild Hunt.
 	if boss != null and not boss.active:
 		return String(boss_info["dead_objective"])
 	return segments[segment_index]["objective"]
@@ -1558,6 +1574,12 @@ func _run_event(ev: Dictionary) -> void:
 				last_day.start_event(ev)
 			game.stat_add("wave_events", 1.0)
 			return  # The Last Day's miniboss (LastDayDirector).
+		# --- Act XV (temporary number): the Greenwood ---
+		"huntsman":
+			if greenwood != null:
+				greenwood.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return  # The Greenwood's miniboss and his riders (GreenwoodDirector).
 	show_banner(ev["banner"])
 	var groups: Array = ev["groups"]
 	if game.shogunate != null:

@@ -138,7 +138,9 @@ const ORDER := ["void_barrage", "eclipse_ward", "abyssal_detonation",
 	# --- Act XIV (temporary number): the Great Plain ---
 	"herd_of_ages",
 	# --- Act XIV (temporary number): the Last Day ---
-	"extinction_event"]
+	"extinction_event",
+	# --- Act XV (temporary number): the Greenwood ---
+	"the_endless_hunt"]
 
 ## Evolution definitions.
 ##   base         — spell id that evolves (AbilityData.SPELLS key).
@@ -1137,6 +1139,25 @@ const EVOLUTIONS := {
 		"stats": {
 			"damage": 96.0, "range": 420.0, "radius": 68.0, "delay": 0.8, "cooldown": 2.8,  # TUNING (not in GDD)
 			"meteors": 3,  # TUNING (not in GDD) the evolution flag: meteors a cast
+		},
+	},
+	# --- Act XV (temporary number): the Greenwood ---
+	# The Endless Hunt (GDD §15.0 "Wild Hunt, The Endless Hunt, Horn of the Hunt
+	# and the Horned Herald"; owner-approved proposal "Wild Hunt -> The Endless
+	# Hunt (+ Horn of the Hunt)"): Wild Hunt + Horn of the Hunt (a NEW passive,
+	# owner rule: at Lv 5). Own decision on its kit: a wider line, and at the end
+	# of each sweep the riders turn and ride back `returns` time(s), striking
+	# every foe again (the hunt that never ends). Detected by the "returns" key.
+	"the_endless_hunt": {
+		"base": "wild_hunt",
+		"passive": "horn_of_the_hunt",
+		"display_name": "The Endless Hunt",  # Owner-approved proposal
+		"icon": "the_endless_hunt",
+		"description": "Six spectral riders sweep across the screen, then turn and ride back through the foes.",
+		"labels": {"damage": "Rider damage", "riders": "Riders", "radius": "Reach (px)", "cooldown": "Cooldown (s)", "returns": "Rides back"},
+		"stats": {
+			"damage": 50.0, "riders": 6, "range": 380.0, "length": 740.0, "speed": 660.0, "radius": 22.0, "cooldown": 2.8,  # TUNING (not in GDD)
+			"returns": 1,  # TUNING (not in GDD) the evolution flag: sweeps back after the first
 		},
 	},
 }

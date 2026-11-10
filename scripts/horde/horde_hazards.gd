@@ -184,6 +184,8 @@ func add_patch(kind: int, pos: Vector2, radius: float, life: float, tick: float,
 	p.tick_left = p.tick * 0.5  # The first tick comes quickly after it lands.
 	p.damage = damage
 	p.source = source
+	if kind == KIND_FIRE and game.wild != null:
+		game.wild.thickets.burn_at(pos, radius)  # Act XV: a Hellhound's fire burns the thorn thickets back (Overgrowth's one burn hook).
 	_burning += 1
 	queue_redraw()
 	return true

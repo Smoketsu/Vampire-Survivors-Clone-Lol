@@ -140,7 +140,9 @@ const SPELL_ORDER := ["shadow_bolt", "orb_shield", "shadow_blast",
 	# --- Act XIV (temporary number): the Great Plain ---
 	"stampede",
 	# --- Act XIV (temporary number): the Last Day ---
-	"meteor_call"]
+	"meteor_call",
+	# --- Act XV (temporary number): the Greenwood ---
+	"wild_hunt"]
 
 ## Spell definitions.
 ##   display_name — UI name.
@@ -1332,6 +1334,31 @@ const SPELLS := {
 			{"damage": 63.0, "range": 380.0, "radius": 56.0, "delay": 0.85, "cooldown": 3.2},  # TUNING (not in GDD)
 			{"damage": 75.0, "range": 390.0, "radius": 60.0, "delay": 0.85, "cooldown": 3.0},  # TUNING (not in GDD)
 			{"damage": 88.0, "range": 400.0, "radius": 64.0, "delay": 0.8, "cooldown": 2.8},  # TUNING (not in GDD) a slow, heavy blow on a pack (Stampede's Lv5 60 on a line)
+		],
+	},
+	# --- Act XV (temporary number): the Greenwood ---
+	# Wild Hunt (GDD §15.0 "Wild Hunt, The Endless Hunt, Horn of the Hunt and
+	# the Horned Herald"; owner-approved proposal: "spectral riders sweep across
+	# the screen in a line"; unlocked by slaying the Stag King, then offered on
+	# every stage). Every `cooldown` s, a foe within `range` px, a line of
+	# `riders` spectral riders abreast rides in from behind the necromancer and
+	# sweeps `length` px at `speed` px/s toward the thickest foes in reach; every
+	# foe within `radius` px of a rider (spell area widens it) takes `damage`
+	# once a sweep and is knocked along. Logic: WildHunt; fixed rules:
+	# WildHuntData. A wide line through the whole screen: lighter per foe than
+	# Stampede's narrow charger.
+	"wild_hunt": {
+		"display_name": "Wild Hunt",  # Owner-approved proposal
+		"icon": "wild_hunt",
+		"description": "Spectral riders sweep across the screen in a line, striking every foe they pass.",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Rider damage", "riders": "Riders", "radius": "Reach (px)", "cooldown": "Cooldown (s)"},
+		"levels": [
+			{"damage": 22.0, "riders": 3, "range": 320.0, "length": 640.0, "speed": 600.0, "radius": 16.0, "cooldown": 3.6},  # Owner-approved proposal: "spectral riders sweep across the screen in a line"; TUNING (not in GDD) the numbers
+			{"damage": 27.0, "riders": 3, "range": 330.0, "length": 660.0, "speed": 600.0, "radius": 17.0, "cooldown": 3.5},  # TUNING (not in GDD)
+			{"damage": 32.0, "riders": 4, "range": 340.0, "length": 680.0, "speed": 620.0, "radius": 18.0, "cooldown": 3.3},  # TUNING (not in GDD)
+			{"damage": 38.0, "riders": 4, "range": 350.0, "length": 700.0, "speed": 620.0, "radius": 19.0, "cooldown": 3.2},  # TUNING (not in GDD)
+			{"damage": 45.0, "riders": 5, "range": 360.0, "length": 720.0, "speed": 640.0, "radius": 20.0, "cooldown": 3.0},  # TUNING (not in GDD) a wide line across the screen, under Stampede's Lv5 60 on its narrow one
 		],
 	},
 }

@@ -238,7 +238,9 @@ const ORDER := ["grave_dominion", "necrotic_vigor", "dark_command", "soul_recycl
 	# --- Act XIV (temporary number): the Great Plain ---
 	"calcified_hide", "hoarders_bones",
 	# --- Act XIV (temporary number): the Last Day ---
-	"cosmic_dust", "petrified_horns", "thick_marrow"]
+	"cosmic_dust", "petrified_horns", "thick_marrow",
+	# --- Act XV (temporary number): the Greenwood ---
+	"horn_of_the_hunt", "fallow_ground"]
 
 ## Passives that only help summons (a "dead" level-up card while no summon
 ## class is owned, see AbilityManager.build_offers()).
@@ -2620,6 +2622,48 @@ const PASSIVES := {
 			{"trample_cut": 0.26},  # TUNING (not in GDD)
 			{"trample_cut": 0.33},  # TUNING (not in GDD)
 			{"trample_cut": 0.40},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act XV (temporary number): the Greenwood ---
+	# Horn of the Hunt (Wild Hunt's paired passive; owner-approved proposal:
+	# "The Endless Hunt (+ Horn of the Hunt)"; unlocked with the spell by the
+	# Stag King and offered on every stage). Own decision on its effect: the
+	# horn drives the riders on: every rider strikes horn_bonus harder and
+	# reaches width_bonus px wider (WildHunt, the one read). Read only by Wild
+	# Hunt: nothing without the spell.
+	"horn_of_the_hunt": {
+		"display_name": "Horn of the Hunt",  # Owner-approved proposal
+		"icon": "horn_of_the_hunt",
+		"description": "Your horn drives the riders on: Wild Hunt strikes harder and reaches wider.",
+		"labels": {"horn_bonus": ["Wild Hunt damage", "pct"], "width_bonus": ["Wild Hunt reach (px)", "num"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"horn_bonus": 0.06, "width_bonus": 2.0},  # TUNING (not in GDD)
+			{"horn_bonus": 0.12, "width_bonus": 4.0},  # TUNING (not in GDD)
+			{"horn_bonus": 0.18, "width_bonus": 6.0},  # TUNING (not in GDD)
+			{"horn_bonus": 0.24, "width_bonus": 8.0},  # TUNING (not in GDD)
+			{"horn_bonus": 0.30, "width_bonus": 10.0},  # TUNING (not in GDD)
+		],
+	},
+	# The Turning Year's counter-passive Fallow Ground (owner-approved proposal:
+	# "Fallow Ground (blight spreads twice as fast)"; unlocked by the Greenwood
+	# achievement Scorched Earth, owner answer Nov 2026; offered only in the
+	# Turning Year through its card row's "act"). The foundation's hook reads
+	# it: WildRules.fallow_mult() (x 1 + blight_rise on the blight's rise under
+	# the army, BloomField._rise()), so the Wild loses its living ground sooner.
+	"fallow_ground": {
+		"display_name": "Fallow Ground",  # Owner-approved proposal
+		"icon": "fallow_ground",
+		"description": "The ground dies faster under your army: blight spreads quicker, and the Wild heals less.",
+		"labels": {"blight_rise": ["Blight under your army", "pct"]},
+		"act": 15,  # Owner-approved: the act's counter-passives are offered only in this act (Unlocks.act_allows(); temporary number, the reorder renumbers)
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"blight_rise": 0.2},  # TUNING (not in GDD)
+			{"blight_rise": 0.4},  # TUNING (not in GDD)
+			{"blight_rise": 0.6},  # TUNING (not in GDD)
+			{"blight_rise": 0.8},  # TUNING (not in GDD)
+			{"blight_rise": 1.0},  # Owner-approved proposal: "blight spreads twice as fast" at full
 		],
 	},
 }
