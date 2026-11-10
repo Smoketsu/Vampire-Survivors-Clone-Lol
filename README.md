@@ -2936,7 +2936,7 @@ through a rift to the day before the meteor and takes the Call for himself. No g
 size of houses, and every one that falls leaves a skeleton (design `docs/proposals/LAST_SIX_ACTS.md` section XIV and
 `docs/proposals/NEW_ACTS_AND_ORDER.md` Part 2; final slot XIV of the fifteen-act order, temporary act number 14 until the
 reorder pass, `docs/last_acts/PLAN.md`). Three stages are registered under an **Act XIV** tab, hidden as "Coming
-soon" until phase 2 builds them (the Fern Basin is built and playable): **the Fern Basin** (`fern_basin`, Scarmaw, the Great Raptor), **the Great Plain**
+soon" until phase 2 builds them (the Fern Basin and the Great Plain are built and playable): **the Fern Basin** (`fern_basin`, Scarmaw, the Great Raptor), **the Great Plain**
 (`great_plain`, Old Ironbrow, the Horned Titan) and **the Last Day** (`last_day`, Old Gravejaw, the Tyrant King); the
 Voice's fall in the Empyrean opens the first, each boss the next. Every Titans stage runs three shared rules
 (`Game.primeval`, `PrimevalRules`):
@@ -2978,6 +2978,28 @@ her unlocks the spell **Pack Leap** (spectral raptors mark the strongest foes ne
 **Apex Pack**, five raptors that each leap on to a second foe, with the passive **Pack Instinct**) and so the **Fern
 Huntress** (innate Hunter's Mark: one more raptor). Autotest lines `fern basin`, `scarmaw`, `act XIV spell`, `act XIV
 passive`; `--spawn=bog_croc@T`, `ironjaw@T`, `primeval_nest@T`, `scarmaw_guard@T`; `--character=fern_huntress`.
+
+#### The Great Plain (stage 41, playable)
+
+Open grassland under a hot sky, in four zones: **the Dust Flats**, **the Watering Hole**, **the Canyon** and **the Bone
+Gate**. Two shared heavies walk the plain: the **Horncharger** paws the ground (a line shows its charge), then runs down
+everything in it, stunning your summons; a charge that hits a rock leaves it stuck there for 2 s. The **Clubtail**'s armour
+plates shrug off the first 5 of every hit, and her tail club sweeps your ring apart (a circle shows it). **The Watering
+Hole:** from 5:00 a lake lies ahead of you (a new one when you walk far from it); the herds gather to drink there, new
+herds come to its shore, and a fight near the water (you within reach and enough foes round it) sends every rested herd
+by the lake stampeding away from you. **The Canyon:** red rock walls make narrow lanes, and a stampede's front there is
+only 340 px wide. At 11:40 **Mother Clubtail** comes with the herd she guards: while one of its beasts grazes near her she
+takes only two thirds of every blow, so drive the herd off (stampede it) or bring it down. **Old Ironbrow, the Horned
+Titan** arrives at 17:00: **the Charge**, a telegraphed charge through your ring that stuns the summons it crosses (into a
+rock, he is stunned for 3 s); **the Herd**, every other charge his herd stampedes the same way behind him; **the Break**,
+at half health he charges the nearest rock and snaps a horn: three short shard lines fly at you, and from then on he
+charges with the stump, faster and more often. Slaying him unlocks the spell **Stampede** (a spectral horned charger
+tramples a line through the thickest foes; evolves into **Herd of Ages**, three chargers abreast that stun what they
+trample, with the passive **Calcified Hide**) and so the **Herd-Warden** (innate Lead Bull: his chargers run 40%
+farther). The achievement **Nothing Taken** (reach 0:00 on the Great Plain without losing one crystal pile to a
+Skyraider) opens the Titans' counter-passive **Hoarder's Bones** (offered in this act only: nothing within 220-300 px of
+you is snatched, and a thief drops its pile after 3-1.4 s of flight). Autotest lines `great plain`, `ironbrow`, `act XIV
+spell`, `act XIV passive`; `--spawn=horncharger@T`, `clubtail@T`, `mother_clubtail@T`; `--character=herd_warden`.
 
 ### The illustrated epilogue
 
@@ -3748,6 +3770,9 @@ scripts/
                             director's pool_in(); Act XIV)
     fern_basin_report.gd    The autotest's Fern Basin lines (fern basin, scarmaw) and the Pack Leap / Pack Instinct
                             item lines (Act XIV)
+    great_plain_ground.gd   The Great Plain's four zone floors (tiles/great_plain_<style>; Act XIV)
+    great_plain_report.gd   The autotest's Great Plain lines (great plain, ironbrow) and the Stampede / Calcified
+                            Hide / Hoarder's Bones item lines (Act XIV)
     proving_moon_glyphs.gd  Code fallbacks of the Warbeast, Vrask'Tal and his skull belt, and the stage's obstacles (Act IX)
     proving_moon_report.gd  The autotest's Proving Moon lines (proving moon, warbeast, threats, vrask'tal; the Soul Caster
                             and passives' item lines; Act IX)
@@ -4281,6 +4306,14 @@ scripts/
       fern_basin_director.gd  The Fern Basin: the Tar Seeps (pool_in(), the slows, the trapped beasts), the Bog Crocs,
                             Ironjaw and her nest (game.enemies.fern_basin)
       boss_scarmaw.gd       Scarmaw, the Great Raptor: the Hunt (packs, the leap), the Ambush (fern patches), Blood Up
+      horncharger_kit.gd    The Horncharger: the telegraphed charge, stuck in a rock; gore() / rock_ahead() (the one
+                            charge hit and rock test, Old Ironbrow's too) (the Great Plain)
+      clubtail_kit.gd       The Clubtail and Mother Clubtail: the tail sweep, the matriarch's herd guard, the
+                            miniboss bar
+      great_plain_director.gd  The Great Plain: the Watering Hole (the lake, Herds.gather, fights start stampedes),
+                            the Canyon's narrow front, Mother Clubtail, Nothing Taken (game.enemies.great_plain)
+      boss_ironbrow.gd      Old Ironbrow, the Horned Titan: the Charge (into a rock), the Herd, the Break (shards, the
+                            stump)
     pantheon/               The Olympian Republic (Act IV): its kits ("<id>_kit.gd", loaded by name after the
                             Eye's and the Empire's) and bosses ("boss_<id>.gd"), and the act's shared rules:
       pantheon_rules.gd     Game.pantheon: owns the wrath, the Phalanx and Glory, the one front test
@@ -4582,6 +4615,9 @@ scripts/
     pack_leap_data.gd       Pack Leap / Apex Pack rules, Pack Instinct keys, Hunter's Mark key (Act XIV, temporary;
                             the spell node is abilities/spells/pack_leap.gd)
     scarmaw_data.gd         Scarmaw, the Great Raptor: her row, the Hunt, the Ambush, Blood Up (Act XIV)
+    stampede_data.gd        Stampede / Herd of Ages rules, Calcified Hide keys, Lead Bull key (Act XIV, temporary;
+                            the spell node is abilities/spells/stampede.gd)
+    ironbrow_data.gd        Old Ironbrow, the Horned Titan: his row, the Charge, the Herd, the Break (Act XIV)
     tractor_lift_data.gd    Tractor Beam / Abduction rules, Starseed keys, Deserter's Signal key (Act IX; the
                             spell node is abilities/spells/tractor_lift.gd, the lift helper abilities/enemy_lift.gd)
     burning_eye_data.gd     Burning Eye / Eye of Retribution rules, Desert Fury keys, Lioness's Gaze key (Act XII,
@@ -4671,15 +4707,17 @@ scripts/
                                      Seventh Trumpet and Voice (empyrean_enemy_data.gd, voice_data.gd, revelation_data.gd)
     primeval_enemy_data.gd  The Age of Titans' shared kinds (Scuttler, Razorclaw, Frill-Spitter, Longneck, Duckbill,
                             Skyraider, Tyrant); the group / pack / herd / fright / scavenger keys; the Stampede of
-                            Ash's kind and companions; the Fern Basin's block the Bog Croc (Act XIV, temporary;
-                            fern_basin_ / great_plain_ / last_day_enemy_data.gd: each stage's own; the Fern Basin's
-                            holds Ironjaw, her nest and Scarmaw's alpha-guard)
+                            Ash's kind and companions; the Fern Basin's block the Bog Croc, the Great Plain's the
+                            Horncharger and the Clubtail (Act XIV, temporary; fern_basin_ / great_plain_ /
+                            last_day_enemy_data.gd: each stage's own; the Fern Basin's holds Ironjaw, her nest and
+                            Scarmaw's alpha-guard, the Great Plain's Mother Clubtail)
     primeval_rules_data.gd  Act XIV's shared rules: PACKS, HERDS, SCAVENGERS, ASH, the SOUNDS map, the Hoarder's
                             Bones / Thick Marrow keys
     stages/fern_basin_stage.gd       Act XIV stubs: the Fern Basin, the Great Plain and the Last Day; act 14,
     stages/great_plain_stage.gd      "primeval": true, zones, the rule overrides, a timeline of the shared kinds, the
     stages/last_day_stage.gd         Stampede of Ash, placeholder floors / bosses ("playable": false; the Fern Basin is
-                                     built: its zones and tar, the Bog Crocs, Ironjaw, Scarmaw, "playable": true)
+                                     built: its zones and tar, the Bog Crocs, Ironjaw, Scarmaw, "playable": true; the
+                                     Great Plain too: its zones, the Watering Hole, the Canyon, Mother Clubtail, Ironbrow)
     stages/ravensmoor_stage.gd     Act VII stubs: Ravensmoor, the Witchwood and Castle Sanguis; act 7,
     stages/witchwood_stage.gd      "court": true, zones, the "moon" overrides, a timeline of the shared kinds,
     stages/castle_sanguis_stage.gd the Endless Feast, placeholder floors / bosses (the Witchwood built: four
@@ -4924,7 +4962,7 @@ Options (after `--`):
 | `--spells=a,b,...` | Any policy first takes these spells (ids from `AbilityData.SPELL_ORDER`, e.g. `bone_spear,soul_siphon,corpse_explosion,plague_cloud` or the later `death_mark,bone_wall,soul_chains` / `wither,raise_dead`) and their evolution passives, which also get ×8 card weight in hands and chests so they are offered reliably (a test-only hook; without `--spells` the draw is unchanged), never banishes them, and stops taking other new actives (or passives) once the free slots are down to the forced spells (or passives) still missing plus one spare, because chests can fill slots too (a hand with nothing else is rerolled or skipped). The `army`, `evolve` and `summon` bots never take a new item that is not on their build list (they reroll or skip), so the newer spells and the later summon classes do not change those baselines (`--classes` / `--spells` items are exempt); the `summon` and `army` bots also keep active slots free for the core classes they still lack (summon: Warriors, Mages, Menders, Warders; army: those plus Archers). Use it to exercise a spell and reach its evolution. |
 | `--passives=a,b,...` | Any policy first takes these passives (ids from `PassiveData.ORDER` except the Pact, e.g. `unholy_precision,unholy_resilience` or `blood_scent,mournsong,siegecraft`) exactly like the `--spells` items (score, ×8 card weight, slot reservation, never banished), so a passive's effect can be exercised. |
 | Bone Golem (content wave 2) | `--classes=bone_golem,...` and `--passives=grave_masonry` force the locked Golem and its passive. A run that had either prints a `bone golem` line: `absorbed=<n> max_growth=<%> bulwarks=<n> titan=<bool> bone_bastion_prevented=<dmg>`, then its level, alive / capacity, deaths, damage by source (slams with their volleys, splash, the Titan's wall), slams and slam hits, planted seconds, taunts, Grave Masonry's level and damage prevented, the Titan's heal, barriers and walls, and whether Bone Bastion was active. |
-| `--stage=ID` | Stage to play: `graveyard` (default), `crimson_march`, `sanctum`, the Act II stages `harbour`, `archive` and `spire`, the Act III stages `wastes`, `assembly` and `citadel`, the Act IV stages `ilion`, `olympus` and `underworld`, the Act V stages `province`, `kurogane` and `sun_road`, the Act VI stages `burning_gate`, `silk_palace` and `pandemonium`, the Act VII stages `ravensmoor`, `witchwood` and `castle_sanguis` (the summary adds the `bloodfeast`, `night wings`, `blood moon`, `court kinds`, `endless feast` and `court stage` lines; `--boss=vargr\|isolde\|carmilla`), the Act VIII stages `skid_row`, `fort_kessler` and `liberty_heights` (city blocks; the summary adds the `city blocks`, `armour`, `supers`, `civilians`, `escalation`, `city kinds`, `martial law` and `city stage` lines; `--boss=don_marrow\|harrow\|paragon`; `--spawn=` takes `civilian`, `street_thug`, `gang_gunner`, `riot_cop`, `squad_car`, `swat_breacher`, `field_medic`, `rifleman`, `tank`, `blitz` and `city_wreck`, Skid Row's `armoured_limo`, `big_sal` and `bounty_board`, and Fort Kessler's `machine_gunner`, `attack_helicopter` and `mammoth`; Skid Row adds `skid row` (Big Sal, the Bounty, No Witnesses), `tear gas`, `big sal` and `don marrow` lines, Fort Kessler adds the `fort kessler`, `fort kessler kinds`, `mammoth`, `fort kessler threats` (top summon-damage and summon-death sources) and `harrow` lines, and on any stage `act VIII spell` / `act VIII passives` when Hearse Run, Black Car, Kevlar Bones, Bone Mines, Tripwire or Armour-Piercing Bones were taken), the Act IX stages `crash_site`, `proving_moon` and `ark` (see *Act IX* above), the Act X stages `cutter`, `galleon` and `maelstrom` (see *Act X: the Black Tide* above), the Hall of the Slain's stages `barrow_fields`, `valgard` and `vigrid` (temporarily Act XI; see *The Hall of the Slain* above), or the temporary Act XII stages `necropolis`, `lioness_temple` and `two_truths` (see *Act XII: the Necropolis Dynasty* above), or the temporary Act XIII stages `silver_stair`, `wheel_of_thrones` and `empyrean` (see *Act XIII: the Celestial Host* above), or the temporary Act XIV stubs `fern_basin`, `great_plain` and `last_day` (see *Act XIV: the Age of Titans* above). Stage locks are ignored. Act II runs print a `dread` line (peak, average, end, Dread calmed by kills, seconds per 25-Dread step, Dread by source) and a `claims` line (claims, Thralls freed, expired, still risen at the end, refusals by the cap, claims by class). Gullhaven adds `tide` (level, seawall, High Water, surges and shoves, seconds in water for you / summons / enemies / swimmers), `harbour` and `harbour events` (buoys sunk and when, tolls, wave and trickle size, caches and chests, the Harbourmaster), `harbour kinds` / `harbour tricks` (also on any stage where a Harbour kind spawned, e.g. `--spawn=deep_kin@60x3`), `merrow` (when he is the boss, also `--boss=merrow`), `act II spell` (Undertow when learned) and `act II passives` (Salt of the Deep, Brinewalker). |
+| `--stage=ID` | Stage to play: `graveyard` (default), `crimson_march`, `sanctum`, the Act II stages `harbour`, `archive` and `spire`, the Act III stages `wastes`, `assembly` and `citadel`, the Act IV stages `ilion`, `olympus` and `underworld`, the Act V stages `province`, `kurogane` and `sun_road`, the Act VI stages `burning_gate`, `silk_palace` and `pandemonium`, the Act VII stages `ravensmoor`, `witchwood` and `castle_sanguis` (the summary adds the `bloodfeast`, `night wings`, `blood moon`, `court kinds`, `endless feast` and `court stage` lines; `--boss=vargr\|isolde\|carmilla`), the Act VIII stages `skid_row`, `fort_kessler` and `liberty_heights` (city blocks; the summary adds the `city blocks`, `armour`, `supers`, `civilians`, `escalation`, `city kinds`, `martial law` and `city stage` lines; `--boss=don_marrow\|harrow\|paragon`; `--spawn=` takes `civilian`, `street_thug`, `gang_gunner`, `riot_cop`, `squad_car`, `swat_breacher`, `field_medic`, `rifleman`, `tank`, `blitz` and `city_wreck`, Skid Row's `armoured_limo`, `big_sal` and `bounty_board`, and Fort Kessler's `machine_gunner`, `attack_helicopter` and `mammoth`; Skid Row adds `skid row` (Big Sal, the Bounty, No Witnesses), `tear gas`, `big sal` and `don marrow` lines, Fort Kessler adds the `fort kessler`, `fort kessler kinds`, `mammoth`, `fort kessler threats` (top summon-damage and summon-death sources) and `harrow` lines, and on any stage `act VIII spell` / `act VIII passives` when Hearse Run, Black Car, Kevlar Bones, Bone Mines, Tripwire or Armour-Piercing Bones were taken), the Act IX stages `crash_site`, `proving_moon` and `ark` (see *Act IX* above), the Act X stages `cutter`, `galleon` and `maelstrom` (see *Act X: the Black Tide* above), the Hall of the Slain's stages `barrow_fields`, `valgard` and `vigrid` (temporarily Act XI; see *The Hall of the Slain* above), or the temporary Act XII stages `necropolis`, `lioness_temple` and `two_truths` (see *Act XII: the Necropolis Dynasty* above), or the temporary Act XIII stages `silver_stair`, `wheel_of_thrones` and `empyrean` (see *Act XIII: the Celestial Host* above), or the temporary Act XIV stages `fern_basin`, `great_plain` (both built) and `last_day` (a stub; see *Act XIV: the Age of Titans* above). Stage locks are ignored. Act II runs print a `dread` line (peak, average, end, Dread calmed by kills, seconds per 25-Dread step, Dread by source) and a `claims` line (claims, Thralls freed, expired, still risen at the end, refusals by the cap, claims by class). Gullhaven adds `tide` (level, seawall, High Water, surges and shoves, seconds in water for you / summons / enemies / swimmers), `harbour` and `harbour events` (buoys sunk and when, tolls, wave and trickle size, caches and chests, the Harbourmaster), `harbour kinds` / `harbour tricks` (also on any stage where a Harbour kind spawned, e.g. `--spawn=deep_kin@60x3`), `merrow` (when he is the boss, also `--boss=merrow`), `act II spell` (Undertow when learned) and `act II passives` (Salt of the Deep, Brinewalker). |
 | (the Hollow Archive) | `--stage=archive` adds `archive` (tomes burned and when, Nothing Unwritten, seconds in ink / spores, the orrery's risings, turns and pushes, the Librarian), `archive rifts` (opened and when, closed early, closed by themselves, cultists spat out) and `archive events` lines; any Archive kind adds `archive enemies` (spawned / killed per kind), `archive kits` (curses, wraith rises and dives, spore clouds and their summon damage, mass splits, Librarian beams, summons turned, lashes, kills) and `archive hazards`; the Archivist adds `archivist` (phase times, kill time, pages and their hits, Footnotes and the damage wasted on copies, Erasure steps and pushes); Forbidden Verse adds `act ii spells`, Marginalia / Iron Mind `act ii passives`. `--spawn=` takes `scribe`, `ink_wraith`, `spore_pilgrim`, `gibbering_mass`, `librarian`, `archive_rift`, `unwritten_one`; `--boss=archivist`; `--character=heretic_scribe`. |
 | (Act III) | `--stage=wastes\|assembly\|citadel` (the Act III stubs) prints `line of fire` (shots fired, rails, arcs; stopped by summons, absorbed by barriers, stopped by Bone Walls, Orb intercepts; reached you and the damage; expired, capped, peak), `lock-on` (lines painted on you / on summons, refused at the cap, fired, cancelled by a slain Spotter, rails stopped by summons or reaching you, most lines at once), `steel` (machine and cyborg kills, Grave Gunners raised per raising effect, their damage and kills), `purge protocol` (orbital salvos and strikes, hits), `empire kinds` (spawned / killed and damage per kind), `empire stage` and `ranged share` (the share of Empire spawns that attack from range; every Act III stage). The Empire's lines also print on any stage where an Empire kind was forced: `--spawn=scout_drone@60x10,line_trooper@90x6,spotter@120`. Grave Gunners need a raising effect, e.g. `--spells=death_mark` or `--ultimate=grave_tide`; `--boss=kestrel\|motherboard\|deus_ex_machina`. The Scrap Wastes (`--stage=wastes`) adds `wastes` (pylons raised / destroyed and when, the share of shooter reach samples boosted, shrunk or storm-halved, storms, the Trojan Horse, objective Soul Ash), `wastes kinds` (Aegis shield blocks and breaks, mortar shells, rockets launched / intercepted / hitting you / shot down, decoys; also wherever a Wastes kind was forced, e.g. `--spawn=aegis_bot@60x6,mortar_walker@90x2,trojan_horse@120`), `trojan horse` and `kestrel` (when she is the boss, also `--boss=kestrel`). On any stage, `act III spell` (Death Ray when learned, e.g. `--spells=death_ray`) and `act III passives` (Conductive Marrow, Lead-Lined Bones, e.g. `--passives=lead_lined_bones`). |
 | (Act IV) | `--stage=ilion\|olympus\|underworld` (the Act IV stubs) prints `divine wrath` (the stage's kind; salvos and strikes per kind: waves, bolts, fissures; damage to enemies with the kills, to summons and to you; fodder drowned, lightning chains, corpses swallowed, shades spat, capped strikes, whether the Twilight began), `phalanx` (walls formed, bodies locked, front hits by shots and melee with the damage prevented, flank breaks, most bodies locked at once), `glory` (stacks gained, the peak, heroes killed and with how many stacks, chests and Soul Ash bounty), `pantheon kinds` (spawned / killed and damage per kind) and `pantheon stage`. The lines also print on any stage where a Pantheon kind was forced: `--spawn=hoplite@60x8,hero@90,shade_of_dead@30x12,bronze_titan@120`; `--boss=achilles\|zeus\|hades` (placeholder boss scripts until phase 2). |
@@ -5114,7 +5152,7 @@ the live build instead of about 30):
    `fort_kessler`, `liberty_heights`, `crash_site`, `proving_moon`, `ark`, the Black Tide's `cutter`, `galleon`,
    `maelstrom`, the Hall of the Slain's `barrow_fields`, `valgard`, `vigrid` and the Necropolis Dynasty's `necropolis`,
    `lioness_temple`, `two_truths`, the Celestial Host's `silver_stair`, `wheel_of_thrones`, `empyrean` and the Age of
-   Titans' `fern_basin`; the other last acts get theirs as they go live) (`--quit-after 15000`, at most 10-15
+   Titans' `fern_basin` and `great_plain`; the other last acts get theirs as they go live) (`--quit-after 15000`, at most 10-15
    wall-clock minutes per run).
    A job fails on any `SCRIPT ERROR`, `ERROR:` or `WARNING:` line, or if its run doesn't complete; one failure does
    not cancel the others. Logs: `test-logs-<id>`.

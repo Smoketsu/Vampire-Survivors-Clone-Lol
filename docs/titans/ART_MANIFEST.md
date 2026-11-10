@@ -110,10 +110,10 @@ The constants are already in `scripts/data/palette.gd` (`PRIMEVAL_*`); the ramps
 
 | Key | Size | What | Loaded now |
 |---|---|---|---|
-| `obstacles/primeval_rock_m` | 36x36 | a mossy boulder (circle kind; scorched on the Last Day); renamed with the one-size suffix `_m` by the Fern Basin (its arena uses one size; the Great Plain / Last Day stubs keep their two-size code glyphs until their agents do the same) | yes (the Fern Basin) |
+| `obstacles/primeval_rock_m` | 36x36 | a mossy boulder (circle kind; scorched on the Last Day); renamed with the one-size suffix `_m` by the Fern Basin (its arena uses one size; the Great Plain uses it too; the Last Day stub keeps its two-size code glyphs until its agent does the same) | yes (the Fern Basin) |
 | `obstacles/primeval_fossil_m` + `_m_v` | 52x30 | a fossil rib arch (bone ribs over a dark rock); `_m` as above | yes (the Fern Basin) |
 | `obstacles/primeval_tree_fern_m` | 40x48 | the Fern Basin: a tree fern trunk (circle kind, footprint radius 10 px; one size, so `_m`) | no (PrimevalGlyphs) |
-| `obstacles/primeval_canyon_wall` + `_v` | 96x32 | phase 2 (the Great Plain): a canyon wall segment (the narrow lanes) | phase 2 |
+| `obstacles/primeval_canyon_wall_m` + `_m_v` | 96x32 | the Great Plain: a red-rock canyon wall segment (the narrow lanes; one size, so `_m`) | no (PrimevalGlyphs) |
 | `obstacles/primeval_lava_rock` | 40x40 | phase 2 (the Last Day): a cooling lava boulder | phase 2 |
 
 ## Icons (`assets/sprites/icons/<id>.png`, 32x32 badges on the approved frames: violet = spells / passives / counter-passives / classes, gold = evolutions and achievements)
@@ -183,3 +183,18 @@ shape). The art it still needs, all loaded by the code as soon as the file exist
 - the obstacle `obstacles/primeval_tree_fern_m`.
 The icons `pack_leap`, `apex_pack`, `pack_instinct` exist. Sounds: the stage reuses the Titans pack (`PrimevalRulesData.SOUNDS`,
 the Fern Basin's block).
+
+## Status (the Great Plain, phase 2)
+
+Built and playable with code fallbacks (`PrimevalGlyphs`, `GreatPlainGround`, BossIronbrow's code shape). It uses the
+Fern Basin's `obstacles/primeval_rock_m` and `primeval_fossil_m` (+ `_m_v`). The art it still needs, all loaded by the code as
+soon as the file exists:
+- units: `primeval/horncharger` (+ walk strip), `primeval/clubtail` (+ walk), `primeval/mother_clubtail` (+ walk; a bigger,
+  heavier-plated Clubtail), `primeval/ironbrow` (+ walk strip and the pose still `primeval/ironbrow_broken`, one horn snapped,
+  drawn after the Break, `BossPoseData`);
+- the character `player/herd_warden` (male: walk strip);
+- floors `tiles/great_plain_dust_flats`, `_watering_hole`, `_canyon`, `_bone_gate` (the watering hole itself is drawn in code
+  as disc textures: a tile is optional);
+- the obstacle `obstacles/primeval_canyon_wall_m` + `_m_v` (96x32).
+The icons `stampede`, `herd_of_ages`, `calcified_hide`, `hoarders_bones`, `ach_nothing_taken` exist. Sounds: the stage reuses
+the Titans pack (`PrimevalRulesData.SOUNDS`, the Great Plain's block).
