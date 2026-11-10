@@ -162,7 +162,7 @@ const RECKONING_OBJECTIVE: String = "SPRING RETURNS: the endless summer breaks a
 ## Winter Prince's minute, so only these two seasons come; the court's knights
 ## and the Wild Hunt from 5:00 (SEASON_WEIGHTS_EARLY before).
 const SEASON_WEIGHTS := {
-	"summer": {"fae_knight": 0.05, "wild_rider": 0.005, "great_stag": 0.006},  # TUNING (not in GDD) the court's knights and the Hunt (first pass 0.07 / 0.008 / 0.008 from 0:00: the naive bot died at 8:10, seed 7)
+	"summer": {"fae_knight": 0.05, "wild_rider": 0.003, "great_stag": 0.004},  # TUNING (not in GDD) the court's knights and the Hunt for fifteen minutes (first passes 0.07 / 0.008 / 0.008 from 0:00, then 0.05 / 0.005 / 0.006: the riders and stags were the bots' worst foes, seeds 7 and 11)
 	"winter": {"winter_fae": 0.15},  # TUNING (not in GDD) the Winter Court comes with its prince
 }
 ## The season kinds of the segments before 5:00 (none of the court yet: its

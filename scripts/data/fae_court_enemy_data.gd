@@ -69,9 +69,9 @@ const ENEMIES := {
 		"volley_every": 5.5,  # TUNING (not in GDD) s between two fans
 		"volley_range": 360.0,  # TUNING (not in GDD) px to the necromancer for a fan
 		"volley_bolts": 5,  # TUNING (not in GDD) bolts in a fan
-		"volley_spread": 40.0,  # TUNING (not in GDD) degrees, the fan's width
+		"volley_spread": 50.0,  # TUNING (not in GDD) degrees, the fan's width (first pass 40)
 		"volley_speed": 290.0,  # TUNING (not in GDD) px/s
-		"volley_damage": 4.0,  # TUNING (not in GDD) per bolt, before the time scaling
+		"volley_damage": 2.5,  # TUNING (not in GDD) per bolt, before the time scaling (first pass 4: 120-165 on the necromancer in his minute, seeds 7 and 11)
 		"chill_slow": 0.35,  # TUNING (not in GDD) 0..1 the chill on a summon a bolt strikes (the Winter Fae's frost)
 		"chill_time": 2.5,  # TUNING (not in GDD) s
 	},  # The Winter Prince.
