@@ -40,7 +40,7 @@ const ENEMY_HP_MULT: float = 2.2  # TUNING (not in GDD) phase 2 (the stub's 2.5,
 const ENEMY_DAMAGE_MULT: float = 1.4  # TUNING (not in GDD) phase 2 (the stub's 1.7, a first pass 1.45: the naive bot collapsed at 7:00-8:30, seed 3): the Greenwood's 1.4; the endless summer's knights and Hunt, the Masque and the Winter Prince are the step up
 ## Elapsed game seconds from which the two multipliers apply to regular
 ## enemies (the boss always gets them).
-const ENEMY_MULT_FROM: float = 420.0  # TUNING (not in GDD) as Acts III to XIV (7:00)
+const ENEMY_MULT_FROM: float = 480.0  # TUNING (not in GDD) 8:00 as the World-Tree (first pass 420 as Acts III to XIV: the thin-ring bots fell at 10:29-12:08, harder than the finale; balance pass 1)
 ## Soul Ash multiplier of a run on this stage (its own end-screen line).
 const ASH_MULT: float = 1.25  # TUNING (not in GDD) owner decision Oct 2026 (GDD §15.0 "Ossuary expansion: owner decisions"): every act restarts, stage 2 of the act
 
@@ -192,11 +192,11 @@ const SEGMENTS := [
 		"weights": {"thornling": 0.78, "dryad": 0.1, "will_o_wisp": 0.03, "treant": 0.015},
 		"season_weights": SEASON_WEIGHTS,
 		"objective": "Where your army stands, the ground dies into blight: the Wild cannot heal there"},
-	{"start": 600.0, "rate": 2.7, "max_alive": 72,  # TUNING (not in GDD)
+	{"start": 600.0, "rate": 2.5, "max_alive": 66,  # TUNING (not in GDD) as the World-Tree (first pass 2.7 / 72; balance pass 1)
 		"weights": {"thornling": 0.74, "dryad": 0.1, "spore_mother": 0.02, "treant": 0.015, "will_o_wisp": 0.03},
 		"season_weights": SEASON_WEIGHTS,
 		"objective": "The Mirror Lake: the court's knights blink through your ring. Keep blockers inside it"},
-	{"start": 900.0, "rate": 3.0, "max_alive": 84,  # TUNING (not in GDD)
+	{"start": 900.0, "rate": 2.7, "max_alive": 76,  # TUNING (not in GDD) as the World-Tree (first pass 3.0 / 84; balance pass 1)
 		"weights": {"thornling": 0.72, "dryad": 0.1, "treant": 0.015, "spore_mother": 0.025},
 		"season_weights": SEASON_WEIGHTS,
 		"objective": "The Throne of Blossoms: the Summer Queen is near"},

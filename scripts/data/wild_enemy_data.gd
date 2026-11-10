@@ -155,7 +155,7 @@ const ENEMIES := {
 		"display_name": "Treant",
 		"max_hp": 420.0,  # TUNING (not in GDD) a heavy
 		"move_speed": 34.0,  # TUNING (not in GDD) px/s; slow
-		"damage": 11.0,  # TUNING (not in GDD) a branch, before the time scaling (the stub's 14, a first pass 12: with its root it hit the bots hardest, seeds 7 and 11)
+		"damage": 8.5,  # TUNING (not in GDD) a branch, before the time scaling (the stub's 14, first passes 12 and 11: with its root it hit the bots hardest, seeds 7 and 11; balance pass 1: up to 345 on the thin-ring bots, the top killer)
 		"attack_interval": 1.6,  # TUNING (not in GDD) s
 		"attack_range": 12.0,  # TUNING (not in GDD) px
 		"radius": 18.0,  # TUNING (not in GDD) px (~80 px sprite)
@@ -215,7 +215,7 @@ const ENEMIES := {
 		"display_name": "Fae Knight",
 		"max_hp": 70.0,  # TUNING (not in GDD) a soldier
 		"move_speed": 64.0,  # TUNING (not in GDD) px/s
-		"damage": 8.0,  # TUNING (not in GDD) a thorn sword, before the time scaling
+		"damage": 6.5,  # TUNING (not in GDD) a thorn sword, before the time scaling (first pass 8: it blinks inside the ring, the highest damage per second of the shared kinds; balance pass 1)
 		"attack_interval": 1.0,  # TUNING (not in GDD) s
 		"attack_range": 8.0,  # TUNING (not in GDD) px
 		"radius": 10.0,  # TUNING (not in GDD) px (~52 px sprite)
