@@ -4,8 +4,8 @@
 ## "Miniboss, the Huntsman of the Wild Hunt, who leads three riders in a sweeping
 ## line"). The shared Wild charge (WildChargeKit) with a following:
 ##   * on his first tick he brings `riders` Riders of the Wild Hunt (row
-##     rider_kind) beside him (EnemyDirector.spawn_at(); each brings its own
-##     hounds);
+##     rider_kind) beside him (EnemyDirector.spawn_at(); they ride without
+##     hounds: a first pass with their six hounds overran the naive bot);
 ##   * every charge_every s he blows his horn and his living riders blink to his
 ##     flanks, rider_spacing px apart (alternating sides), and sweep his line
 ##     with him (WildChargeKit.lead(): a led rider never sweeps on its own, its
@@ -46,6 +46,8 @@ func physics(e: Enemy, delta: float) -> bool:
 			var at := e.game.arena.free_point(e.position + Vector2.from_angle(TAU * float(i) / float(n)) * 70.0, 15.0)
 			var r := e.game.enemies.spawn_at(String(d.get("rider_kind", WildEnemyData.WILD_RIDER)), at, false)
 			if r != null:
+				if r.kit is WildRiderKit:
+					(r.kit as WildRiderKit).no_hounds()  # His riders ride without hounds: he is their pack.
 				riders.append(r)
 				rider_gens.append(r.generation)
 				e.game.stat_add("huntsman_riders", 1.0)

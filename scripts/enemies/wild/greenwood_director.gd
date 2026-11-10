@@ -177,27 +177,6 @@ func _grove_heal(at: Vector2, r: float, dt: float) -> void:
 			game.stat_add("grove_heal", game.combat.heal_enemy(e, e.max_hp * share))
 
 
-## The autopilot's errand when calm: the nearest living grove within `reach` px
-## of `p` (its centre, to blight it), Vector2.INF when none.
-func seek_point(p: Vector2, reach: float) -> Vector2:
-	var pc := cell_of(p)
-	var best := Vector2.INF
-	var best_d := reach
-	for dy in range(-NEAR_CELLS, NEAR_CELLS + 1):
-		for dx in range(-NEAR_CELLS, NEAR_CELLS + 1):
-			var c := pc + Vector2i(dx, dy)
-			if dead.has(c):
-				continue
-			var g := grove_in(c, config)
-			if g.z <= 0.0:
-				continue
-			var d := p.distance_to(Vector2(g.x, g.y))
-			if d < best_d:
-				best_d = d
-				best = Vector2(g.x, g.y)
-	return best
-
-
 # =====================================================================================
 # The Huntsman of the Wild Hunt
 # =====================================================================================

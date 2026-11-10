@@ -44,10 +44,11 @@ func group() -> String:
 ## does not hold yet is hit once: a summon takes `dmg_summon` x `mult`
 ## (CombatResolver.damage_unit()), is stunned `stun` s (CombatResolver.stun_unit(),
 ## the one summon stun path) and thrown `knock` px sideways off the line `dir`
-## (the ring scatters); a necromancer takes `dmg_player`. Tag `source`, killer `by`
-## (null for a rule's riders). Returns how many bodies it hit.
+## (the ring scatters); a necromancer takes `dmg_player` (unless `players` is
+## false: a led follower's line strikes him once, through its leader). Tag
+## `source`, killer `by` (null for a rule's riders). Returns how many bodies it hit.
 static func trample(g: Game, at: Vector2, reach: float, hit: Array, dmg_summon: float, dmg_player: float, stun: float, knock: float,
-		dir: Vector2, source: String, by: Enemy, buf: Array, mult: float = 1.0) -> int:
+		dir: Vector2, source: String, by: Enemy, buf: Array, mult: float = 1.0, players: bool = true) -> int:
 	var n := 0
 	g.ally_grid.query(at, reach + UnitData.MAX_BLOCK_RADIUS, buf)
 	for u: SummonedUnit in buf.duplicate():
@@ -63,6 +64,8 @@ static func trample(g: Game, at: Vector2, reach: float, hit: Array, dmg_summon: 
 			var side := dir.orthogonal()
 			u.position += side * knock * (1.0 if (u.position - at).dot(side) >= 0.0 else -1.0)
 		n += 1
+	if not players:
+		return n
 	for pl in g.all_players:
 		if pl.dead or hit.has(pl) or pl.position.distance_to(at) > reach + pl.radius:
 			continue

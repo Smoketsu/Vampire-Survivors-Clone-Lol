@@ -42,11 +42,11 @@ static func specials_line(st: Dictionary) -> String:
 			any = true
 	if not any:
 		return ""
-	return "treant roots %d | fae blinks %d | stag charges %d (hit %d, you %d) | rider sweeps %d (hit %d, you %d; hounds %d, hound hits %d) | wisp lures %d | spore puffs %d (rots %d, mould cells %d) | bloom meals %d (corpses eaten %d, thornlings budded %d) | huntsman sweeps hit %d, you %d" % [
+	return "treant roots %d | fae blinks %d | stag charges %d (hit %d, you %d) | rider sweeps %d (hit %d, you %d; hounds %d, hound hits %d; rode on %d) | wisp lures %d | spore puffs %d (rots %d, mould cells %d) | bloom meals %d (corpses eaten %d, thornlings budded %d) | huntsman sweeps hit %d, you %d" % [
 		int(st.get("treant_roots", 0.0)), int(st.get("fae_blinks", 0.0)),
 		int(st.get("great_stag_charges", 0.0)), int(st.get("great_stag_charge_hits", 0.0)), int(st.get("great_stag_charge_on_you", 0.0)),
 		int(st.get("wild_rider_charges", 0.0)), int(st.get("wild_rider_charge_hits", 0.0)), int(st.get("wild_rider_charge_on_you", 0.0)),
-		int(st.get("hunt_hounds_brought", 0.0)), int(st.get("hunt_hound_charge_hits", 0.0)),
+		int(st.get("hunt_hounds_brought", 0.0)), int(st.get("hunt_hound_charge_hits", 0.0)), int(st.get("hunt_riders_passed", 0.0)),
 		int(st.get("wisp_lures", 0.0)), int(st.get("spore_puffs", 0.0)), int(st.get("spore_rots", 0.0)), int(st.get("mould_cells", 0.0)),
 		int(st.get("bloom_meals", 0.0)), int(st.get("bloom_corpses_eaten", 0.0)), int(st.get("bloom_buds", 0.0)),
 		int(st.get("huntsman_charge_hits", 0.0)), int(st.get("huntsman_charge_on_you", 0.0))]

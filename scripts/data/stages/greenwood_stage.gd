@@ -33,10 +33,10 @@ const BOSS_TIME: float = 1020.0  # TUNING (not in GDD) 17:00, as on every stage
 
 ## Enemy max-HP multiplier of this stage on top of the shared time scaling
 ## (slot XV is the hardest act: above the Age of Titans' 2.2; the step is in HP).
-const ENEMY_HP_MULT: float = 2.3  # TUNING (not in GDD) phase 2 (the stub's 2.4): the act's first stage, a step over the Titans' 2.2
+const ENEMY_HP_MULT: float = 2.2  # TUNING (not in GDD) phase 2 (the stub's 2.4, a first pass 2.3: the naive bot died on seeds 3, 7 and 11 at about 10:00): the Titans' 2.2, the shared kinds' specials, the groves and the Huntsman are the step up
 ## Enemy damage multiplier of this stage on top of the shared time scaling
 ## (the Age of Titans' 1.4 and up).
-const ENEMY_DAMAGE_MULT: float = 1.5  # TUNING (not in GDD) phase 2 (the stub's 1.6): a step over the Titans' 1.4; the specials are this stage's extra weight
+const ENEMY_DAMAGE_MULT: float = 1.4  # TUNING (not in GDD) phase 2 (the stub's 1.6, first passes 1.5 and 1.45: the naive bot died on every seed, the army bot on seed 3): the Titans' 1.4; the shared kinds' specials, the groves and the Huntsman are the step up
 ## Elapsed game seconds from which the two multipliers apply to regular
 ## enemies (the boss always gets them).
 const ENEMY_MULT_FROM: float = 420.0  # TUNING (not in GDD) as Acts III to XIV (7:00)
@@ -131,7 +131,7 @@ const GREENWOOD := {
 	"grove_trees": 7,  # Owner-approved proposal: "rings of standing trees"; TUNING (not in GDD) the count
 	"grove_tree_art": "obstacles/wild_grove_tree",  # docs/year/ART_MANIFEST.md (phase 2 art)
 	"grove_every": 0.5,  # TUNING (not in GDD) s
-	"grove_heal": 0.02,  # Owner-approved proposal: "heal the Wild inside them"; TUNING (not in GDD) share of max HP a second
+	"grove_heal": 0.01,  # Owner-approved proposal: "heal the Wild inside them"; TUNING (not in GDD) share of max HP a second (first pass 0.02: the Treants piled up, seed 3)
 	"grove_blight": 0.6,  # TUNING (not in GDD) 0..1
 	"grove_kill": 10.0,  # Owner-approved proposal: "holding the ring in it for 10 s"
 	"grove_banner": "A sacred grove withers under your army: it heals the Wild no more!",  # TUNING (not in GDD)
@@ -163,8 +163,8 @@ const RECKONING_OBJECTIVE: String = "SPRING RETURNS: the year turns back to its 
 ## summer fae knights, the Wild Hunt; autumn spore mothers, wisps,
 ## corpse-blooms (not in the trickle: a structure); winter the Winter Court).
 const SEASON_WEIGHTS := {
-	"spring": {"treant": 0.03},  # TUNING (not in GDD)
-	"summer": {"fae_knight": 0.06, "wild_rider": 0.015, "great_stag": 0.01},  # TUNING (not in GDD)
+	"spring": {"treant": 0.02},  # TUNING (not in GDD) (the stub's 0.03: the Treants piled up, seed 3)
+	"summer": {"fae_knight": 0.06, "wild_rider": 0.01, "great_stag": 0.01},  # TUNING (not in GDD) (the stub's riders 0.015: their sweeps were the naive bot's killer)
 	"autumn": {"spore_mother": 0.05, "will_o_wisp": 0.05},  # TUNING (not in GDD)
 	"winter": {"winter_fae": 0.12},  # TUNING (not in GDD) the Winter Court
 }
@@ -183,19 +183,19 @@ const SEGMENTS := [
 		"season_weights": SEASON_WEIGHTS,
 		"objective": "Spring: the roots grab whatever stands still for two seconds. Keep moving"},
 	{"start": 180.0, "rate": 2.0, "max_alive": 50,  # TUNING (not in GDD)
-		"weights": {"thornling": 0.82, "dryad": 0.1, "will_o_wisp": 0.04, "treant": 0.04},
+		"weights": {"thornling": 0.82, "dryad": 0.1, "will_o_wisp": 0.04, "treant": 0.025},
 		"season_weights": SEASON_WEIGHTS,
 		"objective": "Where your army stands, the ground dies into blight: the Wild cannot heal there"},
 	{"start": 300.0, "rate": 2.3, "max_alive": 60,  # TUNING (not in GDD)
-		"weights": {"thornling": 0.78, "dryad": 0.1, "fae_knight": 0.08, "treant": 0.04},
+		"weights": {"thornling": 0.78, "dryad": 0.1, "fae_knight": 0.08, "treant": 0.025},
 		"season_weights": SEASON_WEIGHTS,
 		"objective": "Summer: wildfires sweep the dry grass and burn the thickets. Step out of their path"},
 	{"start": 600.0, "rate": 2.7, "max_alive": 72,  # TUNING (not in GDD)
-		"weights": {"thornling": 0.74, "dryad": 0.1, "fae_knight": 0.08, "spore_mother": 0.04, "treant": 0.04},
+		"weights": {"thornling": 0.74, "dryad": 0.1, "fae_knight": 0.08, "spore_mother": 0.04, "treant": 0.025},
 		"season_weights": SEASON_WEIGHTS,
 		"objective": "Autumn: the dead rot in three seconds. Raise them fast"},
 	{"start": 900.0, "rate": 3.0, "max_alive": 84,  # TUNING (not in GDD)
-		"weights": {"thornling": 0.72, "dryad": 0.1, "fae_knight": 0.1, "treant": 0.04, "spore_mother": 0.04},
+		"weights": {"thornling": 0.72, "dryad": 0.1, "fae_knight": 0.1, "treant": 0.025, "spore_mother": 0.04},
 		"season_weights": SEASON_WEIGHTS,
 		"objective": "Winter: snow slows every step, and the Winter Court comes"},
 	{"start": BOSS_TIME, "rate": 2.4, "max_alive": 64,  # TUNING (not in GDD) thinner during the boss fight
@@ -219,7 +219,7 @@ const EVENTS := [
 	{"time": 330.0, "type": "wave", "banner": "The Fae Knights blink through your ring: keep blockers inside it!", "formation": "arc",  # TUNING (not in GDD)
 		"groups": [{"kind": "fae_knight", "count": 5, "elite": false}, {"kind": "dryad", "count": 2, "elite": false}]},
 	{"time": 480.0, "type": "wave", "banner": "The Wild Hunt sweeps past: step out of the riders' lines!", "formation": "arc",  # TUNING (not in GDD)
-		"groups": [{"kind": "wild_rider", "count": 2, "elite": false}, {"kind": "great_stag", "count": 1, "elite": false}]},
+		"groups": [{"kind": "wild_rider", "count": 1, "elite": false}, {"kind": "great_stag", "count": 1, "elite": false}]},  # The stub's two riders: with their hounds (phase 2) seven hunters at once killed the naive bot
 	{"time": 640.0, "type": "wave", "banner": "Will-o'-Wisps lure your dead away, and Spore Mothers rot them!", "formation": "ring",  # TUNING (not in GDD)
 		"groups": [{"kind": "will_o_wisp", "count": 6, "elite": false}, {"kind": "spore_mother", "count": 3, "elite": false}]},
 	{"time": 700.0, "type": "huntsman", "banner": "THE HUNTSMAN OF THE WILD HUNT! He leads three riders in a sweeping line: step out of it!",  # Owner-approved proposal (miniboss); 8:20 left
@@ -266,6 +266,14 @@ const THICKETS := {
 	"spread_every": 60.0,  # TUNING (not in GDD) s (the default 45)
 }
 
+## This stage's living ground (any key of WildRulesData.BLOOM): the act's first
+## stage heals the Wild more gently (phase 2: at the default 1% a second the
+## naive bot's small army never brought down a Treant, a Fae Knight or a Great
+## Stag, and was overrun at about 12:00 on seeds 3, 7 and 11).
+const BLOOM := {
+	"heal": 0.006,  # TUNING (not in GDD) share of max HP a second (the default 0.01)
+}
+
 ## The whole stage as one dictionary (StageRegistry documents every key).
 const STAGE := {
 	"id": ID,
@@ -296,7 +304,7 @@ const STAGE := {
 	"greenwood": GREENWOOD,  # GreenwoodDirector: the sacred groves, the Huntsman, Scorched Earth.
 	"wild": true,  # The Turning Year, Bloom and Blight, Overgrowth (WildRules).
 	"seasons": {},  # This stage's year ({} = WildRulesData.SEASONS).
-	"bloom": {},  # This stage's living ground ({} = WildRulesData.BLOOM).
+	"bloom": BLOOM,  # This stage's living ground: a gentler heal than the default (the act's first stage).
 	"thickets": THICKETS,  # This stage's thickets: gentler than the defaults (the act's first stage).
 	"zones": ZONES,  # The four zones.
 	# Music key: "wildwood" (the Turning Year's "The Turning Year", SoundData.WILDWOOD_SCORE; its sound pack "wild").

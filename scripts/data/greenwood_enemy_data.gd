@@ -36,9 +36,9 @@ const ENEMIES := {
 	# the miniboss chest; his riders ride on alone.
 	"huntsman": {
 		"display_name": "The Huntsman of the Wild Hunt",
-		"max_hp": 1300.0,  # TUNING (not in GDD) a miniboss (Mother Clubtail 1000 x the Titans' 2.2; slot XV is the hardest)
+		"max_hp": 1100.0,  # TUNING (not in GDD) a miniboss (Mother Clubtail 1000; his riders are his weight; first pass 1300)
 		"move_speed": 58.0,  # TUNING (not in GDD) px/s
-		"damage": 12.0,  # TUNING (not in GDD) a spear in reach, before the time scaling
+		"damage": 9.0,  # TUNING (not in GDD) a spear in reach, before the time scaling (first pass 12)
 		"attack_interval": 1.3,  # TUNING (not in GDD) s
 		"attack_range": 12.0,  # TUNING (not in GDD) px
 		"radius": 20.0,  # TUNING (not in GDD) px (~80 x 68 px sprite)
@@ -71,7 +71,7 @@ const ENEMIES := {
 		"charge_speed": 360.0,  # TUNING (not in GDD) px/s
 		"charge_len": 560.0,  # Owner-approved proposal: "a sweeping line"; TUNING (not in GDD) px
 		"charge_damage": 9.0,  # TUNING (not in GDD) to each summon he crosses, before the time scaling
-		"charge_player": 10.0,  # TUNING (not in GDD) to the necromancer, before the time scaling
+		"charge_player": 4.0,  # TUNING (not in GDD) to the necromancer, before the time scaling (first passes 10, 6: he was the naive bot's killer, seeds 3 and 11)
 		"charge_stun": 0.5,  # TUNING (not in GDD) s
 		"charge_knock": 30.0,  # TUNING (not in GDD) px
 	},  # The Huntsman of the Wild Hunt.

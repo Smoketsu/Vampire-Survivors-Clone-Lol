@@ -151,7 +151,7 @@ const ENEMIES := {
 		"display_name": "Treant",
 		"max_hp": 420.0,  # TUNING (not in GDD) a heavy
 		"move_speed": 34.0,  # TUNING (not in GDD) px/s; slow
-		"damage": 14.0,  # TUNING (not in GDD) a branch, before the time scaling
+		"damage": 12.0,  # TUNING (not in GDD) a branch, before the time scaling (the stub's 14: with its root it hit the naive bot hardest, seeds 7 and 11)
 		"attack_interval": 1.6,  # TUNING (not in GDD) s
 		"attack_range": 12.0,  # TUNING (not in GDD) px
 		"radius": 18.0,  # TUNING (not in GDD) px (~80 px sprite)
@@ -230,11 +230,11 @@ const ENEMIES := {
 		"group": "fae",
 		# --- Act XV (temporary number): the Greenwood --- the blinks through the ring (FaeKnightKit).
 		"blink_first": 3.0,  # TUNING (not in GDD) s after it comes on
-		"blink_every": 7.0,  # TUNING (not in GDD) s between two blinks
-		"blink_min": 120.0,  # TUNING (not in GDD) px: nearer than this it walks
+		"blink_every": 12.0,  # TUNING (not in GDD) s between two blinks (first passes 7, 9: 461 and 700 blinks a run, seed 7)
+		"blink_min": 170.0,  # TUNING (not in GDD) px: nearer than this it walks (first pass 120)
 		"blink_lane": 30.0,  # TUNING (not in GDD) px half width of the line a summon must stand in for it to blink
 		"blink_dist": 110.0,  # Owner-approved proposal: "short blinks through the ring"; TUNING (not in GDD) px
-		"blink_keep": 40.0,  # TUNING (not in GDD) px it lands at least from the necromancer's edge
+		"blink_keep": 90.0,  # TUNING (not in GDD) px it lands at least from the necromancer's edge: in the ring (60-150 px), not on him (first passes 40, 70)
 		"blink_warn": 0.35,  # TUNING (not in GDD) s it gathers itself (leaves swirl)
 	},  # The Fae Knight.
 	# The fae: the Winter Court (owner-approved proposal: "Winter Fae (female,
@@ -273,7 +273,7 @@ const ENEMIES := {
 		"display_name": "Great Stag",
 		"max_hp": 300.0,  # TUNING (not in GDD) an elite
 		"move_speed": 70.0,  # TUNING (not in GDD) px/s
-		"damage": 12.0,  # TUNING (not in GDD) antlers, before the time scaling
+		"damage": 10.0,  # TUNING (not in GDD) antlers, before the time scaling (the stub's 12: with its charge it hit the naive bot hard)
 		"attack_interval": 1.3,  # TUNING (not in GDD) s
 		"attack_range": 10.0,  # TUNING (not in GDD) px
 		"radius": 16.0,  # TUNING (not in GDD) px (~72 px sprite)
@@ -292,13 +292,13 @@ const ENEMIES := {
 		"group": "hunt",
 		# --- Act XV (temporary number): the Greenwood --- the antler charge (GreatStagKit, WildChargeKit).
 		"charge_first": 3.0,  # TUNING (not in GDD) s after it comes on
-		"charge_every": 8.0,  # TUNING (not in GDD) s between two charges
+		"charge_every": 11.0,  # TUNING (not in GDD) s between two charges (first pass 8)
 		"charge_trigger": 240.0,  # TUNING (not in GDD) px to the necromancer for a charge to start
 		"charge_windup": 1.0,  # Owner-approved proposal: "a telegraphed antler charge"; TUNING (not in GDD) s
 		"charge_speed": 320.0,  # TUNING (not in GDD) px/s
 		"charge_len": 260.0,  # TUNING (not in GDD) px at most (through the ring)
 		"charge_damage": 8.0,  # TUNING (not in GDD) to each summon it crosses, before the time scaling
-		"charge_player": 8.0,  # TUNING (not in GDD) to the necromancer, before the time scaling
+		"charge_player": 4.0,  # TUNING (not in GDD) to the necromancer, before the time scaling (first passes 8, 6: the naive bot's killer, seed 11)
 		"charge_stun": 0.6,  # TUNING (not in GDD) s each summon it crosses is stunned
 		"charge_knock": 34.0,  # Owner-approved proposal: "scatters the ring"; TUNING (not in GDD) px a summon is thrown aside
 	},  # The Great Stag.
@@ -308,9 +308,9 @@ const ENEMIES := {
 	# sweep are phase 2's.
 	"wild_rider": {
 		"display_name": "Rider of the Wild Hunt",
-		"max_hp": 240.0,  # TUNING (not in GDD) an elite
+		"max_hp": 200.0,  # TUNING (not in GDD) an elite (the stub's 240: with its sweep and hounds it outlived the naive bot's army)
 		"move_speed": 82.0,  # TUNING (not in GDD) px/s
-		"damage": 11.0,  # TUNING (not in GDD) a spear, before the time scaling
+		"damage": 8.0,  # TUNING (not in GDD) a spear, before the time scaling (the stub's 11: its sweep is its threat now)
 		"attack_interval": 1.2,  # TUNING (not in GDD) s
 		"attack_range": 10.0,  # TUNING (not in GDD) px
 		"radius": 15.0,  # TUNING (not in GDD) px (~72 px sprite)
@@ -329,18 +329,19 @@ const ENEMIES := {
 		"group": "hunt",
 		# --- Act XV (temporary number): the Greenwood --- the sweep and the hounds (WildRiderKit, WildChargeKit).
 		"charge_first": 4.0,  # TUNING (not in GDD) s after it comes on
-		"charge_every": 11.0,  # TUNING (not in GDD) s between two sweeps
+		"charge_every": 16.0,  # TUNING (not in GDD) s between two sweeps (first passes 11, 14)
 		"charge_trigger": 360.0,  # TUNING (not in GDD) px to the necromancer for a sweep to start
 		"charge_windup": 1.2,  # TUNING (not in GDD) s the line shows
 		"charge_speed": 380.0,  # TUNING (not in GDD) px/s
 		"charge_len": 520.0,  # Owner-approved proposal: "sweeps across the arena in a line"; TUNING (not in GDD) px
 		"charge_damage": 7.0,  # TUNING (not in GDD) to each summon it crosses, before the time scaling
-		"charge_player": 8.0,  # TUNING (not in GDD) to the necromancer, before the time scaling
+		"charge_player": 3.0,  # TUNING (not in GDD) to the necromancer, before the time scaling (first passes 8, 4: the riders were the bots' killer, seed 3 and 11)
 		"charge_stun": 0.4,  # TUNING (not in GDD) s
 		"charge_knock": 24.0,  # TUNING (not in GDD) px
 		"hounds": 2,  # Owner-approved proposal: "a spectral horseman and two hounds"
 		"hound_kind": "hunt_hound",  # Its hounds' row (below)
 		"hound_side": 34.0,  # TUNING (not in GDD) px a hound sweeps to either side of it
+		"leave_after": 3,  # Owner-approved proposal: "sweeps across the arena"; TUNING (not in GDD) sweeps of its own before it rides on with its hounds (the Hunt passes; first pass: they stayed and overran the naive bot)
 	},  # The Rider of the Wild Hunt.
 	# The spirits: the lure (owner-approved proposal: "Will-o'-Wisp | Lure |
 	# Draws summons away from the ring (the existing misdirect() hook) | Kill
@@ -438,7 +439,7 @@ const ENEMIES := {
 		"charge_speed": 380.0,  # TUNING (not in GDD) px/s, as its Rider
 		"charge_len": 520.0,  # TUNING (not in GDD) px, as its Rider
 		"charge_damage": 4.0,  # TUNING (not in GDD) to each summon it crosses, before the time scaling
-		"charge_player": 5.0,  # TUNING (not in GDD) to the necromancer, before the time scaling
+		"charge_player": 3.0,  # TUNING (not in GDD) to the necromancer, before the time scaling (first pass 5)
 		"charge_stun": 0.0,  # A bite in passing: no stun
 		"charge_knock": 10.0,  # TUNING (not in GDD) px
 	},  # The Hound of the Wild Hunt.

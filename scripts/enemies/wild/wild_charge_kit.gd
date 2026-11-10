@@ -17,7 +17,8 @@
 ##   * LEAD: a leader (the Rider its hounds, the Huntsman his riders) calls
 ##     lead() on a follower: it blinks to its place in the line and charges
 ##     along the leader's line with the leader's windup; while its leader lives
-##     a follower never starts a charge of its own.
+##     a follower never starts a charge of its own, and its charge tramples
+##     only summons (the line strikes the necromancer once, by its leader).
 ## Subclasses hook _on_begin() (the charge's windup begins: a leader leads its
 ## followers here). Determinism: no RNG, no instance ids. Stats per kind:
 ## <kind>_charges, <kind>_charge_hits, <kind>_charge_on_you.
@@ -98,7 +99,7 @@ func physics(e: Enemy, delta: float) -> bool:
 			var before := hit.size()
 			var n := trample(g, e.position, e.radius, hit, float(d.get("charge_damage", 8.0)) * ts * e.undead_damage_mult,
 					float(d.get("charge_player", 7.0)) * ts, float(d.get("charge_stun", 0.5)), float(d.get("charge_knock", 28.0)),
-					charge_dir, e.kind, e, _buf)
+					charge_dir, e.kind, e, _buf, 1.0, not led())
 			if n > 0:
 				g.stat_add(e.kind + "_charge_hits", float(n))
 				for i in range(before, hit.size()):
