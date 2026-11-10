@@ -1,0 +1,8 @@
+A sheet of 3 separate pixel-art game OBSTACLE sprites for a top-down 2D horde-survival game (three-quarter top-down view, camera above and slightly in front), laid out in one row, evenly spaced with wide empty gaps between them, on a FULLY TRANSPARENT background (real alpha). Prehistoric jungle and badlands. LOW-RESOLUTION pixel art, chunky simple shapes, crisp square pixels (nearest-neighbour), a clean 1-pixel dark outline #120F0D, flat colours, at most 3 shades per material, light from the top-left. No ground under them, no cast shadows, no text.
+From left to right:
+1. a TREE FERN: a short thick fibrous trunk with a crown of big fern-green fronds (about 40 px wide, 48 px tall);
+2. a long CANYON WALL segment: a horizontal stretch of red-ochre layered rock cliff with a flat top and dark cracks (about 96 px wide, 32 px tall);
+3. a cooling LAVA ROCK: a black round boulder with glowing volcanic-orange cracks (about 40 px wide, 40 px tall).
+
+Colours: grey-brown rock #231C18 #4A3A30 #6E5A4C; fern #24451F #4D8534 #8CC46A; ochre rock #7E552A #C89448 #E8C88A; lava #8A2E0C #EF6B1C #FFC070.
+Attached: a game sprite of this game for pixel size, outline weight and flat look.
