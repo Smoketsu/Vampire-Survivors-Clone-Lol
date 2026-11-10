@@ -234,7 +234,9 @@ const ORDER := ["grave_dominion", "necrotic_vigor", "dark_command", "soul_recycl
 	# --- Act XIII (temporary number): the Empyrean ---
 	"seventh_seal", "turning_bones",
 	# --- Act XIV (temporary number): the Fern Basin ---
-	"pack_instinct"]
+	"pack_instinct",
+	# --- Act XIV (temporary number): the Great Plain ---
+	"calcified_hide", "hoarders_bones"]
 
 ## Passives that only help summons (a "dead" level-up card while no summon
 ## class is owned, see AbilityManager.build_offers()).
@@ -2505,6 +2507,50 @@ const PASSIVES := {
 			{"instinct_bonus": 0.18, "pounce_bonus": 9.0},  # TUNING (not in GDD)
 			{"instinct_bonus": 0.24, "pounce_bonus": 12.0},  # TUNING (not in GDD)
 			{"instinct_bonus": 0.30, "pounce_bonus": 15.0},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act XIV (temporary number): the Great Plain ---
+	# Calcified Hide (Stampede's paired passive; owner-approved proposal: "Herd
+	# of Ages (+ Calcified Hide)"; unlocked with the spell by Old Ironbrow and
+	# offered on every stage). Own decision on its effect: the chargers' hides
+	# turn to stone: every charger tramples hide_bonus harder and its path is
+	# width_bonus px wider (Stampede, the one read). Read only by Stampede:
+	# nothing without the spell.
+	"calcified_hide": {
+		"display_name": "Calcified Hide",  # Owner-approved proposal
+		"icon": "calcified_hide",
+		"description": "Your chargers' hides turn to stone: Stampede tramples harder and wider.",
+		"labels": {"hide_bonus": ["Stampede damage", "pct"], "width_bonus": ["Stampede width (px)", "num"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"hide_bonus": 0.06, "width_bonus": 2.0},  # TUNING (not in GDD)
+			{"hide_bonus": 0.12, "width_bonus": 4.0},  # TUNING (not in GDD)
+			{"hide_bonus": 0.18, "width_bonus": 6.0},  # TUNING (not in GDD)
+			{"hide_bonus": 0.24, "width_bonus": 8.0},  # TUNING (not in GDD)
+			{"hide_bonus": 0.30, "width_bonus": 10.0},  # TUNING (not in GDD)
+		],
+	},
+	# The Age of Titans' counter-passive Hoarder's Bones (owner-approved
+	# proposal: "crystals and drops within 300 px cannot be snatched; a
+	# snatched pile drops sooner"; unlocked by the Great Plain achievement
+	# Nothing Taken, owner answer Nov 9, 2026; offered only in the Titans act
+	# through its card row's "act"). The foundation's hook reads it:
+	# PrimevalRules.hoarders_bones_reach() (Scavengers.safe_radius(): the safe
+	# radius grows to safe_radius px) and hoarders_bones_drop_after() (a
+	# fleeing carrier drops its pile after drop_after s of flight, SkyraiderKit).
+	"hoarders_bones": {
+		"display_name": "Hoarder's Bones",  # Owner-approved proposal
+		"icon": "hoarders_bones",
+		"description": "Your crystals are yours: fewer are snatched near you, and a thief drops its pile sooner.",
+		"labels": {"safe_radius": ["Safe from thieves (px)", "num"], "drop_after": ["A thief drops its pile after (s)", "num"]},
+		"act": 14,  # Owner-approved: the act's counter-passives are offered only in this act (Unlocks.act_allows(); temporary number, the reorder renumbers)
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"safe_radius": 220.0, "drop_after": 3.0},  # TUNING (not in GDD)
+			{"safe_radius": 240.0, "drop_after": 2.6},  # TUNING (not in GDD)
+			{"safe_radius": 260.0, "drop_after": 2.2},  # TUNING (not in GDD)
+			{"safe_radius": 280.0, "drop_after": 1.8},  # TUNING (not in GDD)
+			{"safe_radius": 300.0, "drop_after": 1.4},  # Owner-approved proposal: "within 300 px cannot be snatched" at full
 		],
 	},
 }

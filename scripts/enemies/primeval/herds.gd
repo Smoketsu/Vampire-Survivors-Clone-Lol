@@ -46,6 +46,10 @@
 ##   * THE TAR (Act XIV, the Fern Basin): a beast the tar holds
 ##     (HerdBeastKit.stuck_until, FernBasinDirector) stands where it is in
 ##     every state and never frightens its herd: a free kill.
+##   * THE WATERING HOLE (Act XIV, the Great Plain): while `gather` is set
+##     (GreatPlainDirector), a grazing beast within gather_reach px of it is
+##     drawn back toward it past gather_radius px instead of toward the
+##     necromancer: the herds gather at the lake.
 ## The Stampede of Ash (the Reckoning) brings its own herds through
 ## spawn_herd(..., launch) over the cap. Summons never get a rule here: the
 ## trample is a hazard through CombatResolver, and the Fossil Giant a temporary
@@ -116,6 +120,13 @@ var _next: float = INF
 var _draws: bool = false
 ## Scratch buffer for grid queries (_fright_point()).
 var _buf: Array = []
+## The Great Plain's watering hole (world px; Vector2.INF = none): grazing
+## beasts near it gather round it (GreatPlainDirector sets it).
+var gather: Vector2 = Vector2.INF
+## px from `gather` a beast may graze before it is drawn back to it.
+var gather_radius: float = 0.0
+## px from `gather` within which a beast keeps to it (farther: the necromancer).
+var gather_reach: float = 0.0
 
 
 ## Builds Herds for `p_game`; `p_enabled`: a Titans stage.
@@ -416,7 +427,10 @@ func steer(e: Enemy, kit: HerdBeastKit, delta: float) -> bool:
 			if e.position.distance_to(c) > float(cfg["spawn_spread"]) * 1.5:
 				dir = (dir + (c - e.position).normalized()).normalized()
 			var pl := game.nearest_player(e.position)
-			if pl != null and e.position.distance_to(pl.position) > float(cfg["graze_radius"]):
+			if gather != Vector2.INF and e.position.distance_to(gather) <= gather_reach:
+				if e.position.distance_to(gather) > gather_radius:
+					dir = (dir * 0.3 + (gather - e.position).normalized()).normalized()  # Act XIV, the Great Plain: to the watering hole.
+			elif pl != null and e.position.distance_to(pl.position) > float(cfg["graze_radius"]):
 				dir = (dir * 0.3 + (pl.position - e.position).normalized()).normalized()
 			PrimevalKit.move(e, dir, e.move_speed * float(cfg["graze_mult"]), delta)
 	return true

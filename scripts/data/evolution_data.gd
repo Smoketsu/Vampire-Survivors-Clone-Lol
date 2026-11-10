@@ -134,7 +134,9 @@ const ORDER := ["void_barrage", "eclipse_ward", "abyssal_detonation",
 	# --- Act XIII (temporary number): the Empyrean ---
 	"be_not_afraid",
 	# --- Act XIV (temporary number): the Fern Basin ---
-	"apex_pack"]
+	"apex_pack",
+	# --- Act XIV (temporary number): the Great Plain ---
+	"herd_of_ages"]
 
 ## Evolution definitions.
 ##   base         — spell id that evolves (AbilityData.SPELLS key).
@@ -1095,6 +1097,25 @@ const EVOLUTIONS := {
 		"stats": {
 			"damage": 70.0, "raptors": 5, "range": 380.0, "radius": 36.0, "pounce_share": 0.5, "cooldown": 2.0,  # TUNING (not in GDD)
 			"chain_share": 0.6, "chain_reach": 160.0,  # TUNING (not in GDD) the evolution flag: share of the damage the second leap strikes, px it looks for its foe
+		},
+	},
+	# --- Act XIV (temporary number): the Great Plain ---
+	# Herd of Ages (GDD §15.0 "Stampede, Herd of Ages, Calcified Hide and the
+	# Herd-Warden"; owner-approved proposal "Stampede -> Herd of Ages (+
+	# Calcified Hide)"): Stampede + Calcified Hide (a NEW passive, owner rule: at
+	# Lv 5). Own decision on its kit: `herd` chargers run abreast and every foe
+	# they trample is stunned `stun` s (a herd of the old titans runs
+	# everything down). Detected by the "herd" key.
+	"herd_of_ages": {
+		"base": "stampede",
+		"passive": "calcified_hide",
+		"display_name": "Herd of Ages",  # Owner-approved proposal
+		"icon": "herd_of_ages",
+		"description": "Three spectral titans run abreast, trampling and stunning everything in their way.",
+		"labels": {"damage": "Trample damage", "length": "Run (px)", "radius": "Width (px)", "cooldown": "Cooldown (s)", "herd": "Chargers", "stun": "Stun (s)"},
+		"stats": {
+			"damage": 66.0, "range": 380.0, "length": 460.0, "speed": 580.0, "radius": 32.0, "cooldown": 2.4,  # TUNING (not in GDD)
+			"herd": 3, "stun": 0.6,  # TUNING (not in GDD) the evolution flag: chargers abreast, s every trampled foe is stunned
 		},
 	},
 }

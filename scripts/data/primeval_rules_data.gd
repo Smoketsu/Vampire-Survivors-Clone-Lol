@@ -154,6 +154,10 @@ const SOUNDS := {
 	"scarmaw_lunge": "pack_hiss",  # Titans pack (reused): she bursts out of the ferns.
 	"croc_lunge": "pack_hiss",  # Titans pack (reused): a Bog Croc rears out of the tar.
 	"ironjaw_bite": "pack_rush",  # Titans pack (reused): Ironjaw lunges.
+	# --- Act XIV (temporary number): the Great Plain ---
+	"horn_charge": "stampede_warn",  # Titans pack (reused): a Horncharger paws the ground and bellows.
+	"club_sweep": "trample",  # Titans pack (reused): a Clubtail's club swings (a heavy thud).
+	"ironbrow_charge": "stampede_run",  # Titans pack (reused): Old Ironbrow charges (heavy footfalls).
 }
 
 # --- The counter-passives (phase 2 builds them; PrimevalRules' hooks read them) -------------
@@ -161,6 +165,8 @@ const SOUNDS := {
 const HOARDERS_BONES: String = "hoarders_bones"
 ## Hoarder's Bones' value key: px the safe radius grows to (0 = not owned; the proposal's 300).
 const HOARDERS_BONES_KEY: String = "safe_radius"
+## Hoarder's Bones' second key: s of flight after which a carrier drops its pile (0 = not owned: never).
+const HOARDERS_BONES_DROP_KEY: String = "drop_after"
 ## Passive id of Thick Marrow (proposal: "summons take less damage from trampling, charges and stomps"; this act only).
 const THICK_MARROW: String = "thick_marrow"
 ## Thick Marrow's value key: the share of a trample / charge / stomp on a summon it takes off (0..1).

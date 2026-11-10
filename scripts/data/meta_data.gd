@@ -468,7 +468,9 @@ const ACHIEVEMENT_ORDER := ["bone_legion", "heretics_bane", "dread_sovereign", "
 	# --- Act XIII (temporary number): the Wheel of Thrones ---
 	"the_wheel_breaks",
 	# --- Act XIII (temporary number): the Empyrean ---
-	"the_last_word"]
+	"the_last_word",
+	# --- Act XIV (temporary number): the Great Plain ---
+	"nothing_taken"]
 
 ## Achievement definitions (GDD §9.4 "Example Achievement Unlocks"). Each
 ## achievement is tracked and recorded in the save and pays a one-time Soul
@@ -831,6 +833,16 @@ const ACHIEVEMENTS := {
 	# it only records the clear (docs/last_acts/PLAN.md): no unlock, the bounty.
 	"the_last_word": {"display_name": "The Last Word", "description": "Silence the Voice in the Empyrean: heaven, earth and hell answer to you",
 		"stat": "last_word_runs", "goal": 1, "unlock": "", "bounty": 500},  # Owner-approved proposal; bounty TUNING (not in GDD) as A Light Heart (an act's finale)
+	# --- Act XIV (temporary number): the Great Plain ---
+	# The Titans' achievement "Nothing Taken" (owner-approved proposal: "finish
+	# the Great Plain without losing a crystal pile to a Skyraider"): a Great
+	# Plain run that reached 0:00 with no pile flown to a nest (own reading of
+	# "finish": the countdown's end, the clear; GreatPlainDirector sets the run
+	# stat great_plain_nothing_taken; MetaProgress counts the runs, lifetime
+	# nothing_taken_runs). It unlocks the counter-passive Hoarder's Bones
+	# (owner answer, Nov 9, 2026).
+	"nothing_taken": {"display_name": "Nothing Taken", "description": "Reach the end of the Great Plain without losing a single crystal pile to a Skyraider",
+		"stat": "nothing_taken_runs", "goal": 1, "unlock": "The Hoarder's Bones passive", "bounty": 300},  # Owner-approved proposal; bounty TUNING (not in GDD) as Without Sin
 }
 
 # --- Content wave 2: B. Achievement rewards ---

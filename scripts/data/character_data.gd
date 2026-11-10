@@ -122,7 +122,9 @@ const ORDER := ["gravecaller", "umbral_warden", "voidcaller", "bone_oracle", "fa
 	# --- Act XIII (temporary number): the Empyrean ---
 	"the_unveiled",
 	# --- Act XIV (temporary number): the Fern Basin ---
-	"fern_huntress"]
+	"fern_huntress",
+	# --- Act XIV (temporary number): the Great Plain ---
+	"herd_warden"]
 ## The default character (RunConfig, fresh saves, the autotest): today's game.
 const DEFAULT_ID: String = "gravecaller"
 ## Spell level that unlocks a character (owner rule: reach Lv 5 with its spell
@@ -204,6 +206,8 @@ const STAT_LABELS := {
 ##                           Act XIII, temporary)
 ##   pack_leap_raptors       PackLeap._cast (raptors more on every cast;
 ##                           Act XIV, temporary)
+##   stampede_length_bonus   Stampede._cast (share more run length of every
+##                           charger; Act XIV, temporary)
 const INNATE_KEYS := ["orb_projectile_destroy", "blast_echo_delay", "blast_echo_damage", "spear_shard_max",
 	"spear_shard_cooldown", "summon_corpses", "grace_share", "grace_targets", "grace_range", "contagion_range",
 	"contagion_duration", "death_mark_slow", "bone_wall_duration", "soul_chains_extra_jumps", "wither_rot",
@@ -281,7 +285,9 @@ const INNATE_KEYS := ["orb_projectile_destroy", "blast_echo_delay", "blast_echo_
 	# --- Act XIII (temporary number): the Empyrean ---
 	"revelation_stun_bonus",
 	# --- Act XIV (temporary number): the Fern Basin ---
-	"pack_leap_raptors"]
+	"pack_leap_raptors",
+	# --- Act XIV (temporary number): the Great Plain ---
+	"stampede_length_bonus"]
 
 ## Orbit radius (px) of the Bone Oracle's Ossuary Ward shards around him.
 const SHARD_ORBIT_RADIUS: float = 27.0  # TUNING (not in GDD)
@@ -1342,6 +1348,30 @@ const CHARACTERS := {
 		"stats": {"max_hp": -5.0, "move_speed": 0.05},  # TUNING (not in GDD) a huntress: light on her feet
 		"sprite": "player/fern_huntress",
 		"tint": Color(0.80, 0.94, 0.78),  # TUNING (not in GDD) a pale fern green over the violet (her art replaces it)
+		"starts_unlocked": false,
+	},
+	# --- Act XIV (temporary number): the Great Plain ---
+	# The Herd-Warden (Stampede's character; owner-approved proposal "Rewards":
+	# "Old Ironbrow | Stampede ... | The Herd-Warden (male)";
+	# docs/last_acts/PLAN.md: every playable character is a necromancer of the
+	# act's theme in violet, never a beast): MALE: heavy violet robes over a
+	# bone-plated mantle, a ceratopsian skull shoulder piece, a horn-topped
+	# staff (art player/herd_warden, walk strip, docs/titans/ART_MANIFEST.md).
+	# Stampede must be unlocked (Old Ironbrow) before he can be earned, by the
+	# usual Lv 5 rule. Own decision on his innate (the proposal names none):
+	# Lead Bull, his chargers run farther (Stampede._cast()).
+	"herd_warden": {
+		"display_name": "The Herd-Warden",  # Owner-approved proposal
+		"title": "He walked at the head of the old herds, and they follow him still.",
+		"spell": "stampede",
+		"innate": {
+			"id": "lead_bull", "name": "Lead Bull",
+			"description": "Stampede's chargers run 40% farther.",
+			"values": {"stampede_length_bonus": 0.4},  # TUNING (not in GDD) share more run length
+		},
+		"stats": {"max_hp": 10.0, "move_speed": -0.05},  # TUNING (not in GDD) a heavy warden: tough, a little slow
+		"sprite": "player/herd_warden",
+		"tint": Color(0.94, 0.86, 0.72),  # TUNING (not in GDD) a pale dust ochre over the violet (his art replaces it)
 		"starts_unlocked": false,
 	},
 }

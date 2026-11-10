@@ -37,6 +37,17 @@ static func draw_enemy(ci: CanvasItem, kind: String, o: Vector2, r: float, flash
 		"scarmaw_guard":
 			if not SpriteBank.draw(ci, "primeval/razorclaw_alpha", o, flash):  # The alpha's art until her own.
 				_beast(ci, o, r, flash, Palette.PRIMEVAL_FERN_DARK, Palette.PRIMEVAL_BONE, 0.9, 1.0)
+		# --- Act XIV (temporary number): the Great Plain ---
+		"horncharger":
+			_beast(ci, o, r, flash, Palette.PRIMEVAL_OCHRE_DARK, Palette.PRIMEVAL_OCHRE, 1.0, 0.0)
+			ci.draw_rect(Rect2(o + Vector2(r * 0.2, -r * 1.0), Vector2(r * 0.3, r * 0.5)), Glyphs._c(Palette.PRIMEVAL_OCHRE, flash))  # The frill.
+			ci.draw_rect(Rect2(o + Vector2(r * 0.8, -r * 0.5), Vector2(r * 0.6, 2.0)), Glyphs._c(Palette.PRIMEVAL_BONE, flash))  # A horn.
+			ci.draw_rect(Rect2(o + Vector2(r * 0.8, -r * 0.2), Vector2(r * 0.5, 2.0)), Glyphs._c(Palette.PRIMEVAL_BONE, flash))  # A horn.
+		"clubtail", "mother_clubtail":
+			_beast(ci, o, r, flash, Palette.PRIMEVAL_TAR, Palette.PRIMEVAL_OCHRE_DARK, 1.0, 0.0)
+			for i in 3:
+				ci.draw_rect(Rect2(o + Vector2(-r * 0.6 + float(i) * r * 0.45, -r * 0.75), Vector2(r * 0.3, r * 0.2)), Glyphs._c(Palette.PRIMEVAL_BONE.darkened(0.3), flash))  # Armour plates.
+			SpriteBank.draw_disc(ci, o + Vector2(-r * 1.3, -r * 0.1), r * 0.3, Glyphs._c(Palette.PRIMEVAL_BONE, flash))  # The tail club.
 		"scuttler":
 			_beast(ci, o, r, flash, Palette.PRIMEVAL_OCHRE_DARK, Palette.PRIMEVAL_OCHRE, 0.5, 0.0)
 		"frill_spitter":
@@ -104,6 +115,19 @@ static func draw_obstacle(ci: CanvasItem, o: Arena.Obstacle) -> bool:
 			SpriteBank.draw_disc(ci, c, r - 1.5, Palette.PRIMEVAL_OCHRE_DARK)
 			SpriteBank.draw_disc(ci, c + Vector2(-r * 0.3, -r * 0.3), r * 0.4, Palette.PRIMEVAL_OCHRE)
 			SpriteBank.draw_disc(ci, c + Vector2(r * 0.2, -r * 0.5), r * 0.3, Color(Palette.PRIMEVAL_FERN, 0.6))  # Moss.
+		# --- Act XIV (temporary number): the Great Plain ---
+		"primeval_canyon_wall":
+			var wall := Rect2(c - o.half, o.half * 2.0)
+			ci.draw_rect(Rect2(wall.position + Vector2(4, 5), wall.size), Color(0, 0, 0, 0.3))
+			ci.draw_rect(wall, INK)
+			ci.draw_rect(wall.grow(-1.5), Palette.PRIMEVAL_LAVA.darkened(0.55))  # Red rock.
+			var bands := maxi(2, int(maxf(wall.size.x, wall.size.y) / 12.0))  # Strata across the wall.
+			for i in bands:
+				var k := float(i) / float(maxi(1, bands - 1))
+				if wall.size.x >= wall.size.y:
+					ci.draw_rect(Rect2(Vector2(wall.position.x + 2.0 + k * (wall.size.x - 6.0), wall.position.y + 2.0), Vector2(2.0, wall.size.y - 4.0)), Palette.PRIMEVAL_OCHRE_DARK)
+				else:
+					ci.draw_rect(Rect2(Vector2(wall.position.x + 2.0, wall.position.y + 2.0 + k * (wall.size.y - 6.0)), Vector2(wall.size.x - 4.0, 2.0)), Palette.PRIMEVAL_OCHRE_DARK)
 		"primeval_fossil":
 			var rect := Rect2(c - o.half, o.half * 2.0)
 			ci.draw_rect(Rect2(rect.position + Vector2(4, 5), rect.size), Color(0, 0, 0, 0.3))

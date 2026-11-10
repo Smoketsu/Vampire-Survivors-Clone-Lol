@@ -589,6 +589,9 @@ func _ready() -> void:
 		# --- Act XIV (temporary number): the Fern Basin ---
 		"fern_basin":
 			ground = FernBasinGround.new()  # The Fern Basin's four zone floors and its tar pools (FernBasinStage.ZONES).
+		# --- Act XIV (temporary number): the Great Plain ---
+		"great_plain":
+			ground = GreatPlainGround.new()  # The Great Plain's four zone floors (GreatPlainStage.ZONES).
 		_:
 			ground = Ground.new()
 	add_child(ground)

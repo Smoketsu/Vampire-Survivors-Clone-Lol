@@ -491,6 +491,11 @@ var empyrean: EmpyreanDirector = null
 ## The Fern Basin's mechanics (the Tar Seeps, the Bog Crocs, Ironjaw and her
 ## nest; StageRegistry "fern_basin"; null on every other stage).
 var fern_basin: FernBasinDirector = null
+# --- Act XIV (temporary number): the Great Plain ---
+## The Great Plain's mechanics (the Watering Hole, the Canyon's narrow front,
+## Mother Clubtail, Nothing Taken; StageRegistry "great_plain"; null on every
+## other stage).
+var great_plain: GreatPlainDirector = null
 ## Sanctum kit bookkeeping: recent deaths, Confessor revivals, danger hints.
 var rites: CovenantRites
 ## The living miniboss shown on the HUD's miniboss bar (the Cathedral
@@ -773,6 +778,12 @@ func _ready() -> void:
 		fern_basin.game = game
 		fern_basin.config = stage_def["fern_basin"]
 		add_child(fern_basin)  # The Fern Basin's director.
+	# --- Act XIV (temporary number): the Great Plain ---
+	if not (stage_def.get("great_plain", {}) as Dictionary).is_empty():
+		great_plain = GreatPlainDirector.new()
+		great_plain.game = game
+		great_plain.config = stage_def["great_plain"]
+		add_child(great_plain)  # The Great Plain's director.
 
 
 # =====================================================================================
@@ -962,6 +973,9 @@ func step(delta: float) -> void:
 	# --- Act XIV (temporary number): the Fern Basin ---
 	if fern_basin != null:
 		fern_basin.step(delta)  # The Tar Seeps, the Bog Crocs, Ironjaw and her nest.
+	# --- Act XIV (temporary number): the Great Plain ---
+	if great_plain != null:
+		great_plain.step(delta)  # The Watering Hole, the Canyon, Mother Clubtail, Nothing Taken.
 
 
 ## The Archive kinds' world hazards (ArchiveHazards), created on first use.
@@ -1156,6 +1170,9 @@ func objective_text() -> String:
 	# --- Act XIV (temporary number): the Fern Basin ---
 	if fern_basin != null and fern_basin.objective_override() != "":
 		return fern_basin.objective_override()  # Ironjaw and her nest.
+	# --- Act XIV (temporary number): the Great Plain ---
+	if great_plain != null and great_plain.objective_override() != "":
+		return great_plain.objective_override()  # Mother Clubtail.
 	if boss != null and not boss.active:
 		return String(boss_info["dead_objective"])
 	return segments[segment_index]["objective"]
@@ -1499,6 +1516,12 @@ func _run_event(ev: Dictionary) -> void:
 				fern_basin.start_event(ev)
 			game.stat_add("wave_events", 1.0)
 			return  # The Fern Basin's miniboss and her nest (FernBasinDirector).
+		# --- Act XIV (temporary number): the Great Plain ---
+		"herd_mother":
+			if great_plain != null:
+				great_plain.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return  # The Great Plain's miniboss and her herd (GreatPlainDirector).
 	show_banner(ev["banner"])
 	var groups: Array = ev["groups"]
 	if game.shogunate != null:

@@ -23,6 +23,11 @@
 ## Phase 2's shared kinds, each stage in its own block:
 ##   bog_croc      — a hunter (male), the Fern Basin's: an ambusher that lies
 ##                   submerged in the tar and lunges at the rail of the ring.
+##   horncharger   — a titan (male), the Great Plain's: a ceratopsian whose
+##                   telegraphed straight charge stuns summons; a charge that
+##                   runs into a rock leaves it stuck 2 s.
+##   clubtail      — a titan (female), the Great Plain's: an ankylosaur, flat
+##                   armour 5, a tail sweep that knocks summons back.
 ## Each stage's own kinds live in its own file (FernBasinEnemyData,
 ## GreatPlainEnemyData, LastDayEnemyData; empty until phase 2: the Bog Croc,
 ## the Horncharger, the Clubtail, the Stormwing, the stage minibosses and the
@@ -74,6 +79,11 @@ const TYRANT: String = "tyrant"
 # --- Act XIV (temporary number): the Fern Basin ---
 ## Kind id of the Bog Croc (the ambusher of the tar; a shared row, the Fern Basin's block).
 const BOG_CROC: String = "bog_croc"
+# --- Act XIV (temporary number): the Great Plain ---
+## Kind id of the Horncharger (the charging ceratopsian; a shared row, the Great Plain's block).
+const HORNCHARGER: String = "horncharger"
+## Kind id of the Clubtail (the armoured ankylosaur; a shared row, the Great Plain's block).
+const CLUBTAIL: String = "clubtail"
 ## Sprite folder of the Age of Titans' kinds (assets/sprites/primeval/).
 const SPRITE_DIR: String = "primeval/"
 
@@ -321,4 +331,89 @@ const ENEMIES := {
 		"lunge_damage": 11.0,  # TUNING (not in GDD) to the summon it seizes, before the time scaling (first pass 14)
 		"lunge_player": 9.0,  # TUNING (not in GDD) to the necromancer, before the time scaling
 	},  # The Bog Croc.
+	# --- Act XIV (temporary number): the Great Plain ---
+	# The Horncharger (owner-approved proposal: "Horncharger (male) | Heavy |
+	# Telegraphed straight charge that stuns summons; stuck in a rock for 2 s on
+	# a miss | Dodge by Grave Step; Bone Wall"): a three-horned ceratopsian. The
+	# shared melee AI walks it in; every charge_every s, once a summon or
+	# necromancer stands within charge_trigger px, it paws the ground for
+	# charge_windup s (a line shows the charge) and CHARGES charge_len px at
+	# charge_speed px/s: every grounded summon it crosses takes charge_damage (x
+	# the time scaling x Thick Marrow) and is STUNNED charge_stun s
+	# (CombatResolver.stun_unit()); the necromancer it crosses takes
+	# charge_player. A charge that runs into a rock (an obstacle) leaves it
+	# STUCK stuck_time s (the counterplay: Grave Step aside). HornchargerKit.
+	"horncharger": {
+		"display_name": "Horncharger",
+		"max_hp": 240.0,  # TUNING (not in GDD) a heavy (between the Bog Croc and the Tyrant)
+		"move_speed": 46.0,  # TUNING (not in GDD) px/s walking
+		"damage": 9.0,  # TUNING (not in GDD) a horn in reach, before the time scaling
+		"attack_interval": 1.5,  # TUNING (not in GDD) s
+		"attack_range": 10.0,  # TUNING (not in GDD) px
+		"radius": 16.0,  # TUNING (not in GDD) px (~64 x 48 px sprite)
+		"armor": 0.2,  # TUNING (not in GDD) a bone frill
+		"xp": 8,  # TUNING (not in GDD)
+		"behavior": "melee",
+		"projectile_speed": 0.0,
+		"undead_damage_mult": 1.0,
+		"heal_amount": 0.0,
+		"heal_interval": 0.0,
+		"heal_radius": 0.0,
+		"target_priority": 0.7,  # TUNING (not in GDD) 0..1
+		"mass": 8.0,  # TUNING (not in GDD) heavy: the ring does not shove it
+		"faction": FACTION,
+		"kit": "horncharger",
+		"group": "titans",
+		"charge_first": 2.5,  # TUNING (not in GDD) s after it comes on
+		"charge_every": 7.0,  # TUNING (not in GDD) s between two charges
+		"charge_trigger": 260.0,  # TUNING (not in GDD) px: a body this close starts a charge
+		"charge_windup": 0.9,  # Owner-approved proposal: "telegraphed"; TUNING (not in GDD) s
+		"charge_len": 240.0,  # TUNING (not in GDD) px at most
+		"charge_speed": 330.0,  # TUNING (not in GDD) px/s
+		"charge_damage": 9.0,  # TUNING (not in GDD) to each summon it crosses, before the time scaling
+		"charge_player": 8.0,  # TUNING (not in GDD) to the necromancer, before the time scaling
+		"charge_stun": 1.0,  # Owner-approved proposal: "stuns summons"; TUNING (not in GDD) s
+		"charge_knock": 30.0,  # TUNING (not in GDD) px a summon it crosses is thrown aside
+		"stuck_time": 2.0,  # Owner-approved proposal: "stuck in a rock for 2 s on a miss"
+	},  # The Horncharger.
+	# The Clubtail (owner-approved proposal: "Clubtail (female) | Heavy | Flat
+	# armour 5; a tail sweep that knocks summons back | Siegecraft, Wither,
+	# Rot"): an ankylosaur under armour plates with a bone club on her tail.
+	# The shared melee AI walks her in; every sweep_every s, once a summon or
+	# necromancer stands within sweep_radius px, she swings for sweep_windup s
+	# (a circle shows the sweep) and SWEEPS: every grounded summon within
+	# sweep_radius px takes sweep_damage (x the time scaling x Thick Marrow)
+	# and is KNOCKED BACK sweep_knock px away from her; the necromancer takes
+	# sweep_player. Flat armour (the one path: CombatResolver's flat_armor)
+	# shrugs off the first 5 of every hit. ClubtailKit.
+	"clubtail": {
+		"display_name": "Clubtail",
+		"max_hp": 200.0,  # TUNING (not in GDD) a heavy (her flat armour is the rest of her toughness)
+		"move_speed": 40.0,  # TUNING (not in GDD) px/s; slow
+		"damage": 8.0,  # TUNING (not in GDD) a bite in reach, before the time scaling
+		"attack_interval": 1.6,  # TUNING (not in GDD) s
+		"attack_range": 10.0,  # TUNING (not in GDD) px
+		"radius": 16.0,  # TUNING (not in GDD) px (~64 x 44 px sprite)
+		"armor": 0.15,  # TUNING (not in GDD)
+		"flat_armor": 5.0,  # Owner-approved proposal: "flat armour 5"
+		"xp": 8,  # TUNING (not in GDD)
+		"behavior": "melee",
+		"projectile_speed": 0.0,
+		"undead_damage_mult": 1.0,
+		"heal_amount": 0.0,
+		"heal_interval": 0.0,
+		"heal_radius": 0.0,
+		"target_priority": 0.65,  # TUNING (not in GDD) 0..1
+		"mass": 9.0,  # TUNING (not in GDD) heavy
+		"faction": FACTION,
+		"kit": "clubtail",
+		"group": "titans",
+		"sweep_first": 2.0,  # TUNING (not in GDD) s after she comes on
+		"sweep_every": 5.0,  # TUNING (not in GDD) s between two sweeps
+		"sweep_windup": 0.7,  # TUNING (not in GDD) s of telegraph
+		"sweep_radius": 54.0,  # TUNING (not in GDD) px round her
+		"sweep_damage": 7.0,  # TUNING (not in GDD) to each summon in reach, before the time scaling
+		"sweep_player": 7.0,  # TUNING (not in GDD) to the necromancer, before the time scaling
+		"sweep_knock": 60.0,  # Owner-approved proposal: "knocks summons back"; TUNING (not in GDD) px
+	},  # The Clubtail.
 }

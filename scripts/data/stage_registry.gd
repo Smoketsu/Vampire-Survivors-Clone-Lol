@@ -489,6 +489,13 @@
 ##                        ground "fern_basin" is its FernBasinGround (four
 ##                        zone floors and the tar pools, from each zone's
 ##                        "ground" "tar").
+## --- Act XIV (temporary number): the Great Plain ---
+##   great_plain        — GreatPlainDirector config (GreatPlainStage.PLAIN:
+##                        the Watering Hole, the Canyon's narrow front, the
+##                        "herd_mother" event, Nothing Taken); ground
+##                        "great_plain" is its GreatPlainGround (four zone
+##                        floors); a zone's "canyon": true narrows the
+##                        stampedes' front there.
 class_name StageRegistry
 extends RefCounted
 

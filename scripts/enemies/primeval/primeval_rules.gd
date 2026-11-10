@@ -155,6 +155,13 @@ func hoarders_bones_reach() -> float:
 	return game.abilities.passive_value(PrimevalRulesData.HOARDERS_BONES, PrimevalRulesData.HOARDERS_BONES_KEY)
 
 
+## HOARDER'S BONES (hook, the Great Plain): seconds of flight after which a
+## carrier drops its pile (proposal: "a snatched pile drops sooner"). Exactly 0
+## (never) while the passive is not owned; SkyraiderKit reads it.
+func hoarders_bones_drop_after() -> float:
+	return game.abilities.passive_value(PrimevalRulesData.HOARDERS_BONES, PrimevalRulesData.HOARDERS_BONES_DROP_KEY)
+
+
 ## THICK MARROW (hook): x the trample and the bombs on the bound player's
 ## summons (1 - the passive's trample_cut; proposal: "summons take less damage
 ## from trampling, charges and stomps"). Exactly 1 while the passive does not

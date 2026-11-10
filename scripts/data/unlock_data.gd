@@ -406,6 +406,14 @@ const UNLOCKS := {
 	# Day's).
 	"pack_leap": {"type": "spell", "boss": "scarmaw", "text": "Slay Scarmaw in the Fern Basin to unlock."},  # Owner-approved proposal
 	"pack_instinct": {"type": "passive", "boss": "scarmaw", "text": "Slay Scarmaw in the Fern Basin to unlock."},  # Pack Leap's paired passive (owner-approved proposal), unlocked with it
+	# --- Act XIV (temporary number): the Great Plain ---
+	# Old Ironbrow's fall (owner-approved proposal "Rewards": Stampede is
+	# Old Ironbrow's) with its paired passive, offered on every stage; the
+	# counter-passive Hoarder's Bones by the stage's achievement Nothing Taken
+	# (owner answer, Nov 9, 2026), offered only in the act.
+	"stampede": {"type": "spell", "boss": "ironbrow", "text": "Slay Old Ironbrow on the Great Plain to unlock."},  # Owner-approved proposal
+	"calcified_hide": {"type": "passive", "boss": "ironbrow", "text": "Slay Old Ironbrow on the Great Plain to unlock."},  # Stampede's paired passive (owner-approved proposal), unlocked with it
+	"hoarders_bones": {"type": "passive", "achievement": "nothing_taken", "text": "Earn Nothing Taken: finish the Great Plain without losing a crystal pile to a Skyraider."},  # Owner answer (Nov 9, 2026): Nothing Taken unlocks Hoarder's Bones
 }
 
 ## End-screen plate heading of a newly unlocked item, by type.

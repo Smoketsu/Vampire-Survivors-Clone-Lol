@@ -745,6 +745,12 @@ const FLAT_SIZES: Dictionary = {
 	"primeval/primeval_nest": 32.0,  # TUNING (not in GDD) Ironjaw's nest: a mound of fern and eggshells (about 48 wide); `_dead` still
 	"primeval/scarmaw_guard": 40.0,  # TUNING (not in GDD) Scarmaw's alpha-guard, female: a great Razorclaw with a bone crest (about 44 wide); walk strip (the alpha's art until then)
 	"primeval/scarmaw": 60.0,  # TUNING (not in GDD) Fern Basin boss, female (a beast): a huge feathered raptor, a bone crest, a scarred muzzle (about 72 wide); walk strip, pose 1 (the leap)
+	# --- Act XIV (temporary number): the Great Plain (phase 2; art pending, PrimevalGlyphs / the boss's code shape until then) ---
+	"primeval/horncharger": 48.0,  # TUNING (not in GDD) titan, male: a three-horned ceratopsian, a bone frill (about 64 wide); walk strip
+	"primeval/clubtail": 44.0,  # TUNING (not in GDD) titan, female (a beast): an ankylosaur, armour plates, a bone club tail (about 64 wide); walk strip
+	"primeval/mother_clubtail": 60.0,  # TUNING (not in GDD) Great Plain miniboss, female (a beast): an armoured matriarch (about 88 wide); walk strip
+	"primeval/ironbrow": 80.0,  # TUNING (not in GDD) Great Plain boss, male: a giant ceratopsian (about 112 wide); walk strip, pose 1 `_broken` (one horn snapped)
+	"player/herd_warden": 56.0,  # TUNING (not in GDD) male: heavy violet robes over a bone-plated mantle, a ceratopsian skull shoulder piece, a horn-topped staff (about 42 wide); walk strip
 	"player/fern_huntress": 56.0,  # TUNING (not in GDD) female (figure style): violet hunting leathers, a violet fur-trimmed cloak, a raptor-skull headdress, a bone spear-staff with a soul flame (about 40 wide); walk and idle strips
 	"summons/ushabti_sentinel": 46.0,  # TUNING (not in GDD) summon class, the necromancer's stone servant (no sex) (about 20 wide)
 	"summons/eternal_guard": 58.0,  # TUNING (not in GDD) its evolution: a taller gold-trimmed stone guardian (about 32 wide)

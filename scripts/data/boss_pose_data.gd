@@ -46,4 +46,6 @@ const POSES: Dictionary = {
 	"host/throne": {1: "open"},  # TUNING (not in GDD) the wheels parted, the Core open (BossThrone)
 	# --- Act XIV (temporary number): the Fern Basin ---
 	"primeval/scarmaw": {1: "leap"},  # TUNING (not in GDD) crouched to spring / in the air (BossScarmaw: the leap's windup and flight, the ambush lunge)
+	# --- Act XIV (temporary number): the Great Plain ---
+	"primeval/ironbrow": {1: "broken"},  # TUNING (not in GDD) one horn snapped off (BossIronbrow: every frame after the Break)
 }

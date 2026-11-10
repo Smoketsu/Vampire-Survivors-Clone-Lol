@@ -445,7 +445,9 @@ const PRIMEVAL_FLIERS: Array[String] = ["skyraider"]
 ## The titans (group "titans").
 const PRIMEVAL_TITANS: Array[String] = ["tyrant",
 	# --- Act XIV (temporary number): the Fern Basin ---
-	"ironjaw"]
+	"ironjaw",
+	# --- Act XIV (temporary number): the Great Plain ---
+	"horncharger", "clubtail", "mother_clubtail"]
 ## Titans stage bosses (StageRegistry.BOSS_ARRIVALS ids).
 const PRIMEVAL_BOSSES: Array[String] = ["scarmaw", "ironbrow", "gravejaw"]
 
@@ -818,6 +820,10 @@ const DESCRIPTIONS: Dictionary = {
 	"scarmaw_guard": "Scarmaw's alpha-guard: while she lives, every raptor you kill comes back to the great alpha. Kill her first.",  # Owner-approved proposal (Blood Up)
 	"ironjaw": "Ironjaw, the Nest Mother: a bulky predator who guards her nest. While it stands she shrugs off half of every blow.",  # Owner-approved proposal (miniboss)
 	"primeval_nest": "Ironjaw's nest of fern and eggshells. It hatches Scuttlers until it is broken.",  # Owner-approved proposal
+	# --- Act XIV (temporary number): the Great Plain ---
+	"horncharger": "A three-horned charger. It paws the ground, then runs down everything in its line; a rock stops it cold.",  # Owner-approved proposal
+	"clubtail": "An armoured beast whose plates shrug off small blows. Her bone club sweeps your ring apart.",  # Owner-approved proposal
+	"mother_clubtail": "Mother Clubtail, the armoured matriarch. While her herd grazes by her, she shrugs off half of every blow.",  # Owner-approved proposal (miniboss)
 	"scarmaw": "Scarmaw, the Great Raptor: the alpha of every pack in the basin. She hunts from the ferns.",  # Proposal
 	"ironbrow": "Old Ironbrow, the Horned Titan: he leads the stampede himself, and his charge breaks rock.",  # Proposal
 	"gravejaw": "Old Gravejaw, the Tyrant King: his roar calls every beast on the map, and he hunts only you.",  # Proposal
@@ -1174,6 +1180,8 @@ const ACHIEVEMENT_ICONS: Dictionary = {
 	"the_wheel_breaks": "ach_the_wheel_breaks",  # TUNING (not in GDD)
 	# --- Act XIII (temporary number): the Empyrean ---
 	"the_last_word": "ach_the_last_word",  # TUNING (not in GDD)
+	# --- Act XIV (temporary number): the Great Plain ---
+	"nothing_taken": "ach_nothing_taken",  # TUNING (not in GDD)
 }
 ## IconGlyph kind drawn when an achievement badge PNG is missing.
 const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
@@ -1259,6 +1267,8 @@ const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
 	"the_wheel_breaks": "smoked_glass",
 	# --- Act XIII (temporary number): the Empyrean ---
 	"the_last_word": "revelation",
+	# --- Act XIV (temporary number): the Great Plain ---
+	"nothing_taken": "hoarders_bones",
 }
 ## Screen title (TITLE tier).
 const TITLE: String = "Codex"  # TUNING (not in GDD)

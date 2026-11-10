@@ -464,6 +464,8 @@ func award_run(summary: Dictionary, mods: MetaModifiers) -> Dictionary:
 	_add_lifetime("wheel_breaks_runs", 1.0 if float(st.get(WheelOfThronesDirector.WHEEL_BREAKS_STAT, 0.0)) > 0.0 else 0.0)  # The Wheel Breaks (the Wheel of Thrones)
 	# --- Act XIII (temporary number): the Empyrean ---
 	_add_lifetime("last_word_runs", 1.0 if float(st.get(EmpyreanDirector.LAST_WORD_STAT, 0.0)) > 0.0 else 0.0)  # The Last Word (the Empyrean)
+	# --- Act XIV (temporary number): the Great Plain ---
+	_add_lifetime("nothing_taken_runs", 1.0 if float(st.get(GreatPlainDirector.NOTHING_TAKEN_STAT, 0.0)) > 0.0 else 0.0)  # Nothing Taken (the Great Plain)
 	_add_run_counters(summary)  # Content wave 2: the one-run achievements' lifetime counters.
 	var slew_unlock_boss := bool(summary.get("boss_defeated", false)) and String(summary.get("boss_id", "")) == HyperData.UNLOCK_BOSS_ID  # Seraphine slain.
 	if slew_unlock_boss:
@@ -1700,6 +1702,8 @@ static func _default_lifetime() -> Dictionary:
 		"wheel_breaks_runs": 0.0,  # Wheel of Thrones runs that broke the Throne by its open Core (The Wheel Breaks)
 		# --- Act XIII (temporary number): the Empyrean ---
 		"last_word_runs": 0.0,  # Empyrean runs that silenced the Voice (The Last Word)
+		# --- Act XIV (temporary number): the Great Plain ---
+		"nothing_taken_runs": 0.0,  # Great Plain runs that reached 0:00 with no crystal pile lost to a Skyraider (Nothing Taken)
 		# --- Content wave 2: B. Achievement rewards (MetaProgress.run_counters()) ---
 		"best_temp_raised": 0.0,  # most temporary undead raised in one run (Mass Grave)
 		"untouchable_runs": 0.0,  # runs that reached 0:00 never below half HP (Untouchable)

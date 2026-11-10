@@ -11,7 +11,9 @@
 ##           `flee_speed`; at its nest (Scavengers.at_nest()) it leaves the
 ##           field with it. An empty snatch sends it back to IDLE.
 ## Killed while it carries, the pile drops where it dies (on_killed() ->
-## Scavengers.drop()). Determinism: no RNG (its circle's angle is its own
+## Scavengers.drop()). Hoarder's Bones (Act XIV, the Great Plain's
+## counter-passive): a carrier drops its pile where it is after
+## PrimevalRules.hoarders_bones_drop_after() s of flight (0 = never). Determinism: no RNG (its circle's angle is its own
 ## bearing).
 class_name SkyraiderKit
 extends PrimevalKit
@@ -66,6 +68,14 @@ func physics(e: Enemy, delta: float) -> bool:
 			else:
 				e.velocity = Vector2.ZERO
 		FLEE:
+			var drop_after := rules(e).hoarders_bones_drop_after()  # Hoarder's Bones (0 when not owned).
+			if drop_after > 0.0 and phase_time >= drop_after:
+				var dropped := carry
+				carry = PackedInt32Array()
+				sc.drop(e, dropped)
+				e.game.stat_add("scav_hoarder_drops", 1.0)
+				set_phase(e, IDLE)
+				return true
 			if sc.at_nest(e):
 				var carried := carry
 				carry = PackedInt32Array()

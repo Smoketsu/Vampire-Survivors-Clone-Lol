@@ -1786,6 +1786,8 @@ func finish(summary: Dictionary) -> void:
 	EmpyreanReport.item_lines(game, st)  # Revelation, Seventh Seal, the Bound Ophan, Turning Bones (only when taken; the stage's own lines are HostReport's).
 	# --- Act XIV (temporary number): the Fern Basin ---
 	FernBasinReport.item_lines(game, st)  # Pack Leap, Pack Instinct (only when taken; the stage's own lines are PrimevalReport's).
+	# --- Act XIV (temporary number): the Great Plain ---
+	GreatPlainReport.item_lines(game, st)  # Stampede, Calcified Hide, Hoarder's Bones (only when taken; the stage's own lines are PrimevalReport's).
 	if game.enemies.boss is BossSeraphine:
 		print("[autotest] seraphine: %s" % BossSeraphine.summary_line(st))
 	var fired := game.enemies.stage.fired

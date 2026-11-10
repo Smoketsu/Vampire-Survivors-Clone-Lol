@@ -119,6 +119,9 @@
 ## and the Fern Basin's (temporary Act XIV, FERN_BASIN_IDS: stepped only; its
 ## own autotest line, FernBasinReport.item_lines()):
 ##   Pack Leap        -> PackLeap         (evolves into Apex Pack)
+## and the Great Plain's (temporary Act XIV, GREAT_PLAIN_IDS: stepped only; its
+## own autotest line, GreatPlainReport.item_lines()):
+##   Stampede         -> Stampede         (evolves into Herd of Ages)
 ## Game calls after_physics() once per tick after obstacles are resolved
 ## (Bone Wall holds enemies there).
 ## Each spell node is created the first time its spell is learned and reads
@@ -296,6 +299,10 @@ const EMPYREAN_IDS := ["revelation"]
 ## The Fern Basin's unlockable spell (Scarmaw's reward): stepped only (no kill
 ## or after-physics hook), reported by FernBasinReport.
 const FERN_BASIN_IDS := ["pack_leap"]
+# --- Act XIV (temporary number): the Great Plain ---
+## The Great Plain's unlockable spell (Old Ironbrow's reward): stepped only (no
+## kill or after-physics hook), reported by GreatPlainReport.
+const GREAT_PLAIN_IDS := ["stampede"]
 ## Damage-source stat tags of each spell (CombatResolver "dmg_<tag>"), base
 ## spell first, then its evolution's. Used for the autotest summary.
 const SOURCES := {
@@ -382,6 +389,8 @@ const SOURCES := {
 	"revelation": ["revelation", "be_not_afraid"],
 	# --- Act XIV (temporary number): the Fern Basin ---
 	"pack_leap": ["pack_leap", "apex_pack"],
+	# --- Act XIV (temporary number): the Great Plain ---
+	"stampede": ["stampede", "herd_of_ages"],
 }
 
 ## Owning run.
@@ -682,6 +691,15 @@ func step(delta: float) -> void:
 			node = _create(id)
 		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
 		node.step(delta, ab.spell_stats(id))  # The Fern Basin's spell.
+	# --- Act XIV (temporary number): the Great Plain ---
+	for id: String in GREAT_PLAIN_IDS:
+		if ab.spell_level(id) <= 0:
+			continue
+		var node: NecroSpell = nodes.get(id)  # The spell's node (created lazily).
+		if node == null:
+			node = _create(id)
+		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
+		node.step(delta, ab.spell_stats(id))  # The Great Plain's spell.
 
 
 ## Content wave 2: the Bone Wall node, created when missing (the Ossuary
@@ -823,6 +841,9 @@ func _create(id: String) -> NecroSpell:
 		# --- Act XIV (temporary number): the Fern Basin ---
 		"pack_leap":
 			node = PackLeap.new()  # The Fern Basin's spell.
+		# --- Act XIV (temporary number): the Great Plain ---
+		"stampede":
+			node = Stampede.new()  # The Great Plain's spell.
 		_:
 			node = PlagueCloud.new()
 	node.game = game

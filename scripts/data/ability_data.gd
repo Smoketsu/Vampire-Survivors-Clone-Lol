@@ -136,7 +136,9 @@ const SPELL_ORDER := ["shadow_bolt", "orb_shield", "shadow_blast",
 	# --- Act XIII (temporary number): the Empyrean ---
 	"revelation",
 	# --- Act XIV (temporary number): the Fern Basin ---
-	"pack_leap"]
+	"pack_leap",
+	# --- Act XIV (temporary number): the Great Plain ---
+	"stampede"]
 
 ## Spell definitions.
 ##   display_name — UI name.
@@ -1282,6 +1284,29 @@ const SPELLS := {
 			{"damage": 39.0, "raptors": 3, "range": 340.0, "radius": 28.0, "pounce_share": 0.4, "cooldown": 2.4},  # TUNING (not in GDD)
 			{"damage": 47.0, "raptors": 4, "range": 350.0, "radius": 30.0, "pounce_share": 0.4, "cooldown": 2.3},  # TUNING (not in GDD)
 			{"damage": 56.0, "raptors": 4, "range": 360.0, "radius": 32.0, "pounce_share": 0.45, "cooldown": 2.2},  # TUNING (not in GDD) about Flaming Sword's Lv5 on fewer, tougher foes
+		],
+	},
+	# --- Act XIV (temporary number): the Great Plain ---
+	# Stampede (GDD §15.0 "Stampede, Herd of Ages, Calcified Hide and the
+	# Herd-Warden"; owner-approved proposal: "a spectral horned charger
+	# tramples a line"; unlocked by slaying Old Ironbrow, then offered on every
+	# stage). Every `cooldown` s, a foe within `range` px, a spectral charger
+	# runs `length` px at `speed` px/s from behind the necromancer toward the
+	# thickest foes in reach; every foe within `radius` px of it (spell area
+	# widens it) takes `damage` once and is knocked along. Logic: Stampede;
+	# fixed rules: StampedeData. Line damage through packs, weak on one foe.
+	"stampede": {
+		"display_name": "Stampede",  # Owner-approved proposal
+		"icon": "stampede",
+		"description": "A spectral horned charger tramples a line through the thickest foes.",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Trample damage", "length": "Run (px)", "radius": "Width (px)", "cooldown": "Cooldown (s)"},
+		"levels": [
+			{"damage": 30.0, "range": 320.0, "length": 340.0, "speed": 520.0, "radius": 22.0, "cooldown": 3.0},  # Owner-approved proposal: "tramples a line"; TUNING (not in GDD) the numbers
+			{"damage": 36.0, "range": 330.0, "length": 360.0, "speed": 520.0, "radius": 24.0, "cooldown": 2.9},  # TUNING (not in GDD)
+			{"damage": 43.0, "range": 340.0, "length": 380.0, "speed": 540.0, "radius": 26.0, "cooldown": 2.8},  # TUNING (not in GDD)
+			{"damage": 51.0, "range": 350.0, "length": 400.0, "speed": 540.0, "radius": 28.0, "cooldown": 2.6},  # TUNING (not in GDD)
+			{"damage": 60.0, "range": 360.0, "length": 420.0, "speed": 560.0, "radius": 30.0, "cooldown": 2.5},  # TUNING (not in GDD) a line through a pack, about Pack Leap's Lv5 on many foes
 		],
 	},
 }
