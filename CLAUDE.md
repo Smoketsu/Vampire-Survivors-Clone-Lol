@@ -184,9 +184,12 @@ Autotest options (full table in the README):
   Act XIV (all three built; `--boss=scarmaw|ironbrow|gravejaw`,
   `--character=fern_huntress|herd_warden|skywatcher`, `--classes=bonehorn`, `--spawn=` with
   `scuttler|razorclaw|frill_spitter|longneck|duckbill|skyraider|tyrant|bog_croc|ironjaw|primeval_nest|scarmaw_guard|horncharger|clubtail|mother_clubtail|stormwing|thunderwing`);
-  `greenwood|fae_court|world_tree` the Turning Year, Act XV (the Greenwood and the Fae Court built, the World-Tree a stub; `--boss=stag_king|summer_queen|green_mother`,
-  `--character=horned_herald|changeling_princess`, `--spawn=` with
-  `thornling|dryad|treant|corpse_bloom|fae_knight|winter_fae|great_stag|wild_rider|will_o_wisp|spore_mother|hunt_hound|huntsman|antler_thicket|winter_prince|masked_courtier`))
+  `greenwood|fae_court|world_tree` the Turning Year, Act XV (all three built; `--boss=stag_king|summer_queen|green_mother`,
+  `--character=horned_herald|changeling_princess|gravegardener`, `--classes=ossuary_oak`, `--spawn=` with
+  `thornling|dryad|treant|corpse_bloom|fae_knight|winter_fae|great_stag|wild_rider|will_o_wisp|spore_mother|hunt_hound|huntsman|antler_thicket|winter_prince|masked_courtier|gardener_of_roots|burial_thicket`;
+  `--last-claim=id,...|all` forces the Green Mother's Last Claim slots from her arrival, e.g.
+  `covenant,black_tide,sanguine_court,last_line,shogunate,hall_of_the_slain,necropolis_dynasty` and
+  `olympian_republic,inferno,celestial_host,ancient_eye,electronic_empire,concord,age_of_titans` cover all fourteen))
 - `--unlocks=all|none` (Act II's lockable spells / passives / classes in the card pool; forced items
   are open either way)
 - `--boss=alaric|vael|seraphine` (puts that boss in the stage's slot, e.g. test Seraphine on the Graveyard)
@@ -220,10 +223,10 @@ Autotest options (full table in the README):
 the autotests for the area a change touches plus one default run; run the full "Done" set (every stage,
 the same-seed gates) once per batch of changes, before `main` moves; multi-seed batches only for balance.
 
-CI (`.github/workflows/ci.yml`) runs the import and, as forty-two **parallel** matrix jobs, the Graveyard
+CI (`.github/workflows/ci.yml`) runs the import and, as forty-three **parallel** matrix jobs, the Graveyard
 autotest with the naive and army policies, a Crimson March autotest, a Sanctum of Judgment autotest (army
 policy) and one army autotest per Act II, Act IV, V, VI, VII, VIII, IX, X (the Black Tide), XI (the Hall of the Slain) and XII (the
-Necropolis Dynasty) stage, the three Celestial Host stages, the three Age of Titans stages, the Greenwood and the Fae Court; beside them, the Windows/Linux/Web exports (artifacts
+Necropolis Dynasty) stage, the three Celestial Host stages, the three Age of Titans stages and the three Turning Year stages; beside them, the Windows/Linux/Web exports (artifacts
 `Necropathy-windows` / `-linux` / `-web`) and an exported-build smoke test; also the co-op jobs `coop-net` (relay
 protocol + two-process transport test) and `coop-lockstep` (the two-process full-run determinism gate, ~10 min, not
 waited on by the publish jobs) and, on `main` pushes, `deploy-relay` (the Worker, secrets `CLOUDFLARE_API_TOKEN` /
@@ -796,6 +799,18 @@ tiny tweaks.
   `CombatResolver.pay_life()`; the Court in Bloom), Glamour / Court of Masks + Changeling (copies are temporary Warrior bodies through
   `spawn_temporary()` that taunt through `ColossusKit`), the Changeling Princess, A Fair Bargain → the counter-passive Deadwood (act 15
   only). One CI army job (42 matrix jobs). Stages 1–43 same-seed summaries unchanged.
+- **The World-Tree, playable** (the Turning Year's finale and the campaign's last stage, temporarily Act XV, final slot XV; GDD
+  §15.0 from "The World-Tree (Act XV phase 2)" to "The World-Tree tests and gate"): the four zones (`WorldTreeGround`), the year
+  twice as fast, **the Gardener of Roots** (miniboss, `GardenerOfRootsKit`: the Treant's root, and the roots answer his call in any
+  season through `SeasonCycle.call_roots()`, one new radius rule), **the Green Mother** (`boss_green_mother.gd`: the Turning through
+  `set_override()` with a season burst each, the Burial through `burial_thicket` / `SummonedUnit.held_until`, and **the Last
+  Claim**, `LastClaim`: seven of the fourteen other acts' rules, seeded pick, 8 s each from a third of her HP, each through that
+  act's one path reached by `game.<key>_rules()` built with its clocks off; half damage while a slot holds; `--last-claim=` forces
+  the slots), **the First Spring** (`FirstSpring` beside `returns`, RECKONING key `first_spring`: with her beaten, at 0:00 the
+  planted dead rise and the run ends in victory), Root and Rot / Return to Earth + Compost Heart, the Gravegardener, the finale
+  class **Ossuary Oak** / World-Root Warden + Heartwood (`OssuaryOakBehavior` "root_lash"; its Ossuary mastery), The First Spring
+  (records the clear; no epilogue part or closing card until the reorder). One CI army job (43 matrix jobs). Stages 1–44 same-seed
+  summaries unchanged.
 
 **Next, in priority order:**
 1. **Playtest feedback** from the owner and friends (actively playtesting); it outranks everything below.

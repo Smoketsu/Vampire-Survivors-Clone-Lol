@@ -3037,9 +3037,9 @@ the world's cycle, and the necromancer broke it. After heaven, hell, the stars a
 rises to take its dead back: dryads and treants, the fae courts, the great stag, the Wild Hunt and the spirits of the four
 seasons (design `docs/proposals/LAST_SIX_ACTS.md` section XV; final slot XV of the fifteen-act order, **the campaign
 finale and the hardest act**, temporary act number 15 until the reorder pass, `docs/last_acts/PLAN.md`). Three stages
-are registered under an **Act XV** tab: **the Greenwood** (`greenwood`, the Stag King) and **the Fae Court**
-(`fae_court`, the Summer Queen), both built and playable (below), and **the World-Tree** (`world_tree`, the Green Mother),
-still "Coming soon" until phase 2 builds it; Old Gravejaw's fall on the Last Day opens the first, each boss the next. Every Wild stage runs three
+are registered under an **Act XV** tab: **the Greenwood** (`greenwood`, the Stag King), **the Fae Court**
+(`fae_court`, the Summer Queen) and **the World-Tree** (`world_tree`, the Green Mother, the campaign's last stage), all
+built and playable (below); Old Gravejaw's fall on the Last Day opens the first, each boss the next. Every Wild stage runs three
 shared rules (`Game.wild`, `WildRules`):
 - **The Turning Year.** The 20:00 clock is one year of four 5-minute seasons (the World-Tree's turns twice as fast),
   shown as a wheel left of the HUD clock, and each season repaints the arena. **Spring:** roots grab anything that stands
@@ -3091,20 +3091,49 @@ out round you, draw the enemies' attacks and shatter when they fall or fade; evo
 copy every cast). Achievement **A Fair Bargain** (accept every bargain the Summer Queen offers and still win) unlocks the
 counter-passive **Deadwood** (roots and thickets hold your summons for less time; offered only in this act).
 
-Art still to come for the Fae Court (code shapes until then): `wild/winter_prince` (+ walk), `wild/masked_courtier`
+**The World-Tree** (stage 45, the campaign finale and the hardest stage): the tree at the centre of the world, where
+**the year turns twice as fast** (2:30 a season, so every season comes twice). Zones: the Roots (great roots across dark
+soil), the Trunk Stair, the Crown and the Seed. **The Gardener of Roots** (miniboss, 11:20), a great treant: his
+strikes root your summons, and while he lives the roots grab anything that stands still near him **in every season**.
+**The Green Mother** comes with 3:00 left, a colossal goddess half in bloom and half in frost: **the Turning** (every 13 s
+she casts the next season, so the arena's own spring roots, summer fires, autumn rot and winter snow follow, with a
+burst of that season's attack round you: roots that hold your summons, fire, rot that eats the dead, frost that chills
+them), **the Burial** (from two-thirds of her health she pulls a summon into the earth: a thicket grows over it and holds
+it until your army cuts it down) and **the Last Claim** (from a third of her health she replays the signature rule of
+**seven of the fourteen other acts**, picked at random each run, 8 s each: the Covenant's march, a boarding, the Blood
+Moon, the Wanted stars, the Draw, Berserkergang, Rebirth, the gods' lightning, the hell pits, a Judge's descent, the
+Claims, the Lock-On lines, the Concord's beams or a stampede; she takes half damage while a replay holds). **The ending:**
+beaten, she does not die: she sinks into the roots and plants your dead, and at 0:00 **the First Spring** takes the
+Reckoning's place: the planted dead rise to you and the campaign ends in victory 20 s later (not beaten: Spring Returns,
+as on every Wild stage). Slaying her unlocks **Root and Rot** (a ring of roots grows at the strongest foe and rots
+everything inside; evolves into **Return to Earth** with **Compost Heart**: three rings that also bite) and so **the
+Gravegardener** (her rings grow wider), and the finale summon class **the Ossuary Oak** (a slow tree of bone that roots
+in place among foes as a blocker and lashes every foe around it; evolves into the **World-Root Warden** with
+**Heartwood**: wider lashes that root what they strike). Achievement **The First Spring** (defeat the Green Mother; it
+only records the clear until the reorder pass writes the final epilogue part).
+
+Art still to come for the World-Tree (code shapes until then): `wild/gardener_of_roots` (+ walk), `wild/green_mother`
+(+ idle, poses `_cast`, `_burial`), `player/gravegardener` (+ walk, idle), `summons/ossuary_oak`,
+`summons/world_root_warden`, `obstacles/wild_great_root_m` (+ `_m_v`), `icons/heartwood`, the zone tiles
+`tiles/world_tree_roots|trunk_stair|crown|seed`. Art still to come for the Fae Court (code shapes until then): `wild/winter_prince` (+ walk), `wild/masked_courtier`
 (+ walk), `wild/summer_queen` (+ glide, idle, pose `_bargain`), `wild/summer_queen_mask`, `player/changeling_princess`
 (+ walk, idle), `obstacles/wild_rose_hedge_m` (+ `_m_v`), `tiles/wild_fairy_ring`, the zone tiles
 `tiles/fae_court_rose_maze|revel|mirror_lake|throne_of_blossoms`. Art still to come for the Greenwood (code shapes until then): `wild/hunt_hound`, `wild/huntsman`, `wild/antler_thicket`,
 `wild/stag_king` (+ walk, pose `_horn`), `player/horned_herald` (+ walk), `obstacles/wild_grove_tree`, the zone tiles
 `tiles/greenwood_glade|deep_wood|hunting_grounds|stags_hollow` (`docs/year/ART_MANIFEST.md`). Autotest:
 `--stage=greenwood|fae_court|world_tree`, `--boss=stag_king|summer_queen|green_mother`,
-`--character=horned_herald|changeling_princess`, `--spawn=` with `thornling`, `dryad`, `treant`, `corpse_bloom`,
-`fae_knight`, `winter_fae`, `great_stag`, `wild_rider`, `will_o_wisp`, `spore_mother`, `hunt_hound`, `huntsman`,
-`antler_thicket`, `winter_prince`, `masked_courtier`; lines `turning year`, `bloom and blight`, `overgrowth`, `spring
-returns`, `wild kinds`, `wild stage`, `wild damage`, `greenwood`, `wild specials`, `stag king`, `fae court`, `summer
-queen`, `a fair bargain`, and on any stage `act XV spell` / `act XV passive` when Wild Hunt, Horn of the Hunt, Fallow
-Ground, Glamour, Changeling or Deadwood were taken. The autotest answers every bargain at once (the naive bot refuses,
-every other bot accepts). Phase 2 brief
+`--character=horned_herald|changeling_princess|gravegardener`, `--classes=ossuary_oak`, `--spawn=` with `thornling`,
+`dryad`, `treant`, `corpse_bloom`, `fae_knight`, `winter_fae`, `great_stag`, `wild_rider`, `will_o_wisp`,
+`spore_mother`, `hunt_hound`, `huntsman`, `antler_thicket`, `winter_prince`, `masked_courtier`, `gardener_of_roots`,
+`burial_thicket`; **`--last-claim=id,id,...`** (or `all`) forces the Last Claim's slots, in that order, from the Green
+Mother's arrival whatever her health (ids `covenant`, `black_tide`, `sanguine_court`, `last_line`, `shogunate`,
+`hall_of_the_slain`, `necropolis_dynasty`, `olympian_republic`, `inferno`, `celestial_host`, `ancient_eye`,
+`electronic_empire`, `concord`, `age_of_titans`: the slots' check); lines `turning year`, `bloom and blight`,
+`overgrowth`, `spring returns`, `wild kinds`, `wild stage`, `wild damage`, `greenwood`, `wild specials`, `stag king`,
+`fae court`, `summer queen`, `a fair bargain`, `world tree`, `green mother`, `last claim` (which slots ran, in order, and
+each one's effects), `first spring`, and on any stage `act XV spell` / `act XV passive` / `act XV class` when Wild Hunt,
+Horn of the Hunt, Fallow Ground, Glamour, Changeling, Deadwood, Root and Rot, Compost Heart, Heartwood or the Ossuary
+Oak were taken. The autotest answers every bargain at once (the naive bot refuses, every other bot accepts). Phase 2 brief
 (with the World-Tree's Last Claim): `docs/year/BRIEF_PHASE2.md`.
 
 ### The illustrated epilogue
@@ -3894,6 +3923,10 @@ scripts/
                             tiles/wild_fae; Act XV)
     fae_court_report.gd     The autotest's Fae Court lines (fae court, summer queen, a fair bargain) and the Glamour /
                             Changeling / Deadwood item lines (Act XV)
+    world_tree_ground.gd    The World-Tree's four zone looks over the act's tree floor (tiles/world_tree_<style>, else
+                            tiles/wild_tree; Act XV)
+    world_tree_report.gd    The autotest's World-Tree lines (world tree, green mother, last claim, first spring) and the
+                            Root and Rot / Compost Heart / Heartwood / Ossuary Oak item lines (Act XV)
     proving_moon_glyphs.gd  Code fallbacks of the Warbeast, Vrask'Tal and his skull belt, and the stage's obstacles (Act IX)
     proving_moon_report.gd  The autotest's Proving Moon lines (proving moon, warbeast, threats, vrask'tal; the Soul Caster
                             and passives' item lines; Act IX)
@@ -4033,6 +4066,8 @@ scripts/
                             rubble, the shockwave); Eternal Guard's keys; Answering Words' key
     behaviors/bonehorn_behavior.gd  Act XIV (temporary): the Bonehorn's trampling charge through the densest pack
                             and its trot back; Fossil Tyrant's roar; Petrified Horns' keys
+    behaviors/ossuary_oak_behavior.gd  Act XV (temporary): the Ossuary Oak roots among foes and lashes every foe
+                            round it; the World-Root Warden's roots; Heartwood's keys
     golem_kit.gd            Content wave 2: Ossuary Hunger, the Ossuary Titan's heal, barrier and
                             collapse wall (HordeDirector.golems, created by the first Golem)
     golem_texts.gd          Content wave 2: Bone Golem / Grave Masonry / Ossuary Titan card and
@@ -4468,6 +4503,12 @@ scripts/
                             the Winter Prince's minute of winter (winter_prince_kit.gd: the frost fan)
       boss_summer_queen.gd  The Summer Queen: petals, the Masque (masked_courtier_kit.gd), the Bargain (ConfirmDialog,
                             WildRules.take_bargain(), CoopLockstep.Cmd.BARGAIN), the Court in Bloom
+      world_tree_director.gd The World-Tree: the Gardener of Roots (gardener_of_roots_kit.gd: the call through
+                            SeasonCycle.call_roots())
+      boss_green_mother.gd  The Green Mother: the Turning (set_override() and the season bursts), the Burial
+                            (burial_thicket_kit.gd), the Last Claim (last_claim.gd: seven acts' rules through their
+                            own paths), the ending
+      first_spring.gd       The First Spring: the World-Tree's ending in Spring Returns' place (WildRules)
     pantheon/               The Olympian Republic (Act IV): its kits ("<id>_kit.gd", loaded by name after the
                             Eye's and the Empire's) and bosses ("boss_<id>.gd"), and the act's shared rules:
       pantheon_rules.gd     Game.pantheon: owns the wrath, the Phalanx and Glory, the one front test
@@ -4781,6 +4822,9 @@ scripts/
     glamour_data.gd         Glamour / Court of Masks rules, Changeling keys, Many Faces key (Act XV, temporary; the
                             spell node is abilities/spells/glamour.gd)
     summer_queen_data.gd    The Summer Queen of the Fae: her row, petals, the Masque, the BARGAINS, the Court in Bloom (Act XV)
+    green_mother_data.gd    The Green Mother: her row, the Turning, the Burial, LAST_CLAIM and the fourteen SLOTS (Act XV)
+    root_and_rot_data.gd    Root and Rot / Return to Earth rules, Compost Heart keys, Green Thumb key (Act XV,
+                            temporary; the spell node is abilities/spells/root_and_rot.gd)
     tractor_lift_data.gd    Tractor Beam / Abduction rules, Starseed keys, Deserter's Signal key (Act IX; the
                             spell node is abilities/spells/tractor_lift.gd, the lift helper abilities/enemy_lift.gd)
     burning_eye_data.gd     Burning Eye / Eye of Retribution rules, Desert Fury keys, Lioness's Gaze key (Act XII,
@@ -4888,14 +4932,17 @@ scripts/
                             season / plant keys, the specials' keys and the Hound of the Wild Hunt; Spring Returns'
                             kind and companions (Act XV, temporary; greenwood_enemy_data.gd: the Huntsman and the
                             Antler Crown's thorn; fae_court_enemy_data.gd: the Winter Prince and the Masque's
-                            courtier; world_tree_enemy_data.gd: empty until phase 2)
+                            courtier; world_tree_enemy_data.gd: the Gardener of Roots and the burial thicket)
     wild_rules_data.gd      Act XV's shared rules: SEASONS, ROOTS, WILDFIRE, AUTUMN_RULES, WINTER_RULES, BLOOM,
-                            THICKETS, SPRING_RETURNS, the SOUNDS map, the Deadwood / Fallow Ground keys
+                            THICKETS, SPRING_RETURNS, the SOUNDS map, the Deadwood / Fallow Ground keys,
+                            FIRST_SPRING (the World-Tree's ending)
     stages/greenwood_stage.gd        Act XV: the Greenwood, the Fae Court and the World-Tree; act 15, "wild": true,
     stages/fae_court_stage.gd        zones, the rule overrides, a timeline of the shared kinds with season weights,
     stages/world_tree_stage.gd       Spring Returns (the Greenwood built: four zones, the groves, the Huntsman, the
                                      Stag King; the Fae Court built: four zones, the endless summer, the fairy rings,
-                                     the Winter Prince, the Summer Queen; both "playable": true; the World-Tree a stub)
+                                     the Winter Prince, the Summer Queen; the World-Tree built: four zones, the year
+                                     twice as fast, the Gardener of Roots, the Green Mother and the First Spring; all
+                                     three "playable": true)
     stages/ravensmoor_stage.gd     Act VII stubs: Ravensmoor, the Witchwood and Castle Sanguis; act 7,
     stages/witchwood_stage.gd      "court": true, zones, the "moon" overrides, a timeline of the shared kinds,
     stages/castle_sanguis_stage.gd the Endless Feast, placeholder floors / bosses (the Witchwood built: four

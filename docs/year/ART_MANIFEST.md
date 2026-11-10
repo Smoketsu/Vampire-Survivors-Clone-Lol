@@ -198,3 +198,18 @@ rose-maze hedge), `tiles/wild_fairy_ring` (a fairy ring's patch, drawn stretched
 (until then the act's `tiles/wild_fae` floors every zone). Glamour's copies draw the caster's own art in a pale violet
 tint (no new sprite). Icons (`glamour`, `court_of_masks`, `changeling`, `deadwood`, `ach_a_fair_bargain`) and the sound
 pack were already made.
+
+## Status (the World-Tree, phase 2, Nov 2026)
+
+The World-Tree is built and loads these keys as soon as their PNGs exist (code shapes until then; sizes in
+`SpriteData.FLAT_SIZES`): `wild/gardener_of_roots` (+ walk; the miniboss, a great treant with root-hands, no sex; the
+Treant's art until then), `wild/green_mother` (128x144, idle; pose 1 `wild/green_mother_cast`: arms raised with a season,
+pose 2 `wild/green_mother_burial`: hands pressed into the earth, `BossPoseData`; female, figure style, fully clothed, half in
+bloom and half in frost), `player/gravegardener` (+ walk, idle; violet necromancer, female, figure style, fully clothed),
+`summons/ossuary_oak` and `summons/world_root_warden` (+ walk; `_rooted` still not wired yet: the rooted oak draws its bone
+roots by code), `obstacles/wild_great_root_m` and `_m_v` (96x28, a one-size rect kind, so the `_m` key; a great root of the
+tree) and the four zone tiles `tiles/world_tree_roots` / `_trunk_stair` / `_crown` / `_seed` (until then the act's
+`tiles/wild_tree` floors every zone). A burial thicket draws `obstacles/wild_thicket_m` (made). New icon needed:
+`icons/heartwood` (the Ossuary Oak's paired passive, own decision: the proposal names none). Icons `root_and_rot`,
+`return_to_earth`, `compost_heart`, `ossuary_oak`, `world_root_warden`, `ach_the_first_spring` and the sound pack were already
+made. The Last Claim draws nothing of its own: each slot uses its act's own drawing.

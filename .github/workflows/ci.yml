@@ -17,7 +17,7 @@
 #               stages (barrow_fields, valgard, vigrid) and the three Necropolis Dynasty stages (necropolis,
 #               lioness_temple, two_truths) and the three Celestial Host stages (silver_stair,
 #               wheel_of_thrones, empyrean) and the Age of Titans' three stages (fern_basin, great_plain,
-#               last_day) and the Turning Year's Greenwood and Fae Court (greenwood, fae_court); army policy.
+#               last_day) and the Turning Year's three stages (greenwood, fae_court, world_tree); army policy.
 #               Fails on any script error/warning or if a run
 #               doesn't complete.
 #   2. export - builds single-file Windows (.exe) and Linux executables and the
@@ -138,6 +138,7 @@ jobs:
           # The Turning Year (temporarily Act XV, stage 43 in the registry; final slot XV).
           - {id: greenwood, name: "Act XV Stage 43, the Greenwood", args: "--stage=greenwood --policy=army", timeout: 900}
           - {id: fae_court, name: "Act XV Stage 44, the Fae Court", args: "--stage=fae_court --policy=army", timeout: 900}
+          - {id: world_tree, name: "Act XV Stage 45, the World-Tree", args: "--stage=world_tree --policy=army", timeout: 900}
     steps:
       - uses: actions/checkout@v4
 
