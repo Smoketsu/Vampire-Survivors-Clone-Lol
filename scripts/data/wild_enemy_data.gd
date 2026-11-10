@@ -153,7 +153,7 @@ const ENEMIES := {
 	# is TreantKit's (the Greenwood).
 	"treant": {
 		"display_name": "Treant",
-		"max_hp": 420.0,  # TUNING (not in GDD) a heavy
+		"max_hp": 340.0,  # TUNING (not in GDD) a heavy (first pass 420: the spell-only builds could not clear them and 17-33 piled up by 8:00-10:00, their top killer; balance pass 1)
 		"move_speed": 34.0,  # TUNING (not in GDD) px/s; slow
 		"damage": 8.5,  # TUNING (not in GDD) a branch, before the time scaling (the stub's 14, first passes 12 and 11: with its root it hit the bots hardest, seeds 7 and 11; balance pass 1: up to 345 on the thin-ring bots, the top killer)
 		"attack_interval": 1.6,  # TUNING (not in GDD) s
