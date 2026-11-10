@@ -817,6 +817,11 @@ const FLAT_SIZES: Dictionary = {
 	"wild/wild_rider": 64.0,  # TUNING (not in GDD) elite, male: a spectral horseman of the Wild Hunt (about 64 wide); walk strip
 	"wild/will_o_wisp": 30.0,  # TUNING (not in GDD) lure, no sex: a drifting cold light (about 20 wide, 2 empty rows on top for the glide); glide strip
 	"wild/spore_mother": 52.0,  # TUNING (not in GDD) support, female (figure style): a mushroom matron (about 28 wide); walk, idle strips
+	# The Turning Year's markers (not drawn until the stage agents wire them; the code shapes stay)
+	"markers/wild_roots": 16.0,  # TUNING (not in GDD) roots sprouting under a body that stood still, 24 x 16
+	"markers/wild_sprout": 32.0,  # TUNING (not in GDD) a thicket seed sprouting, 32 x 32
+	"markers/wild_blight": 64.0,  # TUNING (not in GDD) a blighted 64 px cell, 64 x 64, tiling
+	"markers/wild_season_wheel": 28.0,  # TUNING (not in GDD) the HUD's wheel of the year, 28 x 28
 }
 ## Longest side (px) for a flat sprite key missing from FLAT_SIZES.
 const DEFAULT_FLAT_SIZE: float = 20.0  # TUNING (not in GDD)
