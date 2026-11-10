@@ -206,8 +206,6 @@ const STAGE := {
 	"bloom": {},  # This stage's living ground ({} = WildRulesData.BLOOM).
 	"thickets": {},  # This stage's thickets ({} = WildRulesData.THICKETS).
 	"zones": ZONES,  # The planned zones (phase 2 builds them).
-	# Music key FOR NOW: "primordial" (the Age of Titans' score: the old world
-	# leads into the world itself); the art + audio agent adds the act's own
-	# score (docs/year/ART_MANIFEST.md) and the lead switches every Wild stage to it.
-	"music": "primordial",
+	# Music key: "wildwood" (the Turning Year's "The Turning Year", SoundData.WILDWOOD_SCORE; its sound pack "wild").
+	"music": "wildwood",
 }

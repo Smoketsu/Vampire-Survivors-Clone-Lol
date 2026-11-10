@@ -839,6 +839,8 @@ const SCORES := {
 	"hosanna": HOSANNA_SCORE,  # "Hosanna in the Silence"
 	# --- the Age of Titans (Act XIV slot) ---
 	"primordial": PRIMORDIAL_SCORE,  # "Before the Fall"
+	# --- the Turning Year (Act XV slot) ---
+	"wildwood": WILDWOOD_SCORE,  # "The Turning Year"
 }
 ## Sound pack each score asks for when its run starts (Sfx.prepare_pack():
 ## "empire" = EMPIRE_SOUNDS, the Act III effects; "pantheon" = PANTHEON_SOUNDS,
@@ -859,6 +861,7 @@ const SCORE_PACKS := {
 	"weighing": "dynasty",  # the Necropolis Dynasty sound pack
 	"hosanna": "host",  # the Celestial Host sound pack
 	"primordial": "titans",  # the Age of Titans sound pack
+	"wildwood": "wild",  # the Turning Year sound pack
 }
 
 ## Act III sound effects (the Electronic Empire; recipe keys as SOUNDS). Kept
@@ -2514,4 +2517,124 @@ const TITANS_SOUNDS: Dictionary = {  # TUNING (not in GDD)
 			{"wave": "saw", "f0": 110.0, "f1": 87.0, "dur": 2.6, "amp": 0.08, "attack": 0.9, "decay": 1.3, "lp0": 600.0},
 			{"wave": "noise", "dur": 2.6, "amp": 0.14, "attack": 1.0, "decay": 1.2, "lp0": 600.0, "lp1": 250.0},
 			{"wave": "sine", "f0": 36.0, "dur": 2.8, "amp": 0.3, "attack": 0.8, "decay": 1.4}]},
+}
+
+# --- the Turning Year (Act XV slot; stage key wild) ---
+## "The Turning Year", the Wild's run loop (GDD §15.0 "The Turning Year art and audio (foundation)"): the RunLoopSynth score of
+## every stage whose STAGE has "music": "wildwood". Pastoral and vast: a lilting 3/4 flute tune (the existing "flute" job, a
+## 1.5 s bar) over a soft organ drone, plucked harp (the existing "arp" job on a "tri" wave, one note every 0.5 s: three to a
+## bar), bright bell tones like birdsong (the existing "hits" job), a low hunting-horn call on the turn of each section (the
+## existing "horn" job, at 0 s, 6 s, 12 s and 18 s) and the default heartbeat (the existing heartbeat job: no "drums" key) as the year's
+## slow pulse. G Lydian over G1 (G, D, Em, C), 24 s, four 6 s chord segments. Rendered lazily (Sfx), never under the autotest; its
+## fixed seed is Sfx.SCORE_SEEDS["wildwood"].
+const WILDWOOD_SCORE := {
+	"loop_seconds": 24.0,  # TUNING (not in GDD) four 6 s chord segments (four 1.5 s bars each)
+	"root_hz": 49.0,  # TUNING (not in GDD) G1, a low drone under G
+	"chords": [
+		[98.0, 146.83, 196.0],
+		[73.42, 110.0, 146.83],
+		[82.41, 123.47, 164.81],
+		[65.41, 98.0, 130.81],
+	],  # TUNING (not in GDD) G, D, Em, C: open fifths with a low root
+	"drone_lp_hz": 70.0,  # TUNING (not in GDD) a soft, deep hum
+	"wind_lp_hz": 900.0,  # TUNING (not in GDD) warm leafy air
+	"wind_swells": 3.0,  # TUNING (not in GDD)
+	"vibrato_hz": 0.3,  # TUNING (not in GDD)
+	"vibrato_depth": 0.002,  # TUNING (not in GDD)
+	# The lilting flute: two-note and three-note phrases on the bar (1.5 s), every note ends before the loop does.
+	"flute": {"amp": 0.08, "breath": 0.05, "attack": 0.2, "decay": 1.0, "vib_hz": 4.8, "vib_depth": 0.01,
+		"notes": [[0.0, 587.33, 1.0], [1.5, 659.25, 0.5], [2.0, 587.33, 0.9], [3.0, 493.88, 1.4], [4.5, 587.33, 1.4],
+			[6.0, 587.33, 1.0], [7.5, 440.0, 0.5], [8.0, 587.33, 0.9], [9.0, 554.37, 1.4], [10.5, 440.0, 1.4],
+			[12.0, 493.88, 1.0], [13.5, 587.33, 0.5], [14.0, 659.25, 0.9], [15.0, 587.33, 1.4], [16.5, 493.88, 1.4],
+			[18.0, 523.25, 1.0], [19.5, 587.33, 0.5], [20.0, 783.99, 0.9], [21.0, 659.25, 1.4], [22.5, 587.33, 1.3]]},  # TUNING (not in GDD) [start (s), Hz, length (s)]
+	# The pad: a low organ, one note a segment (G, D, E, C).
+	"organ": {"attack": 1.6, "decay": 3.8, "vib_hz": 0.4, "vib_depth": 0.002,
+		"partials": [[1.0, 0.08], [2.0, 0.05], [3.0, 0.025], [4.0, 0.012]],
+		"notes": [[0.0, 98.0, 5.9], [6.0, 73.42, 5.9], [12.0, 82.41, 5.9], [18.0, 65.41, 5.8]]},  # TUNING (not in GDD) [start (s), Hz, length (s)]
+	# The harp: a plucked triangle, one note every 0.5 s up the segment's chord.
+	"arp": {"step": 0.5, "dur": 0.9, "amp": 0.035, "decay": 0.35, "lp0": 3600.0, "wave": "tri",
+		"chords": [
+			[392.0, 587.33, 783.99],
+			[293.66, 440.0, 587.33],
+			[329.63, 493.88, 659.25],
+			[261.63, 392.0, 523.25],
+		]},  # TUNING (not in GDD) the chord's notes, an octave or two up
+	# Birdsong bells: a clear, quiet ping every 3 s.
+	"hits": {"every": 3.0, "offset": 1.5, "root_hz": 2093.0, "dur": 1.2, "decay": 0.4,
+		"partials": [[1.0, 0.035], [2.76, 0.015], [5.4, 0.006]], "click": 0.006},  # TUNING (not in GDD)
+	# The hunting horn: a low brass call at the turn of each section.
+	"horn": {"starts": [0.0, 6.0, 12.0, 18.0], "dur": 3.4, "attack": 1.2, "decay": 1.8, "amp": 0.04,
+		"lp0": 260.0, "lp1": 800.0,
+		"notes": [[98.0, 146.83], [73.42, 110.0], [82.41, 123.47], [65.41, 98.0]]},  # TUNING (not in GDD) [root, fifth] (Hz) per call
+}
+
+## Turning Year sound effects (recipe keys as SOUNDS), one per WildRulesData.SOUNDS event. Kept OUT of SOUNDS like the other
+## packs: Sfx renders it lazily the first time a Wild run's music ("wildwood") is asked for (Sfx.prepare_pack("wild"); seeds
+## Sfx.PACK_SEED + Sfx.PACK_SEED_OFFSETS["wild"] + i, offset 12000).
+const WILD_SOUNDS: Dictionary = {  # TUNING (not in GDD)
+	# A bell of wood and wind: the year turns.
+	"season_turn": {"dur": 1.8, "volume_db": -12.0, "max_voices": 1, "min_interval": 600, "pitch_var": 0.03, "priority": 3,
+		"layers": [
+			{"wave": "sine", "f0": 392.0, "dur": 1.6, "amp": 0.16, "attack": 0.004, "decay": 0.7},
+			{"wave": "sine", "f0": 1082.0, "dur": 1.0, "amp": 0.05, "attack": 0.004, "decay": 0.4},
+			{"wave": "tri", "f0": 196.0, "dur": 1.2, "amp": 0.1, "attack": 0.004, "decay": 0.5},
+			{"wave": "noise", "dur": 1.6, "amp": 0.07, "attack": 0.6, "decay": 0.7, "lp0": 1800.0, "lp1": 700.0}]},
+	# Roots cracking up through soil, a creak.
+	"roots_grab": {"dur": 0.7, "volume_db": -13.0, "max_voices": 3, "min_interval": 120, "pitch_var": 0.07, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.06, "amp": 0.3, "attack": 0.001, "decay": 0.02, "lp0": 3500.0},
+			{"wave": "noise", "start": 0.1, "dur": 0.05, "amp": 0.24, "attack": 0.001, "decay": 0.02, "lp0": 4200.0},
+			{"wave": "saw", "f0": 140.0, "f1": 90.0, "dur": 0.6, "amp": 0.07, "attack": 0.05, "decay": 0.35, "lp0": 520.0, "vib_hz": 9.0, "vib_depth": 0.04},
+			{"wave": "sine", "f0": 80.0, "f1": 45.0, "dur": 0.3, "amp": 0.25, "attack": 0.003, "decay": 0.12}]},
+	# A rising crackle and a gust of smoke.
+	"wildfire_warn": {"dur": 1.6, "volume_db": -14.0, "max_voices": 2, "min_interval": 300, "pitch_var": 0.04, "priority": 3,
+		"layers": [
+			{"wave": "noise", "dur": 1.5, "amp": 0.14, "attack": 1.0, "decay": 0.4, "lp0": 1800.0, "lp1": 6000.0},
+			{"wave": "noise", "start": 0.3, "dur": 0.03, "amp": 0.3, "attack": 0.001, "decay": 0.01, "lp0": 6000.0},
+			{"wave": "noise", "start": 0.7, "dur": 0.03, "amp": 0.3, "attack": 0.001, "decay": 0.01, "lp0": 6500.0},
+			{"wave": "noise", "start": 1.0, "dur": 0.03, "amp": 0.3, "attack": 0.001, "decay": 0.01, "lp0": 7000.0},
+			{"wave": "saw", "f0": 110.0, "f1": 200.0, "dur": 1.4, "amp": 0.03, "attack": 0.9, "decay": 0.4, "lp0": 500.0}]},
+	# A roar of dry grass catching.
+	"wildfire_burn": {"dur": 2.4, "volume_db": -11.0, "max_voices": 1, "min_interval": 700, "pitch_var": 0.03, "priority": 3,
+		"layers": [
+			{"wave": "noise", "dur": 2.2, "amp": 0.24, "attack": 0.3, "decay": 1.4, "lp0": 3200.0, "lp1": 700.0},
+			{"wave": "saw", "f0": 70.0, "f1": 55.0, "dur": 2.2, "amp": 0.12, "attack": 0.4, "decay": 1.4, "lp0": 380.0, "vib_hz": 5.0, "vib_depth": 0.02},
+			{"wave": "sine", "f0": 40.0, "dur": 2.2, "amp": 0.28, "attack": 0.4, "decay": 1.4}]},
+	# A howling white wind.
+	"blizzard": {"dur": 2.8, "volume_db": -14.0, "max_voices": 1, "min_interval": 900, "pitch_var": 0.03, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 2.6, "amp": 0.2, "attack": 1.2, "decay": 1.2, "lp0": 2400.0, "lp1": 1200.0},
+			{"wave": "sine", "f0": 520.0, "f1": 760.0, "dur": 2.6, "amp": 0.03, "attack": 1.2, "decay": 1.2, "vib_hz": 0.7, "vib_depth": 0.08},
+			{"wave": "sine", "f0": 700.0, "f1": 480.0, "start": 0.4, "dur": 2.2, "amp": 0.025, "attack": 1.0, "decay": 1.0, "vib_hz": 0.5, "vib_depth": 0.08}]},
+	# Thorns snaking up, a woody snap.
+	"thicket_grow": {"dur": 0.9, "volume_db": -14.0, "max_voices": 3, "min_interval": 120, "pitch_var": 0.06, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.5, "amp": 0.14, "attack": 0.2, "decay": 0.25, "lp0": 1200.0, "lp1": 3600.0},
+			{"wave": "saw", "f0": 200.0, "f1": 420.0, "dur": 0.5, "amp": 0.05, "attack": 0.1, "decay": 0.25, "lp0": 900.0},
+			{"wave": "noise", "start": 0.5, "dur": 0.03, "amp": 0.32, "attack": 0.001, "decay": 0.01, "lp0": 3000.0},
+			{"wave": "sine", "f0": 150.0, "f1": 70.0, "start": 0.5, "dur": 0.25, "amp": 0.18, "attack": 0.003, "decay": 0.1}]},
+	# Thorns crackling to ash.
+	"thicket_burn": {"dur": 1.2, "volume_db": -14.0, "max_voices": 3, "min_interval": 120, "pitch_var": 0.06, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 1.1, "amp": 0.14, "attack": 0.05, "decay": 0.7, "lp0": 5000.0, "lp1": 1500.0},
+			{"wave": "noise", "start": 0.1, "dur": 0.03, "amp": 0.3, "attack": 0.001, "decay": 0.01, "lp0": 6000.0},
+			{"wave": "noise", "start": 0.3, "dur": 0.03, "amp": 0.26, "attack": 0.001, "decay": 0.01, "lp0": 6500.0},
+			{"wave": "noise", "start": 0.55, "dur": 0.03, "amp": 0.22, "attack": 0.001, "decay": 0.01, "lp0": 7000.0},
+			{"wave": "sine", "f0": 90.0, "f1": 50.0, "dur": 0.4, "amp": 0.14, "attack": 0.01, "decay": 0.2}]},
+	# Earth closing, a deep thud.
+	"bury": {"dur": 0.9, "volume_db": -12.0, "max_voices": 3, "min_interval": 120, "pitch_var": 0.05, "priority": 2,
+		"layers": [
+			{"wave": "sine", "f0": 80.0, "f1": 34.0, "dur": 0.6, "amp": 0.42, "attack": 0.003, "decay": 0.25},
+			{"wave": "noise", "dur": 0.6, "amp": 0.2, "attack": 0.01, "decay": 0.35, "lp0": 700.0, "lp1": 250.0},
+			{"wave": "noise", "start": 0.05, "dur": 0.05, "amp": 0.18, "attack": 0.001, "decay": 0.02, "lp0": 2500.0}]},
+	# Spring Returns: every bird and leaf at once, a vast green chord.
+	"spring_horn": {"dur": 3.2, "volume_db": -10.0, "max_voices": 1, "min_interval": 1000, "pitch_var": 0.02, "priority": 4,
+		"layers": [
+			{"wave": "saw", "f0": 98.0, "dur": 3.0, "amp": 0.1, "attack": 0.9, "decay": 1.5, "lp0": 500.0, "lp1": 1500.0, "vib_hz": 4.0, "vib_depth": 0.012},
+			{"wave": "saw", "f0": 147.0, "dur": 3.0, "amp": 0.07, "attack": 1.0, "decay": 1.5, "lp0": 700.0, "lp1": 1800.0},
+			{"wave": "saw", "f0": 196.0, "dur": 3.0, "amp": 0.05, "attack": 1.1, "decay": 1.4, "lp0": 900.0, "lp1": 2400.0},
+			{"wave": "sine", "f0": 49.0, "dur": 3.0, "amp": 0.26, "attack": 0.9, "decay": 1.5},
+			{"wave": "sine", "f0": 2349.0, "f1": 3136.0, "start": 0.5, "dur": 0.5, "amp": 0.04, "attack": 0.01, "decay": 0.2},
+			{"wave": "sine", "f0": 3136.0, "f1": 2637.0, "start": 1.1, "dur": 0.4, "amp": 0.035, "attack": 0.01, "decay": 0.15},
+			{"wave": "sine", "f0": 2637.0, "f1": 3520.0, "start": 1.7, "dur": 0.5, "amp": 0.03, "attack": 0.01, "decay": 0.2}]},
 }

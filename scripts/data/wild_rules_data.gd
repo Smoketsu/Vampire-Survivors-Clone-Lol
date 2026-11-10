@@ -171,21 +171,18 @@ const SPRING_RETURNS := {
 ## Damage source tag of a burial.
 const BURY_SOURCE: String = "wild_burial"
 
-## Sound of each Turning Year event. FOR NOW each points at an EXISTING sound
-## id (the startup bank, or the Titans pack the placeholder music "primordial"
-## renders); the art + audio agent makes the act's own pack ("wild", rendered
-## with the act's score) and the lead points each event at the pack id named
-## in its comment (docs/year/ART_MANIFEST.md).
+## Sound of each Turning Year event: each is an id of the lazy "wild" pack (SoundData.WILD_SOUNDS, rendered with the score
+## "wildwood"; the comment names what it sounds like).
 const SOUNDS := {
-	"season_turn": "reckoning",  # Wild pack id "season_turn" (a bell of wood and wind; the year turns).
-	"roots_grab": "abom_stomp",  # Wild pack id "roots_grab" (roots cracking up through soil, a creak).
-	"wildfire_warn": "boss_telegraph",  # Wild pack id "wildfire_warn" (a rising crackle, a gust of smoke).
-	"wildfire_burn": "eruption",  # Wild pack id "wildfire_burn" (a roar of dry grass catching).
-	"blizzard": "burrow_rumble",  # Wild pack id "blizzard" (a howling white wind).
-	"thicket_grow": "summon_rise",  # Wild pack id "thicket_grow" (thorns snaking up, a woody snap).
-	"thicket_burn": "catapult_impact",  # Wild pack id "thicket_burn" (thorns crackling to ash).
-	"bury": "boss_impact",  # Wild pack id "bury" (earth closing, a deep thud).
-	"spring_returns": "reckoning",  # Wild pack id "spring_horn" (every bird and leaf at once, a vast green chord).
+	"season_turn": "season_turn",  # Wild pack id "season_turn" (a bell of wood and wind; the year turns).
+	"roots_grab": "roots_grab",  # Wild pack id "roots_grab" (roots cracking up through soil, a creak).
+	"wildfire_warn": "wildfire_warn",  # Wild pack id "wildfire_warn" (a rising crackle, a gust of smoke).
+	"wildfire_burn": "wildfire_burn",  # Wild pack id "wildfire_burn" (a roar of dry grass catching).
+	"blizzard": "blizzard",  # Wild pack id "blizzard" (a howling white wind).
+	"thicket_grow": "thicket_grow",  # Wild pack id "thicket_grow" (thorns snaking up, a woody snap).
+	"thicket_burn": "thicket_burn",  # Wild pack id "thicket_burn" (thorns crackling to ash).
+	"bury": "bury",  # Wild pack id "bury" (earth closing, a deep thud).
+	"spring_returns": "spring_horn",  # Wild pack id "spring_horn" (every bird and leaf at once, a vast green chord).
 }
 
 # --- The counter-passives (phase 2 builds them; WildRules' hooks read them) -----------------
