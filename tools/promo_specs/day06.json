@@ -10,14 +10,14 @@
  ],
  "fps": 30,
  "lufs": -14,
- "art_scale": 2,
+ "art_scale": 3,
  "shots": [
   {
    "id": "s0",
    "stage": "sanctum",
    "seed": 3,
-   "start": 1030,
-   "seconds": 5.6,
+   "start": 1060,
+   "seconds": 3.0,
    "texts": [
     {
      "text": "every stage ends",
@@ -43,18 +43,34 @@
   },
   {
    "id": "s1",
-   "stage": "sanctum",
+   "stage": "spire",
    "seed": 3,
-   "start": 1055,
-   "seconds": 5.6,
+   "start": 1090,
+   "seconds": 3.0,
    "texts": []
   },
   {
    "id": "s2",
-   "stage": "underworld",
+   "stage": "olympus",
+   "seed": 5,
+   "start": 1029,
+   "seconds": 3.0,
+   "texts": []
+  },
+  {
+   "id": "s3",
+   "stage": "kurogane",
    "seed": 3,
-   "start": 1035,
-   "seconds": 5.6,
+   "start": 1135,
+   "seconds": 3.0,
+   "texts": []
+  },
+  {
+   "id": "s4",
+   "stage": "ravensmoor",
+   "seed": 4,
+   "start": 1090,
+   "seconds": 3.0,
    "texts": []
   },
   {

@@ -77,13 +77,14 @@ def texts(c, dur, t0=0.0):
 
 # shot: (stage, seed, start, extra, caption); every shot is SEC seconds
 SEC = 5.6  # length of every shot (s of game time = s of video) unless CLIP_SEC overrides it for that clip
-CLIP_SEC = {2: 4.6, 4: 4.6, 7: 4.6, 9: 4.6}  # per-clip shot length (s): Days 2, 4, 7 and 9 show five different builds, so each shot is shorter
+CLIP_SEC = {2: 4.6, 4: 4.6, 6: 3.0, 7: 4.6, 9: 4.6}  # per-clip shot length (s): Days 2, 4, 7 and 9 show five different builds, so each shot is shorter; Day 6 shows five bosses, 3.0 s each (the quick cut keeps 1.5 s of each from 0.4 s in)
 # Opening title of a clip (caption shown over the first shot only, then the shot's own caption takes over):
 # clip number -> (caption, seconds it stays up). Day 2: "36 Spells to Master!" before the first build's names.
 INTRO = {2: (cap("*36 Spells", "to Master!"), 1.6),
          4: (cap("Summons Evolve", "*into Monsters!"), 1.6),
          7: (cap("Meet the New", "*Undead Classes!"), 1.6),
          9: (cap("Every Spell Has", "*an Evolution!"), 1.6)}
+ART_SCALE = {6: 3}  # per-clip art scale (1 art px = N video px; view = 1080/N x 1920/N): Day 6 uses 3 (a 360x640 view) so each boss is big in frame; every other clip uses 2
 G = lambda *a: a
 # Clip numbers whose gameplay shots carry the old burned-in captions (intro title and per-shot names). Owner, Nov 2026: the
 # big caption text looks cheesy, so no clip uses them now (hook line and end card only); the captions stay in CLIPS
@@ -111,9 +112,14 @@ CLIPS = {
  5: [("province", 3, 700, [], cap("Samurai, Ninjas", "*and Oni!")),
      ("province", 3, 900, [], cap("Day Turns", "*to Night!")),
      ("province", 3, 1040, [], cap("Day Turns", "*to Night!"))],
- 6: [("sanctum", 3, 1030, [], cap("*Epic Boss Fights!")),
-     ("sanctum", 3, 1055, [], cap("*Epic Boss Fights!")),
-     ("underworld", 3, 1035, [], cap("Every Stage Has", "*Its Own Boss!"))],
+ # Day 6: five different stage bosses, each in frame beside the army (art scale 3, ART_SCALE; found by scouting 3 s windows from
+ # 17:00, when the boss arrives with 3:00 left). Seraphine's wings, Vhal'Neth's tentacle arms, Zeus beside the necromancer,
+ # Shogun Kurogane charging in, Vargr the werewolf under the blood moon.
+ 6: [("sanctum", 3, 1060, [], cap("*Epic Boss Fights!")),  # Seraphine
+     ("spire", 3, 1090, [], cap("*Epic Boss Fights!")),  # Vhal'Neth (arms and tentacles; the weakest framing)
+     ("olympus", 5, 1029, [], cap("*Epic Boss Fights!")),  # Zeus
+     ("kurogane", 3, 1135, [], cap("*Epic Boss Fights!")),  # Shogun Kurogane
+     ("ravensmoor", 4, 1090, [], cap("*Epic Boss Fights!"))],  # Vargr
  # Day 7: the newer summon classes, one or two per shot (before the 8:00 evolution gate, so they are still the base forms)
  7: [("crimson_march", 9, 330, ["--classes=abomination,gargoyle"], cap("Abominations", "*and Gargoyles!")),
      ("graveyard", 9, 330, ["--classes=frost_wraith,bone_hound"], cap("Frost Wraiths", "*and Bone Hounds!")),
@@ -176,5 +182,5 @@ if __name__ == "__main__":
                 s["texts"] = texts(c, sec)
             out.append(s)
         out.append(END)
-        spec = {"name": "day%02d" % n, "render": [1080, 1920], "size": [1080, 1920], "fps": 30, "lufs": -14, "art_scale": 2, "shots": out}
+        spec = {"name": "day%02d" % n, "render": [1080, 1920], "size": [1080, 1920], "fps": 30, "lufs": -14, "art_scale": ART_SCALE.get(n, 2), "shots": out}
         json.dump(spec, open(os.path.join(HERE, "day%02d.json" % n), "w"), indent=1)
