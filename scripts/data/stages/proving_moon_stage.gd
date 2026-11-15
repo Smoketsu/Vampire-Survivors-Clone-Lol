@@ -42,7 +42,7 @@ const BOSS_TIME: float = 1020.0  # TUNING (not in GDD) 17:00, as on every stage
 const ENEMY_HP_MULT: float = 2.15  # TUNING (not in GDD) brief: a step above Liberty Heights (placeholder, tuned in the balance pass)
 ## Enemy damage multiplier of this stage on top of the shared time scaling
 ## (Liberty Heights's 1.5, kept: the step up is in HP).
-const ENEMY_DAMAGE_MULT: float = 1.5  # TUNING (not in GDD) placeholder, tuned in the balance pass
+const ENEMY_DAMAGE_MULT: float = 1.8  # TUNING (not in GDD) reorder pass part 3 (slot tuning): 1.5 -> 1.8: Act XIII now (built as Act IX), 0/10 bot deaths and mean min HP 80 (before: placeholder, tuned in the balance pass)
 ## Elapsed game seconds from which the two multipliers apply to regular
 ## enemies (the boss always gets them).
 const ENEMY_MULT_FROM: float = 420.0  # TUNING (not in GDD) placeholder (Acts III to VIII: 7:00)

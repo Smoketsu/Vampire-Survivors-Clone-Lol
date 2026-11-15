@@ -48,7 +48,7 @@ const BOSS_TIME: float = 1020.0  # TUNING (not in GDD) 17:00, as on every stage
 ## Enemy max-HP multiplier of this stage on top of the shared time scaling
 ## (Act VIII starts a step above Castle Sanguis's 1.85; the step goes in HP,
 ## not damage: the Act IV lesson).
-const ENEMY_HP_MULT: float = 2.0  # TUNING (not in GDD) the foundation's step, kept
+const ENEMY_HP_MULT: float = 1.85  # TUNING (not in GDD) reorder pass part 3 (slot tuning): 2.0 -> 1.85: Act IV now (built as Act VIII), 1/10 bot deaths and mean min HP 62 against Acts II and V's ~80 (before: the foundation's step, kept)
 ## Enemy damage multiplier of this stage on top of the shared time scaling
 ## (below Castle Sanguis's 1.5: the act's first stage, and the step up is in
 ## HP; Fort Kessler and Liberty Heights set their own).

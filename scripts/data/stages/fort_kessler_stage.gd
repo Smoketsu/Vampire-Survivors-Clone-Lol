@@ -38,10 +38,10 @@ const BOSS_TIME: float = 1020.0  # TUNING (not in GDD) 17:00, as on every stage
 ## Enemy max-HP multiplier of this stage on top of the shared time scaling
 ## (Act VIII starts a step above Castle Sanguis's 1.85; the step goes in HP,
 ## not damage: the Act IV lesson).
-const ENEMY_HP_MULT: float = 2.0  # TUNING (not in GDD) brief: HP x2.0; tuned in the balance pass
+const ENEMY_HP_MULT: float = 1.7  # TUNING (not in GDD) reorder pass part 3 (slot tuning): 2.0 -> 1.7: Act IV now (built as Act VIII), 5/10 bot deaths and mean min HP 30 (before: brief: HP x2.0; tuned in the balance pass)
 ## Enemy damage multiplier of this stage on top of the shared time scaling
 ## (Castle Sanguis's 1.5, kept: the step up is in HP).
-const ENEMY_DAMAGE_MULT: float = 1.3  # TUNING (not in GDD) was 1.5 (brief: damage 1.5); Act VIII pass 3, owner: Stage damage x1.3
+const ENEMY_DAMAGE_MULT: float = 1.15  # TUNING (not in GDD) reorder pass part 3 (slot tuning): 1.3 -> 1.15: as the HP step (Act IV now; 5/10 deaths, min HP 30) (before: was 1.5 (brief: damage 1.5); Act VIII pass 3, owner: Stage damage x1.3)
 ## Elapsed game seconds from which the two multipliers apply to regular
 ## enemies (the boss always gets them).
 const ENEMY_MULT_FROM: float = 420.0  # TUNING (not in GDD) placeholder (Acts III to VII: 7:00)

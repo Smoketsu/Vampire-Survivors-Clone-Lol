@@ -46,9 +46,9 @@ const BOSS_TIME: float = 1020.0  # TUNING (not in GDD) 17:00, as on every stage
 
 ## Enemy max-HP multiplier of this stage on top of the shared time scaling
 ## (Act III starts a step above Act II's last stage, Ul-Thalos 1.2).
-const ENEMY_HP_MULT: float = 1.3  # TUNING (not in GDD) a step above Ul-Thalos (1.2) (Act III balance: 1.25 -> 1.3; the act's danger is its ranged fire, so each stage's step above Ul-Thalos is in HP, not in damage: the naive bot bled to death between 8:00 and 12:00)
+const ENEMY_HP_MULT: float = 1.4  # TUNING (not in GDD) reorder pass part 3 (slot tuning): 1.3 -> 1.4: Act XII now (built as Act III), 1/10 bot deaths and mean min HP 73, the Assembly 51 (before: a step above Ul-Thalos (1.2) (Act III balance: 1.25 -> 1.3; the act's danger is its ranged fire, so each stage's step above Ul-Thalos is in HP, not in damage: the naive bot bled to death between 8:00 and 12:00))
 ## Enemy damage multiplier of this stage on top of the shared time scaling.
-const ENEMY_DAMAGE_MULT: float = 1.0  # TUNING (not in GDD) (Act III balance: 1.2 -> 1.0; the act's danger is its ranged fire, so each stage's step above Ul-Thalos is in HP, not in damage: the naive bot bled to death between 8:00 and 12:00)
+const ENEMY_DAMAGE_MULT: float = 1.1  # TUNING (not in GDD) reorder pass part 3 (slot tuning): 1.0 -> 1.1, the Assembly's: as the HP step (Act XII now; min HP 73) (before: (Act III balance: 1.2 -> 1.0; the act's danger is its ranged fire, so each stage's step above Ul-Thalos is in HP, not in damage: the naive bot bled to death between 8:00 and 12:00))
 ## Elapsed game seconds from which the two multipliers apply to regular
 ## enemies (the boss always gets them): Zone II, as on the Archive and Ul-Thalos.
 const ENEMY_MULT_FROM: float = 420.0  # TUNING (not in GDD) (the Archive and Ul-Thalos: 7:00)

@@ -60,9 +60,9 @@ const BOSS_TIME: float = 1020.0  # TUNING (not in GDD) 17:00, as on every stage
 
 ## Enemy max-HP multiplier of this stage on top of the shared time scaling
 ## (the Sanctum's is 1.1: Act II starts a little above it and climbs).
-const ENEMY_HP_MULT: float = 1.15  # TUNING (not in GDD)
+const ENEMY_HP_MULT: float = 1.4  # TUNING (not in GDD) reorder pass part 3 (slot tuning): 1.15 -> 1.4: Act XI now (built as Act II), 0/10 bot deaths and mean min HP 106 left it the safest stage of Part Three
 ## Enemy damage multiplier of this stage on top of the shared time scaling.
-const ENEMY_DAMAGE_MULT: float = 1.22  # TUNING (not in GDD) 1.15 left the naive bot dying no more often than on the Sanctum (4/9 vs 2/4); the army bot had a wide margin (min HP 95-116)
+const ENEMY_DAMAGE_MULT: float = 1.7  # TUNING (not in GDD) reorder pass part 3 (slot tuning): 1.22 -> 1.7: as the HP step (Act XI now; 0/10 deaths, min HP 106) (before: 1.15 left the naive bot dying no more often than on the Sanctum (4/9 vs 2/4); the army bot had a wide margin (min HP 95-116))
 ## Elapsed game seconds from which the two multipliers apply to regular
 ## enemies (the boss always gets them): Zone II, the Fish Market (the
 ## Sanctum's from Zone III; from 0:00 they would lift an Initiate past the
