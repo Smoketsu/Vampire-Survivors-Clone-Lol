@@ -45,8 +45,6 @@ const ENEMY_DAMAGE_MULT: float = 1.25  # TUNING (not in GDD) placeholder for slo
 ## Elapsed game seconds from which the two multipliers apply to regular
 ## enemies (the boss always gets them).
 const ENEMY_MULT_FROM: float = 420.0  # TUNING (not in GDD) 7:00 (Acts III to IX)
-## Soul Ash multiplier of a run on this stage (its own end-screen line).
-const ASH_MULT: float = 1.5  # TUNING (not in GDD) owner decision Oct 2026, GDD §15.0 "Ossuary expansion: owner decisions": every act restarts, stage 3 of the act
 
 ## Obstacle layout (keys as GraveyardStage.ARENA, plus "fixed"): THE DECK'S
 ## FURNITURE, a FIXED authored layout (Arena "fixed": each entry {kind, at, size
@@ -293,12 +291,8 @@ const STAGE := {
 	"id": ID,
 	"display_name": "The Maelstrom",
 	"short_name": "Maelstrom",
-	"chapter": "Chapter XXX",
-	"act": 10,  # Act X (temporary): the Black Tide, final slot II after the reorder.
 	"playable": true,  # The Black Tide goes live (integration, GDD §15.0 "The Black Tide goes live (integration and balance)").
 	"description": "The ghost ship Hollow Queen, caught in a whirlpool at midnight, and the captain lashed to her wheel who has kept his oath to the sea for a hundred years.",
-	"unlock": {"stage": "galleon", "boss_kills": 1},  # Lead's plan: the chain runs Harvester -> Crow -> Marrec -> Vandermere
-	"unlock_text": "Defeat Admiral Marrec on the Treasure Galleon to unlock.",
 	"boss": BOSS,
 	"segments": SEGMENTS,
 	"events": EVENTS,
@@ -313,7 +307,6 @@ const STAGE := {
 	"enemy_hp_mult": ENEMY_HP_MULT,
 	"enemy_damage_mult": ENEMY_DAMAGE_MULT,
 	"enemy_mult_from": ENEMY_MULT_FROM,
-	"ash_mult": ASH_MULT,
 	"march": MARCH,  # The four clock-driven zones (MarchDirector; every zone keeps ARENA).
 	"corsair": true,  # Act X: Boarding, the Deck, Strikes from the Sea (CorsairRules).
 	"deck": DECK,  # Act X: this stage's deck (DeckBounds).

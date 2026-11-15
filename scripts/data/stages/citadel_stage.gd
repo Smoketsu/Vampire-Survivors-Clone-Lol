@@ -74,8 +74,6 @@ const ENEMY_DAMAGE_MULT: float = 1.15  # TUNING (not in GDD) (Act III balance: 1
 ## Elapsed game seconds from which the two multipliers apply to regular
 ## enemies (the boss always gets them).
 const ENEMY_MULT_FROM: float = 420.0  # TUNING (not in GDD) 7:00 (the Archive and Ul-Thalos)
-## Soul Ash multiplier of a run on this stage (its own end-screen line).
-const ASH_MULT: float = 1.5  # TUNING (not in GDD) owner decision Oct 2026, GDD §15.0 "Ossuary expansion: owner decisions"; each act restarts at x1 / x1.25 / x1.5
 
 ## The Reckoning of this stage (keys as GraveyardStage.RECKONING): the Purge
 ## Protocol, shared by every Act III stage: kill-drones pour in from every edge
@@ -402,12 +400,8 @@ const STAGE := {
 	"id": ID,
 	"display_name": "The Iron Citadel",
 	"short_name": "Iron Citadel",
-	"chapter": "Chapter IX",
-	"act": 3,  # Act III, the Electronic Empire.
 	"playable": true,  # Owner decision (Oct 20, 2026): ship Act III as is for the owner's playtest; balance by hand from it (GDD §15.0 "Act III goes live").
 	"description": "The Empire's throne of iron, where death was conquered with steel. Varn, the Root User, waits at its summit inside Deus Ex Machina, the god it built.",
-	"unlock": {"stage": "assembly", "boss_kills": 1},  # Owner-approved: each boss unlocks the next stage
-	"unlock_text": "Shut down the Motherboard in the Assembly Halls to unlock.",
 	"boss": BOSS,
 	"segments": SEGMENTS,
 	"events": EVENTS,
@@ -422,7 +416,6 @@ const STAGE := {
 	"enemy_hp_mult": ENEMY_HP_MULT,
 	"enemy_damage_mult": ENEMY_DAMAGE_MULT,
 	"enemy_mult_from": ENEMY_MULT_FROM,
-	"ash_mult": ASH_MULT,
 	"march": MARCH,
 	"citadel": CITADEL,  # CitadelDirector (gates, lasers, guns, turrets, Valkyrie 2.0, guests).
 	"kind_aliases": KINDS,

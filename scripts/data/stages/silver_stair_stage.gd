@@ -43,8 +43,6 @@ const ENEMY_DAMAGE_MULT: float = 1.35  # TUNING (not in GDD) balance pass 3 (pha
 ## Elapsed game seconds from which the two multipliers apply to regular
 ## enemies (the boss always gets them).
 const ENEMY_MULT_FROM: float = 420.0  # TUNING (not in GDD) as Acts III to XII (7:00)
-## Soul Ash multiplier of a run on this stage (its own end-screen line).
-const ASH_MULT: float = 1.0  # TUNING (not in GDD) owner decision Oct 2026 (GDD §15.0 "Ossuary expansion: owner decisions"): every act restarts, stage 1 of the act
 
 ## The obstacle layout every zone shares the kinds of (the Host art's sprites
 ## obstacles/<kind>_m, one size each; HostGlyphs without art). Rect kinds lie
@@ -252,12 +250,8 @@ const STAGE := {
 	"id": ID,
 	"display_name": "The Silver Stair",
 	"short_name": "Silver Stair",
-	"chapter": "Chapter XXXVII",  # Temporary (the reorder pass renumbers; final stage 28).
-	"act": 13,  # Temporary Act XIII, the Celestial Host (final slot X; docs/last_acts/PLAN.md).
 	"playable": true,  # Phase 2 built (GDD §15.0 "The Silver Stair (Act XIII phase 2)").
 	"description": "A stair of light rising from hell's ashes into the clouds: step by step to the Gate of Pearl, where Seraiel keeps the way.",
-	"unlock": {"stage": "two_truths", "boss_kills": 1},  # Plan: each stage opens the next
-	"unlock_text": "Defeat Osiris in the Hall of Two Truths to unlock.",
 	"boss": BOSS,
 	"segments": SEGMENTS,
 	"events": EVENTS,
@@ -272,7 +266,6 @@ const STAGE := {
 	"enemy_hp_mult": ENEMY_HP_MULT,
 	"enemy_damage_mult": ENEMY_DAMAGE_MULT,
 	"enemy_mult_from": ENEMY_MULT_FROM,
-	"ash_mult": ASH_MULT,
 	"march": MARCH,  # The four clock-driven zones (MarchDirector).
 	"silver_stair": STAIR,  # SilverStairDirector: the Stair's steps and low clouds, Without Sin, the Cherub of the Gate.
 	"host": true,  # Judgment, Hallowed Light, Grace (HostRules).

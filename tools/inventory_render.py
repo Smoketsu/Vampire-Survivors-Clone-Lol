@@ -39,10 +39,10 @@ try:
     BRANCH = subprocess.run(['git', '-C', REPO, 'rev-parse', '--abbrev-ref', 'HEAD'], capture_output=True, text=True, check=True).stdout.strip()
 except Exception:
     BRANCH = 'unknown'
-# Act number -> act name (StageRegistry.ACTS, via the extractor).
+# Act number -> act name (StageRegistry.ACT_ORDER, via the extractor).
 ACTN = {int(k): v for k, v in M['act_names'].items()}
 # Roman numeral of each act number.
-ROM = {1: 'I', 2: 'II', 3: 'III', 4: 'IV', 5: 'V', 6: 'VI', 7: 'VII', 8: 'VIII', 9: 'IX', 10: 'X'}
+ROM = {1: 'I', 2: 'II', 3: 'III', 4: 'IV', 5: 'V', 6: 'VI', 7: 'VII', 8: 'VIII', 9: 'IX', 10: 'X', 11: 'XI', 12: 'XII', 13: 'XIII', 14: 'XIV', 15: 'XV'}
 # Label for a stage / row that is registered but hidden from the stage select ("playable": false); unused while every stage is live.
 BNP = "Built, not yet playable (waiting on review)"
 stages=M['stages']; S={s['id']:s for s in stages}

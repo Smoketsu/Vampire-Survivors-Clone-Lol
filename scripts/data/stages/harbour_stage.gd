@@ -68,8 +68,6 @@ const ENEMY_DAMAGE_MULT: float = 1.22  # TUNING (not in GDD) 1.15 left the naive
 ## Sanctum's from Zone III; from 0:00 they would lift an Initiate past the
 ## starting Shadow Bolt's one-shot, the March's lesson).
 const ENEMY_MULT_FROM: float = 300.0  # TUNING (not in GDD)
-## Soul Ash multiplier of a run on this stage (its own end-screen line).
-const ASH_MULT: float = 1.0  # TUNING (not in GDD) owner decision Oct 2026, GDD §15.0 "Ossuary expansion: owner decisions"; each act restarts at x1 / x1.25 / x1.5
 
 ## "The Deep Rises": the Harbour's Reckoning (same escalation as every stage;
 ## keys as GraveyardStage.RECKONING) with the stage's own main kind:
@@ -419,12 +417,8 @@ const STAGE := {
 	"id": ID,
 	"display_name": "Gullhaven Harbour",
 	"short_name": "Gullhaven",
-	"chapter": "Chapter IV",
-	"act": 2,  # Act II, the Ancient Eye.
 	"playable": true,  # Act II integration (balance-checked, 8-seed batches); the owner playtests it from here.
 	"description": "A fishing town at low tide, at night, where the Ancient Eye has lived in the open for generations. The tide rises on the clock and floods the lanes; sink the bell buoys, raid the smugglers' caches and silence Abbot Silas Merrow, Voice of the Deep.",
-	"unlock": {"stage": "sanctum", "boss_kills": 1},  # owner-approved: each boss unlocks the next stage
-	"unlock_text": "Slay Grand Inquisitor Seraphine in the Sanctum of Judgment to unlock.",
 	"boss": BOSS,
 	"segments": SEGMENTS,
 	"events": EVENTS,
@@ -438,7 +432,6 @@ const STAGE := {
 	"enemy_hp_mult": ENEMY_HP_MULT,
 	"enemy_damage_mult": ENEMY_DAMAGE_MULT,
 	"enemy_mult_from": ENEMY_MULT_FROM,
-	"ash_mult": ASH_MULT,
 	"march": MARCH,  # The clock-driven zones (MarchDirector).
 	"tide": TIDE,  # The tide (TideDirector).
 	"harbour": HARBOUR,  # Buoys, caches, the Harbourmaster (HarbourDirector).

@@ -67,8 +67,6 @@ const ENEMY_DAMAGE_MULT: float = 1.1  # TUNING (not in GDD) (Act III balance: 1.
 ## Elapsed game seconds from which the two multipliers apply to regular
 ## enemies (the boss always gets them): Zone II.
 const ENEMY_MULT_FROM: float = 420.0  # TUNING (not in GDD) as the Archive and Ul-Thalos (7:00)
-## Soul Ash multiplier of a run on this stage (its own end-screen line).
-const ASH_MULT: float = 1.25  # TUNING (not in GDD) owner decision Oct 2026, GDD §15.0 "Ossuary expansion: owner decisions"; each act restarts at x1 / x1.25 / x1.5
 
 ## The Reckoning of this stage (keys as GraveyardStage.RECKONING): the Purge
 ## Protocol, shared by every Act III stage: kill-drones pour in from every edge
@@ -368,12 +366,8 @@ const STAGE := {
 	"id": ID,
 	"display_name": "The Assembly Halls",
 	"short_name": "Assembly Halls",
-	"chapter": "Chapter VIII",
-	"act": 3,  # Act III, the Electronic Empire.
 	"playable": true,  # Owner decision (Oct 20, 2026): ship Act III as is for the owner's playtest; balance by hand from it (GDD §15.0 "Act III goes live").
 	"description": "The Empire's endless factory floors, where the fallen are rebuilt on moving lines under hard amber light. Ride out the conveyors, smash the fabricators, keep clear of the furnace channels and shut down the Motherboard.",
-	"unlock": {"stage": "wastes", "boss_kills": 1},  # Owner-approved: each boss unlocks the next stage
-	"unlock_text": "Delete Kestrel in the Scrap Wastes to unlock.",
 	"boss": BOSS,
 	"segments": SEGMENTS,
 	"events": EVENTS,
@@ -387,7 +381,6 @@ const STAGE := {
 	"enemy_hp_mult": ENEMY_HP_MULT,
 	"enemy_damage_mult": ENEMY_DAMAGE_MULT,
 	"enemy_mult_from": ENEMY_MULT_FROM,
-	"ash_mult": ASH_MULT,
 	"march": MARCH,  # The clock-driven zones (MarchDirector).
 	"assembly": ASSEMBLY,  # Conveyors, fabricators, furnace channels, the Beta Build (AssemblyDirector).
 	"kind_aliases": KINDS,

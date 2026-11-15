@@ -41,8 +41,6 @@ const ENEMY_DAMAGE_MULT: float = 1.4  # TUNING (not in GDD) phase 2 (the stub's 
 ## Elapsed game seconds from which the two multipliers apply to regular
 ## enemies (the boss always gets them).
 const ENEMY_MULT_FROM: float = 480.0  # TUNING (not in GDD) 8:00 as the World-Tree (first pass 420 as Acts III to XIV: the thin-ring bots fell at 10:29-12:08, harder than the finale; balance pass 1)
-## Soul Ash multiplier of a run on this stage (its own end-screen line).
-const ASH_MULT: float = 1.25  # TUNING (not in GDD) owner decision Oct 2026 (GDD §15.0 "Ossuary expansion: owner decisions"): every act restarts, stage 2 of the act
 
 ## The obstacle kinds the zones share (the Turning Year art's obstacles/<kind>_s /
 ## _l, or _m for a one-size kind; WildGlyphs without art; the thorn thickets grow
@@ -283,12 +281,8 @@ const STAGE := {
 	"id": ID,
 	"display_name": "The Fae Court",
 	"short_name": "Fae Court",
-	"chapter": "Chapter XLIV",  # Temporary and final stage 44 (the reorder pass renumbers if it moves).
-	"act": 15,  # Temporary Act XV, the Turning Year (final slot XV; docs/last_acts/PLAN.md).
 	"playable": true,  # Phase 2 built (GDD §15.0 "The Fae Court (Act XV phase 2)").
 	"description": "A court of endless summer under a sky that never sets. The Summer Queen will offer you a bargain.",
-	"unlock": {"stage": "greenwood", "boss_kills": 1},  # Plan: each stage opens the next
-	"unlock_text": "Defeat the Stag King in the Greenwood to unlock.",
 	"boss": BOSS,
 	"segments": SEGMENTS,
 	"events": EVENTS,
@@ -303,7 +297,6 @@ const STAGE := {
 	"enemy_hp_mult": ENEMY_HP_MULT,
 	"enemy_damage_mult": ENEMY_DAMAGE_MULT,
 	"enemy_mult_from": ENEMY_MULT_FROM,
-	"ash_mult": ASH_MULT,
 	"march": MARCH,  # The four clock-driven zones (MarchDirector).
 	"fae_court": FAE_COURT,  # FaeCourtDirector: the endless summer, the fairy rings, the Winter Prince, A Fair Bargain.
 	"wild": true,  # The Turning Year, Bloom and Blight, Overgrowth (WildRules).

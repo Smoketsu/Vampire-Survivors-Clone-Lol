@@ -49,8 +49,6 @@ const ENEMY_DAMAGE_MULT: float = 1.4  # TUNING (not in GDD) phase 2 (stub 1.3)
 ## Elapsed game seconds from which the two multipliers apply to regular
 ## enemies (the boss always gets them).
 const ENEMY_MULT_FROM: float = 420.0  # TUNING (not in GDD) as Acts III to IX (7:00)
-## Soul Ash multiplier of a run on this stage (its own end-screen line).
-const ASH_MULT: float = 1.0  # TUNING (not in GDD) owner decision Oct 2026 (GDD §15.0 "Ossuary expansion: owner decisions"): every act restarts, stage 1 of the act
 
 ## The four zones (owner-approved proposal names), each from `start` game
 ## seconds (clock-driven, MarchDirector): its floor look ("ground": a
@@ -300,12 +298,8 @@ const STAGE := {
 	"id": ID,
 	"display_name": "The Necropolis of Sand",
 	"short_name": "Necropolis",
-	"chapter": "Chapter XXXIV",  # Temporary (the reorder pass renumbers; final stage 19).
-	"act": 12,  # Temporary Act XII, the Necropolis Dynasty (final slot VII; docs/last_acts/PLAN.md).
 	"playable": true,  # The Necropolis Dynasty goes live (integration, GDD §15.0 "The Necropolis Dynasty goes live (integration)").
 	"description": "The tomb road at dusk, where the dunes meet the rock-cut tombs: the Dynasty has come to take its dead back, and every mummy it raises knows its name.",
-	"unlock": {"stage": "vigrid", "boss_kills": 1},  # PLAN.md: after the Norse act's last boss (odin, stage vigrid; set at the wave 1 integration)
-	"unlock_text": "Defeat Odin and Fenrir on Vigrid to unlock.",
 	"boss": BOSS,
 	"segments": SEGMENTS,
 	"events": EVENTS,
@@ -320,7 +314,6 @@ const STAGE := {
 	"enemy_hp_mult": ENEMY_HP_MULT,
 	"enemy_damage_mult": ENEMY_DAMAGE_MULT,
 	"enemy_mult_from": ENEMY_MULT_FROM,
-	"ash_mult": ASH_MULT,
 	"march": MARCH,  # The four clock-driven zones (MarchDirector).
 	"necropolis": NECROPOLIS,  # NecropolisDirector: the jars beside the tombs, No Jars Left, the Pass's storm, the Sand Colossus.
 	"dynasty": true,  # Rebirth, the Black Land, Heka (DynastyRules).

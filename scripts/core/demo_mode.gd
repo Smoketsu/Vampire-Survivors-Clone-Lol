@@ -38,7 +38,7 @@ static func on() -> bool:
 ## True when stage `id` belongs to the demo (its act is in DemoData.ACTS),
 ## whether or not demo mode is on (the autotest's demo line counts with it).
 static func stage_in_demo(id: String) -> bool:
-	return StageRegistry.STAGES.has(id) and DemoData.ACTS.has(StageRegistry.act_of(id))
+	return StageRegistry.STAGES.has(id) and DemoData.ACTS.has(StageRegistry.act_id_of(id))
 
 
 ## True when stage `id` may be played in this build: always in the full game,
@@ -59,8 +59,8 @@ static func demo_stages() -> PackedStringArray:
 ## Number of acts with stages that the demo leaves out (the call to action).
 static func acts_left_out() -> int:
 	var n := 0  # Acts not in DemoData.ACTS that hold stages.
-	for a: int in StageRegistry.ACTS:
-		if not DemoData.ACTS.has(a) and not StageRegistry.stages_of_act(a).is_empty():
+	for a: int in range(1, StageRegistry.act_count() + 1):
+		if not DemoData.ACTS.has(String(StageRegistry.ACT_ORDER[a - 1]["id"])) and not StageRegistry.stages_of_act(a).is_empty():
 			n += 1
 	return n
 
@@ -167,5 +167,5 @@ static func cta_line() -> Control:
 ## not demo items; must be 0 in a demo run).
 static func summary_line(blocked_offers: int) -> String:
 	return "on=%s | acts=%s | stages=%s | save=%s | full_game_offers=%d" % [
-		str(on()), ",".join(PackedStringArray(DemoData.ACTS.map(func(a: int) -> String: return str(a)))),
+		str(on()), ",".join(PackedStringArray(DemoData.ACTS.map(func(a: String) -> String: return str(StageRegistry.act_number(a))))),
 		",".join(demo_stages()), save_path(Meta.DEFAULT_PATH), blocked_offers]

@@ -385,10 +385,7 @@ const STAGE := {
 	"id": ID,
 	"display_name": "The Desecrated Graveyard",  # GDD §8.1
 	"short_name": "Graveyard",
-	"chapter": "Chapter I",
 	"description": "Defense and survival. The Crimson Covenant has found your burial grounds: hold them for twenty minutes against recruits, archers, Purifiers and Templars, then face Sir Alaric, the Gravebreaker.",  # GDD §8.1 theme / story
-	"unlock": {},  # Always open.
-	"unlock_text": "",
 	"boss": BOSS,
 	"segments": SEGMENTS,
 	"events": EVENTS,
@@ -402,6 +399,5 @@ const STAGE := {
 	"enemy_hp_mult": 1.0,  # Stage 1 is the baseline difficulty.
 	"enemy_damage_mult": 1.0,  # Stage 1 is the baseline difficulty.
 	"enemy_mult_from": 0.0,  # TUNING (not in GDD) no step-up to delay here
-	"ash_mult": 1.0,  # TUNING (not in GDD) no stage bonus: stage 1 of an act is x1 (owner decision Oct 2026, GDD §15.0 "Ossuary expansion: owner decisions").
 	"march": {},  # No Crimson March mechanics.
 }

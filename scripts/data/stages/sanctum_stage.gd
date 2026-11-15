@@ -82,8 +82,6 @@ const ENEMY_DAMAGE_MULT: float = 1.1  # TUNING (not in GDD) (March 1.05)
 ## (the March's lesson), and in Zone II the Sentinels, the Cathedral Guardian
 ## and the Radiant Inquisitors already arrive together.
 const ENEMY_MULT_FROM: float = 510.0  # TUNING (not in GDD) Zone III (was 240, Zone II, before the Stage 3 kinds merged)
-## Soul Ash multiplier of a run on this stage (its own end-screen line).
-const ASH_MULT: float = 1.5  # TUNING (not in GDD) owner decision Oct 2026, GDD §15.0 "Ossuary expansion: owner decisions"; each act restarts at x1 / x1.25 / x1.5
 
 ## Dawn's Wrath: the Sanctum's Reckoning (same escalation as the Graveyard;
 ## keys as GraveyardStage.RECKONING) plus:
@@ -441,10 +439,7 @@ const STAGE := {
 	"id": ID,
 	"display_name": "The Sanctum of Judgment",  # GDD §8.3
 	"short_name": "Sanctum",
-	"chapter": "Chapter III",
 	"description": "The final assault. Storm the Covenant's cathedral through its courtyards, golden halls and cloisters to the final sanctuary. Shatter the ward crystals, topple the sacred altars and corrupt the holy ground, then silence Grand Inquisitor Seraphine.",  # GDD §8.3 theme / story
-	"unlock": {"stage": "crimson_march", "boss_kills": 1},  # GDD §9.3: defeat the previous stage's boss
-	"unlock_text": "Slay Marshal Vael on the Crimson March to unlock.",
 	"boss": BOSS,
 	"segments": SEGMENTS,
 	"events": EVENTS,
@@ -458,7 +453,6 @@ const STAGE := {
 	"enemy_hp_mult": ENEMY_HP_MULT,
 	"enemy_damage_mult": ENEMY_DAMAGE_MULT,
 	"enemy_mult_from": ENEMY_MULT_FROM,
-	"ash_mult": ASH_MULT,
 	"march": MARCH,
 	"sanctum": SANCTUM,
 	"kind_aliases": KINDS,

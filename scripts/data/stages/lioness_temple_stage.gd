@@ -51,8 +51,6 @@ const ENEMY_DAMAGE_MULT: float = 1.4  # TUNING (not in GDD) foundation stub 1.35
 ## Elapsed game seconds from which the two multipliers apply to regular
 ## enemies (the boss always gets them).
 const ENEMY_MULT_FROM: float = 420.0  # TUNING (not in GDD) as Acts III to IX (7:00)
-## Soul Ash multiplier of a run on this stage (its own end-screen line).
-const ASH_MULT: float = 1.25  # TUNING (not in GDD) owner decision Oct 2026 (GDD §15.0 "Ossuary expansion: owner decisions"): every act restarts, stage 2 of the act
 
 # =====================================================================================
 # Zones and their look
@@ -298,12 +296,8 @@ const STAGE := {
 	"id": ID,
 	"display_name": "The Temple of the Lioness",
 	"short_name": "Lioness Temple",
-	"chapter": "Chapter XXXV",  # Temporary (the reorder pass renumbers; final stage 20).
-	"act": 12,  # Temporary Act XII, the Necropolis Dynasty (final slot VII; docs/last_acts/PLAN.md).
 	"playable": true,  # The Necropolis Dynasty goes live (integration, GDD §15.0 "The Necropolis Dynasty goes live (integration)").
 	"description": "A sun-baked temple of colonnades and statue-lined courts, sacred to the goddess of war and plague: here the stone itself walks.",
-	"unlock": {"stage": "necropolis", "boss_kills": 1},  # Brief: each stage opens the next
-	"unlock_text": "Defeat Anubis at the Necropolis of Sand to unlock.",
 	"boss": BOSS,
 	"segments": SEGMENTS,
 	"events": EVENTS,
@@ -318,7 +312,6 @@ const STAGE := {
 	"enemy_hp_mult": ENEMY_HP_MULT,
 	"enemy_damage_mult": ENEMY_DAMAGE_MULT,
 	"enemy_mult_from": ENEMY_MULT_FROM,
-	"ash_mult": ASH_MULT,
 	"march": MARCH,  # The four clock-driven zones (MarchDirector).
 	"dynasty": true,  # Rebirth, the Black Land, Heka (DynastyRules).
 	"rebirth": {},  # This stage's Rebirth overrides ({} = DynastyRulesData.REBIRTH).

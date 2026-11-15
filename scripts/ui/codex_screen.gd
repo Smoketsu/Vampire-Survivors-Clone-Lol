@@ -1,7 +1,7 @@
 ## CodexScreen — the Achievements + Codex screen (GDD §10.1 "Collection /
 ## Codex" and "Achievements"; GDD §15.0 "Codex and achievements screen"),
 ## opened from the main menu with CodexScreen.open_over(parent). An ornate
-## violet panel with four tabs (CodexData.TABS):
+## violet panel with four tabs (CodexData.tabs()):
 ##   * Achievements: every MetaData achievement and every feat (the lifetime
 ##     counter skin unlocks, the Hyper unlock, the Hyper skins) as a
 ##     CodexFeatRow: badge, goal, progress bar, reward; earned rows are gold.
@@ -90,7 +90,7 @@ func _ready() -> void:
 	vb.add_child(stack)
 	stack.add_child(_feats_page())
 	var pages := CodexEntries.pages()  # Page id -> sections.
-	for t: Array in CodexData.TABS:
+	for t: Array in CodexData.tabs():
 		var id := String(t[0])
 		if pages.has(id):
 			stack.add_child(_codex_page(id, pages[id]))
@@ -98,8 +98,8 @@ func _ready() -> void:
 		["ui_cancel", "Back"]]))
 	_wire_tabs()
 	for id: String in _rows:  # Focus links need every node in the tree (get_path_to).
-		_wire_grid(id, _rows[id], id != String(CodexData.TABS[0][0]))
-	show_tab(String(CodexData.TABS[0][0]), false)
+		_wire_grid(id, _rows[id], id != String(CodexData.tabs()[0][0]))
+	show_tab(String(CodexData.tabs()[0][0]), false)
 	(tab_buttons[current] as Button).grab_focus.call_deferred()
 	UiMotion.open(self)
 
@@ -122,7 +122,7 @@ func _header() -> Control:
 	var lb := InputHints.chip(InputHints.raw(KEY_Q, JOY_BUTTON_LEFT_SHOULDER))
 	lb.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	row.add_child(lb)
-	for t: Array in CodexData.TABS:
+	for t: Array in CodexData.tabs():
 		var b := Button.new()
 		b.text = String(t[1])
 		b.custom_minimum_size = Vector2(0.0, CodexData.TAB_HEIGHT)
@@ -150,7 +150,7 @@ func _header() -> Control:
 ## Left / right links along the tab row and Back.
 func _wire_tabs() -> void:
 	var row: Array[Button] = []  # Tabs then Back.
-	for t: Array in CodexData.TABS:
+	for t: Array in CodexData.tabs():
 		row.append(tab_buttons[String(t[0])])
 	row.append(back_button)
 	for i in row.size():
@@ -187,7 +187,7 @@ func show_tab(id: String, animate: bool = true) -> void:
 ## Shows the next (`step` 1) or previous (-1) tab.
 func _cycle_tab(step: int) -> void:
 	var ids: Array[String] = []
-	for t: Array in CodexData.TABS:
+	for t: Array in CodexData.tabs():
 		ids.append(String(t[0]))
 	var i := (ids.find(current) + step + ids.size()) % ids.size()
 	show_tab(ids[i])
@@ -200,7 +200,7 @@ func _cycle_tab(step: int) -> void:
 
 ## The Achievements page: two sections of CodexFeatRow cards in a scroll.
 func _feats_page() -> Control:
-	var id := String(CodexData.TABS[0][0])
+	var id := String(CodexData.tabs()[0][0])
 	var scroll := _scroll()
 	_scrolls[id] = scroll
 	var pad := MarginContainer.new()  # Keeps the cards clear of the scroll bar.

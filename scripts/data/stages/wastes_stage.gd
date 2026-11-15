@@ -52,8 +52,6 @@ const ENEMY_DAMAGE_MULT: float = 1.0  # TUNING (not in GDD) (Act III balance: 1.
 ## Elapsed game seconds from which the two multipliers apply to regular
 ## enemies (the boss always gets them): Zone II, as on the Archive and Ul-Thalos.
 const ENEMY_MULT_FROM: float = 420.0  # TUNING (not in GDD) (the Archive and Ul-Thalos: 7:00)
-## Soul Ash multiplier of a run on this stage (its own end-screen line).
-const ASH_MULT: float = 1.0  # TUNING (not in GDD) owner decision Oct 2026, GDD §15.0 "Ossuary expansion: owner decisions"; each act restarts at x1 / x1.25 / x1.5
 
 ## The Reckoning of this stage (keys as GraveyardStage.RECKONING): the Purge
 ## Protocol, shared by every Act III stage: kill-drones pour in from every edge
@@ -335,12 +333,8 @@ const STAGE := {
 	"id": ID,
 	"display_name": "The Scrap Wastes",
 	"short_name": "Scrap Wastes",
-	"chapter": "Chapter VII",
-	"act": 3,  # Act III, the Electronic Empire.
 	"playable": true,  # Owner decision (Oct 20, 2026): ship Act III as is for the owner's playtest; balance by hand from it (GDD §15.0 "Act III goes live").
 	"description": "The Empire's old battlefield: slag hills, rusting war machines the size of buildings and red signal masts on the ridges. It saw the beacons of Ul-Thalos burning and came for the one who lit them; Kestrel, the Dead Pixel, hunts the wastes.",
-	"unlock": {"stage": "spire", "boss_kills": 1},  # Owner-approved: Act III opens when Vhal'Neth falls
-	"unlock_text": "Slay Vhal'Neth on Ul-Thalos to unlock.",
 	"boss": BOSS,
 	"segments": SEGMENTS,
 	"events": EVENTS,
@@ -355,7 +349,6 @@ const STAGE := {
 	"enemy_hp_mult": ENEMY_HP_MULT,
 	"enemy_damage_mult": ENEMY_DAMAGE_MULT,
 	"enemy_mult_from": ENEMY_MULT_FROM,
-	"ash_mult": ASH_MULT,
 	"march": MARCH,  # The four clock-driven zones (MarchDirector).
 	"wastes": WASTES,  # WastesDirector: Signal Pylons, scrap storms, the Trojan Horse.
 	"empire": true,  # Act III: Line of Fire, Lock-On, Steel has no soul (EmpireRules).

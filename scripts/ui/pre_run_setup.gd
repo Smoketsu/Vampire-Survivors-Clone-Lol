@@ -252,7 +252,7 @@ func _head() -> Control:
 	head.alignment = BoxContainer.ALIGNMENT_CENTER
 	head.add_child(UiTheme.title("Prepare the Ritual"))
 	var def := config.stage_def()  # The chosen stage.
-	var stage_l := UiTheme.tier_label("%s  ·  %s" % [String(def["chapter"]), String(def["short_name"])], UiTheme.Tier.LABEL, UiTheme.TEXT_DIM)
+	var stage_l := UiTheme.tier_label("%s  ·  %s" % [StageRegistry.chapter_of(String(def["id"])), String(def["short_name"])], UiTheme.Tier.LABEL, UiTheme.TEXT_DIM)
 	stage_l.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	head.add_child(stage_l)
 	return head

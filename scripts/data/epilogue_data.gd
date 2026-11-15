@@ -42,7 +42,7 @@ const PARTS := [
 	{
 		"id": "act2",  # TUNING (not in GDD)
 		"achievement": "the_dead_god_serves",
-		"act": "Act II: The Ancient Eye",
+		"act": "Act XI: The Ancient Eye",
 		"heading": "The Dead God Serves",
 		"lines": [
 			"The Eye's faithful had prayed for the Dreaming Mother to wake and claim every corpse as her vessel. They had not prayed for who would answer.",
@@ -75,7 +75,7 @@ const PARTS := [
 const ACT3_PART := {
 	"id": "act3",  # TUNING (not in GDD)
 	"achievement": "nothing_is_deathless",
-	"act": "Act III: The Electronic Empire",
+	"act": "Act XII: The Electronic Empire",
 	"heading": "The Machines Go Dark",  # Owner-approved proposal
 	"lines": [
 		"The Empire had conquered death with steel. Its citizens were never buried; they were rebuilt, and rebuilt again, and called it forever.",  # TUNING (not in GDD)
@@ -110,7 +110,7 @@ const ACT3_PART := {
 const ACT4_PART := {
 	"id": "act4",  # TUNING (not in GDD)
 	"achievement": "empty_throne",
-	"act": "Act IV: The Olympian Republic",
+	"act": "Act VIII: The Olympian Republic",
 	"heading": "The Gods Are Silent",  # Owner-approved proposal
 	"lines": [
 		"The army of the dead had grown so vast that the Underworld stood empty. Hades complained to Olympus that his kingdom was a desert, and the gods came down to take the dead back.",  # Owner-approved proposal story

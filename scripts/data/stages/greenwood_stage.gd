@@ -40,8 +40,6 @@ const ENEMY_DAMAGE_MULT: float = 1.4  # TUNING (not in GDD) phase 2 (the stub's 
 ## Elapsed game seconds from which the two multipliers apply to regular
 ## enemies (the boss always gets them).
 const ENEMY_MULT_FROM: float = 420.0  # TUNING (not in GDD) as Acts III to XIV (7:00)
-## Soul Ash multiplier of a run on this stage (its own end-screen line).
-const ASH_MULT: float = 1.0  # TUNING (not in GDD) owner decision Oct 2026 (GDD §15.0 "Ossuary expansion: owner decisions"): every act restarts, stage 1 of the act
 
 ## The obstacle kinds every zone shares (two sizes each: the Turning Year art's
 ## obstacles/<kind>_s / _l, WildGlyphs without art; the thorn thickets grow
@@ -279,12 +277,8 @@ const STAGE := {
 	"id": ID,
 	"display_name": "The Greenwood",
 	"short_name": "Greenwood",
-	"chapter": "Chapter XLIII",  # Temporary and final stage 43 (the reorder pass renumbers if it moves).
-	"act": 15,  # Temporary Act XV, the Turning Year (final slot XV; docs/last_acts/PLAN.md).
 	"playable": true,  # Phase 2 built (GDD §15.0 "The Greenwood (Act XV phase 2)").
 	"description": "An old forest that has never been cut. The world remembers how to bury things, and it has come for your dead.",
-	"unlock": {"stage": "last_day", "boss_kills": 1},  # Plan: defeating Old Gravejaw (the Age of Titans' finale) opens the Turning Year
-	"unlock_text": "Defeat Old Gravejaw on the Last Day to unlock.",
 	"boss": BOSS,
 	"segments": SEGMENTS,
 	"events": EVENTS,
@@ -299,7 +293,6 @@ const STAGE := {
 	"enemy_hp_mult": ENEMY_HP_MULT,
 	"enemy_damage_mult": ENEMY_DAMAGE_MULT,
 	"enemy_mult_from": ENEMY_MULT_FROM,
-	"ash_mult": ASH_MULT,
 	"march": MARCH,  # The four clock-driven zones (MarchDirector).
 	"greenwood": GREENWOOD,  # GreenwoodDirector: the sacred groves, the Huntsman, Scorched Earth.
 	"wild": true,  # The Turning Year, Bloom and Blight, Overgrowth (WildRules).

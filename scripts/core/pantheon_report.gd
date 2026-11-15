@@ -47,12 +47,12 @@ static func print_lines(game: Game, st: Dictionary) -> void:
 	if not parts.is_empty():
 		print("[autotest] pantheon kinds (spawned/killed): %s" % " | ".join(parts))
 	var sd := game.stage_def  # The run's stage.
-	if StageRegistry.act_of(String(sd["id"])) == 4:
+	if StageRegistry.act_id_of(String(sd["id"])) == "pantheon":
 		var boss: Dictionary = sd["boss"]
 		print("[autotest] pantheon stage: %s (%s) | playable %s | wrath %s | boss %s (script %s) | enemy x%.2f HP / x%.2f dmg from %s | soul ash x%.2f | reckoning kind %s, twilight %s" % [
 			String(sd["id"]), String(sd["display_name"]), str(StageRegistry.is_playable(String(sd["id"]))), pan.wrath.stage_kind,
 			String(boss["id"]), String(boss.get("script", boss["id"])), float(sd["enemy_hp_mult"]), float(sd["enemy_damage_mult"]),
-			EmpireReport._clock(float(sd.get("enemy_mult_from", 0.0))), float(sd["ash_mult"]),
+			EmpireReport._clock(float(sd.get("enemy_mult_from", 0.0))), StageRegistry.ash_mult_of(String(sd["id"])),
 			String((sd["reckoning"] as Dictionary).get("kind", "inquisitor")), str(not pan.wrath.twilight.is_empty())])
 	# --- Act IV: the Shores of Ilion ---
 	IlionReport.print_lines(game, st)  # Siege towers, the stage's kinds, Polyphemus, Achilles (each when it ran).

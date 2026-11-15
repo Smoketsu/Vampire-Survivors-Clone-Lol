@@ -48,8 +48,6 @@ const ENEMY_DAMAGE_MULT: float = 1.45  # TUNING (not in GDD) phase 2 (the founda
 ## Elapsed game seconds from which the two multipliers apply to regular
 ## enemies (the boss always gets them).
 const ENEMY_MULT_FROM: float = 420.0  # TUNING (not in GDD) as Acts III to IX (7:00)
-## Soul Ash multiplier of a run on this stage (its own end-screen line).
-const ASH_MULT: float = 1.5  # TUNING (not in GDD) owner decision Oct 2026 (GDD §15.0 "Ossuary expansion: owner decisions"): every act restarts, stage 3 of the act
 
 # =====================================================================================
 # Zones and their look
@@ -260,12 +258,8 @@ const STAGE := {
 	"id": ID,
 	"display_name": "The Hall of Two Truths",
 	"short_name": "Two Truths",
-	"chapter": "Chapter XXXVI",  # Temporary (the reorder pass renumbers; final stage 21).
-	"act": 12,  # Temporary Act XII, the Necropolis Dynasty (final slot VII; docs/last_acts/PLAN.md).
 	"playable": true,  # The Necropolis Dynasty goes live (integration, GDD §15.0 "The Necropolis Dynasty goes live (integration)").
 	"description": "The judgment hall of the dead: past the gate of reeds and the river of fire the great scales wait, and Osiris on his throne.",
-	"unlock": {"stage": "lioness_temple", "boss_kills": 1},  # Brief: each stage opens the next
-	"unlock_text": "Defeat Sekhmet at the Temple of the Lioness to unlock.",
 	"boss": BOSS,
 	"segments": SEGMENTS,
 	"events": EVENTS,
@@ -280,7 +274,6 @@ const STAGE := {
 	"enemy_hp_mult": ENEMY_HP_MULT,
 	"enemy_damage_mult": ENEMY_DAMAGE_MULT,
 	"enemy_mult_from": ENEMY_MULT_FROM,
-	"ash_mult": ASH_MULT,
 	"march": MARCH,  # The four clock-driven zones (MarchDirector).
 	"two_truths": TWO_TRUTHS,  # TwoTruthsDirector (the Scales, the Whelp, the wardens' rise).
 	"dynasty": true,  # Rebirth, the Black Land, Heka (DynastyRules).

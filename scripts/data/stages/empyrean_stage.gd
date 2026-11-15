@@ -45,8 +45,6 @@ const ENEMY_DAMAGE_MULT: float = 1.5  # TUNING (not in GDD) as the Wheel of Thro
 ## Elapsed game seconds from which the two multipliers apply to regular
 ## enemies (the boss always gets them).
 const ENEMY_MULT_FROM: float = 420.0  # TUNING (not in GDD) as Acts III to XII (7:00)
-## Soul Ash multiplier of a run on this stage (its own end-screen line).
-const ASH_MULT: float = 1.5  # TUNING (not in GDD) owner decision Oct 2026 (GDD §15.0 "Ossuary expansion: owner decisions"): every act restarts, stage 3 of the act
 
 ## The obstacle layout every zone shares the kinds of (the Host art's sprites
 ## obstacles/<kind>_m, one size each; HostGlyphs without art). Rect kinds lie
@@ -245,12 +243,8 @@ const STAGE := {
 	"id": ID,
 	"display_name": "The Empyrean",
 	"short_name": "Empyrean",
-	"chapter": "Chapter XXXIX",  # Temporary (the reorder pass renumbers; final stage 30).
-	"act": 13,  # Temporary Act XIII, the Celestial Host (final slot X; docs/last_acts/PLAN.md).
 	"playable": true,  # Phase 2 built (GDD §15.0 "The Empyrean (Act XIII phase 2)").
 	"description": "The highest heaven: a white rose of light, endless and silent. At its heart the Voice waits, its face hidden behind its wings.",
-	"unlock": {"stage": "wheel_of_thrones", "boss_kills": 1},  # Plan: each stage opens the next
-	"unlock_text": "Break the Throne on the Wheel of Thrones to unlock.",
 	"boss": BOSS,
 	"segments": SEGMENTS,
 	"events": EVENTS,
@@ -265,7 +259,6 @@ const STAGE := {
 	"enemy_hp_mult": ENEMY_HP_MULT,
 	"enemy_damage_mult": ENEMY_DAMAGE_MULT,
 	"enemy_mult_from": ENEMY_MULT_FROM,
-	"ash_mult": ASH_MULT,
 	"march": MARCH,  # The four clock-driven zones (MarchDirector).
 	"empyrean": EMPYREAN,  # EmpyreanDirector: the Choir, the Herald of the Seventh Trumpet, The Last Word.
 	"host": true,  # Judgment, Hallowed Light, Grace (HostRules).

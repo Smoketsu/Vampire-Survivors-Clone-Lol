@@ -1608,7 +1608,7 @@ func build_summary() -> Dictionary:
 		"reason": end_reason,
 		"stage_id": String(stage_def["id"]),
 		"stage_name": String(stage_def["display_name"]),
-		"stage_ash_mult": float(stage_def["ash_mult"]),
+		"stage_ash_mult": StageRegistry.ash_mult_of(String(stage_def["id"])),
 		"character_id": character.id,
 		"character_name": character.display_name(),
 		"unlocked_characters": character.unlocked_this_run.duplicate(),

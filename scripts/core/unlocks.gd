@@ -3,8 +3,9 @@
 ##   is_open(id)       — unlocked (UnlockData; Meta [unlocks]), or not lockable
 ##                       at all (every Act I item), or opened for the autotest.
 ##   act_allows(id, stage) — the item's own card row has no "act" key, or the
-##                       run's stage belongs to that act (Act II's
-##                       counter-passives are offered only in Act II).
+##                       run's stage belongs to that act (the row's act id
+##                       against StageRegistry.act_id_of(); the Ancient Eye's
+##                       counter-passives are offered only in its stages).
 ##   offerable(id, stage) — both: AbilityManager's card pool asks this.
 ## Demo mode (DemoMode, GDD §15.0 "Demo mode (owner request, Nov 2026)"): a
 ## lockable item outside DemoData.OPEN_ITEMS is closed in the demo whatever the
@@ -81,7 +82,7 @@ static func act_allows(id: String, stage_def: Dictionary) -> bool:
 	var row := card_row(id)
 	if not row.has("act"):
 		return true
-	return int(row["act"]) == int(stage_def.get("act", 1))
+	return String(row["act"]) == StageRegistry.act_id_of(String(stage_def.get("id", "")))
 
 
 ## True when item `id` may be offered on stage `stage_def`.

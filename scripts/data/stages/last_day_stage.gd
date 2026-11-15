@@ -48,8 +48,6 @@ const ENEMY_DAMAGE_MULT: float = 1.4  # TUNING (not in GDD) phase 2 (the stub's 
 ## Elapsed game seconds from which the two multipliers apply to regular
 ## enemies (the boss always gets them).
 const ENEMY_MULT_FROM: float = 420.0  # TUNING (not in GDD) as Acts III to XIII (7:00)
-## Soul Ash multiplier of a run on this stage (its own end-screen line).
-const ASH_MULT: float = 1.5  # TUNING (not in GDD) owner decision Oct 2026 (GDD §15.0 "Ossuary expansion: owner decisions"): every act restarts, stage 3 of the act
 ## Damage-source tag of a meteorite of Fire from the Sky (stats, the death line).
 const METEOR_SOURCE: String = "last_day_meteorite"
 
@@ -257,12 +255,8 @@ const STAGE := {
 	"id": ID,
 	"display_name": "The Last Day",
 	"short_name": "Last Day",
-	"chapter": "Chapter XLII",  # Temporary and final stage 42 (the reorder pass renumbers if it moves).
-	"act": 14,  # Temporary Act XIV, the Age of Titans (final slot XIV; docs/last_acts/PLAN.md).
 	"playable": true,  # Phase 2 built (GDD §15.0 "The Last Day (Act XIV phase 2)").
 	"description": "The impact basin under a white sky: the meteor fills the heavens, and the necromancer has taken its Call for himself.",
-	"unlock": {"stage": "great_plain", "boss_kills": 1},  # Plan: each stage opens the next
-	"unlock_text": "Defeat Old Ironbrow on the Great Plain to unlock.",
 	"boss": BOSS,
 	"segments": SEGMENTS,
 	"events": EVENTS,
@@ -277,7 +271,6 @@ const STAGE := {
 	"enemy_hp_mult": ENEMY_HP_MULT,
 	"enemy_damage_mult": ENEMY_DAMAGE_MULT,
 	"enemy_mult_from": ENEMY_MULT_FROM,
-	"ash_mult": ASH_MULT,
 	"march": MARCH,  # The four clock-driven zones (MarchDirector).
 	"last_day": LAST_DAY,  # LastDayDirector: Fire from the Sky, the growing meteor, Thunderwing.
 	"primeval": true,  # Packs, Herds, Scavengers (PrimevalRules).

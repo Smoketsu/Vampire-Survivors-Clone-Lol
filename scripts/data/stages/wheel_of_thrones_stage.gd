@@ -44,8 +44,6 @@ const ENEMY_DAMAGE_MULT: float = 1.5  # TUNING (not in GDD) phase 2, as the Silv
 ## Elapsed game seconds from which the two multipliers apply to regular
 ## enemies (the boss always gets them).
 const ENEMY_MULT_FROM: float = 420.0  # TUNING (not in GDD) as Acts III to XII (7:00)
-## Soul Ash multiplier of a run on this stage (its own end-screen line).
-const ASH_MULT: float = 1.25  # TUNING (not in GDD) owner decision Oct 2026 (GDD §15.0 "Ossuary expansion: owner decisions"): every act restarts, stage 2 of the act
 
 ## The obstacle layout every zone shares the kinds of (the Host art's sprites
 ## obstacles/<kind>_m, one size each; HostGlyphs without art). Rect kinds lie
@@ -256,12 +254,8 @@ const STAGE := {
 	"id": ID,
 	"display_name": "The Wheel of Thrones",
 	"short_name": "Wheel of Thrones",
-	"chapter": "Chapter XXXVIII",  # Temporary (the reorder pass renumbers; final stage 29).
-	"act": 13,  # Temporary Act XIII, the Celestial Host (final slot X; docs/last_acts/PLAN.md).
 	"playable": true,  # Phase 2 built (GDD §15.0 "The Wheel of Thrones (Act XIII phase 2)").
 	"description": "The turning spheres of heaven: rings of crystal orbit through the arena, and at their centre the Throne turns, its rims covered in eyes.",
-	"unlock": {"stage": "silver_stair", "boss_kills": 1},  # Plan: each stage opens the next
-	"unlock_text": "Defeat Seraiel on the Silver Stair to unlock.",
 	"boss": BOSS,
 	"segments": SEGMENTS,
 	"events": EVENTS,
@@ -276,7 +270,6 @@ const STAGE := {
 	"enemy_hp_mult": ENEMY_HP_MULT,
 	"enemy_damage_mult": ENEMY_DAMAGE_MULT,
 	"enemy_mult_from": ENEMY_MULT_FROM,
-	"ash_mult": ASH_MULT,
 	"march": MARCH,  # The four clock-driven zones (MarchDirector).
 	"wheel_of_thrones": SPHERES,  # WheelOfThronesDirector: the turning spheres, the Dominion of the Spheres, The Wheel Breaks.
 	"host": true,  # Judgment, Hallowed Light, Grace (HostRules).

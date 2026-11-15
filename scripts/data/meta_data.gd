@@ -64,7 +64,9 @@ extends RefCounted
 ## a step to Meta._migrate() whenever the save layout changes.
 ## Version 2 (Ossuary deep levels): the [clears] section (hardest difficulty cleared,
 ## with and without Hyper); tiers above 5 became valid. Nothing moves or is refunded.
-const SAVE_VERSION: int = 2
+## Version 3 (the reorder pass, part 1): [stages] opened keeps every stage the old
+## act order had opened (SaveMigration.legacy_opened()).
+const SAVE_VERSION: int = 3
 
 # --- Soul Ash earn formula (header) -----------------------------------------------
 

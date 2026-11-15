@@ -51,7 +51,7 @@ static func print_lines(game: Game, st: Dictionary) -> void:
 		print("[autotest] host stage: %s (%s) | act %d | playable %s | boss %s (script %s) | enemy x%.2f HP / x%.2f dmg from %s | soul ash x%.2f | reckoning kind %s, last trumpet %s" % [
 			String(sd["id"]), String(sd["display_name"]), StageRegistry.act_of(String(sd["id"])), str(StageRegistry.is_playable(String(sd["id"]))),
 			String(boss["id"]), String(boss.get("script", boss["id"])), float(sd["enemy_hp_mult"]), float(sd["enemy_damage_mult"]),
-			EmpireReport._clock(float(sd.get("enemy_mult_from", 0.0))), float(sd["ash_mult"]),
+			EmpireReport._clock(float(sd.get("enemy_mult_from", 0.0))), StageRegistry.ash_mult_of(String(sd["id"])),
 			String((sd["reckoning"] as Dictionary).get("kind", "inquisitor")), str(not ho.trumpet.cfg.is_empty())])
 	# Phase 2: each Host stage's own lines go here (its stage, kinds and boss).
 	# --- Act XIII (temporary number): the Silver Stair --- (its stage, the Cherubs, Seraiel; SilverStairReport)

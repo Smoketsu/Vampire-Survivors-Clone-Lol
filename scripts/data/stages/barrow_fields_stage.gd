@@ -50,8 +50,6 @@ const ENEMY_DAMAGE_MULT: float = 1.2  # balance pass 1: 1.4 -> 1.2 (the act's fi
 ## Elapsed game seconds from which the two multipliers apply to regular
 ## enemies (the boss always gets them).
 const ENEMY_MULT_FROM: float = 420.0  # TUNING (not in GDD) 7:00, as Acts III to IX
-## Soul Ash multiplier of a run on this stage (its own end-screen line).
-const ASH_MULT: float = 1.0  # TUNING (not in GDD) owner decision Oct 2026, GDD §15.0 "Ossuary expansion: owner decisions": every act restarts, stage 1 of the act
 
 ## The four zones (owner-approved proposal names), each from `start` game
 ## seconds (clock-driven, MarchDirector): its floor look ("ground": a
@@ -291,12 +289,8 @@ const STAGE := {
 	"id": ID,
 	"display_name": "The Barrow Fields",
 	"short_name": "Barrow Fields",
-	"chapter": "Chapter XVI",
-	"act": 11,  # The Hall of the Slain: TEMPORARY act number 11 (final slot VI; the reorder pass renumbers it).
 	"playable": true,  # Opened at the Hall of the Slain integration (GDD §15.0 "Hall of the Slain integration").
 	"description": "Snowfields of burial mounds above a frozen fjord. The barrows are cracking open: the hall's dead walk south, and the living march with them to fill its empty benches.",
-	"unlock": {"stage": "maelstrom", "boss_kills": 1},  # Wave 1 integration: the chain runs ... -> Vandermere -> Hrimgar
-	"unlock_text": "Defeat Captain Vandermere in the Maelstrom to unlock.",
 	"boss": BOSS,
 	"segments": SEGMENTS,
 	"events": EVENTS,
@@ -311,7 +305,6 @@ const STAGE := {
 	"enemy_hp_mult": ENEMY_HP_MULT,
 	"enemy_damage_mult": ENEMY_DAMAGE_MULT,
 	"enemy_mult_from": ENEMY_MULT_FROM,
-	"ash_mult": ASH_MULT,
 	"march": MARCH,  # The four clock-driven zones (MarchDirector).
 	"barrow_fields": BARROW_FIELDS,  # BarrowFieldsDirector: the braziers by the map, the open barrows, the drifts, Keep the Fires, the Barrow-Wight.
 	"norse": true,  # The Hall of the Slain: the Long Winter, Berserkergang, the Rune-Stones (NorseRules).

@@ -50,8 +50,6 @@ const ENEMY_DAMAGE_MULT: float = 1.25  # balance pass 1: 1.45 -> 1.25 (2 of 3 ne
 ## Elapsed game seconds from which the two multipliers apply to regular
 ## enemies (the boss always gets them).
 const ENEMY_MULT_FROM: float = 420.0  # TUNING (not in GDD) 7:00, as Acts III to IX
-## Soul Ash multiplier of a run on this stage (its own end-screen line).
-const ASH_MULT: float = 1.25  # TUNING (not in GDD) owner decision Oct 2026, GDD §15.0 "Ossuary expansion: owner decisions": every act restarts, stage 2 of the act
 
 # =====================================================================================
 # Zones and their look
@@ -300,12 +298,8 @@ const STAGE := {
 	"id": ID,
 	"display_name": "Valgard, the Hall of Heroes",
 	"short_name": "Valgard",
-	"chapter": "Chapter XVII",
-	"act": 11,  # The Hall of the Slain: TEMPORARY act number 11 (final slot VI; the reorder pass renumbers it).
 	"playable": true,  # Opened at the Hall of the Slain integration (GDD §15.0 "Hall of the Slain integration").
 	"description": "A vast feast hall at the edge of the sky, long tables and shields on the walls. The benches stood empty since you took the world's dead; now the hall's own heroes rise from them.",
-	"unlock": {"stage": "barrow_fields", "boss_kills": 1},
-	"unlock_text": "Defeat Hrimgar the Draugr-King in the Barrow Fields to unlock.",
 	"boss": BOSS,
 	"segments": SEGMENTS,
 	"events": EVENTS,
@@ -320,7 +314,6 @@ const STAGE := {
 	"enemy_hp_mult": ENEMY_HP_MULT,
 	"enemy_damage_mult": ENEMY_DAMAGE_MULT,
 	"enemy_mult_from": ENEMY_MULT_FROM,
-	"ash_mult": ASH_MULT,
 	"march": MARCH,  # The four clock-driven zones (MarchDirector).
 	"norse": true,  # The Hall of the Slain: the Long Winter, Berserkergang, the Rune-Stones (NorseRules).
 	"long_winter": LONG_WINTER,  # This stage's Long Winter: the braziers by the map.

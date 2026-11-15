@@ -265,7 +265,7 @@ func _refresh_run() -> void:
 	var cfg: Dictionary = CoopNet.settings if not CoopNet.settings.is_empty() else CoopNet.config_dict(_config)
 	var stage := String(cfg.get("stage_id", StageRegistry.DEFAULT_ID))
 	var def: Dictionary = StageRegistry.STAGES.get(stage, StageRegistry.STAGES[StageRegistry.DEFAULT_ID])
-	_run_name.text = "%s  ·  %s" % [String(def["chapter"]), String(def["display_name"])]
+	_run_name.text = "%s  ·  %s" % [StageRegistry.chapter_of(String(def["id"])), String(def["display_name"])]
 	var parts := PackedStringArray()
 	var lv: Dictionary = DifficultyData.LEVELS.get(String(cfg.get("difficulty_id", "")), DifficultyData.LEVELS[DifficultyData.DEFAULT_ID])
 	parts.append(String(lv["display_name"]))

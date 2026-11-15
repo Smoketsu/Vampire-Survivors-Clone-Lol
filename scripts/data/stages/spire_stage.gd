@@ -77,8 +77,6 @@ const ENEMY_DAMAGE_MULT: float = 1.2  # TUNING (not in GDD) (Act II integration:
 ## enemies: Zone II, the Sunken Steps (the boss always gets them). From 0:00
 ## they would lift an Initiate past the starting Shadow Bolt's one-shot.
 const ENEMY_MULT_FROM: float = 420.0  # TUNING (not in GDD) Zone II (Act II integration: 300.0; the naive bot died in 7 of 8 runs)
-## Soul Ash multiplier of a run on this stage (its own end-screen line).
-const ASH_MULT: float = 1.5  # TUNING (not in GDD) owner decision Oct 2026, GDD §15.0 "Ossuary expansion: owner decisions"; each act restarts at x1 / x1.25 / x1.5
 
 ## The Waking: the Reckoning of Ul-Thalos (keys as GraveyardStage.RECKONING
 ## plus "kind", the main wave's kind alias, and "companions" as the
@@ -392,12 +390,8 @@ const STAGE := {
 	"id": ID,
 	"display_name": "Ul-Thalos, the Risen Spire",
 	"short_name": "Ul-Thalos",
-	"chapter": "Chapter VI",
-	"act": 2,  # Act II, the Ancient Eye.
 	"playable": true,  # Act II integration (balance-checked, 8-seed batches); the owner playtests it from here.
 	"description": "The god's city surfaces mid-ocean: wet green stone and wrong angles around the spire where it lies dreaming. The city sinks back as the clock runs; at its heart Vhal'Neth, the Dreaming Mother, wakes. She is dead. Raise her.",
-	"unlock": {"stage": "archive", "boss_kills": 1},  # owner-approved: each boss unlocks the next stage
-	"unlock_text": "Slay the Archivist in the Hollow Archive to unlock.",
 	"boss": BOSS,
 	"segments": SEGMENTS,
 	"events": EVENTS,
@@ -411,7 +405,6 @@ const STAGE := {
 	"enemy_hp_mult": ENEMY_HP_MULT,
 	"enemy_damage_mult": ENEMY_DAMAGE_MULT,
 	"enemy_mult_from": ENEMY_MULT_FROM,
-	"ash_mult": ASH_MULT,
 	"march": MARCH,
 	"sinking": SINKING,  # SinkingDirector (the island shrinks with the zones).
 	"spire": SPIRE,  # SpireDirector (dream pillars, guest squads).

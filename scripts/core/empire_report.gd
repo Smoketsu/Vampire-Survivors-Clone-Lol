@@ -47,12 +47,12 @@ static func print_lines(game: Game, st: Dictionary) -> void:
 	if not parts.is_empty():
 		print("[autotest] empire kinds (spawned/killed): %s" % " | ".join(parts))
 	var sd := game.stage_def  # The run's stage.
-	if StageRegistry.act_of(String(sd["id"])) == 3:
+	if StageRegistry.act_id_of(String(sd["id"])) == "empire":
 		var boss: Dictionary = sd["boss"]
 		print("[autotest] empire stage: %s (%s) | playable %s | boss %s (script %s) | enemy x%.2f HP / x%.2f dmg from %s | soul ash x%.2f | reckoning kind %s" % [
 			String(sd["id"]), String(sd["display_name"]), str(StageRegistry.is_playable(String(sd["id"]))),
 			String(boss["id"]), String(boss.get("script", boss["id"])), float(sd["enemy_hp_mult"]), float(sd["enemy_damage_mult"]),
-			_clock(float(sd.get("enemy_mult_from", 0.0))), float(sd["ash_mult"]), String((sd["reckoning"] as Dictionary).get("kind", "inquisitor"))])
+			_clock(float(sd.get("enemy_mult_from", 0.0))), StageRegistry.ash_mult_of(String(sd["id"])), String((sd["reckoning"] as Dictionary).get("kind", "inquisitor"))])
 		# The proposal's ~60% target, on every Act III stage (the balance pass).
 		print("[autotest] ranged share: %s" % CitadelReport.ranged_share(st))
 	# --- Act III: the Assembly Halls ---

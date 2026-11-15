@@ -40,8 +40,6 @@ const ENEMY_DAMAGE_MULT: float = 1.4  # TUNING (not in GDD) phase 2 (the stub's 
 ## Elapsed game seconds from which the two multipliers apply to regular
 ## enemies (the boss always gets them).
 const ENEMY_MULT_FROM: float = 480.0  # TUNING (not in GDD) 8:00 (Acts III to XV 7:00: the step met the year's first winter at 7:30 and the naive bot fell at 9:03-9:46, seeds 3, 7 and 11)
-## Soul Ash multiplier of a run on this stage (its own end-screen line).
-const ASH_MULT: float = 1.5  # TUNING (not in GDD) owner decision Oct 2026 (GDD §15.0 "Ossuary expansion: owner decisions"): every act restarts, stage 3 of the act
 
 ## The obstacle kinds the zones share (the Turning Year art's obstacles/<kind>_s /
 ## _l, or _m for a one-size kind; WildGlyphs without art; the thorn thickets grow
@@ -248,12 +246,8 @@ const STAGE := {
 	"id": ID,
 	"display_name": "The World-Tree",
 	"short_name": "World-Tree",
-	"chapter": "Chapter XLV",  # Temporary and final stage 45 (the reorder pass renumbers if it moves).
-	"act": 15,  # Temporary Act XV, the Turning Year (final slot XV; docs/last_acts/PLAN.md).
 	"playable": true,  # Phase 2 built (GDD §15.0 "The World-Tree (Act XV phase 2)").
 	"description": "The tree at the centre of the world. Its roots are in the dead, its crown in the sky, and the Green Mother grows from it.",
-	"unlock": {"stage": "fae_court", "boss_kills": 1},  # Plan: each stage opens the next
-	"unlock_text": "Defeat the Summer Queen at the Fae Court to unlock.",
 	"boss": BOSS,
 	"segments": SEGMENTS,
 	"events": EVENTS,
@@ -268,7 +262,6 @@ const STAGE := {
 	"enemy_hp_mult": ENEMY_HP_MULT,
 	"enemy_damage_mult": ENEMY_DAMAGE_MULT,
 	"enemy_mult_from": ENEMY_MULT_FROM,
-	"ash_mult": ASH_MULT,
 	"march": MARCH,  # The four clock-driven zones (MarchDirector).
 	"world_tree": WORLD_TREE,  # WorldTreeDirector: the Gardener of Roots.
 	"wild": true,  # The Turning Year, Bloom and Blight, Overgrowth (WildRules).

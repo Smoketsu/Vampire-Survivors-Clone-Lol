@@ -25,12 +25,14 @@
 ## active. Saved as [oath] active.
 ## Stages (GDD §9.3 campaign unlocks): per-stage records (runs, victories,
 ## best time, boss kills) in `stage_records`, saved as [stages]
-## "<id>_<key>". A stage opens once the boss its StageRegistry `unlock` names
-## was slain often enough (is_stage_unlocked(); the Crimson March: Sir
-## Alaric once). A save without [stages] (older build) is migrated additively:
+## "<id>_<key>". A stage opens once the previous stage's boss
+## (StageRegistry.unlock_of()) was slain (is_stage_unlocked(); the Crimson
+## March: Sir Alaric once), or when the save opened it before the reorder pass
+## ([stages] opened, save version 3). A save without [stages] (older build) is migrated additively:
 ## every earlier run was a Graveyard run, so the Graveyard record is rebuilt
 ## from the lifetime stats (an old Alaric kill unlocks the Crimson March).
-## A run on a stage with an `ash_mult` above 1 earns a stage bonus line.
+## A run on a stage with a Soul Ash multiplier above 1
+## (StageRegistry.ash_mult_of()) earns a stage bonus line.
 ## Pre-run choices (GDD §10.2): the difficulty level and run modifiers last
 ## confirmed on the pre-run setup screen are remembered in `prerun_difficulty`
 ## / `prerun_modifiers` (saved as [prerun] difficulty / modifiers, a
@@ -183,6 +185,11 @@ var oath_active: int = 0
 ## in a victory there; an older save without the key reads 0, and a save from
 ## before [stages] gets the lifetime best_reckoning on the Graveyard record.
 var stage_records: Dictionary = {}
+## Stage id -> true: the stages a save had opened under the act order before
+## the reorder pass (save version 3, SaveMigration.legacy_opened()). They stay
+## open whatever the new chain says (is_stage_unlocked()), so the reorder never
+## closes a stage. Saved as [stages] opened (comma-separated ids).
+var opened_stages: Dictionary = {}
 
 ## Difficulty level (DifficultyData id) last confirmed on the setup screen.
 var prerun_difficulty: String = DifficultyData.DEFAULT_ID
@@ -996,16 +1003,19 @@ func _load_codex(cfg: ConfigFile) -> void:
 # Stages (GDD §9.3 campaign unlocks)
 # =====================================================================================
 
-## True when stage `id` may be played: no `unlock` requirement, or the
-## required stage's boss was slain at least `boss_kills` times. In the demo a
-## stage outside its acts is never unlocked (DemoMode.allows_stage()).
+## True when stage `id` may be played: the first stage, a stage this save
+## opened before the reorder (opened_stages), or the previous stage's boss
+## (StageRegistry.unlock_of()) was slain at least UNLOCK_BOSS_KILLS times. In
+## the demo a stage outside its acts is never unlocked (DemoMode.allows_stage()).
 func is_stage_unlocked(id: String) -> bool:
 	if not StageRegistry.STAGES.has(id) or not DemoMode.allows_stage(id):
 		return false
-	var req: Dictionary = StageRegistry.STAGES[id]["unlock"]
-	if req.is_empty():
+	if opened_stages.has(id):
 		return true
-	return float(stage_record(String(req["stage"])).get("boss_kills", 0.0)) >= float(req["boss_kills"])
+	var need := StageRegistry.unlock_of(id)  # Stage whose boss must fall ("" = always open).
+	if need == "":
+		return true
+	return float(stage_record(need).get("boss_kills", 0.0)) >= float(StageRegistry.UNLOCK_BOSS_KILLS)
 
 
 ## Record of stage `id` (STAGE_RECORD_KEYS; zeros for an unknown id).
@@ -1307,6 +1317,7 @@ func save() -> Error:
 		var rec := stage_record(id)  # This stage's record.
 		for key: String in STAGE_RECORD_KEYS:
 			cfg.set_value("stages", "%s_%s" % [id, key], float(rec[key]))
+	cfg.set_value("stages", "opened", ",".join(PackedStringArray(opened_stages.keys())))
 	for id: String in EvolutionRecipes.ids():
 		cfg.set_value("recipes", id, discovered_recipes.has(id))
 	cfg.set_value("prerun", "hyper", prerun_hyper)
@@ -1416,7 +1427,12 @@ func load_save() -> void:
 ## kills), which keeps an earlier Alaric kill's Crimson March unlock.
 ## Missing keys of a known stage read as 0; unknown keys are ignored.
 func _load_stage_records(cfg: ConfigFile) -> void:
-	if not cfg.has_section("stages"):
+	var opened: Variant = cfg.get_value("stages", "opened", "")  # Written by the version-3 migration.
+	if typeof(opened) == TYPE_STRING:
+		for id: String in String(opened).split(",", false):
+			if StageRegistry.STAGES.has(id):
+				opened_stages[id] = true
+	if not cfg.has_section_key("stages", "%s_runs" % StageRegistry.DEFAULT_ID):  # No records (the version-3 step may still have written "opened").
 		var gy: Dictionary = stage_records[StageRegistry.DEFAULT_ID]  # The Graveyard record.
 		for key: String in STAGE_RECORD_KEYS:
 			gy[key] = float(lifetime.get(key, 0.0))
@@ -1585,6 +1601,10 @@ func _load_recolours(cfg: ConfigFile) -> void:
 ## 1-5, still valid) and nothing is refunded; the new [clears] section is
 ## written empty here and filled from the older Deathlord records by
 ## _load_clears() (the only clear an older save can prove).
+## 2 -> 3 (the reorder pass, part 1): every stage the save had opened under the
+## old act order (SaveMigration.legacy_opened(), from its [stages] boss kills)
+## is written to [stages] opened, so the new unlock chain closes nothing;
+## the per-stage records keep their stage ids.
 func _migrate(cfg: ConfigFile, from_version: int) -> void:
 	if from_version < 1:
 		cfg.set_value("meta", "save_version", 1)
@@ -1594,6 +1614,9 @@ func _migrate(cfg: ConfigFile, from_version: int) -> void:
 		if not cfg.has_section_key("clears", "best_hyper"):
 			cfg.set_value("clears", "best_hyper", "")
 		cfg.set_value("meta", "save_version", 2)
+	if from_version < 3:
+		cfg.set_value("stages", "opened", ",".join(SaveMigration.legacy_opened(cfg)))
+		cfg.set_value("meta", "save_version", 3)
 
 
 ## Refunds tiers whose prerequisite is not met (a hand-edited save or a
@@ -1621,6 +1644,7 @@ func _reset() -> void:
 	last_award = {}
 	oath_active = 0
 	stage_records = _default_stage_records()
+	opened_stages = {}
 	prerun_difficulty = DifficultyData.DEFAULT_ID
 	prerun_modifiers = PackedStringArray()
 	discovered_recipes = {}

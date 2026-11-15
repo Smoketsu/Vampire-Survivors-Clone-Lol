@@ -82,35 +82,25 @@ const STAGES := {
 }
 ## Title of a victory on a stage missing from STAGES.
 const DEFAULT_TITLE: String = "Victory"  # TUNING (not in GDD)
-## Act number -> the line under the title (the first line of the card; the boss
-## line follows it when the boss fell). Absent act = act 1's line.
+## Act id (StageRegistry.ACT_ORDER "id") -> the line under the title (the first
+## line of the card; the boss line follows it when the boss fell). Absent act =
+## the Covenant's line.
 const ACT_LINES := {
-	1: "You outlasted the Covenant. The Reckoning claimed you at last.",  # TUNING (not in GDD; the old shared subtitle)
-	2: "You outlasted the Eye. The Reckoning claimed you at last.",  # TUNING (not in GDD)
-	3: "You outlasted the Empire. The Purge Protocol deleted you at last.",  # TUNING (not in GDD) Act III
-	4: "You outlasted the gods. Their twilight buried you at last.",  # TUNING (not in GDD) Act IV
-	# --- Act V: the Shogunate of the Rising Sun ---
-	5: "You outlasted the Shogunate. The Endless Night swallowed you at last.",  # TUNING (not in GDD) Act V
-	# --- Act VI: the Inferno ---
-	6: "You outlasted the Inferno. The Last Judgment took you at last.",  # TUNING (not in GDD) Act VI
-	# --- Act VII: the Sanguine Court ---
-	7: "You outlasted the Court. The Endless Feast drank you dry at last.",  # TUNING (not in GDD) Act VII
-	# --- Act VIII: the Last Line ---
-	8: "You outlasted the city. Martial Law ground you down at last.",  # TUNING (not in GDD) Act VIII
-	# --- Act IX: the Concord of Stars ---
-	9: "You outlasted the Concord. The Final Harvest reaped you at last.",  # TUNING (not in GDD) Act IX
-	# --- Act X: the Black Tide (temporary act number) ---
-	10: "You outlasted the Brotherhood. The Black Tide dragged you under at last.",  # TUNING (not in GDD) Act X
-	# --- Act XI (temporary): the Hall of the Slain ---
-	11: "You outlasted the hall. Ragnarok took you at last.",  # TUNING (not in GDD) the Norse act
-	# --- Act XII (temporary number): the Necropolis Dynasty ---
-	12: "You outlasted the Dynasty. The Devourer ate you at last.",  # TUNING (not in GDD) Act XII
-	# --- Act XIII (temporary number): the Celestial Host ---
-	13: "You outlasted heaven. The Last Trumpet sounded for you at last.",  # TUNING (not in GDD) Act XIII
-	# --- Act XIV (temporary number): the Age of Titans ---
-	14: "You outlasted the old world. The Stampede of Ash ran you down at last.",  # TUNING (not in GDD) Act XIV
-	# --- Act XV (temporary number): the Turning Year ---
-	15: "You outlasted the turning year. Spring returned and buried you at last.",  # TUNING (not in GDD) Act XV
+	"covenant": "You outlasted the Covenant. The Reckoning claimed you at last.",  # TUNING (not in GDD; the old shared subtitle)
+	"eye": "You outlasted the Eye. The Reckoning claimed you at last.",  # TUNING (not in GDD)
+	"empire": "You outlasted the Empire. The Purge Protocol deleted you at last.",  # TUNING (not in GDD)
+	"pantheon": "You outlasted the gods. Their twilight buried you at last.",  # TUNING (not in GDD)
+	"shogunate": "You outlasted the Shogunate. The Endless Night swallowed you at last.",  # TUNING (not in GDD)
+	"inferno": "You outlasted the Inferno. The Last Judgment took you at last.",  # TUNING (not in GDD)
+	"court": "You outlasted the Court. The Endless Feast drank you dry at last.",  # TUNING (not in GDD)
+	"city": "You outlasted the city. Martial Law ground you down at last.",  # TUNING (not in GDD)
+	"concord": "You outlasted the Concord. The Final Harvest reaped you at last.",  # TUNING (not in GDD)
+	"corsair": "You outlasted the Brotherhood. The Black Tide dragged you under at last.",  # TUNING (not in GDD)
+	"norse": "You outlasted the hall. Ragnarok took you at last.",  # TUNING (not in GDD)
+	"dynasty": "You outlasted the Dynasty. The Devourer ate you at last.",  # TUNING (not in GDD)
+	"host": "You outlasted heaven. The Last Trumpet sounded for you at last.",  # TUNING (not in GDD)
+	"primeval": "You outlasted the old world. The Stampede of Ash ran you down at last.",  # TUNING (not in GDD)
+	"wild": "You outlasted the turning year. Spring returned and buried you at last.",  # TUNING (not in GDD)
 }
 
 # --- The last stand (LastStand; seconds of real time from its start) ----------------

@@ -46,8 +46,6 @@ const ENEMY_DAMAGE_MULT: float = 1.0  # TUNING (not in GDD) slot II, the act's f
 ## Elapsed game seconds from which the two multipliers apply to regular
 ## enemies (the boss always gets them).
 const ENEMY_MULT_FROM: float = 420.0  # TUNING (not in GDD) 7:00 (Acts III to IX)
-## Soul Ash multiplier of a run on this stage (its own end-screen line).
-const ASH_MULT: float = 1.0  # TUNING (not in GDD) owner decision Oct 2026, GDD §15.0 "Ossuary expansion: owner decisions": every act restarts, stage 1 of the act
 
 ## Obstacle layout (keys as GraveyardStage.ARENA, plus "fixed"): THE DECK'S
 ## FURNITURE, a FIXED authored layout (Arena "fixed": each entry {kind, at, size
@@ -287,12 +285,8 @@ const STAGE := {
 	"id": ID,
 	"display_name": "The Smuggler's Cutter",
 	"short_name": "Cutter",
-	"chapter": "Chapter XXVIII",
-	"act": 10,  # Act X (temporary): the Black Tide, final slot II after the reorder.
 	"playable": true,  # The Black Tide goes live (integration, GDD §15.0 "The Black Tide goes live (integration and balance)").
 	"description": "A small night-time sloop slips out of a ruined harbour with the Covenant's coast burning behind it, and the Corsair Brotherhood comes for her in small boats.",
-	"unlock": {"stage": "ark", "boss_kills": 1},  # Lead's plan: the chain runs Harvester -> Crow -> Marrec -> Vandermere
-	"unlock_text": "Defeat the Harvester on the Ark of the Concord to unlock.",
 	"boss": BOSS,
 	"segments": SEGMENTS,
 	"events": EVENTS,
@@ -307,7 +301,6 @@ const STAGE := {
 	"enemy_hp_mult": ENEMY_HP_MULT,
 	"enemy_damage_mult": ENEMY_DAMAGE_MULT,
 	"enemy_mult_from": ENEMY_MULT_FROM,
-	"ash_mult": ASH_MULT,
 	"march": MARCH,  # The four clock-driven zones (MarchDirector).
 	"corsair": true,  # Act X: Boarding, the Deck, Strikes from the Sea (CorsairRules).
 	"deck": DECK,  # Act X: this stage's deck (DeckBounds).

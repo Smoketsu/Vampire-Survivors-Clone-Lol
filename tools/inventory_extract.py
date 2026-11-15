@@ -84,13 +84,27 @@ def s(x): return x.strip('"') if isinstance(x,str) else x
 def txt(f): return open(D+f).read()
 M={}
 # ---------------- stages
-# Campaign order of every registered stage (StageRegistry.ORDER).
-ORDER_STAGES = [i for i, _ in order('stage_registry.gd', 'ORDER')]
-# Act number -> (act name, faction label) taken from StageRegistry.ACTS ("subtitle" is the act's name).
+# The act order (StageRegistry.ACT_ORDER, the one ordered list): act id, act name and stage ids per act.
 _rt = txt('stage_registry.gd')
-_ab = _rt[_rt.index('const ACTS'):]
-_ab = _ab[:_ab.index('\n}')]
-ACT_NAMES = {int(n): sub for n, sub in re.findall(r'\n\t(\d+): \{"name": "[^"]+", "subtitle": "([^"]+)"', _ab)}
+_ab = _rt[_rt.index('const ACT_ORDER'):]
+_ab = _ab[:_ab.index('\n]')]
+ACT_ROWS = re.findall(r'\{"id": "(\w+)", "subtitle": "([^"]+)", "stages": \[([^\]]*)\]\}', _ab)
+# Campaign order of every registered stage (StageRegistry.ORDER, built from ACT_ORDER).
+ORDER_STAGES = [sid for _, _, st in ACT_ROWS for sid in re.findall(r'"(\w+)"', st)]
+# Act number -> act name.
+ACT_NAMES = {n: sub for n, (_, sub, _) in enumerate(ACT_ROWS, 1)}
+# Act id -> act number (PassiveData "act" rows name an act by id).
+ACT_NUMBER = {aid: n for n, (aid, _, _) in enumerate(ACT_ROWS, 1)}
+
+
+def _roman(n):
+    """Roman numeral of n (StageRegistry.roman())."""
+    out = ''
+    for v, r in [(50, 'L'), (40, 'XL'), (10, 'X'), (9, 'IX'), (5, 'V'), (4, 'IV'), (1, 'I')]:
+        while n >= v:
+            out += r
+            n -= v
+    return out
 M['act_names'] = ACT_NAMES
 # Boss rows that live in the stage file itself (Acts I and II-stage 1/2 have no XData.ARRIVAL):
 # stage id -> (display name, boss id).
@@ -113,13 +127,11 @@ for n, sid in enumerate(ORDER_STAGES, 1):
     s_stage = {"n": n, "id": sid}
     s_stage['name'] = re.search(r'\n\t"display_name":\s*"([^"]+)"', st).group(1)
     s_stage['short'] = re.search(r'\n\t"short_name":\s*"([^"]+)"', st).group(1)
-    s_stage['chapter'] = re.search(r'\n\t"chapter":\s*"([^"]+)"', st).group(1)
-    a = re.search(r'\n\t"act":\s*(\d)', st)
-    s_stage['act'] = int(a.group(1)) if a else 1
+    s_stage['chapter'] = 'Chapter ' + _roman(n)  # StageRegistry.chapter_of()
+    s_stage['act'] = (n - 1) // 3 + 1  # StageRegistry.act_of()
     pl = re.search(r'\n\t"playable":\s*(true|false)', st)
     s_stage['playable'] = (pl.group(1) == 'true') if pl else True
-    am = re.search(r'\n\t"ash_mult":\s*([\d.]+)', st)
-    s_stage['ash'] = float(am.group(1)) if am else const('ASH_MULT')
+    s_stage['ash'] = [1.0, 1.25, 1.5][(n - 1) % 3]  # StageRegistry.ash_mult_of()
     hp = re.search(r'\n\t"enemy_hp_mult":\s*([\d.]+)', st)
     s_stage['hpmult'] = float(hp.group(1)) if hp else const('ENEMY_HP_MULT')
     dm = re.search(r'\n\t"enemy_damage_mult":\s*([\d.]+)', st)
@@ -159,7 +171,10 @@ SHARED_ENEMY_FILES = {
     'city_enemy_data.gd': ('Last Line', 'Act VIII shared'), 'concord_enemy_data.gd': ('Concord', 'Act IX shared'),
 }
 # Faction label of each act (enemy tables are grouped by it).
-ACT_FACTION = {1: 'Covenant', 2: 'Ancient Eye', 3: 'Empire', 4: 'Republic', 5: 'Shogunate', 6: 'Inferno', 7: 'Sanguine Court', 8: 'Last Line', 9: 'Concord'}
+_FACTION_OF = {'covenant': 'Covenant', 'eye': 'Ancient Eye', 'empire': 'Empire', 'pantheon': 'Republic', 'shogunate': 'Shogunate',
+               'inferno': 'Inferno', 'court': 'Sanguine Court', 'city': 'Last Line', 'concord': 'Concord', 'corsair': 'Black Tide',
+               'norse': 'Hall of the Slain', 'dynasty': 'Dynasty', 'host': 'Celestial Host', 'primeval': 'Titans', 'wild': 'Turning Year'}
+ACT_FACTION = {n: _FACTION_OF[aid] for aid, n in ACT_NUMBER.items()}
 M['act_faction'] = ACT_FACTION
 FILEFAC = dict((f, v[0]) for f, v in SHARED_ENEMY_FILES.items())
 FILESTAGE = dict((f, v[1]) for f, v in SHARED_ENEMY_FILES.items())
@@ -253,7 +268,7 @@ for i,sec in po:
         passives.append({'id':'profane_pact','name':'Profane Pact','desc':'A dark pact brings more, stronger foes and richer spoils from every death.','section':'Base game','act':'','kind':'Pact (opt-in difficulty)','paired':[],'unlock':''});continue
     r=pa[i]
     kind='Army' if i in ARMY else ('Spell' if i in SPELLP else 'General')
-    passives.append({'id':i,'name':s(r['display_name']),'desc':s(r['description']),'section':secact(sec),'act':r.get('act',''),'kind':kind,'paired':paired.get(i,[]),'unlock':U.get(i,{}).get('text',''),'classes':r.get('classes','')})
+    passives.append({'id':i,'name':s(r['display_name']),'desc':s(r['description']),'section':secact(sec),'act':ACT_NUMBER.get(r.get('act',''),''),'kind':kind,'paired':paired.get(i,[]),'unlock':U.get(i,{}).get('text',''),'classes':r.get('classes','')})
 M['passives']=passives
 # summon classes
 units=[]

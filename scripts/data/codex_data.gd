@@ -30,34 +30,27 @@ const BOSS: String = "boss"
 ## Every recorded category, in save / summary order.
 const CATEGORIES: Array[String] = [SPELL, SUMMON, ENEMY, BOSS]
 
-## Screen tabs, left to right: [tab id, button text]. "feats" is the
-## achievements list; the others are codex pages.
-const TABS: Array = [["feats", "Achievements"], ["spells", "Spells"], ["summons", "Summons"], ["covenant", "Covenant"], ["eye", "Ancient Eye"],
-		["empire", "Empire"],
-		# --- Act IV: the Olympian Republic ---
-		["pantheon", "Republic"],
-		# --- Act V: the Shogunate of the Rising Sun ---
-		["shogunate", "Shogunate"],
-		# --- Act VI: the Inferno ---
-		["inferno", "Inferno"],
-		# --- Act VII: the Sanguine Court ---
-		["court", "Court"],
-		# --- Act VIII: the Last Line ---
-		["city", "Last Line"],
-		# --- Act IX: the Concord of Stars ---
-		["concord", "Concord"],
-		# --- Act X: the Black Tide ---
-		["corsair", "Black Tide"],
-		# --- Act XI (temporary): the Hall of the Slain ---
-		["norse", "Hall"],
-		# --- Act XII (temporary number): the Necropolis Dynasty ---
-		["dynasty", "Dynasty"],
-		# --- Act XIII (temporary number): the Celestial Host ---
-		["host", "Host"],
-		# --- Act XIV (temporary number): the Age of Titans ---
-		["primeval", "Titans"],
-		# --- Act XV (temporary number): the Turning Year ---
-		["wild", "Wild"]]  # TUNING (not in GDD) Act XV (temporary) the Turning Year's; Act XIV (temporary) the Titans'; Act XIII (temporary) the Host's; Act II adds the Ancient Eye tab, Act III the Electronic Empire's, Act IV the Olympian Republic's, Act V the Shogunate's, Act VI the Inferno's, Act VII the Sanguine Court's, Act VIII the Last Line's, Act IX the Concord's, Act XII (temporary) the Dynasty's
+## The fixed screen tabs, left to right: [tab id, button text]. "feats" is the
+## achievements list; the others are codex pages. tabs() adds one faction tab
+## per act after them.
+const FIXED_TABS: Array = [["feats", "Achievements"], ["spells", "Spells"], ["summons", "Summons"]]  # TUNING (not in GDD)
+## Act id (StageRegistry.ACT_ORDER "id", also the faction page's id) -> its tab's
+## button text. tabs() orders them by the act order.
+const ACT_TAB_NAMES := {
+	"covenant": "Covenant", "eye": "Ancient Eye", "empire": "Empire", "pantheon": "Republic",
+	"shogunate": "Shogunate", "inferno": "Inferno", "court": "Court", "city": "Last Line",
+	"concord": "Concord", "corsair": "Black Tide", "norse": "Hall", "dynasty": "Dynasty",
+	"host": "Host", "primeval": "Titans", "wild": "Wild",
+}  # TUNING (not in GDD)
+
+
+## Screen tabs, left to right: FIXED_TABS, then one faction tab per act in
+## campaign order (StageRegistry.ACT_ORDER, the one act order).
+static func tabs() -> Array:
+	var out: Array = FIXED_TABS.duplicate()
+	for act: Dictionary in StageRegistry.ACT_ORDER:
+		out.append([String(act["id"]), String(ACT_TAB_NAMES[act["id"]])])
+	return out
 
 ## Summon classes shown on the Summons page (UnitData ids, card order). The
 ## Profane Bishop is a merge evolution, so it sits with the evolutions.

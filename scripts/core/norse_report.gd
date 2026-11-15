@@ -28,9 +28,8 @@
 class_name NorseReport
 extends RefCounted
 
-## Temporary act number of the Hall of the Slain (docs/last_acts/PLAN.md; the
-## reorder pass renumbers it from one ordered list).
-const ACT: int = 11
+## Act id of the Hall of the Slain (StageRegistry.ACT_ORDER "id").
+const ACT: String = "norse"
 
 
 ## Prints every line that applies to this run.
@@ -51,12 +50,12 @@ static func print_lines(game: Game, st: Dictionary) -> void:
 	if kinds != "":
 		print("[autotest] norse kinds (spawned/killed): %s" % kinds)
 	var sd := game.stage_def  # The run's stage.
-	if StageRegistry.act_of(String(sd["id"])) == ACT:
+	if StageRegistry.act_id_of(String(sd["id"])) == ACT:
 		var boss: Dictionary = sd["boss"]
 		print("[autotest] norse stage: %s (%s) | playable %s | boss %s (script %s) | enemy x%.2f HP / x%.2f dmg from %s | soul ash x%.2f | reckoning kind %s, ragnarok %s" % [
 			String(sd["id"]), String(sd["display_name"]), str(StageRegistry.is_playable(String(sd["id"]))),
 			String(boss["id"]), String(boss.get("script", boss["id"])), float(sd["enemy_hp_mult"]), float(sd["enemy_damage_mult"]),
-			EmpireReport._clock(float(sd.get("enemy_mult_from", 0.0))), float(sd["ash_mult"]),
+			EmpireReport._clock(float(sd.get("enemy_mult_from", 0.0))), StageRegistry.ash_mult_of(String(sd["id"])),
 			String((sd["reckoning"] as Dictionary).get("kind", "inquisitor")), str(not n.ragnarok.cfg.is_empty())])
 	# Phase 2: each Norse stage's own lines go here (its stage, kinds and boss).
 	# --- Act XI (temporary): the Barrow Fields ---

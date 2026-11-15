@@ -56,8 +56,6 @@ const ENEMY_DAMAGE_MULT: float = 1.3  # TUNING (not in GDD) first pass 1.5 (the 
 ## Elapsed game seconds from which the two multipliers apply to regular
 ## enemies (the boss always gets them).
 const ENEMY_MULT_FROM: float = 420.0  # TUNING (not in GDD) Acts III to VII: 7:00
-## Soul Ash multiplier of a run on this stage (its own end-screen line).
-const ASH_MULT: float = 1.0  # TUNING (not in GDD) owner decision Oct 2026, GDD §15.0 "Ossuary expansion: owner decisions": every act restarts, stage 1 of Act VIII
 
 ## The stage's city-block grid: {} = CityBlockData.DEFAULTS (any key overrides
 ## it here; the grid keys only here, never per zone).
@@ -289,12 +287,8 @@ const STAGE := {
 	"id": ID,
 	"display_name": "Skid Row",
 	"short_name": "Skid Row",
-	"chapter": "Chapter XXII",
-	"act": 8,  # Act VIII, the Last Line.
 	"playable": true,  # Owner decision (Nov 2026): "Ship it" after the art reviews and playtest passes (GDD §15.0 "Acts VI–IX go live").
 	"description": "The docks and back streets of the last great city, where the dead first come up out of the sewers and the gangs own every block.",
-	"unlock": {"stage": "castle_sanguis", "boss_kills": 1},  # Owner-approved: Act VIII opens on Carmilla
-	"unlock_text": "Slay Queen Carmilla in Castle Sanguis to unlock.",
 	"boss": BOSS,
 	"segments": SEGMENTS,
 	"events": EVENTS,
@@ -309,7 +303,6 @@ const STAGE := {
 	"enemy_hp_mult": ENEMY_HP_MULT,
 	"enemy_damage_mult": ENEMY_DAMAGE_MULT,
 	"enemy_mult_from": ENEMY_MULT_FROM,
-	"ash_mult": ASH_MULT,
 	"march": MARCH,  # The four clock-driven zones (MarchDirector).
 	"skid_row": SKID_ROW,  # SkidRowDirector: Big Sal and the Armoured Limo, the Bounty's gangs, No Witnesses.
 	"city": true,  # Act VIII: Armour, Supers, Civilians, the escalation (CityRules).

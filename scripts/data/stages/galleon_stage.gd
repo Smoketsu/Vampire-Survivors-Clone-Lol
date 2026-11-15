@@ -48,8 +48,6 @@ const ENEMY_DAMAGE_MULT: float = 1.2  # TUNING (not in GDD) placeholder for slot
 ## Elapsed game seconds from which the two multipliers apply to regular
 ## enemies (the boss always gets them).
 const ENEMY_MULT_FROM: float = 420.0  # TUNING (not in GDD) 7:00 (Acts III to IX)
-## Soul Ash multiplier of a run on this stage (its own end-screen line).
-const ASH_MULT: float = 1.25  # TUNING (not in GDD) owner decision Oct 2026, GDD §15.0 "Ossuary expansion: owner decisions": every act restarts, stage 2 of the act
 
 ## The four zones (owner-approved proposal names), each from `start` game
 ## seconds (clock-driven like every stage): GalleonDirector announces each one,
@@ -249,12 +247,8 @@ const STAGE := {
 	"id": ID,
 	"display_name": "The Treasure Galleon",
 	"short_name": "Galleon",
-	"chapter": "Chapter XXIX",
-	"act": 10,  # Act X (temporary): the Black Tide, final slot II after the reorder.
 	"playable": true,  # The Black Tide goes live (integration, GDD §15.0 "The Black Tide goes live (integration and balance)").
 	"description": "A captured treasure galleon on open water at dawn, heavy with the gold of a hundred cathedrals, and the Brotherhood's whole fleet wants it back.",
-	"unlock": {"stage": "cutter", "boss_kills": 1},  # Lead's plan: the chain runs Harvester -> Crow -> Marrec -> Vandermere
-	"unlock_text": "Defeat Captain Crow on the Smuggler's Cutter to unlock.",
 	"boss": BOSS,
 	"segments": SEGMENTS,
 	"events": EVENTS,
@@ -269,7 +263,6 @@ const STAGE := {
 	"enemy_hp_mult": ENEMY_HP_MULT,
 	"enemy_damage_mult": ENEMY_DAMAGE_MULT,
 	"enemy_mult_from": ENEMY_MULT_FROM,
-	"ash_mult": ASH_MULT,
 	"march": {},  # The zones are GalleonDirector's (the map never changes at sea).
 	"corsair": true,  # Act X: Boarding, the Deck, Strikes from the Sea (CorsairRules).
 	"deck": DECK,  # Act X: this stage's deck (DeckBounds).

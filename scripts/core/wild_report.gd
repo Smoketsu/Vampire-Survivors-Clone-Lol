@@ -59,7 +59,7 @@ static func print_lines(game: Game, st: Dictionary) -> void:
 		print("[autotest] wild stage: %s (%s) | act %d | playable %s | boss %s (script %s) | enemy x%.2f HP / x%.2f dmg from %s | soul ash x%.2f | season %d s | reckoning kind %s, spring returns %s" % [
 			String(sd["id"]), String(sd["display_name"]), StageRegistry.act_of(String(sd["id"])), str(StageRegistry.is_playable(String(sd["id"]))),
 			String(boss["id"]), String(boss.get("script", boss["id"])), float(sd["enemy_hp_mult"]), float(sd["enemy_damage_mult"]),
-			EmpireReport._clock(float(sd.get("enemy_mult_from", 0.0))), float(sd["ash_mult"]), int(w.seasons.cfg["length"]),
+			EmpireReport._clock(float(sd.get("enemy_mult_from", 0.0))), StageRegistry.ash_mult_of(String(sd["id"])), int(w.seasons.cfg["length"]),
 			String((sd["reckoning"] as Dictionary).get("kind", "inquisitor")), str(w.returns.on())])
 	print("[autotest] wild damage (you/summons): %s" % PrimevalReport.damage_line(st))
 	# Phase 2: each Wild stage's own lines go here (its stage, kinds and boss).

@@ -83,7 +83,7 @@ const UNLOCKS := {
 	# --- Act III: the Assembly Halls ---
 	# The Motherboard's gifts (owner-approved Act III proposal "Rewards"): the
 	# spell Hollow Puppet and the summon class Grave Drone, each with its
-	# paired passive; Cold Assembly's counter-passive Signal Ghost ("act": 3 on
+	# paired passive; Cold Assembly's counter-passive Signal Ghost ("act": "empire" on
 	# its card row: offered only on Act III stages).
 	"hollow_puppet": {"type": "spell", "boss": "motherboard", "text": "Shut down the Motherboard in the Assembly Halls to unlock."},  # Owner-approved proposal
 	"strings_of_the_dead": {"type": "passive", "boss": "motherboard", "text": "Shut down the Motherboard in the Assembly Halls to unlock."},  # Hollow Puppet's paired passive, unlocked with it

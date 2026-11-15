@@ -76,7 +76,7 @@
 ##                      (CombatResolver.damage_enemy(); evolves Undertow into
 ##                      Maelstrom; unlocked with Undertow by slaying Merrow).
 ##   Brinewalker      — a counter-passive, offered only on Act II stages
-##                      ("act": 2): water and ink slow the necromancer less,
+##                      ("act": "eye"): water and ink slow the necromancer less,
 ##                      and summons from BRINEWALKER_SUMMON_LEVEL (TerrainSlow,
 ##                      the one ground-slow path; unlocked by the Low Tide
 ##                      achievement).
@@ -87,7 +87,7 @@
 ##                CombatResolver.damage_enemy(), VerseData.MARGINALIA_SOURCES;
 ##                evolves Forbidden Verse into The Unwritten Word). Unlocked
 ##                with the spell by slaying the Archivist.
-##   Iron Mind  — an Act II counter-passive ("act": 2, offered only on Act II
+##   Iron Mind  — an Act II counter-passive ("act": "eye", offered only on Act II
 ##                stages; unlocked by the achievement Nothing Unwritten): Dread
 ##                rises slower and, at Lv 5, kills calm it twice as fast
 ##                (DreadMeter reads its two level keys). Evolves nothing.
@@ -104,7 +104,7 @@
 ##                       beam_width in AbilityManager.apply_spell_mods(), the one
 ##                       spell modifier path; evolves Death Ray into Event
 ##                       Horizon). Unlocked with the spell by slaying Kestrel.
-##   Lead-Lined Bones  — an Act III counter-passive ("act": 3, offered only on
+##   Lead-Lined Bones  — an Act III counter-passive ("act": "empire", offered only on
 ##                       Act III stages; unlocked by the achievement Static in the
 ##                       Wastes): RANGED hits on your summons deal less (one
 ##                       multiplier in CombatResolver.damage_unit() for ranged
@@ -118,7 +118,7 @@
 ##                       AbilityManager.apply_spell_mods(); evolves Stolen
 ##                       Thunder into Gigantomachy). Unlocked with the spell by
 ##                       slaying Zeus.
-##   Grounded Bones    — an Act IV counter-passive ("act": 4, offered only on
+##   Grounded Bones    — an Act IV counter-passive ("act": "pantheon", offered only on
 ##                       Act IV stages; unlocked by the achievement Twilight of
 ##                       the Gods): less lightning and wave damage (the Wrath of
 ##                       the Gods) to the army and the necromancer
@@ -132,7 +132,7 @@
 ##                       .attack_haste(), the one per-summon attack-speed read;
 ##                       evolves Banner of the Dead into Hundred Banners).
 ##                       Unlocked with the spell by slaying Shogun Kurogane.
-##   Unbending         — an Act V counter-passive ("act": 5, offered only on
+##   Unbending         — an Act V counter-passive ("act": "shogunate", offered only on
 ##                       Act V stages; unlocked by the achievement Regiments
 ##                       Broken): the Draw's cuts hit summons for less
 ##                       (DrawCuts.unbending_mult(), the foundation's one read,
@@ -580,8 +580,10 @@ const RECOIL_PROFILES := ["arrow", "aoe", "boulder", "feather", "frost", "suppre
 ##   hold_bonus         — +% block mass of the MASONRY_CLASSES and +% Bulwark
 ##                        plant time of the Bone Golem (Grave Masonry; after
 ##                        the evolution overlay in compute_stats()).
-##   act                — (optional) the only campaign act whose stages offer
-##                        the card (Unlocks.act_allows()).
+##   act                — (optional) the id (StageRegistry.ACT_ORDER "id") of
+##                        the only campaign act whose stages offer the card
+##                        (Unlocks.act_allows()); an id, never a number, so the
+##                        act order can change.
 const PASSIVES := {
 	# Profane Pact (difficulty / reward passive): defined in PactData.
 	PactData.ID: PactData.PASSIVE,
@@ -932,7 +934,7 @@ const PASSIVES := {
 		"description": "Water and ink slow you less, and your summons too once it grows.",
 		"labels": {"water_slow_cut": ["Water and ink slow removed", "pct"]},
 		"shared_card_pool": true,  # owner-approved: Act II items weigh the later items' 0.5
-		"act": 2,  # owner-approved: counter-passives are offered only on Act II stages
+		"act": "eye",  # owner-approved: counter-passives are offered only on Act II stages
 		"levels": [
 			{"water_slow_cut": 0.20},  # owner-approved "-20% a level"
 			{"water_slow_cut": 0.40},  # owner-approved
@@ -961,7 +963,7 @@ const PASSIVES := {
 		"icon": "iron_mind",
 		"description": "Dread takes hold of you more slowly, and kills calm it faster.",
 		"labels": {"dread_rise_reduction": ["Dread rise", "neg_pct"], "dread_fall_mult": ["Dread calmed per kill (x)", "num"]},
-		"act": 2,  # Act II only (Unlocks.act_allows()): never a dead card.
+		"act": "eye",  # Act II only (Unlocks.act_allows()): never a dead card.
 		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
 		"levels": [
 			{"dread_rise_reduction": 0.10, "dread_fall_mult": 1.0},  # Owner-approved proposal "10% slower a level"
@@ -1075,7 +1077,7 @@ const PASSIVES := {
 	# Signal Ghost (owner-approved proposal: an Act III counter-passive, "Lock-On
 	# lines take longer to paint on the necromancer"; unlocked by the
 	# achievement Cold Assembly, UnlockData; offered only on Act III stages,
-	# "act": 3). LockOn.paint_time() reads paint_time (EmpireRulesData
+	# "act": "empire"). LockOn.paint_time() reads paint_time (EmpireRulesData
 	# SIGNAL_GHOST / SIGNAL_GHOST_KEY): a line on the necromancer paints
 	# (1 + paint_time) x as long. Evolves nothing.
 	"signal_ghost": {
@@ -1084,7 +1086,7 @@ const PASSIVES := {
 		"description": "The Empire's Lock-On lines take longer to paint on you.",
 		"labels": {"paint_time": ["Lock-On paint time on you", "pct"]},
 		"shared_card_pool": true,  # owner-approved: Act III items weigh the later items' 0.5, as Act II's counter-passives
-		"act": 3,  # Owner-approved proposal: counter-passives are offered only in their act
+		"act": "empire",  # Owner-approved proposal: counter-passives are offered only in their act
 		"levels": [
 			{"paint_time": 0.15},  # TUNING (not in GDD) 1.5 s -> 1.73 s
 			{"paint_time": 0.30},  # TUNING (not in GDD)
@@ -1118,7 +1120,7 @@ const PASSIVES := {
 		"icon": "lead_lined_bones",
 		"description": "Bullets and shells hurt your summons less.",
 		"labels": {"ranged_reduction": ["Ranged damage to summons", "neg_pct"]},
-		"act": 3,  # Owner-approved: the act's counter-passives are offered only in Act III (Unlocks.act_allows())
+		"act": "empire",  # Owner-approved: the act's counter-passives are offered only in Act III (Unlocks.act_allows())
 		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
 		"levels": [
 			{"ranged_reduction": 0.06},  # TUNING (not in GDD)
@@ -1203,7 +1205,7 @@ const PASSIVES := {
 		"icon": "bronze_breaker",
 		"description": "Your summons' blows on a locked shield wall's front hit harder.",
 		"labels": {"front_damage": ["Summon damage to shield fronts", "pct"]},
-		"act": 4,  # Owner-approved: the act's counter-passives are offered only in Act IV (Unlocks.act_allows())
+		"act": "pantheon",  # Owner-approved: the act's counter-passives are offered only in Act IV (Unlocks.act_allows())
 		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
 		"levels": [
 			{"front_damage": 0.2},  # TUNING (not in GDD) a front shot 10% -> 12%, a front blow x1.2
@@ -1244,7 +1246,7 @@ const PASSIVES := {
 		"icon": "grounded_bones",
 		"description": "The gods' lightning and waves hurt you and your dead less.",
 		"labels": {"wrath_reduction": ["Lightning and wave damage", "neg_pct"]},
-		"act": 4,  # Owner-approved: the act's counter-passives are offered only in Act IV (Unlocks.act_allows())
+		"act": "pantheon",  # Owner-approved: the act's counter-passives are offered only in Act IV (Unlocks.act_allows())
 		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
 		"levels": [
 			{"wrath_reduction": 0.1},  # TUNING (not in GDD)
@@ -1330,7 +1332,7 @@ const PASSIVES := {
 		"icon": "paper_lanterns",
 		"description": "Your light reaches farther, and ambushes show earlier.",
 		"labels": {"light_radius": ["Light radius", "pct"]},
-		"act": 5,  # Owner-approved: the act's counter-passives are offered only in Act V (Unlocks.act_allows())
+		"act": "shogunate",  # Owner-approved: the act's counter-passives are offered only in Act V (Unlocks.act_allows())
 		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
 		"levels": [
 			{"light_radius": 0.15},  # TUNING (not in GDD)
@@ -1415,7 +1417,7 @@ const PASSIVES := {
 		"icon": "unbending",
 		"description": "The samurai's Draw cuts your summons for less.",
 		"labels": {"draw_reduction": ["Draw cut damage to summons", "neg_pct"]},
-		"act": 5,  # Owner-approved: the act's counter-passives are offered only in Act V (Unlocks.act_allows())
+		"act": "shogunate",  # Owner-approved: the act's counter-passives are offered only in Act V (Unlocks.act_allows())
 		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
 		"levels": [
 			{"draw_reduction": 0.15},  # TUNING (not in GDD)
@@ -1458,7 +1460,7 @@ const PASSIVES := {
 		"icon": "salt_circle",
 		"description": "A ring of salt shields your summons: the Hell Pits burn them for less.",
 		"labels": {"pit_reduction": ["Pit damage to summons", "neg_pct"]},
-		"act": 6,  # Owner-approved: the act's counter-passives are offered only in Act VI (Unlocks.act_allows())
+		"act": "inferno",  # Owner-approved: the act's counter-passives are offered only in Act VI (Unlocks.act_allows())
 		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
 		"levels": [
 			{"pit_reduction": 0.15},  # TUNING (not in GDD)
@@ -1522,7 +1524,7 @@ const PASSIVES := {
 		"icon": "faithless",
 		"description": "Your dead keep no faith with hell: charms on them wear off sooner.",
 		"labels": {"charm_reduction": ["Charm time on your summons", "neg_pct"]},
-		"act": 6,  # Owner-approved: the act's counter-passives are offered only in Act VI (Unlocks.act_allows())
+		"act": "inferno",  # Owner-approved: the act's counter-passives are offered only in Act VI (Unlocks.act_allows())
 		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
 		"levels": [
 			{"charm_reduction": 0.10},  # TUNING (not in GDD)
@@ -1610,7 +1612,7 @@ const PASSIVES := {
 		"icon": "silver_bones",
 		"description": "Silver in your dead's bones: they strike werewolves and vampire nobles harder, and the nobles' mist breaks sooner.",
 		"labels": {"silver_damage": ["Summon damage to werewolves and nobles", "pct"], "mist_reduction": ["Noble mist time", "neg_pct"]},
-		"act": 7,  # Owner-approved: the act's counter-passives are offered only in Act VII (Unlocks.act_allows())
+		"act": "court",  # Owner-approved: the act's counter-passives are offered only in Act VII (Unlocks.act_allows())
 		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
 		"levels": [
 			{"silver_damage": 0.10, "mist_reduction": 0.10},  # TUNING (not in GDD)
@@ -1654,7 +1656,7 @@ const PASSIVES := {
 		"icon": "embalmed",
 		"description": "Your dead are embalmed: the Court heals less from biting them.",
 		"labels": {"feed_reduction": ["Court feeding on summons", "neg_pct"]},
-		"act": 7,  # Owner-approved: the act's counter-passives are offered only in Act VII (Unlocks.act_allows())
+		"act": "court",  # Owner-approved: the act's counter-passives are offered only in Act VII (Unlocks.act_allows())
 		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
 		"levels": [
 			{"feed_reduction": 0.15},  # TUNING (not in GDD)
@@ -1745,7 +1747,7 @@ const PASSIVES := {
 		"icon": "kevlar_bones",
 		"description": "Your dead are laced with kevlar: the city's guns hurt them less.",
 		"labels": {"ranged_reduction": ["Ranged damage to summons", "neg_pct"]},
-		"act": 8,  # Owner-approved: the act's counter-passives are offered only in Act VIII (Unlocks.act_allows())
+		"act": "city",  # Owner-approved: the act's counter-passives are offered only in Act VIII (Unlocks.act_allows())
 		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
 		"levels": [
 			{"ranged_reduction": 0.10},  # TUNING (not in GDD)
@@ -1791,7 +1793,7 @@ const PASSIVES := {
 		"icon": "armour_piercing_bones",
 		"description": "Your dead strike through shields and armour plate: fronts stop less of their blows.",
 		"labels": {"front_pierce": ["Armoured front ignored", "pct"]},
-		"act": 8,  # Owner answer: Act VIII only (Unlocks.act_allows())
+		"act": "city",  # Owner answer: Act VIII only (Unlocks.act_allows())
 		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
 		"levels": [
 			{"front_pierce": 0.15},  # TUNING (not in GDD)
@@ -1877,7 +1879,7 @@ const PASSIVES := {
 		"icon": "anchored",
 		"description": "Your dead cling to the earth: tractor beams hold them for less, and a hit on the saucer drops them.",
 		"labels": {"hold_cut": ["Abduction hold", "neg_pct"]},
-		"act": 9,  # Owner-approved: the act's counter-passives are offered only in Act IX (Unlocks.act_allows())
+		"act": "concord",  # Owner-approved: the act's counter-passives are offered only in Act IX (Unlocks.act_allows())
 		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
 		"levels": [
 			{"hold_cut": 0.10},  # TUNING (not in GDD)
@@ -1923,7 +1925,7 @@ const PASSIVES := {
 		"icon": "mirror_bones",
 		"description": "Your dead are polished like mirrors: beams burn them less, and the beams you turn back burn hotter.",
 		"labels": {"beam_reduction": ["Beam damage to summons", "neg_pct"], "reflect_damage": ["Reflected beam damage", "pct"]},
-		"act": 9,  # Owner-approved: the act's counter-passives are offered only in Act IX (Unlocks.act_allows())
+		"act": "concord",  # Owner-approved: the act's counter-passives are offered only in Act IX (Unlocks.act_allows())
 		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
 		"levels": [
 			{"beam_reduction": 0.10, "reflect_damage": 0.04},  # TUNING (not in GDD)
@@ -2002,7 +2004,7 @@ const PASSIVES := {
 	# Act X's counter-passive Barnacle Bones (owner-approved Act X proposal:
 	# "summon hits on boats, hooks and surfaced creatures deal more"; unlocked
 	# by the Smuggler's Cutter's achievement Not One Aboard and offered only in
-	# Act X through its card row's "act": 10 until the reorder pass renumbers
+	# Act X through its card row's "act" ("corsair", an act id: the reorder pass renumbered
 	# it). The foundation's hook reads it: CorsairRules.barnacle_mult() (1 +
 	# sea_damage, the bound player's), in CorsairKit.taken_mult() on boats,
 	# hooks and swimmers, for summon hits only.
@@ -2011,7 +2013,7 @@ const PASSIVES := {
 		"icon": "barnacle_bones",
 		"description": "Your dead grow barnacled bones: their blows on boats, grapple hooks and sea beasts hit harder.",
 		"labels": {"sea_damage": ["Summon damage to boats and sea beasts", "pct"]},
-		"act": 10,  # Owner-approved: the act's counter-passives are offered only in this act (Unlocks.act_allows()); temporary number until the reorder
+		"act": "corsair",  # Owner-approved: the act's counter-passives are offered only in this act (Unlocks.act_allows()); temporary number until the reorder
 		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
 		"levels": [
 			{"sea_damage": 0.15},  # TUNING (not in GDD)
@@ -2056,7 +2058,7 @@ const PASSIVES := {
 		"icon": "sea_legs",
 		"description": "Your dead have found their sea legs: the deck's heave, the waves and the blasts barely move them.",
 		"labels": {"drift_cut": ["Drift and pulls on summons", "neg_pct"]},
-		"act": 10,  # Owner-approved: the act's counter-passives are offered only in the Black Tide (temporary act number 10; Unlocks.act_allows())
+		"act": "corsair",  # Owner-approved: the act's counter-passives are offered only in the Black Tide (temporary act number 10; Unlocks.act_allows())
 		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
 		"levels": [
 			{"drift_cut": 0.15},  # TUNING (not in GDD)
@@ -2144,7 +2146,7 @@ const PASSIVES := {
 		"icon": "fur_lined_bones",
 		"description": "Your dead are wrapped in fur: the Long Winter's cold slows them less.",
 		"labels": {"cold_slow_cut": ["Cold's slow on summons", "neg_pct"]},
-		"act": 11,  # Owner decision: the act's counter-passive is offered only in the Hall of the Slain (TEMPORARY act number 11; the reorder pass renumbers it)
+		"act": "norse",  # Owner decision: the act's counter-passive is offered only in the Hall of the Slain (TEMPORARY act number 11; the reorder pass renumbers it)
 		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
 		"levels": [
 			{"cold_slow_cut": 0.10},  # TUNING (not in GDD)
@@ -2188,7 +2190,7 @@ const PASSIVES := {
 		"icon": "calm_blood",
 		"description": "Your dead meet the fury without fear: berserk foes strike them softer.",
 		"labels": {"fury_cut": ["Berserk damage to summons", "neg_pct"]},
-		"act": 11,  # Owner-approved: the act's counter-passives are offered only in the Hall of the Slain (temporary act number; Unlocks.act_allows())
+		"act": "norse",  # Owner-approved: the act's counter-passives are offered only in the Hall of the Slain (temporary act number; Unlocks.act_allows())
 		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
 		"levels": [
 			{"fury_cut": 0.06},  # TUNING (not in GDD)
@@ -2298,7 +2300,7 @@ const PASSIVES := {
 		"icon": "embalmed_bones",
 		"description": "Your dead are wrapped in your own linen: glyphs leave them sooner, and a cursed summon takes less.",
 		"labels": {"glyph_shed": ["Heka glyph time", "neg_pct"], "cursed_damage_cut": ["Damage to cursed summons", "neg_pct"]},
-		"act": 12,  # Owner-approved: the act's counter-passives are offered only in this act (Unlocks.act_allows(); temporary number, the reorder renumbers)
+		"act": "dynasty",  # Owner-approved: the act's counter-passives are offered only in this act (Unlocks.act_allows(); temporary number, the reorder renumbers)
 		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
 		"levels": [
 			{"glyph_shed": 0.1, "cursed_damage_cut": 0.08},  # TUNING (not in GDD)
@@ -2324,7 +2326,7 @@ const PASSIVES := {
 		"icon": "dune_walkers",
 		"description": "Your dead walk the sand as if born to it: quicksand slows them less, and the Sandstorm steals less of their reach.",
 		"labels": {"sand_slow_cut": ["Quicksand slow on summons", "neg_pct"], "storm_reach_kept": ["Storm reach kept", "pct"]},
-		"act": 12,  # Owner-approved: the act's counter-passives are offered only in its own act (Unlocks.act_allows(); temporary number, the reorder renumbers)
+		"act": "dynasty",  # Owner-approved: the act's counter-passives are offered only in its own act (Unlocks.act_allows(); temporary number, the reorder renumbers)
 		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
 		"levels": [
 			{"sand_slow_cut": 0.1, "storm_reach_kept": 0.1},  # TUNING (not in GDD)
@@ -2411,7 +2413,7 @@ const PASSIVES := {
 		"icon": "absolution",
 		"description": "Your sins weigh less: the scales of Judgment fill slower.",
 		"labels": {"fill_cut": ["Weight of each sin", "neg_pct"]},
-		"act": 13,  # Owner-approved: the act's counter-passives are offered only in this act (Unlocks.act_allows(); temporary number, the reorder renumbers)
+		"act": "host",  # Owner-approved: the act's counter-passives are offered only in this act (Unlocks.act_allows(); temporary number, the reorder renumbers)
 		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
 		"levels": [
 			{"fill_cut": 0.06},  # TUNING (not in GDD)
@@ -2453,7 +2455,7 @@ const PASSIVES := {
 		"icon": "smoked_glass",
 		"description": "Your dead look on heaven through smoked glass: Hallowed Light burns them for less.",
 		"labels": {"burn_cut": ["Light's burn on your summons", "neg_pct"]},
-		"act": 13,  # Owner-approved: the act's counter-passives are offered only in this act (Unlocks.act_allows(); temporary number, the reorder renumbers)
+		"act": "host",  # Owner-approved: the act's counter-passives are offered only in this act (Unlocks.act_allows(); temporary number, the reorder renumbers)
 		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
 		"levels": [
 			{"burn_cut": 0.1},  # TUNING (not in GDD)
@@ -2559,7 +2561,7 @@ const PASSIVES := {
 		"icon": "hoarders_bones",
 		"description": "Your crystals are yours: fewer are snatched near you, and a thief drops its pile sooner.",
 		"labels": {"safe_radius": ["Safe from thieves (px)", "num"], "drop_after": ["A thief drops its pile after (s)", "num"]},
-		"act": 14,  # Owner-approved: the act's counter-passives are offered only in this act (Unlocks.act_allows(); temporary number, the reorder renumbers)
+		"act": "primeval",  # Owner-approved: the act's counter-passives are offered only in this act (Unlocks.act_allows(); temporary number, the reorder renumbers)
 		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
 		"levels": [
 			{"safe_radius": 220.0, "drop_after": 3.0},  # TUNING (not in GDD)
@@ -2622,7 +2624,7 @@ const PASSIVES := {
 		"icon": "thick_marrow",
 		"description": "Your undead have thick bones: tramples, charges and stomps hurt them less.",
 		"labels": {"trample_cut": ["Less from tramples and charges", "pct"]},
-		"act": 14,  # Owner-approved: the act's counter-passives are offered only in this act (Unlocks.act_allows(); temporary number, the reorder renumbers)
+		"act": "primeval",  # Owner-approved: the act's counter-passives are offered only in this act (Unlocks.act_allows(); temporary number, the reorder renumbers)
 		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
 		"levels": [
 			{"trample_cut": 0.10},  # TUNING (not in GDD)
@@ -2664,7 +2666,7 @@ const PASSIVES := {
 		"icon": "fallow_ground",
 		"description": "The ground dies faster under your army: blight spreads quicker, and the Wild heals less.",
 		"labels": {"blight_rise": ["Blight under your army", "pct"]},
-		"act": 15,  # Owner-approved: the act's counter-passives are offered only in this act (Unlocks.act_allows(); temporary number, the reorder renumbers)
+		"act": "wild",  # Owner-approved: the act's counter-passives are offered only in this act (Unlocks.act_allows(); temporary number, the reorder renumbers)
 		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
 		"levels": [
 			{"blight_rise": 0.2},  # TUNING (not in GDD)
@@ -2705,7 +2707,7 @@ const PASSIVES := {
 		"icon": "deadwood",
 		"description": "Roots and thorns rot on your dead: they hold your summons for less time.",
 		"labels": {"hold_cut": ["Root and thicket hold", "pct"]},
-		"act": 15,  # Owner-approved: the act's counter-passives are offered only in this act (Unlocks.act_allows(); temporary number, the reorder renumbers)
+		"act": "wild",  # Owner-approved: the act's counter-passives are offered only in this act (Unlocks.act_allows(); temporary number, the reorder renumbers)
 		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
 		"levels": [
 			{"hold_cut": 0.1},  # TUNING (not in GDD)
