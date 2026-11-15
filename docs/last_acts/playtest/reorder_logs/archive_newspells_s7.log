@@ -1,0 +1,213 @@
+Godot Engine v4.3.stable.official.77dcf97d8 - https://godotengine.org
+
+[autotest] start: seed=7 speed=8x mortal=true timeout=1500s policy=evolve meta=none oath=0 pact=false classes=- spells=bone_spear,soul_siphon,corpse_explosion,plague_cloud
+[autotest] stage: archive
+[autotest] difficulty: necromancer | modifiers: none
+[autotest] character: gravecaller (starting spell shadow_bolt)
+[audio] main-thread startup 7.7 ms; 59 sfx ready after 396 ms, music loop after 335 ms (worker threads); display: headless
+[metric] t=60 avg_horde=2.0 now=2 cap=2 w2/2 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=4 kills=84 enemies=42 hp=120 boss_hp=-1 crystals=4 xp=80
+[metric]    summon dmg taken this window: eye_initiate=43
+[metric]    alive by kind: { "eye_initiate": 40, "eye_chanter": 2 } within260=4
+[autotest] t=01:00 lvl=4 kills=84 enemies=42 summons=2/2 projectiles=0 hp=120 step_avg=0.86ms
+[autotest]    unit FSM: { "ENGAGING": 2 }
+[metric] t=120 avg_horde=1.8 now=2 cap=2 w2/2 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=2 lvl=9 kills=238 enemies=47 hp=118 boss_hp=-1 crystals=2 xp=256
+[metric]    summon dmg taken this window: eye_initiate=77 eye_chanter=22
+[metric]    alive by kind: { "eye_initiate": 45, "eye_chanter": 2 } within260=12
+[autotest] t=02:00 lvl=9 kills=238 enemies=47 summons=2/2 projectiles=0 hp=118 step_avg=0.92ms
+[autotest]    unit FSM: { "ENGAGING": 2 }
+[metric] t=180 avg_horde=2.0 now=2 cap=2 w2/2 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=14 kills=423 enemies=50 hp=120 boss_hp=-1 crystals=11 xp=482
+[metric]    summon dmg taken this window: eye_initiate=73 eye_chanter=22 scribe=4
+[metric]    alive by kind: { "eye_initiate": 45, "eye_chanter": 1, "scribe": 4 } within260=8
+[autotest] t=03:00 lvl=14 kills=423 enemies=50 summons=2/2 projectiles=0 hp=120 step_avg=1.05ms
+[autotest]    unit FSM: { "ENGAGING": 1, "CASTING": 1 }
+[metric] t=240 avg_horde=1.8 now=2 cap=2 w2/2 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=2 lvl=18 kills=627 enemies=58 hp=118 boss_hp=-1 crystals=5 xp=753
+[metric]    summon dmg taken this window: eye_initiate=76 eye_chanter=4 scribe=21 ink_wraith=27
+[metric]    alive by kind: { "scribe": 4, "eye_initiate": 48, "eye_chanter": 3, "ink_wraith": 3 } within260=11
+[autotest] t=04:00 lvl=18 kills=627 enemies=58 summons=2/2 projectiles=0 hp=118 step_avg=1.16ms
+[autotest]    unit FSM: { "ENGAGING": 2 }
+[metric] t=300 avg_horde=1.8 now=1 cap=2 w1/2 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=3 lvl=22 kills=865 enemies=82 hp=100 boss_hp=-1 crystals=24 xp=1069
+[metric]    summon dmg taken this window: eye_initiate=49 eye_chanter=19 scribe=12 ink_wraith=24 drowned_thrall=4 gibbering_mass=42 gibbering_least=31 gibbering_lesser=15
+[metric]    alive by kind: { "eye_initiate": 49, "gibbering_mass": 5, "eye_chanter": 5, "gibbering_least": 4, "scribe": 12, "ink_wraith": 5, "gibbering_lesser": 2 } within260=17
+[autotest] t=05:00 lvl=22 kills=865 enemies=82 summons=1/2 projectiles=0 hp=100 step_avg=1.21ms
+[autotest]    unit FSM: { "ENGAGING": 1 }
+[metric] t=360 avg_horde=1.6 now=2 cap=2 w2/2 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=4 lvl=27 kills=1172 enemies=72 hp=106 boss_hp=-1 crystals=40 xp=1552
+[metric]    summon dmg taken this window: eye_initiate=23 eye_chanter=10 scribe=10 ink_wraith=35 drowned_thrall=13 gibbering_mass=31 gibbering_least=63 gibbering_lesser=40 spores=27 spore_pilgrim=13
+[metric]    alive by kind: { "spore_pilgrim": 6, "eye_initiate": 54, "scribe": 4, "gibbering_mass": 2, "eye_chanter": 4, "ink_wraith": 2 } within260=14
+[autotest] t=06:00 lvl=27 kills=1172 enemies=72 summons=2/2 projectiles=0 hp=106 step_avg=1.29ms
+[autotest]    unit FSM: { "ENGAGING": 2 }
+[metric] t=420 avg_horde=1.8 now=2 cap=2 w2/2 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=3 lvl=31 kills=1470 enemies=71 hp=120 boss_hp=-1 crystals=54 xp=2003
+[metric]    summon dmg taken this window: eye_initiate=12 eye_chanter=5 ink_wraith=40 drowned_thrall=4 gibbering_mass=19 gibbering_least=19 gibbering_lesser=8 spores=37 spore_pilgrim=17
+[metric]    alive by kind: { "gibbering_mass": 7, "eye_initiate": 44, "ink_wraith": 1, "scribe": 9, "spore_pilgrim": 6, "eye_chanter": 4 } within260=2
+[autotest] t=07:00 lvl=31 kills=1470 enemies=71 summons=2/2 projectiles=0 hp=120 step_avg=1.32ms
+[autotest]    unit FSM: { "ACQUIRING": 2 }
+[metric] t=480 avg_horde=1.6 now=2 cap=2 w2/2 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=4 lvl=34 kills=1790 enemies=100 hp=120 boss_hp=-1 crystals=152 xp=2362
+[metric]    summon dmg taken this window: eye_chanter=21 ink_wraith=14 gibbering_mass=70 gibbering_least=39 gibbering_lesser=48 spores=32 spore_pilgrim=9
+[metric]    alive by kind: { "eye_initiate": 57, "gibbering_mass": 9, "eye_chanter": 6, "ink_wraith": 3, "spore_pilgrim": 9, "gibbering_lesser": 5, "scribe": 8, "archive_rift": 1, "gibbering_least": 2 } within260=8
+[autotest] t=08:00 lvl=34 kills=1790 enemies=100 summons=2/2 projectiles=0 hp=120 step_avg=1.35ms
+[autotest]    unit FSM: { "ENGAGING": 2 }
+[metric] t=540 avg_horde=1.7 now=2 cap=3 w2/3 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=4 lvl=39 kills=2259 enemies=69 hp=120 boss_hp=-1 crystals=219 xp=2991
+[metric]    summon dmg taken this window: eye_initiate=9 eye_chanter=15 ink_wraith=60 gibbering_mass=30 gibbering_least=75 gibbering_lesser=58 spores=50
+[metric]    alive by kind: { "eye_initiate": 41, "gibbering_mass": 11, "eye_chanter": 5, "scribe": 3, "spore_pilgrim": 9 } within260=9
+[autotest] t=09:00 lvl=39 kills=2259 enemies=69 summons=2/3 projectiles=0 hp=120 step_avg=1.43ms
+[autotest]    unit FSM: { "ENGAGING": 1, "FOLLOWING": 1 }
+[metric] t=600 avg_horde=3.0 now=3 cap=3 w3/3 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=42 kills=2721 enemies=78 hp=120 boss_hp=-1 crystals=250 xp=3643
+[metric]    summon dmg taken this window: gibbering_least=7 gibbering_lesser=37 spores=64
+[metric]    alive by kind: { "eye_chanter": 7, "scribe": 6, "eye_initiate": 51, "gibbering_mass": 2, "spore_pilgrim": 9, "ink_wraith": 1, "gibbering_lesser": 2 } within260=3
+[autotest] t=10:00 lvl=42 kills=2721 enemies=78 summons=3/3 projectiles=0 hp=120 step_avg=1.48ms
+[autotest]    unit FSM: { "FOLLOWING": 3 }
+[autotest] stall recall: warrior FOLLOWING at (-1108, -476), 11 px from the player, touching an obstacle: false
+[autotest] stall recall: warrior FOLLOWING at (-1202, -406), 112 px from the player, touching an obstacle: false
+[metric] t=660 avg_horde=3.0 now=3 cap=3 w3/3 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=45 kills=3150 enemies=87 hp=120 boss_hp=-1 crystals=247 xp=4153
+[metric]    summon dmg taken this window: spores=30
+[metric]    alive by kind: { "eye_initiate": 46, "eye_chanter": 4, "scribe": 5, "gibbering_mass": 14, "spore_pilgrim": 11, "ink_wraith": 6, "librarian": 1 } within260=0
+[autotest] t=11:00 lvl=45 kills=3150 enemies=87 summons=3/3 projectiles=6 hp=120 step_avg=1.57ms
+[autotest]    unit FSM: { "FOLLOWING": 1, "RETURNING": 2 }
+[autotest] stall recall: warrior FOLLOWING at (-1109, -467), 109 px from the player, touching an obstacle: false
+[autotest] stall recall: warrior RETURNING at (-1141, -406), 390 px from the player, touching an obstacle: false
+[metric] t=720 avg_horde=3.0 now=3 cap=3 w3/3 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=51 kills=3595 enemies=99 hp=120 boss_hp=-1 crystals=77 xp=5395
+[metric]    summon dmg taken this window: eye_initiate=20 gibbering_mass=18 spores=34 librarian_beam=28
+[metric]    alive by kind: { "eye_initiate": 64, "gibbering_lesser": 4, "scribe": 5, "eye_chanter": 4, "spore_pilgrim": 9, "gibbering_mass": 10, "librarian": 1, "ink_wraith": 2 } within260=7
+[autotest] t=12:00 lvl=51 kills=3595 enemies=99 summons=3/3 projectiles=8 hp=120 step_avg=1.62ms
+[autotest]    unit FSM: { "FOLLOWING": 1, "RETURNING": 1, "ENGAGING": 1 }
+[metric] t=780 avg_horde=4.8 now=5 cap=5 w5/5 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=53 kills=4018 enemies=131 hp=120 boss_hp=-1 crystals=250 xp=5936
+[metric]    summon dmg taken this window: eye_chanter=10 ink_wraith=10 gibbering_lesser=15 spores=25
+[metric]    alive by kind: { "eye_initiate": 70, "ink_wraith": 6, "spore_pilgrim": 16, "gibbering_lesser": 3, "eye_chanter": 10, "gibbering_mass": 15, "scribe": 9, "gibbering_least": 2 } within260=2
+[autotest] t=13:00 lvl=53 kills=4018 enemies=131 summons=5/5 projectiles=13 hp=120 step_avg=1.68ms
+[autotest]    unit FSM: { "FOLLOWING": 4, "ACQUIRING": 1 }
+[autotest] stall recall: warrior RETURNING at (-1353, 1657), 588 px from the player, touching an obstacle: false
+[autotest] build complete (only fallback cards left) at 13:38, level 56
+[metric] t=840 avg_horde=6.8 now=8 cap=8 w8/8 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=58 kills=4589 enemies=127 hp=120 boss_hp=-1 crystals=73 xp=7163
+[metric]    summon dmg taken this window: gibbering_least=19 gibbering_lesser=16 spores=57
+[metric]    alive by kind: { "scribe": 14, "eye_initiate": 62, "spore_pilgrim": 14, "eye_chanter": 11, "gibbering_mass": 14, "ink_wraith": 7, "gibbering_lesser": 3, "gibbering_least": 2 } within260=4
+[autotest] t=14:00 lvl=58 kills=4589 enemies=127 summons=8/8 projectiles=8 hp=120 step_avg=1.75ms
+[autotest]    unit FSM: { "FOLLOWING": 7, "ENGAGING": 1 }
+[metric] t=900 avg_horde=8.0 now=8 cap=8 w8/8 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=62 kills=5201 enemies=105 hp=120 boss_hp=-1 crystals=44 xp=8245
+[metric]    summon dmg taken this window: eye_chanter=11 ink_wraith=36 gibbering_least=32 gibbering_lesser=108 spores=122
+[metric]    alive by kind: { "eye_initiate": 57, "scribe": 12, "spore_pilgrim": 15, "gibbering_mass": 8, "ink_wraith": 5, "eye_chanter": 6, "gibbering_lesser": 2 } within260=5
+[autotest] t=15:00 lvl=62 kills=5201 enemies=105 summons=8/8 projectiles=12 hp=120 step_avg=1.89ms
+[autotest]    unit FSM: { "FOLLOWING": 8 }
+[metric] t=960 avg_horde=8.0 now=8 cap=8 w8/8 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=65 kills=5851 enemies=121 hp=120 boss_hp=-1 crystals=128 xp=9172
+[metric]    summon dmg taken this window: gibbering_mass=25 gibbering_least=67 gibbering_lesser=115 spores=169
+[metric]    alive by kind: { "scribe": 16, "eye_initiate": 49, "ink_wraith": 4, "gibbering_mass": 13, "eye_chanter": 13, "spore_pilgrim": 23, "gibbering_lesser": 2, "archive_rift": 1 } within260=4
+[autotest] t=16:00 lvl=65 kills=5851 enemies=121 summons=8/8 projectiles=15 hp=120 step_avg=1.95ms
+[autotest]    unit FSM: { "FOLLOWING": 8 }
+[autotest] boss spawned at 1020.0 s
+[autotest] Shadow Bolt aim switched to Strongest
+[metric] t=1020 avg_horde=7.9 now=6 cap=8 w6/8 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=2 lvl=68 kills=6516 enemies=125 hp=120 boss_hp=24000 crystals=250 xp=10069
+[metric]    summon dmg taken this window: gibbering_mass=55 gibbering_least=142 gibbering_lesser=159 spores=233
+[metric]    alive by kind: { "eye_initiate": 60, "spore_pilgrim": 21, "gibbering_lesser": 2, "gibbering_mass": 16, "eye_chanter": 8, "scribe": 6, "gibbering_least": 5, "ink_wraith": 6, "boss": 1 } within260=3
+[autotest] t=17:00 lvl=68 kills=6516 enemies=125 summons=6/8 projectiles=10 hp=120 step_avg=2.00ms
+[autotest]    unit FSM: { "ENGAGING": 2, "FOLLOWING": 4 }
+[metric] t=1080 avg_horde=5.6 now=3 cap=8 w3/8 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=17 lvl=70 kills=7010 enemies=88 hp=120 boss_hp=7345 crystals=242 xp=10853
+[metric]    summon dmg taken this window: ink_wraith=29 gibbering_mass=114 gibbering_least=77 gibbering_lesser=177 spores=59 archivist_page=853 boss=290
+[metric]    alive by kind: { "scribe": 8, "eye_initiate": 55, "spore_pilgrim": 6, "gibbering_mass": 12, "archivist_copy": 2, "gibbering_lesser": 2, "eye_chanter": 2, "boss": 1 } within260=8
+[autotest] t=18:00 lvl=70 kills=7010 enemies=88 summons=3/8 projectiles=19 hp=120 step_avg=2.02ms
+[autotest]    unit FSM: { "ENGAGING": 1, "FOLLOWING": 2 }
+[autotest] boss defeated at 1112.4 s
+[metric] t=1140 avg_horde=6.2 now=8 cap=8 w8/8 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=9 lvl=73 kills=7452 enemies=110 hp=120 boss_hp=0 crystals=246 xp=12107
+[metric]    summon dmg taken this window: gibbering_mass=31 gibbering_least=27 gibbering_lesser=143 spores=118 archivist_page=561 boss=63
+[metric]    alive by kind: { "eye_initiate": 62, "scribe": 4, "eye_chanter": 7, "gibbering_mass": 5, "spore_pilgrim": 13, "ink_wraith": 10, "gibbering_lesser": 4, "gibbering_least": 4, "archive_rift": 1 } within260=3
+[autotest] t=19:00 lvl=73 kills=7452 enemies=110 summons=8/8 projectiles=14 hp=120 step_avg=2.05ms
+[autotest]    unit FSM: { "ENGAGING": 6, "CASTING": 2 }
+[autotest] countdown reached 0:00 at 1200.0 s - THE RECKONING begins
+[metric] t=1200 avg_horde=7.8 now=8 cap=8 w8/8 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=2 lvl=75 kills=7957 enemies=88 hp=120 boss_hp=0 crystals=250 xp=12882
+[metric]    summon dmg taken this window: gibbering_least=73 gibbering_lesser=213 spores=372 spore_pilgrim=42
+[metric]    alive by kind: { "eye_initiate": 49, "scribe": 4, "ink_wraith": 10, "gibbering_mass": 8, "spore_pilgrim": 7, "eye_chanter": 5, "gibbering_lesser": 2, "unwritten_one": 3 } within260=3
+[autotest] t=20:00 lvl=75 kills=7957 enemies=88 summons=8/8 projectiles=21 hp=120 step_avg=2.08ms
+[autotest]    unit FSM: { "FOLLOWING": 3, "ENGAGING": 5 }
+[autotest] ===== NECROPATHY AUTOTEST SUMMARY =====
+[autotest] result: VICTORY / RUN COMPLETE (run_complete)
+[autotest] time reached: 20:27 elapsed (1227.6 s game time, 292.7 s real time); past 0:00: 27.6 s; Reckoning waves: 3
+[autotest] kills: 8101 | level: 76
+[autotest] level pacing: 01:00=L4 03:00=L14 05:00=L22 10:00=L42 15:00=L62 17:00=L68 20:00=L75 | reached: L2@00:30 L5@01:02 L10@02:01 L15@03:09 L20@04:16 L25@05:20 L30@06:28 L35@08:05 L40@09:10 L45@10:39 L50@11:40 L55@13:31 L60@14:50
+[autotest] build complete: at 13:38, level 56
+[autotest] horde: 1 alive / capacity 8 (warrior 1/8, archer 0/0, mage 0/0, mender 0/0, warder 0/0, bishop 0/0, abomination 0/0, rogue 0/0, gargoyle 0/0, frost_wraith 0/0, bone_hound 0/0, banshee 0/0, corpse_catapult 0/0)
+[autotest] summons spawned: 71, died: 70, hard recalls: 9 (stall recalls: 5)
+[autotest] boss spawned: yes at 1020.0 s | boss defeated: yes at 1112.4 s | boss HP left: 0 / 24000
+[autotest] player HP: 0 / 120 (invulnerable: false)
+[autotest] picks (86): plague_cloud 1, corpse_explosion 1, vampiric_rite 1, shade_stride 1, plague_cloud 2, necrotic_expanse 1, corpse_explosion 2, necrotic_expanse 2, corpse_explosion 3, lingering_malediction 1, lingering_malediction 2, vampiric_rite 2, shade_stride 2, necrotic_expanse 3, plague_cloud 3, shade_stride 3, vampiric_rite 3, lingering_malediction 3, plague_cloud 4, corpse_explosion 4, necrotic_expanse 4, vampiric_rite 4, lingering_malediction 4, shade_stride 4, bone_spear 1, bone_spear 2, corpse_explosion 5, lingering_malediction 5, bone_spear 3, bone_spear 4, vampiric_rite 5, shade_stride 5, bone_spear 5, soul_siphon 1, plague_cloud 5, soul_siphon 2, soul_siphon 3, EVOLVE ossuary_lance, soul_siphon 4, soul_siphon 5, necrotic_expanse 5, EVOLVE soul_rapture, warrior 2, soul_conduit 1, EVOLVE grave_eruption, shadow_bolt 2, soul_conduit 2, shadow_bolt 3, EVOLVE pestilence, shadow_bolt 4, shadow_bolt 5, soul_conduit 3, warding_ritual 1, soul_conduit 4, warding_ritual 2, soul_conduit 5, EVOLVE void_barrage, warding_ritual 3, warding_ritual 4, warrior 3, warding_ritual 5, warrior 4, warrior 5, dark_restoration, skip, skip, skip, skip, skip, skip, skip, skip, skip, skip, skip, skip, skip, skip, dark_restoration, skip, skip, skip, dark_restoration, skip, skip, skip
+[autotest] wards on you: 0 total, absorbed 0 dmg | 0 wards in 0 s with 2+ Warders/Bishops alive (0.0 / min) | heal casts: 0 | ally barriers: 0, barrier dmg absorbed: 0
+[autotest] evolutions: ossuary_lance@08:10, soul_rapture@08:55, grave_eruption@09:23, pestilence@10:07, void_barrage@11:47
+[autotest] evolutions by type: spell: ossuary_lance@08:10, soul_rapture@08:55, grave_eruption@09:23, pestilence@10:07, void_barrage@11:47 | summon: none
+[autotest] summon evolutions: lich raised 0 (capped 0) | merge converted 0, dissolved 0 | aura pulses 0 | merged classes: none
+[autotest] winter revenant: shatters 0 (capped 0), shatter hits 0, shatter dmg 0 | death novas 0, nova hits 0, nova freezes 0, nova dmg 0
+[autotest] summon output by source (dmg/heal/shield): warrior=10276/0/0 bash=1894/0/0
+[autotest] summon output by class (dmg/heal/shield): warrior=12170/0/0
+[autotest] recipe book: 5 / 83 discovered (void_barrage, ossuary_lance, soul_rapture, grave_eruption, pestilence) | Recipes view rows built: 83 (saved: false)
+[autotest] codex: 15 entries met this run (spell 5, summon 1, enemy 8, boss 1) | new to the save 15 | save: spell 5/54, summon 1/30, enemy 8/260, boss 1/45, evolutions 5/83
+[autotest] epilogue: parts=15 (acts=15) open=0 seen=0 panels=59 cards_ok=true autoplay_pending=false
+[autotest] volleys: shots 32833 | hits 14207 | dmg 191572 | peak 114/320 | capped volleys 0 | boss hits capped 324 | barrages 17 | soul_siphon 77616, bone_spear 65512, shadow_bolt 33901, corpse_explosion 6493, plague_cloud 5220, warrior 2827
+[visual] adaptive quality: level 3, peak 3, steps down 3, up 0
+[autotest] victory screen: title=The Last Page Burns best_overtime=27 new_record=true highlights=8
+[autotest] dread: peak 60 | average 1.0 | end 0 | calmed by kills 606 | time per step 0:1215s 1:10s 2:2s 3:0s 4:0s | raised by: ink 397, spores 169, tome 40
+[autotest] claims: claims 11 | freed 11 | expired 0 | still risen at the end 0 | cap refusals 0 | by class: warrior 11
+[autotest] gravebow / bone colossus: gravebow volleys 0, splits 0 (+0 arrows), pierce hits 0, dmg 0 | curses applied 0 (refreshed 0), curse bonus dmg 0 | colossus dmg 0, stomps 0 | taunted enemies 0 | shrapnel bursts 0, hits 0, dmg 0
+[autotest] necro spells: bone_spear: Lv5 EVOLVED dmg=205244 (evolved 194728) boss=2184 volleys=1099 | soul_siphon: Lv5 EVOLVED dmg=242333 (evolved 237887) boss=4599 healed=117 summon_heal=1326 bursts=1653 | corpse_explosion: Lv5 EVOLVED dmg=292090 (evolved 242340) boss=2961 bursts=1818 chain=480 | plague_cloud: Lv5 EVOLVED dmg=144080 (evolved 132584) boss=2726 clouds=379 novas=216 rot_bonus_dmg=103135
+[autotest] later spells: death_mark: not taken | bone_wall: not taken | soul_chains: not taken | wither: not taken | raise_dead: not taken
+[autotest] later spell passives: grim_ledger Lv0 bonus_dmg=0 | spirit_binding Lv0 | restless_dead Lv0 | temporary summons spawned=0
+[autotest] horde passives: bone_plating Lv 0 (dmg prevented 0) | unholy_precision Lv 0 (crits 0, crit bonus dmg 0) | unholy_resilience Lv 0 (dmg prevented 0: area 0, holy 0) | bound_souls Lv 0 (soft recalls 14, hard recalls 9)
+[autotest] class passives: blood_scent Lv 0 (fast: Archers, Rogues, Gargoyles, Bone Hounds, Grave Drones, Succubi, Blood Spawn, Fallen Heroes, Ghost Saucers, Powder Wraiths, Bound Ophans, Bonehorns) | mournsong Lv 0 (extra debuff s 0) | siegecraft Lv 0 (siege bonus dmg 0) | summon dmg to structures 4 (catapults 0)
+[autotest] synergies active at end: none | activations: none
+[autotest] synergy bonus: flesh_rampart hits=0 dmg=0 | killing_field hits=0 dmg=0 | death_from_above hits=0 dmg=0 | wild_hunt hits=0 dmg=0 | cold_blood hits=0 dmg=0 | shatterfall hits=0 dmg=0 | requiem hits=0 dmg=0 | charnel_menagerie hits=0 dmg=0 | baying frenzies=0 | marks staggered=0 swooped=0 | dash resets=0 | requiem +0s
+[autotest] level-up offers: hands 81, new-item cards 57, later items 24 (42%) in 18 hands (22%), distinct later items offered 14
+[autotest] level-up actions: rerolls used 2/2, banishes used 2/2 (banished: soul_recycling, necrotic_vigor), skips 20
+[autotest] shadow bolt: 154676 dmg in Nearest mode, 105980 dmg in Strongest mode; to boss: 6258 of 23999 total boss dmg
+[autotest] stats: archive_ink_pools=127 archive_ink_seconds=28 archive_spore_clouds=2571 archive_spore_seconds=16 archivist_copy_hits=931 archivist_erasure_pushes=386 archivist_erasure_started=1 archivist_erasure_steps=4 archivist_footnotes=4 archivist_kill_time=92 archivist_page_player_hits=44 archivist_page_summon_hits=83 archivist_pages=156 archivist_pages_crumbled=24 archivist_phase1_time=41 archivist_phase2_time=66 archivist_spawn_time=1020 boss_atk_footnotes=5 boss_atk_recitation=16 boss_kills=1 bossdmg_bash=71 bossdmg_bone_spear=932 bossdmg_corpse_explosion=213 bossdmg_death_nova=1063 bossdmg_eruption=1382 bossdmg_eruption_spikes=1579 bossdmg_lance=2184 bossdmg_pestilence=1662 bossdmg_plague_cloud=291 bossdmg_rapture=3564 bossdmg_rapture_burst=1034 bossdmg_shadow_bolt=597 bossdmg_soul_siphon=2068 bossdmg_void=6164 bossdmg_void_shard=93 bossdmg_warrior=1093 bot_dash_crowd=18 bot_dash_hit=7 bot_dash_telegraph=53 chest_count_1=9 chest_evolutions=5 chest_items=9 chests_opened=9 chests_pity=6 chests_spawned=9 claims=11 corpse_bursts=1818 damage_dealt=1350044 damage_to_player=380 damage_to_summons=7690 dash_distance=8580 dash_hits_avoided=8 dashes=78 death_novas=216 death_warrior_by_archivist_page=20 death_warrior_by_boss=3 death_warrior_by_eye_chanter=1 death_warrior_by_eye_initiate=4 death_warrior_by_gibbering_least=6 death_warrior_by_gibbering_lesser=8 death_warrior_by_gibbering_mass=3 death_warrior_by_ink_wraith=4 death_warrior_by_scribe=2 death_warrior_by_spore_pilgrim=1 death_warrior_by_spores=1 death_warrior_by_unwritten_one=17 dmg_bash=1894 dmg_bolt=19766 dmg_bone_spear=65512 dmg_corpse=49750 dmg_corpse_explosion=6493 dmg_death_nova=36078 dmg_eruption=168896 dmg_eruption_spikes=73444 dmg_lance=194728 dmg_nova=4721 dmg_pestilence=96506 dmg_plague=11496 dmg_plague_cloud=5220 dmg_rapture=101905 dmg_rapture_burst=135982 dmg_resisted_archivist_copy=15379 dmg_shadow_bolt=33901 dmg_siphon=4446 dmg_soul_siphon=77616 dmg_spear=10515 dmg_void=207172 dmg_void_shard=33718 dmg_warrior=10276 elite_kills=11 eruption_chains=480 evolutions=5 gibbering_deaths=2445 gibbering_splits=2098 gibbering_splits_capped=6 ink_wraith_dives=27 ink_wraith_rises=179 kill_archive_rift=6 kill_boss=1 kill_drowned_thrall=11 kill_eye_chanter=324 kill_eye_initiate=3948 kill_gibbering_least=1393 kill_gibbering_lesser=700 kill_gibbering_mass=352 kill_ink_wraith=529 kill_librarian=1 kill_scribe=392 kill_spore_pilgrim=444 kills_by_bash=41 kills_by_bolt=344 kills_by_bone_spear=360 kills_by_corpse=1242 kills_by_corpse_explosion=68 kills_by_death_nova=172 kills_by_eruption=1054 kills_by_eruption_spikes=357 kills_by_lance=879 kills_by_nova=63 kills_by_pestilence=451 kills_by_plague=107 kills_by_plague_cloud=42 kills_by_rapture=347 kills_by_rapture_burst=715 kills_by_shadow_bolt=141 kills_by_siphon=22 kills_by_soul_siphon=456 kills_by_spear=141 kills_by_void=837 kills_by_void_shard=121 kills_by_warrior=141 levelup_banishes=2 levelup_rerolls=2 levelup_skips=20 librarian_beams=4 librarian_kills=1 librarian_spawned=1 librarian_ttk=60 librarian_turned=3 march_zones_entered=3 miniboss_chests=1 minibossdmg_bolt=470 minibossdmg_bone_spear=367 minibossdmg_death_nova=270 minibossdmg_eruption=735 minibossdmg_eruption_spikes=462 minibossdmg_lance=508 minibossdmg_pestilence=878 minibossdmg_plague_cloud=25 minibossdmg_rapture=572 minibossdmg_rapture_burst=122 minibossdmg_shadow_bolt=189 minibossdmg_soul_siphon=803 minibossdmg_void=587 nova_kills=63 objective_ash=24 orrery_assembled=6 orrery_push_skipped=836 orrery_pushes=102146 orrery_reassembled=5 orrery_telegraphs=27 orrery_turns=27 plague_clouds=379 player_dmg_from_archivist_page=162 player_dmg_from_eye_chanter=19 player_dmg_from_eye_initiate=54 player_dmg_from_gibbering_mass=83 player_dmg_from_ink_wraith=35 player_dmg_from_scribe=10 player_dmg_from_spore_pilgrim=14 player_healing=140 priest_heals=0 priest_wards=0 pu_collected_feast=6 pu_collected_frenzy=2 pu_collected_hyper=2 pu_collected_magnet=4 pu_collected_nova=1 pu_collected_stasis=5 pu_expired_hyper=1 pu_expired_magnet=2 pu_magnet_crystals=886 pu_pity_drops=2 pu_spawned_feast=6 pu_spawned_frenzy=2 pu_spawned_hyper=3 pu_spawned_magnet=6 pu_spawned_nova=1 pu_spawned_stasis=5 pu_uptime_frenzy=23 pu_uptime_hyper=19 pu_uptime_stasis=24 rallies=17 rally_buff_time=134 rally_heal=1160 rally_knockbacks=53 rally_meter_fills=17 rally_minion_dmg=3792 rally_raised=23 rally_recalled=3 rapture_bursts=1653 reckoning_spawned=22 replacements=42 rift_spawned=178 rifts_closed_early=6 rifts_expired=4 rifts_opened=10 rifts_telegraphed=10 rot_bonus_dmg=103135 rot_kills=3332 scribe_cursed=1441 scribe_curses=735 siphon_healed=117 siphon_summon_heal=1326 spawned_archive_rift=10 spawned_drowned_thrall=11 spawned_gibbering_least=1397 spawned_gibbering_lesser=701 spawned_gibbering_mass=358 spawned_ink_wraith=539 spawned_librarian=1 spawned_scribe=404 spawned_spore_pilgrim=457 spear_volleys=1099 spore_clouds_left=2127 spore_death_clouds=444 structdmg_bolt=18 structdmg_bone_spear=393 structdmg_corpse=310 structdmg_death_nova=113 structdmg_eruption=2321 structdmg_eruption_spikes=977 structdmg_lance=275 structdmg_pestilence=523 structdmg_plague=84 structdmg_plague_cloud=36 structdmg_rapture=36 structdmg_rapture_burst=804 structdmg_shadow_bolt=83 structdmg_soul_siphon=264 structdmg_spear=155 structdmg_void=1495 structdmg_void_shard=479 structdmg_warrior=4 summon_dmg_from_archivist_page=1414 summon_dmg_from_boss=353 summon_dmg_from_drowned_thrall=22 summon_dmg_from_eye_chanter=144 summon_dmg_from_eye_initiate=385 summon_dmg_from_gibbering_least=724 summon_dmg_from_gibbering_lesser=1210 summon_dmg_from_gibbering_mass=440 summon_dmg_from_ink_wraith=279 summon_dmg_from_librarian_beam=28 summon_dmg_from_scribe=48 summon_dmg_from_spore_pilgrim=83 summon_dmg_from_spores=1490 summon_dmg_from_unwritten_one=1062 summon_healing=2486 summon_soft_recalls=14 thralls_freed=11 tomes_burned=2 tomes_lost=3 tomes_placed=5 void_shards=9603 volley_barrages=17 ward_absorbed=0 warrior_bashes=374 warrior_kills=182 wave_events=24 xp_collected=13113 xp_dropped=12923
+[autotest] boss attacks: recitation=16 footnotes=5 | wrath: no | hammer soaked by undead: 0 | charges stopped by undead: 0 (shielding the player: 0) | judgment hits: 0 | call soldiers: 0 | holy zones boss/grave: 0/0
+[autotest] crimson march: zones entered 3 (final: Zone IV  -  The Unwritten Stacks) | placed/destroyed/escaped: outposts 0/0/0 generators 0/0/0 carts 0/0/0 standards 0/0/0 | outpost reinforcements 0 | ward zones 0
+[autotest] march enemies: aura buff pulses 0 | halberd cleave hits 0 | dmg resisted: shieldbearer 0, boss 0 | kills: shieldbearer=0 banner_bearer=0 halberdier=0
+[autotest] marshal vael: last stand no | cleave summon hits 0, soaked for the player 0 | command soldiers 0
+[autotest] march events (3): 5:00 zone_II, 10:00 zone_III, 15:00 zone_IV
+[autotest] archive: tomes burned 2/5 (2:44, 7:31), resealed 3, all burned: no | ink seconds 28, spore seconds 17 | orrery: risen 6 (re-assembled 5), turns 27, bodies pushed 102146 (skipped at obstacles 836) | librarian killed at 12:00 (beams 4, summons turned 3, lashes 0) | objective ash 24
+[autotest] archive rifts: rifts opened 10 (4:03, 7:53, 12:43, 15:08, 15:53, 16:38, 17:23, 18:08, 18:53, 19:38) | closed early by the army 6 | closed by themselves 4 | cultists spat out 178
+[autotest] archive events (21): 0:00 zone_1, 2:30 tomes_1, 2:44 tome_burned, 5:00 zone_2, 7:00 tomes_2, 7:31 tome_burned, 8:30 tome_sealed, 10:00 orrery_rises, 10:00 zone_3, 11:00 librarian_arrived, 12:00 tomes_2, 12:00 librarian_killed, 12:19 orrery_rises, 12:43 orrery_rises, 13:17 orrery_rises, 13:30 tome_sealed, 13:30 tome_sealed, 14:01 orrery_rises, 14:35 orrery_rises, 15:00 zone_4, 15:01 orrery_folds
+[autotest] archive enemies (spawned/killed): scribe 404/392 ink_wraith 539/529 spore_pilgrim 457/444 gibbering_mass 358/352 librarian 1/1 gibbering_lesser 701/700 gibbering_least 1397/1393 archive_rift 10/6
+[autotest] archive kits: scribe curses 735 (cultists cursed 1441) | ink wraith rises 179, dives 27 | spore clouds 2127 (+444 death clouds), summon dmg from spores 1490 | masses split 2098 (capped 6) | librarian beams 4 (player hits 0), summons turned 3, lashes 0 (summon hits 0), killed 1 (avg 60.6 s), dmg taken 5994
+[autotest] archive hazards: ink pools 127, spore clouds 2571 | necromancer in ink 28 s, in spores 17 s | player dmg from pages 162, librarian 0, archive kinds 143
+[autotest] archivist: phase 1 at +41 s, phase 2 at +67 s | killed at +92 s | recitations 16 (pages 156: hit the necromancer 44, summons 83, crumbled 24; ink pools 127) | footnotes 4 (blows on copies 931, damage wasted 15379) | erasure steps 4, pushes 386
+[autotest] stage events fired (0): 
+[autotest] templar charges: 0 (body-blocked by warriors: 0) | temporary summons spawned: 0
+[autotest] obstacle collisions resolved: player=352 summons=3609 enemies=59388
+[autotest] class abomination: Lv 0, alive 0/0, deaths 0 | dmg 0 (abomination=0 abom_stomp=0) | abom_stomps=0 abom_stomp_hits=0
+[autotest] class rogue: Lv 0, alive 0/0, deaths 0 | dmg 0 (rogue=0 rogue_dash=0 rogue_bleed=0) | rogue_dashes=0 rogue_dash_hits=0
+[autotest] class gargoyle: Lv 0, alive 0/0, deaths 0 | dmg 0 (gargoyle=0 gargoyle_swoop=0) | gargoyle_swoops=0 gargoyle_swoop_hits=0
+[autotest] class frost_wraith: Lv 0, alive 0/0, deaths 0 | dmg 0 (frost_wraith=0) | frost_deep_freezes=0 frost_freezes=0 frost_boss_freezes=0 frost_frozen_seconds=0 frost_chills=0
+[autotest] class bone_hound: Lv 0, alive 0/0, deaths 0 | dmg 0 (bone_hound=0 hellhound=0 hellhound_burn=0 hellhound_trail=0) | hound_bites=0 hound_pack_bites=0 hound_pack_bonus_dmg=0 hellhound_burns=0 hellhound_trail_patches=0
+[autotest] class banshee: Lv 0, alive 0/0, deaths 0 | dmg 0 (banshee=0 keening_lady=0) | banshee_dirges=0 banshee_dirge_hits=0 dirge_debuff_seconds=0 keening_waves=0 keening_silenced=0 keening_heals_silenced=0
+[autotest] class corpse_catapult: Lv 0, alive 0/0, deaths 0 | dmg 0 (corpse_catapult=0 ossuary_engine=0 ossuary_shards=0) | catapult_volleys=0 catapult_boulders=0 catapult_boulder_hits=0 catapult_structure_dmg=0 ossuary_shard_fields=0 hazards_dropped=0
+[autotest] class specials: cancelled by recall 0 | ended inside an obstacle 0
+[autotest] special evolutions: shadow reaper: chain dashes 0, cooldown resets 0, bleed stacks added 0, max stacks 0, rogue bleed dmg (all) 0 | cathedral horror: stuns 0 (boss 0), stunned s 0.0, stone forms 0, stone s 0.0, dmg prevented by stone 0
+[autotest] grave step: dashes 78 (bot: crowd 18, hit 7, telegraph 53) | hits avoided in dash i-frames 8 | blocked 0, shortened by obstacles 0, ended inside an obstacle 0, avg length 110 px | charges 1, cooldown 5.00 s
+[autotest] dread rally: rallies 17 | meter fills 17, fill times s [118 69 63 41 46 39 41 30 37 39 24 22 29 30 25 30 36] (avg 42 s), meter now 0% | knockbacks 53 | summons called back 3 | heal 1160 | minion dmg under buff 3792 (est. +dmg part 1083) | buff time 134 s
+[autotest] army formation: bone_ring: 1228s kills 8101 army_dmg 7690 recalls 9 spread max 673 mean 89
+[autotest] character: gravecaller (The Gravecaller) | starting spell shadow_bolt Lv 5 EVOLVED | Baseline stats (Max HP 120, move speed 110) | innate: none | characters unlocked this run: carrion_lord, bone_oracle, plague_scholar, fallen_confessor | unlocked in the profile: gravecaller, bone_oracle, fallen_confessor, carrion_lord, plague_scholar (saved: false)
+[autotest] stuck_units=0 (touching an obstacle: 0) {  }
+[metric] boss_hp_at_0=0 min_hp_before_0=96
+[autotest] peaks: enemies=180 summons=8 projectiles=38 effects=72 crystals=250
+[autotest] nodes created (pools): enemies=182 summons=8 projectiles=40 effects=72 crystals=250
+[autotest] simulation step: avg 2.09 ms, worst 38.20 ms
+[autotest] power-ups: spawned 23 (magnet=6 feast=6 hyper=3 stasis=5 frenzy=2 nova=1) | collected 20 (magnet=4 feast=6 hyper=2 stasis=5 frenzy=2 nova=1) | expired (magnet=2 feast=0 hyper=1 stasis=0 frenzy=0 nova=0) | lost at cap 0 | pity drops 2 | crystals pulled by Soul Magnet 886
+[autotest] buff uptime: hyper=20s (1.6%, refreshed 0) stasis=25s (2.0%, refreshed 0) frenzy=24s (2.0%, refreshed 0) | soul nova kills: 63
+[autotest] chests: spawned 9, opened 9 (x1=9 x3=0 x5=0), items granted 9 (evolutions 5), pity 6, lost at cap 0, left on ground 0
+[autotest]    chest 06:00 x1: lingering_malediction 5
+[autotest]    chest 08:10 x1: EVOLVE ossuary_lance
+[autotest]    chest 08:55 x1: EVOLVE soul_rapture
+[autotest]    chest 09:23 x1: EVOLVE grave_eruption
+[autotest]    chest 10:07 x1: EVOLVE pestilence
+[autotest]    chest 11:47 x1: EVOLVE void_barrage
+[autotest]    chest 12:07 x1: warrior 3
+[autotest]    chest 13:32 x1: dark_restoration
+[autotest]    chest 18:35 x1: dark_restoration
+[autotest] chest beacon: chests marked 9, seen on screen 9 | max off-screen arrows at once 0 | ticks with an arrow 0 (0.0 s)
+[autotest] profane pact: taken no (final Lv 0; never offered or never picked) | oath tier 0 | extra XP from pact 0, from oath 0 | extra soul ash from pact 0, from oath 0
+[autotest] meta upgrades (--meta=none): none | revivals used: 0
+[autotest] soul ash: +755 (time 150 [20:00] + kills 243 [8101] + elites 44 [11] + boss 75 + reckoning 68 [27.6 s] + objectives 24 = 604, bonus +0% = +0, pact +0, oath +0) | bounty 0 | new total 755 | saved: false
+[autotest] difficulty: Necromancer (necromancer) | modifiers: none | foes: HP x0.800 (growth x1.00), dmg x1.000 (growth x1.00), spawn x1.250, speed x1.00, elite chance 0.000, boss HP x1.000 | XP x1.000 | soul ash: difficulty +0%, modifiers +0%, total x1.00
+[autotest] difficulty results: soul ash difficulty +0, modifiers +0 | trickle elites promoted: 0 | holy retribution bursts: 0 (dmg to you 0, to summons 0) | player max HP at start: 120
+[autotest] stage: The Hollow Archive | soul ash stage bonus +151 (x1.25) | stages unlocked by this run: spire
+[autotest] hyper: off (Necromancer) | foes: HP growth x1.00, dmg growth x1.00, boss HP x1.000 | at 0:00 vs the standard game: HP x1.00, dmg x1.00 | soul ash hyper +0 (+0%) | Reckoning lasted 27.6 s past 0:00 | unlocked: false (by this run: false) | hyper clear recorded: no
+[autotest] skins: character gravecaller, worn default | this run: rot kills 3332, high confessors slain 0, seraphine slain with all 4 roles 0 | lifetime: rot 3332/5000, confessors 0/50, seraphine full army 0/1 | unlocked 54/220 (new: none) | setup row cards 6
+[autotest] rewards: achievements=0 (none) titles=0 unlocks=none | run: temp raised 0, min HP before 0:00 80%, evolutions 5, boss slain 92.4 s after arrival | one-run achievements met: untouchable, full_ossuary (not checked: --rewards=on) | worn title: none | title row choices 1
+[autotest] demo: on=false | acts=1 | stages=graveyard,crimson_march,sanctum | save=user://save.cfg | full_game_offers=0
+[autotest] feedback: url_set=true | report_chars=122/217/314 (main menu / pause / results samples built, max 1500) | url_chars=609 | opened=never (autotest)
+exit 0

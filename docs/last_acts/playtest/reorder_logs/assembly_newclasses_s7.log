@@ -1,0 +1,214 @@
+Godot Engine v4.3.stable.official.77dcf97d8 - https://godotengine.org
+
+[autotest] start: seed=7 speed=8x mortal=true timeout=1500s policy=army meta=none oath=0 pact=false classes=abomination,rogue,gargoyle,frost_wraith spells=-
+[autotest] stage: assembly
+[autotest] difficulty: necromancer | modifiers: none
+[autotest] character: gravecaller (starting spell shadow_bolt)
+[autotest] forced class abomination raised to Lv 1
+[autotest] forced class rogue raised to Lv 1
+[autotest] forced class gargoyle raised to Lv 1
+[autotest] forced class frost_wraith raised to Lv 1
+[audio] main-thread startup 7.2 ms; 59 sfx ready after 510 ms, music loop after 369 ms (worker threads); display: headless
+[metric] t=60 avg_horde=6.4 now=8 cap=8 w3/3 a0/0 m0/0 m0/0 w0/0 b0/0 a1/1 r1/1 g2/2 f1/1 b0/0 b0/0 c0/0 deaths_win=0 lvl=5 kills=98 enemies=17 hp=120 boss_hp=-1 crystals=4 xp=94
+[metric]    summon dmg taken this window: scout_drone=48
+[metric]    alive by kind: { "scout_drone": 17 } within260=2
+[autotest] t=01:00 lvl=5 kills=98 enemies=17 summons=8/8 projectiles=1 hp=120 step_avg=1.01ms
+[autotest]    unit FSM: { "FOLLOWING": 4, "ENGAGING": 3, "CASTING": 1 }
+[metric] t=120 avg_horde=8.9 now=11 cap=11 w5/5 a0/0 m0/0 m0/0 w0/0 b0/0 a1/1 r2/2 g2/2 f1/1 b0/0 b0/0 c0/0 deaths_win=0 lvl=9 kills=222 enemies=26 hp=119 boss_hp=-1 crystals=11 xp=226
+[metric]    summon dmg taken this window: scout_drone=81 line_trooper=49 aegis_bot=15
+[metric]    alive by kind: { "scout_drone": 16, "aegis_bot": 7, "line_trooper": 3 } within260=6
+[autotest] t=02:00 lvl=9 kills=222 enemies=26 summons=11/11 projectiles=0 hp=119 step_avg=1.02ms
+[autotest]    unit FSM: { "ENGAGING": 8, "FOLLOWING": 1, "CASTING": 1, "REPOSITIONING": 1 }
+[metric] t=180 avg_horde=12.0 now=17 cap=17 w7/7 a0/0 m0/0 m0/0 w0/0 b0/0 a2/2 r3/3 g3/3 f2/2 b0/0 b0/0 c0/0 deaths_win=0 lvl=13 kills=364 enemies=36 hp=115 boss_hp=-1 crystals=17 xp=428
+[metric]    summon dmg taken this window: scout_drone=109 line_trooper=41 aegis_bot=65
+[metric]    alive by kind: { "aegis_bot": 10, "arc_engineer": 3, "scout_drone": 20, "line_trooper": 3 } within260=6
+[autotest] t=03:00 lvl=13 kills=364 enemies=36 summons=17/17 projectiles=1 hp=115 step_avg=1.07ms
+[autotest]    unit FSM: { "ENGAGING": 14, "CASTING": 2, "ACQUIRING": 1 }
+[metric] t=240 avg_horde=18.8 now=20 cap=20 w7/7 a0/0 m0/0 m0/0 w0/0 b0/0 a2/2 r4/4 g4/4 f3/3 b0/0 b0/0 c0/0 deaths_win=0 lvl=16 kills=513 enemies=33 hp=115 boss_hp=-1 crystals=23 xp=631
+[metric]    summon dmg taken this window: scout_drone=95 line_trooper=67 aegis_bot=157 arc_engineer=28 spotter_rail=18
+[metric]    alive by kind: { "aegis_bot": 10, "scout_drone": 19, "arc_engineer": 3, "line_trooper": 1 } within260=4
+[autotest] t=04:00 lvl=16 kills=513 enemies=33 summons=20/20 projectiles=1 hp=115 step_avg=1.19ms
+[autotest]    unit FSM: { "FOLLOWING": 5, "ACQUIRING": 7, "CASTING": 2, "ENGAGING": 6 }
+[metric] t=300 avg_horde=25.1 now=27 cap=27 w9/9 a0/0 m0/0 m0/0 w0/0 b0/0 a3/3 r6/6 g5/5 f4/4 b0/0 b0/0 c0/0 deaths_win=0 lvl=20 kills=684 enemies=33 hp=120 boss_hp=-1 crystals=42 xp=872
+[metric]    summon dmg taken this window: scout_drone=106 line_trooper=156 aegis_bot=204 arc_engineer=22
+[metric]    alive by kind: { "scout_drone": 18, "arc_engineer": 2, "aegis_bot": 6, "line_trooper": 7 } within260=4
+[autotest] t=05:00 lvl=20 kills=684 enemies=33 summons=27/27 projectiles=0 hp=120 step_avg=1.35ms
+[autotest]    unit FSM: { "ENGAGING": 12, "FOLLOWING": 12, "REPOSITIONING": 2, "CASTING": 1 }
+[metric] t=360 avg_horde=27.0 now=27 cap=27 w9/9 a0/0 m0/0 m0/0 w0/0 b0/0 a3/3 r6/6 g5/5 f4/4 b0/0 b0/0 c0/0 deaths_win=0 lvl=23 kills=864 enemies=51 hp=120 boss_hp=-1 crystals=61 xp=1152
+[metric]    summon dmg taken this window: scout_drone=69 line_trooper=150 aegis_bot=124 arc_engineer=23
+[metric]    alive by kind: { "scout_drone": 14, "arc_engineer": 6, "aegis_bot": 20, "line_trooper": 8, "juggernaut": 1, "fabricator": 2 } within260=0
+[autotest] t=06:00 lvl=23 kills=864 enemies=51 summons=27/27 projectiles=2 hp=120 step_avg=1.40ms
+[autotest]    unit FSM: { "FOLLOWING": 24, "ACQUIRING": 2, "ENGAGING": 1 }
+[metric] t=420 avg_horde=28.5 now=32 cap=32 w10/10 a0/0 m0/0 m0/0 w0/0 b0/0 a4/4 r7/7 g6/6 f5/5 b0/0 b0/0 c0/0 deaths_win=0 lvl=27 kills=1059 enemies=53 hp=119 boss_hp=-1 crystals=87 xp=1504
+[metric]    summon dmg taken this window: scout_drone=83 line_trooper=232 aegis_bot=162 arc_engineer=33 juggernaut=13
+[metric]    alive by kind: { "aegis_bot": 22, "scout_drone": 14, "line_trooper": 13, "arc_engineer": 4 } within260=1
+[autotest] t=07:00 lvl=27 kills=1059 enemies=53 summons=32/32 projectiles=5 hp=119 step_avg=1.58ms
+[autotest]    unit FSM: { "FOLLOWING": 29, "RETURNING": 2, "ENGAGING": 1 }
+[metric] t=480 avg_horde=32.3 now=33 cap=33 w10/10 a0/0 m0/0 m0/0 w0/0 b0/0 a5/5 r7/7 g6/6 f5/5 b0/0 b0/0 c0/0 deaths_win=0 lvl=30 kills=1239 enemies=65 hp=117 boss_hp=-1 crystals=75 xp=1849
+[metric]    summon dmg taken this window: scout_drone=94 line_trooper=296 aegis_bot=289 arc_engineer=39 mortar_walker=46
+[metric]    alive by kind: { "aegis_bot": 30, "line_trooper": 16, "arc_engineer": 5, "scout_drone": 10, "juggernaut": 1, "mortar_walker": 2, "spotter": 1 } within260=2
+[autotest] t=08:00 lvl=30 kills=1239 enemies=65 summons=33/33 projectiles=2 hp=117 step_avg=1.68ms
+[autotest]    unit FSM: { "FOLLOWING": 20, "ENGAGING": 10, "REPOSITIONING": 2, "RETURNING": 1 }
+[metric] t=540 avg_horde=33.0 now=33 cap=33 w10/10 a0/0 m0/0 m0/0 w0/0 b0/0 a5/5 r7/7 g6/6 f5/5 b0/0 b0/0 c0/0 deaths_win=0 lvl=34 kills=1460 enemies=49 hp=120 boss_hp=-1 crystals=94 xp=2300
+[metric]    summon dmg taken this window: scout_drone=96 line_trooper=529 aegis_bot=384 arc_engineer=95 spotter_rail=84 juggernaut=34 mortar_walker=359 juggernaut_flame=192
+[metric]    alive by kind: { "scout_drone": 9, "aegis_bot": 19, "mortar_walker": 2, "line_trooper": 12, "arc_engineer": 6, "juggernaut": 1 } within260=4
+[autotest] t=09:00 lvl=34 kills=1460 enemies=49 summons=33/33 projectiles=2 hp=120 step_avg=1.79ms
+[autotest]    unit FSM: { "FOLLOWING": 10, "ACQUIRING": 9, "CASTING": 5, "ENGAGING": 8, "REPOSITIONING": 1 }
+[metric] t=600 avg_horde=33.0 now=33 cap=34 w11/11 a0/0 m0/0 m0/0 w0/0 b0/0 a5/5 r6/7 g6/6 f5/5 b0/0 b0/0 c0/0 deaths_win=2 lvl=37 kills=1673 enemies=52 hp=112 boss_hp=-1 crystals=118 xp=2738
+[metric]    summon dmg taken this window: scout_drone=105 line_trooper=526 aegis_bot=456 arc_engineer=73 spotter_rail=62 juggernaut=38 mortar_walker=266 juggernaut_flame=583
+[metric]    alive by kind: { "aegis_bot": 19, "line_trooper": 16, "scout_drone": 8, "arc_engineer": 2, "mortar_walker": 3, "juggernaut": 4 } within260=3
+[autotest] t=10:00 lvl=37 kills=1673 enemies=52 summons=33/34 projectiles=7 hp=112 step_avg=1.90ms
+[autotest]    unit FSM: { "ENGAGING": 15, "CASTING": 3, "FOLLOWING": 13, "REPOSITIONING": 2 }
+[metric] t=660 avg_horde=33.7 now=36 cap=36 w13/13 a0/0 m0/0 m0/0 w0/0 b0/0 a5/5 r7/7 g6/6 f5/5 b0/0 b0/0 c0/0 deaths_win=6 lvl=42 kills=1916 enemies=58 hp=94 boss_hp=-1 crystals=20 xp=3573
+[metric]    summon dmg taken this window: scout_drone=72 line_trooper=712 aegis_bot=455 arc_engineer=99 juggernaut=102 mortar_walker=174 juggernaut_flame=222 furnace=442
+[metric]    alive by kind: { "line_trooper": 10, "aegis_bot": 28, "scout_drone": 10, "arc_engineer": 5, "mortar_walker": 3, "fabricator": 1, "beta_build": 1 } within260=2
+[autotest] t=11:00 lvl=42 kills=1916 enemies=58 summons=36/36 projectiles=5 hp=94 step_avg=1.97ms
+[autotest]    unit FSM: { "ENGAGING": 15, "FOLLOWING": 15, "CASTING": 1, "REPOSITIONING": 2, "RETURNING": 2, "ACQUIRING": 1 }
+[metric] t=720 avg_horde=35.9 now=36 cap=36 w13/13 a0/0 m0/0 m0/0 w0/0 b0/0 a5/5 r7/7 g6/6 f5/5 b0/0 b0/0 c0/0 deaths_win=1 lvl=45 kills=2121 enemies=57 hp=50 boss_hp=-1 crystals=28 xp=4145
+[metric]    summon dmg taken this window: scout_drone=123 line_trooper=619 aegis_bot=516 arc_engineer=59 mortar_walker=275 beta_build=261 beta_swipe=288
+[metric]    alive by kind: { "line_trooper": 15, "arc_engineer": 8, "aegis_bot": 20, "mortar_walker": 4, "scout_drone": 8, "juggernaut": 2 } within260=5
+[autotest] t=12:00 lvl=45 kills=2121 enemies=57 summons=36/36 projectiles=6 hp=50 step_avg=2.05ms
+[autotest]    unit FSM: { "FOLLOWING": 8, "RETURNING": 2, "ENGAGING": 25, "CASTING": 1 }
+[metric] t=780 avg_horde=35.6 now=32 cap=36 w13/13 a0/0 m0/0 m0/0 w0/0 b0/0 a5/5 r3/7 g6/6 f5/5 b0/0 b0/0 c0/0 deaths_win=7 lvl=47 kills=2343 enemies=60 hp=48 boss_hp=-1 crystals=73 xp=4568
+[metric]    summon dmg taken this window: scout_drone=104 line_trooper=753 aegis_bot=487 arc_engineer=84 spotter_rail=130 juggernaut=190 mortar_walker=421 juggernaut_flame=857 furnace=992
+[metric]    alive by kind: { "scout_drone": 12, "aegis_bot": 23, "line_trooper": 16, "spotter": 1, "mortar_walker": 2, "arc_engineer": 5, "juggernaut": 1 } within260=10
+[autotest] t=13:00 lvl=47 kills=2343 enemies=60 summons=32/36 projectiles=4 hp=48 step_avg=2.14ms
+[autotest]    unit FSM: { "ENGAGING": 17, "CASTING": 6, "RETURNING": 1, "FOLLOWING": 7, "REPOSITIONING": 1 }
+[metric] t=840 avg_horde=34.5 now=36 cap=36 w13/13 a0/0 m0/0 m0/0 w0/0 b0/0 a5/5 r7/7 g6/6 f5/5 b0/0 b0/0 c0/0 deaths_win=8 lvl=50 kills=2551 enemies=76 hp=34 boss_hp=-1 crystals=39 xp=5239
+[metric]    summon dmg taken this window: scout_drone=137 line_trooper=718 aegis_bot=698 arc_engineer=152 spotter_rail=79 juggernaut=635 mortar_walker=129 juggernaut_flame=1130 furnace=605
+[metric]    alive by kind: { "aegis_bot": 27, "juggernaut": 3, "line_trooper": 16, "scout_drone": 17, "arc_engineer": 9, "mortar_walker": 3, "fabricator": 1 } within260=11
+[autotest] t=14:00 lvl=50 kills=2551 enemies=76 summons=36/36 projectiles=5 hp=34 step_avg=2.19ms
+[autotest]    unit FSM: { "FOLLOWING": 15, "CASTING": 4, "ENGAGING": 14, "ACQUIRING": 2, "REPOSITIONING": 1 }
+[autotest] build complete (only fallback cards left) at 14:33, level 53
+[metric] t=900 avg_horde=35.6 now=36 cap=36 w13/13 a0/0 m0/0 m0/0 w0/0 b0/0 a5/5 r7/7 g6/6 f5/5 b0/0 b0/0 c0/0 deaths_win=6 lvl=53 kills=2798 enemies=51 hp=23 boss_hp=-1 crystals=23 xp=5969
+[metric]    summon dmg taken this window: scout_drone=177 line_trooper=833 aegis_bot=1310 arc_engineer=202 spotter_rail=85 juggernaut=323 mortar_walker=541 juggernaut_flame=1040 furnace=155
+[metric]    alive by kind: { "line_trooper": 14, "aegis_bot": 20, "juggernaut": 2, "arc_engineer": 8, "mortar_walker": 2, "scout_drone": 4, "spotter": 1 } within260=7
+[autotest] t=15:00 lvl=53 kills=2798 enemies=51 summons=36/36 projectiles=7 hp=23 step_avg=2.22ms
+[autotest]    unit FSM: { "FOLLOWING": 19, "ENGAGING": 11, "REPOSITIONING": 4, "CASTING": 1, "RETURNING": 1 }
+[metric] t=960 avg_horde=35.2 now=36 cap=36 w13/13 a0/0 m0/0 m0/0 w0/0 b0/0 a5/5 r7/7 g6/6 f5/5 b0/0 b0/0 c0/0 deaths_win=10 lvl=55 kills=3037 enemies=66 hp=70 boss_hp=-1 crystals=75 xp=6389
+[metric]    summon dmg taken this window: scout_drone=156 line_trooper=653 aegis_bot=830 arc_engineer=122 spotter_rail=97 juggernaut=115 mortar_walker=385 juggernaut_flame=220 furnace=2920
+[metric]    alive by kind: { "line_trooper": 20, "scout_drone": 17, "aegis_bot": 19, "arc_engineer": 2, "mortar_walker": 6, "spotter": 1, "juggernaut": 1 } within260=1
+[autotest] t=16:00 lvl=55 kills=3037 enemies=66 summons=36/36 projectiles=6 hp=70 step_avg=2.24ms
+[autotest]    unit FSM: { "FOLLOWING": 13, "ENGAGING": 18, "CASTING": 4, "RETURNING": 1 }
+[autotest] boss spawned at 1020.0 s
+[autotest] Shadow Bolt aim switched to Strongest
+[metric] t=1020 avg_horde=34.2 now=33 cap=36 w13/13 a0/0 m0/0 m0/0 w0/0 b0/0 a5/5 r6/7 g5/6 f4/5 b0/0 b0/0 c0/0 deaths_win=20 lvl=57 kills=3276 enemies=69 hp=100 boss_hp=27000 crystals=104 xp=6880
+[metric]    summon dmg taken this window: scout_drone=166 line_trooper=918 aegis_bot=859 arc_engineer=113 spotter_rail=48 juggernaut=335 mortar_walker=586 juggernaut_flame=1412 furnace=3242
+[metric]    alive by kind: { "line_trooper": 14, "scout_drone": 8, "mortar_walker": 2, "aegis_bot": 35, "arc_engineer": 5, "juggernaut": 4, "boss": 1 } within260=6
+[autotest] t=17:00 lvl=57 kills=3276 enemies=69 summons=33/36 projectiles=4 hp=100 step_avg=2.26ms
+[autotest]    unit FSM: { "ENGAGING": 21, "FOLLOWING": 2, "CASTING": 9, "REPOSITIONING": 1 }
+[metric] t=1080 avg_horde=32.6 now=35 cap=36 w13/13 a0/0 m0/0 m0/0 w0/0 b0/0 a5/5 r6/7 g6/6 f5/5 b0/0 b0/0 c0/0 deaths_win=20 lvl=59 kills=3452 enemies=48 hp=120 boss_hp=14142 crystals=28 xp=7477
+[metric]    summon dmg taken this window: scout_drone=178 line_trooper=430 aegis_bot=620 arc_engineer=80 juggernaut=291 mortar_walker=68 juggernaut_flame=659 furnace=2234 motherboard_stamp=1328 motherboard_hurl=988 boss=472
+[metric]    alive by kind: { "line_trooper": 16, "aegis_bot": 25, "scout_drone": 5, "boss": 1, "arc_engineer": 1 } within260=3
+[autotest] t=18:00 lvl=59 kills=3452 enemies=48 summons=35/36 projectiles=4 hp=120 step_avg=2.27ms
+[autotest]    unit FSM: { "FOLLOWING": 11, "CASTING": 7, "ACQUIRING": 6, "REPOSITIONING": 3, "ENGAGING": 7, "SPAWNING": 1 }
+[autotest] boss defeated at 1094.7 s
+[metric] t=1140 avg_horde=35.3 now=36 cap=36 w13/13 a0/0 m0/0 m0/0 w0/0 b0/0 a5/5 r7/7 g6/6 f5/5 b0/0 b0/0 c0/0 deaths_win=8 lvl=62 kills=3615 enemies=59 hp=113 boss_hp=0 crystals=49 xp=8290
+[metric]    summon dmg taken this window: scout_drone=172 line_trooper=793 aegis_bot=653 arc_engineer=64 furnace=2813 motherboard_hurl=261 boss=280
+[metric]    alive by kind: { "aegis_bot": 20, "line_trooper": 17, "arc_engineer": 4, "scout_drone": 15, "juggernaut": 2 } within260=8
+[autotest] t=19:00 lvl=62 kills=3615 enemies=59 summons=36/36 projectiles=7 hp=113 step_avg=2.25ms
+[autotest]    unit FSM: { "ENGAGING": 24, "ACQUIRING": 2, "CASTING": 6, "FOLLOWING": 3, "REPOSITIONING": 1 }
+[autotest] countdown reached 0:00 at 1200.0 s - THE RECKONING begins
+[metric] t=1200 avg_horde=35.3 now=36 cap=36 w13/13 a0/0 m0/0 m0/0 w0/0 b0/0 a5/5 r7/7 g6/6 f5/5 b0/0 b0/0 c0/0 deaths_win=7 lvl=63 kills=3806 enemies=47 hp=101 boss_hp=0 crystals=83 xp=8632
+[metric]    summon dmg taken this window: scout_drone=222 line_trooper=672 aegis_bot=799 arc_engineer=103 juggernaut=258 juggernaut_flame=467 furnace=1997
+[metric]    alive by kind: { "aegis_bot": 19, "line_trooper": 12, "arc_engineer": 4, "scout_drone": 7, "juggernaut": 1, "kill_drone": 4 } within260=0
+[autotest] t=20:00 lvl=63 kills=3806 enemies=47 summons=36/36 projectiles=5 hp=101 step_avg=2.25ms
+[autotest]    unit FSM: { "FOLLOWING": 23, "ACQUIRING": 4, "REPOSITIONING": 1, "CASTING": 5, "ENGAGING": 2, "RETURNING": 1 }
+[autotest] ===== NECROPATHY AUTOTEST SUMMARY =====
+[autotest] result: VICTORY / RUN COMPLETE (run_complete)
+[autotest] time reached: 20:28 elapsed (1228.8 s game time, 313.2 s real time); past 0:00: 28.8 s; Reckoning waves: 3
+[autotest] kills: 3893 | level: 64
+[autotest] level pacing: 01:00=L5 03:00=L13 05:00=L20 10:00=L37 15:00=L53 17:00=L57 20:00=L63 | reached: L2@00:21 L5@00:54 L10@02:14 L15@03:22 L20@04:52 L25@06:20 L30@07:41 L35@09:17 L40@10:48 L45@11:39 L50@13:36 L55@15:41 L60@18:14
+[autotest] build complete: at 14:33, level 53
+[autotest] horde: 15 alive / capacity 36 (warrior 6/13, archer 0/0, mage 0/0, mender 0/0, warder 0/0, bishop 0/0, abomination 5/5, rogue 2/7, gargoyle 1/6, frost_wraith 1/5, bone_hound 0/0, banshee 0/0, corpse_catapult 0/0)
+[autotest] summons spawned: 159, died: 144, hard recalls: 0 (stall recalls: 0)
+[autotest] boss spawned: yes at 1020.0 s | boss defeated: yes at 1094.7 s | boss HP left: 0 / 27000
+[autotest] player HP: 0 / 120 (invulnerable: false)
+[autotest] picks (74): abomination 1 (forced), rogue 1 (forced), gargoyle 1 (forced), frost_wraith 1 (forced), abomination 2, shadow_bolt 2, gargoyle 2, warrior 2, rogue 2, rogue 3, gargoyle 3, warrior 3, frost_wraith 2, abomination 3, grave_dominion 1, grave_dominion 2, frost_wraith 3, gargoyle 4, rogue 4, grave_dominion 3, grave_dominion 4, necrotic_vigor 1, rogue 5, dark_command 1, dark_command 2, gargoyle 5, frost_wraith 4, shadow_bolt 3, shadow_bolt 4, grave_dominion 5, frost_wraith 5, abomination 4, dark_command 3, abomination 5, dark_command 4, necrotic_vigor 2, necrotic_vigor 3, soul_recycling 1, warding_ritual 1, shadow_bolt 5, warrior 4, soul_recycling 2, warding_ritual 2, warrior 5, necrotic_vigor 4, necrotic_vigor 5, dark_command 5, EVOLVE death_knight, bound_souls 1, soul_recycling 3, warding_ritual 3, soul_recycling 4, soul_recycling 5, EVOLVE winter_revenant, bound_souls 2, warding_ritual 4, bound_souls 3, warding_ritual 5, bound_souls 4, bound_souls 5, EVOLVE shadow_reaper, dark_restoration, dark_restoration, dark_restoration, dark_restoration, dark_restoration, dark_restoration, dark_restoration, dark_restoration, skip, dark_restoration, skip, dark_restoration, dark_restoration
+[autotest] wards on you: 0 total, absorbed 0 dmg | 0 wards in 0 s with 2+ Warders/Bishops alive (0.0 / min) | heal casts: 0 | ally barriers: 0, barrier dmg absorbed: 0
+[autotest] evolutions: death_knight@10:52, winter_revenant@12:15, shadow_reaper@14:29
+[autotest] evolutions by type: spell: none | summon: death_knight@10:52, winter_revenant@12:15, shadow_reaper@14:29
+[autotest] summon evolutions: lich raised 0 (capped 0) | merge converted 0, dissolved 0 | aura pulses 0 | merged classes: none
+[autotest] winter revenant: shatters 140 (capped 0), shatter hits 131, shatter dmg 5141 | death novas 38, nova hits 9, nova freezes 1, nova dmg 793
+[autotest] summon output by source (dmg/heal/shield): warrior=11975/0/0 abomination=18470/0/0 rogue=17807/0/0 gargoyle=52037/0/0 frost_wraith=54588/0/0 bash=1843/0/0 death_knight=65680/3448/0 death_knight_bash=11307/0/0 death_knight_cleave=3402/0/0 winter_revenant=10976/0/0 shadow_reaper=18686/0/0 winter_revenant_shatter=5141/0/0 winter_revenant_nova=793/0/0
+[autotest] summon output by class (dmg/heal/shield): warrior=94209/3448/0 abomination=18470/0/0 rogue=36493/0/0 gargoyle=52037/0/0 frost_wraith=71498/0/0
+[autotest] recipe book: 3 / 83 discovered (death_knight, winter_revenant, shadow_reaper) | Recipes view rows built: 83 (saved: false)
+[autotest] codex: 16 entries met this run (spell 1, summon 5, enemy 9, boss 1) | new to the save 16 | save: spell 1/54, summon 5/30, enemy 9/260, boss 1/45, evolutions 3/83
+[autotest] epilogue: parts=15 (acts=15) open=0 seen=0 panels=59 cards_ok=true autoplay_pending=false
+[autotest] volleys: shots 44867 | hits 12337 | dmg 106018 | peak 283/320 | capped volleys 0 | boss hits capped 463 | barrages 7 | warrior 29011, gargoyle 22715, rogue 16736, frost_wraith 11399, winter_revenant 10976, abomination 7943, shadow_bolt 7235
+[visual] adaptive quality: level 3, peak 3, steps down 4, up 1
+[autotest] victory screen: title=The Line Stops best_overtime=28 new_record=true highlights=7
+[autotest] line of fire: shots fired 4251 (rails 22, arcs 119) | stopped by summons 3653 (86%), absorbed by barriers 0 | stopped by bone walls 0 | orb intercepts 0 | reached you 199 (5%), dmg 677 | arc bursts 119 | expired 279 | capped 0 | peak 22/360
+[autotest] lock-on: painted 24 (on you 23, on summons 1) | refused at the cap 0 | fired 22 | cancelled (spotter killed) 2 | rails stopped by summons 19, reached you 1 (dmg 28) | most lines at once 2
+[autotest] steel: kills: machines 2976 (no corpse), cyborgs 917 | grave gunners raised 0 (death mark 0, lich 0, grave tide 0, drowned 0) | gunner dmg 0, kills 0
+[autotest] purge protocol: salvos 8, strikes 16, hits on you 1 (dmg 42), summon dmg 5417
+[autotest] empire kinds (spawned/killed): scout_drone 1554/1545 (dmg to you 66, to summons 2498) | line_trooper 703/687 (dmg to you 453, to summons 9690) | spotter 13/12 (dmg to you 0, to summons 0) | kill_drone 21/11 (dmg to you 33, to summons 1732) | aegis_bot 1344/1325 (dmg to you 41, to summons 9602) | mortar_walker 46/46 (dmg to you 123, to summons 3255) | arc_engineer 221/218 (dmg to you 84, to summons 1483) | juggernaut 40/38 (dmg to you 0, to summons 2540) | fabricator 9/9 (dmg to you 0, to summons 0) | beta_build 1/1 (dmg to you 11, to summons 261)
+[autotest] empire stage: assembly (The Assembly Halls) | playable true | boss motherboard (script motherboard) | enemy x1.35 HP / x1.10 dmg from 7:00 | soul ash x1.25 | reckoning kind kill_drone
+[autotest] ranged share: 65% ranged (2558 of 3943 spawns; melee 1385)
+[autotest] assembly: fabricators destroyed 9/9 placed (of 9 planned; 2:39, 2:57, 6:07, 6:45, 10:26, 10:43, 11:11, 13:22, 14:10) | built 42 (capped 0) | wave size now x0.46, trickle x0.73 | cold assembly yes | beta build killed at 11:29 | objective ash 72
+[autotest] assembly floor: belts carried you 159 s, summons 3984 s, enemies 4579 s | furnace flares 431 | burned you 4 times (dmg 5), summons 1822 times (dmg 17294), enemies 2791 times (dmg 76974, kills 123)
+[autotest] assembly events (16): 2:30 fabricators_placed_2, 2:39 fabricator_destroyed, 2:57 fabricator_destroyed, 6:00 fabricators_placed_2, 6:07 fabricator_destroyed, 6:45 fabricator_destroyed, 10:15 fabricators_placed_3, 10:26 fabricator_destroyed, 10:43 fabricator_destroyed, 11:00 beta_build_arrived, 11:11 fabricator_destroyed, 11:29 beta_build_killed, 13:10 fabricators_placed_2, 13:22 fabricator_destroyed, 14:10 fabricator_destroyed, 14:10 cold_assembly
+[autotest] assembly kinds: arc engineer repairs 226 (hp 6091), jams 234 | juggernaut flames 48 (summon hits 1175, player hits 0, flat armour absorbed 43265) | beta build swipes 1 (hits 11), rivet sprays 3, patched 34 hp (23 ticks fed by fabricators), killed 1 (in 30 s) | fabricated 42
+[autotest] motherboard: grabs 6 (summons seized 12, missed 0, hurls hit you 0, hit summons 17) | stamps 5 (hit you 0, summons 22) | magnets 1 (summon-ticks pulled 1605) | turret builds 0 (turrets 0, shots 0) | full load at 17:50 | overclock at 18:09 | dmg to player 0, summons 3331
+[autotest] wastes kinds: aegis shields blocked 3656 shots (52633 dmg), broke 812 times | mortar shells 119 | rockets launched 0: intercepted by summons 0, hit you 0, shot down 0, burst 0 | decoys 0 (fizzled 0)
+[autotest] gravebow / bone colossus: gravebow volleys 0, splits 0 (+0 arrows), pierce hits 0, dmg 0 | curses applied 0 (refreshed 0), curse bonus dmg 0 | colossus dmg 0, stomps 312 | taunted enemies 0 | shrapnel bursts 0, hits 0, dmg 0
+[autotest] necro spells: bone_spear: not taken | soul_siphon: not taken | corpse_explosion: not taken | plague_cloud: not taken
+[autotest] later spells: death_mark: not taken | bone_wall: not taken | soul_chains: not taken | wither: not taken | raise_dead: not taken
+[autotest] later spell passives: grim_ledger Lv0 bonus_dmg=0 | spirit_binding Lv0 | restless_dead Lv0 | temporary summons spawned=0
+[autotest] horde passives: bone_plating Lv 0 (dmg prevented 0) | unholy_precision Lv 0 (crits 0, crit bonus dmg 0) | unholy_resilience Lv 0 (dmg prevented 0: area 0, holy 0) | bound_souls Lv 5 (soft recalls 0, hard recalls 0)
+[autotest] class passives: blood_scent Lv 0 (fast: Archers, Rogues, Gargoyles, Bone Hounds, Grave Drones, Succubi, Blood Spawn, Fallen Heroes, Ghost Saucers, Powder Wraiths, Bound Ophans, Bonehorns) | mournsong Lv 0 (extra debuff s 0) | siegecraft Lv 0 (siege bonus dmg 0) | summon dmg to structures 15361 (catapults 0)
+[autotest] synergies active at end: deathless, flesh_rampart, death_from_above, cold_blood, charnel_menagerie | activations: deathless@00:54, flesh_rampart@00:54, death_from_above@01:12, cold_blood@02:14, charnel_menagerie@02:14
+[autotest] synergy bonus: flesh_rampart hits=2003 dmg=6747 | killing_field hits=0 dmg=0 | death_from_above hits=2489 dmg=6664 | wild_hunt hits=0 dmg=0 | cold_blood hits=1867 dmg=7622 | shatterfall hits=0 dmg=0 | requiem hits=0 dmg=0 | charnel_menagerie hits=17305 dmg=28672 | baying frenzies=0 | marks staggered=457 swooped=616 | dash resets=127 | requiem +0s
+[autotest] level-up offers: hands 66, new-item cards 70, later items 28 (40%) in 21 hands (32%), distinct later items offered 10
+[autotest] level-up actions: rerolls used 2/2, banishes used 1/2 (banished: abyssal_focus), skips 2
+[autotest] shadow bolt: 49133 dmg in Nearest mode, 20500 dmg in Strongest mode; to boss: 2221 of 26999 total boss dmg
+[autotest] stats: abom_stomp_hits=478 abom_stomps=312 aegis_dmg_blocked=52633 aegis_shield_breaks=812 aegis_shots_blocked=3656 arc_jams=234 arc_repaired_hp=6091 arc_repairs=226 assembly_all_fabricators=1 assembly_belt_enemy_s=4579 assembly_belt_player_s=159 assembly_belt_summon_s=3983 assembly_beta_killed=1 assembly_beta_spawned=1 assembly_fabricated=42 assembly_fabricated_aegis_bot=9 assembly_fabricated_arc_engineer=3 assembly_fabricated_juggernaut=2 assembly_fabricated_line_trooper=15 assembly_fabricated_scout_drone=13 assembly_fabricators_destroyed=9 assembly_fabricators_placed=9 assembly_furnace_enemy_dmg=76974 assembly_furnace_enemy_hits=2791 assembly_furnace_enemy_kills=123 assembly_furnace_flares=431 assembly_furnace_player_hits=4 assembly_furnace_summon_hits=1822 beta_kills=1 beta_patch_ticks_with_fabs=23 beta_patched_hp=34 beta_rivets_used=3 beta_spawned=1 beta_swipe_hits=11 beta_swipe_used=1 beta_ttk=29 boss_advance_time=25 boss_atk_grab=6 boss_atk_magnet=1 boss_atk_stamp=5 boss_kills=1 bossdmg_abom_stomp=794 bossdmg_abomination=1507 bossdmg_bolt=2221 bossdmg_death_knight=5362 bossdmg_death_knight_bash=585 bossdmg_frost_wraith=2531 bossdmg_furnace=28 bossdmg_gargoyle=2132 bossdmg_gargoyle_swoop=1054 bossdmg_rogue_bleed=3550 bossdmg_rogue_dash=3987 bossdmg_shadow_bolt=274 bossdmg_shadow_reaper=2195 bossdmg_winter_revenant=735 bossdmg_winter_revenant_shatter=39 bot_dash_hit=9 bot_dash_telegraph=70 chest_count_1=6 chest_count_3=1 chest_evolutions=3 chest_items=7 chests_opened=7 chests_pity=4 chests_spawned=7 damage_dealt=583166 damage_to_player=889 damage_to_summons=64937 dash_distance=8689 dash_hits_avoided=10 dashes=79 death_frost_wraith_by_furnace=17 death_frost_wraith_by_juggernaut_flame=1 death_frost_wraith_by_line_trooper=3 death_frost_wraith_by_mortar_walker=2 death_frost_wraith_by_motherboard_hurl=1 death_frost_wraith_by_motherboard_stamp=4 death_frost_wraith_by_orbital_strike=9 death_frost_wraith_by_scout_drone=1 death_frost_wraith_by_spotter_rail=1 death_gargoyle_by_aegis_bot=1 death_gargoyle_by_furnace=4 death_gargoyle_by_juggernaut=2 death_gargoyle_by_juggernaut_flame=3 death_gargoyle_by_line_trooper=1 death_gargoyle_by_mortar_walker=1 death_gargoyle_by_orbital_strike=4 death_rogue_by_aegis_bot=7 death_rogue_by_beta_build=1 death_rogue_by_boss=1 death_rogue_by_furnace=26 death_rogue_by_juggernaut=4 death_rogue_by_juggernaut_flame=12 death_rogue_by_kill_drone=2 death_rogue_by_line_trooper=9 death_rogue_by_mortar_walker=2 death_rogue_by_motherboard_stamp=4 death_rogue_by_orbital_strike=8 death_rogue_by_spotter_rail=2 death_warrior_by_furnace=1 death_warrior_by_kill_drone=3 death_warrior_by_line_trooper=1 death_warrior_by_orbital_strike=6 deathless_regen=41945 dmg_abom_stomp=19392 dmg_abomination=18470 dmg_bash=1843 dmg_bolt=69633 dmg_death_knight=65680 dmg_death_knight_bash=11307 dmg_death_knight_cleave=3402 dmg_frost_wraith=54588 dmg_furnace=76974 dmg_gargoyle=52037 dmg_gargoyle_swoop=36952 dmg_nova=7487 dmg_rogue=17807 dmg_rogue_bleed=15033 dmg_rogue_dash=77746 dmg_shadow_bolt=7235 dmg_shadow_reaper=18686 dmg_warrior=11975 dmg_winter_revenant=10976 dmg_winter_revenant_nova=793 dmg_winter_revenant_shatter=5141 elite_kills=51 enemy_healing=6126 evolutions=3 flat_armor_absorbed_juggernaut=43265 frost_boss_freezes=15 frost_chills=1161 frost_deep_freezes=291 frost_freezes=584 frost_frozen_seconds=450 gargoyle_swoop_hits=628 gargoyle_swoops=386 heal_by_death_knight=3448 juggernaut_flame_summon_hits=1175 juggernaut_flames=48 kill_aegis_bot=1325 kill_arc_engineer=218 kill_beta_build=1 kill_boss=1 kill_fabricator=9 kill_juggernaut=38 kill_kill_drone=11 kill_line_trooper=687 kill_mortar_walker=46 kill_scout_drone=1545 kill_spotter=12 kills_by_abom_stomp=167 kills_by_abomination=134 kills_by_bash=33 kills_by_bolt=587 kills_by_death_knight=312 kills_by_death_knight_bash=88 kills_by_death_knight_cleave=17 kills_by_frost_wraith=575 kills_by_furnace=123 kills_by_gargoyle=351 kills_by_gargoyle_swoop=255 kills_by_nova=72 kills_by_rogue=132 kills_by_rogue_bleed=57 kills_by_rogue_dash=502 kills_by_shadow_bolt=39 kills_by_shadow_reaper=73 kills_by_warrior=283 kills_by_winter_revenant=57 kills_by_winter_revenant_nova=4 kills_by_winter_revenant_shatter=32 levelup_banishes=1 levelup_rerolls=2 levelup_skips=2 lockon_cancelled=2 lockon_fired=22 lockon_on_player=23 lockon_on_summon=1 lockon_painted=24 los_arc_bursts=119 los_blocked_summon=3653 los_expired=279 los_fired=4251 los_fired_arc=119 los_fired_heavy=22 los_heavy_blocked=19 los_heavy_player=1 los_hit_player=199 los_player_dmg=677 march_zones_entered=3 miniboss_chests=1 minibossdmg_abom_stomp=209 minibossdmg_abomination=372 minibossdmg_bolt=399 minibossdmg_death_knight=1356 minibossdmg_death_knight_bash=189 minibossdmg_death_knight_cleave=8 minibossdmg_frost_wraith=965 minibossdmg_gargoyle=1049 minibossdmg_gargoyle_swoop=653 minibossdmg_rogue=1179 minibossdmg_rogue_bleed=759 minibossdmg_rogue_dash=1172 minibossdmg_shadow_bolt=49 motherboard_grabs=12 motherboard_hurl_summon_hits=17 motherboard_load_at=1070 motherboard_magnet_pulls=1605 motherboard_overclock_at=1089 motherboard_stamp_summon_hits=22 nova_kills=72 objective_ash=72 overkill_redirects=237 player_dmg_from_aegis_bot=41 player_dmg_from_arc_engineer=84 player_dmg_from_beta_build=11 player_dmg_from_furnace=5 player_dmg_from_kill_drone=33 player_dmg_from_line_trooper=453 player_dmg_from_mortar_walker=123 player_dmg_from_orbital_strike=42 player_dmg_from_scout_drone=66 player_dmg_from_spotter_rail=28 player_healing=357 priest_heals=0 priest_wards=0 pu_collected_feast=7 pu_collected_frenzy=2 pu_collected_hyper=2 pu_collected_magnet=7 pu_collected_nova=2 pu_collected_stasis=3 pu_expired_feast=1 pu_magnet_crystals=538 pu_pity_drops=4 pu_spawned_feast=8 pu_spawned_frenzy=2 pu_spawned_hyper=2 pu_spawned_magnet=7 pu_spawned_nova=2 pu_spawned_stasis=3 pu_uptime_frenzy=23 pu_uptime_hyper=19 pu_uptime_stasis=15 purge_player_hits=1 purge_salvos=8 purge_strikes=16 rallies=7 rally_buff_time=56 rally_heal=3781 rally_knockbacks=23 rally_meter_fills=7 rally_minion_dmg=43256 rally_raised=20 rally_recalled=44 reaper_bleed_stacks_added=116 reaper_cd_resets=233 reaper_chain_dashes=451 reaper_max_bleed_stacks=3 reckoning_spawned=21 replacements=103 rogue_dash_hits=1622 rogue_dashes=1766 spawned_aegis_bot=1344 spawned_arc_engineer=221 spawned_beta_build=1 spawned_fabricator=9 spawned_juggernaut=40 spawned_kill_drone=21 spawned_line_trooper=703 spawned_mortar_walker=46 spawned_scout_drone=1554 spawned_spotter=13 steel_kills_cyborg=917 steel_kills_machine=2976 structdmg_abom_stomp=253 structdmg_abomination=540 structdmg_bash=60 structdmg_bolt=1151 structdmg_death_knight=646 structdmg_death_knight_bash=119 structdmg_death_knight_cleave=50 structdmg_frost_wraith=1918 structdmg_gargoyle=2089 structdmg_gargoyle_swoop=477 structdmg_rogue=2892 structdmg_rogue_bleed=1862 structdmg_rogue_dash=2957 structdmg_shadow_bolt=58 structdmg_warrior=1307 structdmg_winter_revenant=186 summon_dmg_from_aegis_bot=9602 summon_dmg_from_arc_engineer=1483 summon_dmg_from_beta_build=261 summon_dmg_from_beta_swipe=288 summon_dmg_from_boss=752 summon_dmg_from_furnace=17294 summon_dmg_from_juggernaut=2540 summon_dmg_from_juggernaut_flame=6866 summon_dmg_from_kill_drone=1732 summon_dmg_from_line_trooper=9690 summon_dmg_from_mortar_walker=3255 summon_dmg_from_motherboard_hurl=1250 summon_dmg_from_motherboard_stamp=1328 summon_dmg_from_orbital_strike=5417 summon_dmg_from_scout_drone=2498 summon_dmg_from_spotter_rail=672 summon_evolutions=3 summon_healing=49175 summon_specials_cancelled=1 suppression_dmg_prevented=14614 suppression_paused_seconds=8 suppression_released=10 suppression_replacements_delayed=10 suppression_spawns_blocked=26 suppression_zones_arc_engineer=234 syn_charnel_menagerie_bonus_dmg=28672 syn_charnel_menagerie_hits=17305 syn_cold_blood_bonus_dmg=7622 syn_cold_blood_hits=1867 syn_death_from_above_bonus_dmg=6664 syn_death_from_above_hits=2489 syn_dfa_resets=127 syn_flesh_rampart_bonus_dmg=6747 syn_flesh_rampart_hits=2003 syn_staggered_marks=457 syn_swooped_marks=616 synergies_activated=5 volley_barrages=7 ward_absorbed=0 warrior_bashes=1135 warrior_kills=733 wastes_mortar_shells=119 wave_events=19 wr_nova_freezes=1 wr_nova_hits=9 wr_novas=38 wr_shatter_hits=131 wr_shatters=140 xp_collected=8909 xp_dropped=7939
+[autotest] boss attacks: grab=6 stamp=5 magnet=1 build=0 | wrath: no | hammer soaked by undead: 0 | charges stopped by undead: 0 (shielding the player: 0) | judgment hits: 0 | call soldiers: 0 | holy zones boss/grave: 0/0
+[autotest] crimson march: zones entered 3 (final: Zone IV  -  The Furnace) | placed/destroyed/escaped: outposts 0/0/0 generators 0/0/0 carts 0/0/0 standards 0/0/0 | outpost reinforcements 0 | ward zones 0
+[autotest] march enemies: aura buff pulses 0 | halberd cleave hits 0 | dmg resisted: shieldbearer 0, boss 0 | kills: shieldbearer=0 banner_bearer=0 halberdier=0
+[autotest] marshal vael: last stand no | cleave summon hits 0, soaked for the player 0 | command soldiers 0
+[autotest] march events (3): 5:00 zone_II, 10:00 zone_III, 15:00 zone_IV
+[autotest] stage events fired (0): 
+[autotest] templar charges: 0 (body-blocked by warriors: 0) | temporary summons spawned: 0
+[autotest] obstacle collisions resolved: player=26 summons=5324 enemies=7571
+[autotest] class abomination: Lv 5, alive 5/5, deaths 0 | dmg 37863 (abomination=18470 abom_stomp=19392) | abom_stomps=312 abom_stomp_hits=478
+[autotest] class rogue: Lv 5, alive 2/7, deaths 78 | dmg 110587 (rogue=17807 rogue_dash=77746 rogue_bleed=15033) | rogue_dashes=1766 rogue_dash_hits=1622
+[autotest] class gargoyle: Lv 5, alive 1/6, deaths 16 | dmg 88989 (gargoyle=52037 gargoyle_swoop=36952) | gargoyle_swoops=386 gargoyle_swoop_hits=628
+[autotest] class frost_wraith: Lv 5, alive 1/5, deaths 39 | dmg 54588 (frost_wraith=54588) | frost_deep_freezes=291 frost_freezes=584 frost_boss_freezes=15 frost_frozen_seconds=450 frost_chills=1161
+[autotest] class bone_hound: Lv 0, alive 0/0, deaths 0 | dmg 0 (bone_hound=0 hellhound=0 hellhound_burn=0 hellhound_trail=0) | hound_bites=0 hound_pack_bites=0 hound_pack_bonus_dmg=0 hellhound_burns=0 hellhound_trail_patches=0
+[autotest] class banshee: Lv 0, alive 0/0, deaths 0 | dmg 0 (banshee=0 keening_lady=0) | banshee_dirges=0 banshee_dirge_hits=0 dirge_debuff_seconds=0 keening_waves=0 keening_silenced=0 keening_heals_silenced=0
+[autotest] class corpse_catapult: Lv 0, alive 0/0, deaths 0 | dmg 0 (corpse_catapult=0 ossuary_engine=0 ossuary_shards=0) | catapult_volleys=0 catapult_boulders=0 catapult_boulder_hits=0 catapult_structure_dmg=0 ossuary_shard_fields=0 hazards_dropped=0
+[autotest] class specials: cancelled by recall 1 | ended inside an obstacle 0
+[autotest] special evolutions: shadow reaper: chain dashes 451, cooldown resets 233, bleed stacks added 116, max stacks 3, rogue bleed dmg (all) 15033 | cathedral horror: stuns 0 (boss 0), stunned s 0.0, stone forms 0, stone s 0.0, dmg prevented by stone 0
+[autotest] grave step: dashes 79 (bot: crowd 0, hit 9, telegraph 70) | hits avoided in dash i-frames 10 | blocked 0, shortened by obstacles 0, ended inside an obstacle 0, avg length 110 px | charges 1, cooldown 5.00 s
+[autotest] dread rally: rallies 7 | meter fills 7, fill times s [127 90 63 55 54 59 67] (avg 73 s), meter now 2% | knockbacks 23 | summons called back 44 | heal 3781 | minion dmg under buff 43256 (est. +dmg part 12358) | buff time 56 s
+[autotest] army formation: bone_ring: 1229s kills 3893 army_dmg 64937 recalls 0 spread max 511 mean 123
+[autotest] character: gravecaller (The Gravecaller) | starting spell shadow_bolt Lv 5 | Baseline stats (Max HP 120, move speed 110) | innate: none | characters unlocked this run: none | unlocked in the profile: gravecaller (saved: false)
+[autotest] stuck_units=0 (touching an obstacle: 0) {  }
+[metric] boss_hp_at_0=0 min_hp_before_0=9
+[autotest] peaks: enemies=87 summons=36 projectiles=14 effects=63 crystals=167
+[autotest] nodes created (pools): enemies=87 summons=36 projectiles=14 effects=63 crystals=167
+[autotest] simulation step: avg 2.25 ms, worst 34.95 ms
+[autotest] power-ups: spawned 24 (magnet=7 feast=8 hyper=2 stasis=3 frenzy=2 nova=2) | collected 23 (magnet=7 feast=7 hyper=2 stasis=3 frenzy=2 nova=2) | expired (magnet=0 feast=1 hyper=0 stasis=0 frenzy=0 nova=0) | lost at cap 0 | pity drops 4 | crystals pulled by Soul Magnet 538
+[autotest] buff uptime: hyper=20s (1.6%, refreshed 0) stasis=15s (1.2%, refreshed 0) frenzy=24s (2.0%, refreshed 0) | soul nova kills: 72
+[autotest] chests: spawned 7, opened 7 (x1=6 x3=1 x5=0), items granted 7 (evolutions 3), pity 4, lost at cap 0, left on ground 0
+[autotest]    chest 06:11 x1: shadow_bolt 3
+[autotest]    chest 09:52 x1: warrior 4
+[autotest]    chest 10:52 x1: EVOLVE death_knight
+[autotest]    chest 11:31 x1: warding_ritual 3
+[autotest]    chest 12:15 x1: EVOLVE winter_revenant
+[autotest]    chest 14:29 x1: EVOLVE shadow_reaper
+[autotest]    chest 18:15 x3: dark_restoration
+[autotest] chest beacon: chests marked 7, seen on screen 7 | max off-screen arrows at once 0 | ticks with an arrow 0 (0.0 s)
+[autotest] profane pact: taken no (final Lv 0; never offered or never picked) | oath tier 0 | extra XP from pact 0, from oath 0 | extra soul ash from pact 0, from oath 0
+[autotest] meta upgrades (--meta=none): none | revivals used: 0
+[autotest] soul ash: +860 (time 150 [20:00] + kills 116 [3893] + elites 204 [51] + boss 75 + reckoning 71 [28.8 s] + objectives 72 = 688, bonus +0% = +0, pact +0, oath +0) | bounty 200 | new total 1060 | saved: false
+[autotest] difficulty: Necromancer (necromancer) | modifiers: none | foes: HP x0.800 (growth x1.00), dmg x1.000 (growth x1.00), spawn x1.250, speed x1.00, elite chance 0.000, boss HP x1.000 | XP x1.000 | soul ash: difficulty +0%, modifiers +0%, total x1.00
+[autotest] difficulty results: soul ash difficulty +0, modifiers +0 | trickle elites promoted: 0 | holy retribution bursts: 0 (dmg to you 0, to summons 0) | player max HP at start: 120
+[autotest] stage: The Assembly Halls | soul ash stage bonus +172 (x1.25) | stages unlocked by this run: citadel
+[autotest] hyper: off (Necromancer) | foes: HP growth x1.00, dmg growth x1.00, boss HP x1.000 | at 0:00 vs the standard game: HP x1.00, dmg x1.00 | soul ash hyper +0 (+0%) | Reckoning lasted 28.8 s past 0:00 | unlocked: false (by this run: false) | hyper clear recorded: no
+[autotest] skins: character gravecaller, worn default | this run: rot kills 0, high confessors slain 0, seraphine slain with all 4 roles 0 | lifetime: rot 0/5000, confessors 0/50, seraphine full army 0/1 | unlocked 54/220 (new: none) | setup row cards 6
+[autotest] rewards: achievements=1 (cold_assembly) titles=0 unlocks=none | run: temp raised 0, min HP before 0:00 8%, evolutions 3, boss slain 74.7 s after arrival | one-run achievements met: none (not checked: --rewards=on) | worn title: none | title row choices 1
+[autotest] demo: on=false | acts=1 | stages=graveyard,crimson_march,sanctum | save=user://save.cfg | full_game_offers=0
+[autotest] feedback: url_set=true | report_chars=122/217/312 (main menu / pause / results samples built, max 1500) | url_chars=605 | opened=never (autotest)
+exit 0
