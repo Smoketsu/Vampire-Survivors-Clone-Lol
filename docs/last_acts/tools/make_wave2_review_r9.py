@@ -22,6 +22,7 @@ import make_wave2_review_r4 as r4  # noqa: E402
 import make_wave2_review_r8 as r8  # noqa: E402
 
 COLLECTION = "wave2_art_r9"  # db collection of this page's marks (a fresh one: nothing here is marked yet).
+NOT_NEW = {"close_act3", "close_act5", "act5_1"}  # Listed in EPILOGUE_PANELS.md as "no change needed" / text-only changes.
 REDONE = ["act1_3", "close", "close_act4"]  # Existing panels redone (was = git HEAD's converted PNG before the redo commits).
 WAS_REF = "ae177639"  # The commit holding their old pictures.
 PANELS = "assets/sprites/epilogue/"  # Panel folder.
@@ -59,7 +60,7 @@ def parse_epilogue() -> list:
 def webp(data: bytes) -> str:
     """A data URI of a lossless WebP of the PNG `data`."""
     buf = io.BytesIO()
-    Image.open(io.BytesIO(data)).convert("RGB").save(buf, "WEBP", lossless=True, quality=100, method=6)
+    Image.open(io.BytesIO(data)).convert("RGB").save(buf, "WEBP", lossless=True, quality=75, method=4)
     return "data:image/webp;base64," + base64.b64encode(buf.getvalue()).decode()
 
 
@@ -102,7 +103,8 @@ def main() -> None:
             counts[gid] = len(cards)
             nav.append('<a href="#%s">%s</a>' % (gid, heading))
             sections.append(r8.section(gid, heading, "", cards))
-    cards = [epilogue_card(*e) for e in parse_epilogue() if os.path.exists(PANELS + e[0] + ".png")]
+    listed = set(re.findall(r"^- `epilogue/(\w+)`", open("docs/last_acts/EPILOGUE_PANELS.md", encoding="utf-8").read(), re.M)) - NOT_NEW
+    cards = [epilogue_card(*e) for e in parse_epilogue() if e[0] in listed and os.path.exists(PANELS + e[0] + ".png")]
     counts["epilogue"] = len(cards)
     nav.append('<a href="#epilogue">Epilogue</a>')
     sections.append(r8.section("epilogue", "Epilogue", "The epilogue's picture panels in act order, each with the line it illustrates. Redone panels show was / now.", cards))
