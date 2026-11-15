@@ -419,7 +419,7 @@ func _check_masteries() -> void:
 	_write_old(old_p, 2, 70, {"necrotic_marrow": 5}, false)
 	Meta.save_path = old_p
 	Meta.load_save()
-	_check(Meta.load_status == "ok" and Meta.mastery_spent_total() == 0 and Meta.class_lv5.is_empty(), "a save without the sections loads with none")
+	_check(Meta.load_status == "migrated" and Meta.mastery_spent_total() == 0 and Meta.class_lv5.is_empty(), "a save without the sections loads with none")  # A version-2 file migrates to 3 (the reorder pass).
 	for f: String in ["masteries.cfg", "v2_nomasteries.cfg"]:
 		DirAccess.remove_absolute(_path(f))
 	Meta.save_path = Meta.DEFAULT_PATH
