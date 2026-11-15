@@ -72,34 +72,34 @@ tablets in landscape (the `Web` export preset; touch controls, mobile UI scale, 
   highest), **half against the stage boss**, no extra tier for evolved pairs; every synergy damage
   bonus goes through `SynergyManager.hit_mult()` from `CombatResolver.damage_enemy()`.
 - **Shadow Bolt** has a Nearest/Strongest aim toggle (T / pad Y).
-- **Act II, the Ancient Eye** (owner decisions, GDD §15.0 "Act II: the Ancient Eye"): the faction is
+- **Act XI, the Ancient Eye** (built as Act II; owner decisions, GDD §15.0 "Act II: the Ancient Eye"): the faction is
   **the Ancient Eye** (never "the Drowned Choir"); it fights the necromancer **for the dead**. Its shared
   rules each have one path: **Claims** (`HordeDirector.claim_fallen()` → `EyeClaims`, `game.claims`: a
   summon dying near a claimer rises 15 s as a hostile Drowned Thrall; killed, its soul is Dread Rally
   charge), **Dread** (`DreadMeter`, `game.dread`: +5% damage taken per 25, applied once in
   `CombatResolver.damage_player()`; raised only through `game.dread.add()`), **unlocks** (`Unlocks.is_open()`
-  / `offerable()`, `UnlockData`, Meta `[unlocks]`: Act II spells by its bosses, offered on every stage;
-  its counter-passives by its achievements, Act II only through the card row's `act`). Act I runs never
-  create any of it (`game.dread` / `game.claims` stay null): stages 1–3 must keep their same-seed
-  summaries. Every female character is in the figure-redesign style; the finale (and Seraphine) grant
+  / `offerable()`, `UnlockData`, Meta `[unlocks]`: its spells by its bosses, offered on every stage;
+  its counter-passives by its achievements, in its own act only through the card row's `act` id, `"eye"`). Runs
+  of every other act never create any of it (`game.dread` / `game.claims` stay null): their stages must keep
+  their same-seed summaries. Every female character is in the figure-redesign style; the finale (and Seraphine) grant
   new summon classes; each new spell comes with its playable character.
-- **Act III, the Electronic Empire** (owner-approved proposal `docs/act3/PROPOSAL.md`, GDD §15.0 "Act III
-  foundation (phase 1)"): a machine power that saw the Act II beacons and came; about 60% of its kinds shoot from
+- **Act XII, the Electronic Empire** (built as Act III; owner-approved proposal `docs/act3/PROPOSAL.md`, GDD §15.0
+  "Act III foundation (phase 1)"): a machine power that saw the Ancient Eye's beacons and came; about 60% of its kinds shoot from
   range, and its three shared rules each have one path, all switched on by the STAGE key `empire` (`game.empire`,
   `EmpireRules`): **Line of Fire** (`EmpireShots`: every Empire shot stops on the first summon, Bone Wall segment
   or Orb Shield; barriers absorb; arcing shots ignore it; never through `ProjectileManager`), **Lock-On**
   (`LockOn.paint()`: 1.5 s painted lines, at most 3, a boss override; Signal Ghost through `paint_time()`) and
   **Steel has no soul** (`Enemy.leaves_corpse()` gates every corpse and raise; cyborgs rise as Grave Gunners
-  through `HordeDirector.raise_corpse()` → `spawn_temporary()`). Act I and II runs never create any of it
-  (`game.empire` stays null): stages 1–6 keep their same-seed summaries. Summons never get act-only rules.
-- **Act IV, the Olympian Republic** (owner-answered proposal `docs/act4/PROPOSAL.md`, Acts IV–VI planned, built one
+  through `HordeDirector.raise_corpse()` → `spawn_temporary()`). Runs of every other act never create any of
+  it (`game.empire` stays null): their stages keep their same-seed summaries. Summons never get act-only rules.
+- **Act VIII, the Olympian Republic** (built as Act IV; owner-answered proposal `docs/act4/PROPOSAL.md`, built one
   act at a time; GDD §15.0 from "Act IV proposal (owner answers)" on): Greek gods commanding Roman legions, stages
-  `ilion` / `olympus` / `underworld` (Hades is the act's final boss, the Pantheon Trial is stage 11). Its three shared
+  `ilion` / `olympus` / `underworld` (Hades is the act's final boss, the Pantheon Trial is stage 23). Its three shared
   rules each have one path, all switched on by the STAGE key `pantheon` (`game.pantheon`, `PantheonRules`): **Wrath
   of the Gods** (`DivineWrath`: waves / lightning / fissures, telegraphed, hitting both armies), **Phalanx** (locked
   shield fronts; the one facing test `PantheonRules.hit_from_front()`, applied once in
   `CombatResolver.damage_enemy()` from the hit's `origin`) and **Glory** (Heroes grow with every summon they kill).
-  Act I–III runs never create any of it: stages 1–9 keep their same-seed summaries. A closing card after each act's
+  Runs of every other act never create any of it: their stages keep their same-seed summaries. A closing card after each act's
   epilogue part ties the acts together (`EpilogueData.CLOSINGS`).
 - **Online co-op** (owner decisions Oct 2026, `docs/coop/DESIGN.md`, GDD §15.0 from "Online co-op: relay and
   lobby" on): 2 players, lobby codes through the Cloudflare relay (`server/relay/`, `CoopNet`), each with their own
@@ -170,15 +170,19 @@ Autotest options (full table in the README):
 - `--spells=a,b` (force spells and their evolution passives, e.g.
   `bone_spear,soul_siphon,corpse_explosion,plague_cloud` or `death_mark,bone_wall,soul_chains`)
 - `--passives=a,b` (force passives the same way, e.g. `unholy_precision,unholy_resilience`)
-- `--stage=graveyard|crimson_march|sanctum|harbour|archive|spire|wastes|assembly|citadel|ilion|olympus|underworld|province|kurogane|sun_road|`
-  `burning_gate|silk_palace|pandemonium|ravensmoor|witchwood|castle_sanguis|skid_row|fort_kessler|liberty_heights|crash_site|`
-  `proving_moon|ark|cutter|galleon|maelstrom|barrow_fields|valgard|vigrid|necropolis|lioness_temple|two_truths|silver_stair|wheel_of_thrones|empyrean|`
-  `fern_basin|great_plain|last_day|greenwood|fae_court|world_tree` (default
-  graveyard; stage locks are ignored; `cutter|galleon|maelstrom` are the Black Tide, Act X until the reorder;
-  `barrow_fields|valgard|vigrid` the Hall of the Slain, Act XI (`--boss=hrimgar|sigrun|odin`, `--character=rune_seer|shield_maiden_hero|berserker_hero`,
+- `--stage=` any of the 45 stage ids, listed here in the act order (`StageRegistry.ACT_ORDER`, the one ordered list;
+  GDD §15.0 "The reorder pass, part 1"): Part One `graveyard|crimson_march|sanctum` (Act I, the Covenant),
+  `cutter|galleon|maelstrom` (II, the Black Tide), `ravensmoor|witchwood|castle_sanguis` (III, the Sanguine Court),
+  `skid_row|fort_kessler|liberty_heights` (IV, the Last Line), `province|kurogane|sun_road` (V, the Shogunate); Part Two
+  `barrow_fields|valgard|vigrid` (VI), `necropolis|lioness_temple|two_truths` (VII), `ilion|olympus|underworld` (VIII,
+  the Olympian Republic), `burning_gate|silk_palace|pandemonium` (IX, the Inferno), `silver_stair|wheel_of_thrones|empyrean`
+  (X); Part Three `harbour|archive|spire` (XI, the Ancient Eye), `wastes|assembly|citadel` (XII, the Electronic Empire),
+  `crash_site|proving_moon|ark` (XIII, the Concord of Stars), `fern_basin|great_plain|last_day` (XIV),
+  `greenwood|fae_court|world_tree` (XV) (default graveyard; stage locks are ignored;
+  `barrow_fields|valgard|vigrid` the Hall of the Slain, Act VI (`--boss=hrimgar|sigrun|odin`, `--character=rune_seer|shield_maiden_hero|berserker_hero`,
   `--spawn=muspel_giant|fenrir|odin_raven@T`); `necropolis|lioness_temple|two_truths` the
-  Necropolis Dynasty, Act XII (`--boss=anubis|sekhmet|osiris`, `--character=the_embalmer|lion_priestess|pharaohs_shade`);
-  `silver_stair|wheel_of_thrones|empyrean` the Celestial Host, Act XIII (all three built; `--boss=seraiel|throne|voice`,
+  Necropolis Dynasty, Act VII (`--boss=anubis|sekhmet|osiris`, `--character=the_embalmer|lion_priestess|pharaohs_shade`);
+  `silver_stair|wheel_of_thrones|empyrean` the Celestial Host, Act X (all three built; `--boss=seraiel|throne|voice`,
   `--character=fallen_herald|blind_saint|the_unveiled`, `--classes=bound_ophan`, `--spawn=` with
   `lesser_light|virtue|power|choir_angel|herald|dominion|judge|cherub|cherub_of_the_gate|ophan|dominion_of_the_spheres|herald_of_the_seventh_trumpet`); `fern_basin|great_plain|last_day` the Age of Titans,
   Act XIV (all three built; `--boss=scarmaw|ironbrow|gravejaw`,
@@ -223,10 +227,10 @@ Autotest options (full table in the README):
 the autotests for the area a change touches plus one default run; run the full "Done" set (every stage,
 the same-seed gates) once per batch of changes, before `main` moves; multi-seed batches only for balance.
 
-CI (`.github/workflows/ci.yml`) runs the import and, as forty-three **parallel** matrix jobs, the Graveyard
-autotest with the naive and army policies, a Crimson March autotest, a Sanctum of Judgment autotest (army
-policy) and one army autotest per Act II, Act IV, V, VI, VII, VIII, IX, X (the Black Tide), XI (the Hall of the Slain) and XII (the
-Necropolis Dynasty) stage, the three Celestial Host stages, the three Age of Titans stages and the three Turning Year stages; beside them, the Windows/Linux/Web exports (artifacts
+CI (`.github/workflows/ci.yml`) runs the import and, as forty-six **parallel** matrix jobs in the act order (named
+"Act N Stage M", grouped by Part), the Graveyard autotest with the naive and army policies, a Crimson March autotest
+and one army autotest for every other stage (all 45 stages; the graveyard job also runs the Ossuary, demo and act
+order / save migration checks); beside them, the Windows/Linux/Web exports (artifacts
 `Necropathy-windows` / `-linux` / `-web`) and an exported-build smoke test; also the co-op jobs `coop-net` (relay
 protocol + two-process transport test) and `coop-lockstep` (the two-process full-run determinism gate, ~10 min, not
 waited on by the publish jobs) and, on `main` pushes, `deploy-relay` (the Worker, secrets `CLOUDFLARE_API_TOKEN` /
@@ -841,7 +845,8 @@ tiny tweaks.
 5. **Content wave 2 art review** (owner): the marks on the wave 2 review page; then any redo.
 6. **Act III, the Electronic Empire: live (Oct 2026).** The three stages are playable (GDD §15.0 "Act III goes
    live"); the owner balances by hand from playtests (their notes outrank the bots). Open: the naive survival rate,
-   the placeholder Soul Ash multipliers, a real-iPhone check; CI has no Act III job yet. Handoff: `docs/act3/HANDOFF.md`.
+   the placeholder Soul Ash multipliers, a real-iPhone check (CI has had an army job for every Act III stage since the
+   reorder pass). Handoff: `docs/act3/HANDOFF.md`.
 6b. **Act IV, the Olympian Republic: live (Oct 25, 2026).** The three stages are playable (GDD §15.0 "Act IV goes
    live"), with one CI army job each. Shipped after the art review (eight rounds) and three bot playtest passes at meta
    none (`docs/act4/playtest/`; the Underworld got damage ×1.5, Centaur Archers and the new Shade Archer). Open: the
@@ -884,6 +889,13 @@ tiny tweaks.
    the tombs, the Nile Archer, the Jackal Warrior, the Sand Colossus, Anubis, Linen Bind / Eternal Shroud + Natron Salts,
    the Embalmer, No Jars Left → Embalmed Bones); then the Temple and the Hall, and **the Dynasty is live** (GDD §15.0 "The
    Necropolis Dynasty goes live (integration)"; one CI army job each). Still Act XII until the reorder (final slot VII).
+   **The reorder pass, part 1 (order and numbering): done** (Nov 2026, GDD §15.0 "The reorder pass, part 1 (order and
+   numbering)"): `StageRegistry.ACT_ORDER` is the one ordered list (three Parts of five acts) from which every act number,
+   Part, chapter, the unlock chain and each stage's Soul Ash (its position in its act) derive; act-scoped rows name an
+   act by id (`PassiveData` "act", `VictoryData.ACT_LINES`, the Codex tabs, `DemoData.ACTS`); Part tabs on the stage
+   select; save version 3 keeps every stage a save had opened (`SaveMigration.legacy_opened()`, `[stages] opened`,
+   checked by `tools/save_migration_check.tscn`); CI 46 jobs in the act order. Section texts above keep the act numbers
+   they were built under. Left for part 2: the epilogue parts and closing cards for every act, a bot pass per moved act.
 7. **Phase 4 polish:** accessibility, profiling on real hardware, and the **final balance pass**.
    The owner's Oct 2026 playtest balance pass is in (GDD §15.0 "Balance pass (Oct 2026 playtest)": Dread Rally raises the army, spells ×1.2, boss HP Alaric −35% / Vael −40% / Seraphine −30%, later level-up items weigh 0.5, Frost Wraith / Bone Hound / Banshee base damage raised; the earlier +5% global multiplier was removed); further value tweaks wait for this pass (naive-bot
    death rates above target on both stages and spell-only builds lacking single-target damage are

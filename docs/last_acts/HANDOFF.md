@@ -34,9 +34,15 @@ in each act's GDD rows (and were listed to the owner as they came).
 ## Next, in order
 
 1. Any art Redo from the marks.
-2. **The reorder pass** (PLAN.md "Waves" 4): one ordered act list, renumbered stages and acts, the unlock chain,
-   Part-grouped act tabs (three Parts of five), the save migration, the epilogue parts and closing cards for every act,
-   a bot pass per moved act, CI jobs for every new stage (43 matrix jobs now).
+2. **The reorder pass** (PLAN.md "Waves" 4). **Part 1 (order and numbering) is done** (GDD §15.0 "The reorder pass,
+   part 1 (order and numbering)"): `StageRegistry.ACT_ORDER` is the one ordered list (act numbers, Parts, chapters, the
+   unlock chain and the Soul Ash bonus derive from it; act-scoped rows name acts by id), Part tabs on the stage select
+   (`docs/last_acts/reorder_stage_select.png`, phone `reorder_stage_select_phone.png`; tool
+   `tools/stage_select_shot.tscn`), save version 3 keeps every stage a save had opened (`tools/save_migration_check.tscn`,
+   in CI), CI 46 jobs in the act order (an army job for every stage; Act III's were missing). **Left for part 2:** the
+   epilogue parts and closing cards for every act (the epilogue labels only renumbered: XI Eye, XII Empire, VIII Republic),
+   a bot pass per moved act, and (optional) renaming the act numbers in old code comments and README sections, which
+   still say the number each act was built under.
 3. **Before `main` moves:** the full "Done" set and same-seed gates, plus `tools/coop_lockstep_gate.py` (the Fae Court's
    Bargain added a co-op lockstep command that only the in-process co-op bot has exercised).
 4. Known tooling bug: `docs/act4/tools/playtest_report.py` reads min HP wrong for runs that died (use the log's
