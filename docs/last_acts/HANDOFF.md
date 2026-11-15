@@ -14,32 +14,30 @@ restarted once mid-stage). The lead pushes after each agent.
 | Necropolis Dynasty (XII → VII) | 3 stages | yes (`docs/dynasty/playtest/pass1.md`) | approved (old session) | Ammit lives 5-10 s (Weighing at 30%; owner: playtest) |
 | Celestial Host (XIII → X) | 3 stages | yes (`docs/host/playtest/pass1.md`) | approved | Silver Stair newclasses 2/3 left |
 | Age of Titans (XIV → XIV) | 3 stages | yes (`docs/titans/playtest/pass1.md`) | approved | |
-| Turning Year (XV → XV) | 3 stages, the Last Claim | yes (`docs/year/playtest/pass1.md`) | **awaiting marks** | Fae Court summon 2/3 (the Winter Prince's minute is the next lever) |
+| Turning Year (XV → XV) | 3 stages, the Last Claim | yes (`docs/year/playtest/pass1.md`) | approved (round 10) | Fae Court summon 2/3 (the Winter Prince's minute is the next lever) |
 
 Owner answers: GDD §15.0 "Wave 2 owner answers" and "Wave 3 owner answers". Lead calls the owner may still overrule are
 in each act's GDD rows (and were listed to the owner as they came).
 
 ## Waiting on the owner
 
-- **Art marks:** review page <https://claude.ai/artifact/3xvAN2KYTE1JVuotg3HcZp>, db collection `wave2_art_r10` (the 5 round 9 Redo marks redone; the other 104 round 9 images approved):
-  60 images (the 4 Blind Saint / Fern Huntress bust-box nudges of round 7, read as 3 and 5 art pixels from the owner's
-  "5 px" / "9 px", then the Turning Year's stage art). Earlier rounds are in collections `wave2_art_r1`..`r7`.
-  Generators: `docs/last_acts/tools/make_wave2_review*.py` (r6 / r7 show was / now for redone images; r8 merged
-  with r7 by hand). Redo any Redo marks with one Sonnet agent (bust boxes: the ART_BIBLE rule, check with
-  `tools/bust_check.py --scale 8` and look at the image).
+- **Art: all approved** (owner, round 10, Nov 2026): every wave 2 image, the Turning Year's stage art and the 53
+  epilogue panels. Review page <https://claude.ai/artifact/3xvAN2KYTE1JVuotg3HcZp>, collections `wave2_art_r1`..`r10`;
+  generators `docs/last_acts/tools/make_wave2_review*.py`. Future redos: one Sonnet agent (bust boxes: the ART_BIBLE rule,
+  `tools/bust_check.py --scale 8`; the review previews play at about 2x, so the owner's "N px" is about N/2 art px).
 - Open design questions: the Thorn Tithe (the Fae Court's second bargain, an agent's design), fairy rings slowing
   attacks too (lead: no), Heartwood (the Ossuary Oak's passive name), the half-damage ward on the Green Mother during
   Last Claim slots (lead: keep).
 
 ## Next, in order
 
-1. Any art Redo from the marks.
+1. (Art: done, all approved.)
 2. **The reorder pass** (PLAN.md "Waves" 4). **Part 1 (order and numbering) is done** (GDD §15.0 "The reorder pass,
    part 1 (order and numbering)"): `StageRegistry.ACT_ORDER` is the one ordered list (act numbers, Parts, chapters, the
    unlock chain and the Soul Ash bonus derive from it; act-scoped rows name acts by id), Part tabs on the stage select
    (`docs/last_acts/reorder_stage_select.png`, phone `reorder_stage_select_phone.png`; tool
    `tools/stage_select_shot.tscn`), save version 3 keeps every stage a save had opened (`tools/save_migration_check.tscn`,
-   in CI), CI 46 jobs in the act order (an army job for every stage; Act III's were missing). **Part 2 (the story): done** (GDD §15.0 "The reorder pass, part 2 (the story)": fifteen epilogue parts in the act order, 14 closing cards, the panels still to paint are in `docs/last_acts/EPILOGUE_PANELS.md`). Parts open on the finale boss kill and the Hyper relic feat counts every finale (owner, GDD §15.0 row after part 2); all epilogue panels painted, **awaiting the owner's marks** (collection `wave2_art_r9`, with round 8's 56 cards). **Left:** a bot pass per moved act, and (optional) renaming the act numbers in old code comments and README sections, which
+   in CI), CI 46 jobs in the act order (an army job for every stage; Act III's were missing). **Part 2 (the story): done** (GDD §15.0 "The reorder pass, part 2 (the story)": fifteen epilogue parts in the act order, 14 closing cards, the panels still to paint are in `docs/last_acts/EPILOGUE_PANELS.md`). Parts open on the finale boss kill and the Hyper relic feat counts every finale (owner, GDD §15.0 row after part 2); all epilogue panels painted and approved (rounds 9 and 10). **Left:** a bot pass per moved act, and (optional) renaming the act numbers in old code comments and README sections, which
    still say the number each act was built under.
 3. **Before `main` moves:** the full "Done" set and same-seed gates, plus `tools/coop_lockstep_gate.py` (the Fae Court's
    Bargain added a co-op lockstep command that only the in-process co-op bot has exercised).
