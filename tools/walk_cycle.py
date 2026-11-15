@@ -1170,7 +1170,7 @@ RIGS = {
     "wild/masked_courtier": dict(mode="robe", hip=32, rigid=[], sway=1, dip=1,
                                  bust=(18, 30, 12, 19, 1), bust_exclude=[(0, 17, 10, 50), (31, 46, 10, 50)]),
     "wild/summer_queen": dict(mode="robe", hip=40, rigid=[], sway=1, dip=1, float=1,
-                              bust=(23, 35, 16, 24, 2), bust_exclude=[(0, 22, 10, 50), (36, 56, 10, 50)],
+                              bust=(23, 35, 19, 27, 2), bust_exclude=[(0, 22, 10, 50), (36, 56, 10, 50)],  # owner round 9: bust 6 preview px lower (3 art px at the preview's x2)
                               wings=[dict(box=(0, 21, 4, 46), pivot=(21, 24), degrees=10.0, seam=2), dict(box=(37, 46, 4, 34), pivot=(37, 24), degrees=-10.0, seam=2)]),
     "wild/gardener_of_roots": dict(mode="legs", hip=62, back=(0, 28), front=(28, 56), rigid=[], spread=1, lift=1, dip=1),
     "wild/green_mother": dict(mode="robe", hip=100, rigid=[], sway=2, dip=1,
@@ -1179,7 +1179,7 @@ RIGS = {
     "player/changeling_princess": dict(mode="robe", hip=40, rigid=[], sway=1, dip=1,
                                        bust=(15, 26, 15, 22, 1), bust_exclude=[(0, 14, 10, 50), (27, 40, 10, 50)]),
     "player/gravegardener": dict(mode="robe", hip=40, rigid=[(29, 38, 0, None)], sway=1, dip=1,
-                                 bust=(13, 24, 15, 22, 1), bust_exclude=[(0, 12, 12, 50), (26, 40, 12, 50)]),
+                                 bust=(15, 26, 17, 24, 1), bust_exclude=[(0, 14, 12, 50), (26, 40, 12, 50)]),  # owner round 9: 4 preview px down and right (2 art px at the preview's x2)
     "summons/ossuary_oak": dict(mode="legs", hip=40, back=(0, 14), front=(14, 28), rigid=[], spread=1, lift=1, dip=1),
     "summons/world_root_warden": dict(mode="legs", hip=46, back=(0, 18), front=(18, 36), rigid=[], spread=1, lift=1, dip=1),
 }

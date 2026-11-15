@@ -21,7 +21,7 @@ in each act's GDD rows (and were listed to the owner as they came).
 
 ## Waiting on the owner
 
-- **Art marks:** review page <https://claude.ai/artifact/3xvAN2KYTE1JVuotg3HcZp>, db collection `wave2_art_r9` (round 8's 56 unmarked cards, then the 53 epilogue panels; r8 had no marks):
+- **Art marks:** review page <https://claude.ai/artifact/3xvAN2KYTE1JVuotg3HcZp>, db collection `wave2_art_r10` (the 5 round 9 Redo marks redone; the other 104 round 9 images approved):
   60 images (the 4 Blind Saint / Fern Huntress bust-box nudges of round 7, read as 3 and 5 art pixels from the owner's
   "5 px" / "9 px", then the Turning Year's stage art). Earlier rounds are in collections `wave2_art_r1`..`r7`.
   Generators: `docs/last_acts/tools/make_wave2_review*.py` (r6 / r7 show was / now for redone images; r8 merged

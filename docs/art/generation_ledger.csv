@@ -1664,3 +1664,4 @@ utc,key,model,quality,size,refs,text_in,image_in,image_out,usd_est,file
 2026-11-15 17:00,epilogue/concord_3,gpt-image-2.5-flare,medium,1536x1024,2,797,1116,343,0.0232,concord_3.png
 2026-11-15 17:00,epilogue/primeval_2,gpt-image-2.5-flare,medium,1536x1024,2,815,1116,343,0.0233,primeval_2.png
 2026-11-15 17:00,epilogue/close,gpt-image-2.5-flare,medium,1536x1024,3,854,2652,343,0.0358,close.png
+2026-11-15 17:16,epilogue/corsair_2,gpt-image-2.5-flare,medium,1536x1024,2,786,1116,343,0.0231,corsair_2.png
