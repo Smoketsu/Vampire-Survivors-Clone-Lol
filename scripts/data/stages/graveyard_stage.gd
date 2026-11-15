@@ -399,6 +399,7 @@ const STAGE := {
 	"crypt_defender": CRYPT_DEFENDER,
 	"arena": ARENA,
 	"ground": "graveyard",
+	"look_proto": true,  # TUNING (not in GDD) visual prototype gate (owner request Nov 2026): the stage shows the new look (light, fog, remains, title cards); purely visual, absent = today's look
 	"enemy_hp_mult": 1.0,  # Stage 1 is the baseline difficulty.
 	"enemy_damage_mult": 1.0,  # Stage 1 is the baseline difficulty.
 	"enemy_mult_from": 0.0,  # TUNING (not in GDD) no step-up to delay here
