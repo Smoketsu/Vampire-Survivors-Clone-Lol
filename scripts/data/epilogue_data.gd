@@ -26,7 +26,7 @@ static var PARTS: Array = _ordered_parts()
 
 ## The part rows (PARTS orders them by their act). Keys: `id` (its Meta
 ## [epilogue] seen_<id> flag), `act_id` (the StageRegistry.ACT_ORDER id of its
-## act), `achievement` (MetaData id that opens it), `heading`, `lines` (the
+## act), `achievement` (the act's finale achievement, kept so a part a save opened never closes; parts open on the finale boss kill, is_open()), `heading`, `lines` (the
 ## paragraphs), and one picture panel per paragraph: [SpriteData key, pan start,
 ## pan end]; a pan point is the window's place over the picture as a fraction
 ## (0..1) of the picture's slack on each axis (0, 0 = top-left corner of the art
@@ -429,7 +429,7 @@ const CLOSINGS := [
 	},
 ]
 ## Line shown in place of a part that is still sealed.
-const SEALED: String = "Sealed. %s to read on."  # TUNING (not in GDD) %s = the achievement's goal
+const SEALED: String = "Sealed. Defeat %s to read on."  # TUNING (not in GDD) %s = the finale boss's short name
 ## Heading of a sealed part's slide.
 const SEALED_HEADING: String = "Sealed"  # TUNING (not in GDD)
 ## Screen title (kept for the Codex / menu wording).
@@ -486,9 +486,26 @@ const CLOSE_FADE: float = 0.6  # TUNING (not in GDD)
 const ADVANCE_GUARD: float = 0.3  # TUNING (not in GDD)
 
 
-## True when part `part` (a PARTS row) is open in the save.
+## The last stage of part `part`'s act (its boss ends the act).
+static func finale_stage(part: Dictionary) -> String:
+	var stages := StageRegistry.stages_of_act(StageRegistry.act_number(String(part["act_id"])))  # The act's stage ids, in campaign order.
+	return "" if stages.is_empty() else stages[stages.size() - 1]
+
+
+## The finale boss's short name for part `part` (the sealed slide names it).
+static func finale_boss_name(part: Dictionary) -> String:
+	var boss: Dictionary = StageRegistry.STAGES[finale_stage(part)]["boss"]  # The finale stage's boss slot.
+	return String(boss.get("short_name", boss.get("display_name", "the act's last boss")))
+
+
+## True when part `part` (a PARTS row) is open in the save: the act's finale
+## boss was beaten once (owner decision, Nov 2026: every part opens on the plain
+## boss kill). Its old achievement still counts, so no part a save opened closes.
 static func is_open(part: Dictionary) -> bool:
-	return Meta.achievements.has(String(part["achievement"]))
+	if Meta.achievements.has(String(part["achievement"])):
+		return true
+	var sid := finale_stage(part)  # The act's last stage.
+	return sid != "" and float(Meta.stage_record(sid).get("boss_kills", 0.0)) > 0.0
 
 
 ## True when at least one part is open (the main menu shows its button).

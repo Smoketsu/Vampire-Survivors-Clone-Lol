@@ -21,7 +21,7 @@ in each act's GDD rows (and were listed to the owner as they came).
 
 ## Waiting on the owner
 
-- **Art marks:** review page <https://claude.ai/artifact/3xvAN2KYTE1JVuotg3HcZp>, db collection `wave2_art_r8`:
+- **Art marks:** review page <https://claude.ai/artifact/3xvAN2KYTE1JVuotg3HcZp>, db collection `wave2_art_r9` (round 8's 56 unmarked cards, then the 53 epilogue panels; r8 had no marks):
   60 images (the 4 Blind Saint / Fern Huntress bust-box nudges of round 7, read as 3 and 5 art pixels from the owner's
   "5 px" / "9 px", then the Turning Year's stage art). Earlier rounds are in collections `wave2_art_r1`..`r7`.
   Generators: `docs/last_acts/tools/make_wave2_review*.py` (r6 / r7 show was / now for redone images; r8 merged
@@ -39,7 +39,7 @@ in each act's GDD rows (and were listed to the owner as they came).
    unlock chain and the Soul Ash bonus derive from it; act-scoped rows name acts by id), Part tabs on the stage select
    (`docs/last_acts/reorder_stage_select.png`, phone `reorder_stage_select_phone.png`; tool
    `tools/stage_select_shot.tscn`), save version 3 keeps every stage a save had opened (`tools/save_migration_check.tscn`,
-   in CI), CI 46 jobs in the act order (an army job for every stage; Act III's were missing). **Part 2 (the story): done** (GDD §15.0 "The reorder pass, part 2 (the story)": fifteen epilogue parts in the act order, 14 closing cards, the panels still to paint are in `docs/last_acts/EPILOGUE_PANELS.md`). **Left:** the 40 new panels and 10 new cards' art, a bot pass per moved act, and (optional) renaming the act numbers in old code comments and README sections, which
+   in CI), CI 46 jobs in the act order (an army job for every stage; Act III's were missing). **Part 2 (the story): done** (GDD §15.0 "The reorder pass, part 2 (the story)": fifteen epilogue parts in the act order, 14 closing cards, the panels still to paint are in `docs/last_acts/EPILOGUE_PANELS.md`). Parts open on the finale boss kill and the Hyper relic feat counts every finale (owner, GDD §15.0 row after part 2); all epilogue panels painted, **awaiting the owner's marks** (collection `wave2_art_r9`, with round 8's 56 cards). **Left:** a bot pass per moved act, and (optional) renaming the act numbers in old code comments and README sections, which
    still say the number each act was built under.
 3. **Before `main` moves:** the full "Done" set and same-seed gates, plus `tools/coop_lockstep_gate.py` (the Fae Court's
    Bargain added a co-op lockstep command that only the in-process co-op bot has exercised).

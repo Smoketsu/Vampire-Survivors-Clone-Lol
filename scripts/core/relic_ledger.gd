@@ -83,9 +83,10 @@ static func feat_met(feat: String) -> bool:
 		return false
 	if f.has("difficulty"):
 		return Meta.best_clear >= DifficultyData.ORDER.find(String(f["difficulty"]))
-	if f.has("hyper_stages"):
-		for sid: Variant in f["hyper_stages"]:
-			if Meta.hyper_clear_count(String(sid)) > 0:
+	if bool(f.get("hyper_finales", false)):
+		for act: Dictionary in StageRegistry.ACT_ORDER:
+			var stages: Array = act["stages"]  # The act's stage ids; the last one is its finale.
+			if Meta.hyper_clear_count(String(stages[stages.size() - 1])) > 0:
 				return true
 	return false
 

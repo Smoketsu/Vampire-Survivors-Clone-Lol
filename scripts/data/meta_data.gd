@@ -697,7 +697,7 @@ const ACHIEVEMENTS := {
 	# epilogue part (EpilogueData id city, "No One Left") and records the clear with
 	# the title Bane of Heroes (UnlockData / TitleData).
 	"no_more_heroes": {"display_name": "No More Heroes", "description": "Beat Paragon at Liberty Heights with no Super at his side",
-		"stat": "paragon_no_heroes_kills", "goal": 1, "unlock": "The title Bane of Heroes, the Act IV epilogue", "bounty": 500},  # Owner-approved proposal; bounty TUNING (not in GDD) as Last Supper
+		"stat": "paragon_no_heroes_kills", "goal": 1, "unlock": "The title Bane of Heroes", "bounty": 500},  # Owner-approved proposal; bounty TUNING (not in GDD) as Last Supper
 	# --- Act IX: the Crash Site ---
 	# The brief's Act IX achievement "Nothing Hatched" (Nov 3, 2026: "No egg
 	# hatches on the Crash Site, from the start until the Hive Mother falls,
@@ -758,7 +758,7 @@ const ACHIEVEMENTS := {
 	# vandermere_tales_kills, set by MaelstromDirector; MetaProgress counts it,
 	# lifetime dead_men_tales_kills).
 	"dead_men_tell_tales": {"display_name": "Dead Men Tell Tales", "description": "Beat Vandermere in the Maelstrom with his Oath broken twice",
-		"stat": "dead_men_tales_kills", "goal": 1, "unlock": "The title Captain of the Dead, the Act II epilogue", "bounty": 500},  # Owner-approved proposal; bounty TUNING (not in GDD) as The Last Harvest
+		"stat": "dead_men_tales_kills", "goal": 1, "unlock": "The title Captain of the Dead", "bounty": 500},  # Owner-approved proposal; bounty TUNING (not in GDD) as The Last Harvest
 	# --- Act XI (temporary): the Barrow Fields ---
 	# The Hall of the Slain's Barrow Fields achievement (owner decision Nov 7,
 	# 2026, replacing None Chosen: "finish the Barrow Fields with no brazier
@@ -812,7 +812,7 @@ const ACHIEVEMENTS := {
 	# Weighings won (BossOsiris, OsirisData.LIGHT_HEART_STAT; MetaProgress), with
 	# the title Light of Heart (UnlockData / TitleData).
 	"a_light_heart": {"display_name": "A Light Heart", "description": "Win Osiris's Weighing with the Scales on your side",
-		"stat": "light_heart_wins", "goal": 1, "unlock": "The title Light of Heart, the Act VII epilogue", "bounty": 500},  # Owner-approved proposal; bounty TUNING (not in GDD) as The Last Harvest
+		"stat": "light_heart_wins", "goal": 1, "unlock": "The title Light of Heart", "bounty": 500},  # Owner-approved proposal; bounty TUNING (not in GDD) as The Last Harvest
 	# --- Act XIII (temporary number): the Silver Stair ---
 	# The Host's achievement "Without Sin" (owner-approved proposal: "clear the
 	# Silver Stair without the scales passing the first third"): a Silver Stair
@@ -842,7 +842,7 @@ const ACHIEVEMENTS := {
 	# last_word_runs). It opens the Host's epilogue part (EpilogueData id host,
 	# "The Voice Is Silent"); no other unlock, the bounty.
 	"the_last_word": {"display_name": "The Last Word", "description": "Silence the Voice in the Empyrean: heaven, earth and hell answer to you",
-		"stat": "last_word_runs", "goal": 1, "unlock": "The Act X epilogue", "bounty": 500},  # Owner-approved proposal; bounty TUNING (not in GDD) as A Light Heart (an act's finale)
+		"stat": "last_word_runs", "goal": 1, "unlock": "", "bounty": 500},  # Owner-approved proposal; bounty TUNING (not in GDD) as A Light Heart (an act's finale)
 	# --- Act XIV (temporary number): the Great Plain ---
 	# The Titans' achievement "Nothing Taken" (owner-approved proposal: "finish
 	# the Great Plain without losing a crystal pile to a Skyraider"): a Great
@@ -869,7 +869,7 @@ const ACHIEVEMENTS := {
 	# the runs, lifetime sky_fell_runs). It opens the
 	# Titans' epilogue part (EpilogueData id primeval, "The Day the Sky Fell").
 	"the_day_the_sky_fell": {"display_name": "The Day the Sky Fell", "description": "Reach the Extinction on the Last Day without losing a summon after Old Gravejaw arrives",
-		"stat": "sky_fell_runs", "goal": 1, "unlock": "The Act XIV epilogue", "bounty": 500},  # Owner-approved proposal; bounty TUNING (not in GDD) as The Last Word (an act's finale)
+		"stat": "sky_fell_runs", "goal": 1, "unlock": "", "bounty": 500},  # Owner-approved proposal; bounty TUNING (not in GDD) as The Last Word (an act's finale)
 	# --- Act XV (temporary number): the Greenwood ---
 	# The Turning Year's achievement "Scorched Earth" (owner-approved proposal:
 	# "blight half the Greenwood in one run"): a Greenwood run whose blight's
@@ -897,7 +897,7 @@ const ACHIEVEMENTS := {
 	# final epilogue part (EpilogueData id wild, "The First Spring": the campaign's
 	# true ending, no closing card).
 	"the_first_spring": {"display_name": "The First Spring", "description": "Defeat the Green Mother at the World-Tree",
-		"stat": "first_spring_runs", "goal": 1, "unlock": "The Act XV epilogue", "bounty": 500},  # Owner-approved proposal; bounty TUNING (not in GDD) as The Last Word (an act's finale)
+		"stat": "first_spring_runs", "goal": 1, "unlock": "", "bounty": 500},  # Owner-approved proposal; bounty TUNING (not in GDD) as The Last Word (an act's finale)
 }
 
 # --- Content wave 2: B. Achievement rewards ---
