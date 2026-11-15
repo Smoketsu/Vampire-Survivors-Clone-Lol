@@ -52,7 +52,7 @@ const BOSS_TIME: float = 1020.0  # TUNING (not in GDD) 17:00, as on every stage
 const ENEMY_HP_MULT: float = 1.8  # TUNING (not in GDD) reorder pass part 3 (slot tuning): 2.0 -> 1.8: Act IV's finale now (built as Act VIII), 2/10 bot deaths and mean min HP 38 (before: the foundation's placeholder, kept; tuned in the balance pass)
 ## Enemy damage multiplier of this stage on top of the shared time scaling
 ## (Castle Sanguis's 1.5, kept: the step up is in HP).
-const ENEMY_DAMAGE_MULT: float = 1.2  # TUNING (not in GDD) reorder pass part 3 (slot tuning): 1.3 -> 1.2: as the HP step (Act IV now; 2/10 deaths, min HP 38) (before: was 1.5 (the foundation's placeholder); Act VIII pass 3, owner: Stage damage x1.3)
+const ENEMY_DAMAGE_MULT: float = 1.05  # TUNING (not in GDD) reorder pass part 3 (slot tuning, round 2: 1.2 -> 1.05, the first round's 1.2 left mean min HP at 45-73, below Acts II and V's ~80): 1.3 -> 1.2: as the HP step (Act IV now; 2/10 deaths, min HP 38) (before: was 1.5 (the foundation's placeholder); Act VIII pass 3, owner: Stage damage x1.3)
 ## Elapsed game seconds from which the two multipliers apply to regular
 ## enemies (the boss always gets them).
 const ENEMY_MULT_FROM: float = 420.0  # TUNING (not in GDD) (Acts III to VII: 7:00)

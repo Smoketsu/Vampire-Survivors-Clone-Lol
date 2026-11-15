@@ -1,0 +1,12 @@
+Godot Engine v4.3.stable.official.77dcf97d8 - https://godotengine.org
+
+[autotest] start: seed=7 speed=8x mortal=true timeout=1500s policy=evolve meta=none oath=0 pact=false classes=- spells=bone_spear,soul_siphon,corpse_explosion,plague_cloud
+[autotest] stage: proving_moon
+[autotest] difficulty: necromancer | modifiers: none
+[autotest] character: gravecaller (starting spell shadow_bolt)
+[audio] main-thread startup 5.1 ms; 59 sfx ready after 276 ms, music loop after 190 ms (worker threads); display: headless
+[metric] t=60 avg_horde=2.0 now=2 cap=2 w2/2 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=6 kills=99 enemies=19 hp=119 boss_hp=-1 crystals=3 xp=118
+[metric]    summon dmg taken this window: broodling=44 vrask_hunter=22 grey_drone=5
+[metric]    alive by kind: { "grey_drone": 5, "broodling": 11, "vrask_hunter": 3 } within260=2
+[autotest] t=01:00 lvl=6 kills=99 enemies=19 summons=2/2 projectiles=0 hp=119 step_avg=0.68ms
+[autotest]    unit FSM: { "FOLLOWING": 1, "ENGAGING": 1 }

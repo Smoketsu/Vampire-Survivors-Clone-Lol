@@ -70,9 +70,9 @@ const BOSS_TIME: float = 1020.0  # TUNING (not in GDD) 17:00, as on every stage
 
 ## Enemy max-HP multiplier of this stage on top of the shared time scaling
 ## (the last stage of Act II: above the Sanctum's 1.1).
-const ENEMY_HP_MULT: float = 1.45  # TUNING (not in GDD) reorder pass part 3 (slot tuning): 1.2 -> 1.45: Act XI's finale now (built as Act II), 0/10 bot deaths and mean min HP 93 (before: the act climbs stage by stage (Act II integration: 1.25; the naive bot died in 7 of 8 runs))
+const ENEMY_HP_MULT: float = 1.35  # TUNING (not in GDD) reorder pass part 3 (slot tuning): 1.2 -> 1.35: Act XI's finale now (built as Act II), 0/10 bot deaths and mean min HP 93 (a first pass 1.45 with damage 1.65: 3/10 deaths, all in the Vhal'Neth fight, the army bot's among them) (before: the act climbs stage by stage (Act II integration: 1.25; the naive bot died in 7 of 8 runs))
 ## Enemy damage multiplier of this stage on top of the shared time scaling.
-const ENEMY_DAMAGE_MULT: float = 1.65  # TUNING (not in GDD) reorder pass part 3 (slot tuning): 1.2 -> 1.65: as the HP step (Act XI now; 0/10 deaths, min HP 93) (before: (Act II integration: 1.25; the naive bot died in 7 of 8 runs))
+const ENEMY_DAMAGE_MULT: float = 1.5  # TUNING (not in GDD) reorder pass part 3 (slot tuning): 1.2 -> 1.5 (first pass 1.65): as the HP step (Act XI now; 0/10 deaths, min HP 93) (before: (Act II integration: 1.25; the naive bot died in 7 of 8 runs))
 ## Elapsed game seconds from which the two multipliers apply to regular
 ## enemies: Zone II, the Sunken Steps (the boss always gets them). From 0:00
 ## they would lift an Initiate past the starting Shadow Bolt's one-shot.

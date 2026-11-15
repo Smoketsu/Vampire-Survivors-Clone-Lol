@@ -49,7 +49,7 @@ const BOSS_TIME: float = 1020.0  # TUNING (not in GDD) 17:00, as on every stage
 const ENEMY_HP_MULT: float = 1.85  # TUNING (not in GDD) the foundation's step, kept
 ## Enemy damage multiplier of this stage on top of the shared time scaling
 ## (Pandemonium's 1.5, kept: the step up is in HP).
-const ENEMY_DAMAGE_MULT: float = 1.3  # TUNING (not in GDD) reorder pass part 3 (slot tuning): 1.5 -> 1.3: Act III now (built as Act VII), 2/10 bot deaths and mean min HP 62 against Acts II and V's ~1/10 and ~80 (before: the foundation's, kept)
+const ENEMY_DAMAGE_MULT: float = 1.2  # TUNING (not in GDD) reorder pass part 3 (slot tuning, round 2: 1.3 -> 1.2, the first round's 1.3 left mean min HP at 45-73, below Acts II and V's ~80): 1.5 -> 1.3: Act III now (built as Act VII), 2/10 bot deaths and mean min HP 62 against Acts II and V's ~1/10 and ~80 (before: the foundation's, kept)
 ## Elapsed game seconds from which the two multipliers apply to regular
 ## enemies (the boss always gets them).
 const ENEMY_MULT_FROM: float = 420.0  # TUNING (not in GDD) Acts III to VI: 7:00

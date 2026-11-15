@@ -52,7 +52,7 @@ const ENEMY_HP_MULT: float = 1.85  # TUNING (not in GDD) reorder pass part 3 (sl
 ## Enemy damage multiplier of this stage on top of the shared time scaling
 ## (below Castle Sanguis's 1.5: the act's first stage, and the step up is in
 ## HP; Fort Kessler and Liberty Heights set their own).
-const ENEMY_DAMAGE_MULT: float = 1.3  # TUNING (not in GDD) first pass 1.5 (the foundation's): the seed-2 army bot's ring broke at 8:00-10:00, lowest HP 3%
+const ENEMY_DAMAGE_MULT: float = 1.15  # TUNING (not in GDD) reorder pass part 3 (slot tuning, round 2): 1.3 -> 1.15: Act IV now (built as Act VIII); the first round's HP step alone left mean min HP at 53, below Acts II and V's ~80 (before: first pass 1.5 (the foundation's): the seed-2 army bot's ring broke at 8:00-10:00, lowest HP 3%)
 ## Elapsed game seconds from which the two multipliers apply to regular
 ## enemies (the boss always gets them).
 const ENEMY_MULT_FROM: float = 420.0  # TUNING (not in GDD) Acts III to VII: 7:00
