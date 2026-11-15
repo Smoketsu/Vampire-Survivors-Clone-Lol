@@ -3161,19 +3161,18 @@ Oak were taken. The autotest answers every bargain at once (the naive bot refuse
 
 ### The illustrated epilogue
 
-The campaign epilogue (content wave 2, GDD §15.0 "Illustrated epilogue (content wave 2)") is a short
-cutscene of twelve slides over a black backdrop: one pixel-art picture panel per paragraph (Act I
-"When the Dawn Went Out": the Sanctum burning, the dawn going out over the pilgrim roads, the dead
-drifting to the coast; Act II "The Dead God Serves": the tide pulled back from Gullhaven, the
-Archive's last page burning, Ul-Thalos sinking, Vhal'Neth kneeling to the necromancer; Act III "The
-Machines Go Dark", opened by *Nothing Is Deathless*: the Empire's chrome city of rebuilt citizens,
-Deus Ex Machina on its knees as the necromancer reaches into its core for Varn's soul, the machines
-gone dark and Varn bowing, the risen dead over the ruins of all three acts) and a closing card after
-Act II, "The Beacons Burn", where the holy orders' knights march out under the beacons (it stays after
-Act II once Act III is open). Closing cards are one per act (`EpilogueData.CLOSINGS`, each with an `after`
-key naming its part); the second, "The River Runs Dry", follows the Act III part: a dried riverbed of the
-dead with an empty ferry and a lone lantern far below, gods silhouetted on a marble mountain in golden
-light above, the set-up of Act IV.
+The campaign epilogue (content wave 2, GDD §15.0 "Illustrated epilogue (content wave 2)"; every act since
+the reorder pass, part 2, GDD §15.0 "The reorder pass, part 2 (the story)") is a cutscene over a black
+backdrop: **fifteen parts, one per act, in the act order** (Covenant "When the Dawn Went Out" through the
+Turning Year "The First Spring", the campaign's true ending), each opened by its act's finale achievement
+(Dawn Extinguished, Dead Men Tell Tales, Last Supper, No More Heroes, The Sun Goes Out, Twilight of the
+Wolf, A Light Heart, Empty Throne, Morning Star Falls, The Last Word, The Dead God Serves, Nothing Is
+Deathless, The Last Harvest, The Day the Sky Fell, The First Spring), with one pixel-art picture panel per
+paragraph. `EpilogueData.PARTS` is built from `StageRegistry.ACT_ORDER` (the one order). After every part but
+the last comes a **closing card** that hints at the next act ("The Beacons Burn" Eye to Empire, "The River Runs
+Dry" Dynasty to Republic, "The Pit Keeps Count" Republic to Inferno, and so on; `EpilogueData.CLOSINGS`, each
+with an `after` key naming its part). Panels not painted yet show a flat colour window with the text and the pan
+(`docs/last_acts/EPILOGUE_PANELS.md` lists them).
 
 - Each panel (1024×576 art px, `assets/sprites/epilogue/`) pans slowly in a framed window
   (944×424, 1 art px = 1 layout px through the sharp-pixel shader); the paragraph fades in under it.
@@ -3183,7 +3182,7 @@ light above, the set-up of Act IV.
   first picture as a dark silhouette.
 - **It plays once on its own**: when you return to the main menu after a run, every epilogue part
   that is open and not seen yet plays before you get the menu (Meta `[epilogue] seen_act1` /
-  `seen_act2` / `seen_act3`; an older save that already earned a part sees it after its next run). The
+  `seen_act2` / `seen_act3` / ... and `seen_<act id>` for the ten newer parts; an older save that already earned a part sees it after its next run). The
   **Epilogue** menu item (above Credits, once a part is open) replays everything.
 - **Music:** a slow, sparse "Grave Lullaby" cue (section A only at 3/4 tempo, no timpani, harp or
   crackle; `MenuThemeData.EPILOGUE_VARIANT`, 34.1 s loop) rendered by `MenuThemeSynth` the first

@@ -130,7 +130,7 @@ const UNLOCKS := {
 	# unlocked by Hades; the finale grants the Myrmidon Shades): the spell with its
 	# paired passive, and the summon class with its paired passive, offered on
 	# every stage (no card-row "act" key). The Empty Throne achievement opens the
-	# Act IV epilogue part (EpilogueData.ACT4_PART), not an unlock row.
+	# Republic epilogue part (EpilogueData id act4), not an unlock row.
 	"river_styx": {"type": "spell", "boss": "hades", "text": "Make Hades kneel in the Asphodel Underworld to unlock."},  # Owner-approved proposal
 	"ferrymans_toll": {"type": "passive", "boss": "hades", "text": "Make Hades kneel in the Asphodel Underworld to unlock."},  # River Styx's paired passive, unlocked with it
 	"myrmidon_shade": {"type": "class", "boss": "hades", "text": "Make Hades kneel in the Asphodel Underworld to unlock."},  # Owner-approved proposal: the finale's reward
@@ -148,7 +148,7 @@ const UNLOCKS := {
 	# unlocked by Amaterasu; the finale grants the Oni): the spell with its paired
 	# passive, and the summon class with its paired passive, offered on every
 	# stage (no card-row "act" key). The Sun Goes Out achievement opens the Act V
-	# epilogue part (EpilogueData.ACT5_PART), not an unlock row.
+	# epilogue part (EpilogueData id act5), not an unlock row.
 	"black_sun": {"type": "spell", "boss": "amaterasu", "text": "Put out the sun: defeat Amaterasu on the Road to the Sun to unlock."},  # Owner-approved proposal
 	"stolen_dawn": {"type": "passive", "boss": "amaterasu", "text": "Put out the sun: defeat Amaterasu on the Road to the Sun to unlock."},  # Black Sun's paired passive, unlocked with it
 	"bound_oni": {"type": "class", "boss": "amaterasu", "text": "Put out the sun: defeat Amaterasu on the Road to the Sun to unlock."},  # Owner-approved proposal: the finale's reward

@@ -2331,4 +2331,9 @@ func _epilogue_line() -> String:
 				seen += 1
 			else:
 				pending += 1
-	return "parts=%d open=%d seen=%d panels=%d autoplay_pending=%s" % [EpilogueData.PARTS.size(), opened, seen, panels, pending > 0]
+	var cards_ok := true  # Every part but the last has exactly one closing card, and every card follows a part.
+	for i in EpilogueData.PARTS.size():
+		var has_card := not EpilogueData.closing_after(String((EpilogueData.PARTS[i] as Dictionary)["id"])).is_empty()
+		cards_ok = cards_ok and (has_card == (i < EpilogueData.PARTS.size() - 1))
+	cards_ok = cards_ok and EpilogueData.CLOSINGS.size() == EpilogueData.PARTS.size() - 1
+	return "parts=%d (acts=%d) open=%d seen=%d panels=%d cards_ok=%s autoplay_pending=%s" % [EpilogueData.PARTS.size(), StageRegistry.act_count(), opened, seen, panels, cards_ok, pending > 0]
