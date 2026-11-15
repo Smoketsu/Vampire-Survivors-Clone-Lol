@@ -1,0 +1,217 @@
+Godot Engine v4.3.stable.official.77dcf97d8 - https://godotengine.org
+
+[autotest] start: seed=7 speed=8x mortal=true timeout=1500s policy=army meta=none oath=0 pact=false classes=- spells=-
+[autotest] stage: fort_kessler
+[autotest] difficulty: necromancer | modifiers: none
+[autotest] character: gravecaller (starting spell shadow_bolt)
+[audio] main-thread startup 14.9 ms; 59 sfx ready after 726 ms, music loop after 621 ms (worker threads); display: headless
+[metric] t=60 avg_horde=3.0 now=6 cap=6 w6/6 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=4 kills=73 enemies=51 hp=118 boss_hp=-1 crystals=6 xp=67
+[metric]    summon dmg taken this window: street_thug=89 gang_gunner=1
+[metric]    alive by kind: { "street_thug": 29, "gang_gunner": 10, "civilian": 12 } within260=6
+[autotest] t=01:00 lvl=4 kills=73 enemies=51 summons=6/6 projectiles=4 hp=118 step_avg=1.43ms
+[autotest]    unit FSM: { "ENGAGING": 2, "ACQUIRING": 2, "CASTING": 2 }
+[metric] t=120 avg_horde=7.4 now=9 cap=9 w7/7 a0/0 m0/0 m0/0 w2/2 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=9 kills=195 enemies=57 hp=120 boss_hp=-1 crystals=8 xp=221
+[metric]    summon dmg taken this window: street_thug=25 gang_gunner=46
+[metric]    alive by kind: { "gang_gunner": 24, "street_thug": 23, "civilian": 10 } within260=8
+[autotest] t=02:00 lvl=9 kills=195 enemies=57 summons=9/9 projectiles=2 hp=120 step_avg=1.55ms
+[autotest]    unit FSM: { "ENGAGING": 8, "ACQUIRING": 1 }
+[metric] t=180 avg_horde=10.9 now=15 cap=15 w8/8 a4/4 m0/0 m0/0 w3/3 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=13 kills=334 enemies=63 hp=120 boss_hp=-1 crystals=13 xp=413
+[metric]    summon dmg taken this window: street_thug=10 gang_gunner=15 riot_cop=30
+[metric]    alive by kind: { "gang_gunner": 16, "riot_cop": 20, "street_thug": 18, "civilian": 8, "squad_car": 1 } within260=15
+[autotest] t=03:00 lvl=13 kills=334 enemies=63 summons=15/15 projectiles=5 hp=120 step_avg=1.63ms
+[autotest]    unit FSM: { "ENGAGING": 12, "CASTING": 3 }
+[metric] t=240 avg_horde=17.6 now=20 cap=20 w9/9 a6/6 m0/0 m0/0 w5/5 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=1 lvl=17 kills=477 enemies=71 hp=120 boss_hp=-1 crystals=9 xp=683
+[metric]    summon dmg taken this window: street_thug=25 gang_gunner=73 riot_cop=57 squad_car=1 wreck_blast=10
+[metric]    alive by kind: { "riot_cop": 24, "gang_gunner": 9, "street_thug": 23, "civilian": 12, "squad_car": 3 } within260=13
+[autotest] t=04:00 lvl=17 kills=477 enemies=71 summons=20/20 projectiles=5 hp=120 step_avg=1.83ms
+[autotest]    unit FSM: { "ENGAGING": 13, "ACQUIRING": 1, "CASTING": 2, "REPOSITIONING": 4 }
+[metric] t=300 avg_horde=27.0 now=29 cap=29 w10/10 a8/8 m5/5 m0/0 w6/6 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=21 kills=636 enemies=60 hp=120 boss_hp=-1 crystals=28 xp=964
+[metric]    summon dmg taken this window: street_thug=6 gang_gunner=16 riot_cop=3 squad_car=18 wreck_blast=12
+[metric]    alive by kind: { "riot_cop": 15, "street_thug": 22, "civilian": 10, "gang_gunner": 11, "squad_car": 2 } within260=8
+[autotest] t=05:00 lvl=21 kills=636 enemies=60 summons=29/29 projectiles=10 hp=120 step_avg=2.02ms
+[autotest]    unit FSM: { "ENGAGING": 21, "CASTING": 2, "REPOSITIONING": 5, "FOLLOWING": 1 }
+[metric] t=360 avg_horde=29.7 now=31 cap=31 w12/12 a8/8 m5/5 m0/0 w6/6 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=25 kills=804 enemies=63 hp=120 boss_hp=-1 crystals=47 xp=1302
+[metric]    summon dmg taken this window: gang_gunner=5 riot_cop=1 wreck_blast=16 kessler_mine=10 swat_breacher=5
+[metric]    alive by kind: { "squad_car": 3, "gang_gunner": 11, "street_thug": 19, "swat_breacher": 5, "riot_cop": 14, "civilian": 9, "field_medic": 2 } within260=12
+[autotest] t=06:00 lvl=25 kills=804 enemies=63 summons=31/31 projectiles=6 hp=120 step_avg=2.16ms
+[autotest]    unit FSM: { "ENGAGING": 18, "FOLLOWING": 1, "ACQUIRING": 7, "CASTING": 5 }
+[metric] t=420 avg_horde=32.5 now=37 cap=37 w12/12 a9/9 m5/5 m5/5 w6/6 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=29 kills=966 enemies=73 hp=119 boss_hp=-1 crystals=44 xp=1684
+[metric]    summon dmg taken this window: street_thug=5 gang_gunner=19 riot_cop=20 squad_car=124 wreck_blast=20 swat_breacher=19
+[metric]    alive by kind: { "squad_car": 8, "street_thug": 22, "swat_breacher": 5, "gang_gunner": 7, "riot_cop": 20, "civilian": 9, "field_medic": 2 } within260=17
+[autotest] t=07:00 lvl=29 kills=966 enemies=73 summons=37/37 projectiles=7 hp=119 step_avg=2.28ms
+[autotest]    unit FSM: { "CASTING": 6, "ENGAGING": 29, "REPOSITIONING": 2 }
+[metric] t=480 avg_horde=36.6 now=38 cap=38 w12/12 a9/9 m6/6 m5/5 w6/6 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=9 lvl=32 kills=1116 enemies=73 hp=120 boss_hp=-1 crystals=51 xp=2042
+[metric]    summon dmg taken this window: street_thug=102 gang_gunner=152 riot_cop=430 squad_car=423 wreck_blast=941 swat_breacher=93 rifleman=17 field_medic=8
+[metric]    alive by kind: { "swat_breacher": 11, "riot_cop": 19, "street_thug": 9, "rifleman": 23, "machine_gunner": 3, "squad_car": 1, "gang_gunner": 5, "field_medic": 2 } within260=14
+[autotest] t=08:00 lvl=32 kills=1116 enemies=73 summons=38/38 projectiles=4 hp=120 step_avg=2.39ms
+[autotest]    unit FSM: { "CASTING": 9, "ENGAGING": 29 }
+[metric] t=540 avg_horde=41.8 now=43 cap=43 w13/13 a10/10 m7/7 m6/6 w7/7 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=35 kills=1281 enemies=72 hp=120 boss_hp=-1 crystals=51 xp=2485
+[metric]    summon dmg taken this window: street_thug=47 gang_gunner=32 riot_cop=91 swat_breacher=48 rifleman=100 machine_gun=43
+[metric]    alive by kind: { "gang_gunner": 8, "street_thug": 12, "swat_breacher": 10, "rifleman": 18, "riot_cop": 13, "field_medic": 4, "machine_gunner": 4, "squad_car": 3 } within260=14
+[autotest] t=09:00 lvl=35 kills=1281 enemies=72 summons=43/43 projectiles=10 hp=120 step_avg=2.50ms
+[autotest]    unit FSM: { "ENGAGING": 27, "FOLLOWING": 4, "CASTING": 8, "REPOSITIONING": 4 }
+[metric] t=600 avg_horde=43.0 now=43 cap=43 w13/13 a10/10 m7/7 m6/6 w7/7 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=38 kills=1425 enemies=78 hp=120 boss_hp=-1 crystals=57 xp=2851
+[metric]    summon dmg taken this window: gang_gunner=4 riot_cop=22 swat_breacher=4 rifleman=9 machine_gun=1
+[metric]    alive by kind: { "riot_cop": 15, "gang_gunner": 9, "swat_breacher": 11, "street_thug": 9, "field_medic": 6, "rifleman": 22, "squad_car": 3, "machine_gunner": 3 } within260=21
+[autotest] t=10:00 lvl=38 kills=1425 enemies=78 summons=43/43 projectiles=7 hp=120 step_avg=2.57ms
+[autotest]    unit FSM: { "ENGAGING": 29, "CASTING": 14 }
+[metric] t=660 avg_horde=43.0 now=43 cap=43 w13/13 a10/10 m7/7 m6/6 w7/7 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=41 kills=1638 enemies=66 hp=120 boss_hp=-1 crystals=63 xp=3401
+[metric]    summon dmg taken this window: street_thug=26 gang_gunner=24 riot_cop=91 squad_car=6 swat_breacher=18 rifleman=78 machine_gun=10
+[metric]    alive by kind: { "street_thug": 7, "squad_car": 4, "rifleman": 17, "attack_helicopter": 2, "riot_cop": 10, "swat_breacher": 11, "gang_gunner": 9, "field_medic": 2, "machine_gunner": 2, "tank": 1 } within260=5
+[autotest] t=11:00 lvl=41 kills=1638 enemies=66 summons=43/43 projectiles=22 hp=120 step_avg=2.64ms
+[autotest]    unit FSM: { "CASTING": 6, "ENGAGING": 37 }
+[metric] t=720 avg_horde=43.3 now=44 cap=44 w13/13 a10/10 m7/7 m7/7 w7/7 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=43 kills=1819 enemies=78 hp=120 boss_hp=-1 crystals=109 xp=3815
+[metric]    summon dmg taken this window: street_thug=13 gang_gunner=14 riot_cop=21 swat_breacher=32 rifleman=72 machine_gun=12 heli_rocket=2 tank_shell=5
+[metric]    alive by kind: { "riot_cop": 20, "street_thug": 15, "rifleman": 19, "swat_breacher": 9, "field_medic": 4, "gang_gunner": 3, "machine_gunner": 6, "tank": 1 } within260=20
+[autotest] t=12:00 lvl=43 kills=1819 enemies=78 summons=44/44 projectiles=6 hp=120 step_avg=2.69ms
+[autotest]    unit FSM: { "CASTING": 9, "ENGAGING": 25, "FOLLOWING": 10 }
+[metric] t=780 avg_horde=44.0 now=44 cap=44 w13/13 a10/10 m7/7 m7/7 w7/7 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=46 kills=1996 enemies=90 hp=120 boss_hp=-1 crystals=116 xp=4291
+[metric]    summon dmg taken this window: street_thug=2 gang_gunner=12 riot_cop=76 swat_breacher=20 rifleman=39 machine_gun=69 tank_shell=136
+[metric]    alive by kind: { "street_thug": 16, "swat_breacher": 8, "squad_car": 3, "machine_gunner": 5, "rifleman": 26, "field_medic": 6, "riot_cop": 13, "tank": 4, "gang_gunner": 9 } within260=15
+[autotest] t=13:00 lvl=46 kills=1996 enemies=90 summons=44/44 projectiles=16 hp=120 step_avg=2.79ms
+[autotest]    unit FSM: { "ENGAGING": 28, "FOLLOWING": 2, "CASTING": 10, "REPOSITIONING": 3, "ACQUIRING": 1 }
+[metric] t=840 avg_horde=45.0 now=45 cap=45 w13/13 a10/10 m8/8 m7/7 w7/7 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=49 kills=2190 enemies=86 hp=120 boss_hp=-1 crystals=144 xp=5001
+[metric]    summon dmg taken this window: street_thug=7 gang_gunner=103 riot_cop=133 squad_car=386 wreck_blast=367 swat_breacher=89 rifleman=207 field_medic=5 machine_gun=220 tank_shell=376 tank=485
+[metric]    alive by kind: { "street_thug": 14, "gang_gunner": 9, "riot_cop": 21, "swat_breacher": 11, "rifleman": 18, "field_medic": 3, "squad_car": 3, "machine_gunner": 4, "tank": 3 } within260=13
+[autotest] t=14:00 lvl=49 kills=2190 enemies=86 summons=45/45 projectiles=11 hp=120 step_avg=2.86ms
+[autotest]    unit FSM: { "ENGAGING": 20, "RETURNING": 8, "CASTING": 6, "REPOSITIONING": 10, "FOLLOWING": 1 }
+[metric] t=900 avg_horde=44.9 now=45 cap=45 w13/13 a10/10 m8/8 m7/7 w7/7 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=1 lvl=52 kills=2380 enemies=94 hp=120 boss_hp=-1 crystals=143 xp=5567
+[metric]    summon dmg taken this window: street_thug=124 gang_gunner=140 riot_cop=474 squad_car=14 wreck_blast=19 swat_breacher=234 rifleman=453 field_medic=23 machine_gun=536 heli_rocket=8 tank_shell=1070 tank=149
+[metric]    alive by kind: { "tank": 6, "street_thug": 15, "rifleman": 21, "gang_gunner": 5, "riot_cop": 18, "swat_breacher": 17, "field_medic": 3, "machine_gunner": 4, "squad_car": 4, "attack_helicopter": 1 } within260=27
+[autotest] t=15:00 lvl=52 kills=2380 enemies=94 summons=45/45 projectiles=7 hp=120 step_avg=2.95ms
+[autotest]    unit FSM: { "CASTING": 8, "ENGAGING": 15, "ACQUIRING": 15, "FOLLOWING": 4, "REPOSITIONING": 3 }
+[metric] t=960 avg_horde=44.7 now=45 cap=45 w13/13 a10/10 m8/8 m7/7 w7/7 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=4 lvl=54 kills=2563 enemies=101 hp=119 boss_hp=-1 crystals=152 xp=6130
+[metric]    summon dmg taken this window: street_thug=61 gang_gunner=114 riot_cop=159 squad_car=353 wreck_blast=923 swat_breacher=242 rifleman=240 machine_gun=374 heli_rocket=133 tank_shell=518 tank=239
+[metric]    alive by kind: { "street_thug": 8, "rifleman": 31, "riot_cop": 21, "field_medic": 9, "swat_breacher": 8, "gang_gunner": 8, "machine_gunner": 13, "tank": 2, "attack_helicopter": 1 } within260=15
+[autotest] t=16:00 lvl=54 kills=2563 enemies=101 summons=45/45 projectiles=11 hp=119 step_avg=3.02ms
+[autotest]    unit FSM: { "ENGAGING": 20, "ACQUIRING": 6, "CASTING": 14, "REPOSITIONING": 5 }
+[autotest] boss spawned at 1020.0 s
+[autotest] Shadow Bolt aim switched to Strongest
+[metric] t=1020 avg_horde=44.8 now=45 cap=45 w13/13 a10/10 m8/8 m7/7 w7/7 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=2 lvl=56 kills=2773 enemies=82 hp=120 boss_hp=30000 crystals=157 xp=6758
+[metric]    summon dmg taken this window: street_thug=97 gang_gunner=153 riot_cop=480 wreck_blast=74 swat_breacher=420 rifleman=526 field_medic=19 machine_gun=1259 heli_rocket=34 tank_shell=361
+[metric]    alive by kind: { "tank": 3, "rifleman": 23, "street_thug": 17, "riot_cop": 13, "gang_gunner": 6, "machine_gunner": 4, "squad_car": 2, "field_medic": 5, "swat_breacher": 8, "boss": 1 } within260=12
+[autotest] t=17:00 lvl=56 kills=2773 enemies=82 summons=45/45 projectiles=10 hp=120 step_avg=3.08ms
+[autotest]    unit FSM: { "ENGAGING": 27, "ACQUIRING": 4, "REPOSITIONING": 8, "CASTING": 6 }
+[metric] t=1080 avg_horde=44.2 now=43 cap=45 w13/13 a9/10 m7/8 m7/7 w7/7 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=7 lvl=58 kills=2945 enemies=71 hp=110 boss_hp=25111 crystals=157 xp=7289
+[metric]    summon dmg taken this window: street_thug=117 gang_gunner=147 riot_cop=539 wreck_blast=548 swat_breacher=264 rifleman=487 field_medic=51 machine_gun=428 tank_shell=486 tank=233 carpet_bomb=1258
+[metric]    alive by kind: { "tank": 1, "swat_breacher": 14, "street_thug": 13, "rifleman": 19, "riot_cop": 14, "gang_gunner": 3, "field_medic": 4, "machine_gunner": 2, "boss": 1 } within260=18
+[autotest] t=18:00 lvl=58 kills=2945 enemies=71 summons=43/45 projectiles=8 hp=110 step_avg=3.11ms
+[autotest]    unit FSM: { "ENGAGING": 20, "ACQUIRING": 15, "CASTING": 7, "FOLLOWING": 1 }
+[metric] t=1140 avg_horde=40.0 now=37 cap=45 w13/13 a7/10 m5/8 m5/7 w7/7 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=28 lvl=60 kills=3109 enemies=71 hp=116 boss_hp=10078 crystals=142 xp=7854
+[metric]    summon dmg taken this window: street_thug=89 gang_gunner=79 riot_cop=444 wreck_blast=495 swat_breacher=478 rifleman=523 field_medic=44 machine_gun=231 tank_shell=156 tank=507 carpet_bomb=1871 harrow_slam=1417 boss=410
+[metric]    alive by kind: { "rifleman": 16, "riot_cop": 14, "street_thug": 21, "field_medic": 4, "tank": 3, "swat_breacher": 5, "gang_gunner": 4, "machine_gunner": 3, "boss": 1 } within260=22
+[autotest] t=19:00 lvl=60 kills=3109 enemies=71 summons=37/45 projectiles=15 hp=116 step_avg=3.13ms
+[autotest]    unit FSM: { "ENGAGING": 27, "CASTING": 9, "RETURNING": 1 }
+[autotest] build complete (only fallback cards left) at 19:05, level 61
+[autotest] boss defeated at 1171.9 s
+[autotest] stall recall: warrior RETURNING at (538, -10), 233 px from the player, touching an obstacle: true
+[autotest] countdown reached 0:00 at 1200.0 s - THE RECKONING begins
+[metric] t=1200 avg_horde=38.6 now=45 cap=45 w13/13 a10/10 m8/8 m7/7 w7/7 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=31 lvl=66 kills=3270 enemies=78 hp=120 boss_hp=0 crystals=4 xp=9531
+[metric]    summon dmg taken this window: street_thug=185 gang_gunner=184 riot_cop=719 wreck_blast=127 swat_breacher=377 rifleman=737 field_medic=22 machine_gun=281 tank_shell=419 tank=899 carpet_bomb=785 harrow_slam=2312 boss=358
+[metric]    alive by kind: { "street_thug": 17, "rifleman": 22, "riot_cop": 16, "gang_gunner": 4, "swat_breacher": 10, "machine_gunner": 6, "field_medic": 2, "tank": 1 } within260=11
+[autotest] t=20:00 lvl=66 kills=3270 enemies=78 summons=45/45 projectiles=22 hp=120 step_avg=3.15ms
+[autotest]    unit FSM: { "FOLLOWING": 5, "ENGAGING": 29, "CASTING": 7, "ACQUIRING": 1, "REPOSITIONING": 3 }
+[metric] t=1260 avg_horde=37.1 now=19 cap=45 w10/13 a2/10 m1/8 m3/7 w3/7 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=49 lvl=67 kills=3419 enemies=124 hp=91 boss_hp=0 crystals=36 xp=9877
+[metric]    summon dmg taken this window: street_thug=604 gang_gunner=26 riot_cop=1309 swat_breacher=501 rifleman=1254 field_medic=16 machine_gun=872 tank_shell=685 tank=394 blitz=287 blitz_dash=233 artillery=2483 aurora_blast=111
+[metric]    alive by kind: { "rifleman": 28, "street_thug": 29, "riot_cop": 21, "swat_breacher": 12, "aurora": 1, "tank": 23, "machine_gunner": 8, "field_medic": 1, "gang_gunner": 1 } within260=24
+[autotest] t=21:00 lvl=67 kills=3419 enemies=124 summons=19/45 projectiles=25 hp=91 step_avg=3.18ms
+[autotest]    unit FSM: { "ENGAGING": 16, "CASTING": 1, "RETURNING": 1, "SPAWNING": 1 }
+[autotest] ===== NECROPATHY AUTOTEST SUMMARY =====
+[autotest] result: VICTORY / RUN COMPLETE (run_complete)
+[autotest] time reached: 21:26 elapsed (1286.5 s game time, 318.2 s real time); past 0:00: 86.5 s; Reckoning waves: 9
+[autotest] kills: 3431 | level: 67
+[autotest] level pacing: 01:00=L4 03:00=L13 05:00=L21 10:00=L38 15:00=L52 17:00=L56 20:00=L66 | reached: L2@00:35 L5@01:09 L10@02:09 L15@03:23 L20@04:30 L25@05:52 L30@07:12 L35@08:50 L40@10:32 L45@12:17 L50@14:07 L55@16:14 L60@18:30
+[autotest] build complete: at 19:05, level 61
+[autotest] horde: 5 alive / capacity 45 (warrior 3/13, archer 1/10, mage 0/8, mender 1/7, warder 0/7, bishop 0/0, abomination 0/0, rogue 0/0, gargoyle 0/0, frost_wraith 0/0, bone_hound 0/0, banshee 0/0, corpse_catapult 0/0)
+[autotest] summons spawned: 180, died: 175, hard recalls: 2 (stall recalls: 1)
+[autotest] boss spawned: yes at 1020.0 s | boss defeated: yes at 1171.9 s | boss HP left: 0 / 30000
+[autotest] player HP: 0 / 120 (invulnerable: false)
+[autotest] picks (72): warrior 2, warrior 3, warrior 4, warder 1, warder 2, skip, grave_dominion 1, dark_command 1, soul_conduit 1, grave_dominion 2, archer 1, archer 2, warder 3, archer 3, grave_dominion 3, warder 4, mage 1, grave_dominion 4, shadow_bolt 2, archer 4, skip, skip, warrior 5, soul_recycling 1, soul_conduit 2, shadow_bolt 3, warder 5, mender 1, archer 5, dark_command 2, necrotic_vigor 1, mage 2, grave_dominion 5, shadow_bolt 4, dark_command 3, dark_command 4, skip, soul_recycling 2, unholy_resilience 1, dark_command 5, EVOLVE death_knight, mender 2, necrotic_vigor 2, mender 3, mage 3, soul_recycling 3, shadow_bolt 5, mage 4, unholy_resilience 2, mender 4, necrotic_vigor 3, mender 5, soul_recycling 4, necrotic_vigor 4, mage 5, soul_recycling 5, necrotic_vigor 5, soul_conduit 3, unholy_resilience 3, soul_conduit 4, unholy_resilience 4, soul_conduit 5, unholy_resilience 5, EVOLVE void_barrage, dark_restoration, dark_restoration, dark_restoration, skip, skip, skip, skip, dark_restoration
+[autotest] wards on you: 283 total, absorbed 1690 dmg | 275 wards in 1164 s with 2+ Warders/Bishops alive (14.2 / min) | heal casts: 1910 | ally barriers: 1919, barrier dmg absorbed: 74767
+[autotest] evolutions: death_knight@10:32, void_barrage@18:44
+[autotest] evolutions by type: spell: void_barrage@18:44 | summon: death_knight@10:32
+[autotest] summon evolutions: lich raised 0 (capped 0) | merge converted 0, dissolved 0 | aura pulses 0 | merged classes: none
+[autotest] winter revenant: shatters 0 (capped 0), shatter hits 0, shatter dmg 0 | death novas 0, nova hits 0, nova freezes 0, nova dmg 0
+[autotest] summon output by source (dmg/heal/shield): warrior=32049/0/0 archer=169470/0/0 mage=175771/0/0 mender=14030/17536/0 warder=19699/0/44187 bash=3573/0/0 death_knight=252255/2589/0 death_knight_bash=21651/0/0 death_knight_cleave=29478/0/0
+[autotest] summon output by class (dmg/heal/shield): warrior=339008/2589/0 archer=169470/0/0 mage=175771/0/0 mender=14030/17536/0 warder=19699/0/44187
+[autotest] recipe book: 2 / 83 discovered (void_barrage, death_knight) | Recipes view rows built: 83 (saved: false)
+[autotest] codex: 20 entries met this run (spell 1, summon 5, enemy 13, boss 1) | new to the save 20 | save: spell 1/54, summon 5/30, enemy 13/260, boss 1/45, evolutions 2/83
+[autotest] epilogue: parts=15 (acts=15) open=0 seen=0 panels=59 cards_ok=true autoplay_pending=false
+[autotest] volleys: shots 92237 | hits 66899 | dmg 335605 | peak 258/320 | capped volleys 0 | boss hits capped 1051 | barrages 11 | warrior 196925, archer 63189, mage 27218, shadow_bolt 24681, mender 12443, warder 11148
+[visual] adaptive quality: level 3, peak 3, steps down 4, up 1
+[autotest] victory screen: title=The Line Is Broken best_overtime=86 new_record=true highlights=6
+[autotest] city blocks: lots 703 (open 186) | building push-outs 155909, wreck push-outs 76936 | ring posts pulled toward you 31787 of 173692 | enemy contact with faces 515 s (24.1 s per minute) | wrecks placed 21, refused 63, burnt away 0, standing 21
+[autotest] armour: front hits 23022 (cut 152364) | flat armour absorbed 11269 | vehicles driven 119, corners 110, turns 1126, rams 507 (wrecks 507) | run-overs on summons 672, on you 5 (dodged 4) | destroyed 82, wrecks 21, explosions 82 | shells 944 | kevlar withheld 0
+[autotest] supers: arrived 2 (escalation 0) | exposed 5 (building 1, blocker 4) | damage taken exposed 15683, guarded 2230 | met blitz, aurora | blitz dashes 5 (hits 15, stopped 5)
+[autotest] civilians: spawned 257 | fled 235 | killed by the army 22 | XP dropped 22 | alive at the end 0 (own cap 24)
+[autotest] escalation: gangs 0:00 | police 2:30 | swat 5:00 | army 7:30 | last tier army | supers sent 0
+[autotest] city kinds (spawned/killed): civilian 257/22 first 0:00 (dmg to you 0, to summons 0) | street_thug 1076/1027 first 0:01 (dmg to you 0, to summons 2371) | gang_gunner 470/470 first 0:46 (dmg to you 25, to summons 1368) | riot_cop 653/624 first 2:31 (dmg to you 21, to summons 5854) | squad_car 49/49 first 2:57 (dmg to you 0, to summons 1328) | swat_breacher 352/331 first 5:10 (dmg to you 8, to summons 3570) | field_medic 149/149 first 5:01 (dmg to you 8, to summons 192) | rifleman 668/627 first 7:30 (dmg to you 61, to summons 5997) | tank 66/28 first 10:49 (dmg to you 28, to summons 3441) | blitz 1/1 first 20:02 (dmg to you 0, to summons 287) | machine_gunner 111/98 first 7:43 (dmg to you 0, to summons 0) | attack_helicopter 3/3 first 10:10 (dmg to you 0, to summons 0) | aurora 1/0 first 20:47 (dmg to you 0, to summons 0) | mammoth 1/1 first 11:30 (dmg to you 0, to summons 0) | gunner sprays 713 | breacher blasts 707, flashbangs 375 (summon stuns 1796) | rifle bursts 1837 | tank shells 128 | medic heals 501
+[autotest] martial law: began 20:00 | artillery lines 11 (shells 88; hits on summons 1283, on you 27, on enemies 407) | supers returned 2 | act supers on (called 2; met this run: blitz, aurora)
+[autotest] city stage: fort_kessler (Fort Kessler) | playable true | boss harrow (script harrow) | enemy x2.00 HP / x1.30 dmg from 7:00 | soul ash x1.25 | reckoning kind tank, martial law true
+[autotest] tear gas: canisters 679 | summon slows 41626 (refreshes of 0.50 s)
+[autotest] fort kessler: minefields: live peak 57, triggered 67 (by enemies 66, summons 1, you 0), blown 67, enemy kills 34, ring posts moved off 48 | mammoth killed at 11:56 | events 11:30 mammoth_arrived, 11:56 mammoth_killed
+[autotest] fort kessler kinds: machine gunner set-ups 198 (lane ticks 1371, hits on summons 7379, on you 55, walled 0; dmg to you 10, to summons 4382) | attack helicopter runs 26, rockets 173 (dmg to you 0, to summons 179), melee hits cut 67, crashes onto a street 2
+[autotest] mammoth: main shells 0, twin lines 0 | killed 1 (ttk 27 s), extra wreck 0 | dmg to you 0, to summons 0
+[autotest] fort kessler threats (summon dmg by source): rifleman 5997, riot_cop 5854, tank_shell 5205, machine_gun 4382, carpet_bomb 3914, harrow_slam 3729, swat_breacher 3570, wreck_blast 3558 | summon deaths by source: artillery 27, carpet_bomb 23, harrow_slam 21, rifleman 20, riot_cop 15, tank 14, street_thug 13, tank_shell 12 | mines: dmg to you 0, to summons 10
+[autotest] harrow: carpet lines 20 (shells 180, hits on summons 1283, on you 27, on enemies 407) | rifle squads 4 | the Hammer 18:28 | slams 11 (hits 155) | tank columns 2 (tanks 4) | Broken Arrow 19:03 | CALLED OFF (1.4 s left) | dmg to you 124, to summons 8411
+[autotest] liberty heights supers: atlas 0/0, throws 0 (wrecks lifted 0, cars 0, landed as wrecks 0, dropped when stunned 0) | aurora 1/0, volleys 19, falls 0, aloft blows grazed 72 | nightjar 0/0, grapples 0 (reeled 0, 0 px on average), landings 0, strikes 0, aloft blows grazed 0 | specials' dmg to you 79, to summons 638 | conscripts 0/0 | wrecks removed 0
+[autotest] gravebow / bone colossus: gravebow volleys 0, splits 0 (+0 arrows), pierce hits 0, dmg 0 | curses applied 0 (refreshed 0), curse bonus dmg 0 | colossus dmg 0, stomps 0 | taunted enemies 0 | shrapnel bursts 0, hits 0, dmg 0
+[autotest] necro spells: bone_spear: not taken | soul_siphon: not taken | corpse_explosion: not taken | plague_cloud: not taken
+[autotest] later spells: death_mark: not taken | bone_wall: not taken | soul_chains: not taken | wither: not taken | raise_dead: not taken
+[autotest] later spell passives: grim_ledger Lv0 bonus_dmg=0 | spirit_binding Lv0 | restless_dead Lv0 | temporary summons spawned=0
+[autotest] horde passives: bone_plating Lv 0 (dmg prevented 0) | unholy_precision Lv 0 (crits 0, crit bonus dmg 0) | unholy_resilience Lv 5 (dmg prevented 0: area 0, holy 0) | bound_souls Lv 0 (soft recalls 53, hard recalls 2)
+[autotest] class passives: blood_scent Lv 0 (fast: Archers, Rogues, Gargoyles, Bone Hounds, Grave Drones, Succubi, Blood Spawn, Fallen Heroes, Ghost Saucers, Powder Wraiths, Bound Ophans, Bonehorns) | mournsong Lv 0 (extra debuff s 0) | siegecraft Lv 0 (siege bonus dmg 0) | summon dmg to structures 0 (catapults 0)
+[autotest] synergies active at end: shieldwall, volley, deathless, unholy_host | activations: shieldwall@01:20, deathless@02:58, volley@07:56, unholy_host@07:56
+[autotest] synergy bonus: flesh_rampart hits=0 dmg=0 | killing_field hits=0 dmg=0 | death_from_above hits=0 dmg=0 | wild_hunt hits=0 dmg=0 | cold_blood hits=0 dmg=0 | shatterfall hits=0 dmg=0 | requiem hits=0 dmg=0 | charnel_menagerie hits=0 dmg=0 | baying frenzies=0 | marks staggered=0 swooped=0 | dash resets=0 | requiem +0s
+[autotest] level-up offers: hands 70, new-item cards 74, later items 35 (47%) in 25 hands (36%), distinct later items offered 20
+[autotest] level-up actions: rerolls used 2/2, banishes used 2/2 (banished: abyssal_focus, orb_shield), skips 8
+[autotest] shadow bolt: 70636 dmg in Nearest mode, 101823 dmg in Strongest mode; to boss: 7320 of 30056 total boss dmg
+[autotest] stats: ally_barriers=1919 armour_front_dmg_prevented=152364 armour_front_hits=23022 armour_front_hits_boss=1154 armour_front_hits_riot_cop=20739 armour_front_hits_tank=1129 aurora_aloft_grazed=72 aurora_blasts=19 barrier_absorbed=74767 blitz_dash_hits=15 blitz_dash_stopped=5 blitz_dashes=5 boss_advance_time=7 boss_atk_broken_arrow=1 boss_atk_carpet=20 boss_atk_column=2 boss_atk_dismount=1 boss_atk_slam=11 boss_atk_squad=4 boss_kill_full_army=1 boss_kills=1 bossdmg_archer=6554 bossdmg_bolt=3847 bossdmg_death_knight=7590 bossdmg_death_knight_bash=1012 bossdmg_death_knight_cleave=374 bossdmg_mage=5856 bossdmg_mender=327 bossdmg_shadow_bolt=416 bossdmg_void=3231 bossdmg_void_shard=241 bossdmg_warder=603 bot_dash_crowd=11 bot_dash_hit=9 bot_dash_telegraph=112 breacher_flashbangs=375 breacher_shotgun_blasts=707 chest_count_1=6 chest_evolutions=2 chest_items=6 chests_opened=6 chests_pity=4 chests_spawned=6 city_blast_hits_enemies=407 city_blast_hits_summons=1283 city_blast_hits_you=27 city_civilians_fled=235 city_civilians_killed=22 city_civilians_spawned=257 city_civilians_xp=22 city_rams_wreck=507 city_run_over_dodged=4 city_run_over_summons=672 city_run_over_you=5 city_shells=944 city_shells_artillery=88 city_shells_carpet_bomb=180 city_shells_flashbang=375 city_shells_heli_rocket=173 city_shells_tank_shell=128 city_supers_arrived=2 city_supers_exposed=5 city_supers_exposed_blocker=4 city_supers_exposed_building=1 city_supers_fallen=1 city_tier_army=1 city_tier_gangs=1 city_tier_police=1 city_tier_swat=1 city_tier_warnings=3 city_vehicle_corners=110 city_vehicles_destroyed=82 city_vehicles_driven=119 city_wrecks=21 damage_dealt=1986822 damage_to_player=425 damage_to_summons=50045 dash_distance=14201 dash_hits_avoided=20 dash_shortened=7 dashes=132 death_archer_by_artillery=8 death_archer_by_aurora_blast=1 death_archer_by_blitz_dash=2 death_archer_by_carpet_bomb=10 death_archer_by_gang_gunner=1 death_archer_by_harrow_slam=9 death_archer_by_machine_gun=1 death_archer_by_rifleman=5 death_archer_by_riot_cop=6 death_archer_by_squad_car=2 death_archer_by_street_thug=7 death_archer_by_swat_breacher=2 death_archer_by_tank=4 death_archer_by_wreck_blast=5 death_mage_by_artillery=3 death_mage_by_aurora_blast=2 death_mage_by_carpet_bomb=8 death_mage_by_harrow_slam=6 death_mage_by_machine_gun=1 death_mage_by_rifleman=6 death_mage_by_riot_cop=3 death_mage_by_squad_car=1 death_mage_by_swat_breacher=1 death_mage_by_tank=3 death_mage_by_tank_shell=5 death_mage_by_wreck_blast=3 death_mender_by_artillery=7 death_mender_by_carpet_bomb=4 death_mender_by_harrow_slam=4 death_mender_by_rifleman=2 death_mender_by_squad_car=1 death_mender_by_tank=4 death_mender_by_tank_shell=2 death_mender_by_wreck_blast=2 death_warder_by_artillery=3 death_warder_by_carpet_bomb=1 death_warder_by_harrow_slam=2 death_warder_by_rifleman=2 death_warder_by_riot_cop=1 death_warder_by_street_thug=3 death_warder_by_swat_breacher=3 death_warder_by_tank=1 death_warder_by_tank_shell=2 death_warder_by_wreck_blast=1 death_warrior_by_artillery=6 death_warrior_by_rifleman=5 death_warrior_by_riot_cop=5 death_warrior_by_street_thug=3 death_warrior_by_swat_breacher=1 death_warrior_by_tank=2 death_warrior_by_tank_shell=3 deathless_regen=12943 dmg_archer=169470 dmg_artillery=32172 dmg_bash=3573 dmg_bolt=92231 dmg_carpet_bomb=4416 dmg_death_knight=252255 dmg_death_knight_bash=21651 dmg_death_knight_cleave=29478 dmg_kessler_mine=2020 dmg_mage=175771 dmg_mender=14030 dmg_nova=19735 dmg_resisted_attack_helicopter=429 dmg_resisted_aurora=1064 dmg_resisted_blitz=-4285 dmg_shadow_bolt=24681 dmg_void=66584 dmg_void_shard=13644 dmg_warder=19699 dmg_warrior=32049 dmg_wreck_blast=2560 dmg_wreck_ram=1010794 elite_kills=2 enemy_healing=6881 enemy_stunned_seconds=4 enemy_stuns=5 evolutions=2 flat_armor_absorbed_mammoth=36 flat_armor_absorbed_tank=11269 fort_kessler_broken_arrow=1 fort_kessler_mammoth_killed=1 fort_kessler_mammoth_spawned=1 gunner_sprays=713 harrow_called_off_left=1 harrow_carpet_shells=180 harrow_phase2_at=1108 harrow_phase3_at=1143 harrow_slam_hits=155 harrow_squads=4 harrow_tanks=4 heal_by_death_knight=2589 heal_by_mender=17536 heli_crash_moved=2 heli_melee_cut=67 heli_rockets=173 heli_runs=26 host_dmg_prevented=21029 kill_attack_helicopter=3 kill_blitz=1 kill_boss=1 kill_civilian=22 kill_field_medic=149 kill_gang_gunner=470 kill_machine_gunner=98 kill_mammoth=1 kill_rifleman=627 kill_riot_cop=624 kill_squad_car=49 kill_street_thug=1027 kill_swat_breacher=331 kill_tank=28 kills_by_archer=696 kills_by_artillery=3 kills_by_bash=72 kills_by_bolt=494 kills_by_carpet_bomb=9 kills_by_death_knight=623 kills_by_death_knight_bash=64 kills_by_death_knight_cleave=58 kills_by_kessler_mine=34 kills_by_mage=545 kills_by_mender=32 kills_by_nova=50 kills_by_shadow_bolt=51 kills_by_void=43 kills_by_void_shard=12 kills_by_warder=83 kills_by_warrior=510 kills_by_wreck_blast=8 kills_by_wreck_ram=44 levelup_banishes=2 levelup_rerolls=2 levelup_skips=8 mage_explosions=2713 mammoth_kills=1 mammoth_spawned=1 mammoth_ttk=26 march_zones_entered=3 martial_act_supers=2 martial_lines=11 martial_shells=88 martial_supers=2 medic_heals=501 mg_hits_summons=7379 mg_hits_you=55 mg_setups=198 mg_ticks=1371 mine_kills_enemies=34 mine_ring_posts_moved=48 mines_blown=67 mines_live_peak=57 mines_triggered=67 mines_triggered_by_enemy=66 mines_triggered_by_summon=1 miniboss_chests=1 minibossdmg_wreck_ram=13620 nova_kills=50 overkill_redirects=1043 player_dmg_from_aurora_blast=79 player_dmg_from_boss=23 player_dmg_from_carpet_bomb=22 player_dmg_from_field_medic=8 player_dmg_from_gang_gunner=25 player_dmg_from_harrow_slam=79 player_dmg_from_machine_gun=10 player_dmg_from_rifleman=61 player_dmg_from_riot_cop=21 player_dmg_from_swat_breacher=8 player_dmg_from_tank=28 player_dmg_from_tank_shell=39 player_dmg_from_wreck_blast=15 player_healing=232 priest_heals=1910 priest_wards=283 pu_collected_feast=4 pu_collected_hyper=1 pu_collected_magnet=1 pu_collected_nova=1 pu_collected_stasis=3 pu_expired_feast=1 pu_expired_frenzy=1 pu_expired_magnet=1 pu_expired_stasis=1 pu_magnet_crystals=166 pu_pity_drops=5 pu_spawned_feast=5 pu_spawned_frenzy=1 pu_spawned_hyper=1 pu_spawned_magnet=2 pu_spawned_nova=1 pu_spawned_stasis=4 pu_uptime_hyper=10 pu_uptime_stasis=15 rallies=11 rally_buff_time=88 rally_heal=2119 rally_knockbacks=71 rally_meter_fills=11 rally_minion_dmg=85532 rally_raised=26 rally_recalled=34 reckoning_spawned=243 replacements=109 rifle_bursts=1837 riot_gas_slows=41626 riot_gas_thrown=679 shield_by_warder=44187 shieldwall_barriers=240 spawned_attack_helicopter=3 spawned_aurora=1 spawned_blitz=1 spawned_civilian=257 spawned_field_medic=149 spawned_gang_gunner=470 spawned_machine_gunner=111 spawned_mammoth=1 spawned_rifleman=668 spawned_riot_cop=653 spawned_squad_car=49 spawned_street_thug=1076 spawned_swat_breacher=352 spawned_tank=66 summon_dmg_from_artillery=3011 summon_dmg_from_aurora_blast=638 summon_dmg_from_blitz=287 summon_dmg_from_blitz_dash=233 summon_dmg_from_boss=768 summon_dmg_from_carpet_bomb=3914 summon_dmg_from_field_medic=192 summon_dmg_from_gang_gunner=1368 summon_dmg_from_harrow_slam=3729 summon_dmg_from_heli_rocket=179 summon_dmg_from_kessler_mine=10 summon_dmg_from_machine_gun=4382 summon_dmg_from_rifleman=5997 summon_dmg_from_riot_cop=5854 summon_dmg_from_squad_car=1328 summon_dmg_from_street_thug=2371 summon_dmg_from_swat_breacher=3570 summon_dmg_from_tank=3441 summon_dmg_from_tank_shell=5205 summon_dmg_from_wreck_blast=3558 summon_evolutions=1 summon_healing=35034 summon_soft_recalls=53 summon_stunned_seconds=1796 summon_stuns=1796 summon_stuns_flashbang=1796 synergies_activated=4 tank_shells=128 void_shards=3231 volley_barrages=11 volley_marked_hits=3731 ward_absorbed=1690 warrior_bashes=2584 warrior_kills=1327 wave_events=13 xp_collected=9938 xp_dropped=9298
+[autotest] boss attacks: carpet=20 squad=4 dismount=1 slam=11 column=2 broken_arrow=1 strike=0 | wrath: no | hammer soaked by undead: 0 | charges stopped by undead: 0 (shielding the player: 0) | judgment hits: 0 | call soldiers: 0 | holy zones boss/grave: 0/0
+[autotest] crimson march: zones entered 3 (final: Zone IV  -  The Command Bunker) | placed/destroyed/escaped: outposts 0/0/0 generators 0/0/0 carts 0/0/0 standards 0/0/0 | outpost reinforcements 0 | ward zones 0
+[autotest] march enemies: aura buff pulses 0 | halberd cleave hits 0 | dmg resisted: shieldbearer 0, boss 0 | kills: shieldbearer=0 banner_bearer=0 halberdier=0
+[autotest] marshal vael: last stand no | cleave summon hits 0, soaked for the player 0 | command soldiers 0
+[autotest] march events (3): 4:00 zone_II, 10:00 zone_III, 14:00 zone_IV
+[autotest] stage events fired (0): 
+[autotest] templar charges: 0 (body-blocked by warriors: 0) | temporary summons spawned: 0
+[autotest] obstacle collisions resolved: player=113 summons=199276 enemies=33456
+[autotest] class abomination: Lv 0, alive 0/0, deaths 0 | dmg 0 (abomination=0 abom_stomp=0) | abom_stomps=0 abom_stomp_hits=0
+[autotest] class rogue: Lv 0, alive 0/0, deaths 0 | dmg 0 (rogue=0 rogue_dash=0 rogue_bleed=0) | rogue_dashes=0 rogue_dash_hits=0
+[autotest] class gargoyle: Lv 0, alive 0/0, deaths 0 | dmg 0 (gargoyle=0 gargoyle_swoop=0) | gargoyle_swoops=0 gargoyle_swoop_hits=0
+[autotest] class frost_wraith: Lv 0, alive 0/0, deaths 0 | dmg 0 (frost_wraith=0) | frost_deep_freezes=0 frost_freezes=0 frost_boss_freezes=0 frost_frozen_seconds=0 frost_chills=0
+[autotest] class bone_hound: Lv 0, alive 0/0, deaths 0 | dmg 0 (bone_hound=0 hellhound=0 hellhound_burn=0 hellhound_trail=0) | hound_bites=0 hound_pack_bites=0 hound_pack_bonus_dmg=0 hellhound_burns=0 hellhound_trail_patches=0
+[autotest] class banshee: Lv 0, alive 0/0, deaths 0 | dmg 0 (banshee=0 keening_lady=0) | banshee_dirges=0 banshee_dirge_hits=0 dirge_debuff_seconds=0 keening_waves=0 keening_silenced=0 keening_heals_silenced=0
+[autotest] class corpse_catapult: Lv 0, alive 0/0, deaths 0 | dmg 0 (corpse_catapult=0 ossuary_engine=0 ossuary_shards=0) | catapult_volleys=0 catapult_boulders=0 catapult_boulder_hits=0 catapult_structure_dmg=0 ossuary_shard_fields=0 hazards_dropped=0
+[autotest] class specials: cancelled by recall 0 | ended inside an obstacle 0
+[autotest] special evolutions: shadow reaper: chain dashes 0, cooldown resets 0, bleed stacks added 0, max stacks 0, rogue bleed dmg (all) 0 | cathedral horror: stuns 0 (boss 0), stunned s 5.0, stone forms 0, stone s 0.0, dmg prevented by stone 0
+[autotest] grave step: dashes 132 (bot: crowd 11, hit 9, telegraph 112) | hits avoided in dash i-frames 20 | blocked 0, shortened by obstacles 7, ended inside an obstacle 0, avg length 108 px | charges 1, cooldown 5.00 s
+[autotest] dread rally: rallies 11 | meter fills 11, fill times s [138 97 86 97 90 77 81 74 82 88 68] (avg 89 s), meter now 84% | knockbacks 71 | summons called back 34 | heal 2119 | minion dmg under buff 85532 (est. +dmg part 24437) | buff time 88 s
+[autotest] army formation: bone_ring: 1286s kills 3431 army_dmg 50045 recalls 2 spread max 636 mean 100
+[autotest] character: gravecaller (The Gravecaller) | starting spell shadow_bolt Lv 5 EVOLVED | Baseline stats (Max HP 120, move speed 110) | innate: none | characters unlocked this run: none | unlocked in the profile: gravecaller (saved: false)
+[autotest] stuck_units=0 (touching an obstacle: 0) {  }
+[metric] boss_hp_at_0=0 min_hp_before_0=58
+[autotest] peaks: enemies=192 summons=45 projectiles=51 effects=55 crystals=167
+[autotest] nodes created (pools): enemies=192 summons=45 projectiles=51 effects=55 crystals=168
+[autotest] simulation step: avg 3.21 ms, worst 146.51 ms
+[autotest] power-ups: spawned 14 (magnet=2 feast=5 hyper=1 stasis=4 frenzy=1 nova=1) | collected 10 (magnet=1 feast=4 hyper=1 stasis=3 frenzy=0 nova=1) | expired (magnet=1 feast=1 hyper=0 stasis=1 frenzy=1 nova=0) | lost at cap 0 | pity drops 5 | crystals pulled by Soul Magnet 166
+[autotest] buff uptime: hyper=10s (0.8%, refreshed 0) stasis=15s (1.2%, refreshed 0) frenzy=0s (0.0%, refreshed 0) | soul nova kills: 50
+[autotest] chests: spawned 6, opened 6 (x1=6 x3=0 x5=0), items granted 6 (evolutions 2), pity 4, lost at cap 0, left on ground 0
+[autotest]    chest 06:10 x1: soul_conduit 2
+[autotest]    chest 10:32 x1: EVOLVE death_knight
+[autotest]    chest 13:02 x1: unholy_resilience 2
+[autotest]    chest 18:05 x1: soul_conduit 5
+[autotest]    chest 18:44 x1: EVOLVE void_barrage
+[autotest]    chest 19:31 x1: dark_restoration
+[autotest] chest beacon: chests marked 5, seen on screen 5 | max off-screen arrows at once 1 | ticks with an arrow 1399 (23.3 s)
+[autotest] profane pact: taken no (final Lv 0; never offered or never picked) | oath tier 0 | extra XP from pact 0, from oath 0 | extra soul ash from pact 0, from oath 0
+[autotest] meta upgrades (--meta=none): none | revivals used: 0
+[autotest] soul ash: +688 (time 150 [20:00] + kills 102 [3431] + elites 8 [2] + boss 75 + reckoning 216 [86.5 s] = 551, bonus +0% = +0, pact +0, oath +0) | bounty 550 | new total 1238 | saved: false
+[autotest] difficulty: Necromancer (necromancer) | modifiers: none | foes: HP x0.800 (growth x1.00), dmg x1.000 (growth x1.00), spawn x1.250, speed x1.00, elite chance 0.000, boss HP x1.000 | XP x1.000 | soul ash: difficulty +0%, modifiers +0%, total x1.00
+[autotest] difficulty results: soul ash difficulty +0, modifiers +0 | trickle elites promoted: 0 | holy retribution bursts: 0 (dmg to you 0, to summons 0) | player max HP at start: 120
+[autotest] stage: Fort Kessler | soul ash stage bonus +137 (x1.25) | stages unlocked by this run: liberty_heights
+[autotest] hyper: off (Necromancer) | foes: HP growth x1.00, dmg growth x1.00, boss HP x1.000 | at 0:00 vs the standard game: HP x1.00, dmg x1.00 | soul ash hyper +0 (+0%) | Reckoning lasted 86.5 s past 0:00 | unlocked: false (by this run: false) | hyper clear recorded: no
+[autotest] skins: character gravecaller, worn default | this run: rot kills 0, high confessors slain 0, seraphine slain with all 4 roles 0 | lifetime: rot 0/5000, confessors 0/50, seraphine full army 0/1 | unlocked 55/220 (new: ivory_seer) | setup row cards 6
+[autotest] rewards: achievements=3 (bone_legion, dread_sovereign, broken_arrow) titles=0 unlocks=ultimate:sovereigns_decree | run: temp raised 0, min HP before 0:00 49%, evolutions 2, boss slain 151.9 s after arrival | one-run achievements met: none (not checked: --rewards=on) | worn title: none | title row choices 1
+[autotest] demo: on=false | acts=1 | stages=graveyard,crimson_march,sanctum | save=user://save.cfg | full_game_offers=0
+[autotest] feedback: url_set=true | report_chars=122/211/309 (main menu / pause / results samples built, max 1500) | url_chars=602 | opened=never (autotest)
+exit 0

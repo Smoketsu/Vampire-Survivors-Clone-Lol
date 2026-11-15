@@ -1,0 +1,216 @@
+Godot Engine v4.3.stable.official.77dcf97d8 - https://godotengine.org
+
+[autotest] start: seed=3 speed=8x mortal=true timeout=1500s policy=summon meta=none oath=0 pact=false classes=- spells=-
+[autotest] stage: underworld
+[autotest] difficulty: necromancer | modifiers: none
+[autotest] character: gravecaller (starting spell shadow_bolt)
+[audio] main-thread startup 32.6 ms; 59 sfx ready after 666 ms, music loop after 609 ms (worker threads); display: headless
+[metric] t=60 avg_horde=1.7 now=0 cap=2 w0/2 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=4 lvl=4 kills=77 enemies=38 hp=120 boss_hp=-1 crystals=3 xp=74
+[metric]    summon dmg taken this window: shade_of_dead=236 wrath_fissure=3
+[metric]    alive by kind: { "shade_of_dead": 38 } within260=25
+[autotest] t=01:00 lvl=4 kills=77 enemies=38 summons=0/2 projectiles=0 hp=120 step_avg=0.88ms
+[autotest]    unit FSM: {  }
+[metric] t=120 avg_horde=2.0 now=3 cap=3 w2/2 a0/0 m1/1 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=2 lvl=9 kills=249 enemies=23 hp=120 boss_hp=-1 crystals=18 xp=246
+[metric]    summon dmg taken this window: shade_of_dead=181 wrath_fissure=39 shade_hoplite=21
+[metric]    alive by kind: { "shade_of_dead": 19, "shade_hoplite": 4 } within260=5
+[autotest] t=02:00 lvl=9 kills=249 enemies=23 summons=3/3 projectiles=2 hp=120 step_avg=0.88ms
+[autotest]    unit FSM: { "ACQUIRING": 2, "FOLLOWING": 1 }
+[metric] t=180 avg_horde=4.2 now=5 cap=5 w2/2 a0/0 m2/2 m0/0 w1/1 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=12 kills=406 enemies=27 hp=120 boss_hp=-1 crystals=41 xp=397
+[metric]    summon dmg taken this window: wrath_fissure=32
+[metric]    alive by kind: { "shade_of_dead": 18, "shade_hoplite": 8, "hero": 1 } within260=6
+[autotest] t=03:00 lvl=12 kills=406 enemies=27 summons=5/5 projectiles=3 hp=120 step_avg=0.86ms
+[autotest]    unit FSM: { "ENGAGING": 3, "REPOSITIONING": 1, "CASTING": 1 }
+[metric] t=240 avg_horde=7.4 now=10 cap=10 w3/3 a0/0 m4/4 m0/0 w3/3 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=17 kills=580 enemies=33 hp=120 boss_hp=-1 crystals=41 xp=636
+[metric]    summon dmg taken this window: wrath_fissure=34 hero=3
+[metric]    alive by kind: { "shade_hoplite": 9, "shade_of_dead": 19, "hoplite": 5 } within260=0
+[autotest] t=04:00 lvl=17 kills=580 enemies=33 summons=10/10 projectiles=5 hp=120 step_avg=0.88ms
+[autotest]    unit FSM: { "FOLLOWING": 7, "ACQUIRING": 1, "RETURNING": 2 }
+[metric] t=300 avg_horde=10.0 now=10 cap=10 w3/3 a0/0 m4/4 m0/0 w3/3 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=21 kills=775 enemies=31 hp=120 boss_hp=-1 crystals=22 xp=923
+[metric]    summon dmg taken this window: wrath_fissure=11 shade_hoplite=4
+[metric]    alive by kind: { "shade_of_dead": 16, "shade_hoplite": 10, "shade_archer": 1, "hoplite": 1, "legionary": 3 } within260=2
+[autotest] t=05:00 lvl=21 kills=775 enemies=31 summons=10/10 projectiles=4 hp=120 step_avg=0.93ms
+[autotest]    unit FSM: { "FOLLOWING": 4, "ENGAGING": 2, "REPOSITIONING": 4 }
+[metric] t=360 avg_horde=10.2 now=11 cap=11 w4/4 a0/0 m4/4 m0/0 w3/3 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=23 kills=994 enemies=32 hp=120 boss_hp=-1 crystals=76 xp=1138
+[metric]    summon dmg taken this window: wrath_fissure=23
+[metric]    alive by kind: { "shade_of_dead": 12, "hoplite": 6, "shade_archer": 4, "shade_hoplite": 10 } within260=3
+[autotest] t=06:00 lvl=23 kills=994 enemies=32 summons=11/11 projectiles=3 hp=120 step_avg=0.97ms
+[autotest]    unit FSM: { "ENGAGING": 5, "REPOSITIONING": 2, "CASTING": 2, "FOLLOWING": 2 }
+[metric] t=420 avg_horde=12.6 now=13 cap=13 w6/6 a0/0 m4/4 m0/0 w3/3 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=26 kills=1196 enemies=32 hp=120 boss_hp=-1 crystals=100 xp=1398
+[metric]    summon dmg taken this window: wrath_fissure=25 centaur_archer=6
+[metric]    alive by kind: { "shade_of_dead": 14, "shade_hoplite": 8, "hoplite": 4, "shade_archer": 4, "centaur_archer": 2 } within260=4
+[autotest] t=07:00 lvl=26 kills=1196 enemies=32 summons=13/13 projectiles=3 hp=120 step_avg=1.00ms
+[autotest]    unit FSM: { "ACQUIRING": 4, "FOLLOWING": 1, "REPOSITIONING": 1, "ENGAGING": 7 }
+[metric] t=480 avg_horde=14.4 now=16 cap=16 w9/9 a0/0 m4/4 m0/0 w3/3 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=1 lvl=29 kills=1430 enemies=47 hp=109 boss_hp=-1 crystals=150 xp=1741
+[metric]    summon dmg taken this window: shade_of_dead=4 wrath_fissure=73 hero=85 centaur_archer=30 shade_archer=32 hoplite=23 amazon=3
+[metric]    alive by kind: { "shade_of_dead": 14, "shade_hoplite": 17, "hoplite": 12, "hero": 1, "shade_archer": 2, "centaur_archer": 1 } within260=5
+[autotest] t=08:00 lvl=29 kills=1430 enemies=47 summons=16/16 projectiles=4 hp=109 step_avg=1.06ms
+[autotest]    unit FSM: { "ENGAGING": 9, "FOLLOWING": 4, "REPOSITIONING": 2, "CASTING": 1 }
+[metric] t=540 avg_horde=18.4 now=22 cap=22 w11/11 a0/0 m6/6 m0/0 w5/5 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=32 kills=1652 enemies=70 hp=113 boss_hp=-1 crystals=162 xp=2069
+[metric]    summon dmg taken this window: wrath_fissure=78 hero=17 shade_archer=2
+[metric]    alive by kind: { "shade_of_dead": 15, "shade_hoplite": 29, "hoplite": 8, "centaur_archer": 3, "shade_archer": 11, "amazon": 4 } within260=5
+[autotest] t=09:00 lvl=32 kills=1652 enemies=70 summons=22/22 projectiles=7 hp=113 step_avg=1.12ms
+[autotest]    unit FSM: { "RETURNING": 3, "FOLLOWING": 3, "ENGAGING": 8, "REPOSITIONING": 6, "CASTING": 2 }
+[metric] t=600 avg_horde=23.8 now=25 cap=25 w12/12 a0/0 m7/7 m0/0 w6/6 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=35 kills=1903 enemies=53 hp=120 boss_hp=-1 crystals=172 xp=2531
+[metric]    summon dmg taken this window: shade_of_dead=7 wrath_fissure=294 hero=53 centaur_archer=48 shade_archer=31 amazon=31
+[metric]    alive by kind: { "shade_hoplite": 15, "shade_of_dead": 20, "centaur_archer": 1, "shade_archer": 5, "hoplite": 9, "hero": 3 } within260=3
+[autotest] t=10:00 lvl=35 kills=1903 enemies=53 summons=25/25 projectiles=4 hp=120 step_avg=1.21ms
+[autotest]    unit FSM: { "CASTING": 8, "ENGAGING": 9, "REPOSITIONING": 2, "FOLLOWING": 2, "RETURNING": 2, "ACQUIRING": 2 }
+[metric] t=660 avg_horde=26.8 now=34 cap=34 w13/13 a0/0 m8/8 m6/6 w7/7 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=39 kills=2198 enemies=49 hp=120 boss_hp=-1 crystals=237 xp=2991
+[metric]    summon dmg taken this window: shade_of_dead=14 wrath_fissure=198 hero=27 shade_archer=39 cyclops_boulder=6 cyclops=10
+[metric]    alive by kind: { "shade_hoplite": 13, "hoplite": 13, "shade_archer": 5, "shade_of_dead": 17, "hero": 1 } within260=11
+[autotest] t=11:00 lvl=39 kills=2198 enemies=49 summons=34/34 projectiles=7 hp=120 step_avg=1.29ms
+[autotest]    unit FSM: { "ENGAGING": 18, "CASTING": 5, "REPOSITIONING": 2, "ACQUIRING": 9 }
+[metric] t=720 avg_horde=34.4 now=35 cap=35 w13/13 a0/0 m8/8 m7/7 w7/7 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=1 lvl=44 kills=2483 enemies=56 hp=120 boss_hp=-1 crystals=26 xp=3984
+[metric]    summon dmg taken this window: shade_of_dead=6 wrath_fissure=528 shade_hoplite=12 hero=159 centaur_archer=35 shade_archer=37 cerberus_pounce=423
+[metric]    alive by kind: { "legionary": 4, "shade_hoplite": 17, "shade_of_dead": 23, "hero": 3, "hoplite": 7, "centaur_archer": 1, "shade_archer": 1 } within260=14
+[autotest] t=12:00 lvl=44 kills=2483 enemies=56 summons=35/35 projectiles=5 hp=120 step_avg=1.37ms
+[autotest]    unit FSM: { "ENGAGING": 20, "FOLLOWING": 1, "REPOSITIONING": 4, "CASTING": 3, "ACQUIRING": 7 }
+[metric] t=780 avg_horde=33.2 now=29 cap=29 w13/13 a0/0 m8/8 m0/0 w0/0 b8/8 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=47 kills=2738 enemies=66 hp=120 boss_hp=-1 crystals=24 xp=4462
+[metric]    summon dmg taken this window: shade_of_dead=12 wrath_fissure=277 hero=141 centaur_archer=28 shade_archer=23 hoplite=24
+[metric]    alive by kind: { "shade_hoplite": 24, "shade_of_dead": 15, "hoplite": 9, "hero": 3, "shade_archer": 7, "centaur_archer": 8 } within260=15
+[autotest] t=13:00 lvl=47 kills=2738 enemies=66 summons=29/29 projectiles=8 hp=120 step_avg=1.43ms
+[autotest]    unit FSM: { "ENGAGING": 15, "CASTING": 3, "ACQUIRING": 5, "REPOSITIONING": 5, "FOLLOWING": 1 }
+[metric] t=840 avg_horde=29.2 now=35 cap=35 w13/13 a6/6 m8/8 m0/0 w0/0 b8/8 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=50 kills=3045 enemies=58 hp=120 boss_hp=-1 crystals=17 xp=5128
+[metric]    summon dmg taken this window: shade_of_dead=7 wrath_fissure=44 shade_hoplite=14 hero=61 centaur_archer=21 shade_archer=3
+[metric]    alive by kind: { "shade_archer": 6, "hoplite": 16, "shade_of_dead": 21, "shade_hoplite": 14, "centaur_archer": 1 } within260=11
+[autotest] t=14:00 lvl=50 kills=3045 enemies=58 summons=35/35 projectiles=4 hp=120 step_avg=1.51ms
+[autotest]    unit FSM: { "ENGAGING": 26, "ACQUIRING": 2, "CASTING": 6, "REPOSITIONING": 1 }
+[metric] t=900 avg_horde=35.6 now=37 cap=37 w13/13 a8/8 m8/8 m0/0 w0/0 b8/8 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=52 kills=3346 enemies=61 hp=120 boss_hp=-1 crystals=61 xp=5540
+[metric]    summon dmg taken this window: wrath_fissure=161 hero=10 shade_archer=5 hoplite=16
+[metric]    alive by kind: { "shade_archer": 4, "hoplite": 17, "shade_of_dead": 21, "shade_hoplite": 13, "hero": 2, "centaur_archer": 3 } within260=7
+[autotest] t=15:00 lvl=52 kills=3346 enemies=61 summons=37/37 projectiles=9 hp=120 step_avg=1.57ms
+[autotest]    unit FSM: { "ACQUIRING": 6, "ENGAGING": 23, "CASTING": 4, "RETURNING": 3, "FOLLOWING": 1 }
+[metric] t=960 avg_horde=37.9 now=39 cap=39 w13/13 a10/10 m8/8 m0/0 w0/0 b8/8 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=54 kills=3702 enemies=68 hp=120 boss_hp=-1 crystals=76 xp=6183
+[metric]    summon dmg taken this window: shade_of_dead=41 wrath_fissure=307 shade_hoplite=72 hero=324 centaur_archer=80 shade_archer=47 hoplite=35 wolf_lunge=18
+[metric]    alive by kind: { "shade_hoplite": 28, "shade_of_dead": 16, "hoplite": 15, "shade_archer": 5, "centaur_archer": 3, "hero": 1 } within260=13
+[autotest] t=16:00 lvl=54 kills=3702 enemies=68 summons=39/39 projectiles=15 hp=120 step_avg=1.66ms
+[autotest]    unit FSM: { "ENGAGING": 26, "CASTING": 5, "REPOSITIONING": 3, "ACQUIRING": 5 }
+[autotest] boss spawned at 1020.0 s
+[autotest] Shadow Bolt aim switched to Strongest
+[metric] t=1020 avg_horde=39.0 now=39 cap=39 w13/13 a10/10 m8/8 m0/0 w0/0 b8/8 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=57 kills=4007 enemies=94 hp=120 boss_hp=24000 crystals=70 xp=6876
+[metric]    summon dmg taken this window: shade_of_dead=4 wrath_fissure=123 hero=311 centaur_archer=6 hoplite=42
+[metric]    alive by kind: { "shade_hoplite": 25, "hero": 3, "hoplite": 23, "shade_archer": 11, "shade_of_dead": 29, "centaur_archer": 2, "boss": 1 } within260=7
+[autotest] t=17:00 lvl=57 kills=4007 enemies=94 summons=39/39 projectiles=21 hp=120 step_avg=1.73ms
+[autotest]    unit FSM: { "ENGAGING": 23, "REPOSITIONING": 5, "ACQUIRING": 3, "CASTING": 4, "FOLLOWING": 3, "RETURNING": 1 }
+[autotest] build complete (only fallback cards left) at 17:10, level 58
+[metric] t=1080 avg_horde=37.6 now=36 cap=39 w11/13 a10/10 m8/8 m0/0 w0/0 b7/8 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=8 lvl=59 kills=4289 enemies=58 hp=120 boss_hp=7605 crystals=25 xp=7425
+[metric]    summon dmg taken this window: shade_of_dead=154 wrath_fissure=2369 shade_hoplite=42 hero=250 centaur_archer=7 shade_archer=105 hoplite=70 boss=465 hades_bident=1364 hades_reclaim=1107 hades_god_shade=548 tartarus_warden=50
+[metric]    alive by kind: { "shade_hoplite": 14, "shade_archer": 13, "shade_of_dead": 14, "hoplite": 7, "centaur_archer": 1, "boss": 1, "hero": 1, "tartarus_warden": 7 } within260=19
+[autotest] t=18:00 lvl=59 kills=4289 enemies=58 summons=36/39 projectiles=8 hp=120 step_avg=1.79ms
+[autotest]    unit FSM: { "ENGAGING": 27, "CASTING": 8, "REPOSITIONING": 1 }
+[autotest] boss defeated at 1094.1 s
+[metric] t=1140 avg_horde=38.9 now=39 cap=39 w13/13 a10/10 m8/8 m0/0 w0/0 b8/8 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=63 kills=4549 enemies=44 hp=120 boss_hp=0 crystals=38 xp=8553
+[metric]    summon dmg taken this window: shade_of_dead=217 wrath_fissure=1810 shade_hoplite=60 hero=305 centaur_archer=42 shade_archer=125 hoplite=3 boss=49 hades_bident=174 tartarus_warden=84
+[metric]    alive by kind: { "shade_archer": 8, "hoplite": 7, "shade_hoplite": 12, "shade_of_dead": 16, "centaur_archer": 1 } within260=11
+[autotest] t=19:00 lvl=63 kills=4549 enemies=44 summons=39/39 projectiles=13 hp=120 step_avg=1.82ms
+[autotest]    unit FSM: { "ENGAGING": 32, "CASTING": 2, "REPOSITIONING": 5 }
+[autotest] countdown reached 0:00 at 1200.0 s - THE RECKONING begins
+[metric] t=1200 avg_horde=38.9 now=39 cap=39 w13/13 a10/10 m8/8 m0/0 w0/0 b8/8 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=1 lvl=64 kills=4776 enemies=44 hp=120 boss_hp=0 crystals=2 xp=8966
+[metric]    summon dmg taken this window: shade_of_dead=69 wrath_fissure=475 hero=238 shade_archer=22
+[metric]    alive by kind: { "shade_hoplite": 12, "hoplite": 12, "shade_archer": 6, "centaur_archer": 1, "shade_of_dead": 11, "bronze_titan": 2 } within260=2
+[autotest] t=20:00 lvl=64 kills=4776 enemies=44 summons=39/39 projectiles=15 hp=120 step_avg=1.84ms
+[autotest]    unit FSM: { "FOLLOWING": 20, "REPOSITIONING": 4, "CASTING": 5, "ENGAGING": 10 }
+[autotest] ===== NECROPATHY AUTOTEST SUMMARY =====
+[autotest] result: VICTORY / RUN COMPLETE (run_complete)
+[autotest] time reached: 20:48 elapsed (1248.3 s game time, 198.4 s real time); past 0:00: 48.3 s; Reckoning waves: 5
+[autotest] kills: 4963 | level: 65
+[autotest] level pacing: 01:00=L4 03:00=L12 05:00=L21 10:00=L35 15:00=L52 17:00=L57 20:00=L64 | reached: L2@00:22 L5@01:09 L10@02:05 L15@03:28 L20@04:39 L25@06:33 L30@08:06 L35@09:37 L40@11:05 L45@12:04 L50@13:57 L55@16:05 L60@18:14
+[autotest] build complete: at 17:10, level 58
+[autotest] horde: 21 alive / capacity 39 (warrior 11/13, archer 0/10, mage 2/8, mender 0/0, warder 0/0, bishop 8/8, abomination 0/0, rogue 0/0, gargoyle 0/0, frost_wraith 0/0, bone_hound 0/0, banshee 0/0, corpse_catapult 0/0)
+[autotest] summons spawned: 80, died: 53, hard recalls: 0 (stall recalls: 0)
+[autotest] boss spawned: yes at 1020.0 s | boss defeated: yes at 1094.1 s | boss HP left: 0 / 24000
+[autotest] player HP: 0 / 120 (invulnerable: false)
+[autotest] picks (76): warding_ritual 1, shadow_bolt 2, dark_command 1, shadow_bolt 3, shadow_bolt 4, dark_command 2, mage 1, dark_command 3, warder 1, warder 2, mage 2, warder 3, mage 3, mage 4, grave_dominion 1, skip, shadow_bolt 5, mage 5, warder 4, necrotic_vigor 1, dark_benediction 1, warrior 2, dark_command 4, warrior 3, dark_command 5, necrotic_vigor 2, warrior 4, warrior 5, unholy_resilience 1, EVOLVE death_knight, dark_benediction 2, grave_dominion 2, grave_dominion 3, warder 5, grave_dominion 4, necrotic_vigor 3, dark_benediction 3, dark_benediction 4, dark_benediction 5, warding_ritual 2, mender 1, grave_dominion 5, warding_ritual 3, mender 2, necrotic_vigor 4, mender 3, shadow_blast 1, mender 4, mender 5, necrotic_vigor 5, shadow_blast 2, EVOLVE profane_bishop, unholy_resilience 2, unholy_resilience 3, warding_ritual 4, warding_ritual 5, shadow_blast 3, archer 1, archer 2, archer 3, archer 4, archer 5, shadow_blast 4, shadow_blast 5, unholy_resilience 4, unholy_resilience 5, skip, skip, skip, skip, skip, dark_restoration, skip, skip, dark_restoration, skip
+[autotest] wards on you: 212 total, absorbed 921 dmg | 206 wards in 1067 s with 2+ Warders/Bishops alive (11.6 / min) | heal casts: 718 | ally barriers: 1510, barrier dmg absorbed: 73146
+[autotest] evolutions: death_knight@08:01, profane_bishop@12:42
+[autotest] evolutions by type: spell: none | summon: death_knight@08:01, profane_bishop@12:42
+[autotest] summon evolutions: lich raised 0 (capped 0) | merge converted 8, dissolved 6 | aura pulses 1291 | merged classes: mender, warder
+[autotest] winter revenant: shatters 0 (capped 0), shatter hits 0, shatter dmg 0 | death novas 0, nova hits 0, nova freezes 0, nova dmg 0
+[autotest] summon output by source (dmg/heal/shield): warrior=3181/0/0 archer=60096/0/0 mage=102998/0/0 mender=2687/1245/0 warder=4270/0/11604 bishop=28128/17530/44034 bash=627/0/0 death_knight=142005/618/0 death_knight_bash=21430/0/0 death_knight_cleave=9743/0/0 bishop_aura=19471/0/0
+[autotest] summon output by class (dmg/heal/shield): warrior=176989/618/0 archer=60096/0/0 mage=102998/0/0 mender=2687/1245/0 warder=4270/0/11604 bishop=47600/17530/44034
+[autotest] recipe book: 2 / 83 discovered (death_knight, profane_bishop) | Recipes view rows built: 83 (saved: false)
+[autotest] codex: 22 entries met this run (spell 2, summon 5, enemy 14, boss 1) | new to the save 22 | save: spell 2/54, summon 5/30, enemy 14/260, boss 1/45, evolutions 2/83
+[autotest] epilogue: parts=15 (acts=15) open=1 seen=0 panels=59 cards_ok=true autoplay_pending=true
+[autotest] volleys: shots 63865 | hits 28121 | dmg 174780 | peak 291/320 | capped volleys 0 | boss hits capped 712 | barrages 9 | warrior 76787, mage 31345, bishop 21444, archer 20814, shadow_bolt 17789, shadow_blast 2605, mender 2020, warder 1973
+[visual] adaptive quality: level 0, peak 0, steps down 0, up 0
+[autotest] victory screen: title=The Empty Throne best_overtime=48 new_record=true highlights=6
+[autotest] claims: claims 6 | freed 6 | expired 0 | still risen at the end 0 | cap refusals 0 | by class: bishop 1, warrior 5
+[autotest] divine wrath: stage kind fissures | salvos waves 2, lightning 18, fissures 91 | strikes: waves 2, bolts 51, fissures 198 | dmg to enemies 47485 (kills 111), to summons 16964, to you 0 | fodder drowned 9 | lightning chains 63 | corpses swallowed 289 | shades spat 594 | capped 0 | twilight on
+[autotest] phalanx: walls formed 30, bodies locked 161 | front hits: shots 223, melee 10, dmg prevented 2998 | flank breaks 22 | most locked at once 25
+[autotest] glory: stacks gained 3, peak 2 | heroes killed 71 (with stacks 2; by stacks 1:1 2:1) | chests 0 | bounty 6 soul ash
+[autotest] pantheon kinds (spawned/killed): shade_of_dead 2876/2858 (dmg to you 15, to summons 1172) | hoplite 514/503 (dmg to you 0, to summons 216) | hero 72/71 (dmg to you 4, to summons 2364) | bronze_titan 20/2 (dmg to you 0, to summons 2019) | legionary 11/11 (dmg to you 0, to summons 0) | wolf_of_rome 55/55 (dmg to you 0, to summons 0) | cyclops 4/4 (dmg to you 0, to summons 10) | centaur_archer 138/138 (dmg to you 20, to summons 355) | amazon 7/7 (dmg to you 0, to summons 34) | shade_hoplite 940/931 (dmg to you 4, to summons 228) | cerberus 1/1 (dmg to you 0, to summons 0) | cerberus_head 3/3 (dmg to you 0, to summons 0) | tartarus_warden 10/10 (dmg to you 0, to summons 135) | shade_archer 367/362 (dmg to you 47, to summons 524)
+[autotest] pantheon stage: underworld (The Asphodel Underworld) | playable true | wrath fissures | boss hades (script hades) | enemy x1.50 HP / x1.50 dmg from 7:00 | soul ash x1.50 | reckoning kind bronze_titan, twilight true
+[autotest] ilion kinds: testudo shots cut 0, boulders from above cut 0 | wolf packs 11 (packmates 44), lunges 15 (hits 12) | cyclops throws 8 (boulders 8, hits: summons 16, you 0)
+[autotest] olympus kinds: centaurs 138 (arrow dmg to you 20, summons 355) | amazons 7: leaps 7 (caught by blockers 6, summon hits 0, you hit 0) | gorgons 0: gazes 0 (summons petrified 0, 0.0 s of stone; you hit 0) | sea serpents 0: lunges 0 (hits 0)
+[autotest] wrath called: waves 0, lightning 0, fissures 18 (DivineWrath.strike())
+[autotest] underworld: styx: checks 3243, you wading 1% of them, enemy slows 15971, summon-checks wading 3514, forget zones 342 (dmg prevented 6698) | guests: legionary, wolf_of_rome, cyclops, centaur_archer, amazon, gorgon, squads 9, spawned 38 | objective ash 20
+[autotest] underworld events (3): 5:00 styx, 11:30 cerberus, 15:00 styx
+[autotest] underworld kinds: shade hoplites 940/931 | cerberus 1, killed 1 (ttk 20s): heads killed 3, breaths 0, pounces 1, howls 4 (shades 24), you hit 0, summon hits 13 | tartarus wardens 10/10 | shade archers 367/362, arrows hit you 47, summons 524
+[autotest] hades: phases: reclaiming 36.8s, lord 57.1s, kneels 74.1s | helm: cloaks 4, reveals 4, footprints 44, ring fissures 18 | bident 12 (you hit 0) | marks 6, taken 6, shades risen 6 | gods 2 (ares 1 (art), artemis 1 (art)) | rings 1 (wardens 10), breaks 1 | dmg to you: bident 0, god shades 0 | dmg to summons: bident 1538, god shades 548
+[autotest] hades claims: claims 6 | freed 6 | expired 0 | still risen at the end 0 | cap refusals 0 | by class: bishop 1, warrior 5 | hades' shades 6
+[autotest] gravebow / bone colossus: gravebow volleys 0, splits 0 (+0 arrows), pierce hits 0, dmg 0 | curses applied 0 (refreshed 0), curse bonus dmg 0 | colossus dmg 0, stomps 0 | taunted enemies 0 | shrapnel bursts 0, hits 0, dmg 0
+[autotest] necro spells: bone_spear: not taken | soul_siphon: not taken | corpse_explosion: not taken | plague_cloud: not taken
+[autotest] later spells: death_mark: not taken | bone_wall: not taken | soul_chains: not taken | wither: not taken | raise_dead: not taken
+[autotest] later spell passives: grim_ledger Lv0 bonus_dmg=0 | spirit_binding Lv0 | restless_dead Lv0 | temporary summons spawned=0
+[autotest] horde passives: bone_plating Lv 0 (dmg prevented 0) | unholy_precision Lv 0 (crits 0, crit bonus dmg 0) | unholy_resilience Lv 5 (dmg prevented 0: area 0, holy 0) | bound_souls Lv 0 (soft recalls 3, hard recalls 0)
+[autotest] class passives: blood_scent Lv 0 (fast: Archers, Rogues, Gargoyles, Bone Hounds, Grave Drones, Succubi, Blood Spawn, Fallen Heroes, Ghost Saucers, Powder Wraiths, Bound Ophans, Bonehorns) | mournsong Lv 0 (extra debuff s 0) | siegecraft Lv 0 (siege bonus dmg 0) | summon dmg to structures 7110 (catapults 0)
+[autotest] synergies active at end: shieldwall, volley, deathless, unholy_host | activations: shieldwall@05:48, deathless@05:48, volley@14:27, unholy_host@14:27
+[autotest] synergy bonus: flesh_rampart hits=0 dmg=0 | killing_field hits=0 dmg=0 | death_from_above hits=0 dmg=0 | wild_hunt hits=0 dmg=0 | cold_blood hits=0 dmg=0 | shatterfall hits=0 dmg=0 | requiem hits=0 dmg=0 | charnel_menagerie hits=0 dmg=0 | baying frenzies=0 | marks staggered=0 swooped=0 | dash resets=0 | requiem +0s
+[autotest] level-up offers: hands 68, new-item cards 95, later items 62 (65%) in 41 hands (60%), distinct later items offered 23
+[autotest] level-up actions: rerolls used 2/2, banishes used 2/2 (banished: orb_shield, abyssal_focus), skips 9
+[autotest] shadow bolt: 102839 dmg in Nearest mode, 31448 dmg in Strongest mode; to boss: 1692 of 24000 total boss dmg
+[autotest] stats: ally_barriers=1510 amazon_land_hits=0 amazon_leaps=7 amazon_leaps_caught=6 aura_pulses=1291 barrier_absorbed=73146 boss_atk_bident=12 boss_atk_cloak=4 boss_atk_fissures=6 boss_atk_god_shade=2 boss_atk_reclaim=2 boss_atk_ring=1 boss_kill_full_army=1 boss_kills=1 bossdmg_archer=7979 bossdmg_bishop=948 bossdmg_bishop_aura=723 bossdmg_blast=419 bossdmg_bolt=1692 bossdmg_death_knight=6095 bossdmg_death_knight_bash=590 bossdmg_death_knight_cleave=44 bossdmg_mage=4970 bossdmg_shadow_blast=106 bossdmg_shadow_bolt=156 bossdmg_wrath_fissure=274 bot_dash_crowd=1 bot_dash_hit=6 bot_dash_telegraph=112 cerberus_heads_killed=3 cerberus_howls=4 cerberus_kills=1 cerberus_pounces=1 cerberus_shades=24 cerberus_spawned=1 cerberus_summon_hits=13 cerberus_ttk=20 chest_count_1=11 chest_count_3=1 chest_evolutions=2 chest_items=12 chests_opened=12 chests_pity=3 chests_spawned=12 claims=6 cyclops_boulder_hits_player=0 cyclops_boulder_hits_summon=16 cyclops_boulders=8 cyclops_throws=8 damage_dealt=617773 damage_to_player=91 damage_to_summons=28186 dash_distance=13089 dash_hits_avoided=2 dashes=119 death_archer_by_bronze_titan=2 death_archer_by_hero=3 death_archer_by_wrath_fissure=3 death_archer_by_wrath_lightning=16 death_archer_by_wrath_wave=2 death_bishop_by_hades_reclaim=1 death_mage_by_cerberus_pounce=1 death_mage_by_wrath_fissure=1 death_mage_by_wrath_lightning=11 death_warrior_by_bronze_titan=2 death_warrior_by_hades_reclaim=5 death_warrior_by_shade_of_dead=5 death_warrior_by_wrath_fissure=1 deathless_regen=3537 dmg_archer=60096 dmg_bash=627 dmg_bishop=28128 dmg_bishop_aura=19471 dmg_blast=14093 dmg_bolt=134287 dmg_cerberus_heads=1 dmg_death_knight=142005 dmg_death_knight_bash=21430 dmg_death_knight_cleave=9743 dmg_mage=102998 dmg_mender=2687 dmg_nova=6074 dmg_resisted_boss=3170 dmg_shadow_blast=2605 dmg_shadow_bolt=17789 dmg_warder=4270 dmg_warrior=3181 dmg_wrath_chain=12631 dmg_wrath_fissure=18762 dmg_wrath_lightning=9041 dmg_wrath_wave=7842 elite_kills=79 enemy_stunned_seconds=8 enemy_stuns=6 evolutions=2 flat_armor_absorbed_cyclops=773 glory_bounty_ash=6 glory_heroes_killed=71 glory_kills_s1=1 glory_kills_s2=1 glory_kills_stacked=2 glory_stacks_gained=3 hades_cloaks=4 hades_footprints=44 hades_god_ares=1 hades_god_art_ares=1 hades_god_art_artemis=1 hades_god_artemis=1 hades_gods=2 hades_kill_time=74 hades_lord_at=1077 hades_marks=6 hades_reclaim_at=1056 hades_reveals=4 hades_ring_breaks=1 hades_ring_fissures=18 hades_rings=1 hades_shades_risen=6 hades_spawn_time=1020 hades_taken=6 hades_wardens=10 heal_by_bishop=17530 heal_by_death_knight=618 heal_by_mender=1245 host_dmg_prevented=913003 kill_amazon=7 kill_boss=1 kill_bronze_titan=2 kill_centaur_archer=138 kill_cerberus=1 kill_cerberus_head=3 kill_cyclops=4 kill_drowned_thrall=6 kill_hero=71 kill_hoplite=503 kill_legionary=11 kill_shade_archer=362 kill_shade_hoplite=931 kill_shade_of_dead=2858 kill_tartarus_warden=10 kill_wolf_of_rome=55 kills_by_archer=241 kills_by_bash=27 kills_by_bishop=173 kills_by_bishop_aura=159 kills_by_blast=107 kills_by_bolt=1793 kills_by_cerberus_heads=1 kills_by_death_knight=912 kills_by_death_knight_bash=220 kills_by_death_knight_cleave=55 kills_by_mage=710 kills_by_mender=39 kills_by_nova=79 kills_by_shadow_blast=14 kills_by_shadow_bolt=132 kills_by_warder=67 kills_by_warrior=123 kills_by_wrath_chain=10 kills_by_wrath_fissure=51 kills_by_wrath_lightning=24 kills_by_wrath_wave=26 levelup_banishes=2 levelup_rerolls=2 levelup_skips=9 mage_explosions=2590 march_zones_entered=3 merge_converted=8 merge_dissolved=6 miniboss_chests=1 minibossdmg_cerberus_heads=1 minibossdmg_death_knight_bash=49 nova_kills=79 objective_ash=20 overkill_redirects=1070 pantheon_titans_risen=20 phalanx_flank_breaks=22 phalanx_front_dmg_prevented=2998 phalanx_front_melee=10 phalanx_front_shots=223 phalanx_members_locked=161 phalanx_walls_formed=30 player_dmg_from_centaur_archer=20 player_dmg_from_hero=4 player_dmg_from_shade_archer=47 player_dmg_from_shade_hoplite=4 player_dmg_from_shade_of_dead=15 player_healing=35 priest_heals=718 priest_wards=212 pu_collected_feast=3 pu_collected_frenzy=5 pu_collected_hyper=4 pu_collected_magnet=6 pu_collected_nova=2 pu_collected_stasis=3 pu_magnet_crystals=492 pu_pity_drops=4 pu_spawned_feast=3 pu_spawned_frenzy=5 pu_spawned_hyper=4 pu_spawned_magnet=6 pu_spawned_nova=2 pu_spawned_stasis=3 pu_uptime_frenzy=59 pu_uptime_hyper=39 pu_uptime_stasis=15 rallies=9 rally_buff_time=72 rally_heal=751 rally_knockbacks=38 rally_meter_fills=9 rally_minion_dmg=45618 rally_raised=14 rally_recalled=13 reckoning_spawned=20 replacements=21 shadow_blasts=151 shield_by_bishop=44034 shield_by_warder=11604 shieldwall_barriers=180 spawned_amazon=7 spawned_bronze_titan=20 spawned_centaur_archer=138 spawned_cerberus=1 spawned_cerberus_head=3 spawned_cyclops=4 spawned_drowned_thrall=6 spawned_hero=72 spawned_hoplite=514 spawned_legionary=11 spawned_shade_archer=367 spawned_shade_hoplite=940 spawned_shade_of_dead=2876 spawned_tartarus_warden=10 spawned_wolf_of_rome=55 structdmg_bolt=132 structdmg_death_knight=3193 structdmg_death_knight_bash=105 structdmg_death_knight_cleave=656 structdmg_mage=2905 structdmg_warder=250 styx_checks=3243 styx_enemy_slows=15971 styx_forget_zones=342 styx_player_wading=21 styx_summons_wading=3514 summon_dmg_from_amazon=34 summon_dmg_from_boss=514 summon_dmg_from_bronze_titan=2019 summon_dmg_from_centaur_archer=355 summon_dmg_from_cerberus_pounce=423 summon_dmg_from_cyclops=10 summon_dmg_from_cyclops_boulder=6 summon_dmg_from_hades_bident=1538 summon_dmg_from_hades_god_shade=548 summon_dmg_from_hades_reclaim=1107 summon_dmg_from_hero=2364 summon_dmg_from_hoplite=216 summon_dmg_from_shade_archer=524 summon_dmg_from_shade_hoplite=228 summon_dmg_from_shade_of_dead=1172 summon_dmg_from_tartarus_warden=135 summon_dmg_from_wolf_lunge=18 summon_dmg_from_wrath_fissure=9952 summon_dmg_from_wrath_lightning=6761 summon_dmg_from_wrath_wave=250 summon_evolutions=2 summon_healing=23648 summon_soft_recalls=3 suppression_dmg_prevented=6698 suppression_zones_styx=342 synergies_activated=4 thralls_freed=6 underworld_guest_squads=9 underworld_guests_spawned=38 volley_barrages=9 volley_marked_hits=1393 ward_absorbed=921 warrior_bashes=1680 warrior_kills=1337 wave_events=14 wolf_lunge_hits=12 wolf_lunges=15 wolf_packmates=44 wolf_packs=11 wrath_bolts=51 wrath_called_fissures=18 wrath_chains=63 wrath_corpses_swallowed=289 wrath_drowned=9 wrath_enemy_dmg_fissures=18762 wrath_enemy_dmg_lightning=21672 wrath_enemy_dmg_waves=7050 wrath_fissures=198 wrath_salvos_fissures=91 wrath_salvos_lightning=18 wrath_salvos_waves=2 wrath_shades_spat=594 wrath_waves=2 xp_collected=9231 xp_dropped=8359
+[autotest] boss attacks: cloak=4 bident=12 reclaim=2 god_shade=2 ring=1 fissures=6 | wrath: no | hammer soaked by undead: 0 | charges stopped by undead: 0 (shielding the player: 0) | judgment hits: 0 | call soldiers: 0 | holy zones boss/grave: 0/0
+[autotest] crimson march: zones entered 3 (final: Zone IV  -  The Throne of Hades) | placed/destroyed/escaped: outposts 0/0/0 generators 0/0/0 carts 0/0/0 standards 0/0/0 | outpost reinforcements 0 | ward zones 0
+[autotest] march enemies: aura buff pulses 0 | halberd cleave hits 0 | dmg resisted: shieldbearer 0, boss 3170 | kills: shieldbearer=0 banner_bearer=0 halberdier=0
+[autotest] marshal vael: last stand no | cleave summon hits 0, soaked for the player 0 | command soldiers 0
+[autotest] march events (3): 5:00 zone_II, 10:00 zone_III, 15:00 zone_IV
+[autotest] stage events fired (0): 
+[autotest] templar charges: 0 (body-blocked by warriors: 0) | temporary summons spawned: 0
+[autotest] obstacle collisions resolved: player=62 summons=4208 enemies=5492
+[autotest] class abomination: Lv 0, alive 0/0, deaths 0 | dmg 0 (abomination=0 abom_stomp=0) | abom_stomps=0 abom_stomp_hits=0
+[autotest] class rogue: Lv 0, alive 0/0, deaths 0 | dmg 0 (rogue=0 rogue_dash=0 rogue_bleed=0) | rogue_dashes=0 rogue_dash_hits=0
+[autotest] class gargoyle: Lv 0, alive 0/0, deaths 0 | dmg 0 (gargoyle=0 gargoyle_swoop=0) | gargoyle_swoops=0 gargoyle_swoop_hits=0
+[autotest] class frost_wraith: Lv 0, alive 0/0, deaths 0 | dmg 0 (frost_wraith=0) | frost_deep_freezes=0 frost_freezes=0 frost_boss_freezes=0 frost_frozen_seconds=0 frost_chills=0
+[autotest] class bone_hound: Lv 0, alive 0/0, deaths 0 | dmg 0 (bone_hound=0 hellhound=0 hellhound_burn=0 hellhound_trail=0) | hound_bites=0 hound_pack_bites=0 hound_pack_bonus_dmg=0 hellhound_burns=0 hellhound_trail_patches=0
+[autotest] class banshee: Lv 0, alive 0/0, deaths 0 | dmg 0 (banshee=0 keening_lady=0) | banshee_dirges=0 banshee_dirge_hits=0 dirge_debuff_seconds=0 keening_waves=0 keening_silenced=0 keening_heals_silenced=0
+[autotest] class corpse_catapult: Lv 0, alive 0/0, deaths 0 | dmg 0 (corpse_catapult=0 ossuary_engine=0 ossuary_shards=0) | catapult_volleys=0 catapult_boulders=0 catapult_boulder_hits=0 catapult_structure_dmg=0 ossuary_shard_fields=0 hazards_dropped=0
+[autotest] class specials: cancelled by recall 0 | ended inside an obstacle 0
+[autotest] special evolutions: shadow reaper: chain dashes 0, cooldown resets 0, bleed stacks added 0, max stacks 0, rogue bleed dmg (all) 0 | cathedral horror: stuns 0 (boss 0), stunned s 8.4, stone forms 0, stone s 0.0, dmg prevented by stone 0
+[autotest] grave step: dashes 119 (bot: crowd 1, hit 6, telegraph 112) | hits avoided in dash i-frames 2 | blocked 0, shortened by obstacles 0, ended inside an obstacle 0, avg length 110 px | charges 1, cooldown 5.00 s
+[autotest] dread rally: rallies 9 | meter fills 9, fill times s [117 89 75 59 51 44 42 43 43] (avg 62 s), meter now 30% | knockbacks 38 | summons called back 13 | heal 751 | minion dmg under buff 45618 (est. +dmg part 13033) | buff time 72 s
+[autotest] army formation: bone_ring: 1248s kills 4963 army_dmg 28186 recalls 0 spread max 334 mean 98
+[autotest] character: gravecaller (The Gravecaller) | starting spell shadow_bolt Lv 5 | Baseline stats (Max HP 120, move speed 110) | innate: none | characters unlocked this run: voidcaller | unlocked in the profile: gravecaller, voidcaller (saved: false)
+[autotest] stuck_units=0 (touching an obstacle: 0) {  }
+[metric] boss_hp_at_0=0 min_hp_before_0=106
+[autotest] peaks: enemies=114 summons=39 projectiles=31 effects=71 crystals=250
+[autotest] nodes created (pools): enemies=114 summons=39 projectiles=32 effects=72 crystals=250
+[autotest] simulation step: avg 1.86 ms, worst 28.45 ms
+[autotest] power-ups: spawned 23 (magnet=6 feast=3 hyper=4 stasis=3 frenzy=5 nova=2) | collected 23 (magnet=6 feast=3 hyper=4 stasis=3 frenzy=5 nova=2) | expired (magnet=0 feast=0 hyper=0 stasis=0 frenzy=0 nova=0) | lost at cap 0 | pity drops 4 | crystals pulled by Soul Magnet 492
+[autotest] buff uptime: hyper=40s (3.2%, refreshed 0) stasis=15s (1.2%, refreshed 0) frenzy=60s (4.8%, refreshed 0) | soul nova kills: 79
+[autotest] chests: spawned 12, opened 12 (x1=11 x3=1 x5=0), items granted 12 (evolutions 2), pity 3, lost at cap 0, left on ground 0
+[autotest]    chest 06:01 x1: dark_command 4
+[autotest]    chest 08:01 x1: EVOLVE death_knight
+[autotest]    chest 09:26 x1: necrotic_vigor 3
+[autotest]    chest 10:12 x1: dark_benediction 5
+[autotest]    chest 11:33 x1: mender 3
+[autotest]    chest 11:53 x1: mender 5
+[autotest]    chest 12:42 x1: EVOLVE profane_bishop
+[autotest]    chest 13:08 x1: unholy_resilience 3
+[autotest]    chest 13:46 x1: shadow_blast 3
+[autotest]    chest 16:31 x1: unholy_resilience 4
+[autotest]    chest 18:15 x3: dark_restoration
+[autotest]    chest 19:52 x1: dark_restoration
+[autotest] chest beacon: chests marked 12, seen on screen 12 | max off-screen arrows at once 0 | ticks with an arrow 0 (0.0 s)
+[autotest] profane pact: taken no (final Lv 0; never offered or never picked) | oath tier 0 | extra XP from pact 0, from oath 0 | extra soul ash from pact 0, from oath 0
+[autotest] meta upgrades (--meta=none): none | revivals used: 0
+[autotest] soul ash: +1243 (time 150 [20:00] + kills 148 [4963] + elites 316 [79] + boss 75 + reckoning 120 [48.3 s] + objectives 20 = 829, bonus +0% = +0, pact +0, oath +0) | bounty 650 | new total 1893 | saved: false
+[autotest] difficulty: Necromancer (necromancer) | modifiers: none | foes: HP x0.800 (growth x1.00), dmg x1.000 (growth x1.00), spawn x1.250, speed x1.00, elite chance 0.000, boss HP x1.000 | XP x1.000 | soul ash: difficulty +0%, modifiers +0%, total x1.00
+[autotest] difficulty results: soul ash difficulty +0, modifiers +0 | trickle elites promoted: 0 | holy retribution bursts: 0 (dmg to you 0, to summons 0) | player max HP at start: 120
+[autotest] stage: The Asphodel Underworld | soul ash stage bonus +414 (x1.50) | stages unlocked by this run: burning_gate
+[autotest] hyper: off (Necromancer) | foes: HP growth x1.00, dmg growth x1.00, boss HP x1.000 | at 0:00 vs the standard game: HP x1.00, dmg x1.00 | soul ash hyper +0 (+0%) | Reckoning lasted 48.3 s past 0:00 | unlocked: false (by this run: false) | hyper clear recorded: no
+[autotest] skins: character gravecaller, worn default | this run: rot kills 0, high confessors slain 0, seraphine slain with all 4 roles 0 | lifetime: rot 0/5000, confessors 0/50, seraphine full army 0/1 | unlocked 55/220 (new: ivory_seer) | setup row cards 6
+[autotest] rewards: achievements=3 (bone_legion, dread_sovereign, empty_throne) titles=0 unlocks=ultimate:sovereigns_decree | run: temp raised 0, min HP before 0:00 89%, evolutions 2, boss slain 74.1 s after arrival | one-run achievements met: untouchable (not checked: --rewards=on) | worn title: none | title row choices 1
+[autotest] demo: on=false | acts=1 | stages=graveyard,crimson_march,sanctum | save=user://save.cfg | full_game_offers=0
+[autotest] feedback: url_set=true | report_chars=122/222/311 (main menu / pause / results samples built, max 1500) | url_chars=604 | opened=never (autotest)
+exit 0

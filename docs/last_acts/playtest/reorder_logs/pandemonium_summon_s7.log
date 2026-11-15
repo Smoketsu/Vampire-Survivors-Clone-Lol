@@ -1,0 +1,196 @@
+Godot Engine v4.3.stable.official.77dcf97d8 - https://godotengine.org
+
+[autotest] start: seed=7 speed=8x mortal=true timeout=1500s policy=summon meta=none oath=0 pact=false classes=- spells=-
+[autotest] stage: pandemonium
+[autotest] difficulty: necromancer | modifiers: none
+[autotest] character: gravecaller (starting spell shadow_bolt)
+[audio] main-thread startup 10.6 ms; 59 sfx ready after 552 ms, music loop after 497 ms (worker threads); display: headless
+[metric] t=60 avg_horde=2.6 now=5 cap=5 w3/3 a0/0 m2/2 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=4 kills=83 enemies=30 hp=120 boss_hp=-1 crystals=10 xp=73
+[metric]    summon dmg taken this window: damned=66 hell_pit=36
+[metric]    alive by kind: { "damned": 30 } within260=6
+[autotest] t=01:00 lvl=4 kills=83 enemies=30 summons=5/5 projectiles=3 hp=120 step_avg=0.78ms
+[autotest]    unit FSM: { "FOLLOWING": 2, "ENGAGING": 3 }
+[metric] t=120 avg_horde=6.0 now=7 cap=7 w4/4 a0/0 m3/3 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=2 lvl=8 kills=214 enemies=38 hp=120 boss_hp=-1 crystals=12 xp=202
+[metric]    summon dmg taken this window: damned=47 hell_pit=121 imp=26
+[metric]    alive by kind: { "damned": 28, "imp": 7, "hell_knight": 2, "demon_portal": 1 } within260=9
+[autotest] t=02:00 lvl=8 kills=214 enemies=38 summons=7/7 projectiles=0 hp=120 step_avg=0.83ms
+[autotest]    unit FSM: { "ACQUIRING": 2, "ENGAGING": 4, "CASTING": 1 }
+[metric] t=180 avg_horde=9.4 now=12 cap=12 w5/5 a0/0 m4/4 m3/3 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=2 lvl=11 kills=363 enemies=32 hp=120 boss_hp=-1 crystals=24 xp=350
+[metric]    summon dmg taken this window: damned=41 hell_pit=117 imp=74 hell_knight=23
+[metric]    alive by kind: { "damned": 27, "imp": 5 } within260=3
+[autotest] t=03:00 lvl=11 kills=363 enemies=32 summons=12/12 projectiles=1 hp=120 step_avg=0.86ms
+[autotest]    unit FSM: { "ENGAGING": 9, "FOLLOWING": 1, "REPOSITIONING": 2 }
+[metric] t=240 avg_horde=12.0 now=12 cap=12 w5/5 a0/0 m4/4 m3/3 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=15 kills=495 enemies=64 hp=120 boss_hp=-1 crystals=38 xp=512
+[metric]    summon dmg taken this window: damned=29 hell_pit=202 imp=11 hell_knight=150
+[metric]    alive by kind: { "hell_knight": 16, "damned": 40, "imp": 8 } within260=8
+[autotest] t=04:00 lvl=15 kills=495 enemies=64 summons=12/12 projectiles=2 hp=120 step_avg=0.92ms
+[autotest]    unit FSM: { "ENGAGING": 7, "REPOSITIONING": 1, "CASTING": 2, "ACQUIRING": 2 }
+[metric] t=300 avg_horde=13.9 now=15 cap=15 w6/6 a0/0 m5/5 m4/4 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=18 kills=675 enemies=37 hp=120 boss_hp=-1 crystals=56 xp=750
+[metric]    summon dmg taken this window: damned=45 hell_pit=134 imp=9 hell_knight=71
+[metric]    alive by kind: { "hell_knight": 5, "damned": 23, "imp": 6, "pit_cultist": 3 } within260=1
+[autotest] t=05:00 lvl=18 kills=675 enemies=37 summons=15/15 projectiles=4 hp=120 step_avg=0.98ms
+[autotest]    unit FSM: { "FOLLOWING": 14, "REPOSITIONING": 1 }
+[metric] t=360 avg_horde=15.7 now=18 cap=18 w8/8 a0/0 m5/5 m5/5 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=23 kills=869 enemies=41 hp=120 boss_hp=-1 crystals=17 xp=1120
+[metric]    summon dmg taken this window: damned=29 hell_pit=342 imp=69 hell_knight=320 fallen_angel_dive=47 charmed=21 fallen_angel=20 succubus=21
+[metric]    alive by kind: { "damned": 20, "hell_knight": 18, "fallen_angel": 1, "imp": 2 } within260=1
+[autotest] t=06:00 lvl=23 kills=869 enemies=41 summons=18/18 projectiles=4 hp=120 step_avg=1.03ms
+[autotest]    unit FSM: { "ENGAGING": 7, "FOLLOWING": 6, "REPOSITIONING": 4, "CASTING": 1 }
+[metric] t=420 avg_horde=19.0 now=19 cap=19 w8/8 a0/0 m6/6 m5/5 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=26 kills=1045 enemies=52 hp=120 boss_hp=-1 crystals=45 xp=1388
+[metric]    summon dmg taken this window: damned=35 hell_pit=487 imp=31 hell_knight=221 fallen_angel_dive=52 charmed=5 fallen_angel=6 succubus=5 lilim_witch=5
+[metric]    alive by kind: { "hell_knight": 20, "damned": 22, "imp": 8, "fallen_angel": 1, "demon_portal": 1 } within260=4
+[autotest] t=07:00 lvl=26 kills=1045 enemies=52 summons=19/19 projectiles=3 hp=120 step_avg=1.09ms
+[autotest]    unit FSM: { "RETURNING": 9, "FOLLOWING": 1, "ENGAGING": 7, "REPOSITIONING": 2 }
+[metric] t=480 avg_horde=19.0 now=18 cap=19 w8/8 a0/0 m5/6 m5/5 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=1 lvl=29 kills=1233 enemies=74 hp=116 boss_hp=-1 crystals=59 xp=1699
+[metric]    summon dmg taken this window: damned=79 hell_pit=487 imp=169 hell_knight=1036 fallen_angel_dive=367 charmed=18 fallen_angel=79
+[metric]    alive by kind: { "succubus": 5, "imp": 13, "hell_knight": 25, "damned": 27, "fallen_angel": 1, "lilim_witch": 3 } within260=14
+[autotest] t=08:00 lvl=29 kills=1233 enemies=74 summons=18/19 projectiles=4 hp=116 step_avg=1.14ms
+[autotest]    unit FSM: { "ENGAGING": 17, "CASTING": 1 }
+[metric] t=540 avg_horde=17.8 now=20 cap=20 w9/9 a0/0 m6/6 m5/5 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=9 lvl=32 kills=1457 enemies=52 hp=120 boss_hp=-1 crystals=62 xp=2107
+[metric]    summon dmg taken this window: damned=177 hell_pit=601 imp=253 hell_knight=1820 fallen_angel_dive=44 charmed=57 fallen_angel=11 succubus=192 lilim_witch=47
+[metric]    alive by kind: { "hell_knight": 13, "damned": 28, "succubus": 3, "imp": 6, "fallen_angel": 1, "charmed": 1 } within260=7
+[autotest] t=09:00 lvl=32 kills=1457 enemies=52 summons=20/20 projectiles=2 hp=120 step_avg=1.20ms
+[autotest]    unit FSM: { "ENGAGING": 16, "CASTING": 3, "FOLLOWING": 1 }
+[metric] t=600 avg_horde=24.5 now=26 cap=24 w9/9 a0/0 m6/6 m5/5 w4/4 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=6 lvl=35 kills=1696 enemies=38 hp=120 boss_hp=-1 crystals=86 xp=2512
+[metric]    summon dmg taken this window: damned=148 hell_pit=680 imp=162 hell_knight=1829 fallen_angel_dive=695 fallen_angel=114 succubus=61 pit_cultist=23
+[metric]    alive by kind: { "hell_knight": 16, "damned": 17, "imp": 5 } within260=2
+[autotest] t=10:00 lvl=35 kills=1696 enemies=38 summons=26/24 projectiles=5 hp=120 step_avg=1.27ms
+[autotest]    unit FSM: { "ENGAGING": 10, "RETURNING": 2, "FOLLOWING": 9, "REPOSITIONING": 5 }
+[metric] t=660 avg_horde=26.9 now=29 cap=28 w9/9 a4/4 m4/6 m4/5 w4/4 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=8 lvl=38 kills=1895 enemies=74 hp=120 boss_hp=-1 crystals=88 xp=2866
+[metric]    summon dmg taken this window: damned=120 hell_pit=1614 imp=174 hell_knight=2035 fallen_angel_dive=538 charmed=11 fallen_angel=42 succubus=45 demon_brute=618
+[metric]    alive by kind: { "damned": 26, "hell_knight": 22, "imp": 16, "demon_portal": 4, "pit_cultist": 4, "succubus": 1, "demon_brute": 1 } within260=29
+[autotest] t=11:00 lvl=38 kills=1895 enemies=74 summons=29/28 projectiles=4 hp=120 step_avg=1.34ms
+[autotest]    unit FSM: { "ENGAGING": 21, "CASTING": 5, "REPOSITIONING": 3 }
+[metric] t=720 avg_horde=15.3 now=8 cap=30 w3/11 a1/4 m1/6 m1/5 w1/4 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=52 lvl=40 kills=2083 enemies=86 hp=119 boss_hp=-1 crystals=101 xp=3172
+[metric]    summon dmg taken this window: damned=433 hell_pit=941 imp=538 hell_knight=3023 fallen_angel_dive=603 charmed=42 fallen_angel=407 succubus=73 pit_cultist=26 demon_brute=261
+[metric]    alive by kind: { "hell_knight": 47, "damned": 13, "imp": 15, "demon_portal": 2, "succubus": 1, "fallen_angel": 7, "seraph_general": 1 } within260=5
+[autotest] t=12:00 lvl=40 kills=2083 enemies=86 summons=8/30 projectiles=3 hp=119 step_avg=1.39ms
+[autotest]    unit FSM: { "RETURNING": 4, "ENGAGING": 2, "FOLLOWING": 1, "CASTING": 1 }
+[metric] t=780 avg_horde=14.8 now=9 cap=36 w3/12 a0/6 m2/7 m1/6 w1/5 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=60 lvl=42 kills=2257 enemies=83 hp=120 boss_hp=-1 crystals=145 xp=3492
+[metric]    summon dmg taken this window: damned=231 hell_pit=1247 imp=341 hell_knight=1726 fallen_angel_dive=847 charmed=38 fallen_angel=289 succubus=87 lilim_witch=13 demon_brute=31 seraph_feathers=136 seraph_general=297 seraph_cleave=2120
+[metric]    alive by kind: { "damned": 27, "hell_knight": 35, "fallen_angel": 2, "imp": 9, "demon_portal": 4, "demon_brute": 4, "succubus": 1, "seraph_general": 1 } within260=16
+[autotest] t=13:00 lvl=42 kills=2257 enemies=83 summons=9/36 projectiles=1 hp=120 step_avg=1.44ms
+[autotest]    unit FSM: { "CASTING": 2, "ENGAGING": 6, "SPAWNING": 1 }
+[metric] t=840 avg_horde=15.1 now=34 cap=36 w10/12 a5/6 m6/7 m4/6 w4/5 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=34 lvl=43 kills=2482 enemies=74 hp=120 boss_hp=-1 crystals=229 xp=3814
+[metric]    summon dmg taken this window: damned=298 hell_pit=445 imp=194 hell_knight=2996 fallen_angel_dive=703 fallen_angel=134 succubus=79 demon_brute=1240 seraph_feathers=781 seraph_general=53
+[metric]    alive by kind: { "fallen_angel": 4, "damned": 34, "imp": 9, "hell_knight": 17, "demon_portal": 4, "seraph_general": 1, "succubus": 2, "demon_brute": 3 } within260=19
+[autotest] t=14:00 lvl=43 kills=2482 enemies=74 summons=34/36 projectiles=2 hp=120 step_avg=1.49ms
+[autotest]    unit FSM: { "ENGAGING": 27, "REPOSITIONING": 2, "CASTING": 5 }
+[metric] t=900 avg_horde=11.1 now=13 cap=42 w4/13 a1/7 m3/8 m1/7 w2/7 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=59 lvl=45 kills=2664 enemies=85 hp=46 boss_hp=-1 crystals=250 xp=4058
+[metric]    summon dmg taken this window: damned=348 hell_pit=824 imp=226 hell_knight=2033 fallen_angel_dive=855 charmed=24 fallen_angel=363 succubus=40 demon_brute=699 seraph_feathers=582 seraph_general=102 seraph_cleave=804
+[metric]    alive by kind: { "damned": 25, "hell_knight": 33, "fallen_angel": 3, "lilim_witch": 5, "demon_brute": 4, "demon_portal": 4, "succubus": 1, "imp": 9, "seraph_general": 1 } within260=23
+[autotest] t=15:00 lvl=45 kills=2664 enemies=85 summons=13/42 projectiles=2 hp=46 step_avg=1.53ms
+[autotest]    unit FSM: { "ENGAGING": 10, "CASTING": 3 }
+[metric] t=960 avg_horde=15.2 now=7 cap=42 w3/13 a1/7 m1/8 m1/7 w1/7 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=72 lvl=47 kills=2857 enemies=105 hp=102 boss_hp=-1 crystals=234 xp=4529
+[metric]    summon dmg taken this window: damned=192 hell_pit=1077 imp=229 hell_knight=2607 fallen_angel_dive=1203 charmed=86 fallen_angel=170 succubus=187 lilim_witch=47 demon_brute=548 seraph_feathers=837 seraph_general=193 seraph_cleave=927
+[metric]    alive by kind: { "hell_knight": 52, "succubus": 6, "damned": 23, "demon_portal": 4, "fallen_angel": 3, "demon_brute": 1, "imp": 14, "seraph_general": 1, "charmed": 1 } within260=12
+[autotest] t=16:00 lvl=47 kills=2857 enemies=105 summons=7/42 projectiles=2 hp=102 step_avg=1.58ms
+[autotest]    unit FSM: { "RETURNING": 2, "ENGAGING": 4, "FOLLOWING": 1 }
+[autotest] boss spawned at 1020.0 s
+[autotest] Shadow Bolt aim switched to Strongest
+[metric] t=1020 avg_horde=15.4 now=10 cap=42 w7/13 a0/7 m2/8 m1/7 w0/7 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=60 lvl=48 kills=3080 enemies=80 hp=107 boss_hp=20825 crystals=250 xp=4792
+[metric]    summon dmg taken this window: damned=144 hell_pit=2043 imp=181 hell_knight=2166 fallen_angel_dive=1525 charmed=63 fallen_angel=389 succubus=214 demon_brute=493 seraph_feathers=410 seraph_cleave=189
+[metric]    alive by kind: { "hell_knight": 22, "imp": 15, "damned": 27, "demon_portal": 4, "demon_brute": 3, "fallen_angel": 5, "seraph_general": 1, "succubus": 1, "boss": 1 } within260=14
+[autotest] t=17:00 lvl=48 kills=3080 enemies=80 summons=10/42 projectiles=0 hp=107 step_avg=1.63ms
+[autotest]    unit FSM: { "RETURNING": 7, "ENGAGING": 2, "CASTING": 1 }
+[metric] t=1080 avg_horde=5.1 now=3 cap=42 w1/13 a1/7 m0/8 m1/7 w0/7 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=44 lvl=49 kills=3200 enemies=81 hp=40 boss_hp=20247 crystals=250 xp=4942
+[metric]    summon dmg taken this window: damned=57 hell_pit=390 imp=599 hell_knight=929 fallen_angel_dive=614 charmed=89 fallen_angel=262 succubus=119 demon_brute=100 seraph_feathers=136 morning_star_sword=60 morning_star_dark=450 morning_star_light=253
+[metric]    alive by kind: { "damned": 15, "succubus": 4, "imp": 10, "hell_knight": 35, "demon_brute": 5, "demon_portal": 4, "boss": 1, "fallen_angel": 6, "seraph_general": 1 } within260=29
+[autotest] t=18:00 lvl=49 kills=3200 enemies=81 summons=3/42 projectiles=3 hp=40 step_avg=1.65ms
+[autotest]    unit FSM: { "ENGAGING": 2, "SPAWNING": 1 }
+[metric] t=1140 avg_horde=4.6 now=3 cap=43 w2/13 a1/8 m0/8 m0/7 w0/7 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=37 lvl=50 kills=3304 enemies=80 hp=29 boss_hp=19993 crystals=250 xp=5100
+[metric]    summon dmg taken this window: damned=80 hell_pit=469 imp=514 hell_knight=565 fallen_angel_dive=995 charmed=97 fallen_angel=375 succubus=155 demon_brute=46 seraph_feathers=34 seraph_cleave=49 morning_star_dark=434 morning_star_light=64
+[metric]    alive by kind: { "imp": 8, "hell_knight": 41, "demon_brute": 5, "succubus": 4, "damned": 10, "demon_portal": 4, "fallen_angel": 6, "boss": 1, "seraph_general": 1 } within260=54
+[autotest] t=19:00 lvl=50 kills=3304 enemies=80 summons=3/43 projectiles=0 hp=29 step_avg=1.66ms
+[autotest]    unit FSM: { "CASTING": 1, "ENGAGING": 2 }
+[autotest] ===== NECROPATHY AUTOTEST SUMMARY =====
+[autotest] result: NOT COMPLETED (defeat)
+[autotest] time reached: 19:30 elapsed (1170.5 s game time, 175.8 s real time); past 0:00: 0.0 s; Reckoning waves: 0
+[autotest] kills: 3404 | level: 51
+[autotest] level pacing: 01:00=L4 03:00=L11 05:00=L18 10:00=L35 15:00=L45 17:00=L48 | reached: L2@00:27 L5@01:06 L10@02:18 L15@03:59 L20@05:23 L25@06:29 L30@08:14 L35@09:39 L40@11:55 L45@14:52 L50@18:39
+[autotest] build complete: no
+[autotest] horde: 5 alive / capacity 43 (warrior 3/13, archer 1/8, mage 1/8, mender 0/7, warder 0/7, bishop 0/0, abomination 0/0, rogue 0/0, gargoyle 0/0, frost_wraith 0/0, bone_hound 0/0, banshee 0/0, corpse_catapult 0/0)
+[autotest] summons spawned: 502, died: 497, hard recalls: 0 (stall recalls: 0)
+[autotest] boss spawned: yes at 1020.0 s | boss defeated: no | boss HP left: 16705 / 20825
+[autotest] player HP: 0 / 120 (invulnerable: false)
+[autotest] picks (54): shadow_bolt 2, grave_dominion 1, mage 1, mage 2, forbidden_knowledge 1, warrior 2, necrotic_vigor 1, grave_dominion 2, necrotic_vigor 2, mender 1, shadow_bolt 3, dark_benediction 1, skip, skip, shadow_bolt 4, grave_dominion 3, mage 3, forbidden_knowledge 2, mender 2, forbidden_knowledge 3, warrior 3, mender 3, mage 4, dark_benediction 2, mage 5, skip, mender 4, soul_recycling 1, mender 5, dark_benediction 3, forbidden_knowledge 4, warrior 4, forbidden_knowledge 5, EVOLVE lich, warder 1, necrotic_vigor 3, dark_command 1, dark_command 2, archer 1, warrior 5, dark_command 3, grave_dominion 4, archer 2, warder 2, warder 3, grave_dominion 5, warder 4, warder 5, dark_benediction 4, dark_command 4, dark_command 5, EVOLVE death_knight, archer 3, dark_benediction 5
+[autotest] wards on you: 116 total, absorbed 1035 dmg | 85 wards in 349 s with 2+ Warders/Bishops alive (14.6 / min) | heal casts: 1306 | ally barriers: 417, barrier dmg absorbed: 16159
+[autotest] evolutions: lich@09:07, death_knight@18:36
+[autotest] evolutions by type: spell: none | summon: lich@09:07, death_knight@18:36
+[autotest] summon evolutions: lich raised 173 (capped 8) | merge converted 0, dissolved 0 | aura pulses 0 | merged classes: none
+[autotest] winter revenant: shatters 0 (capped 0), shatter hits 0, shatter dmg 0 | death novas 0, nova hits 0, nova freezes 0, nova dmg 0
+[autotest] summon output by source (dmg/heal/shield): warrior=35804/0/0 archer=5784/0/0 mage=21793/0/0 mender=5415/16640/0 warder=2998/0/10913 bash=6703/0/0 death_knight=16735/611/0 death_knight_bash=1112/0/0 death_knight_cleave=1843/0/0 lich=219825/0/0 lich_risen=8271/0/0
+[autotest] summon output by class (dmg/heal/shield): warrior=62198/611/0 archer=5784/0/0 mage=241618/0/0 mender=5415/16640/0 warder=2998/0/10913 lich_risen=8271/0/0
+[autotest] recipe book: 2 / 83 discovered (death_knight, lich) | Recipes view rows built: 83 (saved: false)
+[autotest] codex: 16 entries met this run (spell 1, summon 5, enemy 9, boss 1) | new to the save 16 | save: spell 1/54, summon 5/30, enemy 9/260, boss 1/45, evolutions 2/83
+[autotest] epilogue: parts=15 (acts=15) open=0 seen=0 panels=59 cards_ok=true autoplay_pending=false
+[autotest] volleys: shots 26439 | hits 21661 | dmg 113014 | peak 220/320 | capped volleys 0 | boss hits capped 630 | barrages 11 | mage 73447, warrior 23419, shadow_bolt 6252, mender 5307, lich_risen 2697, warder 1316, archer 573
+[visual] adaptive quality: level 0, peak 0, steps down 0, up 0
+[autotest] hell pits: opened 398 (timed 160, reckoning 0, opened by kinds 0), refused 0 | fixed live peak 19 (zone 3 at the end) | burns 4676 | dmg to summons 13828, to you 7, to enemies 34004 | pit kills 492, the damned burned 469
+[autotest] portals: opened 16 (reckoning 0), destroyed 7, sealed 5 (at 5:28, 5:45, 9:49, 11:10, 11:21; bounty 100 Soul Ash), standing at the end 4 | squads 53 (138 units), capped 0
+[autotest] temptation: charms 106, most at once 3, broken by the charmer's death 2, expired 1, freed (body broken) 103, refused at the cap 0 | dmg by charmed summons: to summons 557, to you 5 | by class: warrior 43, archer 9, mage 28, mender 16, warder 10
+[autotest] inferno kinds (spawned/killed): damned 1555/1534 first 0:01 (dmg to you 63, to summons 2683) | imp 827/808 first 1:02 (dmg to you 167, to summons 3948) | hell_knight 806/788 first 2:00 (dmg to you 304, to summons 25049) | succubus 57/57 first 5:15 (dmg to you 30, to summons 1375) | demon_brute 16/15 first 10:26 (dmg to you 0, to summons 4510) | demon_portal 16/7 first 1:30 (dmg to you 0, to summons 0) | charmed 106/103 first 5:25 (dmg to you 5, to summons 557) | pit_cultist 11/11 first 5:00 (dmg to you 0, to summons 49) | lilim_witch 12/12 first 6:25 (dmg to you 0, to summons 113) | fallen_angel 71/69 first 5:12 (dmg to you 7, to summons 2940) | seraph_general 1/0 first 11:40 (dmg to you 0, to summons 647) | knight sweeps 669 (hits 1001), succubus kisses 122 (missed 14), brute slams 44 (hits 134)
+[autotest] inferno stage: pandemonium (Pandemonium) | playable true | boss morning_star (script morning_star) | enemy x1.75 HP / x1.50 dmg from 7:00 | soul ash x1.50 | reckoning kind demon_brute, last judgment true
+[autotest] burning gate kinds: hellhound trail pits 0 (skipped at the cap 0; every pit burned summons for 13828) | pit cultist rites 11 (portals opened 11, broken by a kill 0, refused 0)
+[autotest] silk palace kinds: lilim witch 12/12 (curses 17, pits 17, portal rites 0, healed 0) | twins: naamah 0/0, agrat 0/0, rages 0, kisses 0 (missed 0), kisses of pain 0 (summon hits 0), dmg to you 0, to summons 0
+[autotest] pandemonium: guests: lava_hound, pit_cultist, lilim_witch, squads 7, spawned 23 | objective ash 100
+[autotest] pandemonium events (1): 11:40 seraph_general
+[autotest] pandemonium kinds: fallen angel 71/69, dives 214 (summon hits 406, you hit 5), aloft blows grazed 1071, landed blows 507, spear pits 206 | seraph general 1, killed 0 (ttk 0s): cleaves 15, feathers 118, you hit 3, summon hits 328, pits 15, fallen host 3
+[autotest] morning star: phases: the beast -, he falls - | angel: sword 6, light beams 15, dark beams 14 | beast: slams 0, pit rings 0, pits opened 0 (skipped off Act VI 0) | you hit 14, summon hits 154 | dmg to you: sword 0, light 85, dark 162, slam 0 | dmg to summons: sword 1286, light 1022, dark 1647, slam 0
+[autotest] gravebow / bone colossus: gravebow volleys 0, splits 0 (+0 arrows), pierce hits 0, dmg 0 | curses applied 0 (refreshed 0), curse bonus dmg 0 | colossus dmg 0, stomps 0 | taunted enemies 0 | shrapnel bursts 0, hits 0, dmg 0
+[autotest] necro spells: bone_spear: not taken | soul_siphon: not taken | corpse_explosion: not taken | plague_cloud: not taken
+[autotest] later spells: death_mark: not taken | bone_wall: not taken | soul_chains: not taken | wither: not taken | raise_dead: not taken
+[autotest] later spell passives: grim_ledger Lv0 bonus_dmg=0 | spirit_binding Lv0 | restless_dead Lv0 | temporary summons spawned=173
+[autotest] horde passives: bone_plating Lv 0 (dmg prevented 0) | unholy_precision Lv 0 (crits 0, crit bonus dmg 0) | unholy_resilience Lv 0 (dmg prevented 0: area 0, holy 0) | bound_souls Lv 0 (soft recalls 35, hard recalls 0)
+[autotest] class passives: blood_scent Lv 0 (fast: Archers, Rogues, Gargoyles, Bone Hounds, Grave Drones, Succubi, Blood Spawn, Fallen Heroes, Ghost Saucers, Powder Wraiths, Bound Ophans, Bonehorns) | mournsong Lv 0 (extra debuff s 0) | siegecraft Lv 0 (siege bonus dmg 0) | summon dmg to structures 7976 (catapults 0)
+[autotest] synergies active at end: shieldwall, volley, deathless, unholy_host | activations: deathless@05:23, volley@12:50, unholy_host@12:50, shieldwall@13:41
+[autotest] synergy bonus: flesh_rampart hits=0 dmg=0 | killing_field hits=0 dmg=0 | death_from_above hits=0 dmg=0 | wild_hunt hits=0 dmg=0 | cold_blood hits=0 dmg=0 | shatterfall hits=0 dmg=0 | requiem hits=0 dmg=0 | charnel_menagerie hits=0 dmg=0 | baying frenzies=0 | marks staggered=0 swooped=0 | dash resets=0 | requiem +0s
+[autotest] level-up offers: hands 54, new-item cards 83, later items 41 (49%) in 29 hands (54%), distinct later items offered 20
+[autotest] level-up actions: rerolls used 2/2, banishes used 2/2 (banished: orb_shield, abyssal_focus), skips 3
+[autotest] shadow bolt: 59456 dmg in Nearest mode, 12668 dmg in Strongest mode; to boss: 1550 of 4119 total boss dmg
+[autotest] stats: ally_barriers=417 barrier_absorbed=16159 boss_atk_burning_sword=6 boss_atk_dark_beams=14 boss_atk_light_beams=15 bossdmg_archer=256 bossdmg_bolt=1550 bossdmg_death_knight=608 bossdmg_death_knight_bash=47 bossdmg_death_knight_cleave=71 bossdmg_lich=1454 bossdmg_lich_risen=36 bossdmg_mender=38 bossdmg_shadow_bolt=25 bossdmg_warder=27 bossdmg_warrior=3 bot_dash_crowd=20 bot_dash_hit=11 bot_dash_telegraph=93 brute_slam_hits=134 brute_slams=44 charm_broken=2 charm_by_succubus=106 charm_charms=106 charm_class_archer=9 charm_class_mage=28 charm_class_mender=16 charm_class_warder=10 charm_class_warrior=43 charm_expired=1 charm_freed=103 chest_count_1=4 chest_evolutions=2 chest_items=4 chests_opened=4 chests_pity=7 chests_spawned=7 cultist_portals=11 cultist_rites=11 damage_dealt=443496 damage_to_player=1018 damage_to_summons=76734 dash_distance=13639 dash_hits_avoided=12 dashes=124 death_archer_by_charmed=4 death_archer_by_damned=5 death_archer_by_demon_brute=3 death_archer_by_fallen_angel=4 death_archer_by_fallen_angel_dive=10 death_archer_by_hell_knight=24 death_archer_by_hell_pit=14 death_archer_by_imp=11 death_archer_by_morning_star_dark=5 death_archer_by_morning_star_light=2 death_archer_by_morning_star_sword=1 death_archer_by_seraph_cleave=10 death_archer_by_seraph_feathers=7 death_archer_by_succubus=2 death_mage_by_charmed=2 death_mage_by_damned=2 death_mage_by_demon_brute=2 death_mage_by_fallen_angel_dive=9 death_mage_by_hell_knight=16 death_mage_by_hell_pit=29 death_mage_by_imp=6 death_mage_by_morning_star_dark=3 death_mage_by_morning_star_light=3 death_mage_by_morning_star_sword=3 death_mage_by_seraph_cleave=8 death_mage_by_seraph_feathers=6 death_mage_by_succubus=3 death_mender_by_damned=1 death_mender_by_demon_brute=3 death_mender_by_fallen_angel=2 death_mender_by_fallen_angel_dive=9 death_mender_by_hell_knight=14 death_mender_by_hell_pit=14 death_mender_by_lilim_witch=1 death_mender_by_morning_star_dark=4 death_mender_by_morning_star_light=1 death_mender_by_morning_star_sword=2 death_mender_by_seraph_cleave=12 death_mender_by_seraph_feathers=7 death_mender_by_succubus=2 death_warder_by_charmed=1 death_warder_by_damned=1 death_warder_by_fallen_angel=1 death_warder_by_fallen_angel_dive=10 death_warder_by_hell_knight=6 death_warder_by_hell_pit=16 death_warder_by_imp=1 death_warder_by_morning_star_dark=2 death_warder_by_morning_star_sword=5 death_warder_by_seraph_cleave=10 death_warder_by_seraph_feathers=5 death_warder_by_succubus=2 death_warrior_by_boss=1 death_warrior_by_charmed=3 death_warrior_by_damned=5 death_warrior_by_demon_brute=28 death_warrior_by_fallen_angel=18 death_warrior_by_fallen_angel_dive=21 death_warrior_by_hell_knight=118 death_warrior_by_hell_pit=29 death_warrior_by_imp=17 death_warrior_by_lilim_witch=1 death_warrior_by_morning_star_dark=9 death_warrior_by_morning_star_light=4 death_warrior_by_morning_star_sword=3 death_warrior_by_seraph_cleave=12 death_warrior_by_seraph_feathers=11 death_warrior_by_seraph_general=10 death_warrior_by_succubus=5 deathless_regen=10865 dmg_archer=5784 dmg_bash=6703 dmg_bolt=72125 dmg_death_knight=16735 dmg_death_knight_bash=1112 dmg_death_knight_cleave=1843 dmg_hell_pit=34004 dmg_lich=219825 dmg_lich_risen=8271 dmg_mage=21793 dmg_mender=5415 dmg_nova=4828 dmg_resisted_fallen_angel=5494 dmg_shadow_bolt=6252 dmg_warder=2998 dmg_warrior=35804 evolutions=2 fallen_angel_dive_hits=406 fallen_angel_dive_player_hits=5 fallen_angel_dives=214 fallen_angel_grazed=1071 fallen_angel_landed_hits=507 flat_armor_absorbed_demon_brute=14882 flat_armor_absorbed_hell_knight=15495 heal_by_death_knight=611 heal_by_mender=16640 hell_knight_sweep_hits=1001 hell_knight_sweeps=669 host_dmg_prevented=11377 kill_charmed=103 kill_damned=1534 kill_demon_brute=15 kill_demon_portal=7 kill_fallen_angel=69 kill_hell_knight=788 kill_imp=808 kill_lilim_witch=12 kill_pit_cultist=11 kill_succubus=57 kills_by_archer=14 kills_by_bash=99 kills_by_bolt=888 kills_by_death_knight=38 kills_by_death_knight_bash=5 kills_by_death_knight_cleave=5 kills_by_hell_pit=492 kills_by_lich=909 kills_by_lich_risen=35 kills_by_mage=398 kills_by_mender=54 kills_by_nova=39 kills_by_shadow_bolt=31 kills_by_warder=12 kills_by_warrior=385 levelup_banishes=2 levelup_rerolls=2 levelup_skips=3 lich_raise_capped=8 lich_raised=173 lilim_curses=17 lilim_pits=17 mage_explosions=1324 march_zones_entered=3 minibossdmg_archer=444 minibossdmg_bash=121 minibossdmg_bolt=1113 minibossdmg_death_knight=106 minibossdmg_death_knight_cleave=62 minibossdmg_lich=6452 minibossdmg_lich_risen=476 minibossdmg_mender=98 minibossdmg_shadow_bolt=57 minibossdmg_warder=59 minibossdmg_warrior=514 morning_star_player_hits=14 morning_star_spawn_time=1020 morning_star_summon_hits=154 nova_kills=39 objective_ash=100 overkill_redirects=207 pandemonium_guest_squads=7 pandemonium_guests_spawned=23 pit_burns=4676 pit_damned_burned=469 pit_dmg_enemies=34004 pit_dmg_summons=13828 pit_dmg_you=7 pit_kills=492 pits_opened=398 pits_opened_fallen_angel=206 pits_opened_lilim=17 pits_opened_seraph_general=15 pits_opened_timed=160 player_dmg_from_boss=72 player_dmg_from_charmed=5 player_dmg_from_damned=63 player_dmg_from_fallen_angel=7 player_dmg_from_fallen_angel_dive=69 player_dmg_from_hell_knight=304 player_dmg_from_hell_pit=7 player_dmg_from_imp=167 player_dmg_from_morning_star_dark=162 player_dmg_from_morning_star_light=85 player_dmg_from_seraph_feathers=41 player_dmg_from_succubus=30 player_healing=622 portal_seal_ash=100 portal_squads=53 portal_units=138 portals_destroyed=7 portals_opened=16 portals_refused=5 portals_sealed=5 priest_heals=1306 priest_wards=116 pu_collected_feast=3 pu_collected_frenzy=1 pu_collected_hyper=1 pu_collected_magnet=1 pu_collected_nova=1 pu_collected_stasis=2 pu_expired_feast=3 pu_expired_magnet=1 pu_expired_stasis=1 pu_magnet_crystals=68 pu_pity_drops=6 pu_spawned_feast=6 pu_spawned_frenzy=1 pu_spawned_hyper=1 pu_spawned_magnet=2 pu_spawned_nova=1 pu_spawned_stasis=3 pu_uptime_frenzy=12 pu_uptime_hyper=10 pu_uptime_stasis=10 rallies=11 rally_buff_time=88 rally_heal=2072 rally_knockbacks=84 rally_meter_fills=11 rally_minion_dmg=93190 rally_raised=166 rally_recalled=24 replacements=293 seraph_general_cleaves=15 seraph_general_feathers=118 seraph_general_host=3 seraph_general_pits=15 seraph_general_player_hits=3 seraph_general_spawned=1 seraph_general_summon_hits=328 shield_by_warder=10913 shieldwall_barriers=54 spawned_charmed=106 spawned_damned=1555 spawned_demon_brute=16 spawned_demon_portal=16 spawned_fallen_angel=71 spawned_hell_knight=806 spawned_imp=827 spawned_lilim_witch=12 spawned_pit_cultist=11 spawned_seraph_general=1 spawned_succubus=57 structdmg_archer=64 structdmg_bash=221 structdmg_bolt=2181 structdmg_lich=4404 structdmg_lich_risen=547 structdmg_mage=1059 structdmg_mender=12 structdmg_nova=764 structdmg_shadow_bolt=404 structdmg_warder=59 structdmg_warrior=1607 succubus_kiss_missed=14 succubus_kisses=122 summon_dmg_from_boss=91 summon_dmg_from_charmed=557 summon_dmg_from_damned=2683 summon_dmg_from_demon_brute=4510 summon_dmg_from_fallen_angel=2940 summon_dmg_from_fallen_angel_dive=9314 summon_dmg_from_hell_knight=25049 summon_dmg_from_hell_pit=13828 summon_dmg_from_imp=3948 summon_dmg_from_lilim_witch=113 summon_dmg_from_morning_star_dark=1647 summon_dmg_from_morning_star_light=1022 summon_dmg_from_morning_star_sword=1286 summon_dmg_from_pit_cultist=49 summon_dmg_from_seraph_cleave=4246 summon_dmg_from_seraph_feathers=3419 summon_dmg_from_seraph_general=647 summon_dmg_from_succubus=1375 summon_evolutions=2 summon_healing=29583 summon_soft_recalls=35 synergies_activated=4 temporary_expired=49 volley_barrages=11 volley_marked_hits=204 ward_absorbed=1035 warrior_bashes=1531 warrior_kills=532 wave_events=16 xp_collected=5406 xp_dropped=6203
+[autotest] boss attacks: burning_sword=6 light_beams=15 dark_beams=14 transform=0 beast_slam=0 pit_ring=0 | wrath: no | hammer soaked by undead: 0 | charges stopped by undead: 0 (shielding the player: 0) | judgment hits: 0 | call soldiers: 0 | holy zones boss/grave: 0/0
+[autotest] crimson march: zones entered 3 (final: Zone IV  -  The Throne) | placed/destroyed/escaped: outposts 0/0/0 generators 0/0/0 carts 0/0/0 standards 0/0/0 | outpost reinforcements 0 | ward zones 0
+[autotest] march enemies: aura buff pulses 0 | halberd cleave hits 0 | dmg resisted: shieldbearer 0, boss 0 | kills: shieldbearer=0 banner_bearer=0 halberdier=0
+[autotest] marshal vael: last stand no | cleave summon hits 0, soaked for the player 0 | command soldiers 0
+[autotest] march events (3): 5:00 zone_II, 10:00 zone_III, 15:00 zone_IV
+[autotest] stage events fired (0): 
+[autotest] templar charges: 0 (body-blocked by warriors: 0) | temporary summons spawned: 173
+[autotest] obstacle collisions resolved: player=65 summons=3059 enemies=11643
+[autotest] class abomination: Lv 0, alive 0/0, deaths 0 | dmg 0 (abomination=0 abom_stomp=0) | abom_stomps=0 abom_stomp_hits=0
+[autotest] class rogue: Lv 0, alive 0/0, deaths 0 | dmg 0 (rogue=0 rogue_dash=0 rogue_bleed=0) | rogue_dashes=0 rogue_dash_hits=0
+[autotest] class gargoyle: Lv 0, alive 0/0, deaths 0 | dmg 0 (gargoyle=0 gargoyle_swoop=0) | gargoyle_swoops=0 gargoyle_swoop_hits=0
+[autotest] class frost_wraith: Lv 0, alive 0/0, deaths 0 | dmg 0 (frost_wraith=0) | frost_deep_freezes=0 frost_freezes=0 frost_boss_freezes=0 frost_frozen_seconds=0 frost_chills=0
+[autotest] class bone_hound: Lv 0, alive 0/0, deaths 0 | dmg 0 (bone_hound=0 hellhound=0 hellhound_burn=0 hellhound_trail=0) | hound_bites=0 hound_pack_bites=0 hound_pack_bonus_dmg=0 hellhound_burns=0 hellhound_trail_patches=0
+[autotest] class banshee: Lv 0, alive 0/0, deaths 0 | dmg 0 (banshee=0 keening_lady=0) | banshee_dirges=0 banshee_dirge_hits=0 dirge_debuff_seconds=0 keening_waves=0 keening_silenced=0 keening_heals_silenced=0
+[autotest] class corpse_catapult: Lv 0, alive 0/0, deaths 0 | dmg 0 (corpse_catapult=0 ossuary_engine=0 ossuary_shards=0) | catapult_volleys=0 catapult_boulders=0 catapult_boulder_hits=0 catapult_structure_dmg=0 ossuary_shard_fields=0 hazards_dropped=0
+[autotest] class specials: cancelled by recall 0 | ended inside an obstacle 0
+[autotest] special evolutions: shadow reaper: chain dashes 0, cooldown resets 0, bleed stacks added 0, max stacks 0, rogue bleed dmg (all) 0 | cathedral horror: stuns 0 (boss 0), stunned s 0.0, stone forms 0, stone s 0.0, dmg prevented by stone 0
+[autotest] grave step: dashes 124 (bot: crowd 20, hit 11, telegraph 93) | hits avoided in dash i-frames 12 | blocked 0, shortened by obstacles 0, ended inside an obstacle 0, avg length 110 px | charges 1, cooldown 5.00 s
+[autotest] dread rally: rallies 11 | meter fills 11, fill times s [132 105 81 74 67 66 87 75 82 78 131] (avg 89 s), meter now 12% | knockbacks 84 | summons called back 24 | heal 2072 | minion dmg under buff 93190 (est. +dmg part 26625) | buff time 88 s
+[autotest] army formation: bone_ring: 1170s kills 3404 army_dmg 76734 recalls 0 spread max 483 mean 103
+[autotest] character: gravecaller (The Gravecaller) | starting spell shadow_bolt Lv 4 | Baseline stats (Max HP 120, move speed 110) | innate: none | characters unlocked this run: none | unlocked in the profile: gravecaller (saved: false)
+[autotest] stuck_units=0 (touching an obstacle: 0) {  }
+[metric] boss_hp_at_0=-1 min_hp_before_0=2
+[autotest] peaks: enemies=128 summons=47 projectiles=15 effects=66 crystals=250
+[autotest] nodes created (pools): enemies=128 summons=47 projectiles=16 effects=66 crystals=250
+[autotest] simulation step: avg 1.67 ms, worst 42.99 ms
+[autotest] power-ups: spawned 14 (magnet=2 feast=6 hyper=1 stasis=3 frenzy=1 nova=1) | collected 9 (magnet=1 feast=3 hyper=1 stasis=2 frenzy=1 nova=1) | expired (magnet=1 feast=3 hyper=0 stasis=1 frenzy=0 nova=0) | lost at cap 0 | pity drops 6 | crystals pulled by Soul Magnet 68
+[autotest] buff uptime: hyper=10s (0.9%, refreshed 0) stasis=10s (0.9%, refreshed 0) frenzy=12s (1.0%, refreshed 0) | soul nova kills: 39
+[autotest] chests: spawned 7, opened 4 (x1=4 x3=0 x5=0), items granted 4 (evolutions 2), pity 7, lost at cap 0, left on ground 3
+[autotest]    chest 06:01 x1: mage 4
+[autotest]    chest 09:07 x1: EVOLVE lich
+[autotest]    chest 16:04 x1: dark_benediction 4
+[autotest]    chest 18:36 x1: EVOLVE death_knight
+[autotest] chest beacon: chests marked 7, seen on screen 7 | max off-screen arrows at once 2 | ticks with an arrow 10182 (169.7 s)
+[autotest] profane pact: taken no (final Lv 0; never offered or never picked) | oath tier 0 | extra XP from pact 0, from oath 0 | extra soul ash from pact 0, from oath 0
+[autotest] meta upgrades (--meta=none): none | revivals used: 0
+[autotest] soul ash: +522 (time 146 [19:30] + kills 102 [3404] + elites 0 [0] + boss 0 + reckoning 0 [0.0 s] + objectives 100 = 348, bonus +0% = +0, pact +0, oath +0) | bounty 0 | new total 522 | saved: false
+[autotest] difficulty: Necromancer (necromancer) | modifiers: none | foes: HP x0.800 (growth x1.00), dmg x1.000 (growth x1.00), spawn x1.250, speed x1.00, elite chance 0.000, boss HP x1.000 | XP x1.000 | soul ash: difficulty +0%, modifiers +0%, total x1.00
+[autotest] difficulty results: soul ash difficulty +0, modifiers +0 | trickle elites promoted: 0 | holy retribution bursts: 0 (dmg to you 0, to summons 0) | player max HP at start: 120
+[autotest] stage: Pandemonium | soul ash stage bonus +174 (x1.50) | stages unlocked by this run: none
+[autotest] hyper: off (Necromancer) | foes: HP growth x1.00, dmg growth x1.00, boss HP x1.000 | at 0:00 vs the standard game: HP x1.00, dmg x1.00 | soul ash hyper +0 (+0%) | Reckoning lasted 0.0 s past 0:00 | unlocked: false (by this run: false) | hyper clear recorded: no
+[autotest] skins: character gravecaller, worn default | this run: rot kills 0, high confessors slain 0, seraphine slain with all 4 roles 0 | lifetime: rot 0/5000, confessors 0/50, seraphine full army 0/1 | unlocked 54/220 (new: none) | setup row cards 6
+[autotest] rewards: achievements=0 (none) titles=0 unlocks=none | run: temp raised 173, min HP before 0:00 2%, evolutions 2, boss slain never after arrival | one-run achievements met: none (not checked: --rewards=on) | worn title: none | title row choices 1
+[autotest] demo: on=false | acts=1 | stages=graveyard,crimson_march,sanctum | save=user://save.cfg | full_game_offers=0
+[autotest] feedback: url_set=true | report_chars=122/210/298 (main menu / pause / results samples built, max 1500) | url_chars=585 | opened=never (autotest)
+exit 1
