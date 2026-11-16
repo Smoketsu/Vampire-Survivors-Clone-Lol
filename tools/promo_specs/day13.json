@@ -23,24 +23,24 @@
    ],
    "texts": [
     {
-     "text": "Play as",
+     "text": "36 characters, each",
      "font": "jersey",
-     "size": 57,
+     "size": 38,
      "scale": 2,
-     "color": "cream",
-     "y": 230,
+     "color": "white",
+     "y": 250,
      "from": 0.0,
-     "to": 5.6
+     "to": 2.2
     },
     {
-     "text": "36 Necromancers!",
+     "text": "starts with their own spell",
      "font": "jersey",
-     "size": 57,
+     "size": 38,
      "scale": 2,
-     "color": "gold",
-     "y": 352,
+     "color": "white",
+     "y": 334,
      "from": 0.0,
-     "to": 5.6
+     "to": 2.2
     }
    ]
   },
@@ -53,28 +53,7 @@
    "extra": [
     "--character=plague_scholar"
    ],
-   "texts": [
-    {
-     "text": "Play as",
-     "font": "jersey",
-     "size": 57,
-     "scale": 2,
-     "color": "cream",
-     "y": 230,
-     "from": 0.0,
-     "to": 5.6
-    },
-    {
-     "text": "36 Necromancers!",
-     "font": "jersey",
-     "size": 57,
-     "scale": 2,
-     "color": "gold",
-     "y": 352,
-     "from": 0.0,
-     "to": 5.6
-    }
-   ]
+   "texts": []
   },
   {
    "id": "s2",
@@ -85,28 +64,7 @@
    "extra": [
     "--character=barrow_warden"
    ],
-   "texts": [
-    {
-     "text": "Each Wields a",
-     "font": "jersey",
-     "size": 57,
-     "scale": 2,
-     "color": "cream",
-     "y": 230,
-     "from": 0.0,
-     "to": 5.6
-    },
-    {
-     "text": "Different Spell!",
-     "font": "jersey",
-     "size": 57,
-     "scale": 2,
-     "color": "gold",
-     "y": 352,
-     "from": 0.0,
-     "to": 5.6
-    }
-   ]
+   "texts": []
   },
   {
    "id": "s3",
@@ -117,28 +75,7 @@
    "extra": [
     "--character=soulbinder"
    ],
-   "texts": [
-    {
-     "text": "Each Wields a",
-     "font": "jersey",
-     "size": 57,
-     "scale": 2,
-     "color": "cream",
-     "y": 230,
-     "from": 0.0,
-     "to": 5.6
-    },
-    {
-     "text": "Different Spell!",
-     "font": "jersey",
-     "size": 57,
-     "scale": 2,
-     "color": "gold",
-     "y": 352,
-     "from": 0.0,
-     "to": 5.6
-    }
-   ]
+   "texts": []
   },
   {
    "id": "end",
@@ -155,22 +92,22 @@
    },
    "texts": [
     {
-     "text": "FREE IN YOUR BROWSER",
+     "text": "free in your browser",
      "font": "jersey",
      "size": 38,
-     "scale": 3,
-     "color": "gold",
-     "y": 900,
+     "scale": 2,
+     "color": "white",
+     "y": 960,
      "from": 0.3,
      "to": 3.2
     },
     {
-     "text": "LINK IN BIO",
+     "text": "link in bio",
      "font": "jersey",
-     "size": 57,
-     "scale": 3,
-     "color": "teal",
-     "y": 1080,
+     "size": 38,
+     "scale": 2,
+     "color": "white",
+     "y": 1044,
      "from": 0.7,
      "to": 3.2
     }

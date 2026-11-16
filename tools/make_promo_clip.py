@@ -51,7 +51,7 @@ A shot:
   "texts"       (a text that lasts to the end of the shot has no fade-out, so repeating it in the next shot holds
                 it across the cut) list of {"text": "LINE1\\nLINE2", "font": "jersey"|"jacquard", "size": native px (28 / 38 / 57 for
                 Jersey, 43 for Jacquard), "scale": integer enlargement, "color": "gold"|"teal"|"cream"|"violet"|
-                "crimson", "y": top of the text block in the final video (px), "from": s, "to": s (within the shot)}
+                "crimson"|"white", "y": top of the text block in the final video (px), "from": s, "to": s (within the shot)}
 Safe zone: keep text inside x 80..918 (TikTok's buttons sit on the right ~15%) and y 150..1500 (the caption, bottom
 ~20%, and the top bar are covered by TikTok's own UI).
 """
@@ -77,6 +77,7 @@ FONTS = {"jersey": os.path.join(ROOT, "assets/fonts/Jersey10-Regular.ttf"),
 # Text colours = UiTheme constants (scripts/ui/ui_theme.gd), 0-255 RGB.
 COLORS = {"gold": (255, 214, 102),    # TEXT_GOLD: evolution / victory / selection
           "teal": (140, 255, 166),    # TEXT_GOOD: soul-teal, affordable / focused / new
+          "white": (255, 255, 255),   # plain white: the solo-dev hook line and the end card (Nov 2026 style)
           "cream": (235, 230, 214),   # TEXT: normal text
           "violet": (170, 130, 235),  # a light tint of the violet BORDER (0.45, 0.3, 0.7)
           "crimson": (255, 96, 96)}   # danger

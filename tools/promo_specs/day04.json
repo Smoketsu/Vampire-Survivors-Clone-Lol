@@ -14,35 +14,35 @@
  "shots": [
   {
    "id": "s0",
-   "stage": "sanctum",
+   "stage": "crimson_march",
    "seed": 5,
-   "start": 620,
-   "seconds": 5.6,
+   "start": 600,
+   "seconds": 4.6,
    "extra": [
     "--policy=summon",
-    "--classes=bone_hound,abomination,gargoyle,frost_wraith",
-    "--passives=blood_scent,bone_plating,unholy_resilience,soul_recycling"
+    "--classes=bone_hound",
+    "--passives=blood_scent"
    ],
    "texts": [
     {
-     "text": "Summons Evolve",
+     "text": "every summon in my game",
      "font": "jersey",
-     "size": 57,
+     "size": 38,
      "scale": 2,
-     "color": "cream",
-     "y": 230,
+     "color": "white",
+     "y": 250,
      "from": 0.0,
-     "to": 5.6
+     "to": 2.2
     },
     {
-     "text": "into Monsters!",
+     "text": "evolves. here's 5 of them",
      "font": "jersey",
-     "size": 57,
+     "size": 38,
      "scale": 2,
-     "color": "gold",
-     "y": 352,
+     "color": "white",
+     "y": 334,
      "from": 0.0,
-     "to": 5.6
+     "to": 2.2
     }
    ]
   },
@@ -50,89 +50,53 @@
    "id": "s1",
    "stage": "sanctum",
    "seed": 5,
-   "start": 700,
-   "seconds": 5.6,
+   "start": 600,
+   "seconds": 4.6,
    "extra": [
     "--policy=summon",
-    "--classes=bone_hound,abomination,gargoyle,frost_wraith",
-    "--passives=blood_scent,bone_plating,unholy_resilience,soul_recycling"
+    "--classes=abomination",
+    "--passives=bone_plating"
    ],
-   "texts": [
-    {
-     "text": "Hellhounds,",
-     "font": "jersey",
-     "size": 57,
-     "scale": 2,
-     "color": "cream",
-     "y": 230,
-     "from": 0.0,
-     "to": 5.6
-    },
-    {
-     "text": "Bone Colossi,",
-     "font": "jersey",
-     "size": 57,
-     "scale": 2,
-     "color": "cream",
-     "y": 352,
-     "from": 0.0,
-     "to": 5.6
-    },
-    {
-     "text": "Winter Revenants!",
-     "font": "jersey",
-     "size": 57,
-     "scale": 2,
-     "color": "gold",
-     "y": 474,
-     "from": 0.0,
-     "to": 5.6
-    }
-   ]
+   "texts": []
   },
   {
    "id": "s2",
-   "stage": "sanctum",
+   "stage": "graveyard",
    "seed": 5,
-   "start": 840,
-   "seconds": 5.6,
+   "start": 800,
+   "seconds": 4.6,
    "extra": [
     "--policy=summon",
-    "--classes=bone_hound,abomination,gargoyle,frost_wraith",
-    "--passives=blood_scent,bone_plating,unholy_resilience,soul_recycling"
+    "--classes=frost_wraith",
+    "--passives=soul_recycling"
    ],
-   "texts": [
-    {
-     "text": "Hellhounds,",
-     "font": "jersey",
-     "size": 57,
-     "scale": 2,
-     "color": "cream",
-     "y": 230,
-     "from": 0.0,
-     "to": 5.6
-    },
-    {
-     "text": "Bone Colossi,",
-     "font": "jersey",
-     "size": 57,
-     "scale": 2,
-     "color": "cream",
-     "y": 352,
-     "from": 0.0,
-     "to": 5.6
-    },
-    {
-     "text": "Winter Revenants!",
-     "font": "jersey",
-     "size": 57,
-     "scale": 2,
-     "color": "gold",
-     "y": 474,
-     "from": 0.0,
-     "to": 5.6
-    }
-   ]
+   "texts": []
+  },
+  {
+   "id": "s3",
+   "stage": "wastes",
+   "seed": 6,
+   "start": 660,
+   "seconds": 4.6,
+   "extra": [
+    "--policy=summon",
+    "--classes=spawn_of_the_deep",
+    "--passives=crushing_depths"
+   ],
+   "texts": []
+  },
+  {
+   "id": "s4",
+   "stage": "olympus",
+   "seed": 7,
+   "start": 760,
+   "seconds": 4.6,
+   "extra": [
+    "--policy=summon",
+    "--classes=bone_golem",
+    "--passives=grave_masonry"
+   ],
+   "texts": []
   },
   {
    "id": "end",
@@ -149,22 +113,22 @@
    },
    "texts": [
     {
-     "text": "FREE IN YOUR BROWSER",
+     "text": "free in your browser",
      "font": "jersey",
      "size": 38,
-     "scale": 3,
-     "color": "gold",
-     "y": 900,
+     "scale": 2,
+     "color": "white",
+     "y": 960,
      "from": 0.3,
      "to": 3.2
     },
     {
-     "text": "LINK IN BIO",
+     "text": "link in bio",
      "font": "jersey",
-     "size": 57,
-     "scale": 3,
-     "color": "teal",
-     "y": 1080,
+     "size": 38,
+     "scale": 2,
+     "color": "white",
+     "y": 1044,
      "from": 0.7,
      "to": 3.2
     }
