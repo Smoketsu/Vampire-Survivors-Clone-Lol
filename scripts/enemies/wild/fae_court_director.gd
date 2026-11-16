@@ -20,6 +20,16 @@
 ##     boss, a miniboss, a structure or a flier). Drawn on the director's own
 ##     layer just over the blight (a disc of moss and its mushrooms, or the
 ##     tiles/wild_fairy_ring patch).
+##     Rings slow ATTACKS too (owner answer, GDD §15.0 "Fairy rings slow attacks;
+##     Heartwood renamed Deep Roots"), ring_attack_slow, read live from the body's
+##     position each tick: a grounded summon's attack / cast timer through
+##     HordeDirector.attack_haste() (summon_attack_rate()), an enemy's attack
+##     timer in Enemy._tick_timers() (enemy_attack_rate(); the same exemptions as
+##     the move slow), and the necromancer's spell cooldowns ("cooldown",
+##     "recharge", "pulse_interval") through AbilityManager._apply_spell_buffs()
+##     (spell_cooldown_mult()), whose cache this director drops when he steps in
+##     or out of a ring (checked every ring_every s). Kit specials and summon
+##     behaviour specials keep their own timers.
 ##   * THE WINTER PRINCE ("winter_prince" event): the stage miniboss comes in
 ##     prince_dist px ahead of the necromancer and his row's winter_time s of
 ##     WINTER begin (set_override(WINTER, now + winter_time): the snow, the
@@ -28,8 +38,9 @@
 ##     Queen offers and still win"): MetaProgress reads the Summer Queen's
 ##     bargain stats (BossSummerQueen) with the run's victory.
 ## Deterministic: game time, pure hashes and positions only. Stats:
-## ring_slows_you, ring_slows_summons, ring_slows_enemies,
-## prince_spawned, prince_killed, prince_winter_s.
+## ring_slows_you, ring_slows_summons, ring_slows_enemies, ring_cast_s,
+## prince_spawned, prince_killed, prince_winter_s (and the attack-slowed tick
+## counters below, printed as seconds).
 class_name FaeCourtDirector
 extends Node2D
 
@@ -58,6 +69,15 @@ var _prince_gen: int = 0
 var _draws: bool = false
 ## The ring cell under the necromancer last drawn (redraw on a change).
 var _drawn_at: Vector2i = Vector2i(2147483647, 0)
+## Physics ticks a grounded summon's attack timer ran ring-slowed (summed over
+## summons; printed as seconds).
+var _summon_slow_ticks: int = 0
+## Physics ticks an enemy's attack timer ran ring-slowed (summed over enemies;
+## printed as seconds).
+var _enemy_slow_ticks: int = 0
+## Per player slot (game.all_players index): true while that necromancer's spell
+## cooldowns are ring-slowed (set at each ring check; sized on the first one).
+var _cast_slowed: Array[bool] = []
 
 
 func _ready() -> void:
@@ -92,6 +112,35 @@ func cell_of(p: Vector2) -> Vector2i:
 func in_ring(p: Vector2) -> bool:
 	var g := ring_in(cell_of(p), config)
 	return g.z > 0.0 and p.distance_to(Vector2(g.x, g.y)) <= g.z
+
+
+## Rate (0..1] a grounded summon's attack timer runs at this tick: 1 -
+## ring_attack_slow inside a ring, 1 outside or airborne (HordeDirector.attack_haste()).
+func summon_attack_rate(u: SummonedUnit) -> float:
+	if u.airborne or u.flies or not in_ring(u.position):
+		return 1.0
+	_summon_slow_ticks += 1
+	return 1.0 - float(config["ring_attack_slow"])
+
+
+## Rate (0..1] enemy `e`'s attack timer runs at this tick: 1 - ring_attack_slow
+## inside a ring, 1 outside (and always for a boss, a miniboss, a structure or a
+## flier, as the move slow); Enemy._tick_timers().
+func enemy_attack_rate(e: Enemy) -> float:
+	if e.is_boss or e.is_miniboss or e.is_structure or e.flies or e.floating or not in_ring(e.position):
+		return 1.0
+	_enemy_slow_ticks += 1
+	return 1.0 - float(config["ring_attack_slow"])
+
+
+## Spell cooldown multiplier (>= 1) for necromancer `pl`: 1 / (1 -
+## ring_attack_slow) while he stood in a ring at the last check, 1 otherwise
+## (AbilityManager._apply_spell_buffs()).
+func spell_cooldown_mult(pl: Necromancer) -> float:
+	var k := game.all_players.find(pl)
+	if k < 0 or k >= _cast_slowed.size() or not _cast_slowed[k]:
+		return 1.0
+	return 1.0 / (1.0 - float(config["ring_attack_slow"]))
 
 
 ## Per-tick update (EnemyDirector, after the MarchDirector).
@@ -137,6 +186,18 @@ func _step_rings() -> void:
 	for pl in game.all_players:
 		if not pl.dead and in_ring(pl.position) and game.wild.slow_player(pl, f, linger):
 			game.stat_add("ring_slows_you", 1.0)
+	# Casting: a step in or out of a ring drops that slot's cached spell stats.
+	_cast_slowed.resize(game.all_players.size())
+	for k in game.all_players.size():
+		var pl := game.all_players[k]
+		var inside := not pl.dead and in_ring(pl.position)
+		if inside:
+			game.stat_add("ring_cast_s", float(config["ring_every"]))
+		if inside != _cast_slowed[k]:
+			_cast_slowed[k] = inside
+			var prev := game.bind_index(k)
+			game.abilities.invalidate_spell_stats()
+			game.unbind(prev)
 	for hd in game.all_hordes:
 		for u in hd.units:
 			if u.active and not u.airborne and not u.flies and u.state != SummonedUnit.State.SPAWNING and u.state != SummonedUnit.State.DEAD \
@@ -216,8 +277,10 @@ func _draw() -> void:
 ## One autotest summary line of the stage's systems.
 func summary_line() -> String:
 	var st := game.stats
-	return "fairy rings: slowed you %d, summons %d, enemies %d | winter prince spawned %d, killed %d%s (winter %d s, fans %d, bolts %d) | events: %s" % [
+	var tps := float(Engine.physics_ticks_per_second)  # Ticks to seconds.
+	return "fairy rings: slowed you %d, summons %d, enemies %d; attacks slowed summons %d s, enemies %d s, your casting %d s | winter prince spawned %d, killed %d%s (winter %d s, fans %d, bolts %d) | events: %s" % [
 		int(st.get("ring_slows_you", 0.0)), int(st.get("ring_slows_summons", 0.0)), int(st.get("ring_slows_enemies", 0.0)),
+		int(float(_summon_slow_ticks) / tps), int(float(_enemy_slow_ticks) / tps), int(st.get("ring_cast_s", 0.0)),
 		int(st.get("prince_spawned", 0.0)), int(st.get("prince_killed", 0.0)), (" at " + prince_time) if prince_time != "" else "",
 		int(st.get("prince_winter_s", 0.0)), int(st.get("prince_fans", 0.0)), int(st.get("prince_bolts", 0.0)),
 		", ".join(fired)]

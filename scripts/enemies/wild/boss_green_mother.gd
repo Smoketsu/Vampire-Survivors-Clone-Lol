@@ -27,7 +27,7 @@
 ## does not die (the ending text: she sinks into the roots and plants the dead);
 ## beaten before 0:00 she sets GreenMotherData.BEATEN_STAT, and at 0:00 the
 ## First Spring (WildRules.first_spring) ends the campaign. Slaying her unlocks
-## Root and Rot with Compost Heart and the Ossuary Oak with Heartwood
+## Root and Rot with Compost Heart and the Ossuary Oak with Deep Roots
 ## (UnlockData, boss "green_mother"). Determinism: the seeded gameplay RNG (the
 ## circles' spots, the buried summon, the Last Claim's pick), game time.
 ## Stats: boss_atk_<special>, mother_turns, mother_turn_<season>,

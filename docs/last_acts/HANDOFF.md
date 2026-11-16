@@ -25,9 +25,10 @@ in each act's GDD rows (and were listed to the owner as they came).
   epilogue panels. Review page <https://claude.ai/artifact/3xvAN2KYTE1JVuotg3HcZp>, collections `wave2_art_r1`..`r10`;
   generators `docs/last_acts/tools/make_wave2_review*.py`. Future redos: one Sonnet agent (bust boxes: the ART_BIBLE rule,
   `tools/bust_check.py --scale 8`; the review previews play at about 2x, so the owner's "N px" is about N/2 art px).
-- Open design questions: the Thorn Tithe (the Fae Court's second bargain, an agent's design), fairy rings slowing
-  attacks too (lead: no), Heartwood (the Ossuary Oak's passive name), the half-damage ward on the Green Mother during
-  Last Claim slots (lead: keep).
+- Design questions: all answered (owner, Nov 2026; GDD §15.0 "Owner answers after the reorder tuning" and "Fairy rings
+  slow attacks; Heartwood renamed Deep Roots"): the Thorn Tithe stays; fairy rings slow attacks too, both armies
+  (built: attack timers and spell cooldowns at half speed inside a ring); Heartwood is renamed Deep Roots (built; the id
+  `heartwood` stays); the Green Mother's half-damage ward during Last Claim slots stays.
 
 ## Next, in order
 

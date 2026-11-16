@@ -213,6 +213,16 @@ func _apply_spell_buffs(out: Dictionary) -> Dictionary:
 		var reach := game.dynasty.army_reach_mult()  # x reach now (1 outside a storm).
 		if reach < 1.0:
 			out["range"] = float(out["range"]) * reach
+	# --- The Fae Court --- a fairy ring slows casting: the cooldown keys x
+	# FaeCourtDirector.spell_cooldown_mult() while the bound necromancer stands in
+	# one (the director drops this cache when he steps in or out; null elsewhere).
+	var fc := game.enemies.fae_court if game.enemies != null else null  # The Fae Court's rings.
+	if fc != null:
+		var cm := fc.spell_cooldown_mult(game.player)  # x cooldown (1 outside a ring).
+		if cm != 1.0:
+			for key: String in ["cooldown", "recharge", "pulse_interval"]:
+				if out.has(key):
+					out[key] = float(out[key]) * cm
 	var pw := game.powerups  # Owner of the timed buffs.
 	if pw == null or not pw.is_active("hyper"):
 		return out

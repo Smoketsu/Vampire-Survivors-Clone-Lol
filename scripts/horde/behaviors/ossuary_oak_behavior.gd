@@ -21,7 +21,7 @@
 ##      foe its lash strikes is held by its roots, slowed root_slow for
 ##      root_time s (CombatResolver.slow_enemy(); bosses through their own slow
 ##      resist).
-## With no foe near it uproots and walks slowly back to its post. Heartwood (its
+## With no foe near it uproots and walks slowly back to its post. Deep Roots (its
 ## paired passive, PassiveData "heartwood", read only here): x 1 +
 ## heart_damage on the lash, + heart_radius px.
 ## Determinism: no RNG beyond the base class's first cooldown (the seeded
@@ -39,11 +39,11 @@ const EVOLUTION_ID: String = "world_root_warden"
 const SOURCE: String = "ossuary_oak_lash"
 ## Damage-source tag of the World-Root Warden's lash.
 const EVOLVED_SOURCE: String = "world_root_lash"
-## Passive id of Heartwood (its paired passive; PassiveData, UnlockData).
+## Passive id of Deep Roots (its paired passive, built as Heartwood: the id stays; PassiveData, UnlockData).
 const HEARTWOOD: String = "heartwood"
-## Heartwood's level-row key: share more lash damage (0..1).
+## Deep Roots' level-row key: share more lash damage (0..1).
 const HEARTWOOD_DAMAGE_KEY: String = "heart_damage"
-## Heartwood's level-row key: px more lash radius.
+## Deep Roots' level-row key: px more lash radius.
 const HEARTWOOD_RADIUS_KEY: String = "heart_radius"
 
 ## True while it stands rooted.

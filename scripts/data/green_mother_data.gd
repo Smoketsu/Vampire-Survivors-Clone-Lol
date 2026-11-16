@@ -43,7 +43,7 @@
 ## Beaten, she does not die: she sinks into the roots and gives the
 ## necromancer the one claim left (the short ending text; at 0:00 the FIRST
 ## SPRING, WildRules.first_spring, instead of Spring Returns). Slaying her
-## unlocks Root and Rot with Compost Heart, and the Ossuary Oak with Heartwood
+## unlocks Root and Rot with Compost Heart, and the Ossuary Oak with Deep Roots
 ## (UnlockData, boss "green_mother"); the achievement The First Spring.
 ## Everything is TUNING (not in GDD) unless marked as the owner-approved
 ## proposal or an owner answer. Tuned for the final slot XV (the hardest).

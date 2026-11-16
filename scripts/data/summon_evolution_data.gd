@@ -1179,7 +1179,7 @@ const EVOLUTIONS := {
 	# --- Act XV (temporary number): the World-Tree ---
 	# World-Root Warden (owner-approved proposal: "the Ossuary Oak ... (evolution
 	# World-Root Warden)"; GDD §15.0 "The Ossuary Oak, World-Root Warden and
-	# Heartwood"): Ossuary Oak Lv 5 + Heartwood Lv 5 (a NEW passive, own
+	# Heartwood"): Ossuary Oak Lv 5 + Deep Roots Lv 5 (id heartwood; a NEW passive, own
 	# decision, owner rule: maxed). A warden of the world's roots in bone (art
 	# summons/world_root_warden). It lashes harder and wider, and every foe its
 	# lash strikes is held by its roots (OssuaryOakBehavior reads these

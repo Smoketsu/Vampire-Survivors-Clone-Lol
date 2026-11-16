@@ -1044,10 +1044,15 @@ func set_banners(zones: PackedVector3Array, haste: float) -> void:
 ## this army's banners (the strongest, not added up) + Warlord's Seal's when it
 ## stands within BannerData.SEAL_RADIUS px of its necromancer. Exactly 1 when
 ## neither the spell nor the passive is owned (every older run unchanged). The
-## same on every stage (no act-only rule).
+## same on every stage (no act-only rule), times the GROUND's: a Fae Court fairy
+## ring slows the timer of a summon standing in it (FaeCourtDirector.
+## summon_attack_rate(); a stage hazard like TerrainSlow, not a summon rule;
+## exactly 1 elsewhere).
 func attack_haste(u: SummonedUnit) -> float:
+	var fc := game.enemies.fae_court if game.enemies != null else null  # The Fae Court's rings (null elsewhere).
+	var ground := fc.summon_attack_rate(u) if fc != null else 1.0  # Ring rate (1 outside).
 	if banner_haste <= 0.0 and _seal_haste <= 0.0:
-		return 1.0
+		return ground
 	var h := 0.0  # Extra share.
 	if banner_haste > 0.0:
 		for z in banner_zones:
@@ -1056,5 +1061,5 @@ func attack_haste(u: SummonedUnit) -> float:
 				break
 	if _seal_haste > 0.0 and u.position.distance_squared_to(_seal_pos) <= BannerData.SEAL_RADIUS * BannerData.SEAL_RADIUS:
 		h += _seal_haste
-	return 1.0 + h
+	return (1.0 + h) * ground
 

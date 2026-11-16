@@ -116,6 +116,8 @@ const MARCH := {
 ##   ring_every     — s between two ring checks.
 ##   ring_slow      — 0..1 the move slow inside a ring (both armies).
 ##   ring_linger    — s a slow lasts after a check (to the next check and a little more).
+##   ring_attack_slow — 0..1 of attack / cast speed lost inside a ring (both armies;
+##                    attack timers run at 1 - this, spell cooldowns x 1 / (1 - this)).
 ##   ring_mushrooms — mushrooms drawn on a ring (drawing only).
 ##   ring_art       — tile key of a fairy ring's patch (disc textures until it exists).
 ##   prince_objective — HUD objective while the Winter Prince's winter holds.
@@ -131,6 +133,7 @@ const FAE_COURT := {
 	"ring_every": 0.25,  # TUNING (not in GDD) s
 	"ring_slow": 0.5,  # Owner-approved proposal: "time runs at half speed for whatever is inside, both armies" (the move speed; see GDD §15.0 "The Fae Court")
 	"ring_linger": 0.35,  # TUNING (not in GDD) s
+	"ring_attack_slow": 0.5,  # Owner answer (GDD §15.0 "Fairy rings slow attacks; Heartwood renamed Deep Roots"): rings slow attacks too, both armies; the proposal's "half speed" (every attack interval and spell cooldown x2 inside a ring)
 	"ring_mushrooms": 12,  # TUNING (not in GDD) drawing only
 	"ring_art": "tiles/wild_fairy_ring",  # docs/year/ART_MANIFEST.md (phase 2 art)
 	"prince_objective": "The Winter Prince brings a minute of winter into the summer: bring him down",  # TUNING (not in GDD)

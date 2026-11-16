@@ -13,7 +13,7 @@
 ##   item_lines(game, st) — from Autotest.finish() on every stage, only when one
 ##       of the World-Tree's items was taken (so other runs print as before):
 ##     act XV spell:   Root and Rot / Return to Earth
-##     act XV passive: Compost Heart, Heartwood
+##     act XV passive: Compost Heart, Deep Roots (id heartwood)
 ##     act XV class:   the Ossuary Oak / World-Root Warden
 ## The big damage sources (her season bursts, the Last Claim's replays under
 ## their own acts' tags, the burial-free rules) carry their own tags in the
@@ -51,9 +51,9 @@ static func item_lines(game: Game, st: Dictionary) -> void:
 	if ch > 0:
 		print("[autotest] act XV passive: compost heart Lv%d (rot +%d%%, rings +%.1f s)" % [
 			ch, roundi(100.0 * ab.passive_value(RootAndRotData.COMPOST_HEART, RootAndRotData.ROT_KEY)), ab.passive_value(RootAndRotData.COMPOST_HEART, RootAndRotData.TIME_KEY)])
-	var hw := ab.passive_level(OssuaryOakBehavior.HEARTWOOD)  # Heartwood level.
+	var hw := ab.passive_level(OssuaryOakBehavior.HEARTWOOD)  # Deep Roots level.
 	if hw > 0:
-		print("[autotest] act XV passive: heartwood Lv%d (lash +%d%%, +%d px)" % [
+		print("[autotest] act XV passive: deep roots Lv%d (lash +%d%%, +%d px)" % [
 			hw, roundi(100.0 * ab.passive_value(OssuaryOakBehavior.HEARTWOOD, OssuaryOakBehavior.HEARTWOOD_DAMAGE_KEY)), int(ab.passive_value(OssuaryOakBehavior.HEARTWOOD, OssuaryOakBehavior.HEARTWOOD_RADIUS_KEY))])
 	var cls := OssuaryOakBehavior.CLASS_ID
 	if int(game.horde.class_levels.get(cls, 0)) > 0:

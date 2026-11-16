@@ -1198,9 +1198,11 @@ func resolve_blocking() -> void:
 		u.try_bash(self, n)
 
 
-## Shared countdowns (flash, slow, cooldowns).
+## Shared countdowns (flash, slow, cooldowns). A Fae Court fairy ring slows the
+## attack timer (FaeCourtDirector.enemy_attack_rate(); null elsewhere).
 func _tick_timers(delta: float) -> void:
-	attack_cd -= delta
+	var fc := game.enemies.fae_court  # The Fae Court's rings (null on every other stage).
+	attack_cd -= delta if fc == null else delta * fc.enemy_attack_rate(self)
 	heal_cd -= delta
 	orb_hit_cd -= delta
 	if slow_timer > 0.0:

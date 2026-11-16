@@ -3100,8 +3100,8 @@ one run) unlocks the counter-passive **Fallow Ground** (blight spreads faster; o
 **The Fae Court** (stage 44): a court of **endless summer** under a sky that never sets: the year stays at Summer the
 whole run (its wildfires come every 40 s instead of 24), the court's Fae Knights and the Wild Hunt ride from 5:00, and
 only the Winter Prince's minute breaks it. Zones: the Rose Maze (rose hedges), the Revel (open lawns), the Mirror Lake
-and the Throne of Blossoms. **Fairy rings** (mushroom circles) slow whatever stands inside to half speed, you, your army
-and the enemy alike. **The Winter Prince** (miniboss, 11:40) brings **one minute of winter** into her summer (snow,
+and the Throne of Blossoms. **Fairy rings** (mushroom circles) slow whatever stands inside to half speed, moving, attacking
+and casting (your spell cooldowns double inside one), you, your army and the enemy alike (not bosses, minibosses or fliers). **The Winter Prince** (miniboss, 11:40) brings **one minute of winter** into her summer (snow,
 a blizzard, the Winter Court) and throws fans of chilling frost bolts. **The Summer Queen** comes with 3:00 left:
 **petals** (fans of petal bolts), **the Masque** (she vanishes and reappears among four courtiers wearing her face on a
 ring round you; a hit unmasks a courtier, a hit on her unmasks them all), **the Bargain** (at two-thirds and one-third of
@@ -3132,7 +3132,7 @@ as on every Wild stage). Slaying her unlocks **Root and Rot** (a ring of roots g
 everything inside; evolves into **Return to Earth** with **Compost Heart**: three rings that also bite) and so **the
 Gravegardener** (her rings grow wider), and the finale summon class **the Ossuary Oak** (a slow tree of bone that roots
 in place among foes as a blocker and lashes every foe around it; evolves into the **World-Root Warden** with
-**Heartwood**: wider lashes that root what they strike). Achievement **The First Spring** (defeat the Green Mother; it
+**Deep Roots**, renamed from Heartwood (owner, Nov 2026): wider lashes that root what they strike). Achievement **The First Spring** (defeat the Green Mother; it
 only records the clear until the reorder pass writes the final epilogue part).
 
 Art still to come for the World-Tree (code shapes until then): `wild/gardener_of_roots` (+ walk), `wild/green_mother`
@@ -3155,7 +3155,7 @@ Mother's arrival whatever her health (ids `covenant`, `black_tide`, `sanguine_co
 `overgrowth`, `spring returns`, `wild kinds`, `wild stage`, `wild damage`, `greenwood`, `wild specials`, `stag king`,
 `fae court`, `summer queen`, `a fair bargain`, `world tree`, `green mother`, `last claim` (which slots ran, in order, and
 each one's effects), `first spring`, and on any stage `act XV spell` / `act XV passive` / `act XV class` when Wild Hunt,
-Horn of the Hunt, Fallow Ground, Glamour, Changeling, Deadwood, Root and Rot, Compost Heart, Heartwood or the Ossuary
+Horn of the Hunt, Fallow Ground, Glamour, Changeling, Deadwood, Root and Rot, Compost Heart, Deep Roots or the Ossuary
 Oak were taken. The autotest answers every bargain at once (the naive bot refuses, every other bot accepts). Phase 2 brief
 (with the World-Tree's Last Claim): `docs/year/BRIEF_PHASE2.md`.
 
@@ -3948,7 +3948,7 @@ scripts/
     world_tree_ground.gd    The World-Tree's four zone looks over the act's tree floor (tiles/world_tree_<style>, else
                             tiles/wild_tree; Act XV)
     world_tree_report.gd    The autotest's World-Tree lines (world tree, green mother, last claim, first spring) and the
-                            Root and Rot / Compost Heart / Heartwood / Ossuary Oak item lines (Act XV)
+                            Root and Rot / Compost Heart / Deep Roots / Ossuary Oak item lines (Act XV)
     proving_moon_glyphs.gd  Code fallbacks of the Warbeast, Vrask'Tal and his skull belt, and the stage's obstacles (Act IX)
     proving_moon_report.gd  The autotest's Proving Moon lines (proving moon, warbeast, threats, vrask'tal; the Soul Caster
                             and passives' item lines; Act IX)
@@ -4089,7 +4089,7 @@ scripts/
     behaviors/bonehorn_behavior.gd  Act XIV (temporary): the Bonehorn's trampling charge through the densest pack
                             and its trot back; Fossil Tyrant's roar; Petrified Horns' keys
     behaviors/ossuary_oak_behavior.gd  Act XV (temporary): the Ossuary Oak roots among foes and lashes every foe
-                            round it; the World-Root Warden's roots; Heartwood's keys
+                            round it; the World-Root Warden's roots; Deep Roots' keys
     golem_kit.gd            Content wave 2: Ossuary Hunger, the Ossuary Titan's heal, barrier and
                             collapse wall (HordeDirector.golems, created by the first Golem)
     golem_texts.gd          Content wave 2: Bone Golem / Grave Masonry / Ossuary Titan card and

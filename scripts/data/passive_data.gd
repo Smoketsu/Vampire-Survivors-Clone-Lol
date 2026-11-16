@@ -2737,16 +2737,18 @@ const PASSIVES := {
 			{"compost_rot": 0.15, "compost_time": 1.5},  # TUNING (not in GDD)
 		],
 	},
-	# Heartwood (the Ossuary Oak's paired passive; own decision, the proposal
-	# names none; owner rule: every evolution needs its paired passive maxed;
+	# Deep Roots (the Ossuary Oak's paired passive; built as "Heartwood", own
+	# decision, the proposal names none; renamed Deep Roots by the owner, Nov 2026,
+	# GDD §15.0 "Fairy rings slow attacks; Heartwood renamed Deep Roots": the id
+	# "heartwood", its icon and save keys stay; owner rule: every evolution needs its paired passive maxed;
 	# unlocked with the class by the Green Mother and offered on every stage).
 	# Its effect: the bone wood hardens to the heart: every lash of an Ossuary
 	# Oak / World-Root Warden strikes heart_damage harder and heart_radius px
 	# wider (OssuaryOakBehavior, the one read). Nothing without the class.
 	"heartwood": {
-		"display_name": "Heartwood",  # Own decision
+		"display_name": "Deep Roots",  # Owner's pick (Nov 2026; was "Heartwood")
 		"icon": "heartwood",
-		"description": "Your oaks of bone harden to the heart: the Ossuary Oak lashes harder and wider.",
+		"description": "Your oaks of bone root deep: the Ossuary Oak lashes harder and wider.",
 		"labels": {"heart_damage": ["Ossuary Oak lash damage", "pct"], "heart_radius": ["Ossuary Oak lash radius (px)", "num"]},
 		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
 		"levels": [
