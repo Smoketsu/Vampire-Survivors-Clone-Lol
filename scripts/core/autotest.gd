@@ -870,6 +870,23 @@ func _track(n: Node2D, gen: int, r: float, wants: bool, label: String) -> void:
 		_stuck_at_obstacle += 1
 	print("[autotest] stuck unit: %s at %s (%.0f px from player, touching obstacle: %s)" % [
 		label, str(n.position.round()), n.position.distance_to(game.player.position), str(at_obstacle)])
+	if n is Enemy:  # DEBUG-TMP
+		var ee := n as Enemy
+		var tp: Vector2 = ee.target.position if ee.target != null else Vector2.ZERO
+		var cbk := game.arena.city_blocks
+		if cbk != null:
+			for w in cbk.wrecks:
+				if w.obstacle.center.distance_to(ee.position) < 300.0:
+					print("[dbg] wreck %s half %s" % [str(w.obstacle.center), str(w.obstacle.half)])
+			for dd: Vector2 in [Vector2(1,0), Vector2(-1,0), Vector2(0,1), Vector2(0,-1)]:
+				var bo := cbk._blocker(ee.position, dd, ee.radius, ee.radius + 16.0)
+				print("[dbg] probe %s -> %s" % [str(dd), "clear" if bo == null else (bo.kind + str(bo.center) + str(bo.half))])
+			var pr := cbk._pressing(ee.position, (tp - ee.position).normalized(), ee.radius)
+			print("[dbg] pressing %s pos %s r %.1f" % [str(pr != null), str(ee.position), ee.radius])
+		print("[dbg] vel=%s kb=%s hint=%s spd=%.1f slow=%.2f/%.2f eng=%.2f target=%s at %s sep=%s busy=%s" % [str(ee.velocity), str(ee.knockback), str(ee.street_hint), ee.move_speed, ee.slow_factor, ee.slow_timer, ee.engaged_timer, str(ee.target), str(tp), str(ee.sep), str(ee.kit != null and ee.kit.is_busy())])
+	else:
+		var uu := n as SummonedUnit
+		print("[dbg] unit state=%s vel=%s anchor=%s target=%s tpos=%s ppos=%s r=%.1f slide=%s obst=%s" % [str(uu.state), str(uu.velocity), str(uu.anchor_offset), str(uu.target), str(uu.target.position if uu.target != null else Vector2.ZERO), str(game.player.position), uu.radius, str(game.arena._slide.get(uu.get_instance_id())), str(game.arena.obstacle_at(uu.position).center if game.arena.obstacle_at(uu.position) != null else Vector2.ZERO)])
 	_stuck_track[id] = [gen, n.position, game.elapsed]
 
 
