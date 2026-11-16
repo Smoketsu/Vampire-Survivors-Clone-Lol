@@ -37,7 +37,7 @@ Targets taken from these: slots III-IV ~1/10 and ~80; VIII-IX ~70; XI-XIII ~60-6
 | wastes (XII) | HP 1.3 -> 1.4, damage 1.0 -> 1.1 | 1/10, 73 | 1/10, 57 | - |
 | assembly / citadel (XII) | none | 0/10 51, 1/10 51 | - | - |
 | crash_site (XIII) | damage 1.5 -> 1.7 | 1/10, 69 | 2/10, 57 | - |
-| proving_moon (XIII) | damage 1.5 -> 1.8 | 0/10, 80 | 1/8, 70 (2 runs pending) | - |
+| proving_moon (XIII) | damage 1.5 -> 1.8 | 0/10, 80 | 1/10, 68 | - |
 | ark (XIII) | none | 3/10, 60 | - | - |
 
 ## Why
