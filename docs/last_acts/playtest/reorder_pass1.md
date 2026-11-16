@@ -64,3 +64,12 @@ never had: `skid_row_summon_s7` round 1 (a riot cop against a building), `fort_k
 (`{"enemy_boss": 8}`, the boss alive at 0:00 with 990 HP), `liberty_heights_army_s7` round 2 (one Warrior against an
 obstacle). The lower numbers change the run's path, so these look like city-map pathing edge cases exposed by it;
 they must be fixed before `main` moves.
+
+**Stuck units: fixed** (GDD §15.0 "City stuck units after the slot tuning"). `fort_kessler_summon_s7`: the 8 episodes were
+General Harrow (kind `boss`, after Broken Arrow) dithering 3 px up and down at an alley mouth above four wrecks of
+the street's centre: `CityBlocks.street_dir()` alternated its "in toward the centre line" step and the axis toward his
+target. It now keeps the previous hint against a fallback that would reverse it while that hint is clear and closes on
+the target; he walks up the alley and dies at 19:58. `liberty_heights_army_s7`: a Warrior pinned under a building
+corner, its slide memory (picked sliding right) cancelling its own walk left after its target; on a blocks layout the
+slide side now follows a clear opposite lean (`CityBlockData.SLIDE_FLIP_LEAN`). Both reproducers and
+`skid_row_summon_s7` report `stuck_units=0`; the Graveyard default seed 7 summary is unchanged.

@@ -1028,7 +1028,7 @@ func physics_step(delta: float) -> void:
 			# Hysteresis: once off the straight line it takes a longer clear look to
 			# go straight again (no flip-flop at the edge of the look-ahead).
 			var look := CityBlockData.STEER_LOOK if street_hint == Vector2.ZERO else CityBlockData.STEER_LOOK_BACK
-			var sd := game.arena.city_blocks.street_dir(position, goal, radius, look)  # This tick's decision.
+			var sd := game.arena.city_blocks.street_dir(position, goal, radius, look, street_hint)  # This tick's decision.
 			street_hint = Vector2.ZERO if sd.dot(move) > 0.999 else sd  # ZERO: straight was clear.
 		if street_hint != Vector2.ZERO:
 			move = street_hint

@@ -233,8 +233,15 @@ func lane(pos: Vector2, dir: Vector2) -> Dictionary:
 ##     side the body is on), a step in toward that street's centre line (off a
 ##     building corner at a crossing's edge), the axes toward the target and a
 ##     sidestep round what blocks the straight line is taken.
+##   * `prev` is the body's last hint (ZERO = it went straight). A fallback
+##     step (anything but the routed direction) that would turn it straight
+##     back while `prev` is still clear and still closes on the target keeps
+##     `prev` instead: the step in toward the centre line and the axis toward
+##     the target took turns at an alley mouth above a row of wrecks (each
+##     probe flipped with a 3 px move), and General Harrow dithered there for
+##     good (Fort Kessler, seed 7, summon policy).
 ##     Never a navmesh.
-func street_dir(pos: Vector2, target: Vector2, r: float = 8.0, look: float = 96.0) -> Vector2:
+func street_dir(pos: Vector2, target: Vector2, r: float = 8.0, look: float = 96.0, prev: Vector2 = Vector2.ZERO) -> Vector2:
 	var to := target - pos
 	var dist := to.length()
 	if dist < 1.0:
@@ -257,6 +264,7 @@ func street_dir(pos: Vector2, target: Vector2, r: float = 8.0, look: float = 96.
 	var goal := target if (in_h_street(target) or in_v_street(target)) else exit_point(target)  # Its street point.
 	var tg := goal - pos  # Toward the street point.
 	var cands: Array[Vector2] = []  # Directions to try, in order.
+	var routed := Vector2.ZERO  # The routed direction (ZERO = none); every other candidate is a fallback.
 	if tg.length() > 8.0:
 		var inh := in_h_street(pos)
 		var inv := in_v_street(pos)
@@ -283,6 +291,7 @@ func street_dir(pos: Vector2, target: Vector2, r: float = 8.0, look: float = 96.
 				cands.append(Vector2(0.0, _sgn(ys - pos.y)))
 		if not cands.is_empty():
 			var d0: Vector2 = cands[0]  # The routed direction.
+			routed = d0
 			var rb := _blocker(pos, d0, r, r + 16.0)  # What blocks it (null = clear).
 			if rb != null and not is_building(rb):
 				# A wreck in the lane: step round it to the side the body is on
@@ -316,6 +325,8 @@ func street_dir(pos: Vector2, target: Vector2, r: float = 8.0, look: float = 96.
 		cands.append(Vector2(signf(off.x) if absf(off.x) > 0.5 else 1.0, 0.0))
 	for d in cands:
 		if d != Vector2.ZERO and _blocker(pos, d, r, r + 16.0) == null:
+			if d != routed and prev.dot(d) < -0.999 and prev.dot(to) > 0.0 and _blocker(pos, prev, r, r + 16.0) == null:
+				return prev  # No turning straight back on a fallback (see the header).
 			return d
 	return straight
 

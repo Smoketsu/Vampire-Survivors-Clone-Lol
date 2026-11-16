@@ -568,6 +568,8 @@ func _slide_side(id: int, vt: float, speed: float, offset: float, now: float) ->
 	var side := 0.0
 	if mem != null and (mem as Vector2).y >= now:
 		side = (mem as Vector2).x
+		if city_blocks != null and side * vt < -speed * CityBlockData.SLIDE_FLIP_LEAN:
+			side = -side  # Act VIII: see SLIDE_FLIP_LEAN (a long face keeps the contact, so the memory never lapses).
 	elif absf(vt) > speed * 0.1:
 		side = signf(vt)
 	else:
