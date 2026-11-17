@@ -127,7 +127,7 @@ func _step_coop(delta: float) -> void:
 		var c := active[i]
 		if not c.magnet:
 			for s in co.slots:
-				if s.alive() and c.position.distance_squared_to(s.player.position) <= s.player.pickup_radius * s.player.pickup_radius:
+				if not s.downed and not s.player.dead and c.position.distance_squared_to(s.player.position) <= s.player.pickup_radius * s.player.pickup_radius:
 					c.magnet = true
 					c.slot = s.index
 					break

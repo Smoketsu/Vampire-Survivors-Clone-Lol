@@ -499,7 +499,10 @@ func resolve_all(delta: float) -> void:
 			if not u.active or u.state == SummonedUnit.State.SPAWNING or u.airborne or u.flies:
 				continue  # A flying Gargoyle passes over obstacles (it lands on a free point); so does a hovering Grave Drone (Act III).
 			var before := u.position
-			u.position = _resolve_body(u.position, u.radius, u.velocity, u.get_instance_id(), delta, now)
+			var uo := obstacle_at(before)  # The obstacle of its cell (null for most bodies: nothing to resolve).
+			if uo == null:
+				continue
+			u.position = _resolve_body(uo, u, before, u.radius, u.velocity, delta, now)
 			if u.position != before:
 				resolved_summons += 1
 				if city_blocks != null:
@@ -508,7 +511,10 @@ func resolve_all(delta: float) -> void:
 		if not e.active or e.phases_obstacles:
 			continue  # (A phasing body, the Ink Wraith, slips through obstacles.)
 		var before := e.position
-		e.position = _resolve_body(e.position, e.radius, e.velocity, e.get_instance_id(), delta, now)
+		var eo := obstacle_at(before)  # The obstacle of its cell (null for most bodies: nothing to resolve).
+		if eo == null:
+			continue
+		e.position = _resolve_body(eo, e, before, e.radius, e.velocity, delta, now)
 		if e.position != before:
 			resolved_enemies += 1
 			if city_blocks != null:
@@ -539,10 +545,10 @@ func _count_city_push(o: Obstacle, enemy: bool, delta: float) -> void:
 
 ## Resolves one body: push-out, then turns the blocked (into-the-obstacle)
 ## part of `vel` into tangential motion on a remembered side.
-func _resolve_body(pos: Vector2, r: float, vel: Vector2, id: int, delta: float, now: float) -> Vector2:
-	var o := obstacle_at(pos)
-	if o == null:
-		return pos
+## `o` is the obstacle of the body's cell (never null: resolve_all() skips
+## bodies in free cells before calling); `body` is only asked for its instance
+## id (the slide-memory key) when it actually slides.
+func _resolve_body(o: Obstacle, body: Object, pos: Vector2, r: float, vel: Vector2, delta: float, now: float) -> Vector2:
 	var push := separation(o, pos, r)
 	if push == Vector2.ZERO:
 		return pos
@@ -551,7 +557,7 @@ func _resolve_body(pos: Vector2, r: float, vel: Vector2, id: int, delta: float, 
 	var vn := vel.dot(n)
 	if vn < 0.0:
 		var t := Vector2(-n.y, n.x)
-		var side := _slide_side(id, vel.dot(t), vel.length(), (pos - o.center).dot(t), now)
+		var side := _slide_side(body.get_instance_id(), vel.dot(t), vel.length(), (pos - o.center).dot(t), now)
 		out += t * side * (-vn) * delta
 	return out
 

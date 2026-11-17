@@ -880,6 +880,7 @@ func step(delta: float) -> void:
 	var recycle := maxf(WaveData.RECYCLE_DISTANCE, _ring_radius() + WaveData.RECYCLE_MARGIN)
 	var recycle2 := recycle * recycle
 	var pw := game.powerups  # Stasis check (power-up freeze).
+	var stasis_on := pw.stasis_running()  # A Stasis runs this tick (constant inside the loop: skips the per-enemy check).
 	var co := game.coop  # Co-op session (null in solo).
 	for e in active:
 		if not e.active:
@@ -887,7 +888,7 @@ func step(delta: float) -> void:
 		if co != null:
 			co.bind_nearest(e.position)  # Co-op: this enemy acts on its nearest standing necromancer.
 			player_pos = game.player.position
-		var frozen := pw.freezes(e) or e.freeze_timer > 0.0 or e.stun_timer > 0.0  # Held by Stasis, a Deep Freeze or a Cathedral Horror stun this tick.
+		var frozen := (stasis_on and pw.freezes(e)) or e.freeze_timer > 0.0 or e.stun_timer > 0.0  # Held by Stasis, a Deep Freeze or a Cathedral Horror stun this tick.
 		e.set_frozen(frozen)
 		if frozen:
 			e.step_frozen(delta)

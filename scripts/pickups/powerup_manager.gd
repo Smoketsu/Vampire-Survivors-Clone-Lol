@@ -304,6 +304,18 @@ func frenzy_bonus(key: String) -> float:
 	return float(PowerupData.POWERUPS["frenzy"][key]) if is_active("frenzy") else 0.0
 
 
+## True while any Stasis runs this tick (co-op: either player's). The enemy
+## step asks it once per tick and skips the per-enemy freezes() call when
+## false: a Stasis only starts in collect(), after the enemies stepped.
+func stasis_running() -> bool:
+	if game.coop != null:
+		for s in game.coop.slots:
+			if float(s.powerup_timers.get("stasis", 0.0)) > 0.0:
+				return true
+		return false
+	return is_active("stasis")
+
+
 ## True if enemy `e` is held by Stasis right now: every enemy while it runs,
 ## except Reckoning enemies (immune) and the stage boss (and a miniboss, the
 ## Cathedral Guardian) after the first boss_fraction of the duration.

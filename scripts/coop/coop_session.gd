@@ -283,8 +283,8 @@ func nearest_slot(pos: Vector2) -> int:
 	var best := -1
 	var best_d := INF
 	for s in slots:
-		if not s.alive():
-			continue
+		if s.downed or s.player == null or s.player.dead:
+			continue  # CoopSlot.alive(), inlined: this runs once per enemy per tick.
 		var d := pos.distance_squared_to(s.player.position)
 		if d < best_d:
 			best_d = d
