@@ -1437,6 +1437,16 @@ def skin_rig(skin: str, base: str) -> dict:
     return rig
 
 
+# Drawn-skins round (Nov 2026): the Hyper / Untouchable / Deathlord skins of the Act II-XV characters. Added when the
+# skin's PNG exists, so the rig is derived exactly like the entries above (a skin keeps its character's pose).
+for _c in ("brine_widow", "heretic_scribe", "marooned_quartermaster", "corsair_queen", "ghost_helmsman", "rune_seer",
+           "shield_maiden_hero", "berserker_hero", "the_embalmer", "lion_priestess", "pharaohs_shade", "fallen_herald",
+           "blind_saint", "the_unveiled", "fern_huntress", "herd_warden", "skywatcher", "horned_herald",
+           "changeling_princess", "gravegardener"):
+    for _f in ("hyper", "untouchable", "deathlord"):
+        if (SPRITE_DIR / f"player/{_c}_{_f}.png").exists():
+            SKINS.setdefault(f"player/{_c}_{_f}", f"player/{_c}")
+
 for _skin, _base in SKINS.items():
     RIGS[_skin] = skin_rig(_skin, _base)
 
