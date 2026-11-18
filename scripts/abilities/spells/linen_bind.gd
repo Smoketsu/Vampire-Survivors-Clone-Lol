@@ -200,16 +200,22 @@ func summary_extra() -> String:
 
 
 ## The bandage lines of the last casts and a band of linen round every
-## wrapped foe (thin rects: no polygons redrawn every frame).
+## wrapped foe (thin rects: no polygons redrawn every frame). With the art the
+## line is the ribbon tiled along it and the band a wrap sized to the foe
+## (LinenBindData STRAND_ART / WRAP_ART), else code lines and rects.
 func _draw() -> void:
 	var now := game.elapsed
 	for ln: Array in _lines:
 		var k := 1.0 - clampf((now - float(ln[2])) / LinenBindData.LINE_FADE, 0.0, 1.0)
+		if CovenantFx.ray_strip(self, ln[0], ln[1], LinenBindData.STRAND_ART, 4.0, 0.0, Color(1.0, 1.0, 1.0, k)):  # 4 px: the ribbon's art height, 1:1.
+			continue
 		draw_line(ln[0], ln[1], Color(LinenBindData.GLOW_COLOR, 0.5 * k), 3.0)
 		draw_line(ln[0], ln[1], Color(LinenBindData.LINEN_COLOR, 0.9 * k), 1.0)
 	for m: Array in _marks:
 		var e: Enemy = m[0]
 		if not e.active or not e.visible:
+			continue
+		if CovenantFx.still(self, CovenantFx.disc_key(LinenBindData.WRAP_ART, e.radius * 2.0), e.position, Color(1.0, 1.0, 1.0, LinenBindData.WRAP_ALPHA)):
 			continue
 		var w := e.radius * 2.2
 		var c := e.position + Vector2(-w * 0.5, -e.radius * 0.6)

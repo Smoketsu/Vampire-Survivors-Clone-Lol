@@ -44,6 +44,13 @@ const LINEN_COLOR := Color(0.92, 0.89, 0.80)  # TUNING (not in GDD)
 const GLOW_COLOR := Color(0.36, 0.94, 0.86)  # TUNING (not in GDD) the necromancer's soul-teal
 ## Seconds a cast's bandage lines stay drawn.
 const LINE_FADE: float = 0.3  # TUNING (not in GDD)
+## Wrap art over a marked foe, by its art size (px across; the one nearest
+## twice the foe's radius is drawn, 1:1; GDD §15.0 "Missing art round wired").
+const WRAP_ART := {16: "spell_fx/linen_wrap_s", 24: "spell_fx/linen_wrap_m", 36: "spell_fx/linen_wrap_l"}  # TUNING (not in GDD)
+## Modulate alpha of the wrap art (0..1).
+const WRAP_ALPHA: float = 0.9  # TUNING (not in GDD)
+## Tether ribbon art (16 x 4, tiling along a cast's line).
+const STRAND_ART: String = "spell_fx/linen_strand"  # TUNING (not in GDD)
 ## Seconds a cast waits before trying again when no foe stands in range.
 const WAIT_RETRY: float = 0.3  # TUNING (not in GDD)
 ## Most wrapped foes remembered at once (older marks drop first).

@@ -31,6 +31,16 @@ const ROD_COLOR: Color = Color(0.42, 0.30, 0.18)  # TUNING (not in GDD) visual o
 const ROPE_COLOR: Color = Color(0.78, 0.68, 0.46, 0.85)  # TUNING (not in GDD) visual only
 ## Tint of the duel ground inside the square (a faint gold).
 const GROUND_TINT: Color = Color(0.96, 0.84, 0.48, 0.08)  # TUNING (not in GDD) visual only
+## Art of a rod (8 x 16, its feet on the bottom row at art x 4; GDD §15.0 "Missing art round wired").
+const POST_ART: String = "norse/holmgang_post"
+## Art of the rope along the top and bottom sides (16 x 3, tiling along x).
+const ROPE_ART: String = "norse/holmgang_rope"
+## Art of the rope along the left and right sides (3 x 16, tiling along y).
+const ROPE_V_ART: String = "norse/holmgang_rope_v"
+## Art of the duel ground (32 x 32, seamless), tiled over the square.
+const GROUND_ART: String = "norse/holmgang_ground"
+## Modulate alpha of the ground art (0..1; it replaces the flat tint).
+const GROUND_ART_ALPHA: float = 0.8  # TUNING (not in GDD) visual only
 ## Px a body is set beyond the rods when it is pushed out.
 const OUT_GAP: float = 2.0  # TUNING (not in GDD)
 ## Px every other ENEMY is kept beyond the rods (the duel ground's verge): the
@@ -146,7 +156,8 @@ func enforce(boss: Enemy, duelist: Necromancer) -> void:
 # =====================================================================================
 
 ## The duel ground (a faint gold), the rope between the rods and the rods,
-## closing in from 1.5x the square while they move.
+## closing in from 1.5x the square while they move: the art when it exists
+## (_draw_art()), else rects.
 func _draw() -> void:
 	if not active:
 		return
@@ -155,6 +166,8 @@ func _draw() -> void:
 		_moving = false
 	var h := half * (1.5 - 0.5 * k)  # Drawn half side (px).
 	var r := Rect2(center - Vector2(h, h), Vector2(h, h) * 2.0)
+	if _draw_art(r, maxi(2, roundi(h * 2.0 / ROD_STEP))):
+		return
 	draw_rect(r, GROUND_TINT)
 	# The rope: four thin rects along the sides.
 	draw_rect(Rect2(r.position + Vector2(0.0, -7.0), Vector2(r.size.x, 1.0)), ROPE_COLOR)
@@ -168,3 +181,36 @@ func _draw() -> void:
 				Vector2(r.position.x, r.position.y + r.size.y * t), Vector2(r.end.x, r.position.y + r.size.y * t)]:
 			draw_rect(Rect2(p + Vector2(-1.5, -10.0), Vector2(3.0, 11.0)), ROD_COLOR)
 			draw_rect(Rect2(p + Vector2(-1.5, -11.0), Vector2(3.0, 2.0)), Palette.NORSE_PINE_LIGHT)  # A hazel leaf at the top.
+
+
+## The art of the ring on the square `r` with `n` rods per side: the ground
+## tiled over it (anchored to the world), the rope tiled 7 px above each side's
+## ground line where the rects lie, then the rods, top row first and the bottom
+## row last so the nearer rods overlap the farther ones. False (nothing drawn)
+## when any piece is missing.
+func _draw_art(r: Rect2, n: int) -> bool:
+	var ground := CovenantFx.tex(GROUND_ART, true)  # Repeating ground tile.
+	var rope := CovenantFx.tex(ROPE_ART, true)  # Repeating rope (along x).
+	var rope_v := CovenantFx.tex(ROPE_V_ART, true)  # Repeating rope (along y).
+	var post := CovenantFx.tex(POST_ART)  # A rod.
+	if ground == null or rope == null or rope_v == null or post == null:
+		return false
+	SpriteBank.apply_sharp(self)
+	draw_texture_rect_region(ground, r, r, Color(1.0, 1.0, 1.0, GROUND_ART_ALPHA))
+	var rh := float(rope.get_height())  # Rope thickness (px).
+	for y: float in [r.position.y - 7.0, r.end.y - 7.0]:
+		draw_texture_rect_region(rope, Rect2(r.position.x, y - rh * 0.5, r.size.x, rh), Rect2(0.0, 0.0, r.size.x, rh))
+	var rw := float(rope_v.get_width())  # Rope thickness (px).
+	for x: float in [r.position.x, r.end.x]:
+		draw_texture_rect_region(rope_v, Rect2(x - rw * 0.5, r.position.y - 7.0, rw, r.size.y), Rect2(0.0, 0.0, rw, r.size.y))
+	var size := Vector2(float(post.get_width()), float(post.get_height()))  # A rod's art size (px).
+	var feet := Vector2(-size.x * 0.5, 1.0 - size.y)  # Rod corner from its rod position (its feet row on it).
+	for i in n + 1:  # The far (top) row.
+		draw_texture_rect(post, Rect2((Vector2(r.position.x + r.size.x * float(i) / float(n), r.position.y) + feet).round(), size), false)
+	for i in range(1, n):  # The sides, top to bottom.
+		var y := r.position.y + r.size.y * float(i) / float(n)  # This pair's ground line (px).
+		draw_texture_rect(post, Rect2((Vector2(r.position.x, y) + feet).round(), size), false)
+		draw_texture_rect(post, Rect2((Vector2(r.end.x, y) + feet).round(), size), false)
+	for i in n + 1:  # The near (bottom) row.
+		draw_texture_rect(post, Rect2((Vector2(r.position.x + r.size.x * float(i) / float(n), r.end.y) + feet).round(), size), false)
+	return true

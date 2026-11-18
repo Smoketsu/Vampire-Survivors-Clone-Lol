@@ -411,7 +411,7 @@ func _land_bolt(b: Dictionary, t: float) -> void:
 	var at: Vector2 = b["pos"]
 	var r := float(c["radius"])  # Circle radius (px).
 	game.stat_add("wrath_bolts", 1.0)
-	game.effects.impact(at, r, Palette.PANTHEON_AEGEAN_LIGHT)
+	game.effects.impact(at, r, Palette.PANTHEON_AEGEAN_LIGHT, PantheonFxData.STRIKE_ANIM)
 	game.pantheon.play_sound("thunder", at)
 	game.shake(2.5)
 	flashes.append({"a": at + Vector2(0.0, -260.0), "b": at, "until": t + 0.22, "sky": true})
@@ -562,7 +562,9 @@ func danger_push(p: Vector2) -> Vector2:
 	return push
 
 
-## The telegraphs and the hazards (visual only; no RNG):
+## The telegraphs and the hazards (visual only; no RNG). Each draws its pixel
+## art through PantheonFx (GDD §15.0 "Missing art round wired"), sized to the
+## same line, circle or band; the shapes below are the fallback without it:
 ##   waves     — the foam line at the starting edge with chevrons along the
 ##               heading while it telegraphs; then the band of dark water with
 ##               a bright foam crest at its front.
@@ -583,9 +585,11 @@ func _draw() -> void:
 			var k := clampf(1.0 - (float(w["t0"]) - t) / maxf(0.01, float(c["telegraph"])), 0.0, 1.0)  # 0 -> 1 as it nears.
 			var line_c := o - dir * sd
 			var blink := 0.55 + 0.45 * absf(sin(t * 9.0))
+			if PantheonFx.wave_warn(self, line_c, dir, half, k, blink, PantheonFxData.CHEVRON_STEP):
+				continue
 			draw_line(line_c - perp * half, line_c + perp * half, Color(Palette.PANTHEON_AEGEAN_LIGHT, 0.5 * blink + 0.3 * k), 3.0 + 3.0 * k)
 			draw_line(line_c - perp * half - dir * 10.0, line_c + perp * half - dir * 10.0, Color(Palette.PANTHEON_AEGEAN, 0.3 + 0.3 * k), 8.0)
-			var step := 120.0
+			var step := PantheonFxData.CHEVRON_STEP
 			var s := -half
 			while s <= half:
 				var q := line_c + perp * s + dir * (14.0 + 30.0 * k)  # Chevron tip.
@@ -595,6 +599,8 @@ func _draw() -> void:
 			continue
 		var f := (t - float(w["t0"])) * float(c["speed"]) - sd
 		var back := maxf(-sd, f - float(c["band"]) * 2.5)  # Trailing edge of the drawn water (px).
+		if PantheonFx.wave(self, o, dir, half, back, f, (t - float(w["t0"])) * float(c["speed"])):
+			continue
 		var pts := PackedVector2Array([o + dir * back - perp * half, o + dir * f - perp * half, o + dir * f + perp * half, o + dir * back + perp * half])
 		draw_colored_polygon(pts, Color(Palette.PANTHEON_AEGEAN_DARK, 0.45))
 		var band_pts := PackedVector2Array([o + dir * (f - float(c["band"])) - perp * half, o + dir * f - perp * half, o + dir * f + perp * half, o + dir * (f - float(c["band"])) + perp * half])
@@ -606,6 +612,8 @@ func _draw() -> void:
 		var r := float(c["radius"])
 		var at: Vector2 = b["pos"]
 		var k := clampf(1.0 - (float(b["land"]) - t) / maxf(0.01, float(c["telegraph"])), 0.0, 1.0)
+		if PantheonFx.bolt_warn(self, at, r, k):
+			continue
 		draw_circle(at, r * k, Color(Palette.PANTHEON_AEGEAN, 0.16 + 0.16 * k))
 		draw_arc(at, r, 0.0, TAU, 36, Color(Palette.PANTHEON_AEGEAN_LIGHT, 0.85), 2.0)
 		draw_arc(at, r * 0.55, 0.0, TAU, 24, Color(Palette.PANTHEON_MARBLE_LIGHT, 0.45), 1.0)
@@ -619,15 +627,19 @@ func _draw() -> void:
 		if t < float(fz["open_t"]):
 			var k := clampf(1.0 - (float(fz["open_t"]) - t) / maxf(0.01, float(c["telegraph"])), 0.0, 1.0)
 			var blink := 0.5 + 0.5 * absf(sin(t * 10.0))
+			if PantheonFx.fissure_warn(self, a, b2, k, 0.35 + 0.65 * blink):
+				continue
 			draw_line(a, b2, Color(Palette.CRIMSON, 0.25 + 0.5 * k * blink), 2.0 + wdt * 0.6 * k)
 			draw_line(a, b2, Color(Palette.FLAME, 0.6 * blink), 1.0)
-		else:
+		elif not PantheonFx.fissure(self, a, b2, wdt):
 			draw_line(a, b2, Color(Palette.CRIMSON, 0.55), wdt + 6.0)
 			draw_line(a, b2, Color(0.02, 0.0, 0.0, 0.95), wdt)
 			draw_line(a, b2, Color(Palette.FLAME, 0.7), 2.0)
 	for fl in flashes:
 		var a: Vector2 = fl["a"]
 		var b2: Vector2 = fl["b"]
+		if PantheonFx.arc(self, a, b2, bool(fl["sky"]), clampf((float(fl["until"]) - t) / PantheonFxData.FLASH_FADE, 0.0, 1.0)):
+			continue
 		var n := 6  # Zigzag segments.
 		var prev := a
 		var side := (b2 - a).orthogonal().normalized()

@@ -25,9 +25,9 @@ confirmed the static findings and added the floor decals, the scribe's curse sig
 
 ## Most noticeable (top list)
 
-1. **Divine Wrath** (Ilion, Olympus, Underworld; Zeus / Poseidon / Hades fights): the tidal wave is a flat blue polygon with
+1. ~~**Divine Wrath** (Ilion, Olympus, Underworld; Zeus / Poseidon / Hades fights): the tidal wave is a flat blue polygon with
    a line edge, the lightning warning is concentric circles. No Pantheon AoE art (the Empire has `EmpireFx`, Act I-III have
-   `AoeArt`). The act's signature rule.
+   `AoeArt`). The act's signature rule.~~ **Done** (Nov 2026, GDD §15.0 "Missing art round wired"). `PantheonFx`.
 2. ~~**Hallowed Light shafts** (Silver Stair, Wheel of Thrones, Empyrean; Seraiel, the Throne, the Voice): plain translucent
    rectangles. `fx/host_shaft`, `host_shaft_line`, `host_trumpet_ring` exist but no script loads them.~~ **Done** (Nov 2026,
    GDD §15.0 "Unwired art hooked up").
@@ -37,8 +37,8 @@ confirmed the static findings and added the floor decals, the scribe's curse sig
 4. **Scribe's curse sigil** (`markers/scribe_curse`, Archive and Ul-Thalos): the ink sigil over every cursed cultist is an arc
    (480,000 lookups in one Archive run); the Archive is the sharpest-difficulty stage and the sigil is on screen constantly.
    Same for `markers/inscription` (Forbidden Verse mark).
-5. **Act-spell effects** (Stolen Thunder, Paris's Arrow, River Styx, Linen Bind; Death Ray's fallback): zigzag lines, a line
-   with a triangle head, thick black lines. The player sees these all run.
+5. ~~**Act-spell effects** (Stolen Thunder, Paris's Arrow, River Styx, Linen Bind; Death Ray's fallback): zigzag lines, a line
+   with a triangle head, thick black lines. The player sees these all run.~~ **Done** (Nov 2026, GDD §15.0 "Missing art round wired"). (Death Ray's fallback never shows.)
 6. ~~**Seasonal fronts** (Wild: wildfire front, blizzard veil, snow and leaves; Greenwood, Fae Court, World-Tree): flat rects /
    gradient. Seven `fx/wild_*` strips exist, unwired.~~ **Done** (Nov 2026, GDD §15.0 "Unwired art hooked up").
 7. ~~**Stampede dust fronts, volcanic bomb burst, Fossil Giant rise** (Age of Titans): rects and discs. Four
@@ -47,8 +47,8 @@ confirmed the static findings and added the floor decals, the scribe's curse sig
    sprite plus a code emblem / aura, not a drawn skin.
 9. **Floor decals** (Archive x4, Citadel x3, Ul-Thalos x16 `decals/*`): the hashed floor scatter stays the old code
     dressing instead of pixel decals on those three stages; every other stage's floor tiles and decals are present.
-10. **Holmgang ring** (Valgard, Sigrun's duel): a rectangle of rod rects.
-11. **Cursed Coin** (Treasure Galleon, Marrec's gold): a brass disc ("no coin sprite" in the kit).
+10. ~~**Holmgang ring** (Valgard, Sigrun's duel): a rectangle of rod rects.~~ **Done** (Nov 2026, GDD §15.0 "Missing art round wired").
+11. ~~**Cursed Coin** (Treasure Galleon, Marrec's gold): a brass disc ("no coin sprite" in the kit).~~ **Done** (Nov 2026, GDD §15.0 "Missing art round wired").
 12. **Soul Siphon / Soul Rapture tethers** (a core starting-pool spell): sine polylines with dots (reads fine, still the
     plainest of the core spells). Also: two passive icons (`fur_lined_bones`, `cold_iron`) and eight achievement badges still
     use a reused or code icon.
@@ -76,7 +76,7 @@ bosses have attack-pose strips only where `boss_pose_data.gd` lists them (option
 
 | Thing | Where | Looks now | Visibility | Suggested fix |
 |---|---|---|---|---|
-| `cursed_coin` | Treasure Galleon (Marrec) | code disc (brass, ink rim, glow) | medium | coin sprite, 2-frame spin |
+| `cursed_coin` | Treasure Galleon (Marrec) | code disc (brass, ink rim, glow) | medium | **done**: `corsair/cursed_coin_spin` (4 frames), the glow kept in code |
 | Tinted reuse, intentional: `kage_clone` (Kage), `fox_fire` (Kitsune), `kestrel_decoy` (Kestrel), `archivist_copy` (Archivist), `woken_colossus` (Sand Colossus), `charmed` (the charmed summon), `drowned_thrall`, `shade_hoplite` / `tartarus_warden` (Hoplite), `blood_bearer` (Blood Thrall), `ghost_deckhand` / `ghost_gunner` (`GhostCrewKit` spectre tint of the crew), `wine_jar` (Canopic Jar, wine red) | various | the donor sprite with a tint / flicker; reads as a deliberate variant | low | none needed; own sprites only if the owner wants them to read as different creatures |
 | `cerberus_head` | Underworld | invisible by design (the body sprite carries the heads) | none | none |
 | Boss walk strips absent: `merrow`, `archivist`, `vhalneth`, `motherboard`, `deus_ex_machina`, `osiris` | their stages | still only (they stand or hover) | low | none unless they move |
@@ -105,14 +105,14 @@ Code-only effects that stand in for an object or effect (the player would expect
 
 | Effect | Where | Looks now | Visibility | Fix |
 |---|---|---|---|---|
-| Divine Wrath wave and lightning (`divine_wrath.gd`) | Ilion, Olympus, Underworld | water polygon + lines, concentric circle telegraph | high | Pantheon AoE strips (wave front, bolt flash, ground ring), like `EmpireFx` |
-| Stolen Thunder arcs (`stolen_thunder.gd`) | Olympus spell (Zeus) | zigzag lines, circle charge orb | medium-high | bolt strips |
-| Paris's Arrow (`paris_arrow.gd`) | Ilion spell | line trail, triangle head | medium | arrow + trail sprite |
-| River Styx (`river_styx.gd`) | Underworld spell | black line with drift ticks | medium | river-strip tile |
-| Linen Bind (`linen_bind.gd`) | Necropolis spell | thin lines and 3 rects per marked enemy | medium | bandage wrap sprite |
+| Divine Wrath wave and lightning (`divine_wrath.gd`) | Ilion, Olympus, Underworld | water polygon + lines, concentric circle telegraph | high | **done**: `PantheonFx` (wave band, chevrons, front and water; bolt fill, band, target, column and `wrath_strike`; chain arcs; fissure telegraph and crack) |
+| Stolen Thunder arcs (`stolen_thunder.gd`) | Olympus spell (Zeus) | zigzag lines, circle charge orb | medium-high | **done**: `pantheon_fx/thunder_orb`, the arc segments |
+| Paris's Arrow (`paris_arrow.gd`) | Ilion spell | line trail, triangle head | medium | **done**: `projectiles/paris_arrow`, `aoe/paris_trail` |
+| River Styx (`river_styx.gd`) | Underworld spell | black line with drift ticks | medium | **done**: `styx_` / `lethe_water` and `_bank` |
+| Linen Bind (`linen_bind.gd`) | Necropolis spell | thin lines and 3 rects per marked enemy | medium | **done**: `spell_fx/linen_wrap_s/m/l`, `linen_strand` |
 | Soul Siphon / Soul Rapture tether (`spell_glyphs.gd`) | core spell | sine polyline + dots | medium | tether strip (fine as is) |
 | Death Ray fallback | Wastes | only if `EmpireFx.death_ray` lacks art (it has it) | none | none |
-| Holmgang ring (`holmgang.gd`) | Valgard, Sigrun | rect of rods + rope lines | medium | ring sprite |
+| Holmgang ring (`holmgang.gd`) | Valgard, Sigrun | rect of rods + rope lines | medium | **done**: `norse/holmgang_ground`, `_rope`, `_rope_v`, `_post` |
 | Phalanx shield bar, legionary shield, hero Glory ring, Poseidon trident | Pantheon | lines / rects drawn over the sprite | medium | shield-front sprite |
 | Lock-On painted lines, orbital / dead-zone rings (Empire) | Act XII | lines and rings (the strikes use `EmpireFx`) | low | none |
 | Siren / Spire pillar / grove rings, Siege tower rings | Eye / Pantheon | telegraph rings and auras | low | none (intentional rings) |
