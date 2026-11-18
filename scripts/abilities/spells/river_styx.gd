@@ -171,7 +171,9 @@ func summary_extra() -> String:
 
 
 ## The rivers: black water with pale banks filling from the middle out; Lethe's
-## Flood glows a pale silver-blue (the water of forgetting). Visual only.
+## Flood glows a pale silver-blue (the water of forgetting). With the art the
+## water tile drifts over the river's rectangle with a bank along each side
+## (PantheonFx.river()), else code lines. Visual only.
 func _draw() -> void:
 	if game == null:
 		return
@@ -186,6 +188,8 @@ func _draw() -> void:
 		var a2 := mid.lerp(a, fill)
 		var b2 := mid.lerp(b, fill)
 		var lethe := bool(rv["evolved"])
+		if PantheonFx.river(self, a2, b2, r, lethe, now * PantheonFxData.RIVER_SCROLL, fade):
+			continue
 		draw_line(a2, b2, Color(Palette.BONE if not lethe else Palette.PANTHEON_MARBLE_LIGHT, 0.35 * fade), r * 2.0 + 4.0)  # The banks.
 		draw_line(a2, b2, Color(0.02, 0.02, 0.05, 0.85 * fade), r * 2.0)  # Black water.
 		draw_line(a2, b2, Color(Palette.VIOLET if not lethe else Palette.PANTHEON_AEGEAN_LIGHT, 0.45 * fade), maxf(1.0, r * 0.35))  # The current.

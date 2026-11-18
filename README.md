@@ -4643,6 +4643,7 @@ scripts/
   fx/sharp_pixel.gdshader   The sharp-pixel filter: grid pixel art (and the pixel fonts) crisp at any window scale
   fx/covenant_fx.gd         CovenantFx: the Covenant's area-effect pixel art (shared telegraphs, holy ground, Seraphine's hazards): tiles along edges, clipped hatch rows, baked discs
   fx/empire_fx.gd           EmpireFx: Act III's ground effects, beams and zones as pixel art in the Empire's look (hex fill, hazard band, scan line, targeting brackets; code fallback)
+  fx/pantheon_fx.gd         PantheonFx: the Olympian Republic's effect art (Divine Wrath's waves, bolts, chains and fissures; Stolen Thunder's arcs; River Styx), on CovenantFx; code fallback
   fx/flat_silhouette.gdshader  Pixel art as one flat colour (the Codex's unmet entries), sharp-pixel sampling
   ui/                       hud, level_up_panel, pause_menu, end_screen, main_menu,
                             debug_overlay, hud_bar, icon_glyph, ui_theme, settings_menu,
@@ -5061,6 +5062,7 @@ scripts/
     marker_art_data.gd      Pixel-art keys and placement of the world markers, overlays and spell props (rally pennant, ice shell, brands, corpses, bone walls, boulders)
     covenant_fx_data.gd     Keys and drawing numbers of the Covenant's area-effect art (CovenantFx)
     empire_fx_data.gd       Keys and drawing numbers of Act III's ground-effect, beam and zone art (EmpireFx)
+    pantheon_fx_data.gd     Keys and drawing numbers of the Olympian Republic's effect art (PantheonFx)
     boss_pose_data.gd       Which attack-pose sprite each stage boss shows per attack phase
     view_data.gd            Camera zoom levels (Normal / Close) and the player's ground marker
     ui_art_data.gd          The UI kit and logo (9-slice margins, crests), pixel font sizes, the type tiers

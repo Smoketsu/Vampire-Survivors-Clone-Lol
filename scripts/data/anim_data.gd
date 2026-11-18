@@ -76,6 +76,7 @@ const ANIMS: Dictionary = {
 	"empire_blast_red": {"duration": 0.4, "fill": 1.2},  # TUNING (not in GDD) the same in warning red (overloads, heavy hits; impact() 0.4 s)
 	"empire_boss_death": {"duration": 0.4, "fill": 1.1},  # TUNING (not in GDD) an Empire stage boss falls: a red blast, four amber secondary blasts, a cyan-white shock ring (10 frames of 256 px; EnemyDirector impact() 0.4 s, as boss_death; the ring ends at 0.91 of the frame half)
 	"empire_blast_chrome": {"duration": 0.4, "fill": 1.2},  # TUNING (not in GDD) the same in chrome and cyan-white (energy pops; impact() 0.4 s)
+	"wrath_strike": {"duration": 0.4, "fill": 1.2},  # TUNING (not in GDD) Divine Wrath's bolt landing (Act IV, Zeus): a white-blue bolt flash and shock ring (8 frames of 96 px; DivineWrath impact() 0.4 s; the ring ends at 0.84 of the frame half, so 1.2 puts it on the bolt radius, x1.1 at 44 px; GDD §15.0 "Missing art round wired")
 	# --- Act strips in fx/ (an id with a folder is its own sprite key; GDD §15.0 "Unwired art hooked up") ---
 	"fx/primeval_bomb_burst": {"duration": 0.3, "fill": 1.0},  # TUNING (not in GDD) a volcanic bomb landing (6 frames of 64 px; StampedeOfAsh draws it over PrimevalRulesData.ASH bomb_show 0.3 s; the last frame fills its frame = bomb_radius)
 	"fx/primeval_fossil_rise": {"duration": 0.5, "fill": 1.1},  # TUNING (not in GDD) a heavy corpse rising as a Fossil Giant, bone dust (6 frames of 48 px; Herds ring() 0.5 s)

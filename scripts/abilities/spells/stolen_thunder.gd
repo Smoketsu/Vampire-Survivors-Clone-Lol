@@ -228,20 +228,26 @@ func summary_extra() -> String:
 
 
 ## The charging orb over the necromancer (white-blue sparks gathering) and
-## the bolts and chains as jagged white-blue lines. Visual only.
+## the bolts and chains as jagged white-blue lines: the art (PantheonFxData
+## THUNDER_ORB, the arc segments through PantheonFx.arc()), else code shapes.
+## Visual only.
 func _draw() -> void:
 	if game == null:
 		return
 	if _charge_left >= 0.0:
 		var k := clampf(1.0 - _charge_left / _charge_len, 0.0, 1.0)  # 0 -> 1 as it charges.
 		var c := caster_pos() + Vector2(0.0, -StolenThunderData.ORB_LIFT)
-		draw_circle(c, 3.0 + 5.0 * k, Color(Palette.PANTHEON_AEGEAN_LIGHT, 0.35 + 0.4 * k))
-		draw_circle(c, 1.5 + 2.5 * k, Palette.PANTHEON_MARBLE_LIGHT)
-		for s in 4:
-			var a := float(s) * TAU / 4.0 + k * 6.0
-			draw_line(c + Vector2.from_angle(a) * (6.0 + 6.0 * k), c + Vector2.from_angle(a + 0.6) * (12.0 + 4.0 * k), Color(Palette.PANTHEON_AEGEAN_LIGHT, 0.7), 1.0)
+		var nf := PantheonFxData.THUNDER_ORB_FRAMES  # Orb frames (by charge).
+		if not SpriteBank.draw_flat_frame(self, PantheonFxData.THUNDER_ORB, nf, mini(nf - 1, int(k * float(nf))), c, 0.0):
+			draw_circle(c, 3.0 + 5.0 * k, Color(Palette.PANTHEON_AEGEAN_LIGHT, 0.35 + 0.4 * k))
+			draw_circle(c, 1.5 + 2.5 * k, Palette.PANTHEON_MARBLE_LIGHT)
+			for s in 4:
+				var a := float(s) * TAU / 4.0 + k * 6.0
+				draw_line(c + Vector2.from_angle(a) * (6.0 + 6.0 * k), c + Vector2.from_angle(a + 0.6) * (12.0 + 4.0 * k), Color(Palette.PANTHEON_AEGEAN_LIGHT, 0.7), 1.0)
 	for arc in _arcs:
 		var fade := clampf(arc.time_left / StolenThunderData.ARC_TIME, 0.0, 1.0)
+		if PantheonFx.arc(self, arc.a, arc.b, arc.sky, fade):
+			continue
 		var n := 7 if arc.sky else 5  # Zigzag segments.
 		var side := (arc.b - arc.a).orthogonal().normalized()
 		var prev := arc.a

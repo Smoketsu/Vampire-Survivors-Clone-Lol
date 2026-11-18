@@ -237,10 +237,18 @@ func summary_extra() -> String:
 
 
 ## The ghost arrows: a fading violet trail, a bright shaft and a bone head
-## pointing along their flight. Visual only.
+## pointing along their flight. With the art (ParisArrowData ARROW_ART /
+## TRAIL_ART) the trail texture is stretched along the trail, one rect per
+## segment, and the arrow drawn 1:1 on its position; else code shapes. Visual only.
 func _draw() -> void:
+	var trail_tex := CovenantFx.tex(ParisArrowData.TRAIL_ART)  # Trail art, or null.
 	for a in _arrows:
 		var n := a.trail.size()
+		if trail_tex != null and n >= 2:
+			_draw_trail_art(a.trail, trail_tex)
+			var head := a.pos - a.trail[n - 2]  # Flight direction (px).
+			if SpriteBank.draw_flat(self, ParisArrowData.ARROW_ART, a.pos - head.normalized() * ParisArrowData.ARROW_ART_BACK, head.angle()):
+				continue
 		for i in range(1, n):
 			var w := float(i) / float(maxi(1, n - 1))  # 0 (oldest) -> 1.
 			draw_line(a.trail[i - 1], a.trail[i], Color(ParisArrowData.GLOW, 0.15 + 0.45 * w), 1.0 + 2.0 * w)
@@ -252,3 +260,19 @@ func _draw() -> void:
 		draw_line(a.pos - dir * 7.0, tip, ParisArrowData.CORE, 2.0)
 		draw_colored_polygon(PackedVector2Array([tip + dir * 4.0, tip + dir.orthogonal() * 2.5, tip - dir.orthogonal() * 2.5]), ParisArrowData.HEAD)
 		draw_circle(a.pos, 3.0, Color(ParisArrowData.GLOW, 0.35))
+
+
+## Stretches `tex` along the polyline `trail` (oldest first): one rect per
+## segment, each showing its share of the texture, the bright end on the newest
+## point. Drawing only.
+func _draw_trail_art(trail: PackedVector2Array, tex: Texture2D) -> void:
+	SpriteBank.apply_sharp(self)
+	var tw := float(tex.get_width())  # Texture length (texels).
+	var th := float(tex.get_height())  # Texture height (texels = px).
+	var segs := float(trail.size() - 1)  # Segments in the trail.
+	for i in range(1, trail.size()):
+		var d := trail[i] - trail[i - 1]  # This segment (px).
+		var u0 := tw * float(i - 1) / segs  # Its share of the texture (texels).
+		draw_set_transform(trail[i - 1], d.angle(), Vector2.ONE)
+		draw_texture_rect_region(tex, Rect2(0.0, -th * 0.5, d.length(), th), Rect2(u0, 0.0, tw / segs, th))
+	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)

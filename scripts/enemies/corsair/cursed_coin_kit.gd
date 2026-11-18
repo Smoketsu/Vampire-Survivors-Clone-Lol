@@ -14,6 +14,16 @@
 class_name CursedCoinKit
 extends CorsairKit
 
+## Art of the coin spinning: 4 frames of 14 x 14 (face, 3/4, edge, 3/4
+## mirrored; GDD §15.0 "Missing art round wired").
+const SPIN_ART: String = "corsair/cursed_coin_spin"
+## Frames in SPIN_ART.
+const SPIN_FRAMES: int = 4
+## Spin frames a second (game time; drawing only).
+const SPIN_FPS: float = 6.0  # TUNING (not in GDD) visual only
+## The coin's still face (14 x 14), drawn when the spin strip is missing.
+const FACE_ART: String = "corsair/cursed_coin"
+
 ## Seconds until its next barrier pulse.
 var _pulse_cd: float = 0.0
 ## Game time (s) it fades.
@@ -69,10 +79,17 @@ func draws_body(_e: Enemy) -> bool:
 	return true
 
 
+## The body: the lantern glow (code), then the spinning coin art (SPIN_ART,
+## else FACE_ART), else the code coin.
 func draw_body(e: Enemy, ci: CanvasItem) -> void:
 	var t := e.game.elapsed
 	var glow := 0.5 + 0.5 * absf(sin(t * 4.0 + float(e.think_slot)))
 	SpriteBank.draw_disc(ci, Vector2.ZERO, e.radius * 2.2, Color(Palette.CORSAIR_LANTERN, 0.18 + 0.15 * glow))
+	if SpriteBank.draw_flat_frame(ci, SPIN_ART, SPIN_FRAMES, int(t * SPIN_FPS), Vector2.ZERO, 0.0) \
+			or SpriteBank.draw_flat(ci, FACE_ART, Vector2.ZERO, 0.0):
+		if e.flash > 0.0:
+			SpriteBank.draw_disc(ci, Vector2.ZERO, e.radius, Color(1.0, 1.0, 1.0, 0.7))  # The hit flash over the art.
+		return
 	SpriteBank.draw_disc(ci, Vector2.ZERO, e.radius + 1.0, Palette.CORSAIR_INK)
 	SpriteBank.draw_disc(ci, Vector2.ZERO, e.radius, Palette.CORSAIR_BRASS_DARK if e.flash <= 0.0 else Color.WHITE)
 	SpriteBank.draw_disc(ci, Vector2(-1.0, -1.0), e.radius * 0.65, Palette.CORSAIR_BRASS)

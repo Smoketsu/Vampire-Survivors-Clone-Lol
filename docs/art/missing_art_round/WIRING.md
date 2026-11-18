@@ -1,5 +1,12 @@
 # Wiring plan for the missing-art round effects
 
+**Status: wired (Nov 2026, GDD §15.0 "Missing art round wired").** Sections 1, 4 and 5 and the Cursed Coin are all drawn
+(`PantheonFx` / `PantheonFxData`, the spells' and kits' own draw code), each with its code drawing kept as the fallback.
+Small departures from the plan: the arcs and the fissure telegraph repeat their tile at 1:1 along the line (the telegraph
+grows uniformly, so its pixels stay square), the chevron art points -x (turned half round past the heading), the bolt
+column comes down from its top, and the Cursed Coin draws a white
+disc over its art for the hit flash.
+
 All art is drawn by `art_source/missing_art/make_missing_art.py` (deterministic; `manifest.json` beside it lists every
 PNG with its size and frame count). Everything is true pixel art on the art grid: draw 1 art px = 1 layout px, through
 the sharp-pixel path (`SpriteBank.apply_sharp()`), never stretched. Keep each code drawing as the fallback when the PNG is
@@ -10,7 +17,7 @@ Follow the `EmpireFx` pattern (`scripts/fx/empire_fx.gd`, `scripts/data/empire_f
 (`scripts/fx/pantheon_fx.gd`) and `PantheonFxData` (keys and numbers). Alphas are baked into the PNGs (stepped), so draw
 with `Color.WHITE` unless a fade is noted.
 
-## 1. Divine Wrath (`scripts/enemies/pantheon/divine_wrath.gd`, `_draw()`)
+## 1. Divine Wrath (`scripts/enemies/pantheon/divine_wrath.gd`, `_draw()`) — **done**
 
 | Key | Size (art px) | Use |
 |---|---|---|
@@ -26,7 +33,7 @@ with `Color.WHITE` unless a fade is noted.
 | `pantheon_fx/fissure_warn` | 12 x 6, tiles along x | Fissure telegraph: tile along a -> b (rotated), height scales 1 -> 3x by `k` as the current crimson line grows; blink alpha as now. |
 | `pantheon_fx/fissure_body`, `fissure_cap` | 16 x 22 tile, 10 x 22 left cap (flip for the right) | Open fissure (opening 18 px = `width`, centre row 11): cap at `a`, tiles between, flipped cap at `b`, all rotated by `(b - a).angle()`. Replaces the 3 lines. |
 
-## 4. Act-spell effects
+## 4. Act-spell effects — **done**
 
 - **Stolen Thunder** (`scripts/abilities/spells/stolen_thunder.gd` `_draw()`): arcs use `pantheon_fx/arc_thin` (ground arc) and
   `arc_thick` (`arc.sky`), same drawing as the chain flash above, fade by `fade`. Charge orb: `pantheon_fx/thunder_orb`, 4 frames of
@@ -45,7 +52,7 @@ with `Color.WHITE` unless a fade is noted.
   `spell_fx/linen_strand` 16 x 4, tiled along the line, rotated, alpha `k`.
 - Death Ray fallback: not made (`EmpireFx.death_ray` already has art, the fallback never shows).
 
-## 5. Holmgang ring (`scripts/enemies/norse/holmgang.gd` `_draw()`)
+## 5. Holmgang ring (`scripts/enemies/norse/holmgang.gd` `_draw()`) — **done**
 
 - Posts: `norse/holmgang_post` 8 x 16, **pivot = bottom centre** (feet at the rod position `p`, art x 4, y 15), replaces the 3 x 11 rect and
   leaf rect; draw sorted by y.
@@ -54,7 +61,7 @@ with `Color.WHITE` unless a fade is noted.
 - Ground: `norse/holmgang_ground` 32 x 32 seamless, tiled over the square under `GROUND_TINT` (draw at modulate alpha 0.8 so
   it replaces the flat gold rect; keep the code tint at lower alpha if the square must still read).
 
-## Also (not a wired effect, optional)
+## Also (not a wired effect, optional) — **done**
 
 - Cursed Coin: `corsair/cursed_coin` (14 x 14 still) and `corsair/cursed_coin_spin` (4 frames of 14 x 14: face, 3/4, edge, 3/4
   mirrored). `CursedCoinKit.draw_body()` has no texture lookup: add one with `SpriteBank.draw_flat_frame(ci, key, 4, frame, Vector2.ZERO, 0.0)`

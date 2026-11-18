@@ -29,6 +29,13 @@ const GLOW := Color(0.64, 0.36, 0.98)  # TUNING (not in GDD) Palette.VIOLET
 const CORE := Color(0.87, 0.74, 1.0)  # TUNING (not in GDD) violet_flare
 ## The arrowhead (bone; drawing only).
 const HEAD := Color(0.95, 0.92, 0.83)  # TUNING (not in GDD) bone
+## Arrow art (20 x 7 grid art, points +x; GDD §15.0 "Missing art round wired").
+const ARROW_ART: String = "projectiles/paris_arrow"  # TUNING (not in GDD)
+## px from the arrow's position back to its art's centre (the position sits on
+## art x 17 of 20, near the head; the centre is x 10).
+const ARROW_ART_BACK: float = 7.0  # TUNING (not in GDD)
+## Trail art (24 x 5, stretched along the trail, the bright end at the arrow).
+const TRAIL_ART: String = "aoe/paris_trail"  # TUNING (not in GDD)
 ## Sound pitch of a volley's release (Sfx "bolt_cast"; audio only).
 const LOOSE_PITCH: float = 1.35  # TUNING (not in GDD)
 ## Sound pitch of a strike (Sfx "bolt_hit" when it exists; audio only).

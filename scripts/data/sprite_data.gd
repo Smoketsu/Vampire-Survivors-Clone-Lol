@@ -640,6 +640,10 @@ const FLAT_SIZES: Dictionary = {
 	"pickups/pu_frenzy": 24.0,  # TUNING (not in GDD) power-up medallion
 	"pickups/pu_nova": 24.0,  # TUNING (not in GDD) power-up medallion
 	"projectiles/shadow_bolt": 22.0,  # TUNING (not in GDD)
+	"projectiles/paris_arrow": 20.0,  # TUNING (not in GDD) Paris's Arrow, a violet ghost arrow (20 x 7 grid art, points +x); GDD §15.0 "Missing art round wired"
+	"pantheon_fx/thunder_orb": 64.0,  # TUNING (not in GDD) Stolen Thunder's charge orb strip (4 frames of 16 x 16); GDD §15.0 "Missing art round wired"
+	"corsair/cursed_coin": 14.0,  # TUNING (not in GDD) the Cursed Coin's face (14 x 14 grid art); GDD §15.0 "Missing art round wired"
+	"corsair/cursed_coin_spin": 56.0,  # TUNING (not in GDD) the Cursed Coin spinning (4 frames of 14 x 14: face, 3/4, edge, 3/4 mirrored)
 	"projectiles/void_bolt": 32.0,  # TUNING (not in GDD) art pass: 30 before; the grid art with its outline is 32 px long
 	"projectiles/void_shard": 16.0,  # TUNING (not in GDD) art pass: 14 before; the grid art with its outline is 16 px long
 	"projectiles/arrow": 22.0,  # TUNING (not in GDD) art pass: 20 before; the grid art with its outline is 22 px long
