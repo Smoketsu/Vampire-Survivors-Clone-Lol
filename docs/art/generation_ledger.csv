@@ -1665,3 +1665,11 @@ utc,key,model,quality,size,refs,text_in,image_in,image_out,usd_est,file
 2026-11-15 17:00,epilogue/primeval_2,gpt-image-2.5-flare,medium,1536x1024,2,815,1116,343,0.0233,primeval_2.png
 2026-11-15 17:00,epilogue/close,gpt-image-2.5-flare,medium,1536x1024,3,854,2652,343,0.0358,close.png
 2026-11-15 17:16,epilogue/corsair_2,gpt-image-2.5-flare,medium,1536x1024,2,786,1116,343,0.0231,corsair_2.png
+2026-11-18 22:08,obstacles_v/bookshelf,gpt-image-2.5-flare,medium,1024x1536,1,273,1024,343,0.0198,g_bookshelf.png
+2026-11-18 22:09,obstacles_v/chart_table_l,gpt-image-2.5-flare,medium,1024x1536,1,229,1024,343,0.0196,g_chart_table_l.png
+2026-11-18 22:09,obstacles_v/dyn_tomb_l,gpt-image-2.5-flare,medium,1024x1536,1,202,1024,343,0.0195,g_dyn_tomb_l.png
+2026-11-18 22:09,obstacles_v/dyn_tomb_s,gpt-image-2.5-flare,medium,1024x1024,1,181,1024,439,0.0223,g_dyn_tomb_s.png
+2026-11-18 22:09,obstacles_v/toppled_arch_l,gpt-image-2.5-flare,medium,1024x1536,1,203,1024,343,0.0195,g_toppled_arch_l.png
+2026-11-18 22:09,obstacles_v/reading_desk_l,gpt-image-2.5-flare,medium,1024x1536,1,239,1024,343,0.0197,g_reading_desk_l.png
+2026-11-18 22:09,obstacles_v/toppled_shelf_l,gpt-image-2.5-flare,medium,1024x1024,1,229,1024,439,0.0225,g_toppled_shelf_l.png
+2026-11-18 22:09,obstacles_v/blank_shelf_l,gpt-image-2.5-flare,medium,1024x1536,1,268,1024,343,0.0198,g_blank_shelf_l.png
