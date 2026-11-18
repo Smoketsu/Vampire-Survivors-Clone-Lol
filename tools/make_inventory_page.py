@@ -20,7 +20,7 @@ How sprites are found (the keys follow scripts/data/sprite_data.gd,
 *_idle are never used, only the still):
   enemies / minibosses / structures  the row's Id (or its display name via the model),
                                      searched in the faction folders (ENEMY_DIRS)
-  bosses                             bosses/<stage boss id>; alternate forms are a
+  bosses                             bosses/<stage boss id>, else the faction folder; alternate forms are a
                                      gallery (BOSS_FORMS)
   characters                         player/<id> (the Gravecaller is player/necromancer)
   skins                              player/<id>_hyper, _<achievement skin>, _untouchable,
@@ -54,7 +54,7 @@ BOX = 56
 TARGET_H = 48
 # Folders searched, in order, for an enemy id (faction folders, then structures, then bosses).
 ENEMY_DIRS = ["enemies", "holy", "court", "city", "concord", "eye", "empire", "pantheon",
-              "shogunate", "inferno", "structures", "bosses", "projectiles"]
+              "shogunate", "inferno", "corsair", "norse", "dynasty", "host", "primeval", "wild", "structures", "bosses", "projectiles"]
 # Data ids whose sprite file is named differently: (folder-less) id -> file stem.
 ID_ALIASES = {
     "deus": "deus_ex_machina",        # the stage's boss id vs bosses/deus_ex_machina.png
@@ -180,7 +180,7 @@ def process_tables(page, b):
             def fn(cells):
                 st = stages.get(int(cells[0]))
                 bid = st["bossid"] if st else ""
-                return [("bosses/" + bid,)], unesc(cells[1])
+                return [("bosses/" + bid,) + tuple(b.enemy_keys(bid))], unesc(cells[1])   # later acts keep a boss in the faction folder
         elif heads[0] == "Miniboss":
             cat = "Minibosses"
             def fn(cells):
@@ -372,7 +372,7 @@ def main():
 
     # no-art section
     total_missing = sum(len(v) for v in b.missing.values())
-    parts = ["<p>Rows above that show a dashed 'no art' box have no PNG at the key the game would load. "
+    parts = ["<p>Rows above that show a dashed 'no art' box have no PNG at the key the game would load (the game then draws the unit in code, or tints the character's base sprite for a skin). "
              "%d rows have no art; %d thumbnails are shown from %d distinct files.</p>" % (total_missing, b.shown, len(b.s.used))]
     if not b.missing:
         parts.append("<p>Every row has art.</p>")
