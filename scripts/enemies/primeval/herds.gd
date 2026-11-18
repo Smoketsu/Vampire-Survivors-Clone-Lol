@@ -68,6 +68,12 @@ const GRAZE: int = 0
 const WARN: int = 1
 ## Herd state: the front runs.
 const RUN: int = 2
+## Art of the stampede's telegraph line: 4 px across, tiling along it (dust ochre).
+const DUST_LINE_ART: String = "fx/primeval_dust_line"
+## Art of the running front's dust: 56 px deep (the front's depth), tiling along its width.
+const DUST_FRONT_ART: String = "fx/primeval_dust_front"
+## Animation of a heavy corpse rising as a Fossil Giant (AnimData "fx/primeval_fossil_rise").
+const FOSSIL_RISE_ART: String = "fx/primeval_fossil_rise"
 
 
 ## One herd: its beasts in joining order and its stampede.
@@ -473,7 +479,7 @@ func on_killed(e: Enemy) -> void:
 		return
 	giants.append([u, u.generation])
 	game.stat_add("fossil_giants", 1.0)
-	game.effects.ring(u.position, 28.0, Palette.PRIMEVAL_BONE, 0.5)
+	game.effects.ring(u.position, 28.0, Palette.PRIMEVAL_BONE, 0.5, FOSSIL_RISE_ART)  # Its rise of bone dust when the art exists.
 	game.primeval.play_sound("fossil_rise", u.position, 0.5)
 
 
@@ -497,7 +503,8 @@ func danger_push(p: Vector2) -> Vector2:
 
 
 ## Draws every stampede on `ci` (PrimevalRules' layer): the dust line `lead` s
-## ahead of the front and, while it runs, the front's dust (rotated rects only).
+## ahead of the front and, while it runs, the front's dust (the fx/ art over the
+## rects' own areas, else rotated rects).
 func draw(ci: CanvasItem) -> void:
 	var w := float(cfg["width"])
 	var depth := float(cfg["depth"])
@@ -506,8 +513,9 @@ func draw(ci: CanvasItem) -> void:
 			continue
 		var ahead := float(cfg["run_speed"]) * (h.state_t if h.state == WARN else float(cfg["lead"]))  # The dust line: where the front is in `lead` s.
 		ci.draw_set_transform(front(h), h.dir.angle(), Vector2.ONE)
-		ci.draw_rect(Rect2(Vector2(ahead - 1.5, -w * 0.5), Vector2(3.0, w)), Color(Palette.PRIMEVAL_OCHRE, 0.8))
-		if h.state == RUN:
+		if not SpriteBank.draw_band(ci, DUST_LINE_ART, Rect2(Vector2(ahead - 2.0, -w * 0.5), Vector2(4.0, w))):
+			ci.draw_rect(Rect2(Vector2(ahead - 1.5, -w * 0.5), Vector2(3.0, w)), Color(Palette.PRIMEVAL_OCHRE, 0.8))
+		if h.state == RUN and not SpriteBank.draw_band(ci, DUST_FRONT_ART, Rect2(Vector2(-depth * 0.5, -w * 0.5), Vector2(depth, w)), Color(1.0, 1.0, 1.0, 0.8)):
 			ci.draw_rect(Rect2(Vector2(-depth * 0.5, -w * 0.5), Vector2(depth, w)), Color(Palette.PRIMEVAL_OCHRE_DARK, 0.3))
 			ci.draw_rect(Rect2(Vector2(depth * 0.1, -w * 0.5), Vector2(depth * 0.4, w)), Color(Palette.PRIMEVAL_OCHRE, 0.25))
 	ci.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)

@@ -49,6 +49,21 @@
 class_name SeasonCycle
 extends RefCounted
 
+## Art of the wildfire's telegraph line: 4 px across, tiling along it (ash grey).
+const SMOKE_ART: String = "fx/wild_smoke_line"
+## Art of the running fire: 44 px deep (the front's depth), tiling along its width.
+const FIRE_ART: String = "fx/wild_fire_front"
+## Art of the falling snow (winter) over the view: 8 frames of 64 px, tiled.
+const SNOW_ART: String = "fx/wild_snowfall"
+## Art of the falling leaves (autumn) over the view: 8 frames of 64 px, tiled.
+const LEAVES_ART: String = "fx/wild_leaves"
+## Frames in SNOW_ART / LEAVES_ART.
+const FALL_FRAMES: int = 8
+## Frames a second the snow and leaves play (game time; drawing only).
+const FALL_FPS: float = 6.0
+## Opacity (0..1) of the snow and leaves (drawing only).
+const FALL_ALPHA: float = 0.8
+
 ## Owning run.
 var game: Game
 ## True on a Wild stage (STAGE "wild"): the year turns; false off the act.
@@ -468,12 +483,24 @@ func danger_push(p: Vector2) -> Vector2:
 
 ## True while something of the year shows on the over layer.
 func showing() -> bool:
-	return not fronts.is_empty() or not roots_drawn.is_empty() or blizzard()
+	return not fronts.is_empty() or not roots_drawn.is_empty() or blizzard() or _fall_art() != ""
 
 
-## Draws the roots, the fronts and the blizzard on `ci` (WildRules' layer;
-## rects, disc textures and one radial texture only).
-func draw(ci: CanvasItem, blizzard_tex: Texture2D) -> void:
+## The falling snow or leaves to draw over the view now ("" = none: another
+## season, no art, or Reduced effects / a lowered visual tier). Drawing only.
+func _fall_art() -> String:
+	if AdaptiveQuality.tier() > 0:
+		return ""
+	var s := season()
+	var key := SNOW_ART if s == WildRulesData.WINTER else (LEAVES_ART if s == WildRulesData.AUTUMN else "")
+	return key if key != "" and SpriteBank.has(key) else ""
+
+
+## Draws the roots, the fronts, the falling snow or leaves and the blizzard on
+## `ci` (WildRules' layer; the fx/ art over the code rects' own areas, else rects,
+## disc textures and one radial texture; `blizzard_art`, when given, adds its
+## drifts and flakes over the radial veil).
+func draw(ci: CanvasItem, blizzard_tex: Texture2D, blizzard_art: Texture2D = null) -> void:
 	for p: Vector2 in roots_drawn:
 		for k in 3:
 			var a := float(k) * 2.1 + p.x * 0.01
@@ -485,17 +512,32 @@ func draw(ci: CanvasItem, blizzard_tex: Texture2D) -> void:
 		var run := game.elapsed - float(f["t0"])
 		var ahead := float(cf["speed"]) * (float(cf["lead"]) if run >= 0.0 else float(cf["lead"]) + run)  # The smoke line: where the fire is in `lead` s.
 		ci.draw_set_transform(front_pos(f), (f["dir"] as Vector2).angle(), Vector2.ONE)
-		ci.draw_rect(Rect2(Vector2(ahead - 1.5, -w * 0.5), Vector2(3.0, w)), Color(Palette.WILD_ASH, 0.75))
-		if run >= 0.0:
+		if not SpriteBank.draw_band(ci, SMOKE_ART, Rect2(Vector2(ahead - 2.0, -w * 0.5), Vector2(4.0, w))):
+			ci.draw_rect(Rect2(Vector2(ahead - 1.5, -w * 0.5), Vector2(3.0, w)), Color(Palette.WILD_ASH, 0.75))
+		if run >= 0.0 and not SpriteBank.draw_band(ci, FIRE_ART, Rect2(Vector2(-depth * 0.5, -w * 0.5), Vector2(depth, w)), Color(1.0, 1.0, 1.0, 0.85)):
 			ci.draw_rect(Rect2(Vector2(-depth * 0.5, -w * 0.5), Vector2(depth, w)), Color(Palette.WILD_FIRE, 0.4))
 			ci.draw_rect(Rect2(Vector2(depth * 0.1, -w * 0.5), Vector2(depth * 0.4, w)), Color(Palette.WILD_GOLD_LEAF, 0.35))
 	ci.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+	var fall := _fall_art()
+	if fall != "":
+		# A seamless falling loop, tiled on a world grid over the visible rect.
+		var tile := float(SpriteBank.texture(fall).get_height())  # One frame (px).
+		var view := ci.get_canvas_transform().affine_inverse() * ci.get_viewport_rect()  # Visible world rect.
+		var frame := int(game.elapsed * FALL_FPS)
+		var ix0 := int(floorf(view.position.x / tile))
+		var iy0 := int(floorf(view.position.y / tile))
+		for iy in range(iy0, int(ceilf(view.end.y / tile))):
+			for ix in range(ix0, int(ceilf(view.end.x / tile))):
+				SpriteBank.draw_strip_rect(ci, fall, FALL_FRAMES, frame,
+						Rect2(Vector2(float(ix), float(iy)) * tile, Vector2(tile, tile)), Color(1.0, 1.0, 1.0, FALL_ALPHA))
 	if blizzard() and blizzard_tex != null:
 		var sight := float(WildRulesData.WINTER_RULES["sight"])
 		var c := game.player.position
 		var outer := sight * 1.6  # The texture's edge: fully white from here out.
 		var snow := Color(Palette.WILD_FROST, 0.82)
 		ci.draw_texture_rect(blizzard_tex, Rect2(c - Vector2.ONE * outer, Vector2.ONE * outer * 2.0), false, snow)
+		if blizzard_art != null:
+			ci.draw_texture_rect(blizzard_art, Rect2(c - Vector2.ONE * outer, Vector2.ONE * outer * 2.0), false, Color(1.0, 1.0, 1.0, 0.7))  # Drifts and flakes over the veil (128 px art at ~10x: softened).
 		var far := 2400.0  # px: beyond any view.
 		ci.draw_rect(Rect2(c + Vector2(-far, -far), Vector2(far * 2.0, far - outer)), snow)
 		ci.draw_rect(Rect2(c + Vector2(-far, outer), Vector2(far * 2.0, far - outer)), snow)

@@ -76,10 +76,18 @@ const ANIMS: Dictionary = {
 	"empire_blast_red": {"duration": 0.4, "fill": 1.2},  # TUNING (not in GDD) the same in warning red (overloads, heavy hits; impact() 0.4 s)
 	"empire_boss_death": {"duration": 0.4, "fill": 1.1},  # TUNING (not in GDD) an Empire stage boss falls: a red blast, four amber secondary blasts, a cyan-white shock ring (10 frames of 256 px; EnemyDirector impact() 0.4 s, as boss_death; the ring ends at 0.91 of the frame half)
 	"empire_blast_chrome": {"duration": 0.4, "fill": 1.2},  # TUNING (not in GDD) the same in chrome and cyan-white (energy pops; impact() 0.4 s)
+	# --- Act strips in fx/ (an id with a folder is its own sprite key; GDD §15.0 "Unwired art hooked up") ---
+	"fx/primeval_bomb_burst": {"duration": 0.3, "fill": 1.0},  # TUNING (not in GDD) a volcanic bomb landing (6 frames of 64 px; StampedeOfAsh draws it over PrimevalRulesData.ASH bomb_show 0.3 s; the last frame fills its frame = bomb_radius)
+	"fx/primeval_fossil_rise": {"duration": 0.5, "fill": 1.1},  # TUNING (not in GDD) a heavy corpse rising as a Fossil Giant, bone dust (6 frames of 48 px; Herds ring() 0.5 s)
+	"fx/wild_thicket_burn": {"duration": 0.9, "fill": 1.0},  # TUNING (not in GDD) a thicket burning to ash (6 frames of 48 px; an art-only burst at the thicket's 26 px radius)
+	"fx/wild_bury": {"duration": 0.6, "fill": 1.0},  # TUNING (not in GDD) earth closing over a buried summon, Spring Returns (6 frames of 40 px; an art-only burst of WILD_BURY_RADIUS)
 }
 ## Most art-only bursts alive at once (AnimBursts ring buffer; the oldest is
 ## overwritten when full).
 const BURST_CAPACITY: int = 48  # TUNING (not in GDD)
+## Drawn radius (px) of the earth closing over a buried summon ("fx/wild_bury"):
+## 40 px across, its art 1:1. Drawing only.
+const WILD_BURY_RADIUS: float = 20.0  # TUNING (not in GDD)
 ## Gameplay radius (px) of a spell-bolt hit splash ("bolt_impact"): small and subtle.
 const BOLT_IMPACT_RADIUS: float = 10.0  # TUNING (not in GDD)
 ## Half-height (px) of the level-up column ("level_up", drawn 2x this tall).

@@ -34,6 +34,9 @@
 class_name NorseKit
 extends CovenantKit
 
+## Art of the Einherjar's gold light: a 48 px pale-gold aura ring.
+const EINHERJAR_ART: String = "norse/einherjar_overlay"
+
 ## True for an Einherjar, a hero of the hall (gold-lit; make_einherjar()).
 var einherjar: bool = false
 ## Game time (s) until which a skald's song quickens this warrior (0 = none).
@@ -150,14 +153,19 @@ func is_busy() -> bool:
 	return phase != IDLE
 
 
-## Under the body: a flier's ground shadow; an Einherjar's gold light.
+## Under the body: a flier's ground shadow; an Einherjar's gold light
+## (EINHERJAR_ART in the glow's square, else a gold disc).
 func draw_under(e: Enemy) -> void:
 	if is_flier():
 		var w := e.radius * 1.1  # Shadow half-width (px).
 		e.draw_texture_rect(SpriteBank.disc(), Rect2(Vector2(-w, e.radius * 0.9 - w * 0.35), Vector2(w * 2.0, w * 0.7)), false, Color(0.0, 0.0, 0.0, 0.28))
 	if einherjar:
 		var r := e.radius * 1.8  # Glow radius (px).
-		e.draw_texture_rect(SpriteBank.disc(), Rect2(Vector2(-r, -r * 1.1), Vector2(r * 2.0, r * 2.0)), false, Color(Palette.NORSE_VALKYRIE_GOLD, 0.32))
+		var glow := SpriteBank.texture(EINHERJAR_ART)  # The pale-gold aura ring, or null.
+		if glow != null:
+			e.draw_texture_rect(glow, Rect2(Vector2(-r, -r * 1.1), Vector2(r * 2.0, r * 2.0)), false, Color(1.0, 1.0, 1.0, 0.85))
+		else:
+			e.draw_texture_rect(SpriteBank.disc(), Rect2(Vector2(-r, -r * 1.1), Vector2(r * 2.0, r * 2.0)), false, Color(Palette.NORSE_VALKYRIE_GOLD, 0.32))
 
 
 ## Over the body: the fury's red eyes and the song's notes.

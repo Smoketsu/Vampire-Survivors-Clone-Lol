@@ -26,6 +26,9 @@ const FALL: int = 2
 ## Phase: on the ground after the landing (open to every blow).
 const LANDED: int = 3
 
+## Art of the dive's shadow on the landing mark: a 40 x 20 gold ellipse.
+const SHADOW_ART: String = "norse/valkyrie_shadow"
+
 ## Seconds until the next dive may start.
 var _cd: float = 0.0
 ## Where she will land (world px; locked when she rises).
@@ -59,6 +62,7 @@ func physics(e: Enemy, delta: float) -> bool:
 		RISE:
 			phase_time += delta
 			hold(e)
+			e.queue_redraw()  # The dive's shadow grows on the mark (drawing only).
 			if phase_time >= float(d.get("dive_rise", 0.8)):
 				_from = e.position
 				set_phase(e, FALL)
@@ -68,6 +72,7 @@ func physics(e: Enemy, delta: float) -> bool:
 			var k := clampf(phase_time / maxf(0.01, float(d.get("dive_fall", 0.25))), 0.0, 1.0)  # 0 -> 1 down to the mark.
 			e.position = _from.lerp(_at, k)
 			e.velocity = Vector2.ZERO
+			e.queue_redraw()  # The shadow stays on the mark while she moves (drawing only).
 			if k >= 1.0:
 				_land(e)
 				set_phase(e, LANDED)
@@ -123,6 +128,26 @@ func _land(e: Enemy) -> void:
 		if u.active and u.state != SummonedUnit.State.DEAD and push > 0.0 and not u.airborne:
 			var away := (u.position - _at).normalized() if u.position.distance_squared_to(_at) > 1.0 else Vector2.RIGHT
 			u.position += away * g.arena.clear_length(u.position, away, push, u.radius)
+
+
+## Under the body: the shared looks, then, while she rises and falls, her
+## shadow on the landing mark (SHADOW_ART inside the dive's circle, growing and
+## darkening as she comes down; nothing without the art, the telegraph circle
+## marks the landing either way).
+func draw_under(e: Enemy) -> void:
+	super.draw_under(e)
+	if phase != RISE and phase != FALL:
+		return
+	var tex := SpriteBank.texture(SHADOW_ART)  # The shadow art, or null.
+	if tex == null:
+		return
+	var rise := float(d.get("dive_rise", 0.8))
+	var fall := float(d.get("dive_fall", 0.25))
+	var k := clampf((phase_time + (rise if phase == FALL else 0.0)) / maxf(0.01, rise + fall), 0.0, 1.0)  # 0 -> 1 to the landing.
+	var size := Vector2(2.0, 1.0) * float(d.get("dive_radius", 36.0)) * (0.5 + 0.5 * k)  # Inside the circle's width.
+	unmirror(e)
+	e.draw_texture_rect(tex, Rect2(_at - e.position - size * 0.5, size), false, Color(1.0, 1.0, 1.0, 0.35 + 0.55 * k))
+	e.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 
 
 ## Autopilot hint: out of the marked landing ring while she rises and dives.

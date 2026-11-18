@@ -27,13 +27,18 @@
 ##     comes in nest_dist px ahead of the necromancer beside her nest (a
 ##     structure that hatches Scuttlers until it is destroyed; never recycled),
 ##     linked to her (IronjawKit.link_nest()); tracked for the objective and the
-##     report.
+##     report. Destroyed, it leaves its scorched remains where it stood for the
+##     rest of the run (DEAD_NEST_ART, drawn on this node; nothing without the
+##     art; drawing only).
 ## Deterministic: pure hashes and the seeded global RNG only. Stats:
 ## tar_checks, tar_slows_you, tar_slows_summons, tar_slows_enemies,
 ## tar_trapped (beasts caught), crocs_spawned, nest_mother_spawned,
 ## nest_mother_killed, nest_killed.
 class_name FernBasinDirector
 extends Node2D
+
+## Art of the destroyed nest's scorched remains (drawn where it stood).
+const DEAD_NEST_ART: String = "primeval/primeval_nest_dead"
 
 ## Owning run.
 var game: Game
@@ -65,6 +70,15 @@ var _ironjaw_gen: int = 0
 var _nest: Enemy = null
 ## Generation of `_nest` when laid.
 var _nest_gen: int = 0
+## Where the nest stood (world px; it never moves; Vector2.INF = never laid).
+var _nest_at: Vector2 = Vector2.INF
+## True once the nest fell (its remains are drawn at `_nest_at`).
+var _nest_dead: bool = false
+
+
+func _ready() -> void:
+	z_as_relative = false
+	z_index = -7  # On the ground: over the floor and the blight (-10, -8), under the obstacles (-6) and the units.
 
 
 ## Per-tick update (EnemyDirector, after the MarchDirector).
@@ -89,6 +103,14 @@ func step(_delta: float) -> void:
 		game.stat_add("nest_killed", 1.0)
 		nest_time = _clock()
 		_log("nest_down")
+		_nest_dead = true
+		queue_redraw()
+
+
+## The destroyed nest's remains (drawing only).
+func _draw() -> void:
+	if _nest_dead and _nest_at != Vector2.INF:
+		SpriteBank.draw(self, DEAD_NEST_ART, _nest_at, false)
 
 
 # =====================================================================================
@@ -256,6 +278,7 @@ func start_event(ev: Dictionary) -> void:
 		n.is_objective = true  # Never recycled: it stays where it was laid.
 		_nest = n
 		_nest_gen = n.generation
+		_nest_at = n.position
 	var side := ahead.orthogonal()
 	var e := game.enemies.spawn_at(String(ev.get("kind", FernBasinEnemyData.IRONJAW)), game.arena.free_point(at + side * 46.0, 22.0), bool(ev.get("elite", false)))
 	if e != null:

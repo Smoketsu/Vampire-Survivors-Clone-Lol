@@ -38,6 +38,8 @@ const LANDED: int = 3
 const LAND_DIST: float = 130.0  # TUNING (not in GDD)
 ## Most seconds of a swoop (it lands where it is after this).
 const SWOOP_MAX: float = 2.0  # TUNING (not in GDD)
+## Suffix of the kind's landed sprite key (drawing only).
+const LANDED_SUFFIX: String = "_landed"
 
 ## Seconds until the next gust may start.
 var cd: float = 0.0
@@ -160,6 +162,24 @@ func on_deactivate(e: Enemy) -> void:
 
 func is_busy() -> bool:
 	return phase == WINDUP or phase == SWOOP
+
+
+## Body while grounded: the kind's landed sprite (`primeval/<kind>_landed`,
+## wings folded; the Stormwing has one, Thunderwing keeps his flying look).
+func draws_body(e: Enemy) -> bool:
+	if phase != LANDED:
+		return false
+	var key := _landed_key(e)
+	return SpriteData.HEIGHTS.has(key) and SpriteBank.has(key)  # Only kinds with a landed sprite listed (no probe for the others).
+
+
+func draw_body(e: Enemy, ci: CanvasItem) -> void:
+	SpriteBank.draw(ci, _landed_key(e), Vector2.ZERO, e.flash > 0.0)
+
+
+## Sprite key of the kind's landed look.
+static func _landed_key(e: Enemy) -> String:
+	return PrimevalEnemyData.SPRITE_DIR + e.kind + LANDED_SUFFIX
 
 
 ## Overlay: the gust's circle round the necromancer while she beats her wings,

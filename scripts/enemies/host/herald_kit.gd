@@ -16,6 +16,10 @@ extends HostKit
 const WINDUP: int = 1
 ## px from the Herald the called squad lands (a ring around him).
 const SQUAD_RING: float = 46.0  # Drawing / placement only, not balance.
+## Art of the widening ring: 8 frames of 48 x 24 (silver), played over the windup.
+const RING_ART: String = "fx/host_trumpet_ring"
+## Frames in RING_ART.
+const RING_FRAMES: int = 8
 
 ## Seconds until the next blast.
 var cd: float = 0.0
@@ -76,11 +80,15 @@ func _blast(e: Enemy, bl: Dictionary) -> void:
 				g.stat_add("herald_called", 1.0)
 
 
-## A widening silver ring at his feet while the trumpet is raised.
+## A widening silver ring at his feet while the trumpet is raised (RING_ART,
+## its frames running with the windup, else a flattened disc).
 func draw_under(e: Enemy) -> void:
 	if phase != WINDUP:
 		return
 	var k := clampf(phase_time / maxf(0.01, float((d["blast"] as Dictionary)["windup"])), 0.0, 1.0)
 	var r := e.radius * (1.4 + 2.2 * k)
+	if SpriteBank.draw_strip_rect(e, RING_ART, RING_FRAMES, mini(int(k * float(RING_FRAMES)), RING_FRAMES - 1),
+			Rect2(Vector2(-r, -r * 0.5) + Vector2(0.0, e.radius * 0.6), Vector2(r * 2.0, r)), Color(1.0, 1.0, 1.0, 0.9)):
+		return
 	e.draw_texture_rect(SpriteBank.disc(), Rect2(Vector2(-r, -r * 0.4) + Vector2(0.0, e.radius * 0.6), Vector2(r * 2.0, r * 0.8)),
 			false, Color(Palette.HOST_SILVER, 0.35 * (1.0 - k) + 0.1))

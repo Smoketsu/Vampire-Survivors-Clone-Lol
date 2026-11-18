@@ -25,6 +25,9 @@
 class_name StampedeOfAsh
 extends RefCounted
 
+## Animation of a bomb landing (AnimData "fx/primeval_bomb_burst"; drawing only).
+const BURST_ART: String = "fx/primeval_bomb_burst"
+
 ## Owning run.
 var game: Game
 ## The Stampede of Ash's numbers ({} = off on this stage).
@@ -167,14 +170,16 @@ func showing() -> bool:
 
 
 ## Draws every bomb on `ci` (PrimevalRules' layer): a filling circle, then a
-## burst (disc textures only).
+## burst (BURST_ART at the bomb's radius, else a disc; disc textures).
 func draw(ci: CanvasItem) -> void:
 	var r := float(cfg.get("bomb_radius", 0.0))
 	var warn := maxf(0.01, float(cfg.get("bomb_warn", 1.0)))
 	for b: Array in bombs:
 		var at: Vector2 = b[0]
 		if b.size() > 2:
-			SpriteBank.draw_disc(ci, at, r, Color(Palette.PRIMEVAL_LAVA, 0.55))
+			var burst := (game.elapsed - float(b[1])) / maxf(0.01, float(cfg.get("bomb_show", 0.3)))  # 0 -> 1 through the burst.
+			if not SpriteBank.draw_anim(ci, BURST_ART, at, r * 2.0 * float(AnimData.ANIMS[BURST_ART]["fill"]), burst):
+				SpriteBank.draw_disc(ci, at, r, Color(Palette.PRIMEVAL_LAVA, 0.55))
 			continue
 		var k := clampf(1.0 - (float(b[1]) - game.elapsed) / warn, 0.0, 1.0)  # 0 -> 1 as it falls.
 		SpriteBank.draw_disc(ci, at, r, Color(Palette.PRIMEVAL_LAVA, 0.14))
