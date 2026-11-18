@@ -409,6 +409,40 @@ static func draw_flat_frame(ci: CanvasItem, key: String, frames: int, frame: int
 	return true
 
 
+## Draws flat strip art `key` (fx/*: a band a few px across, its texture
+## tiling down its height) over `rect`: stretched to rect's width, repeated
+## every texture height along y (the last copy cut). Callers set the transform
+## so +x is the band's motion and y runs along it (a light shaft, a fire or dust
+## front, a telegraph line): the art fills exactly the rect the code drawing
+## used, never a hit area of its own. `tint` multiplies it. Returns false when
+## there is no art, so the caller draws its rects.
+static func draw_band(ci: CanvasItem, key: String, rect: Rect2, tint: Color = Color.WHITE) -> bool:
+	var tex := texture(key)  # Art for this key, or null.
+	if tex == null:
+		return false
+	var tw := float(tex.get_width())  # Texture width (texels).
+	var th := float(tex.get_height())  # One tile's height (texels = px).
+	var y := rect.position.y  # Top of the next tile (px).
+	while y < rect.end.y:
+		var h := minf(th, rect.end.y - y)  # This tile's height (px; the last one cut).
+		ci.draw_texture_rect_region(tex, Rect2(rect.position.x, y, rect.size.x, h), Rect2(0.0, 0.0, tw, h), tint)
+		y += th
+	return true
+
+
+## Draws frame `frame` (0-based, wrapped) of strip `key` (`frames` equal frames
+## side by side) stretched over `rect`, `tint` multiplied: for frames that are
+## not square (a flattened ring) or that tile a view. Returns false when there
+## is no art.
+static func draw_strip_rect(ci: CanvasItem, key: String, frames: int, frame: int, rect: Rect2, tint: Color = Color.WHITE) -> bool:
+	var tex := texture(key)  # Art for this key, or null.
+	if tex == null or frames < 1:
+		return false
+	var fw := float(tex.get_width()) / float(frames)  # One frame's width (texels).
+	ci.draw_texture_rect_region(tex, rect, Rect2(fw * float(posmod(frame, frames)), 0.0, fw, float(tex.get_height())), tint)
+	return true
+
+
 ## Draws sprite `key` like draw() (centred near `o`, feet below it, a drop
 ## shadow), but only its top `rise` (0..1) of rows, their bottom on the
 ## sprite's feet line: the sprite grows up out of the ground as `rise` goes
@@ -472,17 +506,24 @@ static func draw_icon_art(ci: CanvasItem, kind: String, rect: Rect2) -> bool:
 	return true
 
 
-## True when an effect animation strip exists for `id` (assets/sprites/effects/<id>.png).
+## True when an effect animation strip exists for `id` (assets/sprites/effects/<id>.png;
+## an id with a folder, "fx/<name>", names its key as is).
 static func has_anim(id: String) -> bool:
-	return texture("effects/" + id) != null
+	return texture(_anim_key(id)) != null
+
+
+## Sprite key of effect animation `id`: "effects/<id>", or `id` itself when it
+## names a folder (the act effect strips in fx/, GDD §15.0 "Unwired art hooked up").
+static func _anim_key(id: String) -> String:
+	return id if id.contains("/") else "effects/" + id
 
 
 ## Draws frame `progress` (0..1 through the animation) of effect animation `id`
-## centred on `o`, `diameter` px across (square frames in a horizontal strip;
+## (see has_anim()) centred on `o`, `diameter` px across (square frames in a horizontal strip;
 ## frame count = width / height). `alpha` fades it; `tint` multiplies its colours
 ## (the volley bursts, grey masks tinted with the shot's colour). Returns false without art.
 static func draw_anim(ci: CanvasItem, id: String, o: Vector2, diameter: float, progress: float, alpha: float = 1.0, tint: Color = Color.WHITE) -> bool:
-	var tex := texture("effects/" + id)  # Strip of square frames, or null.
+	var tex := texture(_anim_key(id))  # Strip of square frames, or null.
 	if tex == null:
 		return false
 	var fh := float(tex.get_height())  # Frame size (px).

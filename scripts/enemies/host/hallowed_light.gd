@@ -24,13 +24,20 @@
 ##     tick (CombatResolver.heal_enemy()).
 ## Summons get no act-only rule: the Light is a hazard on the ground, read by
 ## the army only as damage. Off a Host stage (a forced Host kind) no shaft
-## opens unless phase 2 adds one. Drawn: the shafts (rotated rects, starlight
-## white) and their cerulean lines, z 14. Determinism: game time and the
+## opens unless phase 2 adds one. Drawn: the shafts and their cerulean lines,
+## z 14: the art fx/host_shaft / fx/host_shaft_line tiled along each, added
+## onto the scene (an additive material, set only when the art exists), else
+## rotated rects (starlight white). Determinism: game time and the
 ## seeded gameplay RNG, only on a Host stage.
 ## Stats: light_shafts, light_summon_burns, light_summon_dmg,
 ## light_player_burns, light_shaded, light_blocked, light_angel_heals.
 class_name HallowedLight
 extends Node2D
+
+## Art of a shaft: 32 px across (stretched to its width), tiling along it.
+const SHAFT_ART: String = "fx/host_shaft"
+## Art of the telegraph line: 4 px across, tiling along it.
+const LINE_ART: String = "fx/host_shaft_line"
 
 ## Owning run.
 var game: Game
@@ -80,6 +87,10 @@ func _init(p_game: Game, p_enabled: bool) -> void:
 		_next = float(cfg["first"])
 	clouds = CloudShade.new(p_game, p_enabled)
 	_draws = DisplayServer.get_name() != "headless"
+	if _draws and SpriteBank.has(SHAFT_ART):
+		var mat := CanvasItemMaterial.new()  # Light adds onto what it crosses (no screen read).
+		mat.blend_mode = CanvasItemMaterial.BLEND_MODE_ADD
+		material = mat
 
 
 ## Seconds until the next shaft now: every - every_step per minute, never
@@ -223,8 +234,8 @@ func danger_push(p: Vector2) -> Vector2:
 	return push
 
 
-## Every shaft (a starlight band) and its cerulean line `lead` s ahead
-## (rotated rects only).
+## Every shaft (a starlight band) and its cerulean line `lead` s ahead: the
+## art tiled over the band's own rect, else rotated rects.
 func _draw() -> void:
 	var now := game.elapsed
 	var length := float(cfg["length"])
@@ -233,7 +244,9 @@ func _draw() -> void:
 		var c := centre(sh, now)
 		var w := float(sh[4])
 		draw_set_transform(c, (sh[2] as Vector2).angle(), Vector2.ONE)
-		draw_rect(Rect2(Vector2(-w * 0.5, -length * 0.5), Vector2(w, length)), Color(Palette.HOST_STARLIGHT, 0.28))
-		draw_rect(Rect2(Vector2(-w * 0.2, -length * 0.5), Vector2(w * 0.4, length)), Color(Palette.HOST_STARLIGHT, 0.22))
-		draw_rect(Rect2(Vector2(ahead - 1.0, -length * 0.5), Vector2(2.0, length)), Color(Palette.HOST_CERULEAN, 0.75))
+		if not SpriteBank.draw_band(self, SHAFT_ART, Rect2(Vector2(-w * 0.5, -length * 0.5), Vector2(w, length)), Color(1.0, 1.0, 1.0, 0.7)):
+			draw_rect(Rect2(Vector2(-w * 0.5, -length * 0.5), Vector2(w, length)), Color(Palette.HOST_STARLIGHT, 0.28))
+			draw_rect(Rect2(Vector2(-w * 0.2, -length * 0.5), Vector2(w * 0.4, length)), Color(Palette.HOST_STARLIGHT, 0.22))
+		if not SpriteBank.draw_band(self, LINE_ART, Rect2(Vector2(ahead - 2.0, -length * 0.5), Vector2(4.0, length))):
+			draw_rect(Rect2(Vector2(ahead - 1.0, -length * 0.5), Vector2(2.0, length)), Color(Palette.HOST_CERULEAN, 0.75))
 	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)

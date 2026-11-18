@@ -68,6 +68,9 @@ var _under: Node2D = null
 var _under_at: float = 0.0
 ## The blizzard's radial snow texture (null headless).
 var _blizzard_tex: GradientTexture2D = null
+## The blizzard's drifts and flakes (fx/wild_blizzard, drawn over the radial
+## veil in the same square; null headless or without the art).
+var _blizzard_art: Texture2D = null
 ## The HUD's season wheel (null headless or off the act).
 var _wheel: SeasonWheel = null
 # --- Act XV (temporary number): the Fae Court --- the Summer Queen's bargain (take_bargain()).
@@ -113,6 +116,7 @@ func _init(p_game: Game) -> void:
 		_blizzard_tex.fill_to = Vector2(1.0, 0.5)
 		_blizzard_tex.width = 128
 		_blizzard_tex.height = 128
+		_blizzard_art = SpriteBank.texture("fx/wild_blizzard")
 
 
 ## Per-tick update (Game, after the enemies, before the obstacle push-out):
@@ -196,7 +200,7 @@ func danger_push(p: Vector2) -> Vector2:
 
 
 func _draw() -> void:
-	seasons.draw(self, _blizzard_tex)
+	seasons.draw(self, _blizzard_tex, _blizzard_art)
 
 
 ## Draws the under layer: the blight round the necromancer, then the sprouts.

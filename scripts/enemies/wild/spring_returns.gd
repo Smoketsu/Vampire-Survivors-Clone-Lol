@@ -119,3 +119,4 @@ func _bury() -> void:
 		game.stat_add("returns_burials", 1.0)
 		game.stat_add("returns_bury_dmg", dmg)
 		game.wild.play_sound("bury", u.position, 0.3)
+		game.effects.burst(u.position, AnimData.WILD_BURY_RADIUS, "fx/wild_bury")  # The earth closing over it (art only, drawing).

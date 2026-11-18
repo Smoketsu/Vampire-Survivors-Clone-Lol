@@ -28,8 +28,9 @@ confirmed the static findings and added the floor decals, the scribe's curse sig
 1. **Divine Wrath** (Ilion, Olympus, Underworld; Zeus / Poseidon / Hades fights): the tidal wave is a flat blue polygon with
    a line edge, the lightning warning is concentric circles. No Pantheon AoE art (the Empire has `EmpireFx`, Act I-III have
    `AoeArt`). The act's signature rule.
-2. **Hallowed Light shafts** (Silver Stair, Wheel of Thrones, Empyrean; Seraiel, the Throne, the Voice): plain translucent
-   rectangles. `fx/host_shaft`, `host_shaft_line`, `host_trumpet_ring` exist but no script loads them.
+2. ~~**Hallowed Light shafts** (Silver Stair, Wheel of Thrones, Empyrean; Seraiel, the Throne, the Voice): plain translucent
+   rectangles. `fx/host_shaft`, `host_shaft_line`, `host_trumpet_ring` exist but no script loads them.~~ **Done** (Nov 2026,
+   GDD §15.0 "Unwired art hooked up").
 3. **Vigrid obstacles** (`norse_boulder` x2 sizes, `norse_ash_rock` x3 sizes, Zones I-II of the Hall's finale): stacked flat
    discs; they are most of the map's furniture (~3,700 draws a run). No `obstacles/norse_*` PNG. Also the Maelstrom's
    `maelstrom_wheel_m` obstacle (339 draws) is a code glyph.
@@ -38,10 +39,10 @@ confirmed the static findings and added the floor decals, the scribe's curse sig
    Same for `markers/inscription` (Forbidden Verse mark).
 5. **Act-spell effects** (Stolen Thunder, Paris's Arrow, River Styx, Linen Bind; Death Ray's fallback): zigzag lines, a line
    with a triangle head, thick black lines. The player sees these all run.
-6. **Seasonal fronts** (Wild: wildfire front, blizzard veil, snow and leaves; Greenwood, Fae Court, World-Tree): flat rects /
-   gradient. Seven `fx/wild_*` strips exist, unwired.
-7. **Stampede dust fronts, volcanic bomb burst, Fossil Giant rise** (Age of Titans): rects and discs. Four
-   `fx/primeval_*` PNGs exist, unwired.
+6. ~~**Seasonal fronts** (Wild: wildfire front, blizzard veil, snow and leaves; Greenwood, Fae Court, World-Tree): flat rects /
+   gradient. Seven `fx/wild_*` strips exist, unwired.~~ **Done** (Nov 2026, GDD §15.0 "Unwired art hooked up").
+7. ~~**Stampede dust fronts, volcanic bomb burst, Fossil Giant rise** (Age of Titans): rects and discs. Four
+   `fx/primeval_*` PNGs exist, unwired.~~ **Done** (Nov 2026, GDD §15.0 "Unwired art hooked up").
 8. **Hyper skins for 20 characters and Untouchable / Deathlord for 18** (the Act II-XV characters): a palette tint of the base
    sprite plus a code emblem / aura, not a drawn skin.
 9. **Floor decals** (Archive x4, Citadel x3, Ul-Thalos x16 `decals/*`): the hashed floor scatter stays the old code
@@ -87,17 +88,18 @@ all but `bishop` have an icon. No gaps.
 
 ## Effects, projectiles and spells
 
-Projectile kinds (12 of 12) all have art. Art exists but is **not wired** (no script loads the key, so the old code drawing
-still shows):
+Projectile kinds (12 of 12) all have art. Art that existed but was **not wired** (no script loaded the key, so the old code
+drawing showed). **All wired in Nov 2026** (GDD §15.0 "Unwired art hooked up"; the code drawing stays the fallback) except the
+two leftovers in the last row:
 
 | Key | Intended for | Currently drawn as | Visibility | Fix |
 |---|---|---|---|---|
-| `fx/host_shaft`, `host_shaft_line`, `host_trumpet_ring` | Hallowed Light shaft, its telegraph, the Herald's blast ring | rects / disc in `hallowed_light.gd` and the Herald kit | high (boss attacks) | wire (`draw_flat` tiled along the shaft) |
-| `fx/wild_smoke_line`, `wild_fire_front`, `wild_blizzard`, `wild_snowfall`, `wild_leaves`, `wild_thicket_burn`, `wild_bury` | wildfire front and its warning, blizzard veil, seasonal particles, thicket burning, buried summons | rects / gradient in `season_cycle.gd` and the Wild kits | high on the Wild stages | wire |
-| `fx/primeval_dust_line`, `primeval_dust_front`, `primeval_bomb_burst`, `primeval_fossil_rise` | stampede line and dust front, volcanic bomb, Fossil Giant rise | rect / discs / ring | medium-high | wire |
-| `norse/einherjar_overlay`, `norse/valkyrie_shadow` | Einherjar aura, valkyrie dive shadow | code ring / ellipse | low-medium | wire |
-| `primeval/primeval_nest_dead`, `primeval/stormwing_landed` | dead nest, landed Stormwing | the live sprite | low | wire |
-| `dynasty/mummy_b`, `icons/inglorious` | unused leftovers | n/a | none | delete or ignore |
+| `fx/host_shaft`, `host_shaft_line`, `host_trumpet_ring` | Hallowed Light shaft, its telegraph, the Herald's blast ring | rects / disc in `hallowed_light.gd` and the Herald kit | high (boss attacks) | **done**: `SpriteBank.draw_band()` over each shaft and line (additive), the ring's frames over the Herald's windup |
+| `fx/wild_smoke_line`, `wild_fire_front`, `wild_blizzard`, `wild_snowfall`, `wild_leaves`, `wild_thicket_burn`, `wild_bury` | wildfire front and its warning, blizzard veil, seasonal particles, thicket burning, buried summons | rects / gradient in `season_cycle.gd` and the Wild kits | high on the Wild stages | **done**: bands for the front and line, the art over the blizzard veil, snow / leaves tiled over the view (Full effects), bursts for the burn and the burial |
+| `fx/primeval_dust_line`, `primeval_dust_front`, `primeval_bomb_burst`, `primeval_fossil_rise` | stampede line and dust front, volcanic bomb, Fossil Giant rise | rect / discs / ring | medium-high | **done**: bands for the front and line, the bomb's burst, the Fossil Giant's rise through `Herds`' ring |
+| `norse/einherjar_overlay`, `norse/valkyrie_shadow` | Einherjar aura, valkyrie dive shadow | code ring / ellipse | low-medium | **done**: the gold light's art; the shadow on a valkyrie's landing mark while she dives |
+| `primeval/primeval_nest_dead`, `primeval/stormwing_landed` | dead nest, landed Stormwing | the live sprite | low | **done**: the remains where the nest fell; the Stormwing's body while landed |
+| `dynasty/mummy_b`, `icons/inglorious` | unused leftovers | n/a | none | **left unwired**: the old 28 x 40 mummy (replaced by `mummy`) and the dropped counter-passive Inglorious (Calm Blood took its place); nothing shows them |
 
 Code-only effects that stand in for an object or effect (the player would expect art):
 

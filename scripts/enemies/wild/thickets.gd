@@ -25,7 +25,9 @@
 ##     as the Stag King's Antler Crown hears it through ring_burns); a thicket on dead ground
 ##     (BloomField.is_dead()) WITHERS away after `wither` s.
 ## Drawn: the thickets by the arena (WildGlyphs.draw_obstacle(), kind
-## WildRulesData.THICKET_KIND), the sprouts on WildRules' under layer.
+## WildRulesData.THICKET_KIND), the sprouts on WildRules' under layer, a burnt
+## thicket's fall to ash (fx/wild_thicket_burn, an art-only burst: nothing
+## without the art).
 ## Determinism: game time, positions and pure hashes; no RNG. Stats:
 ## thicket_seeds, thicket_seeds_capped, thicket_seeds_blocked,
 ## thicket_seeds_died, thickets_grown, thickets_burnt, thickets_withered,
@@ -46,6 +48,9 @@ class Thicket:
 	var next_spread: float = INF
 	## Seeds it has spread so far (the neighbour hash).
 	var spreads: int = 0
+
+## Art-only burst of a thicket burning to ash (AnimData "fx/wild_thicket_burn").
+const BURN_ART: String = "fx/wild_thicket_burn"
 
 ## Owning run.
 var game: Game
@@ -169,6 +174,13 @@ func _spread(th: Thicket) -> void:
 	game.stat_add("thicket_spreads", 1.0)
 
 
+## Thicket `j` burns: its fall to ash plays (drawing only), then it is taken out.
+func _burn_out(j: int) -> void:
+	var o := thickets[j].obstacle
+	game.effects.burst(o.center, o.radius, BURN_ART)
+	_remove(j)
+
+
 ## Takes thicket `j` out (the arena forgets it).
 func _remove(j: int) -> void:
 	game.arena.remove_obstacle(thickets[j].obstacle)
@@ -200,7 +212,7 @@ func burn_line(front: Vector2, dir: Vector2, width: float, depth: float) -> void
 		var rel := thickets[j].obstacle.center - front
 		var r := thickets[j].obstacle.radius
 		if absf(rel.dot(dir)) <= depth * 0.5 + r and absf(rel.dot(dir.orthogonal())) <= width * 0.5:
-			_remove(j)
+			_burn_out(j)
 			game.stat_add("thickets_burnt", 1.0)
 			game.wild.play_sound("thicket_burn", front, 0.3)
 		j -= 1
@@ -219,7 +231,7 @@ func burn_at(at: Vector2, r: float) -> int:
 	var j := thickets.size() - 1
 	while j >= 0:
 		if thickets[j].obstacle.center.distance_to(at) <= r + thickets[j].obstacle.radius:
-			_remove(j)
+			_burn_out(j)
 			n += 1
 		j -= 1
 	if n > 0:

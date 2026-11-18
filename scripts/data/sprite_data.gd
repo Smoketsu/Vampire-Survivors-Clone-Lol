@@ -743,6 +743,7 @@ const FLAT_SIZES: Dictionary = {
 	"primeval/bog_croc_submerged": 12.0,  # TUNING (not in GDD) the Bog Croc under the tar: eyes and a ripple (about 32 wide)
 	"primeval/ironjaw": 60.0,  # TUNING (not in GDD) Fern Basin miniboss, female (a beast: no figure style): a bulky tar-dark predator, an iron-grey jaw (about 80 wide); walk strip
 	"primeval/primeval_nest": 32.0,  # TUNING (not in GDD) Ironjaw's nest: a mound of fern and eggshells (about 48 wide); `_dead` still
+	"primeval/primeval_nest_dead": 32.0,  # TUNING (not in GDD) the destroyed nest's scorched remains, where it stood (FernBasinDirector; about 40 wide)
 	"primeval/scarmaw_guard": 40.0,  # TUNING (not in GDD) Scarmaw's alpha-guard, female: a great Razorclaw with a bone crest (about 44 wide); walk strip (the alpha's art until then)
 	"primeval/scarmaw": 60.0,  # TUNING (not in GDD) Fern Basin boss, female (a beast): a huge feathered raptor, a bone crest, a scarred muzzle (about 72 wide); walk strip, pose 1 (the leap)
 	# --- Act XIV (temporary number): the Great Plain (phase 2; art pending, PrimevalGlyphs / the boss's code shape until then) ---
@@ -752,6 +753,7 @@ const FLAT_SIZES: Dictionary = {
 	"primeval/ironbrow": 80.0,  # TUNING (not in GDD) Great Plain boss, male: a giant ceratopsian (about 112 wide); walk strip, pose 1 `_broken` (one horn snapped)
 	# --- Act XIV (temporary number): the Last Day (phase 2; art pending, PrimevalGlyphs / the boss's and the class's code shapes until then) ---
 	"primeval/stormwing": 44.0,  # TUNING (not in GDD) flier elite, female (a beast): a great pterosaur, a lava crest (about 72 wide); fly strip, `_landed` still
+	"primeval/stormwing_landed": 44.0,  # TUNING (not in GDD) the Stormwing grounded, wings folded, pecking (StormwingKit's LANDED body; about 56 wide)
 	"primeval/thunderwing": 64.0,  # TUNING (not in GDD) Last Day miniboss, male: a giant pterosaur (about 112 wide); fly strip
 	"primeval/gravejaw": 104.0,  # TUNING (not in GDD) Last Day boss, male: the greatest tyrant, scarred, a lava glow in the throat (about 128 wide); walk strip, pose 1 `_roar`
 	"player/skywatcher": 56.0,  # TUNING (not in GDD) female (figure style): a violet star-robed dress, a bone astrolabe, a falling-star staff (about 38 wide); walk and idle strips
