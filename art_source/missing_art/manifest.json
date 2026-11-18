@@ -1,0 +1,548 @@
+{
+ "aoe/paris_trail": {
+  "frames": 1,
+  "h": 5,
+  "note": "arrow trail, stretch along the trail polyline, bright end at the arrow",
+  "w": 24
+ },
+ "corsair/cursed_coin": {
+  "frames": 1,
+  "h": 14,
+  "note": "Cursed Coin (radius 6 px), single face; the sickly lantern glow stays code",
+  "w": 14
+ },
+ "corsair/cursed_coin_spin": {
+  "frames": 4,
+  "h": 14,
+  "note": "spin: face, 3/4, edge, 3/4 mirrored; 4 frames of 14 x 14",
+  "w": 56
+ },
+ "decals/archive_halls_pages": {
+  "frames": 1,
+  "h": 7,
+  "note": "floor decal, top-down, no outline",
+  "w": 12
+ },
+ "decals/archive_orrery_star": {
+  "frames": 1,
+  "h": 17,
+  "note": "floor decal, top-down, no outline",
+  "w": 17
+ },
+ "decals/archive_stacks_pages": {
+  "frames": 1,
+  "h": 5,
+  "note": "floor decal, top-down, no outline",
+  "w": 9
+ },
+ "decals/archive_wells_stain": {
+  "frames": 1,
+  "h": 12,
+  "note": "floor decal, top-down, no outline",
+  "w": 15
+ },
+ "decals/citadel_courts_scorch": {
+  "frames": 1,
+  "h": 12,
+  "note": "floor decal, top-down, no outline",
+  "w": 19
+ },
+ "decals/citadel_gates_plate": {
+  "frames": 1,
+  "h": 16,
+  "note": "floor decal, top-down, no outline",
+  "w": 16
+ },
+ "decals/citadel_lifts_hazard": {
+  "frames": 1,
+  "h": 11,
+  "note": "floor decal, top-down, no outline",
+  "w": 21
+ },
+ "decals/spire_breakwater_barnacles": {
+  "frames": 1,
+  "h": 10,
+  "note": "floor decal, top-down, no outline",
+  "w": 8
+ },
+ "decals/spire_breakwater_bones": {
+  "frames": 1,
+  "h": 5,
+  "note": "floor decal, top-down, no outline",
+  "w": 15
+ },
+ "decals/spire_breakwater_glyph": {
+  "frames": 1,
+  "h": 15,
+  "note": "floor decal, top-down, no outline",
+  "w": 15
+ },
+ "decals/spire_breakwater_kelp": {
+  "frames": 1,
+  "h": 6,
+  "note": "floor decal, top-down, no outline",
+  "w": 16
+ },
+ "decals/spire_gate_barnacles": {
+  "frames": 1,
+  "h": 10,
+  "note": "floor decal, top-down, no outline",
+  "w": 8
+ },
+ "decals/spire_gate_bones": {
+  "frames": 1,
+  "h": 5,
+  "note": "floor decal, top-down, no outline",
+  "w": 15
+ },
+ "decals/spire_gate_glyph": {
+  "frames": 1,
+  "h": 15,
+  "note": "floor decal, top-down, no outline",
+  "w": 15
+ },
+ "decals/spire_gate_kelp": {
+  "frames": 1,
+  "h": 6,
+  "note": "floor decal, top-down, no outline",
+  "w": 16
+ },
+ "decals/spire_spire_barnacles": {
+  "frames": 1,
+  "h": 9,
+  "note": "floor decal, top-down, no outline",
+  "w": 9
+ },
+ "decals/spire_spire_bones": {
+  "frames": 1,
+  "h": 5,
+  "note": "floor decal, top-down, no outline",
+  "w": 14
+ },
+ "decals/spire_spire_glyph": {
+  "frames": 1,
+  "h": 14,
+  "note": "floor decal, top-down, no outline",
+  "w": 14
+ },
+ "decals/spire_spire_kelp": {
+  "frames": 1,
+  "h": 6,
+  "note": "floor decal, top-down, no outline",
+  "w": 14
+ },
+ "decals/spire_steps_barnacles": {
+  "frames": 1,
+  "h": 8,
+  "note": "floor decal, top-down, no outline",
+  "w": 9
+ },
+ "decals/spire_steps_bones": {
+  "frames": 1,
+  "h": 5,
+  "note": "floor decal, top-down, no outline",
+  "w": 13
+ },
+ "decals/spire_steps_glyph": {
+  "frames": 1,
+  "h": 13,
+  "note": "floor decal, top-down, no outline",
+  "w": 13
+ },
+ "decals/spire_steps_kelp": {
+  "frames": 1,
+  "h": 6,
+  "note": "floor decal, top-down, no outline",
+  "w": 16
+ },
+ "effects/wrath_strike": {
+  "frames": 8,
+  "h": 96,
+  "note": "lightning landing, 8 frames 96x96, ring ends at 0.84 of half = 40 px",
+  "w": 768
+ },
+ "icons/ach_deathlords_due": {
+  "frames": 1,
+  "h": 32,
+  "note": "32 x 32 badge, gold frame",
+  "w": 32
+ },
+ "icons/ach_full_ossuary": {
+  "frames": 1,
+  "h": 32,
+  "note": "32 x 32 badge, gold frame",
+  "w": 32
+ },
+ "icons/ach_holmgang": {
+  "frames": 1,
+  "h": 32,
+  "note": "32 x 32 badge, gold frame",
+  "w": 32
+ },
+ "icons/ach_keep_the_fires": {
+  "frames": 1,
+  "h": 32,
+  "note": "32 x 32 badge, gold frame",
+  "w": 32
+ },
+ "icons/ach_mass_grave": {
+  "frames": 1,
+  "h": 32,
+  "note": "32 x 32 badge, gold frame",
+  "w": 32
+ },
+ "icons/ach_swift_judgment": {
+  "frames": 1,
+  "h": 32,
+  "note": "32 x 32 badge, gold frame",
+  "w": 32
+ },
+ "icons/ach_twilight_of_the_wolf": {
+  "frames": 1,
+  "h": 32,
+  "note": "32 x 32 badge, gold frame",
+  "w": 32
+ },
+ "icons/ach_untouchable": {
+  "frames": 1,
+  "h": 32,
+  "note": "32 x 32 badge, gold frame",
+  "w": 32
+ },
+ "icons/cold_iron": {
+  "frames": 1,
+  "h": 32,
+  "note": "32 x 32 badge, violet frame",
+  "w": 32
+ },
+ "icons/fur_lined_bones": {
+  "frames": 1,
+  "h": 32,
+  "note": "32 x 32 badge, violet frame",
+  "w": 32
+ },
+ "markers/inscription": {
+  "frames": 1,
+  "h": 12,
+  "note": "Forbidden Verse mark: a violet rune ring round a small inscribed page",
+  "w": 12
+ },
+ "markers/scribe_curse": {
+  "frames": 1,
+  "h": 12,
+  "note": "ink sigil over a cursed cultist: a rune ring around an open biolume eye",
+  "w": 12
+ },
+ "norse/holmgang_ground": {
+  "frames": 1,
+  "h": 32,
+  "note": "duel ground tint tile (replaces the flat gold rect), seamless, alpha 0.3-0.5 in code",
+  "w": 32
+ },
+ "norse/holmgang_post": {
+  "frames": 1,
+  "h": 16,
+  "note": "hazel rod post, feet on the bottom row; one at each rod position (code draws 3 x 11 rects)",
+  "w": 8
+ },
+ "norse/holmgang_rope": {
+  "frames": 1,
+  "h": 3,
+  "note": "rope between posts, tiles along x; the code lays it at 7 px above the ground line",
+  "w": 16
+ },
+ "norse/holmgang_rope_v": {
+  "frames": 1,
+  "h": 16,
+  "note": "vertical sides",
+  "w": 3
+ },
+ "obstacles/blank_shelf_l_v": {
+  "frames": 1,
+  "h": 171,
+  "note": "derived from the horizontal art (tall props: top face above the end face; low props: a diagonal flip)",
+  "w": 22
+ },
+ "obstacles/blank_shelf_m_v": {
+  "frames": 1,
+  "h": 148,
+  "note": "derived from the horizontal art (tall props: top face above the end face; low props: a diagonal flip)",
+  "w": 22
+ },
+ "obstacles/blank_shelf_s_v": {
+  "frames": 1,
+  "h": 126,
+  "note": "derived from the horizontal art (tall props: top face above the end face; low props: a diagonal flip)",
+  "w": 22
+ },
+ "obstacles/bookshelf_l_v": {
+  "frames": 1,
+  "h": 157,
+  "note": "derived from the horizontal art (tall props: top face above the end face; low props: a diagonal flip)",
+  "w": 22
+ },
+ "obstacles/bookshelf_m_v": {
+  "frames": 1,
+  "h": 141,
+  "note": "derived from the horizontal art (tall props: top face above the end face; low props: a diagonal flip)",
+  "w": 22
+ },
+ "obstacles/bookshelf_s_v": {
+  "frames": 1,
+  "h": 126,
+  "note": "derived from the horizontal art (tall props: top face above the end face; low props: a diagonal flip)",
+  "w": 22
+ },
+ "obstacles/chart_table_l_v": {
+  "frames": 1,
+  "h": 71,
+  "note": "derived from the horizontal art (tall props: top face above the end face; low props: a diagonal flip)",
+  "w": 28
+ },
+ "obstacles/chart_table_s_v": {
+  "frames": 1,
+  "h": 60,
+  "note": "derived from the horizontal art (tall props: top face above the end face; low props: a diagonal flip)",
+  "w": 28
+ },
+ "obstacles/dyn_tomb_l_v": {
+  "frames": 1,
+  "h": 44,
+  "note": "derived from the horizontal art (tall props: top face above the end face; low props: a diagonal flip)",
+  "w": 29
+ },
+ "obstacles/dyn_tomb_s_v": {
+  "frames": 1,
+  "h": 29,
+  "note": "derived from the horizontal art (tall props: top face above the end face; low props: a diagonal flip)",
+  "w": 27
+ },
+ "obstacles/galleon_steps_m": {
+  "frames": 1,
+  "h": 28,
+  "note": "horizontal twin (quarter turn of the vertical), not placed by the fixed layout",
+  "w": 96
+ },
+ "obstacles/galleon_steps_m_v": {
+  "frames": 1,
+  "h": 96,
+  "note": "rect 96 x 26, vertical placement (fixed layout); one size so suffix m",
+  "w": 28
+ },
+ "obstacles/maelstrom_wheel_m": {
+  "frames": 1,
+  "h": 32,
+  "note": "circle kind, size 12; one size so suffix m; feet = bottom row",
+  "w": 28
+ },
+ "obstacles/norse_ash_rock_l": {
+  "frames": 1,
+  "h": 42,
+  "note": "ash rock with ember cracks; circle kind, radius 12 / 16 / 22",
+  "w": 45
+ },
+ "obstacles/norse_ash_rock_m": {
+  "frames": 1,
+  "h": 30,
+  "note": "ash rock with ember cracks; circle kind, radius 12 / 16 / 22",
+  "w": 35
+ },
+ "obstacles/norse_ash_rock_s": {
+  "frames": 1,
+  "h": 23,
+  "note": "ash rock with ember cracks; circle kind, radius 12 / 16 / 22",
+  "w": 26
+ },
+ "obstacles/norse_boulder_l": {
+  "frames": 1,
+  "h": 26,
+  "note": "frozen boulder, snow cap; circle kind, radius 10 / 14 (sprite = 2r + 4 wide)",
+  "w": 31
+ },
+ "obstacles/norse_boulder_s": {
+  "frames": 1,
+  "h": 21,
+  "note": "frozen boulder, snow cap; circle kind, radius 10 / 14 (sprite = 2r + 4 wide)",
+  "w": 23
+ },
+ "obstacles/reading_desk_l_v": {
+  "frames": 1,
+  "h": 71,
+  "note": "derived from the horizontal art (tall props: top face above the end face; low props: a diagonal flip)",
+  "w": 26
+ },
+ "obstacles/reading_desk_s_v": {
+  "frames": 1,
+  "h": 61,
+  "note": "derived from the horizontal art (tall props: top face above the end face; low props: a diagonal flip)",
+  "w": 26
+ },
+ "obstacles/toppled_arch_l_v": {
+  "frames": 1,
+  "h": 56,
+  "note": "derived from the horizontal art (tall props: top face above the end face; low props: a diagonal flip)",
+  "w": 36
+ },
+ "obstacles/toppled_arch_s_v": {
+  "frames": 1,
+  "h": 45,
+  "note": "derived from the horizontal art (tall props: top face above the end face; low props: a diagonal flip)",
+  "w": 29
+ },
+ "obstacles/toppled_shelf_l_v": {
+  "frames": 1,
+  "h": 79,
+  "note": "derived from the horizontal art (tall props: top face above the end face; low props: a diagonal flip)",
+  "w": 64
+ },
+ "obstacles/toppled_shelf_m_v": {
+  "frames": 1,
+  "h": 67,
+  "note": "derived from the horizontal art (tall props: top face above the end face; low props: a diagonal flip)",
+  "w": 54
+ },
+ "obstacles/toppled_shelf_s_v": {
+  "frames": 1,
+  "h": 58,
+  "note": "derived from the horizontal art (tall props: top face above the end face; low props: a diagonal flip)",
+  "w": 47
+ },
+ "pantheon_fx/arc_thick": {
+  "frames": 1,
+  "h": 13,
+  "note": "lightning segment, tile and stretch along a->b",
+  "w": 20
+ },
+ "pantheon_fx/arc_thin": {
+  "frames": 1,
+  "h": 9,
+  "note": "lightning segment, tile and stretch along a->b",
+  "w": 20
+ },
+ "pantheon_fx/bolt_column": {
+  "frames": 1,
+  "h": 96,
+  "note": "the bolt itself from the sky, base on the bottom row, stepped alpha",
+  "w": 16
+ },
+ "pantheon_fx/chevron": {
+  "frames": 1,
+  "h": 13,
+  "note": "direction chevron, points +x",
+  "w": 13
+ },
+ "pantheon_fx/edge": {
+  "frames": 1,
+  "h": 6,
+  "note": "warning band piece, row 3 on the hit edge",
+  "w": 10
+ },
+ "pantheon_fx/edge_tick": {
+  "frames": 1,
+  "h": 6,
+  "note": "warning band piece, row 3 on the hit edge",
+  "w": 10
+ },
+ "pantheon_fx/fill": {
+  "frames": 1,
+  "h": 16,
+  "note": "seamless danger fill, laid as clipped rows",
+  "w": 16
+ },
+ "pantheon_fx/fissure_body": {
+  "frames": 1,
+  "h": 22,
+  "note": "open crack, tiles along x (18 px wide opening), centre row 11",
+  "w": 16
+ },
+ "pantheon_fx/fissure_cap": {
+  "frames": 1,
+  "h": 22,
+  "note": "crack end, left cap; flip for the right end",
+  "w": 10
+ },
+ "pantheon_fx/fissure_warn": {
+  "frames": 1,
+  "h": 6,
+  "note": "telegraph: a crimson crack with ember dashes, tiles along x",
+  "w": 12
+ },
+ "pantheon_fx/lethe_bank": {
+  "frames": 1,
+  "h": 4,
+  "note": "river bank piece, row 0 outside; flip vertically for the far bank",
+  "w": 16
+ },
+ "pantheon_fx/lethe_water": {
+  "frames": 1,
+  "h": 32,
+  "note": "river water, seamless, scrolled along the river; alpha ~0.85",
+  "w": 32
+ },
+ "pantheon_fx/styx_bank": {
+  "frames": 1,
+  "h": 4,
+  "note": "river bank piece, row 0 outside; flip vertically for the far bank",
+  "w": 16
+ },
+ "pantheon_fx/styx_water": {
+  "frames": 1,
+  "h": 32,
+  "note": "river water, seamless, scrolled along the river; alpha ~0.85",
+  "w": 32
+ },
+ "pantheon_fx/target": {
+  "frames": 1,
+  "h": 15,
+  "note": "impact point, centre of the warning circle",
+  "w": 15
+ },
+ "pantheon_fx/thunder_orb": {
+  "frames": 4,
+  "h": 16,
+  "note": "charge orb, 4 frames by charge fraction, drawn at the caster's lift",
+  "w": 64
+ },
+ "pantheon_fx/wave_body": {
+  "frames": 1,
+  "h": 32,
+  "note": "seamless water fill behind the front, scrolled with the wave",
+  "w": 32
+ },
+ "pantheon_fx/wave_front": {
+  "frames": 1,
+  "h": 16,
+  "note": "tidal wave front, tiles along x, advancing edge = bottom, edge row ~13",
+  "w": 24
+ },
+ "projectiles/paris_arrow": {
+  "frames": 1,
+  "h": 7,
+  "note": "Paris's Arrow, art points +x, centred on the arrow position, rotated by its direction",
+  "w": 20
+ },
+ "spell_fx/linen_strand": {
+  "frames": 1,
+  "h": 4,
+  "note": "tether ribbon, tiles along a->b (4 px tall)",
+  "w": 16
+ },
+ "spell_fx/linen_wrap_l": {
+  "frames": 1,
+  "h": 36,
+  "note": "bandage wrap over a marked enemy; pick the size nearest 2x its radius",
+  "w": 36
+ },
+ "spell_fx/linen_wrap_m": {
+  "frames": 1,
+  "h": 24,
+  "note": "bandage wrap over a marked enemy; pick the size nearest 2x its radius",
+  "w": 24
+ },
+ "spell_fx/linen_wrap_s": {
+  "frames": 1,
+  "h": 16,
+  "note": "bandage wrap over a marked enemy; pick the size nearest 2x its radius",
+  "w": 16
+ }
+}
