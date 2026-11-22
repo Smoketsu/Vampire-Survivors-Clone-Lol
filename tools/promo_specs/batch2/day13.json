@@ -1,0 +1,125 @@
+{
+ "name": "day13",
+ "render": [
+  1080,
+  1920
+ ],
+ "size": [
+  1080,
+  1920
+ ],
+ "fps": 30,
+ "lufs": -14,
+ "art_scale": 3,
+ "cuts": 3,
+ "shots": [
+  {
+   "id": "s0",
+   "stage": "graveyard",
+   "seed": 4,
+   "start": 45,
+   "seconds": 3.0,
+   "extra": [
+    "--coop-bot",
+    "--character2=bone_oracle"
+   ],
+   "texts": [
+    {
+     "text": "online co-op: two",
+     "font": "jersey",
+     "size": 38,
+     "scale": 2,
+     "color": "white",
+     "y": 250,
+     "from": 0.0,
+     "to": 2.2
+    },
+    {
+     "text": "necromancers, one fight",
+     "font": "jersey",
+     "size": 38,
+     "scale": 2,
+     "color": "white",
+     "y": 334,
+     "from": 0.0,
+     "to": 2.2
+    }
+   ]
+  },
+  {
+   "id": "s1",
+   "stage": "crimson_march",
+   "seed": 4,
+   "start": 45,
+   "seconds": 3.0,
+   "extra": [
+    "--coop-bot",
+    "--character=doomsayer",
+    "--character2=wither_witch"
+   ],
+   "texts": []
+  },
+  {
+   "id": "s2",
+   "stage": "ravensmoor",
+   "seed": 4,
+   "start": 45,
+   "seconds": 3.0,
+   "extra": [
+    "--coop-bot",
+    "--character=plague_scholar",
+    "--character2=soulbinder"
+   ],
+   "texts": []
+  },
+  {
+   "id": "s3",
+   "stage": "citadel",
+   "seed": 4,
+   "start": 45,
+   "seconds": 3.0,
+   "extra": [
+    "--coop-bot",
+    "--character=barrow_warden",
+    "--character2=grave_kunoichi"
+   ],
+   "texts": []
+  },
+  {
+   "id": "end",
+   "stage": "graveyard",
+   "seed": 3,
+   "start": 900,
+   "seconds": 3.2,
+   "dim": 0.6,
+   "logo": {
+    "y": 520,
+    "scale": 3,
+    "from": 0.0,
+    "to": 3.2
+   },
+   "texts": [
+    {
+     "text": "free in your browser",
+     "font": "jersey",
+     "size": 38,
+     "scale": 2,
+     "color": "white",
+     "y": 960,
+     "from": 0.3,
+     "to": 3.2
+    },
+    {
+     "text": "link in bio",
+     "font": "jersey",
+     "size": 38,
+     "scale": 2,
+     "color": "white",
+     "y": 1044,
+     "from": 0.7,
+     "to": 3.2
+    }
+   ]
+  }
+ ]
+}

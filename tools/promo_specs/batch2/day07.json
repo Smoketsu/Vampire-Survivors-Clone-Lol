@@ -1,0 +1,96 @@
+{
+ "name": "day07",
+ "render": [
+  1080,
+  1920
+ ],
+ "size": [
+  1080,
+  1920
+ ],
+ "fps": 30,
+ "lufs": -14,
+ "art_scale": 3,
+ "cuts": 3,
+ "shots": [
+  {
+   "id": "s0",
+   "stage": "citadel",
+   "seed": 4,
+   "start": 330,
+   "seconds": 3.0,
+   "texts": [
+    {
+     "text": "the iron citadel has a laser grid",
+     "font": "jersey",
+     "size": 38,
+     "scale": 2,
+     "color": "white",
+     "y": 250,
+     "from": 0.0,
+     "to": 2.2
+    }
+   ]
+  },
+  {
+   "id": "s1",
+   "stage": "citadel",
+   "seed": 5,
+   "start": 330,
+   "seconds": 3.0,
+   "texts": []
+  },
+  {
+   "id": "s2",
+   "stage": "citadel",
+   "seed": 7,
+   "start": 330,
+   "seconds": 3.0,
+   "texts": []
+  },
+  {
+   "id": "s3",
+   "stage": "citadel",
+   "seed": 8,
+   "start": 330,
+   "seconds": 3.0,
+   "texts": []
+  },
+  {
+   "id": "end",
+   "stage": "graveyard",
+   "seed": 3,
+   "start": 900,
+   "seconds": 3.2,
+   "dim": 0.6,
+   "logo": {
+    "y": 520,
+    "scale": 3,
+    "from": 0.0,
+    "to": 3.2
+   },
+   "texts": [
+    {
+     "text": "free in your browser",
+     "font": "jersey",
+     "size": 38,
+     "scale": 2,
+     "color": "white",
+     "y": 960,
+     "from": 0.3,
+     "to": 3.2
+    },
+    {
+     "text": "link in bio",
+     "font": "jersey",
+     "size": 38,
+     "scale": 2,
+     "color": "white",
+     "y": 1044,
+     "from": 0.7,
+     "to": 3.2
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,118 @@
+{
+ "name": "day09",
+ "render": [
+  1080,
+  1920
+ ],
+ "size": [
+  1080,
+  1920
+ ],
+ "fps": 30,
+ "lufs": -14,
+ "art_scale": 3,
+ "cuts": 3,
+ "shots": [
+  {
+   "id": "s0",
+   "stage": "olympus",
+   "seed": 5,
+   "start": 72,
+   "seconds": 3.0,
+   "extra": [
+    "--spawn=amazon@50x5"
+   ],
+   "texts": [
+    {
+     "text": "act 4 has amazons",
+     "font": "jersey",
+     "size": 38,
+     "scale": 2,
+     "color": "white",
+     "y": 250,
+     "from": 0.0,
+     "to": 2.2
+    },
+    {
+     "text": "and cyclopes",
+     "font": "jersey",
+     "size": 38,
+     "scale": 2,
+     "color": "white",
+     "y": 334,
+     "from": 0.0,
+     "to": 2.2
+    }
+   ]
+  },
+  {
+   "id": "s1",
+   "stage": "ilion",
+   "seed": 4,
+   "start": 80,
+   "seconds": 3.0,
+   "extra": [
+    "--spawn=cyclops@50x3"
+   ],
+   "texts": []
+  },
+  {
+   "id": "s2",
+   "stage": "olympus",
+   "seed": 5,
+   "start": 77,
+   "seconds": 3.0,
+   "extra": [
+    "--spawn=amazon@50x5"
+   ],
+   "texts": []
+  },
+  {
+   "id": "s3",
+   "stage": "ilion",
+   "seed": 5,
+   "start": 80,
+   "seconds": 3.0,
+   "extra": [
+    "--spawn=cyclops@50x3"
+   ],
+   "texts": []
+  },
+  {
+   "id": "end",
+   "stage": "graveyard",
+   "seed": 3,
+   "start": 900,
+   "seconds": 3.2,
+   "dim": 0.6,
+   "logo": {
+    "y": 520,
+    "scale": 3,
+    "from": 0.0,
+    "to": 3.2
+   },
+   "texts": [
+    {
+     "text": "free in your browser",
+     "font": "jersey",
+     "size": 38,
+     "scale": 2,
+     "color": "white",
+     "y": 960,
+     "from": 0.3,
+     "to": 3.2
+    },
+    {
+     "text": "link in bio",
+     "font": "jersey",
+     "size": 38,
+     "scale": 2,
+     "color": "white",
+     "y": 1044,
+     "from": 0.7,
+     "to": 3.2
+    }
+   ]
+  }
+ ]
+}

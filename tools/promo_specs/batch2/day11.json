@@ -1,0 +1,108 @@
+{
+ "name": "day11",
+ "render": [
+  1080,
+  1920
+ ],
+ "size": [
+  1080,
+  1920
+ ],
+ "fps": 30,
+ "lufs": -14,
+ "art_scale": 3,
+ "cuts": 3,
+ "shots": [
+  {
+   "id": "s0",
+   "stage": "sun_road",
+   "seed": 4,
+   "start": 806,
+   "seconds": 3.0,
+   "extra": [
+    "--spawn=kitsune@790x8"
+   ],
+   "texts": [
+    {
+     "text": "kitsune only come out at night",
+     "font": "jersey",
+     "size": 38,
+     "scale": 2,
+     "color": "white",
+     "y": 250,
+     "from": 0.0,
+     "to": 2.2
+    }
+   ]
+  },
+  {
+   "id": "s1",
+   "stage": "sun_road",
+   "seed": 5,
+   "start": 806,
+   "seconds": 3.0,
+   "extra": [
+    "--spawn=kitsune@790x8,fox_fire@790x8"
+   ],
+   "texts": []
+  },
+  {
+   "id": "s2",
+   "stage": "sun_road",
+   "seed": 6,
+   "start": 806,
+   "seconds": 3.0,
+   "extra": [
+    "--spawn=kitsune@790x8"
+   ],
+   "texts": []
+  },
+  {
+   "id": "s3",
+   "stage": "sun_road",
+   "seed": 7,
+   "start": 806,
+   "seconds": 3.0,
+   "extra": [
+    "--spawn=kitsune@790x8,fox_fire@790x8"
+   ],
+   "texts": []
+  },
+  {
+   "id": "end",
+   "stage": "graveyard",
+   "seed": 3,
+   "start": 900,
+   "seconds": 3.2,
+   "dim": 0.6,
+   "logo": {
+    "y": 520,
+    "scale": 3,
+    "from": 0.0,
+    "to": 3.2
+   },
+   "texts": [
+    {
+     "text": "free in your browser",
+     "font": "jersey",
+     "size": 38,
+     "scale": 2,
+     "color": "white",
+     "y": 960,
+     "from": 0.3,
+     "to": 3.2
+    },
+    {
+     "text": "link in bio",
+     "font": "jersey",
+     "size": 38,
+     "scale": 2,
+     "color": "white",
+     "y": 1044,
+     "from": 0.7,
+     "to": 3.2
+    }
+   ]
+  }
+ ]
+}
