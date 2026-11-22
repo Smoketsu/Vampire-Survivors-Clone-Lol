@@ -76,7 +76,7 @@
 ##                      (CombatResolver.damage_enemy(); evolves Undertow into
 ##                      Maelstrom; unlocked with Undertow by slaying Merrow).
 ##   Brinewalker      — a counter-passive, offered only on Act II stages
-##                      ("act": 2): water and ink slow the necromancer less,
+##                      ("act": "eye"): water and ink slow the necromancer less,
 ##                      and summons from BRINEWALKER_SUMMON_LEVEL (TerrainSlow,
 ##                      the one ground-slow path; unlocked by the Low Tide
 ##                      achievement).
@@ -87,7 +87,7 @@
 ##                CombatResolver.damage_enemy(), VerseData.MARGINALIA_SOURCES;
 ##                evolves Forbidden Verse into The Unwritten Word). Unlocked
 ##                with the spell by slaying the Archivist.
-##   Iron Mind  — an Act II counter-passive ("act": 2, offered only on Act II
+##   Iron Mind  — an Act II counter-passive ("act": "eye", offered only on Act II
 ##                stages; unlocked by the achievement Nothing Unwritten): Dread
 ##                rises slower and, at Lv 5, kills calm it twice as fast
 ##                (DreadMeter reads its two level keys). Evolves nothing.
@@ -104,7 +104,7 @@
 ##                       beam_width in AbilityManager.apply_spell_mods(), the one
 ##                       spell modifier path; evolves Death Ray into Event
 ##                       Horizon). Unlocked with the spell by slaying Kestrel.
-##   Lead-Lined Bones  — an Act III counter-passive ("act": 3, offered only on
+##   Lead-Lined Bones  — an Act III counter-passive ("act": "empire", offered only on
 ##                       Act III stages; unlocked by the achievement Static in the
 ##                       Wastes): RANGED hits on your summons deal less (one
 ##                       multiplier in CombatResolver.damage_unit() for ranged
@@ -118,7 +118,7 @@
 ##                       AbilityManager.apply_spell_mods(); evolves Stolen
 ##                       Thunder into Gigantomachy). Unlocked with the spell by
 ##                       slaying Zeus.
-##   Grounded Bones    — an Act IV counter-passive ("act": 4, offered only on
+##   Grounded Bones    — an Act IV counter-passive ("act": "pantheon", offered only on
 ##                       Act IV stages; unlocked by the achievement Twilight of
 ##                       the Gods): less lightning and wave damage (the Wrath of
 ##                       the Gods) to the army and the necromancer
@@ -132,7 +132,7 @@
 ##                       .attack_haste(), the one per-summon attack-speed read;
 ##                       evolves Banner of the Dead into Hundred Banners).
 ##                       Unlocked with the spell by slaying Shogun Kurogane.
-##   Unbending         — an Act V counter-passive ("act": 5, offered only on
+##   Unbending         — an Act V counter-passive ("act": "shogunate", offered only on
 ##                       Act V stages; unlocked by the achievement Regiments
 ##                       Broken): the Draw's cuts hit summons for less
 ##                       (DrawCuts.unbending_mult(), the foundation's one read,
@@ -208,7 +208,43 @@ const ORDER := ["grave_dominion", "necrotic_vigor", "dark_command", "soul_recycl
 	# --- Act IX: the Proving Moon ---
 	"trophy_rack", "mirror_bones",
 	# --- Act IX: the Ark ---
-	"starseed", "crop_circles"]
+	"starseed", "crop_circles",
+	# --- Act X: the Smuggler's Cutter ---
+	"bosuns_whistle", "barnacle_bones",
+	# --- Act X: the Treasure Galleon ---
+	"black_powder", "sea_legs",
+	# --- Act X: the Maelstrom ---
+	"dead_reckoning", "slow_match",
+	# --- Act XI (temporary): the Barrow Fields ---
+	"grave_frost", "fur_lined_bones",
+	# --- Act XI (temporary): Valgard ---
+	"einherjars_oath", "calm_blood",
+	# --- Act XI (temporary): Vigrid ---
+	"runecraft", "cold_iron",
+	# --- Act XII (temporary number): the Necropolis of Sand ---
+	"natron_salts", "embalmed_bones",
+	# --- Act XII (temporary number): the Temple of the Lioness ---
+	"desert_fury", "dune_walkers",
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	"heavy_heart", "answering_words",
+	# --- Act XIII (temporary number): the Silver Stair ---
+	"fallen_light", "absolution",
+	# --- Act XIII (temporary number): the Wheel of Thrones ---
+	"all_seeing", "smoked_glass",
+	# --- Act XIII (temporary number): the Empyrean ---
+	"seventh_seal", "turning_bones",
+	# --- Act XIV (temporary number): the Fern Basin ---
+	"pack_instinct",
+	# --- Act XIV (temporary number): the Great Plain ---
+	"calcified_hide", "hoarders_bones",
+	# --- Act XIV (temporary number): the Last Day ---
+	"cosmic_dust", "petrified_horns", "thick_marrow",
+	# --- Act XV (temporary number): the Greenwood ---
+	"horn_of_the_hunt", "fallow_ground",
+	# --- Act XV (temporary number): the Fae Court ---
+	"changeling", "deadwood",
+	# --- Act XV (temporary number): the World-Tree ---
+	"compost_heart", "heartwood"]
 
 ## Passives that only help summons (a "dead" level-up card while no summon
 ## class is owned, see AbilityManager.build_offers()).
@@ -258,7 +294,31 @@ const ARMY_PASSIVES := ["grave_dominion", "necrotic_vigor", "dark_command", "sou
 	# --- Act IX: the Proving Moon ---
 	"mirror_bones",
 	# --- Act IX: the Ark ---
-	"crop_circles"]
+	"crop_circles",
+	# --- Act X: the Smuggler's Cutter ---
+	"barnacle_bones",
+	# --- Act X: the Treasure Galleon ---
+	"sea_legs",
+	# --- Act X: the Maelstrom ---
+	"slow_match",
+	# --- Act XI (temporary): the Barrow Fields ---
+	"fur_lined_bones",
+	# --- Act XI (temporary): Valgard ---
+	"calm_blood",
+	# --- Act XI (temporary): Vigrid ---
+	"cold_iron",
+	# --- Act XII (temporary number): the Necropolis of Sand ---
+	"embalmed_bones",
+	# --- Act XII (temporary number): the Temple of the Lioness ---
+	"dune_walkers",
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	"answering_words",
+	# --- Act XIII (temporary number): the Empyrean ---
+	"turning_bones",
+	# --- Act XIV (temporary number): the Last Day ---
+	"petrified_horns", "thick_marrow",
+	# --- Act XV (temporary number): the World-Tree ---
+	"heartwood"]
 
 # --- Act III: the Assembly Halls ---
 ## Overclock (paired with the Grave Drone): a summon class is "ranged" (and
@@ -304,7 +364,9 @@ const MINION_EXTRA_TAGS := ["lich_risen", "death_mark_risen", "raised_dead",
 	# --- Act III: the Electronic Empire --- (a raised cyborg's Grave Gunner, EmpireRulesData.STEEL)
 	"grave_gunner",
 	# --- Act III: the Assembly Halls --- (a Hollow Puppet, PuppetData.SOURCE)
-	"hollow_puppet"]
+	"hollow_puppet",
+	# --- Act XII (temporary number): the Necropolis of Sand --- (Linen Bind's risen Mummy, LinenBindData.RISEN_TAG)
+	"linen_mummy"]
 ## Unholy Precision: the other minion damage sources that can crit: the
 ## basic warrior shield bash and the later classes' specials (and the Bone
 ## Colossus's death shrapnel). The Rogue's
@@ -329,7 +391,19 @@ const MINION_SPECIAL_SOURCES := ["bash", "abom_stomp", "rogue_dash", "gargoyle_s
 	# what lets Armour-Piercing Bones, Armour.pierce_share(), count them as summon hits)
 	"fallen_hero_slam", "black_paragon_slam",
 	# --- Act IX: the Ark --- (the Ghost Saucer's and Black Mothership's dropped foes, GhostSaucerBehavior)
-	"ghost_saucer_lift", "black_mothership_lift"]
+	"ghost_saucer_lift", "black_mothership_lift",
+	# --- Act X: the Maelstrom --- (the Powder Wraith's and Magazine Lord's kegs, PowderWraithBehavior)
+	"powder_wraith_keg", "magazine_lord_keg",
+	# --- Act XI (temporary): Vigrid --- (the Draugr Thane's and Barrow King's frost cleave, DraugrThaneBehavior)
+	"thane_cleave", "barrow_king_cleave",
+	# --- Act XII (temporary number): the Hall of Two Truths --- (the Ushabti Sentinel's and Eternal Guard's shockwaves, UshabtiSentinelBehavior)
+	"ushabti_reform", "eternal_guard_reform",
+	# --- Act XIII (temporary number): the Empyrean --- (the Bound Ophan's and Throne of Bones' rolls, BoundOphanBehavior)
+	"bound_ophan_roll", "throne_of_bones_roll",
+	# --- Act XIV (temporary number): the Last Day --- (the Bonehorn's and Fossil Tyrant's charges, BonehornBehavior)
+	"bonehorn_charge", "fossil_tyrant_charge",
+	# --- Act XV (temporary number): the World-Tree --- (the Ossuary Oak's and World-Root Warden's lashes, OssuaryOakBehavior)
+	"ossuary_oak_lash", "world_root_lash"]
 ## Unholy Resilience: enemy damage-source tags (CombatResolver.damage_unit
 ## `source`) that count as AREA or HOLY damage, tag -> category ("area" |
 ## "holy"; the category only splits the summary stats). Every other source
@@ -506,8 +580,10 @@ const RECOIL_PROFILES := ["arrow", "aoe", "boulder", "feather", "frost", "suppre
 ##   hold_bonus         — +% block mass of the MASONRY_CLASSES and +% Bulwark
 ##                        plant time of the Bone Golem (Grave Masonry; after
 ##                        the evolution overlay in compute_stats()).
-##   act                — (optional) the only campaign act whose stages offer
-##                        the card (Unlocks.act_allows()).
+##   act                — (optional) the id (StageRegistry.ACT_ORDER "id") of
+##                        the only campaign act whose stages offer the card
+##                        (Unlocks.act_allows()); an id, never a number, so the
+##                        act order can change.
 const PASSIVES := {
 	# Profane Pact (difficulty / reward passive): defined in PactData.
 	PactData.ID: PactData.PASSIVE,
@@ -858,7 +934,7 @@ const PASSIVES := {
 		"description": "Water and ink slow you less, and your summons too once it grows.",
 		"labels": {"water_slow_cut": ["Water and ink slow removed", "pct"]},
 		"shared_card_pool": true,  # owner-approved: Act II items weigh the later items' 0.5
-		"act": 2,  # owner-approved: counter-passives are offered only on Act II stages
+		"act": "eye",  # owner-approved: counter-passives are offered only on Act II stages
 		"levels": [
 			{"water_slow_cut": 0.20},  # owner-approved "-20% a level"
 			{"water_slow_cut": 0.40},  # owner-approved
@@ -887,7 +963,7 @@ const PASSIVES := {
 		"icon": "iron_mind",
 		"description": "Dread takes hold of you more slowly, and kills calm it faster.",
 		"labels": {"dread_rise_reduction": ["Dread rise", "neg_pct"], "dread_fall_mult": ["Dread calmed per kill (x)", "num"]},
-		"act": 2,  # Act II only (Unlocks.act_allows()): never a dead card.
+		"act": "eye",  # Act II only (Unlocks.act_allows()): never a dead card.
 		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
 		"levels": [
 			{"dread_rise_reduction": 0.10, "dread_fall_mult": 1.0},  # Owner-approved proposal "10% slower a level"
@@ -1001,7 +1077,7 @@ const PASSIVES := {
 	# Signal Ghost (owner-approved proposal: an Act III counter-passive, "Lock-On
 	# lines take longer to paint on the necromancer"; unlocked by the
 	# achievement Cold Assembly, UnlockData; offered only on Act III stages,
-	# "act": 3). LockOn.paint_time() reads paint_time (EmpireRulesData
+	# "act": "empire"). LockOn.paint_time() reads paint_time (EmpireRulesData
 	# SIGNAL_GHOST / SIGNAL_GHOST_KEY): a line on the necromancer paints
 	# (1 + paint_time) x as long. Evolves nothing.
 	"signal_ghost": {
@@ -1010,7 +1086,7 @@ const PASSIVES := {
 		"description": "The Empire's Lock-On lines take longer to paint on you.",
 		"labels": {"paint_time": ["Lock-On paint time on you", "pct"]},
 		"shared_card_pool": true,  # owner-approved: Act III items weigh the later items' 0.5, as Act II's counter-passives
-		"act": 3,  # Owner-approved proposal: counter-passives are offered only in their act
+		"act": "empire",  # Owner-approved proposal: counter-passives are offered only in their act
 		"levels": [
 			{"paint_time": 0.15},  # TUNING (not in GDD) 1.5 s -> 1.73 s
 			{"paint_time": 0.30},  # TUNING (not in GDD)
@@ -1044,7 +1120,7 @@ const PASSIVES := {
 		"icon": "lead_lined_bones",
 		"description": "Bullets and shells hurt your summons less.",
 		"labels": {"ranged_reduction": ["Ranged damage to summons", "neg_pct"]},
-		"act": 3,  # Owner-approved: the act's counter-passives are offered only in Act III (Unlocks.act_allows())
+		"act": "empire",  # Owner-approved: the act's counter-passives are offered only in Act III (Unlocks.act_allows())
 		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
 		"levels": [
 			{"ranged_reduction": 0.06},  # TUNING (not in GDD)
@@ -1129,7 +1205,7 @@ const PASSIVES := {
 		"icon": "bronze_breaker",
 		"description": "Your summons' blows on a locked shield wall's front hit harder.",
 		"labels": {"front_damage": ["Summon damage to shield fronts", "pct"]},
-		"act": 4,  # Owner-approved: the act's counter-passives are offered only in Act IV (Unlocks.act_allows())
+		"act": "pantheon",  # Owner-approved: the act's counter-passives are offered only in Act IV (Unlocks.act_allows())
 		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
 		"levels": [
 			{"front_damage": 0.2},  # TUNING (not in GDD) a front shot 10% -> 12%, a front blow x1.2
@@ -1170,7 +1246,7 @@ const PASSIVES := {
 		"icon": "grounded_bones",
 		"description": "The gods' lightning and waves hurt you and your dead less.",
 		"labels": {"wrath_reduction": ["Lightning and wave damage", "neg_pct"]},
-		"act": 4,  # Owner-approved: the act's counter-passives are offered only in Act IV (Unlocks.act_allows())
+		"act": "pantheon",  # Owner-approved: the act's counter-passives are offered only in Act IV (Unlocks.act_allows())
 		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
 		"levels": [
 			{"wrath_reduction": 0.1},  # TUNING (not in GDD)
@@ -1256,7 +1332,7 @@ const PASSIVES := {
 		"icon": "paper_lanterns",
 		"description": "Your light reaches farther, and ambushes show earlier.",
 		"labels": {"light_radius": ["Light radius", "pct"]},
-		"act": 5,  # Owner-approved: the act's counter-passives are offered only in Act V (Unlocks.act_allows())
+		"act": "shogunate",  # Owner-approved: the act's counter-passives are offered only in Act V (Unlocks.act_allows())
 		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
 		"levels": [
 			{"light_radius": 0.15},  # TUNING (not in GDD)
@@ -1341,7 +1417,7 @@ const PASSIVES := {
 		"icon": "unbending",
 		"description": "The samurai's Draw cuts your summons for less.",
 		"labels": {"draw_reduction": ["Draw cut damage to summons", "neg_pct"]},
-		"act": 5,  # Owner-approved: the act's counter-passives are offered only in Act V (Unlocks.act_allows())
+		"act": "shogunate",  # Owner-approved: the act's counter-passives are offered only in Act V (Unlocks.act_allows())
 		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
 		"levels": [
 			{"draw_reduction": 0.15},  # TUNING (not in GDD)
@@ -1384,7 +1460,7 @@ const PASSIVES := {
 		"icon": "salt_circle",
 		"description": "A ring of salt shields your summons: the Hell Pits burn them for less.",
 		"labels": {"pit_reduction": ["Pit damage to summons", "neg_pct"]},
-		"act": 6,  # Owner-approved: the act's counter-passives are offered only in Act VI (Unlocks.act_allows())
+		"act": "inferno",  # Owner-approved: the act's counter-passives are offered only in Act VI (Unlocks.act_allows())
 		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
 		"levels": [
 			{"pit_reduction": 0.15},  # TUNING (not in GDD)
@@ -1448,7 +1524,7 @@ const PASSIVES := {
 		"icon": "faithless",
 		"description": "Your dead keep no faith with hell: charms on them wear off sooner.",
 		"labels": {"charm_reduction": ["Charm time on your summons", "neg_pct"]},
-		"act": 6,  # Owner-approved: the act's counter-passives are offered only in Act VI (Unlocks.act_allows())
+		"act": "inferno",  # Owner-approved: the act's counter-passives are offered only in Act VI (Unlocks.act_allows())
 		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
 		"levels": [
 			{"charm_reduction": 0.10},  # TUNING (not in GDD)
@@ -1536,7 +1612,7 @@ const PASSIVES := {
 		"icon": "silver_bones",
 		"description": "Silver in your dead's bones: they strike werewolves and vampire nobles harder, and the nobles' mist breaks sooner.",
 		"labels": {"silver_damage": ["Summon damage to werewolves and nobles", "pct"], "mist_reduction": ["Noble mist time", "neg_pct"]},
-		"act": 7,  # Owner-approved: the act's counter-passives are offered only in Act VII (Unlocks.act_allows())
+		"act": "court",  # Owner-approved: the act's counter-passives are offered only in Act VII (Unlocks.act_allows())
 		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
 		"levels": [
 			{"silver_damage": 0.10, "mist_reduction": 0.10},  # TUNING (not in GDD)
@@ -1580,7 +1656,7 @@ const PASSIVES := {
 		"icon": "embalmed",
 		"description": "Your dead are embalmed: the Court heals less from biting them.",
 		"labels": {"feed_reduction": ["Court feeding on summons", "neg_pct"]},
-		"act": 7,  # Owner-approved: the act's counter-passives are offered only in Act VII (Unlocks.act_allows())
+		"act": "court",  # Owner-approved: the act's counter-passives are offered only in Act VII (Unlocks.act_allows())
 		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
 		"levels": [
 			{"feed_reduction": 0.15},  # TUNING (not in GDD)
@@ -1671,7 +1747,7 @@ const PASSIVES := {
 		"icon": "kevlar_bones",
 		"description": "Your dead are laced with kevlar: the city's guns hurt them less.",
 		"labels": {"ranged_reduction": ["Ranged damage to summons", "neg_pct"]},
-		"act": 8,  # Owner-approved: the act's counter-passives are offered only in Act VIII (Unlocks.act_allows())
+		"act": "city",  # Owner-approved: the act's counter-passives are offered only in Act VIII (Unlocks.act_allows())
 		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
 		"levels": [
 			{"ranged_reduction": 0.10},  # TUNING (not in GDD)
@@ -1717,7 +1793,7 @@ const PASSIVES := {
 		"icon": "armour_piercing_bones",
 		"description": "Your dead strike through shields and armour plate: fronts stop less of their blows.",
 		"labels": {"front_pierce": ["Armoured front ignored", "pct"]},
-		"act": 8,  # Owner answer: Act VIII only (Unlocks.act_allows())
+		"act": "city",  # Owner answer: Act VIII only (Unlocks.act_allows())
 		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
 		"levels": [
 			{"front_pierce": 0.15},  # TUNING (not in GDD)
@@ -1803,7 +1879,7 @@ const PASSIVES := {
 		"icon": "anchored",
 		"description": "Your dead cling to the earth: tractor beams hold them for less, and a hit on the saucer drops them.",
 		"labels": {"hold_cut": ["Abduction hold", "neg_pct"]},
-		"act": 9,  # Owner-approved: the act's counter-passives are offered only in Act IX (Unlocks.act_allows())
+		"act": "concord",  # Owner-approved: the act's counter-passives are offered only in Act IX (Unlocks.act_allows())
 		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
 		"levels": [
 			{"hold_cut": 0.10},  # TUNING (not in GDD)
@@ -1849,7 +1925,7 @@ const PASSIVES := {
 		"icon": "mirror_bones",
 		"description": "Your dead are polished like mirrors: beams burn them less, and the beams you turn back burn hotter.",
 		"labels": {"beam_reduction": ["Beam damage to summons", "neg_pct"], "reflect_damage": ["Reflected beam damage", "pct"]},
-		"act": 9,  # Owner-approved: the act's counter-passives are offered only in Act IX (Unlocks.act_allows())
+		"act": "concord",  # Owner-approved: the act's counter-passives are offered only in Act IX (Unlocks.act_allows())
 		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
 		"levels": [
 			{"beam_reduction": 0.10, "reflect_damage": 0.04},  # TUNING (not in GDD)
@@ -1902,6 +1978,785 @@ const PASSIVES := {
 			{"special_hold": 0.18},  # TUNING (not in GDD)
 			{"special_hold": 0.24},  # TUNING (not in GDD)
 			{"special_hold": 0.30},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act X: the Smuggler's Cutter ---
+	# Bosun's Whistle (Chain Shot's paired passive; owner-approved Act X
+	# proposal: "Keelhauler (+ Bosun's Whistle)"; unlocked with the spell by
+	# Captain Crow and offered on every stage). Own decision on its effect: the
+	# whistle calls the shot home sooner: Chain Shot's cooldown is cooldown_cut
+	# shorter (ChainShot._cooldown(), the one read; stat chain_whistle_s; 0
+	# while not owned).
+	"bosuns_whistle": {
+		"display_name": "Bosun's Whistle",  # Owner-approved proposal
+		"icon": "bosuns_whistle",
+		"description": "The bosun's whistle calls your chain-shots home: Chain Shot recovers faster.",
+		"labels": {"cooldown_cut": ["Chain Shot cooldown", "neg_pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"cooldown_cut": 0.05},  # TUNING (not in GDD)
+			{"cooldown_cut": 0.10},  # TUNING (not in GDD)
+			{"cooldown_cut": 0.15},  # TUNING (not in GDD)
+			{"cooldown_cut": 0.20},  # TUNING (not in GDD)
+			{"cooldown_cut": 0.25},  # TUNING (not in GDD) first pass 0.30
+		],
+	},
+	# Act X's counter-passive Barnacle Bones (owner-approved Act X proposal:
+	# "summon hits on boats, hooks and surfaced creatures deal more"; unlocked
+	# by the Smuggler's Cutter's achievement Not One Aboard and offered only in
+	# Act X through its card row's "act" ("corsair", an act id: the reorder pass renumbered
+	# it). The foundation's hook reads it: CorsairRules.barnacle_mult() (1 +
+	# sea_damage, the bound player's), in CorsairKit.taken_mult() on boats,
+	# hooks and swimmers, for summon hits only.
+	"barnacle_bones": {
+		"display_name": "Barnacle Bones",  # Owner-approved proposal
+		"icon": "barnacle_bones",
+		"description": "Your dead grow barnacled bones: their blows on boats, grapple hooks and sea beasts hit harder.",
+		"labels": {"sea_damage": ["Summon damage to boats and sea beasts", "pct"]},
+		"act": "corsair",  # Owner-approved: the act's counter-passives are offered only in this act (Unlocks.act_allows()); temporary number until the reorder
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"sea_damage": 0.15},  # TUNING (not in GDD)
+			{"sea_damage": 0.30},  # TUNING (not in GDD)
+			{"sea_damage": 0.45},  # TUNING (not in GDD)
+			{"sea_damage": 0.60},  # TUNING (not in GDD)
+			{"sea_damage": 0.75},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act X: the Treasure Galleon ---
+	# Black Powder (Cannonade's paired passive; owner-approved proposal:
+	# "Dead Men's Broadside (+ Black Powder)"; unlocked with the spell by
+	# Admiral Marrec and offered on every stage). Own decision on its effect:
+	# every Cannonade blast is powder_blast_radius wider and knocks the foes it
+	# hits powder_knock px outward (their knockback; on a deck a blast at the
+	# rail drowns them). Read only by Cannonade (CannonadeData.BLAST_KEY /
+	# KNOCK_KEY): exactly nothing without the spell.
+	"black_powder": {
+		"display_name": "Black Powder",  # Owner-approved proposal
+		"icon": "black_powder",
+		"description": "Your Cannonade's balls are packed with black powder: wider blasts that throw foes back.",
+		"labels": {"powder_blast_radius": ["Cannonade blast radius", "pct"], "powder_knock": ["Knockback (px)", "num"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"powder_blast_radius": 0.08, "powder_knock": 20.0},  # TUNING (not in GDD)
+			{"powder_blast_radius": 0.12, "powder_knock": 28.0},  # TUNING (not in GDD)
+			{"powder_blast_radius": 0.16, "powder_knock": 36.0},  # TUNING (not in GDD)
+			{"powder_blast_radius": 0.20, "powder_knock": 44.0},  # TUNING (not in GDD)
+			{"powder_blast_radius": 0.25, "powder_knock": 52.0},  # TUNING (not in GDD)
+		],
+	},
+	# The Black Tide's counter-passive Sea Legs (owner-approved proposal: "Sea
+	# Legs (the Heave drift and grapple pulls are halved for the army)";
+	# unlocked by the Treasure Galleon's achievement Walked the Plank and
+	# offered only in Act X through its card row's "act"; the act number is
+	# the temporary 10 until the reorder). The foundation's hook reads it,
+	# nothing else: CorsairRules.sea_legs_mult(u) (x 1 - drift_cut on every
+	# drift and pull the army takes: the powder blasts' push, the Black Tide's
+	# wave, the Heave and the Grappler's pull). Key CorsairRulesData.SEA_LEGS_KEY.
+	"sea_legs": {
+		"display_name": "Sea Legs",  # Owner-approved proposal
+		"icon": "sea_legs",
+		"description": "Your dead have found their sea legs: the deck's heave, the waves and the blasts barely move them.",
+		"labels": {"drift_cut": ["Drift and pulls on summons", "neg_pct"]},
+		"act": "corsair",  # Owner-approved: the act's counter-passives are offered only in the Black Tide (temporary act number 10; Unlocks.act_allows())
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"drift_cut": 0.15},  # TUNING (not in GDD)
+			{"drift_cut": 0.25},  # TUNING (not in GDD)
+			{"drift_cut": 0.35},  # TUNING (not in GDD)
+			{"drift_cut": 0.43},  # TUNING (not in GDD)
+			{"drift_cut": 0.50},  # TUNING (not in GDD) owner-approved proposal: halved at full
+		],
+	},
+	# --- Act X: the Maelstrom ---
+	# Dead Reckoning (owner-approved proposal: Abyssal Mooring's paired passive;
+	# own decision on its rule; GDD §15.0 "Anchor Drop, Abyssal Mooring, Dead
+	# Reckoning and the Ghost Helmsman"; unlocked by defeating Vandermere,
+	# UnlockData): the dead know where to strike: Anchor Drop recharges
+	# reckoning_haste sooner and its stun lasts reckoning_stun longer
+	# (AbilityManager.apply_spell_mods() on the spell rows' own keys, like
+	# Starseed). Pairs with Anchor Drop -> Abyssal Mooring.
+	"dead_reckoning": {
+		"display_name": "Dead Reckoning",  # Owner-approved proposal
+		"icon": "dead_reckoning",
+		"description": "Your Anchor Drop falls sooner, and its stun holds longer.",
+		"labels": {"reckoning_haste": ["Anchor Drop cooldown", "neg_pct"], "reckoning_stun": ["Anchor stun", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"reckoning_haste": 0.04, "reckoning_stun": 0.1},  # TUNING (not in GDD)
+			{"reckoning_haste": 0.08, "reckoning_stun": 0.2},  # TUNING (not in GDD)
+			{"reckoning_haste": 0.12, "reckoning_stun": 0.3},  # TUNING (not in GDD)
+			{"reckoning_haste": 0.16, "reckoning_stun": 0.4},  # TUNING (not in GDD)
+			{"reckoning_haste": 0.20, "reckoning_stun": 0.5},  # TUNING (not in GDD)
+		],
+	},
+	# Slow Match (own decision: Magazine Lord's paired passive, its name and
+	# rule; GDD §15.0 "The Powder Wraith, Magazine Lord and Slow Match";
+	# unlocked by defeating Vandermere): a slow match is the gunner's fuse cord:
+	# every class special's KNOCKBACK pushes special_push farther (its
+	# *_knockback keys: the Powder Wraith's keg, the Fallen Hero's slam, the
+	# Abomination's stomp...; HordeDirector._special_stats(), THE one path of
+	# summon special numbers, its own category; 0 when not owned, so every
+	# other run is unchanged). On a deck, farther is overboard. Works the same
+	# on every stage. Pairs with the Powder Wraith -> Magazine Lord.
+	"slow_match": {
+		"display_name": "Slow Match",
+		"icon": "slow_match",
+		"description": "Every summon's special knocks foes farther.",
+		"labels": {"special_push": ["Special knockback", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"special_push": 0.1},  # TUNING (not in GDD)
+			{"special_push": 0.2},  # TUNING (not in GDD)
+			{"special_push": 0.3},  # TUNING (not in GDD)
+			{"special_push": 0.4},  # TUNING (not in GDD)
+			{"special_push": 0.5},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act XI (temporary): the Barrow Fields ---
+	# Grave Frost (Barrow Grasp's paired passive; owner-approved proposal:
+	# "Barrow-Lord's Embrace (+ Grave Frost)"; unlocked with the spell by
+	# Hrimgar and offered on every stage). Own decision on its effect: the
+	# barrow's frost bites: every Barrow Grasp hand deals frost_bonus more and
+	# holds frost_bonus longer (BarrowGrasp reads it once per grab; stat
+	# grasp_frost_bonus_dmg; 0 while not owned).
+	"grave_frost": {
+		"display_name": "Grave Frost",  # Owner-approved proposal
+		"icon": "grave_frost",
+		"description": "Barrow frost bites deeper: your barrow hands hit harder and hold longer.",
+		"labels": {"frost_bonus": ["Barrow hand damage and hold", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"frost_bonus": 0.08},  # TUNING (not in GDD)
+			{"frost_bonus": 0.15},  # TUNING (not in GDD)
+			{"frost_bonus": 0.22},  # TUNING (not in GDD)
+			{"frost_bonus": 0.30},  # TUNING (not in GDD)
+			{"frost_bonus": 0.40},  # TUNING (not in GDD)
+		],
+	},
+	# The Hall of the Slain's counter-passive Fur-Lined Bones (owner decision
+	# Nov 7, 2026: "the cold slows summons half as much"; replaces the
+	# proposal's Inglorious; unlocked by the Barrow Fields achievement Keep the
+	# Fires and offered only in the Norse act through its card row's "act"). The
+	# foundation's hook reads it: LongWinter.fur_mult() (x the cold's slow on
+	# summons, 1 - cold_slow_cut). The frostbite and the necromancer's own
+	# slow are unchanged.
+	"fur_lined_bones": {
+		"display_name": "Fur-Lined Bones",  # Owner decision Nov 7, 2026
+		"icon": "fur_lined_bones",
+		"description": "Your dead are wrapped in fur: the Long Winter's cold slows them less.",
+		"labels": {"cold_slow_cut": ["Cold's slow on summons", "neg_pct"]},
+		"act": "norse",  # Owner decision: the act's counter-passive is offered only in the Hall of the Slain (TEMPORARY act number 11; the reorder pass renumbers it)
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"cold_slow_cut": 0.10},  # TUNING (not in GDD)
+			{"cold_slow_cut": 0.20},  # TUNING (not in GDD)
+			{"cold_slow_cut": 0.30},  # TUNING (not in GDD)
+			{"cold_slow_cut": 0.40},  # TUNING (not in GDD)
+			{"cold_slow_cut": 0.50},  # Owner decision: "half as much" at full
+		],
+	},
+	# --- Act XI (temporary): Valgard ---
+	# Einherjar's Oath (Valkyrie Spear's paired passive; owner-approved
+	# proposal: "Chooser of the Slain (+ Einherjar's Oath)"; unlocked with the
+	# spell by Sigrun and offered on every stage). Own decision on its effect:
+	# the spear swears the hall's oath: oath_jumps more leaps and +oath_damage
+	# on every strike (ValkyrieSpear._cast(), the one read). Read only by
+	# ValkyrieSpear: exactly nothing without the spell.
+	"einherjars_oath": {
+		"display_name": "Einherjar's Oath",  # Owner-approved proposal
+		"icon": "einherjars_oath",
+		"description": "Your Valkyrie Spear swears the hall's oath: it leaps to more foes and strikes harder.",
+		"labels": {"oath_jumps": ["Valkyrie Spear leaps", "num"], "oath_damage": ["Valkyrie Spear damage", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"oath_jumps": 0, "oath_damage": 0.06},  # TUNING (not in GDD)
+			{"oath_jumps": 1, "oath_damage": 0.08},  # TUNING (not in GDD)
+			{"oath_jumps": 1, "oath_damage": 0.12},  # TUNING (not in GDD)
+			{"oath_jumps": 1, "oath_damage": 0.16},  # TUNING (not in GDD)
+			{"oath_jumps": 2, "oath_damage": 0.2},  # TUNING (not in GDD)
+		],
+	},
+	# The Hall of the Slain's counter-passive Calm Blood (owner-approved
+	# proposal: "Calm Blood (berserk enemies deal 20% less damage to
+	# summons)"; unlocked by Valgard's achievement Holmgang and offered only in
+	# the act through its card row's "act"). Its one read is
+	# NorseRules.calm_blood_mult() in CombatResolver.damage_unit(): a BERSERK
+	# enemy's own blow on a summon deals 1 - fury_cut (exactly 1 while not
+	# owned, and off the act, where no enemy is ever berserk). Keys
+	# NorseRulesData.CALM_BLOOD / CALM_BLOOD_KEY.
+	"calm_blood": {
+		"display_name": "Calm Blood",  # Owner-approved proposal
+		"icon": "calm_blood",
+		"description": "Your dead meet the fury without fear: berserk foes strike them softer.",
+		"labels": {"fury_cut": ["Berserk damage to summons", "neg_pct"]},
+		"act": "norse",  # Owner-approved: the act's counter-passives are offered only in the Hall of the Slain (temporary act number; Unlocks.act_allows())
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"fury_cut": 0.06},  # TUNING (not in GDD)
+			{"fury_cut": 0.09},  # TUNING (not in GDD)
+			{"fury_cut": 0.12},  # TUNING (not in GDD)
+			{"fury_cut": 0.16},  # TUNING (not in GDD)
+			{"fury_cut": 0.2},  # Owner-approved proposal: "20% less damage to summons"
+		],
+	},
+	# --- Act XI (temporary): Vigrid ---
+	# Runecraft (owner-approved proposal: Spear of the Hanged's paired passive;
+	# own decision on its rule; GDD §15.0 "Gungnir, Spear of the Hanged,
+	# Runecraft and the Berserker"; unlocked by defeating Odin, UnlockData): the
+	# runes the god won on his own spear: Gungnir recharges runecraft_haste
+	# sooner and its line is runecraft_width wider (AbilityManager
+	# .apply_spell_mods() on the spell rows' own keys, like Starseed). Pairs
+	# with Gungnir -> Spear of the Hanged.
+	"runecraft": {
+		"display_name": "Runecraft",  # Owner-approved proposal
+		"icon": "runecraft",
+		"description": "Your Gungnir flies sooner, and its line cuts wider.",
+		"labels": {"runecraft_haste": ["Gungnir cooldown", "neg_pct"], "runecraft_width": ["Spear width", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"runecraft_haste": 0.04, "runecraft_width": 0.08},  # TUNING (not in GDD)
+			{"runecraft_haste": 0.08, "runecraft_width": 0.16},  # TUNING (not in GDD)
+			{"runecraft_haste": 0.12, "runecraft_width": 0.24},  # TUNING (not in GDD)
+			{"runecraft_haste": 0.16, "runecraft_width": 0.32},  # TUNING (not in GDD)
+			{"runecraft_haste": 0.20, "runecraft_width": 0.40},  # TUNING (not in GDD)
+		],
+	},
+	# Cold Iron (own decision: Barrow King's paired passive, its name and rule;
+	# GDD §15.0 "The Draugr Thane, the Barrow King and Cold Iron"; unlocked by
+	# defeating Odin): the barrow-iron of the old jarls bites deeper into the
+	# slowed: every summon blow on a SLOWED foe deals iron_damage more
+	# (CombatResolver.damage_enemy(), its own category beside Crushing Depths;
+	# 0 when not owned, so every other run is unchanged). Works the same on every
+	# stage; pairs with the Draugr Thane (whose frost-axe slows what it hits) ->
+	# Barrow King.
+	"cold_iron": {
+		"display_name": "Cold Iron",
+		"icon": "cold_iron",
+		"description": "Your dead strike slowed foes harder.",
+		"labels": {"iron_damage": ["Summon damage to slowed foes", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"iron_damage": 0.04},  # TUNING (not in GDD)
+			{"iron_damage": 0.08},  # TUNING (not in GDD)
+			{"iron_damage": 0.12},  # TUNING (not in GDD)
+			{"iron_damage": 0.16},  # TUNING (not in GDD)
+			{"iron_damage": 0.20},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act XII (temporary number): the Necropolis of Sand ---
+	# Natron Salts (Linen Bind's paired passive; owner-approved proposal:
+	# "Eternal Shroud (+ Natron Salts)"; unlocked with the spell by Anubis and
+	# offered on every stage). Own decision on its effect: the bandages are
+	# packed with natron: every binding deals bind_bonus more and holds
+	# hold_bonus s longer (LinenBind._cast(), the one read; stat
+	# linen_natron_bonus_dmg). Read only by LinenBind: exactly nothing without
+	# the spell.
+	"natron_salts": {
+		"display_name": "Natron Salts",  # Owner-approved proposal
+		"icon": "natron_salts",
+		"description": "Your bandages are packed with natron: Linen Bind hits harder and holds longer.",
+		"labels": {"bind_bonus": ["Linen Bind damage", "pct"], "hold_bonus": ["Linen Bind hold (s)", "num"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"bind_bonus": 0.06, "hold_bonus": 0.1},  # TUNING (not in GDD)
+			{"bind_bonus": 0.12, "hold_bonus": 0.2},  # TUNING (not in GDD)
+			{"bind_bonus": 0.18, "hold_bonus": 0.3},  # TUNING (not in GDD)
+			{"bind_bonus": 0.24, "hold_bonus": 0.4},  # TUNING (not in GDD)
+			{"bind_bonus": 0.30, "hold_bonus": 0.5},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act XII (temporary number): the Temple of the Lioness ---
+	# Desert Fury (Burning Eye's paired passive; owner-approved proposal: "Eye
+	# of Retribution (+ Desert Fury)"; unlocked with the spell by Sekhmet and
+	# offered on every stage). Own decision on its effect: the desert's anger
+	# in the eye: Burning Eye's beam deals fury_dmg more and sweeps fury_arc
+	# degrees wider (BurningEye, the one read: exactly nothing without the
+	# spell).
+	"desert_fury": {
+		"display_name": "Desert Fury",  # Owner-approved proposal
+		"icon": "desert_fury",
+		"description": "Your Burning Eye burns hotter, and its beam sweeps wider.",
+		"labels": {"fury_dmg": ["Burning Eye damage", "pct"], "fury_arc": ["Burning Eye arc (deg)", "num"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"fury_dmg": 0.06, "fury_arc": 4},  # TUNING (not in GDD)
+			{"fury_dmg": 0.12, "fury_arc": 8},  # TUNING (not in GDD)
+			{"fury_dmg": 0.18, "fury_arc": 12},  # TUNING (not in GDD)
+			{"fury_dmg": 0.24, "fury_arc": 16},  # TUNING (not in GDD)
+			{"fury_dmg": 0.30, "fury_arc": 20},  # TUNING (not in GDD)
+		],
+	},
+	# The Dynasty's counter-passive Embalmed Bones (owner-approved proposal:
+	# "summons shed a curse glyph faster and take less damage while cursed";
+	# unlocked by the Necropolis achievement No Jars Left and offered only on
+	# the Dynasty through its card row's "act"). The foundation's hooks read
+	# it: DynastyRules.embalmed_shed_mult() (x a glyph's time on the summon,
+	# 1 - glyph_shed, in Heka.write()) and embalmed_taken_mult() (x a hit on a
+	# CURSED summon, 1 - cursed_damage_cut, in CombatResolver.damage_unit();
+	# stat embalmed_dmg_prevented).
+	"embalmed_bones": {
+		"display_name": "Embalmed Bones",  # Owner-approved proposal
+		"icon": "embalmed_bones",
+		"description": "Your dead are wrapped in your own linen: glyphs leave them sooner, and a cursed summon takes less.",
+		"labels": {"glyph_shed": ["Heka glyph time", "neg_pct"], "cursed_damage_cut": ["Damage to cursed summons", "neg_pct"]},
+		"act": "dynasty",  # Owner-approved: the act's counter-passives are offered only in this act (Unlocks.act_allows(); temporary number, the reorder renumbers)
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"glyph_shed": 0.1, "cursed_damage_cut": 0.08},  # TUNING (not in GDD)
+			{"glyph_shed": 0.2, "cursed_damage_cut": 0.16},  # TUNING (not in GDD)
+			{"glyph_shed": 0.3, "cursed_damage_cut": 0.24},  # TUNING (not in GDD)
+			{"glyph_shed": 0.4, "cursed_damage_cut": 0.32},  # TUNING (not in GDD)
+			{"glyph_shed": 0.5, "cursed_damage_cut": 0.40},  # TUNING (not in GDD) half the glyph's time at full
+		],
+	},
+	# --- Act XII (temporary number): the Temple of the Lioness ---
+	# The Dynasty's second counter-passive Dune Walkers (owner-approved
+	# proposal: "quicksand slows summons by half as much and Sandstorm range
+	# loss is smaller for the army"; unlocked by the Temple's achievement Names
+	# Taken: the integration's split, as the Necropolis's No Jars Left earns
+	# Embalmed Bones; offered only on the Dynasty through its card row's
+	# "act"). The foundation's hooks read it: DynastyRules.dune_slow_mult()
+	# (x the quicksand slow on the bound player's summons, 1 - sand_slow_cut,
+	# in Quicksand) and dune_reach_kept() (the share 0..1 of the Sandstorm's
+	# reach loss the army keeps, in army_reach_mult()). Keys
+	# DynastyRulesData.DUNE_SLOW_KEY and DUNE_REACH_KEY.
+	"dune_walkers": {
+		"display_name": "Dune Walkers",  # Owner-approved proposal
+		"icon": "dune_walkers",
+		"description": "Your dead walk the sand as if born to it: quicksand slows them less, and the Sandstorm steals less of their reach.",
+		"labels": {"sand_slow_cut": ["Quicksand slow on summons", "neg_pct"], "storm_reach_kept": ["Storm reach kept", "pct"]},
+		"act": "dynasty",  # Owner-approved: the act's counter-passives are offered only in its own act (Unlocks.act_allows(); temporary number, the reorder renumbers)
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"sand_slow_cut": 0.1, "storm_reach_kept": 0.1},  # TUNING (not in GDD)
+			{"sand_slow_cut": 0.2, "storm_reach_kept": 0.2},  # TUNING (not in GDD)
+			{"sand_slow_cut": 0.3, "storm_reach_kept": 0.3},  # TUNING (not in GDD)
+			{"sand_slow_cut": 0.4, "storm_reach_kept": 0.4},  # TUNING (not in GDD)
+			{"sand_slow_cut": 0.5, "storm_reach_kept": 0.5},  # TUNING (not in GDD) proposal: "half as much" at full
+		],
+	},
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	# Heavy Heart (owner-approved proposal: Heart Devoured's paired passive; own
+	# decision on its rule; GDD §15.0 "Feather's Verdict, Heart Devoured, Heavy
+	# Heart and the Pharaoh's Shade"; unlocked by defeating Osiris and Ammit,
+	# UnlockData): the heart on the scale weighs more: Feather's Verdict executes
+	# foes heavy_line more of their health and its ring reaches heavy_reach
+	# wider (AbilityManager.apply_spell_mods() on the spell rows' own keys, like
+	# Starseed). Pairs with Feather's Verdict -> Heart Devoured.
+	"heavy_heart": {
+		"display_name": "Heavy Heart",  # Owner-approved proposal
+		"icon": "heavy_heart",
+		"description": "Feather's Verdict executes healthier foes, in a wider ring.",
+		"labels": {"heavy_line": ["Execute line", "pct"], "heavy_reach": ["Ring reach", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"heavy_line": 0.02, "heavy_reach": 0.05},  # TUNING (not in GDD)
+			{"heavy_line": 0.04, "heavy_reach": 0.10},  # TUNING (not in GDD)
+			{"heavy_line": 0.06, "heavy_reach": 0.15},  # TUNING (not in GDD)
+			{"heavy_line": 0.08, "heavy_reach": 0.20},  # TUNING (not in GDD)
+			{"heavy_line": 0.10, "heavy_reach": 0.25},  # TUNING (not in GDD)
+		],
+	},
+	# Answering Words (own decision: Eternal Guard's paired passive, its name
+	# and rule, after the shabti's spell "here I am, I will answer"; GDD §15.0
+	# "The Ushabti Sentinel, Eternal Guard and Answering Words"; unlocked by
+	# defeating Osiris and Ammit): every class special recharges answer_haste
+	# sooner (its *_cooldown keys: the Sentinel's reassembly, the stomps,
+	# swoops, lifts...; HordeDirector._special_stats(), THE one path of summon
+	# special numbers, its own category beside Fallen Grace and the level row's
+	# special_haste; 0 when not owned, so every other run is unchanged). Works
+	# the same on every stage. Pairs with the Ushabti Sentinel -> Eternal Guard.
+	"answering_words": {
+		"display_name": "Answering Words",
+		"icon": "answering_words",
+		"description": "Every summon's special comes back sooner.",
+		"labels": {"answer_haste": ["Special recharge", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"answer_haste": 0.05},  # TUNING (not in GDD)
+			{"answer_haste": 0.10},  # TUNING (not in GDD)
+			{"answer_haste": 0.15},  # TUNING (not in GDD)
+			{"answer_haste": 0.20},  # TUNING (not in GDD)
+			{"answer_haste": 0.25},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act XIII (temporary number): the Silver Stair ---
+	# Fallen Light (Flaming Sword's paired passive; owner-approved proposal:
+	# "Sword at the Gate (+ Fallen Light)"; unlocked with the spell by Seraiel
+	# and offered on every stage). Own decision on its effect: the light the
+	# Fallen Herald stole burns on the blade: every sweep deals edge_bonus more
+	# and its arc reaches arc_bonus degrees wider (FlamingSword._sweep() /
+	# _arc(), the one read). Read only by FlamingSword: nothing without the spell.
+	"fallen_light": {
+		"display_name": "Fallen Light",  # Owner-approved proposal
+		"icon": "fallen_light",
+		"description": "Stolen light burns on your blade: Flaming Sword cuts harder and sweeps wider.",
+		"labels": {"edge_bonus": ["Flaming Sword damage", "pct"], "arc_bonus": ["Flaming Sword arc (deg)", "num"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"edge_bonus": 0.06, "arc_bonus": 6.0},  # TUNING (not in GDD)
+			{"edge_bonus": 0.12, "arc_bonus": 12.0},  # TUNING (not in GDD)
+			{"edge_bonus": 0.18, "arc_bonus": 18.0},  # TUNING (not in GDD)
+			{"edge_bonus": 0.24, "arc_bonus": 24.0},  # TUNING (not in GDD)
+			{"edge_bonus": 0.30, "arc_bonus": 30.0},  # TUNING (not in GDD)
+		],
+	},
+	# The Celestial Host's counter-passive Absolution (owner-approved proposal:
+	# "the scales fill 30% slower"; unlocked by the Silver Stair achievement
+	# Without Sin, owner answer Nov 9, 2026; offered only on the Host through
+	# its card row's "act"). The foundation's hook reads it:
+	# HostRules.absolution_mult() (x every sin's weight, 1 - fill_cut, in
+	# Judgment.on_raise() / on_replace()).
+	"absolution": {
+		"display_name": "Absolution",  # Owner-approved proposal
+		"icon": "absolution",
+		"description": "Your sins weigh less: the scales of Judgment fill slower.",
+		"labels": {"fill_cut": ["Weight of each sin", "neg_pct"]},
+		"act": "host",  # Owner-approved: the act's counter-passives are offered only in this act (Unlocks.act_allows(); temporary number, the reorder renumbers)
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"fill_cut": 0.06},  # TUNING (not in GDD)
+			{"fill_cut": 0.12},  # TUNING (not in GDD)
+			{"fill_cut": 0.18},  # TUNING (not in GDD)
+			{"fill_cut": 0.24},  # TUNING (not in GDD)
+			{"fill_cut": 0.30},  # Owner-approved proposal: "the scales fill 30% slower" at full
+		],
+	},
+	# --- Act XIII (temporary number): the Wheel of Thrones ---
+	# All-Seeing (Wheel of Eyes' paired passive; owner-approved proposal:
+	# "Ophanim (+ All-Seeing)"; unlocked with the spell by the Throne and
+	# offered on every stage). Own decision on its effect: the wheels' eyes see
+	# every foe: every strike deals wheel_damage more and every wheel rolls
+	# wheel_life longer (WheelOfEyes._damage() / _cast(), the one read). Read
+	# only by WheelOfEyes: nothing without the spell.
+	"all_seeing": {
+		"display_name": "All-Seeing",  # Owner-approved proposal
+		"icon": "all_seeing",
+		"description": "Every eye opens on your wheels: Wheel of Eyes strikes harder and rolls longer.",
+		"labels": {"wheel_damage": ["Wheel of Eyes damage", "pct"], "wheel_life": ["Wheel of Eyes roll time", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"wheel_damage": 0.06, "wheel_life": 0.06},  # TUNING (not in GDD)
+			{"wheel_damage": 0.12, "wheel_life": 0.12},  # TUNING (not in GDD)
+			{"wheel_damage": 0.18, "wheel_life": 0.18},  # TUNING (not in GDD)
+			{"wheel_damage": 0.24, "wheel_life": 0.24},  # TUNING (not in GDD)
+			{"wheel_damage": 0.30, "wheel_life": 0.30},  # TUNING (not in GDD)
+		],
+	},
+	# The Celestial Host's counter-passive Smoked Glass (owner-approved
+	# proposal: "Hallowed Light burns summons for half"; unlocked by the Wheel
+	# of Thrones achievement The Wheel Breaks, owner answer Nov 9, 2026: the
+	# Host's other achievement; offered only on the Host through its card row's
+	# "act"). The foundation's hook reads it: HostRules.smoked_glass_mult() (x
+	# the Light's burn on summons, 1 - burn_cut, in HallowedLight._burn()).
+	"smoked_glass": {
+		"display_name": "Smoked Glass",  # Owner-approved proposal
+		"icon": "smoked_glass",
+		"description": "Your dead look on heaven through smoked glass: Hallowed Light burns them for less.",
+		"labels": {"burn_cut": ["Light's burn on your summons", "neg_pct"]},
+		"act": "host",  # Owner-approved: the act's counter-passives are offered only in this act (Unlocks.act_allows(); temporary number, the reorder renumbers)
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"burn_cut": 0.1},  # TUNING (not in GDD)
+			{"burn_cut": 0.2},  # TUNING (not in GDD)
+			{"burn_cut": 0.3},  # TUNING (not in GDD)
+			{"burn_cut": 0.4},  # TUNING (not in GDD)
+			{"burn_cut": 0.5},  # Owner-approved proposal: "burns summons for half" at full
+		],
+	},
+	# --- Act XIII (temporary number): the Empyrean ---
+	# Seventh Seal (Revelation's paired passive; owner-approved proposal: "Be
+	# Not Afraid (+ Seventh Seal)"; unlocked with the spell by the Voice and
+	# offered on every stage). Own decision on its effect: the seventh seal
+	# opens on the flash: every foe it stuns stays stunned seal_stun s longer
+	# and every flash strikes seal_damage harder (Revelation._flash(), the one
+	# read). Read only by Revelation: nothing without the spell.
+	"seventh_seal": {
+		"display_name": "Seventh Seal",  # Owner-approved proposal
+		"icon": "seventh_seal",
+		"description": "The last seal breaks: Revelation stuns longer and strikes harder.",
+		"labels": {"seal_damage": ["Revelation damage", "pct"], "seal_stun": ["Revelation stun (s)", "num"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"seal_damage": 0.06, "seal_stun": 0.1},  # TUNING (not in GDD)
+			{"seal_damage": 0.12, "seal_stun": 0.2},  # TUNING (not in GDD)
+			{"seal_damage": 0.18, "seal_stun": 0.3},  # TUNING (not in GDD)
+			{"seal_damage": 0.24, "seal_stun": 0.4},  # TUNING (not in GDD)
+			{"seal_damage": 0.30, "seal_stun": 0.5},  # TUNING (not in GDD)
+		],
+	},
+	# Turning Bones (the Bound Ophan's paired passive; own decision, the
+	# proposal names none; owner rule: every evolution needs its paired passive
+	# maxed; unlocked with the class by the Voice and offered on every stage).
+	# Its effect: the wheel turns faster: every roll of a Bound Ophan / Throne of
+	# Bones strikes turn_damage harder and comes turn_haste sooner
+	# (BoundOphanBehavior, the one read). Nothing without the class.
+	"turning_bones": {
+		"display_name": "Turning Bones",  # Own decision
+		"icon": "turning_bones",
+		"description": "Your wheels of bone turn faster: the Bound Ophan rolls harder and more often.",
+		"labels": {"turn_damage": ["Bound Ophan roll damage", "pct"], "turn_haste": ["Bound Ophan roll recharge", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"turn_damage": 0.06, "turn_haste": 0.05},  # TUNING (not in GDD)
+			{"turn_damage": 0.12, "turn_haste": 0.10},  # TUNING (not in GDD)
+			{"turn_damage": 0.18, "turn_haste": 0.15},  # TUNING (not in GDD)
+			{"turn_damage": 0.24, "turn_haste": 0.20},  # TUNING (not in GDD)
+			{"turn_damage": 0.30, "turn_haste": 0.25},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act XIV (temporary number): the Fern Basin ---
+	# Pack Instinct (Pack Leap's paired passive; owner-approved proposal: "Apex
+	# Pack (+ Pack Instinct)"; unlocked with the spell by Scarmaw and offered on
+	# every stage). Own decision on its effect: the raptors hunt as one: every
+	# leap strikes instinct_bonus harder and its pounce reaches pounce_bonus px
+	# wider (PackLeap, the one read). Read only by PackLeap: nothing without the
+	# spell.
+	"pack_instinct": {
+		"display_name": "Pack Instinct",  # Owner-approved proposal
+		"icon": "pack_instinct",
+		"description": "Your raptors hunt as one: Pack Leap strikes harder and pounces wider.",
+		"labels": {"instinct_bonus": ["Pack Leap damage", "pct"], "pounce_bonus": ["Pack Leap pounce (px)", "num"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"instinct_bonus": 0.06, "pounce_bonus": 3.0},  # TUNING (not in GDD)
+			{"instinct_bonus": 0.12, "pounce_bonus": 6.0},  # TUNING (not in GDD)
+			{"instinct_bonus": 0.18, "pounce_bonus": 9.0},  # TUNING (not in GDD)
+			{"instinct_bonus": 0.24, "pounce_bonus": 12.0},  # TUNING (not in GDD)
+			{"instinct_bonus": 0.30, "pounce_bonus": 15.0},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act XIV (temporary number): the Great Plain ---
+	# Calcified Hide (Stampede's paired passive; owner-approved proposal: "Herd
+	# of Ages (+ Calcified Hide)"; unlocked with the spell by Old Ironbrow and
+	# offered on every stage). Own decision on its effect: the chargers' hides
+	# turn to stone: every charger tramples hide_bonus harder and its path is
+	# width_bonus px wider (Stampede, the one read). Read only by Stampede:
+	# nothing without the spell.
+	"calcified_hide": {
+		"display_name": "Calcified Hide",  # Owner-approved proposal
+		"icon": "calcified_hide",
+		"description": "Your chargers' hides turn to stone: Stampede tramples harder and wider.",
+		"labels": {"hide_bonus": ["Stampede damage", "pct"], "width_bonus": ["Stampede width (px)", "num"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"hide_bonus": 0.06, "width_bonus": 2.0},  # TUNING (not in GDD)
+			{"hide_bonus": 0.12, "width_bonus": 4.0},  # TUNING (not in GDD)
+			{"hide_bonus": 0.18, "width_bonus": 6.0},  # TUNING (not in GDD)
+			{"hide_bonus": 0.24, "width_bonus": 8.0},  # TUNING (not in GDD)
+			{"hide_bonus": 0.30, "width_bonus": 10.0},  # TUNING (not in GDD)
+		],
+	},
+	# The Age of Titans' counter-passive Hoarder's Bones (owner-approved
+	# proposal: "crystals and drops within 300 px cannot be snatched; a
+	# snatched pile drops sooner"; unlocked by the Great Plain achievement
+	# Nothing Taken, owner answer Nov 9, 2026; offered only in the Titans act
+	# through its card row's "act"). The foundation's hook reads it:
+	# PrimevalRules.hoarders_bones_reach() (Scavengers.safe_radius(): the safe
+	# radius grows to safe_radius px) and hoarders_bones_drop_after() (a
+	# fleeing carrier drops its pile after drop_after s of flight, SkyraiderKit).
+	"hoarders_bones": {
+		"display_name": "Hoarder's Bones",  # Owner-approved proposal
+		"icon": "hoarders_bones",
+		"description": "Your crystals are yours: fewer are snatched near you, and a thief drops its pile sooner.",
+		"labels": {"safe_radius": ["Safe from thieves (px)", "num"], "drop_after": ["A thief drops its pile after (s)", "num"]},
+		"act": "primeval",  # Owner-approved: the act's counter-passives are offered only in this act (Unlocks.act_allows(); temporary number, the reorder renumbers)
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"safe_radius": 220.0, "drop_after": 3.0},  # TUNING (not in GDD)
+			{"safe_radius": 240.0, "drop_after": 2.6},  # TUNING (not in GDD)
+			{"safe_radius": 260.0, "drop_after": 2.2},  # TUNING (not in GDD)
+			{"safe_radius": 280.0, "drop_after": 1.8},  # TUNING (not in GDD)
+			{"safe_radius": 300.0, "drop_after": 1.4},  # Owner-approved proposal: "within 300 px cannot be snatched" at full
+		],
+	},
+	# --- Act XIV (temporary number): the Last Day ---
+	# Cosmic Dust (Meteor Call's paired passive; owner-approved proposal:
+	# "Extinction Event (+ Cosmic Dust)"; unlocked with the spell by Old
+	# Gravejaw and offered on every stage). Own decision on its effect: the
+	# dust of the stars falls with every meteor: each strikes dust_bonus harder
+	# and dust_radius px wider (MeteorCall, the one read). Read only by Meteor
+	# Call: nothing without the spell.
+	"cosmic_dust": {
+		"display_name": "Cosmic Dust",  # Owner-approved proposal
+		"icon": "cosmic_dust",
+		"description": "Star dust falls with your meteors: Meteor Call strikes harder and wider.",
+		"labels": {"dust_bonus": ["Meteor Call damage", "pct"], "dust_radius": ["Meteor Call radius (px)", "num"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"dust_bonus": 0.06, "dust_radius": 2.0},  # TUNING (not in GDD)
+			{"dust_bonus": 0.12, "dust_radius": 4.0},  # TUNING (not in GDD)
+			{"dust_bonus": 0.18, "dust_radius": 6.0},  # TUNING (not in GDD)
+			{"dust_bonus": 0.24, "dust_radius": 8.0},  # TUNING (not in GDD)
+			{"dust_bonus": 0.30, "dust_radius": 10.0},  # TUNING (not in GDD)
+		],
+	},
+	# Petrified Horns (the Bonehorn's paired passive; own decision, the
+	# proposal names none; owner rule: every evolution needs its paired passive
+	# maxed; unlocked with the class by Old Gravejaw and offered on every
+	# stage). Its effect: the horns turn to stone: every charge of a Bonehorn /
+	# Fossil Tyrant strikes horns_damage harder and comes horns_haste sooner
+	# (BonehornBehavior, the one read). Nothing without the class.
+	"petrified_horns": {
+		"display_name": "Petrified Horns",  # Own decision
+		"icon": "petrified_horns",
+		"description": "Your chargers' horns turn to stone: the Bonehorn charges harder and more often.",
+		"labels": {"horns_damage": ["Bonehorn charge damage", "pct"], "horns_haste": ["Bonehorn charge recharge", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"horns_damage": 0.06, "horns_haste": 0.05},  # TUNING (not in GDD)
+			{"horns_damage": 0.12, "horns_haste": 0.10},  # TUNING (not in GDD)
+			{"horns_damage": 0.18, "horns_haste": 0.15},  # TUNING (not in GDD)
+			{"horns_damage": 0.24, "horns_haste": 0.20},  # TUNING (not in GDD)
+			{"horns_damage": 0.30, "horns_haste": 0.25},  # TUNING (not in GDD)
+		],
+	},
+	# The Age of Titans' counter-passive Thick Marrow (owner-approved proposal:
+	# "summons take less damage from trampling, charges and stomps"; unlocked
+	# by the achievement Trampled, owner answer Nov 9, 2026; offered only in the
+	# Titans act through its card row's "act"). The foundation's hook reads it:
+	# PrimevalRules.thick_marrow_mult() (x 1 - trample_cut on the trample, the
+	# bombs, the charges, the sweeps, the gusts, the swallow and the
+	# meteorites on the necromancer's summons).
+	"thick_marrow": {
+		"display_name": "Thick Marrow",  # Owner-approved proposal
+		"icon": "thick_marrow",
+		"description": "Your undead have thick bones: tramples, charges and stomps hurt them less.",
+		"labels": {"trample_cut": ["Less from tramples and charges", "pct"]},
+		"act": "primeval",  # Owner-approved: the act's counter-passives are offered only in this act (Unlocks.act_allows(); temporary number, the reorder renumbers)
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"trample_cut": 0.10},  # TUNING (not in GDD)
+			{"trample_cut": 0.18},  # TUNING (not in GDD)
+			{"trample_cut": 0.26},  # TUNING (not in GDD)
+			{"trample_cut": 0.33},  # TUNING (not in GDD)
+			{"trample_cut": 0.40},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act XV (temporary number): the Greenwood ---
+	# Horn of the Hunt (Wild Hunt's paired passive; owner-approved proposal:
+	# "The Endless Hunt (+ Horn of the Hunt)"; unlocked with the spell by the
+	# Stag King and offered on every stage). Own decision on its effect: the
+	# horn drives the riders on: every rider strikes horn_bonus harder and
+	# reaches width_bonus px wider (WildHunt, the one read). Read only by Wild
+	# Hunt: nothing without the spell.
+	"horn_of_the_hunt": {
+		"display_name": "Horn of the Hunt",  # Owner-approved proposal
+		"icon": "horn_of_the_hunt",
+		"description": "Your horn drives the riders on: Wild Hunt strikes harder and reaches wider.",
+		"labels": {"horn_bonus": ["Wild Hunt damage", "pct"], "width_bonus": ["Wild Hunt reach (px)", "num"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"horn_bonus": 0.06, "width_bonus": 2.0},  # TUNING (not in GDD)
+			{"horn_bonus": 0.12, "width_bonus": 4.0},  # TUNING (not in GDD)
+			{"horn_bonus": 0.18, "width_bonus": 6.0},  # TUNING (not in GDD)
+			{"horn_bonus": 0.24, "width_bonus": 8.0},  # TUNING (not in GDD)
+			{"horn_bonus": 0.30, "width_bonus": 10.0},  # TUNING (not in GDD)
+		],
+	},
+	# The Turning Year's counter-passive Fallow Ground (owner-approved proposal:
+	# "Fallow Ground (blight spreads twice as fast)"; unlocked by the Greenwood
+	# achievement Scorched Earth, owner answer Nov 2026; offered only in the
+	# Turning Year through its card row's "act"). The foundation's hook reads
+	# it: WildRules.fallow_mult() (x 1 + blight_rise on the blight's rise under
+	# the army, BloomField._rise()), so the Wild loses its living ground sooner.
+	"fallow_ground": {
+		"display_name": "Fallow Ground",  # Owner-approved proposal
+		"icon": "fallow_ground",
+		"description": "The ground dies faster under your army: blight spreads quicker, and the Wild heals less.",
+		"labels": {"blight_rise": ["Blight under your army", "pct"]},
+		"act": "wild",  # Owner-approved: the act's counter-passives are offered only in this act (Unlocks.act_allows(); temporary number, the reorder renumbers)
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"blight_rise": 0.2},  # TUNING (not in GDD)
+			{"blight_rise": 0.4},  # TUNING (not in GDD)
+			{"blight_rise": 0.6},  # TUNING (not in GDD)
+			{"blight_rise": 0.8},  # TUNING (not in GDD)
+			{"blight_rise": 1.0},  # Owner-approved proposal: "blight spreads twice as fast" at full
+		],
+	},
+	# --- Act XV (temporary number): the Fae Court ---
+	# Changeling (Glamour's paired passive; owner-approved proposal: "Court of
+	# Masks (+ Changeling)"; unlocked with the spell by the Summer Queen and
+	# offered on every stage). Own decision on its effect: the copies are better
+	# changelings: each lasts copy_life s longer and has copy_hp more HP
+	# (Glamour, the one read). Read only by Glamour: nothing without the spell.
+	"changeling": {
+		"display_name": "Changeling",  # Owner-approved proposal
+		"icon": "changeling",
+		"description": "Your copies are better changelings: Glamour's copies last longer and take more blows.",
+		"labels": {"copy_life": ["Copy life (s)", "num"], "copy_hp": ["Copy HP", "pct"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"copy_life": 0.5, "copy_hp": 0.1},  # TUNING (not in GDD)
+			{"copy_life": 1.0, "copy_hp": 0.2},  # TUNING (not in GDD)
+			{"copy_life": 1.5, "copy_hp": 0.3},  # TUNING (not in GDD)
+			{"copy_life": 2.0, "copy_hp": 0.4},  # TUNING (not in GDD)
+			{"copy_life": 2.5, "copy_hp": 0.5},  # TUNING (not in GDD)
+		],
+	},
+	# The Turning Year's counter-passive Deadwood (owner-approved proposal:
+	# "Deadwood (roots and thickets hold summons half as long)"; unlocked by the
+	# Fae Court achievement A Fair Bargain, owner answer Nov 2026; offered only in
+	# the Turning Year through its card row's "act"). The foundation's hook reads
+	# it: WildRules.deadwood_mult() (x 1 - hold_cut on every root, thicket and
+	# burial hold on a summon: SeasonCycle, Thickets, SpringReturns).
+	"deadwood": {
+		"display_name": "Deadwood",  # Owner-approved proposal
+		"icon": "deadwood",
+		"description": "Roots and thorns rot on your dead: they hold your summons for less time.",
+		"labels": {"hold_cut": ["Root and thicket hold", "pct"]},
+		"act": "wild",  # Owner-approved: the act's counter-passives are offered only in this act (Unlocks.act_allows(); temporary number, the reorder renumbers)
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"hold_cut": 0.1},  # TUNING (not in GDD)
+			{"hold_cut": 0.2},  # TUNING (not in GDD)
+			{"hold_cut": 0.3},  # TUNING (not in GDD)
+			{"hold_cut": 0.4},  # TUNING (not in GDD)
+			{"hold_cut": 0.5},  # Owner-approved proposal: "hold summons half as long" at full
+		],
+	},
+	# --- Act XV (temporary number): the World-Tree ---
+	# Compost Heart (Root and Rot's paired passive; owner-approved proposal:
+	# "Return to Earth (+ Compost Heart)"; unlocked with the spell by the Green
+	# Mother and offered on every stage). Own decision on its effect: the dead
+	# feed the soil: every ring rots compost_rot harder and stands compost_time s
+	# longer (RootAndRot, the one read). Nothing without the spell.
+	"compost_heart": {
+		"display_name": "Compost Heart",  # Owner-approved proposal
+		"icon": "compost_heart",
+		"description": "The dead feed the soil: Root and Rot rots harder and its rings stand longer.",
+		"labels": {"compost_rot": ["Root and Rot rot", "pct"], "compost_time": ["Ring time (s)", "num"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"compost_rot": 0.03, "compost_time": 0.3},  # TUNING (not in GDD)
+			{"compost_rot": 0.06, "compost_time": 0.6},  # TUNING (not in GDD)
+			{"compost_rot": 0.09, "compost_time": 0.9},  # TUNING (not in GDD)
+			{"compost_rot": 0.12, "compost_time": 1.2},  # TUNING (not in GDD)
+			{"compost_rot": 0.15, "compost_time": 1.5},  # TUNING (not in GDD)
+		],
+	},
+	# Deep Roots (the Ossuary Oak's paired passive; built as "Heartwood", own
+	# decision, the proposal names none; renamed Deep Roots by the owner, Nov 2026,
+	# GDD §15.0 "Fairy rings slow attacks; Heartwood renamed Deep Roots": the id
+	# "heartwood", its icon and save keys stay; owner rule: every evolution needs its paired passive maxed;
+	# unlocked with the class by the Green Mother and offered on every stage).
+	# Its effect: the bone wood hardens to the heart: every lash of an Ossuary
+	# Oak / World-Root Warden strikes heart_damage harder and heart_radius px
+	# wider (OssuaryOakBehavior, the one read). Nothing without the class.
+	"heartwood": {
+		"display_name": "Deep Roots",  # Owner's pick (Nov 2026; was "Heartwood")
+		"icon": "heartwood",
+		"description": "Your oaks of bone root deep: the Ossuary Oak lashes harder and wider.",
+		"labels": {"heart_damage": ["Ossuary Oak lash damage", "pct"], "heart_radius": ["Ossuary Oak lash radius (px)", "num"]},
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"levels": [
+			{"heart_damage": 0.06, "heart_radius": 2.0},  # TUNING (not in GDD)
+			{"heart_damage": 0.12, "heart_radius": 4.0},  # TUNING (not in GDD)
+			{"heart_damage": 0.18, "heart_radius": 6.0},  # TUNING (not in GDD)
+			{"heart_damage": 0.24, "heart_radius": 8.0},  # TUNING (not in GDD)
+			{"heart_damage": 0.30, "heart_radius": 10.0},  # TUNING (not in GDD)
 		],
 	},
 }

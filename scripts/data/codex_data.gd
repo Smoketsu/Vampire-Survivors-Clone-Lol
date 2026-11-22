@@ -30,22 +30,27 @@ const BOSS: String = "boss"
 ## Every recorded category, in save / summary order.
 const CATEGORIES: Array[String] = [SPELL, SUMMON, ENEMY, BOSS]
 
-## Screen tabs, left to right: [tab id, button text]. "feats" is the
-## achievements list; the others are codex pages.
-const TABS: Array = [["feats", "Achievements"], ["spells", "Spells"], ["summons", "Summons"], ["covenant", "Covenant"], ["eye", "Ancient Eye"],
-		["empire", "Empire"],
-		# --- Act IV: the Olympian Republic ---
-		["pantheon", "Republic"],
-		# --- Act V: the Shogunate of the Rising Sun ---
-		["shogunate", "Shogunate"],
-		# --- Act VI: the Inferno ---
-		["inferno", "Inferno"],
-		# --- Act VII: the Sanguine Court ---
-		["court", "Court"],
-		# --- Act VIII: the Last Line ---
-		["city", "Last Line"],
-		# --- Act IX: the Concord of Stars ---
-		["concord", "Concord"]]  # TUNING (not in GDD) Act II adds the Ancient Eye tab, Act III the Electronic Empire's, Act IV the Olympian Republic's, Act V the Shogunate's, Act VI the Inferno's, Act VII the Sanguine Court's, Act VIII the Last Line's, Act IX the Concord's
+## The fixed screen tabs, left to right: [tab id, button text]. "feats" is the
+## achievements list; the others are codex pages. tabs() adds one faction tab
+## per act after them.
+const FIXED_TABS: Array = [["feats", "Achievements"], ["spells", "Spells"], ["summons", "Summons"]]  # TUNING (not in GDD)
+## Act id (StageRegistry.ACT_ORDER "id", also the faction page's id) -> its tab's
+## button text. tabs() orders them by the act order.
+const ACT_TAB_NAMES := {
+	"covenant": "Covenant", "eye": "Ancient Eye", "empire": "Empire", "pantheon": "Republic",
+	"shogunate": "Shogunate", "inferno": "Inferno", "court": "Court", "city": "Last Line",
+	"concord": "Concord", "corsair": "Black Tide", "norse": "Hall", "dynasty": "Dynasty",
+	"host": "Host", "primeval": "Titans", "wild": "Wild",
+}  # TUNING (not in GDD)
+
+
+## Screen tabs, left to right: FIXED_TABS, then one faction tab per act in
+## campaign order (StageRegistry.ACT_ORDER, the one act order).
+static func tabs() -> Array:
+	var out: Array = FIXED_TABS.duplicate()
+	for act: Dictionary in StageRegistry.ACT_ORDER:
+		out.append([String(act["id"]), String(ACT_TAB_NAMES[act["id"]])])
+	return out
 
 ## Summon classes shown on the Summons page (UnitData ids, card order). The
 ## Profane Bishop is a merge evolution, so it sits with the evolutions.
@@ -74,7 +79,19 @@ const SUMMON_ORDER: Array[String] = ["warrior", "archer", "mage", "mender", "war
 		# --- Act VIII: Liberty Heights --- (a silhouette naming its unlock until met)
 		"fallen_hero",
 		# --- Act IX: the Ark --- (a silhouette naming its unlock until met)
-		"ghost_saucer"]
+		"ghost_saucer",
+		# --- Act X: the Maelstrom --- (a silhouette naming its unlock until met)
+		"powder_wraith",
+		# --- Act XI (temporary): Vigrid --- (a silhouette naming its unlock until met)
+		"draugr_thane",
+		# --- Act XII (temporary number): the Hall of Two Truths --- (a silhouette naming its unlock until met)
+		"ushabti_sentinel",
+		# --- Act XIII (temporary number): the Empyrean --- (a silhouette naming its unlock until met)
+		"bound_ophan",
+		# --- Act XIV (temporary number): the Last Day --- (a silhouette naming its unlock until met)
+		"bonehorn",
+		# --- Act XV (temporary number): the World-Tree --- (a silhouette naming its unlock until met)
+		"ossuary_oak"]
 
 ## Covenant soldiers (enemy kinds), in the order the stages bring them.
 const SOLDIERS: Array[String] = ["recruit", "footman", "archer", "chaplain", "purifier", "templar",
@@ -298,6 +315,163 @@ const CONCORD_LUMINOUS: Array[String] = ["lumen_sentinel", "prism",
 ## Concord stage bosses (StageRegistry.BOSS_ARRIVALS ids).
 const CONCORD_BOSSES: Array[String] = ["hive_mother", "vrask_tal", "harvester"]
 
+# --- Act X: the Black Tide ---
+## Act X, the Black Tide (GDD §15.0 "Act X foundation: the Black Tide (phase
+## 1)"; the Black Tide tab): the Brotherhood's crews, the sea's beasts, the
+## boats and their hooks, then its stage bosses (StageRegistry.BOSS_ARRIVALS
+## ids). Each Act X stage adds its own kinds as it is built (phase 2).
+const CORSAIR_CREW: Array[String] = ["deckhand", "musketeer", "powder_runner", "swashbuckler", "boarding_bruiser",
+	# --- Act X: the Smuggler's Cutter --- (the shared Grappler and Boatswain; the miniboss with the crews, as Act VIII placed Mammoth with the army)
+	"grappler", "boatswain", "bosun_gorran",
+	# --- Act X: the Treasure Galleon ---
+	"gunnery_mate", "voodoo_navigator",
+	# --- Act X: the Maelstrom --- (the Hollow Queen's ghost crew and the miniboss with them)
+	"ghost_deckhand", "ghost_gunner", "ghost_bosun"]
+## The sea's beasts (rows "water").
+const CORSAIR_SEA: Array[String] = ["reef_shark", "kraken_arm",
+	# --- Act X: the Treasure Galleon --- (the miniboss with the sea's beasts, as Act IX placed its minibosses with their races)
+	"hull_crab", "old_hollow_eye",
+	# --- Act X: the Maelstrom ---
+	"corsair_serpent"]
+## The boats and their grapple hooks (structures BoardingParty brings).
+const CORSAIR_BOATS: Array[String] = ["skiff", "longboat", "raider_ship", "boarding_hook",
+	# --- Act X: the Smuggler's Cutter --- (Gorran's ram longboat; the powder barrel and Crow's sloop have no entry: never a Codex kill)
+	"ram_longboat",
+	# --- Act X: the Treasure Galleon --- (the gunboat, and Marrec's cursed coin with the Brotherhood's gear)
+	"gunboat", "cursed_coin",
+	# --- Act X: the Maelstrom ---
+	"ghost_longboat"]
+## Black Tide stage bosses (StageRegistry.BOSS_ARRIVALS ids).
+const CORSAIR_BOSSES: Array[String] = ["crow", "marrec", "vandermere"]
+# --- Act XI (temporary): the Hall of the Slain ---
+## The Hall of the Slain (GDD §15.0 "The Hall of the Slain foundation (phase
+## 1)"; the Hall tab), GROUPED as NorseRulesData.GROUPS: the warriors of the
+## hall, the hall's valkyries and seers with its stones and braziers, the cold
+## things of the north, then its stage bosses (StageRegistry.BOSS_ARRIVALS ids).
+## Each of its stages adds its own as it is built (phase 2).
+const NORSE_WARRIORS: Array[String] = ["raider", "shield_maiden", "berserker", "skald",
+	# --- Act XI (temporary): Valgard --- (the hall's Einherjar and their Champion, the miniboss)
+	"einherjar", "einherjar_champion"]
+## The hall's kinds (group "hall"): the valkyries, the seers and the
+## Rune-Stone (recorded when first taken: a stone is never slain). The brazier
+## has no entry (it is the necromancer's warmth, not a foe).
+const NORSE_HALL: Array[String] = ["valkyrie", "seer", "rune_stone",
+	# --- Act XI (temporary): Valgard --- (Sigrun's valkyrie wing)
+	"wing_valkyrie",
+	# --- Act XI (temporary): Vigrid --- (Odin's ravens)
+	"odin_raven"]
+## The cold things of the north (group "wilds").
+const NORSE_WILDS: Array[String] = ["draugr", "wolf_of_the_wastes", "frost_giant", "fire_giant",
+	# --- Act XI (temporary): the Barrow Fields --- (the open barrow and the
+	# stage's miniboss with the barrow-dead; the female draugr shares the
+	# Draugr's entry, Hrimgar's own barrow his)
+	"open_barrow", "barrow_wight",
+	# --- Act XI (temporary): Vigrid --- (the miniboss with its kin, as Act VIII placed Mammoth with the army; Fenrir beside the giants)
+	"muspel_giant", "fenrir"]
+## The Hall of the Slain's stage bosses (StageRegistry.BOSS_ARRIVALS ids).
+const NORSE_BOSSES: Array[String] = ["hrimgar", "sigrun", "odin"]
+# --- Act XII (temporary number): the Necropolis Dynasty ---
+## The Necropolis Dynasty (GDD §15.0 "The Necropolis Dynasty foundation (phase
+## 1)"; the Dynasty tab), GROUPED BY GROUP (DynastyRulesData.GROUPS): the
+## wrapped dead, the sacred beasts, the guard, the priesthood, stone and jars,
+## then its stage bosses (StageRegistry.BOSS_ARRIVALS ids). Each Dynasty stage
+## adds its own as it is built (phase 2). The cartouche is no roster kind (no
+## entry).
+const DYNASTY_DEAD: Array[String] = ["mummy", "mummy_female"]
+## The sacred beasts (group "beasts").
+const DYNASTY_BEASTS: Array[String] = ["scarab_swarm",
+	# --- Act XII (temporary number): the Hall of Two Truths --- (the miniboss with its group)
+	"devourers_whelp"]
+## The guard (group "guard").
+const DYNASTY_GUARD: Array[String] = ["khopesh_guard",
+	# --- Act XII (temporary number): the Necropolis of Sand ---
+	"nile_archer", "jackal_warrior",
+	# --- Act XII (temporary number): the Temple of the Lioness ---
+	"bastet_hunter",
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	"crocodile_warden"]
+## The priesthood (group "priests").
+const DYNASTY_PRIESTS: Array[String] = ["heka_priest", "embalmer"]
+## Stone and jars (group "stone": the structures and, in phase 2, the statues).
+const DYNASTY_STONE: Array[String] = ["canopic_jar",
+	# --- Act XII (temporary number): the Necropolis of Sand --- (the miniboss)
+	"sand_colossus",
+	# --- Act XII (temporary number): the Temple of the Lioness --- (the woken statues and the miniboss)
+	"ushabti_statue", "woken_colossus", "lion_warden"]
+## Dynasty stage bosses (StageRegistry.BOSS_ARRIVALS ids).
+const DYNASTY_BOSSES: Array[String] = ["anubis", "sekhmet", "osiris"]
+# --- Act XIII (temporary number): the Celestial Host ---
+## The Celestial Host (GDD §15.0 "The Celestial Host foundation (phase 1)"; the
+## Host tab), GROUPED BY GROUP (HostRulesData.GROUPS): the lesser lights, the
+## soldiers of light, the choir, the high orders, then its stage bosses
+## (StageRegistry.BOSS_ARRIVALS ids). Each Host stage adds its own as it is
+## built (phase 2; the Cherub and the Ophan bring a "guardians" section).
+const HOST_LIGHTS: Array[String] = ["lesser_light"]
+## The soldiers of light (group "soldiers").
+const HOST_SOLDIERS: Array[String] = ["virtue", "power"]
+## The choir (group "choir": the supports).
+const HOST_CHOIR: Array[String] = ["choir_angel", "herald"]
+## The high orders (group "orders": the elites).
+const HOST_ORDERS: Array[String] = ["dominion", "judge"]
+## The guardians (group "guardians": the Cherub and, with the Wheel of Thrones,
+## the Ophan; the stage minibosses of the Silver Stair).
+const HOST_GUARDIANS: Array[String] = [
+	# --- Act XIII (temporary number): the Silver Stair ---
+	"cherub", "cherub_of_the_gate",
+	# --- Act XIII (temporary number): the Wheel of Thrones ---
+	"ophan", "dominion_of_the_spheres",
+	# --- Act XIII (temporary number): the Empyrean ---
+	"herald_of_the_seventh_trumpet"]
+## Host stage bosses (StageRegistry.BOSS_ARRIVALS ids).
+const HOST_BOSSES: Array[String] = ["seraiel", "throne", "voice"]
+# --- Act XIV (temporary number): the Age of Titans ---
+## The Age of Titans (GDD §15.0 "The Age of Titans foundation (phase 1)"; the
+## Titans tab), GROUPED BY GROUP (PrimevalRulesData.GROUPS): the swarms, the
+## hunters, the herds, the fliers, the titans, then its stage bosses
+## (StageRegistry.BOSS_ARRIVALS ids). Each Titans stage adds its own as it is
+## built (phase 2).
+const PRIMEVAL_SWARM: Array[String] = ["scuttler",
+	# --- Act XIV (temporary number): the Fern Basin ---
+	"primeval_nest"]
+## The hunters (group "hunters": the pack predators and the spitters).
+const PRIMEVAL_HUNTERS: Array[String] = ["razorclaw", "frill_spitter",
+	# --- Act XIV (temporary number): the Fern Basin ---
+	"bog_croc", "scarmaw_guard"]
+## The herds (group "herds": the neutral giants).
+const PRIMEVAL_HERDS: Array[String] = ["longneck", "duckbill"]
+## The fliers (group "fliers").
+const PRIMEVAL_FLIERS: Array[String] = ["skyraider",
+	# --- Act XIV (temporary number): the Last Day ---
+	"stormwing", "thunderwing"]
+## The titans (group "titans").
+const PRIMEVAL_TITANS: Array[String] = ["tyrant",
+	# --- Act XIV (temporary number): the Fern Basin ---
+	"ironjaw",
+	# --- Act XIV (temporary number): the Great Plain ---
+	"horncharger", "clubtail", "mother_clubtail"]
+## Titans stage bosses (StageRegistry.BOSS_ARRIVALS ids).
+const PRIMEVAL_BOSSES: Array[String] = ["scarmaw", "ironbrow", "gravejaw"]
+# --- Act XV (temporary number): the Turning Year ---
+## The Turning Year (GDD §15.0 "The Turning Year foundation (phase 1)"; the
+## Wild tab), GROUPED BY GROUP (WildRulesData.GROUPS): what grows, the fae, the
+## Wild Hunt, the spirits, then its stage bosses (StageRegistry.BOSS_ARRIVALS
+## ids). Each Wild stage adds its own as it is built (phase 2).
+const WILD_GROWTH: Array[String] = ["thornling", "dryad", "treant", "corpse_bloom",
+	# --- Act XV (temporary number): the World-Tree ---
+	"gardener_of_roots"]
+## The fae (group "fae": the knights and the Winter Court).
+const WILD_FAE: Array[String] = ["fae_knight", "winter_fae",
+	# --- Act XV (temporary number): the Fae Court ---
+	"masked_courtier", "winter_prince"]
+## The Wild Hunt (group "hunt").
+const WILD_HUNT: Array[String] = ["great_stag", "wild_rider",
+	# --- Act XV (temporary number): the Greenwood ---
+	"hunt_hound", "huntsman"]
+## The spirits (group "spirits").
+const WILD_SPIRITS: Array[String] = ["will_o_wisp", "spore_mother"]
+## Wild stage bosses (StageRegistry.BOSS_ARRIVALS ids).
+const WILD_BOSSES: Array[String] = ["stag_king", "summer_queen", "green_mother"]
+
 ## Section headers of each page: page id -> [[section id, header text], ...].
 const SECTIONS: Dictionary = {
 	"spells": [["spells", "Spells"], ["spell_evolutions", "Evolutions"]],  # TUNING (not in GDD)
@@ -319,6 +493,24 @@ const SECTIONS: Dictionary = {
 	# --- Act IX: the Concord of Stars (grouped by race) ---
 	"concord": [["concord_brood", "The Brood"], ["concord_harvesters", "The Harvesters"], ["concord_vrask", "The Vrask"],
 		["concord_luminous", "The Luminous"], ["concord_bosses", "Bosses"]],  # TUNING (not in GDD) Act IX
+	# --- Act X: the Black Tide ---
+	"corsair": [["corsair_crew", "The Brotherhood"], ["corsair_sea", "The Sea"], ["corsair_boats", "Boats"],
+		["corsair_bosses", "Bosses"]],  # TUNING (not in GDD) Act X
+	# --- Act XI (temporary): the Hall of the Slain (grouped by group) ---
+	"norse": [["norse_warriors", "The Warriors"], ["norse_hall", "The Hall"], ["norse_wilds", "The North"],
+		["norse_bosses", "Bosses"]],  # TUNING (not in GDD) the Norse act
+	# --- Act XII (temporary number): the Necropolis Dynasty (grouped by group) ---
+	"dynasty": [["dynasty_dead", "The Wrapped Dead"], ["dynasty_beasts", "Sacred Beasts"], ["dynasty_guard", "The Guard"],
+		["dynasty_priests", "The Priesthood"], ["dynasty_stone", "Stone and Jars"], ["dynasty_bosses", "Bosses"]],  # TUNING (not in GDD) Act XII
+	# --- Act XIII (temporary number): the Celestial Host (grouped by group) ---
+	"host": [["host_lights", "Lesser Lights"], ["host_soldiers", "Soldiers of Light"], ["host_choir", "The Choir"],
+		["host_orders", "The High Orders"], ["host_guardians", "The Guardians"], ["host_bosses", "Bosses"]],  # TUNING (not in GDD) Act XIII
+	# --- Act XIV (temporary number): the Age of Titans (grouped by group) ---
+	"primeval": [["primeval_swarm", "Swarms"], ["primeval_hunters", "Hunters"], ["primeval_herds", "Herds"],
+		["primeval_fliers", "Fliers"], ["primeval_titans", "Titans"], ["primeval_bosses", "Bosses"]],  # TUNING (not in GDD) Act XIV
+	# --- Act XV (temporary number): the Turning Year (grouped by group) ---
+	"wild": [["wild_growth", "What Grows"], ["wild_fae", "The Fae"], ["wild_hunt", "The Wild Hunt"],
+		["wild_spirits", "Spirits"], ["wild_bosses", "Bosses"]],  # TUNING (not in GDD) Act XV
 }
 
 ## One-sentence descriptions of the Covenant (the enemy data has none),
@@ -525,6 +717,65 @@ const DESCRIPTIONS: Dictionary = {
 	"hive_mother": "The Hive Mother, the Brood's queen grown into the crater: egg waves, a burrow under your ring, and acid from the sky.",  # Owner-approved Act IX proposal
 	"vrask_tal": "Vrask'Tal, the Hunt-Lord: he stalks your ring cloaked, duels you with his glaive, and arms the bomb on his wrist.",  # Owner-approved Act IX proposal
 	"harvester": "The Harvester, the oldest of its kind: the one who planted the world, come to reap what is left.",  # Owner-approved Act IX proposal
+	# --- Act X: the Black Tide ---
+	"deckhand": "Cutlass mobs of the Brotherhood, pouring off the boats in streams. Meet them at the rail.",  # Owner-approved Act X proposal
+	"musketeer": "A gunman of the Brotherhood. Ordinary shot, from the boats and then the deck: Archers answer him.",  # Owner-approved Act X proposal
+	"powder_runner": "He sprints with a lit keg. Kill him at range, and the blast throws his own crew over the rail.",  # Owner-approved Act X proposal
+	"swashbuckler": "A duellist whose rapier lunge jumps your first blocker. Rogues, Gargoyles and area damage end her.",  # Owner-approved Act X proposal
+	"boarding_bruiser": "An axeman in a leather apron, flat armour 3. Wither him, or push him overboard.",  # Owner-approved Act X proposal
+	"reef_shark": "It circles the hull and leaps into your ring. Hit it at the leap; on the deck, knock it back into the sea.",  # Owner-approved Act X proposal
+	"kraken_arm": "A tentacle from below that drags one of your dead overboard. Kill it while it is above the water.",  # Owner-approved Act X proposal
+	"skiff": "A small boat of six. Cut both grapple hooks and it drifts off; sink it and its crew drowns.",  # Owner-approved Act X proposal (Boarding)
+	"longboat": "A boat of twelve. Ranged summons, spells and fliers sink it; your Warriors cut its hooks.",  # Owner-approved Act X proposal (Boarding)
+	"raider_ship": "A raider of twenty-four with two planks. Sink it before its whole crew is aboard.",  # Owner-approved Act X proposal (Boarding)
+	"boarding_hook": "A grapple biting the rail. Cut both hooks of a boat and it drifts away with its crew.",  # Owner-approved Act X proposal (Boarding)
+	"crow": "Captain Ezekiel Crow, the Gull King: broadsides, a cutlass duel, and his own ship set ablaze.",  # Owner-approved Act X proposal
+	"marrec": "Admiral Isabeau Marrec, the Sea Wolf: her fleet, the boarding plank and cursed gold.",  # Owner-approved Act X proposal
+	"vandermere": "Captain Cornelius Vandermere, lashed to the wheel of the Hollow Queen behind an oath only the dead can break.",  # Owner-approved Act X proposal
+	# --- Act X: the Smuggler's Cutter ---
+	"grappler": "He throws a hook line and drags one of your dead to the rail, where the sea strikes. Kill him first.",  # Owner-approved Act X proposal
+	"boatswain": "His bellow drives his crew faster and shields them for a moment. A priority target.",  # Owner-approved Act X proposal
+	"bosun_gorran": "Bosun Gorran rams the hull in his longboat, staggering your whole ring, then swings his chain-hook through it.",  # Owner-approved Act X proposal (miniboss)
+	"ram_longboat": "A heavy longboat with an iron ram. Sink it before its crew is aboard and they drown with it.",  # Owner-approved Act X proposal
+	# --- Act X: the Treasure Galleon ---
+	"gunnery_mate": "She lobs grenadoes over your ring onto you: step out of the landing circle, and kill her before the next.",  # Owner-approved Act X proposal
+	"voodoo_navigator": "She reads the sea and marks a spot on your ring for it to strike. Kill her first: the mark fails if she dies.",  # Owner-approved Act X proposal
+	"gunboat": "A gun barge that never boards: it shells your deck in lines from the water. Sink it with cannons, fliers and ranged dead.",  # Owner-approved Act X proposal
+	"hull_crab": "It climbs the hull and comes over the rail with armour 4. Area blows crack it; a hard knock sends it back in.",  # Owner-approved Act X proposal
+	"old_hollow_eye": "The old kraken itself, blind in one eye: every tentacle it lifts grabs one of your dead. Strike it while it is above the water.",  # Owner-approved Act X proposal (miniboss)
+	"cursed_coin": "Admiral Marrec's cursed gold: a barrier round her marines and her own guard. Any blow clears a coin; area blows clear them all.",  # Owner-approved Act X proposal (Gold Fever)
+	# --- Act X: the Maelstrom ---
+	"ghost_deckhand": "A drowned deckhand of the Hollow Queen. Cut him down near you and he rises for you instead.",  # Owner-approved Act X proposal
+	"ghost_gunner": "A drowned gunner who still fires from the deck. His fall near you raises him for you.",  # Owner-approved Act X proposal
+	"ghost_bosun": "The Hollow Queen's drowned bosun: every blast of his whistle calls a spectral longboat to the rail.",  # Owner-approved Act X proposal
+	"corsair_serpent": "A serpent of the deep that breaches in a line across the rail band. Step out of its line.",  # Owner-approved Act X proposal
+	"ghost_longboat": "A spectral longboat of the Hollow Queen's crew, called up by a whistle or the captain himself.",  # Owner-approved Act X proposal
+	# --- Act XI (temporary): the Hall of the Slain ---
+	"raider": "Raiders with axe and round shield, come south in crowds. Anything cuts them down.",  # Owner-approved proposal (LAST_SIX_ACTS.md)
+	"shield_maiden": "A shield-maiden: her shield bash throws one of your dead out of the ring. Flank her.",  # Owner-approved proposal
+	"berserker": "A berserker in a bear pelt, always in the fury: faster, harder, and no slow or stun holds him. Burst him down.",  # Owner-approved proposal (Berserkergang)
+	"skald": "A skald whose war-song makes the warriors near him strike faster. Kill him first.",  # Owner-approved proposal
+	"valkyrie": "A valkyrie who dives on your ring with her spear. Aloft, only arrows, fliers and spells reach her.",  # Owner-approved proposal (Night Wings)
+	"seer": "A seer who douses your braziers, re-carves the rune-stones you take and curses one of your dead blind.",  # Owner decision Nov 7, 2026 (the Long Winter) and the proposal
+	"rune_stone": "A carved stone that wards the warriors near it and calls them with its horn. Stand by it with your army to take it.",  # Owner-approved proposal (Rune-Stones)
+	"draugr": "Barrow-dead in rusted mail. Their armour turns light blows, and their touch chills your dead.",  # Owner-approved proposal
+	"wolf_of_the_wastes": "Wolves in packs of five that lunge at the ring. Blockers hold them.",  # Owner-approved proposal
+	"frost_giant": "A frost giant: its boulders fall where a circle shows, it stamps your ring away and douses your braziers.",  # Owner-approved proposal and the Long Winter
+	"fire_giant": "A fire-giant of the south, come to burn the last field.",  # Owner-approved proposal (Ragnarok)
+	"hrimgar": "Hrimgar the Draugr-King, who rises from his barrow three times unless you break it.",  # Owner-approved proposal
+	# --- Act XI (temporary): the Barrow Fields ---
+	"open_barrow": "A burial mound cracking open. Draugr climb out of it until you break it.",  # Brief (the open barrows)
+	"barrow_wight": "A draugr chieftain in a rusted crown. His howl stuns your whole ring for a moment.",  # Brief (miniboss)
+	"sigrun": "Sigrun, the Shield-Queen, captain of the valkyries: she charges your ring and calls you to a duel.",  # Owner-approved proposal
+	"odin": "Odin, the one-eyed god, and Fenrir the wolf, come for the army the world promised them.",  # Owner-approved proposal
+	# --- Act XI (temporary): Valgard ---
+	"einherjar": "A hero of the hall, gold-lit and asleep at the long tables until a horn blows. Then they all rise at once.",  # Owner-approved proposal (the Feast)
+	"einherjar_champion": "The hall's champion, a thousand years at the feast: his sweep throws your ring back, and his horn wakes the tables.",  # Owner-approved proposal (miniboss)
+	"wing_valkyrie": "One of Sigrun's valkyrie wing. When their queen charges, they dive across your ring beside her.",  # Owner-approved proposal (the Charge)
+	# --- Act XI (temporary): Vigrid ---
+	"muspel_giant": "A fire-giant of the south, out of Muspell before his time: his footprints burn, and his stomp sets the ground alight.",  # Owner-approved proposal (miniboss)
+	"fenrir": "Fenrir, the great wolf, his chain broken at last: he swallows one of your dead whole and spits it out four seconds later.",  # Owner-approved proposal
+	"odin_raven": "One of Odin's ravens. If it reaches you, it marks you for the All-Father's spear. Shoot it down.",  # Owner-approved proposal
 	# --- Act IX: the Crash Site ---
 	"burrower": "It tunnels under your ring and bursts up among your dead. A mound of dirt shows a moment ahead: keep blockers inside the ring.",  # Owner-approved Act IX proposal
 	"acid_spitter": "It lobs acid over your ring that leaves a burning puddle. Kill it on approach, and step out of the green.",  # Owner-approved Act IX proposal
@@ -538,11 +789,100 @@ const DESCRIPTIONS: Dictionary = {
 	"vault_beast": "A beast the Concord harvested from some dead world. Freed, it bites whatever is nearest: your dead, you, or its keepers.",  # Owner-approved Act IX proposal
 	"reactor_vent": "A vent of the Ark's reactor that breathes alien ground on a timer. Break it to stop it.",  # TUNING (not in GDD) brief
 	"reap_emitter": "One of the Harvester's emitters: its tractor beam lifts your dead from the ring. Destroy them all to end the Reaping.",  # Owner-approved Act IX proposal
+	# --- Act XII (temporary number): the Necropolis Dynasty ---
+	"mummy": "The wrapped dead. A fallen mummy's Name waits over it: smash it or raise it, or it stands again. Fire burns them well.",  # Proposal (Rebirth)
+	"mummy_female": "The wrapped dead, quicker on her feet. Her Name waits over her too: smash it or raise it before she returns.",  # Proposal (Rebirth)
+	"scarab_swarm": "A swarm of sacred beetles that tears through your Warders' barriers. Beasts do not return.",  # Proposal
+	"khopesh_guard": "A tomb guard with curved blades: when he plants his feet, he spins. He returns unless you take his Name.",  # Proposal (Rebirth)
+	"heka_priest": "He writes a glyph on one of your dead, and it runs around your ring. A Mender's heal or a Warder's barrier clears it.",  # Proposal (Heka)
+	"embalmer": "She heals the Dynasty's soldiers and hastens every Name near her. Kill her first.",  # Proposal (Rebirth)
+	"canopic_jar": "A jar that holds the Names of the dead near it: no blow reaches them. Break it, and they return no more.",  # Proposal (Rebirth)
+	# --- Act XII (temporary number): the Necropolis of Sand ---
+	"nile_archer": "An archer of the tombs' watch. Her arrows find your ring from the dunes, but she falls silent when the sand blows.",  # Owner-approved proposal
+	"jackal_warrior": "A jackal-headed guardian who hunts in pairs and lunges over your ring. He returns unless you take his Name.",  # Owner-approved proposal (Rebirth)
+	"sand_colossus": "A walking statue of the old kings. His slam breaks the ground round him: burst him, and stay at range.",  # Owner-approved proposal (miniboss)
+	"anubis": "Anubis, Opener of the Way: he leads the procession of the dead, embalms the fallen, then duels you as the jackal.",  # Proposal
+	"sekhmet": "Sekhmet, the Lioness of Retribution: she leaps between the pillars, calls the Red Wind, and feasts in her fury.",  # Proposal
+	"osiris": "Osiris, Lord of the Dead, judges you on the great scales; Ammit the Devourer waits at his feet.",  # Proposal
+	# --- Act XII (temporary number): the Temple of the Lioness ---
+	"bastet_hunter": "A cat-masked hunter of Bastet. She swims through the sand under your ring to your archers and mages, then bursts out with both daggers. A spell throws her out of the sand.",  # Proposal
+	"ushabti_statue": "A stone servant of the temple. Its row sleeps along the avenue until the eyes glow; then the stone walks, and weak blows barely chip it.",  # Proposal
+	"woken_colossus": "A great statue of the temple, woken from a long row. Its fists shake the flagstones: step out of the slam, and break it from range.",  # TUNING (not in GDD)
+	"lion_warden": "The Lion Warden: a stone lion-headed warrior who seals the hall and stands in its only door. Kill him to pass; his roar wakes the statues.",  # Proposal
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	"crocodile_warden": "A crocodile-headed warden of the river of the dead. He climbs out of the quicksand and drags your dead under.",  # Proposal
+	"devourers_whelp": "A young hippo-lion-crocodile beast that eats the Names of the dead before they can stand. Raise them before it reaches them.",  # Proposal
+	# --- Act XIII (temporary number): the Celestial Host ---
+	"lesser_light": "A small winged orb of light. They come down in swarms of twelve and wear no halo.",  # Proposal
+	"virtue": "A silver spearman with a mirror mask and four wings. His halo shrugs off the first blow of each kind: hold him with blockers.",  # Proposal (Grace)
+	"power": "A warrior angel with a blade of white flame. Her lunge cuts the first two bodies in its line.",  # Proposal
+	"choir_angel": "Her hymn heals every angel within her reach. Kill her first.",  # Proposal
+	"herald": "His trumpet calls a squad of the Host and pushes your ring back. Kill him on arrival.",  # Proposal
+	"dominion": "A sceptre of light rings: the angels near him move faster, and their halos come back. Kill him first.",  # Proposal (Grace)
+	"judge": "Sent when the scales of your sins tip a third. He comes for you, not your dead; killing him lightens the scales.",  # Proposal (Judgment)
+	# --- Act XIII (temporary number): the Silver Stair ---
+	"cherub": "Four faces and four wings full of eyes: its flaming sword sweeps all around it. Stay out of its reach.",  # Owner-approved proposal
+	"cherub_of_the_gate": "The guardian of the Gate of Pearl: its flaming sword turns a full circle every six seconds.",  # Owner-approved proposal (miniboss)
+	# --- Act XIII (temporary number): the Wheel of Thrones ---
+	"ophan": "A burning wheel within a wheel: it marks its line, rolls straight through your ring, then turns. A Bone Wall stops it; step aside.",  # Owner-approved proposal
+	"dominion_of_the_spheres": "A Dominion among the turning spheres: while he stands, every halo in the zone keeps coming back.",  # Owner-approved proposal (miniboss)
+	# --- Act XIII (temporary number): the Empyrean ---
+	"herald_of_the_seventh_trumpet": "The Herald of the Seventh Trumpet: each blast of his great trumpet calls down the squads of the Rose's earlier zones.",  # Owner-approved proposal (miniboss)
+	"seraiel": "Seraiel, Warden of the Gate: an archangel with a flaming sword who splits the way with walls of light.",  # Proposal
+	"throne": "The Throne: a colossal wheel within a wheel, its rims covered in eyes. It rolls, it gazes, and its core burns.",  # Proposal
+	"voice": "The Voice: a six-winged seraph whose face is never seen. When it lowers its wings, your dead stand still.",  # Proposal
+	# --- Act XIV (temporary number): the Age of Titans ---
+	"scuttler": "A tiny, fast, chittering beast. They come in swarms of twelve.",  # Proposal
+	"razorclaw": "A feathered hunter that runs in packs. The pack circles, holds, then rushes from the flanks: kill the alpha and it charges in blind.",  # Proposal (Packs)
+	"frill_spitter": "A frilled lizard that spits venom from range. Kill it on approach.",  # Proposal
+	"longneck": "A giant of the herds. It never attacks, but hurt it and the whole herd stampedes. Its bones rise as a Fossil Giant for you.",  # Proposal (Herds)
+	"duckbill": "A smaller herd beast whose crest horn hears a fight from far off and sends its herd running.",  # Proposal (Herds)
+	"skyraider": "A pterosaur thief. It dives on your crystals and flies them to its nest: shoot it down and the pile drops.",  # Proposal (Scavengers)
+	"tyrant": "A tyrant of the old world, all teeth and hunger. It swallows a summon whole and roars your ring still; burst it and the swallowed cut their way out.",  # Proposal
+	# --- Act XIV (temporary number): the Fern Basin ---
+	"bog_croc": "A crocodile that lies in the tar with only its eyes above it, then lunges at the edge of your ring.",  # Owner-approved proposal
+	"scarmaw_guard": "Scarmaw's alpha-guard: while she lives, every raptor you kill comes back to the great alpha. Kill her first.",  # Owner-approved proposal (Blood Up)
+	"ironjaw": "Ironjaw, the Nest Mother: a bulky predator who guards her nest. While it stands she shrugs off half of every blow.",  # Owner-approved proposal (miniboss)
+	"primeval_nest": "Ironjaw's nest of fern and eggshells. It hatches Scuttlers until it is broken.",  # Owner-approved proposal
+	# --- Act XIV (temporary number): the Great Plain ---
+	"horncharger": "A three-horned charger. It paws the ground, then runs down everything in its line; a rock stops it cold.",  # Owner-approved proposal
+	"clubtail": "An armoured beast whose plates shrug off small blows. Her bone club sweeps your ring apart.",  # Owner-approved proposal
+	"mother_clubtail": "Mother Clubtail, the armoured matriarch. While her herd grazes by her, she shrugs off half of every blow.",  # Owner-approved proposal (miniboss)
+	"scarmaw": "Scarmaw, the Great Raptor: the alpha of every pack in the basin. She hunts from the ferns.",  # Proposal
+	"ironbrow": "Old Ironbrow, the Horned Titan: he leads the stampede himself, and his charge breaks rock.",  # Proposal
+	"gravejaw": "Old Gravejaw, the Tyrant King: his roar calls every beast on the map, and he hunts only you.",  # Proposal
+	# --- Act XV (temporary number): the Turning Year ---
+	"thornling": "A twig creature of the Wild. They crawl out of the undergrowth in swarms of twelve.",  # Proposal
+	"dryad": "A spirit of the trees who plants thorn seeds round your army and heals the Wild. Kill her first.",  # Proposal (Overgrowth)
+	"treant": "A slow, walking oak. What it strikes, it roots in place.",  # Proposal
+	"corpse_bloom": "A great flower that feeds on the dead of the field and buds Thornlings. Break it.",  # Proposal
+	"fae_knight": "A knight of the fae in leaf armour, with a sword of thorn.",  # Proposal
+	"winter_fae": "A lady of the Winter Court. She comes only in winter, with bolts of frost.",  # Proposal (the Turning Year)
+	"great_stag": "A great stag of the old wood. Its antler charge scatters your ring.",  # Proposal
+	"wild_rider": "A spectral horseman of the Wild Hunt and his two hounds. The Hunt sweeps the wood in a line.",  # Proposal
+	"will_o_wisp": "A drifting light that draws your dead away from you. Kill it.",  # Proposal
+	"spore_mother": "A mushroom matron whose spores rot your dead and whose mould kills your blight.",  # Proposal
+	"stag_king": "The Stag King, the antlered lord of the Greenwood. He leads the Wild Hunt himself.",  # Proposal
+	# --- Act XV (temporary number): the Greenwood ---
+	"hunt_hound": "A hound of the Wild Hunt. Two run with every Rider, and sweep his line beside him.",  # Owner-approved proposal
+	"huntsman": "The Huntsman of the Wild Hunt: he blows his horn and leads three riders across the wood in one sweeping line.",  # Owner-approved proposal (miniboss)
+	# --- Act XV (temporary number): the Fae Court ---
+	"masked_courtier": "A courtier of the Summer Queen wearing her face. Strike it, and the mask falls.",  # Owner-approved proposal (the Masque)
+	"winter_prince": "The Winter Prince, the Summer Queen's rival. Where he walks, her summer freezes for one minute.",  # Owner-approved proposal (miniboss)
+	"summer_queen": "The Summer Queen of the fae. She wears many faces, and she will offer you a bargain.",  # Proposal
+	"green_mother": "The Green Mother, grown from the World-Tree: the whole year in one figure, half in bloom and half in frost.",  # Proposal
+	# --- Act XV (temporary number): the World-Tree ---
+	"gardener_of_roots": "The Gardener of Roots, a great treant that tends the World-Tree. Near him the roots grab in every season.",  # Owner-approved proposal (miniboss)
+	# --- Act XIV (temporary number): the Last Day ---
+	"stormwing": "A great pterosaur. Her wing gust blows your ring apart; she lands to peck, and then she can be hit.",  # Owner-approved proposal
+	"thunderwing": "Thunderwing, the Sky King: a giant pterosaur whose wing gusts clear the whole ring.",  # Owner-approved proposal (miniboss)
 }
 
 ## Sprite key of an entry whose art is not "<category folder>/<id>":
 ## entry id -> SpriteBank key ("" = draw its icon instead).
 const SPRITE_KEYS: Dictionary = {
+	# --- Act XI (temporary): the Barrow Fields --- (an open barrow has no unit sprite: the king's barrow stands for it)
+	"open_barrow": "norse/boss_barrow",
 	"profane_bishop": "summons/bishop",
 	"inquisitor": "enemies/inquisitor",
 	# --- Act II: Gullhaven Harbour (the Ancient Eye's art is in eye/) ---
@@ -554,6 +894,14 @@ const SPRITE_KEYS: Dictionary = {
 	# --- Act IV: the Asphodel Underworld --- (the Underworld's dead wear the Hoplite's art)
 	"shade_hoplite": "pantheon/hoplite",
 	"tartarus_warden": "pantheon/hoplite",
+	# --- Act X: the Maelstrom --- (the ghost crew wears the roster's art)
+	"ghost_deckhand": "corsair/deckhand",
+	"ghost_gunner": "corsair/musketeer",
+	"corsair_serpent": "corsair/sea_serpent",
+	# --- Act XI (temporary): Valgard --- (Sigrun's wing wears the shared valkyrie's art)
+	"wing_valkyrie": "norse/valkyrie",
+	# --- Act XII (temporary number): the Temple of the Lioness ---
+	"woken_colossus": "dynasty/sand_colossus",  # It wears the Sand Colossus's art (LionessTempleEnemyData)
 }
 
 ## Stat labels and record lines of the detail panel (format strings use
@@ -613,6 +961,42 @@ const LOCKED_HINT: Dictionary = {
 	"concord_vrask": "Slay one to record it.",  # TUNING (not in GDD) Act IX Vrask
 	"concord_luminous": "Slay one to record it.",  # TUNING (not in GDD) Act IX Luminous
 	"concord_bosses": "Face it to record it.",  # TUNING (not in GDD) Act IX bosses
+	# --- Act X: the Black Tide ---
+	"corsair_crew": "Slay one to record it.",  # TUNING (not in GDD) Act X
+	"corsair_sea": "Slay one to record it.",  # TUNING (not in GDD) Act X
+	"corsair_boats": "Sink one to record it.",  # TUNING (not in GDD) Act X
+	"corsair_bosses": "Face it to record it.",  # TUNING (not in GDD) Act X bosses
+	# --- Act XI (temporary): the Hall of the Slain ---
+	"norse_warriors": "Slay one to record it.",  # TUNING (not in GDD) the Norse act
+	"norse_hall": "Slay or take one to record it.",  # TUNING (not in GDD) the Norse act (a stone is taken)
+	"norse_wilds": "Slay one to record it.",  # TUNING (not in GDD) the Norse act
+	"norse_bosses": "Face it to record it.",  # TUNING (not in GDD) the Norse act bosses
+	# --- Act XII (temporary number): the Necropolis Dynasty ---
+	"dynasty_dead": "Slay one to record it.",  # TUNING (not in GDD) Act XII
+	"dynasty_beasts": "Slay one to record it.",  # TUNING (not in GDD) Act XII beasts
+	"dynasty_guard": "Slay one to record it.",  # TUNING (not in GDD) Act XII guard
+	"dynasty_priests": "Slay one to record it.",  # TUNING (not in GDD) Act XII priests
+	"dynasty_stone": "Break one to record it.",  # TUNING (not in GDD) Act XII stone
+	"dynasty_bosses": "Face it to record it.",  # TUNING (not in GDD) Act XII bosses
+	# --- Act XIII (temporary number): the Celestial Host ---
+	"host_lights": "Slay one to record it.",  # TUNING (not in GDD) Act XIII
+	"host_soldiers": "Slay one to record it.",  # TUNING (not in GDD) Act XIII soldiers
+	"host_choir": "Slay one to record it.",  # TUNING (not in GDD) Act XIII choir
+	"host_orders": "Slay one to record it.",  # TUNING (not in GDD) Act XIII orders
+	"host_bosses": "Face it to record it.",  # TUNING (not in GDD) Act XIII bosses
+	# --- Act XIV (temporary number): the Age of Titans ---
+	"primeval_swarm": "Slay one to record it.",  # TUNING (not in GDD) Act XIV
+	"primeval_hunters": "Slay one to record it.",  # TUNING (not in GDD) Act XIV hunters
+	"primeval_herds": "Slay one to record it.",  # TUNING (not in GDD) Act XIV herds
+	"primeval_fliers": "Slay one to record it.",  # TUNING (not in GDD) Act XIV fliers
+	"primeval_titans": "Slay one to record it.",  # TUNING (not in GDD) Act XIV titans
+	"primeval_bosses": "Face it to record it.",  # TUNING (not in GDD) Act XIV bosses
+	# --- Act XV (temporary number): the Turning Year ---
+	"wild_growth": "Slay one to record it.",  # TUNING (not in GDD) Act XV
+	"wild_fae": "Slay one to record it.",  # TUNING (not in GDD) Act XV
+	"wild_hunt": "Slay one to record it.",  # TUNING (not in GDD) Act XV
+	"wild_spirits": "Slay one to record it.",  # TUNING (not in GDD) Act XV
+	"wild_bosses": "Face it to record it.",  # TUNING (not in GDD) Act XV bosses
 	"evolution": "Undiscovered.",  # TUNING (not in GDD) owner rule: no hint
 }
 ## Name shown for a locked entry.
@@ -662,6 +1046,42 @@ const TAGS: Dictionary = {
 	"concord_vrask": "The Vrask",  # TUNING (not in GDD) Act IX
 	"concord_luminous": "The Luminous",  # TUNING (not in GDD) Act IX
 	"concord_bosses": "Stage boss",  # TUNING (not in GDD) Act IX bosses
+	# --- Act X: the Black Tide ---
+	"corsair_crew": "The Brotherhood",  # TUNING (not in GDD) Act X
+	"corsair_sea": "The sea",  # TUNING (not in GDD) Act X
+	"corsair_boats": "Boat",  # TUNING (not in GDD) Act X
+	"corsair_bosses": "Stage boss",  # TUNING (not in GDD) Act X bosses
+	# --- Act XI (temporary): the Hall of the Slain ---
+	"norse_warriors": "Warrior",  # TUNING (not in GDD) the Norse act
+	"norse_hall": "The Hall",  # TUNING (not in GDD) the Norse act
+	"norse_wilds": "The North",  # TUNING (not in GDD) the Norse act
+	"norse_bosses": "Stage boss",  # TUNING (not in GDD) the Norse act bosses
+	# --- Act XII (temporary number): the Necropolis Dynasty ---
+	"dynasty_dead": "The wrapped dead",  # TUNING (not in GDD) Act XII
+	"dynasty_beasts": "Sacred beast",  # TUNING (not in GDD) Act XII
+	"dynasty_guard": "The guard",  # TUNING (not in GDD) Act XII
+	"dynasty_priests": "The priesthood",  # TUNING (not in GDD) Act XII
+	"dynasty_stone": "Stone and jars",  # TUNING (not in GDD) Act XII
+	"dynasty_bosses": "Stage boss",  # TUNING (not in GDD) Act XII bosses
+	# --- Act XIII (temporary number): the Celestial Host ---
+	"host_lights": "Lesser light",  # TUNING (not in GDD) Act XIII
+	"host_soldiers": "Soldier of light",  # TUNING (not in GDD) Act XIII
+	"host_choir": "The choir",  # TUNING (not in GDD) Act XIII
+	"host_orders": "The high orders",  # TUNING (not in GDD) Act XIII
+	"host_bosses": "Stage boss",  # TUNING (not in GDD) Act XIII bosses
+	# --- Act XIV (temporary number): the Age of Titans ---
+	"primeval_swarm": "Swarm",  # TUNING (not in GDD) Act XIV
+	"primeval_hunters": "Hunter",  # TUNING (not in GDD) Act XIV
+	"primeval_herds": "Herd beast",  # TUNING (not in GDD) Act XIV
+	"primeval_fliers": "Flier",  # TUNING (not in GDD) Act XIV
+	"primeval_titans": "Titan",  # TUNING (not in GDD) Act XIV
+	"primeval_bosses": "Stage boss",  # TUNING (not in GDD) Act XIV bosses
+	# --- Act XV (temporary number): the Turning Year ---
+	"wild_growth": "What grows",  # TUNING (not in GDD) Act XV
+	"wild_fae": "Fae",  # TUNING (not in GDD) Act XV
+	"wild_hunt": "The Wild Hunt",  # TUNING (not in GDD) Act XV
+	"wild_spirits": "Spirit",  # TUNING (not in GDD) Act XV
+	"wild_bosses": "Stage boss",  # TUNING (not in GDD) Act XV bosses
 }
 
 # --- Layout (layout px at 1280x720; TUNING, not in GDD) -----------------------------
@@ -797,6 +1217,41 @@ const ACHIEVEMENT_ICONS: Dictionary = {
 	"the_hunter_hunted": "ach_the_hunter_hunted",  # TUNING (not in GDD)
 	# --- Act IX: the Ark ---
 	"last_harvest": "ach_last_harvest",  # TUNING (not in GDD)
+	# --- Act X: the Smuggler's Cutter ---
+	"not_one_aboard": "ach_not_one_aboard",  # TUNING (not in GDD)
+	# --- Act X: the Treasure Galleon ---
+	"walked_the_plank": "ach_walked_the_plank",  # TUNING (not in GDD) the art pass's badge
+	# --- Act X: the Maelstrom ---
+	"dead_men_tell_tales": "ach_dead_men_tell_tales",  # TUNING (not in GDD)
+	# --- Act XI (temporary): the Barrow Fields ---
+	"keep_the_fires": "ach_keep_the_fires",  # TUNING (not in GDD) (no badge PNG yet: the fallback icon)
+	# --- Act XI (temporary): Valgard ---
+	"holmgang": "ach_holmgang",  # TUNING (not in GDD) (no badge PNG yet: the fallback icon draws)
+	# --- Act XI (temporary): Vigrid ---
+	"twilight_of_the_wolf": "ach_twilight_of_the_wolf",  # TUNING (not in GDD) (no badge PNG yet: the fallback icon shows)
+	# --- Act XII (temporary number): the Necropolis of Sand ---
+	"no_jars_left": "ach_no_jars_left",  # TUNING (not in GDD)
+	# --- Act XII (temporary number): the Temple of the Lioness ---
+	"names_taken": "ach_names_taken",  # TUNING (not in GDD)
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	"a_light_heart": "ach_a_light_heart",  # TUNING (not in GDD)
+	# --- Act XIII (temporary number): the Silver Stair ---
+	"without_sin": "ach_without_sin",  # TUNING (not in GDD)
+	# --- Act XIII (temporary number): the Wheel of Thrones ---
+	"the_wheel_breaks": "ach_the_wheel_breaks",  # TUNING (not in GDD)
+	# --- Act XIII (temporary number): the Empyrean ---
+	"the_last_word": "ach_the_last_word",  # TUNING (not in GDD)
+	# --- Act XIV (temporary number): the Great Plain ---
+	"nothing_taken": "ach_nothing_taken",  # TUNING (not in GDD)
+	# --- Act XIV (temporary number): the Last Day ---
+	"trampled": "ach_trampled",  # TUNING (not in GDD)
+	"the_day_the_sky_fell": "ach_the_day_the_sky_fell",  # TUNING (not in GDD)
+	# --- Act XV (temporary number): the Greenwood ---
+	"scorched_earth": "ach_scorched_earth",  # TUNING (not in GDD)
+	# --- Act XV (temporary number): the Fae Court ---
+	"a_fair_bargain": "ach_a_fair_bargain",  # TUNING (not in GDD)
+	# --- Act XV (temporary number): the World-Tree ---
+	"the_first_spring": "ach_the_first_spring",  # TUNING (not in GDD)
 }
 ## IconGlyph kind drawn when an achievement badge PNG is missing.
 const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
@@ -858,6 +1313,41 @@ const ACHIEVEMENT_FALLBACK_ICONS: Dictionary = {
 	"the_hunter_hunted": "mirror_bones",
 	# --- Act IX: the Ark ---
 	"last_harvest": "tractor_lift",
+	# --- Act X: the Smuggler's Cutter ---
+	"not_one_aboard": "barnacle_bones",
+	# --- Act X: the Treasure Galleon ---
+	"walked_the_plank": "sea_legs",
+	# --- Act X: the Maelstrom ---
+	"dead_men_tell_tales": "anchor_drop",
+	# --- Act XI (temporary): the Barrow Fields ---
+	"keep_the_fires": "grave_frost",
+	# --- Act XI (temporary): Valgard ---
+	"holmgang": "calm_blood",
+	# --- Act XI (temporary): Vigrid ---
+	"twilight_of_the_wolf": "gungnir",
+	# --- Act XII (temporary number): the Necropolis of Sand ---
+	"no_jars_left": "embalmed_bones",
+	# --- Act XII (temporary number): the Temple of the Lioness ---
+	"names_taken": "dune_walkers",
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	"a_light_heart": "feathers_verdict",
+	# --- Act XIII (temporary number): the Silver Stair ---
+	"without_sin": "absolution",
+	# --- Act XIII (temporary number): the Wheel of Thrones ---
+	"the_wheel_breaks": "smoked_glass",
+	# --- Act XIII (temporary number): the Empyrean ---
+	"the_last_word": "revelation",
+	# --- Act XIV (temporary number): the Great Plain ---
+	"nothing_taken": "hoarders_bones",
+	# --- Act XIV (temporary number): the Last Day ---
+	"trampled": "thick_marrow",
+	"the_day_the_sky_fell": "meteor_call",
+	# --- Act XV (temporary number): the Greenwood ---
+	"scorched_earth": "fallow_ground",
+	# --- Act XV (temporary number): the Fae Court ---
+	"a_fair_bargain": "deadwood",
+	# --- Act XV (temporary number): the World-Tree ---
+	"the_first_spring": "root_and_rot",
 }
 ## Screen title (TITLE tier).
 const TITLE: String = "Codex"  # TUNING (not in GDD)
@@ -901,11 +1391,24 @@ static func is_known(cat: String, id: String) -> bool:
 					or CITY_CIVILIANS.has(id) or CITY_GANGS.has(id) or CITY_POLICE.has(id) \
 					or CITY_SWAT.has(id) or CITY_ARMY.has(id) or CITY_HEROES.has(id) \
 					or CONCORD_BROOD.has(id) or CONCORD_HARVESTERS.has(id) or CONCORD_VRASK.has(id) \
-					or CONCORD_LUMINOUS.has(id)  # Act IV to Act IX
+					or CONCORD_LUMINOUS.has(id) \
+					or CORSAIR_CREW.has(id) or CORSAIR_SEA.has(id) or CORSAIR_BOATS.has(id) \
+					or NORSE_WARRIORS.has(id) or NORSE_HALL.has(id) or NORSE_WILDS.has(id) \
+					or DYNASTY_DEAD.has(id) or DYNASTY_BEASTS.has(id) or DYNASTY_GUARD.has(id) \
+					or DYNASTY_PRIESTS.has(id) or DYNASTY_STONE.has(id) \
+					or HOST_LIGHTS.has(id) or HOST_SOLDIERS.has(id) or HOST_CHOIR.has(id) \
+					or HOST_ORDERS.has(id) or HOST_GUARDIANS.has(id) \
+					or PRIMEVAL_SWARM.has(id) or PRIMEVAL_HUNTERS.has(id) or PRIMEVAL_HERDS.has(id) \
+					or PRIMEVAL_FLIERS.has(id) or PRIMEVAL_TITANS.has(id) \
+					or WILD_GROWTH.has(id) or WILD_FAE.has(id) or WILD_HUNT.has(id) or WILD_SPIRITS.has(id)  # Act IV to Act XV (temporary numbers)
 		BOSS:
 			return BOSSES.has(id) or EYE_BOSSES.has(id) or EMPIRE_BOSSES.has(id) or PANTHEON_BOSSES.has(id) \
 					or SHOGUNATE_BOSSES.has(id) or INFERNO_BOSSES.has(id) or COURT_BOSSES.has(id) \
-					or CITY_BOSSES.has(id) or CONCORD_BOSSES.has(id)  # (Act IX last)
+					or CITY_BOSSES.has(id) or CONCORD_BOSSES.has(id) or CORSAIR_BOSSES.has(id) \
+					or NORSE_BOSSES.has(id) or DYNASTY_BOSSES.has(id) \
+					or HOST_BOSSES.has(id) \
+					or PRIMEVAL_BOSSES.has(id) \
+					or WILD_BOSSES.has(id)  # (Act XV, temporary, last)
 	return false
 
 
@@ -926,11 +1429,24 @@ static func total(cat: String) -> int:
 					+ CITY_CIVILIANS.size() + CITY_GANGS.size() + CITY_POLICE.size() \
 					+ CITY_SWAT.size() + CITY_ARMY.size() + CITY_HEROES.size() \
 					+ CONCORD_BROOD.size() + CONCORD_HARVESTERS.size() + CONCORD_VRASK.size() \
-					+ CONCORD_LUMINOUS.size()  # Act IV to Act IX
+					+ CONCORD_LUMINOUS.size() \
+					+ CORSAIR_CREW.size() + CORSAIR_SEA.size() + CORSAIR_BOATS.size() \
+					+ NORSE_WARRIORS.size() + NORSE_HALL.size() + NORSE_WILDS.size() \
+					+ DYNASTY_DEAD.size() + DYNASTY_BEASTS.size() + DYNASTY_GUARD.size() \
+					+ DYNASTY_PRIESTS.size() + DYNASTY_STONE.size() \
+					+ HOST_LIGHTS.size() + HOST_SOLDIERS.size() + HOST_CHOIR.size() \
+					+ HOST_ORDERS.size() + HOST_GUARDIANS.size() \
+					+ PRIMEVAL_SWARM.size() + PRIMEVAL_HUNTERS.size() + PRIMEVAL_HERDS.size() \
+					+ PRIMEVAL_FLIERS.size() + PRIMEVAL_TITANS.size() \
+					+ WILD_GROWTH.size() + WILD_FAE.size() + WILD_HUNT.size() + WILD_SPIRITS.size()  # Act IV to Act XV (temporary numbers)
 		BOSS:
 			return BOSSES.size() + EYE_BOSSES.size() + EMPIRE_BOSSES.size() + PANTHEON_BOSSES.size() \
 					+ SHOGUNATE_BOSSES.size() + INFERNO_BOSSES.size() + COURT_BOSSES.size() \
-					+ CITY_BOSSES.size() + CONCORD_BOSSES.size()  # (Act IX last)
+					+ CITY_BOSSES.size() + CONCORD_BOSSES.size() + CORSAIR_BOSSES.size() \
+					+ NORSE_BOSSES.size() + DYNASTY_BOSSES.size() \
+					+ HOST_BOSSES.size() \
+					+ PRIMEVAL_BOSSES.size() \
+					+ WILD_BOSSES.size()  # (Act XV, temporary, last)
 	return 0
 
 
@@ -966,6 +1482,24 @@ static func enemy_row(id: String) -> Dictionary:
 	var concord := EnemyDirector.concord_def(id)  # Act IX kinds ({} when none).
 	if not concord.is_empty():
 		return concord
+	var corsair := EnemyDirector.corsair_def(id)  # Act X kinds ({} when none).
+	if not corsair.is_empty():
+		return corsair
+	var norse := EnemyDirector.norse_def(id)  # The Hall of the Slain's kinds ({} when none).
+	if not norse.is_empty():
+		return norse
+	var dynasty := EnemyDirector.dynasty_def(id)  # Act XII (temporary) kinds ({} when none).
+	if not dynasty.is_empty():
+		return dynasty
+	var host := EnemyDirector.host_def(id)  # Act XIII (temporary) kinds ({} when none).
+	if not host.is_empty():
+		return host
+	var primeval := EnemyDirector.primeval_def(id)  # Act XIV (temporary) kinds ({} when none).
+	if not primeval.is_empty():
+		return primeval
+	var wild := EnemyDirector.wild_def(id)  # Act XV (temporary) kinds ({} when none).
+	if not wild.is_empty():
+		return wild
 	match id:
 		"alaric":
 			return EnemyData.BOSS

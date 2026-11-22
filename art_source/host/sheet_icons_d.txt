@@ -1,0 +1,8 @@
+A sheet of 4 separate pixel-art game ICON SYMBOLS in one row, evenly spaced with a wide empty gap between them, on a FULLY TRANSPARENT background (real alpha). Each symbol is simple, bold and centred in its part of the image, drawn as chunky low-resolution pixel art (each symbol about 24 pixels wide on a coarse grid, shown enlarged with crisp square pixels, nearest-neighbour, 1-pixel dark outline, flat colours, at most 3 shades per colour, light from the top-left). No frame, no badge background, no text, no letters.
+From left to right:
+1. THE WHEEL BREAKS: a silver wheel cracked in two with cerulean light leaking out of the crack.
+2. THE LAST WORD: a long silver trumpet with a white burst of sound rays from its bell.
+3. BOUND OPHAN: a small wheel of BONE-white bones with soul-teal glowing eyes (#3DCC94) along the rim.
+4. THRONE OF BONES: a double wheel of bone-white bones with soul-teal fire (#3DCC94) in the middle.
+Colours: starlight white #F4F7FF; pale silver #8A96AC #C9D2E0; cerulean #1F4F8F #3E8FD8 #9CC8F0; dawn rose #B07888 #F2B8C6; dark #0E1626. NO red, NO gold, NO yellow. Teal #3DCC94 only for items 3 and 4.
+Attached: an approved icon of this game: match its pixel size, outline weight and flat look (only the symbol, not its frame).

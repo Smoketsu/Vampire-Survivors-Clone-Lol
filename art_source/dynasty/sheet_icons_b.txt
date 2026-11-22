@@ -1,0 +1,8 @@
+A sheet of 4 separate pixel-art game ICON SYMBOLS in one row, evenly spaced with a wide empty gap between them, on a FULLY TRANSPARENT background (real alpha). Each symbol is simple, bold and centred in its part of the image, drawn as chunky low-resolution pixel art (each symbol about 24 pixels wide on a coarse grid, shown enlarged with crisp square pixels, nearest-neighbour, 1-pixel dark outline, flat colours, at most 3 shades per colour, light from the top-left). No frame, no badge background, no text, no letters, no hieroglyph writing.
+From left to right:
+1. DESERT FURY: a spiral of whirling sand and wind with a small red sun in its centre.
+2. HEAVY HEART: a dark red heart weighed down on one pan of a hanging scale, the pan sagging.
+3. EMBALMED BONES: a bone wrapped in linen bandage with a small scarab-blue gem on it.
+4. DUNE WALKERS: a leather sandal with a gold strap stepping on a sand dune ripple.
+Colours: sand #8C6B3E #D2B574 #F0DDA6; carnelian #7B1E16 #BF3B2B #E87855; linen #8F8670 #C9C0A4 #F0E8D2; lapis #2B54B8 #5F8BE6; bronze #6B5A22 #A38E3C #D2BB62; leather #4F3320 #8C6040; dark #0B0A10.
+Attached: an approved icon of this game: match its pixel size, outline weight and flat look (only the symbol, not its frame).

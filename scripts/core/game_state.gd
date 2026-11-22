@@ -270,6 +270,18 @@ var autotest_unlock_all: bool = false
 ## content wave 2 (MetaData "run" rows) in memory, as the game does; off by
 ## default so the default summaries (bounty, Soul Ash total) stay as before.
 var autotest_rewards: bool = false
+## Autotest: true when --keep-fires makes the bot a fire-keeper on a Norse
+## stage (Hall of the Slain integration): it walks to the brazier that has been
+## out longest before anything else but its own danger, to show that Keep the
+## Fires can be earned (LongWinter.keeper_point()). Off by default: the
+## default runs stay as before.
+var autotest_keep_fires: bool = false
+## Autotest (Act XV, temporary: the World-Tree): the Last Claim's slots forced
+## by --last-claim=id,id,... (GreenMotherData.SLOTS ids, in the order given; or
+## "all" for the fourteen in campaign order). Forced, the Green Mother begins
+## the Last Claim as she arrives, whatever her HP (the slots' check). Empty =
+## the normal seeded pick at a third of her HP.
+var autotest_last_claim: Array[String] = []
 ## Autotest: forced spawns from --spawn= ({"kind", "time" s, "count"}, in
 ## the order given; empty = none).
 var autotest_spawns: Array[Dictionary] = []
@@ -582,6 +594,17 @@ func _parse_args(args: PackedStringArray) -> void:
 				autotest_rewards = rv == "on"
 			else:
 				push_error("Unknown --rewards=%s (expected on or off)" % rv)
+		elif arg == "--keep-fires":
+			autotest_keep_fires = true
+		elif arg.begins_with("--last-claim="):
+			for id: String in arg.get_slice("=", 1).split(",", false):
+				if id == "all":
+					for row: Dictionary in GreenMotherData.SLOTS:
+						autotest_last_claim.append(String(row["id"]))
+				elif not LastClaim.slot_of(id).is_empty():
+					autotest_last_claim.append(id)
+				else:
+					push_error("Unknown --last-claim slot %s (GreenMotherData.SLOTS ids)" % id)
 		elif arg.begins_with("--spawn="):
 			for entry: String in arg.get_slice("=", 1).split(",", false):
 				var kind := entry.get_slice("@", 0)  # Enemy kind id.

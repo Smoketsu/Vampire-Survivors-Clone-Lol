@@ -1,0 +1,208 @@
+Godot Engine v4.3.stable.official.77dcf97d8 - https://godotengine.org
+
+[autotest] start: seed=7 speed=8x mortal=true timeout=1500s policy=evolve meta=none oath=0 pact=false classes=- spells=bone_spear,soul_siphon,corpse_explosion,plague_cloud
+[autotest] stage: two_truths
+[autotest] difficulty: necromancer | modifiers: none
+[autotest] character: gravecaller (starting spell shadow_bolt)
+[audio] main-thread startup 38.3 ms; 59 sfx ready after 490 ms, music loop after 537 ms (worker threads); display: headless
+[metric] t=60 avg_horde=1.8 now=2 cap=2 w2/2 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=2 lvl=3 kills=48 enemies=46 hp=120 boss_hp=-1 crystals=2 xp=46
+[metric]    summon dmg taken this window: mummy=97 mummy_female=58
+[metric]    alive by kind: { "mummy": 27, "mummy_female": 14, "cartouche": 5 } within260=27
+[autotest] t=01:00 lvl=3 kills=48 enemies=46 summons=2/2 projectiles=0 hp=120 step_avg=0.58ms
+[autotest]    unit FSM: { "ENGAGING": 2 }
+[metric] t=120 avg_horde=1.3 now=1 cap=2 w1/2 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=9 lvl=7 kills=194 enemies=54 hp=120 boss_hp=-1 crystals=25 xp=169
+[metric]    summon dmg taken this window: mummy=335 mummy_female=108 scarab_swarm=67
+[metric]    alive by kind: { "mummy": 35, "mummy_female": 10, "cartouche": 4, "scarab_swarm": 4, "canopic_jar": 1 } within260=21
+[autotest] t=02:00 lvl=7 kills=194 enemies=54 summons=1/2 projectiles=0 hp=120 step_avg=0.71ms
+[autotest]    unit FSM: { "ENGAGING": 1 }
+[metric] t=180 avg_horde=1.3 now=1 cap=2 w1/2 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=7 lvl=11 kills=398 enemies=64 hp=120 boss_hp=-1 crystals=47 xp=351
+[metric]    summon dmg taken this window: mummy=231 mummy_female=205 scarab_swarm=24
+[metric]    alive by kind: { "cartouche": 13, "mummy": 27, "mummy_female": 15, "scarab_swarm": 4, "khopesh_guard": 3, "canopic_jar": 1, "heka_priest": 1 } within260=35
+[autotest] t=03:00 lvl=11 kills=398 enemies=64 summons=1/2 projectiles=0 hp=120 step_avg=0.80ms
+[autotest]    unit FSM: { "ENGAGING": 1 }
+[metric] t=240 avg_horde=1.8 now=2 cap=2 w2/2 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=2 lvl=17 kills=615 enemies=53 hp=120 boss_hp=-1 crystals=29 xp=650
+[metric]    summon dmg taken this window: mummy=82 mummy_female=36 scarab_swarm=1 khopesh_guard_spin=43 khopesh_guard=8
+[metric]    alive by kind: { "scarab_swarm": 8, "mummy": 28, "mummy_female": 9, "khopesh_guard": 4, "cartouche": 2, "heka_priest": 2 } within260=1
+[autotest] t=04:00 lvl=17 kills=615 enemies=53 summons=2/2 projectiles=1 hp=120 step_avg=0.85ms
+[autotest]    unit FSM: { "FOLLOWING": 2 }
+[metric] t=300 avg_horde=1.9 now=2 cap=2 w2/2 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=1 lvl=20 kills=792 enemies=56 hp=120 boss_hp=-1 crystals=37 xp=873
+[metric]    summon dmg taken this window: mummy=5 mummy_female=3 khopesh_guard_spin=18 heka_priest=2
+[metric]    alive by kind: { "mummy": 31, "mummy_female": 6, "heka_priest": 5, "scarab_swarm": 7, "cartouche": 3, "khopesh_guard": 3, "canopic_jar": 1 } within260=11
+[autotest] t=05:00 lvl=20 kills=792 enemies=56 summons=2/2 projectiles=0 hp=120 step_avg=0.88ms
+[autotest]    unit FSM: { "ENGAGING": 1, "FOLLOWING": 1 }
+[metric] t=360 avg_horde=1.9 now=2 cap=2 w2/2 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=1 lvl=24 kills=987 enemies=56 hp=120 boss_hp=-1 crystals=40 xp=1172
+[metric]    summon dmg taken this window: mummy_female=7 scarab_swarm=7 khopesh_guard_spin=52 khopesh_guard=7 crocodile_warden_drag=51 crocodile_warden=24
+[metric]    alive by kind: { "cartouche": 4, "mummy_female": 14, "heka_priest": 4, "khopesh_guard": 7, "mummy": 14, "scarab_swarm": 5, "embalmer": 5, "crocodile_warden": 2, "canopic_jar": 1 } within260=6
+[autotest] t=06:00 lvl=24 kills=987 enemies=56 summons=2/2 projectiles=0 hp=120 step_avg=0.91ms
+[autotest]    unit FSM: { "RETURNING": 1, "FOLLOWING": 1 }
+[metric] t=420 avg_horde=1.7 now=2 cap=2 w2/2 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=3 lvl=27 kills=1202 enemies=67 hp=120 boss_hp=-1 crystals=50 xp=1547
+[metric]    summon dmg taken this window: scarab_swarm=2 khopesh_guard_spin=24 khopesh_guard=10 crocodile_warden_drag=90 crocodile_warden=34
+[metric]    alive by kind: { "mummy_female": 13, "khopesh_guard": 12, "mummy": 19, "cartouche": 3, "embalmer": 7, "scarab_swarm": 6, "crocodile_warden": 4, "canopic_jar": 1, "heka_priest": 2 } within260=2
+[autotest] t=07:00 lvl=27 kills=1202 enemies=67 summons=2/2 projectiles=0 hp=120 step_avg=0.95ms
+[autotest]    unit FSM: { "ENGAGING": 1, "FOLLOWING": 1 }
+[metric] t=480 avg_horde=1.5 now=2 cap=2 w2/2 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=6 lvl=31 kills=1399 enemies=60 hp=120 boss_hp=-1 crystals=40 xp=1952
+[metric]    summon dmg taken this window: mummy=7 mummy_female=6 scarab_swarm=10 khopesh_guard_spin=104 khopesh_guard=51 heka_priest=4 crocodile_warden_drag=194
+[metric]    alive by kind: { "mummy_female": 11, "mummy": 22, "khopesh_guard": 6, "heka_priest": 5, "embalmer": 4, "cartouche": 1, "scarab_swarm": 8, "crocodile_warden": 3 } within260=16
+[autotest] t=08:00 lvl=31 kills=1399 enemies=60 summons=2/2 projectiles=0 hp=120 step_avg=0.96ms
+[autotest]    unit FSM: { "ENGAGING": 2 }
+[metric] t=540 avg_horde=1.7 now=2 cap=2 w2/2 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=3 lvl=34 kills=1607 enemies=54 hp=120 boss_hp=-1 crystals=44 xp=2301
+[metric]    summon dmg taken this window: scarab_swarm=3 khopesh_guard_spin=59 crocodile_warden_drag=142 embalmer=4
+[metric]    alive by kind: { "scarab_swarm": 4, "mummy": 20, "khopesh_guard": 9, "crocodile_warden": 2, "embalmer": 4, "mummy_female": 12, "heka_priest": 2, "cartouche": 1 } within260=0
+[autotest] t=09:00 lvl=34 kills=1607 enemies=54 summons=2/2 projectiles=1 hp=120 step_avg=0.98ms
+[autotest]    unit FSM: { "FOLLOWING": 2 }
+[metric] t=600 avg_horde=2.0 now=2 cap=2 w2/2 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=36 kills=1814 enemies=47 hp=120 boss_hp=-1 crystals=68 xp=2657
+[metric]    summon dmg taken this window: khopesh_guard_spin=19 crocodile_warden_drag=39
+[metric]    alive by kind: { "embalmer": 5, "crocodile_warden": 6, "mummy_female": 7, "mummy": 16, "scarab_swarm": 5, "cartouche": 1, "heka_priest": 3, "khopesh_guard": 4 } within260=1
+[autotest] t=10:00 lvl=36 kills=1814 enemies=47 summons=2/2 projectiles=1 hp=120 step_avg=0.99ms
+[autotest]    unit FSM: { "FOLLOWING": 2 }
+[metric] t=660 avg_horde=1.8 now=2 cap=2 w2/2 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=2 lvl=39 kills=2021 enemies=70 hp=120 boss_hp=-1 crystals=54 xp=3104
+[metric]    summon dmg taken this window: khopesh_guard_spin=42 crocodile_warden_drag=128 crocodile_warden=36
+[metric]    alive by kind: { "mummy": 25, "khopesh_guard": 9, "mummy_female": 17, "scarab_swarm": 4, "embalmer": 6, "crocodile_warden": 3, "cartouche": 1, "heka_priest": 5 } within260=1
+[autotest] t=11:00 lvl=39 kills=2021 enemies=70 summons=2/2 projectiles=0 hp=120 step_avg=1.02ms
+[autotest]    unit FSM: { "FOLLOWING": 2 }
+[metric] t=720 avg_horde=2.0 now=2 cap=2 w2/2 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=42 kills=2238 enemies=67 hp=120 boss_hp=-1 crystals=69 xp=3522
+[metric]    summon dmg taken this window: 
+[metric]    alive by kind: { "embalmer": 8, "mummy": 24, "scarab_swarm": 6, "mummy_female": 12, "khopesh_guard": 10, "heka_priest": 5, "crocodile_warden": 2 } within260=2
+[autotest] t=12:00 lvl=42 kills=2238 enemies=67 summons=2/2 projectiles=1 hp=120 step_avg=1.05ms
+[autotest]    unit FSM: { "FOLLOWING": 2 }
+[metric] t=780 avg_horde=1.9 now=1 cap=2 w1/2 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=1 lvl=44 kills=2470 enemies=63 hp=120 boss_hp=-1 crystals=92 xp=3942
+[metric]    summon dmg taken this window: crocodile_warden_drag=99 devourers_whelp_gulp=55
+[metric]    alive by kind: { "mummy": 19, "mummy_female": 15, "scarab_swarm": 3, "khopesh_guard": 12, "heka_priest": 3, "embalmer": 6, "crocodile_warden": 2, "cartouche": 2, "devourers_whelp": 1 } within260=9
+[autotest] t=13:00 lvl=44 kills=2470 enemies=63 summons=1/2 projectiles=0 hp=120 step_avg=1.08ms
+[autotest]    unit FSM: { "RETURNING": 1 }
+[metric] t=840 avg_horde=1.7 now=1 cap=2 w1/2 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=4 lvl=46 kills=2693 enemies=56 hp=120 boss_hp=-1 crystals=124 xp=4300
+[metric]    summon dmg taken this window: devourers_whelp_gulp=180 devourers_whelp=65
+[metric]    alive by kind: { "mummy_female": 9, "crocodile_warden": 5, "khopesh_guard": 9, "mummy": 19, "heka_priest": 3, "scarab_swarm": 2, "cartouche": 2, "embalmer": 6, "devourers_whelp": 1 } within260=6
+[autotest] t=14:00 lvl=46 kills=2693 enemies=56 summons=1/2 projectiles=2 hp=120 step_avg=1.11ms
+[autotest]    unit FSM: { "ENGAGING": 1 }
+[metric] t=900 avg_horde=2.0 now=2 cap=2 w2/2 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=48 kills=2921 enemies=70 hp=120 boss_hp=-1 crystals=167 xp=4700
+[metric]    summon dmg taken this window: crocodile_warden_drag=58 devourers_whelp=46
+[metric]    alive by kind: { "mummy": 24, "embalmer": 3, "mummy_female": 17, "scarab_swarm": 5, "khopesh_guard": 10, "heka_priest": 4, "crocodile_warden": 6, "canopic_jar": 1 } within260=1
+[autotest] t=15:00 lvl=48 kills=2921 enemies=70 summons=2/2 projectiles=6 hp=120 step_avg=1.14ms
+[autotest]    unit FSM: { "FOLLOWING": 2 }
+[metric] t=960 avg_horde=1.9 now=2 cap=2 w2/2 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=1 lvl=50 kills=3163 enemies=73 hp=120 boss_hp=-1 crystals=231 xp=5067
+[metric]    summon dmg taken this window: crocodile_warden_drag=60
+[metric]    alive by kind: { "mummy": 30, "mummy_female": 11, "khopesh_guard": 12, "scarab_swarm": 5, "heka_priest": 3, "crocodile_warden": 5, "canopic_jar": 1, "embalmer": 6 } within260=1
+[autotest] t=16:00 lvl=50 kills=3163 enemies=73 summons=2/2 projectiles=5 hp=120 step_avg=1.18ms
+[autotest]    unit FSM: { "FOLLOWING": 2 }
+[autotest] boss spawned at 1020.0 s
+[autotest] Shadow Bolt aim switched to Strongest
+[metric] t=1020 avg_horde=2.0 now=2 cap=2 w2/2 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=51 kills=3452 enemies=68 hp=120 boss_hp=17825 crystals=250 xp=5414
+[metric]    summon dmg taken this window: 
+[metric]    alive by kind: { "mummy": 24, "mummy_female": 10, "heka_priest": 5, "khopesh_guard": 13, "cartouche": 5, "scarab_swarm": 2, "canopic_jar": 2, "crocodile_warden": 4, "embalmer": 2, "boss": 1 } within260=2
+[autotest] t=17:00 lvl=51 kills=3452 enemies=68 summons=2/2 projectiles=24 hp=120 step_avg=1.23ms
+[autotest]    unit FSM: { "FOLLOWING": 2 }
+[metric] t=1080 avg_horde=1.9 now=2 cap=2 w2/2 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=1 lvl=53 kills=3689 enemies=63 hp=120 boss_hp=5345 crystals=230 xp=5910
+[metric]    summon dmg taken this window: osiris_judgment=106 boss=7
+[metric]    alive by kind: { "mummy": 23, "khopesh_guard": 9, "embalmer": 5, "scarab_swarm": 6, "heka_priest": 2, "mummy_female": 13, "crocodile_warden": 3, "canopic_jar": 1, "boss": 1 } within260=0
+[autotest] t=18:00 lvl=53 kills=3689 enemies=63 summons=2/2 projectiles=19 hp=120 step_avg=1.25ms
+[autotest]    unit FSM: { "RETURNING": 2 }
+[autotest] boss defeated at 1105.3 s
+[autotest] build complete (only fallback cards left) at 18:27, level 58
+[metric] t=1140 avg_horde=5.6 now=8 cap=8 w8/8 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=1 lvl=59 kills=3911 enemies=53 hp=120 boss_hp=0 crystals=243 xp=7372
+[metric]    summon dmg taken this window: osiris_judgment=95 boss=19
+[metric]    alive by kind: { "mummy": 26, "mummy_female": 10, "khopesh_guard": 3, "scarab_swarm": 3, "crocodile_warden": 3, "embalmer": 4, "canopic_jar": 1, "heka_priest": 2, "cartouche": 1 } within260=0
+[autotest] t=19:00 lvl=59 kills=3911 enemies=53 summons=8/8 projectiles=21 hp=120 step_avg=1.27ms
+[autotest]    unit FSM: { "FOLLOWING": 8 }
+[autotest] countdown reached 0:00 at 1200.0 s - THE RECKONING begins
+[metric] t=1200 avg_horde=8.0 now=8 cap=8 w8/8 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=60 kills=4110 enemies=77 hp=120 boss_hp=0 crystals=248 xp=7614
+[metric]    summon dmg taken this window: 
+[metric]    alive by kind: { "mummy": 26, "khopesh_guard": 8, "mummy_female": 22, "embalmer": 3, "crocodile_warden": 3, "canopic_jar": 1, "cartouche": 2, "scarab_swarm": 11, "heka_priest": 1 } within260=0
+[autotest] t=20:00 lvl=60 kills=4110 enemies=77 summons=8/8 projectiles=21 hp=120 step_avg=1.28ms
+[autotest]    unit FSM: { "FOLLOWING": 8 }
+[autotest] ===== NECROPATHY AUTOTEST SUMMARY =====
+[autotest] result: VICTORY / RUN COMPLETE (run_complete)
+[autotest] time reached: 20:34 elapsed (1234.3 s game time, 203.7 s real time); past 0:00: 34.3 s; Reckoning waves: 4
+[autotest] kills: 4239 | level: 60
+[autotest] level pacing: 01:00=L3 03:00=L11 05:00=L20 10:00=L36 15:00=L48 17:00=L51 20:00=L60 | reached: L2@00:33 L5@01:26 L10@02:31 L15@03:32 L20@04:49 L25@06:22 L30@07:33 L35@09:20 L40@11:07 L45@13:09 L50@15:59 L55@18:26 L60@19:54
+[autotest] build complete: at 18:27, level 58
+[autotest] horde: 5 alive / capacity 8 (warrior 5/8, archer 0/0, mage 0/0, mender 0/0, warder 0/0, bishop 0/0, abomination 0/0, rogue 0/0, gargoyle 0/0, frost_wraith 0/0, bone_hound 0/0, banshee 0/0, corpse_catapult 0/0)
+[autotest] summons spawned: 56, died: 51, hard recalls: 0 (stall recalls: 0)
+[autotest] boss spawned: yes at 1020.0 s | boss defeated: yes at 1105.3 s | boss HP left: 0 / 17825
+[autotest] player HP: 0 / 120 (invulnerable: false)
+[autotest] picks (67): necrotic_expanse 1, vampiric_rite 1, bone_spear 1, vampiric_rite 2, soul_siphon 1, soul_siphon 2, necrotic_expanse 2, necrotic_expanse 3, bone_spear 2, soul_siphon 3, lingering_malediction 1, lingering_malediction 2, necrotic_expanse 4, bone_spear 3, corpse_explosion 1, corpse_explosion 2, vampiric_rite 3, corpse_explosion 3, vampiric_rite 4, corpse_explosion 4, soul_siphon 4, vampiric_rite 5, corpse_explosion 5, necrotic_expanse 5, soul_conduit 1, shade_stride 1, shade_stride 2, shade_stride 3, lingering_malediction 3, lingering_malediction 4, bone_spear 4, EVOLVE grave_eruption, shade_stride 4, shade_stride 5, bone_spear 5, EVOLVE ossuary_lance, soul_siphon 5, EVOLVE soul_rapture, lingering_malediction 5, shadow_bolt 2, soul_conduit 2, plague_cloud 1, plague_cloud 2, plague_cloud 3, plague_cloud 4, plague_cloud 5, EVOLVE pestilence, shadow_bolt 3, shadow_bolt 4, abyssal_focus 1, abyssal_focus 2, soul_conduit 3, shadow_bolt 5, soul_conduit 4, abyssal_focus 3, soul_conduit 5, EVOLVE void_barrage, abyssal_focus 4, abyssal_focus 5, warrior 2, warrior 3, warrior 4, warrior 5, dark_restoration, skip, skip, skip
+[autotest] wards on you: 0 total, absorbed 0 dmg | 0 wards in 0 s with 2+ Warders/Bishops alive (0.0 / min) | heal casts: 0 | ally barriers: 0, barrier dmg absorbed: 0
+[autotest] evolutions: grave_eruption@08:00, ossuary_lance@08:51, soul_rapture@09:34, pestilence@12:21, void_barrage@16:49
+[autotest] evolutions by type: spell: grave_eruption@08:00, ossuary_lance@08:51, soul_rapture@09:34, pestilence@12:21, void_barrage@16:49 | summon: none
+[autotest] summon evolutions: lich raised 0 (capped 0) | merge converted 0, dissolved 0 | aura pulses 0 | merged classes: none
+[autotest] winter revenant: shatters 0 (capped 0), shatter hits 0, shatter dmg 0 | death novas 0, nova hits 0, nova freezes 0, nova dmg 0
+[autotest] summon output by source (dmg/heal/shield): warrior=1885/0/0 bash=479/0/0
+[autotest] summon output by class (dmg/heal/shield): warrior=2365/0/0
+[autotest] recipe book: 5 / 71 discovered (void_barrage, ossuary_lance, soul_rapture, grave_eruption, pestilence) | Recipes view rows built: 71 (saved: false)
+[autotest] codex: 16 entries met this run (spell 5, summon 1, enemy 9, boss 1) | new to the save 16 | save: spell 5/45, summon 1/27, enemy 9/217, boss 1/36, evolutions 5/71
+[autotest] epilogue: parts=5 open=0 seen=0 panels=19 autoplay_pending=false
+[autotest] volleys: shots 28395 | hits 6950 | dmg 84636 | peak 130/320 | capped volleys 0 | boss hits capped 425 | barrages 13 | soul_siphon 47667, bone_spear 28709, shadow_bolt 6493, corpse_explosion 1376, plague_cloud 332, warrior 56
+[visual] adaptive quality: level 1, peak 1, steps down 3, up 2
+[autotest] victory screen: title=The Scales Are Empty best_overtime=34 new_record=true highlights=8
+[autotest] rebirth: fallen 3266 | cartouches 3156 (sealed by a jar 176), peak 22, hastened by Embalmers 399 | returned 367 (1st 256, 2nd 111, later 0) | stolen by a raise 0 | smashed 2746 (spell 2273, summon 59, other 414) | crumbled with a jar 40 | eaten 2 | refused: spent 110, cap 0, no jar 0 | jars 8 placed, 7 broken, refused 0
+[autotest] black land: on | quicksand peak live 10, added 187 | slow ticks: you 81, summons 337, enemies 2732 | sandstorms 4 (forced 0) at 5:00, 10:00, 15:00, 20:00, blew 154s, warned 3 | reach refreshes 7 | enemy fire hits 1512
+[autotest] heka: written 62 (casts 61, lost 6, refused 0) | jumps 33 (stuck 44) | ended bearer 3, expired 8, priest 51 | peak 3 | cursed summon-seconds 188 | summon curses 95
+[autotest] devourer's hour: began 20:00 | lanes 4 (refused 0) | summon hits 4 (dmg 1504) | hits on you 0 | cartouches eaten 2 | rebirth unlimited true
+[autotest] dynasty kinds (spawned/killed): dead: mummy 1624/1576 first 0:01 (dmg to you 3, to summons 760), mummy_female 1090/1061 first 0:01 (dmg to you 3, to summons 427) | beasts: scarab_swarm 610/600 first 1:03 (dmg to you 3, to summons 128), devourers_whelp 1/1 first 12:30 (dmg to you 0, to summons 111) | guard: khopesh_guard 508/495 first 2:50 (dmg to you 7, to summons 77), crocodile_warden 139/134 first 5:13 (dmg to you 20, to summons 94) | priests: heka_priest 200/195 first 2:50 (dmg to you 0, to summons 6), embalmer 170/169 first 4:10 (dmg to you 7, to summons 4) | stone: canopic_jar 8/7 first 1:41 (dmg to you 0, to summons 0) | khopesh spins 34 (hits 28) | scarab barrier torn 0 | embalmer heals 391
+[autotest] dynasty stage: two_truths (The Hall of Two Truths) | act 12 | playable true | boss osiris (script osiris) | enemy x1.55 HP / x1.45 dmg from 7:00 | soul ash x1.50 | reckoning kind khopesh_guard, devourer's hour true
+[autotest] two truths: scales: balance -12 (peaks -76 / +100), favour turned dynasty 2 / ma'at 1, time in favour ma'at 124s / none 970s / dynasty 139s, moved by returns +918, raises +0, steals +0, smashes -1373 | crocs risen 8 (refused 0)
+[autotest] two truths events (4): 5:30 crocodile_rise x2, 9:30 crocodile_rise x3, 12:30 devourers_whelp, 15:30 crocodile_rise x3
+[autotest] two truths kinds: crocodile warden 139/134, rises 139, drags 48 (drowned 30, dmg 1228) | devourer's whelp 1/1, names eaten 2 (healed 169, hunger peak 2), gulps 5 (hits 4), killed in 91s
+[autotest] osiris: judge: glyphs 12 (written 7), courts 6 (bodies 44), judgments 13 (hits 5) | weighing 17:23: toward you (shield broke for 4456 HP; a light heart) | devourer 18:23 (feasts 0, names eaten 0, charges 0, charge hits 0) | killed in 85s | dmg to you 34 (judgment 34, charge 0, touch 0), to summons 228
+[autotest] gravebow / bone colossus: gravebow volleys 0, splits 0 (+0 arrows), pierce hits 0, dmg 0 | curses applied 0 (refreshed 0), curse bonus dmg 0 | colossus dmg 0, stomps 0 | taunted enemies 0 | shrapnel bursts 0, hits 0, dmg 0
+[autotest] necro spells: bone_spear: Lv5 EVOLVED dmg=96913 (evolved 86111) boss=2533 volleys=1397 | soul_siphon: Lv5 EVOLVED dmg=76669 (evolved 63106) boss=1778 healed=44 summon_heal=390 bursts=865 | corpse_explosion: Lv5 EVOLVED dmg=92765 (evolved 79937) boss=1018 bursts=1330 chain=318 | plague_cloud: Lv5 EVOLVED dmg=66557 (evolved 66237) boss=1075 clouds=208 novas=180 rot_bonus_dmg=32257
+[autotest] later spells: death_mark: not taken | bone_wall: not taken | soul_chains: not taken | wither: not taken | raise_dead: not taken
+[autotest] later spell passives: grim_ledger Lv0 bonus_dmg=0 | spirit_binding Lv0 | restless_dead Lv0 | temporary summons spawned=0
+[autotest] horde passives: bone_plating Lv 0 (dmg prevented 0) | unholy_precision Lv 0 (crits 0, crit bonus dmg 0) | unholy_resilience Lv 0 (dmg prevented 0: area 0, holy 0) | bound_souls Lv 0 (soft recalls 0, hard recalls 0)
+[autotest] class passives: blood_scent Lv 0 (fast: Archers, Rogues, Gargoyles, Bone Hounds, Grave Drones, Succubi, Blood Spawn, Fallen Heroes, Ghost Saucers, Powder Wraiths) | mournsong Lv 0 (extra debuff s 0) | siegecraft Lv 0 (siege bonus dmg 0) | summon dmg to structures 80 (catapults 0)
+[autotest] synergies active at end: none | activations: none
+[autotest] synergy bonus: flesh_rampart hits=0 dmg=0 | killing_field hits=0 dmg=0 | death_from_above hits=0 dmg=0 | wild_hunt hits=0 dmg=0 | cold_blood hits=0 dmg=0 | shatterfall hits=0 dmg=0 | requiem hits=0 dmg=0 | charnel_menagerie hits=0 dmg=0 | baying frenzies=0 | marks staggered=0 swooped=0 | dash resets=0 | requiem +0s
+[autotest] level-up offers: hands 63, new-item cards 53, later items 21 (40%) in 17 hands (27%), distinct later items offered 15
+[autotest] level-up actions: rerolls used 2/2, banishes used 2/2 (banished: necrotic_vigor, soul_recycling), skips 3
+[autotest] shadow bolt: 33035 dmg in Nearest mode, 87782 dmg in Strongest mode; to boss: 3465 of 13398 total boss dmg
+[autotest] stats: ammit_time_none=1 boss_advance_time=12 boss_atk_judge_court=6 boss_atk_judge_glyphs=12 boss_atk_judgment=13 boss_atk_weighing=1 boss_atk_whelp_gulp=5 boss_kills=1 bossdmg_bash=18 bossdmg_bone_spear=1255 bossdmg_corpse_explosion=151 bossdmg_death_nova=84 bossdmg_eruption=463 bossdmg_eruption_spikes=555 bossdmg_lance=2533 bossdmg_pestilence=991 bossdmg_plague_cloud=93 bossdmg_rapture=1778 bossdmg_rapture_burst=0 bossdmg_shadow_bolt=932 bossdmg_soul_siphon=1036 bossdmg_void=3365 bossdmg_void_shard=100 bossdmg_warrior=37 bot_dash_crowd=1 bot_dash_telegraph=13 chest_count_1=8 chest_evolutions=5 chest_items=8 chests_opened=8 chests_pity=6 chests_spawned=8 corpse_bursts=1330 croc_drag_dmg=1228 croc_drags=48 croc_drowned=30 croc_rises=139 damage_dealt=542583 damage_to_player=80 damage_to_summons=3951 dash_distance=1540 dash_hits_avoided=1 dashes=14 death_novas=180 death_warrior_by_boss=2 death_warrior_by_crocodile_warden=4 death_warrior_by_crocodile_warden_drag=11 death_warrior_by_devourer=4 death_warrior_by_devourers_whelp=1 death_warrior_by_devourers_whelp_gulp=4 death_warrior_by_khopesh_guard=1 death_warrior_by_khopesh_guard_spin=3 death_warrior_by_mummy=11 death_warrior_by_mummy_female=6 death_warrior_by_scarab_swarm=4 devourer_lanes=4 devourer_summon_dmg=1504 devourer_summon_hits=4 dmg_bash=479 dmg_bolt=29145 dmg_bone_spear=28709 dmg_corpse=12827 dmg_corpse_explosion=1376 dmg_death_nova=18327 dmg_eruption=61909 dmg_eruption_spikes=18027 dmg_lance=86111 dmg_nova=1912 dmg_pestilence=47909 dmg_plague=320 dmg_plague_cloud=332 dmg_rapture=39420 dmg_rapture_burst=23686 dmg_resisted_boss=16576 dmg_resisted_mummy=-4198 dmg_resisted_mummy_female=-3024 dmg_shadow_bolt=6493 dmg_siphon=13562 dmg_soul_siphon=47667 dmg_spear=10802 dmg_void=81717 dmg_void_shard=9955 dmg_warrior=1885 dynasty_fire_hits=1512 embalmer_heals=391 enemy_healing=4040 eruption_chains=318 evolutions=5 flat_armor_absorbed_crocodile_warden=12354 heka_casts=61 heka_casts_lost=6 heka_ended_bearer=3 heka_ended_expired=8 heka_ended_priest=51 heka_jumps=33 heka_jumps_stuck=44 heka_written=62 khopesh_spin_hits=28 khopesh_spins=34 kill_boss=1 kill_canopic_jar=7 kill_crocodile_warden=134 kill_devourers_whelp=1 kill_embalmer=169 kill_heka_priest=195 kill_khopesh_guard=495 kill_mummy=1576 kill_mummy_female=1061 kill_scarab_swarm=600 kills_by_bash=16 kills_by_bolt=425 kills_by_bone_spear=162 kills_by_corpse=346 kills_by_corpse_explosion=20 kills_by_death_nova=106 kills_by_eruption=468 kills_by_eruption_spikes=150 kills_by_lance=422 kills_by_nova=26 kills_by_pestilence=234 kills_by_plague=1 kills_by_rapture=235 kills_by_rapture_burst=170 kills_by_shadow_bolt=26 kills_by_siphon=285 kills_by_soul_siphon=519 kills_by_spear=294 kills_by_void=228 kills_by_void_shard=29 kills_by_warrior=77 levelup_banishes=2 levelup_rerolls=2 levelup_skips=3 light_heart_wins=1 march_zones_entered=3 miniboss_chests=1 minibossdmg_bash=17 minibossdmg_bolt=1157 minibossdmg_bone_spear=787 minibossdmg_corpse_explosion=102 minibossdmg_death_nova=590 minibossdmg_eruption=524 minibossdmg_eruption_spikes=814 minibossdmg_lance=1439 minibossdmg_pestilence=1287 minibossdmg_plague_cloud=141 minibossdmg_rapture=1916 minibossdmg_rapture_burst=129 minibossdmg_shadow_bolt=5 minibossdmg_soul_siphon=1784 minibossdmg_warrior=90 nova_kills=26 osiris_court=44 osiris_devourer_at=1103 osiris_glyphs=7 osiris_judgment_hits=5 osiris_kill_time=85 osiris_shield_broken=4456 osiris_weighing_at=1043 osiris_weighing_result=-1 plague_clouds=208 player_dmg_from_crocodile_warden=20 player_dmg_from_embalmer=7 player_dmg_from_khopesh_guard=7 player_dmg_from_mummy=3 player_dmg_from_mummy_female=3 player_dmg_from_osiris_judgment=34 player_dmg_from_scarab_swarm=3 player_healing=45 priest_heals=0 priest_wards=0 pu_collected_feast=4 pu_collected_frenzy=3 pu_collected_hyper=2 pu_collected_nova=1 pu_collected_stasis=3 pu_expired_feast=1 pu_expired_frenzy=1 pu_expired_magnet=1 pu_pity_drops=5 pu_spawned_feast=5 pu_spawned_frenzy=4 pu_spawned_hyper=2 pu_spawned_magnet=1 pu_spawned_nova=1 pu_spawned_stasis=3 pu_uptime_frenzy=35 pu_uptime_hyper=19 pu_uptime_stasis=15 quicksand_added=187 quicksand_enemies=2732 quicksand_player=81 quicksand_summons=337 rallies=13 rally_buff_time=104 rally_heal=284 rally_knockbacks=18 rally_meter_fills=13 rally_minion_dmg=489 rally_raised=4 rally_recalled=5 rapture_bursts=865 rebirth_crumbled=40 rebirth_eaten=2 rebirth_embalmed=399 rebirth_jars=8 rebirth_jars_broken=7 rebirth_returned=367 rebirth_smashed=2746 reckoning_spawned=118 replacements=44 rot_bonus_dmg=32257 rot_kills=974 sandstorm_falls=3 sandstorm_reach_refreshes=7 sandstorm_time=154 sandstorm_warnings=3 sandstorms=4 scales_tipped_dynasty=2 scales_tipped_maat=1 siphon_healed=44 siphon_summon_heal=390 spawned_canopic_jar=8 spawned_cartouche=3156 spawned_crocodile_warden=139 spawned_devourers_whelp=1 spawned_embalmer=170 spawned_heka_priest=200 spawned_khopesh_guard=508 spawned_mummy=1624 spawned_mummy_female=1090 spawned_scarab_swarm=610 spear_volleys=1397 structdmg_bash=4 structdmg_bolt=235 structdmg_bone_spear=52 structdmg_corpse=41 structdmg_corpse_explosion=19 structdmg_death_nova=0 structdmg_eruption=34 structdmg_eruption_spikes=82 structdmg_lance=749 structdmg_nova=0 structdmg_pestilence=1 structdmg_plague=0 structdmg_plague_cloud=3 structdmg_rapture=539 structdmg_rapture_burst=5 structdmg_shadow_bolt=9 structdmg_siphon=185 structdmg_soul_siphon=105 structdmg_spear=146 structdmg_void=1378 structdmg_void_shard=31 structdmg_warrior=75 summon_curses=95 summon_curses_heka=62 summon_curses_heka_jump=33 summon_dmg_from_boss=27 summon_dmg_from_crocodile_warden=94 summon_dmg_from_crocodile_warden_drag=1097 summon_dmg_from_devourer=324 summon_dmg_from_devourers_whelp=111 summon_dmg_from_devourers_whelp_gulp=235 summon_dmg_from_embalmer=4 summon_dmg_from_heka_priest=6 summon_dmg_from_khopesh_guard=77 summon_dmg_from_khopesh_guard_spin=451 summon_dmg_from_mummy=760 summon_dmg_from_mummy_female=427 summon_dmg_from_osiris_judgment=201 summon_dmg_from_scarab_swarm=128 summon_healing=675 two_truths_crocs_risen=8 void_shards=4884 volley_barrages=13 ward_absorbed=0 warrior_bashes=136 warrior_kills=93 wave_events=14 whelp_eaten=2 whelp_gulp_hits=4 whelp_gulps=5 whelp_healed=169 whelp_hunger_peak=2 whelp_kill_time=91 whelp_spawned=1 xp_collected=7841 xp_dropped=7352
+[autotest] boss attacks: judge_glyphs=12 judge_court=6 judgment=13 weighing=1 ammit_feast=0 ammit_charge=0 | wrath: no | hammer soaked by undead: 0 | charges stopped by undead: 0 (shielding the player: 0) | judgment hits: 0 | call soldiers: 0 | holy zones boss/grave: 0/0
+[autotest] crimson march: zones entered 3 (final: Zone IV  -  The Throne of Osiris) | placed/destroyed/escaped: outposts 0/0/0 generators 0/0/0 carts 0/0/0 standards 0/0/0 | outpost reinforcements 0 | ward zones 0
+[autotest] march enemies: aura buff pulses 0 | halberd cleave hits 0 | dmg resisted: shieldbearer 0, boss 16576 | kills: shieldbearer=0 banner_bearer=0 halberdier=0
+[autotest] marshal vael: last stand no | cleave summon hits 0, soaked for the player 0 | command soldiers 0
+[autotest] march events (3): 5:00 zone_II, 10:00 zone_III, 15:00 zone_IV
+[autotest] stage events fired (0): 
+[autotest] templar charges: 0 (body-blocked by warriors: 0) | temporary summons spawned: 0
+[autotest] obstacle collisions resolved: player=180 summons=455 enemies=11237
+[autotest] class abomination: Lv 0, alive 0/0, deaths 0 | dmg 0 (abomination=0 abom_stomp=0) | abom_stomps=0 abom_stomp_hits=0
+[autotest] class rogue: Lv 0, alive 0/0, deaths 0 | dmg 0 (rogue=0 rogue_dash=0 rogue_bleed=0) | rogue_dashes=0 rogue_dash_hits=0
+[autotest] class gargoyle: Lv 0, alive 0/0, deaths 0 | dmg 0 (gargoyle=0 gargoyle_swoop=0) | gargoyle_swoops=0 gargoyle_swoop_hits=0
+[autotest] class frost_wraith: Lv 0, alive 0/0, deaths 0 | dmg 0 (frost_wraith=0) | frost_deep_freezes=0 frost_freezes=0 frost_boss_freezes=0 frost_frozen_seconds=0 frost_chills=0
+[autotest] class bone_hound: Lv 0, alive 0/0, deaths 0 | dmg 0 (bone_hound=0 hellhound=0 hellhound_burn=0 hellhound_trail=0) | hound_bites=0 hound_pack_bites=0 hound_pack_bonus_dmg=0 hellhound_burns=0 hellhound_trail_patches=0
+[autotest] class banshee: Lv 0, alive 0/0, deaths 0 | dmg 0 (banshee=0 keening_lady=0) | banshee_dirges=0 banshee_dirge_hits=0 dirge_debuff_seconds=0 keening_waves=0 keening_silenced=0 keening_heals_silenced=0
+[autotest] class corpse_catapult: Lv 0, alive 0/0, deaths 0 | dmg 0 (corpse_catapult=0 ossuary_engine=0 ossuary_shards=0) | catapult_volleys=0 catapult_boulders=0 catapult_boulder_hits=0 catapult_structure_dmg=0 ossuary_shard_fields=0 hazards_dropped=0
+[autotest] class specials: cancelled by recall 0 | ended inside an obstacle 0
+[autotest] special evolutions: shadow reaper: chain dashes 0, cooldown resets 0, bleed stacks added 0, max stacks 0, rogue bleed dmg (all) 0 | cathedral horror: stuns 0 (boss 0), stunned s 0.0, stone forms 0, stone s 0.0, dmg prevented by stone 0
+[autotest] grave step: dashes 14 (bot: crowd 1, hit 0, telegraph 13) | hits avoided in dash i-frames 1 | blocked 0, shortened by obstacles 0, ended inside an obstacle 0, avg length 110 px | charges 1, cooldown 5.00 s
+[autotest] dread rally: rallies 13 | meter fills 13, fill times s [134 66 79 64 68 71 70 63 72 55 63 58 50] (avg 70 s), meter now 7% | knockbacks 18 | summons called back 5 | heal 284 | minion dmg under buff 489 (est. +dmg part 139) | buff time 104 s
+[autotest] army formation: bone_ring: 1234s kills 4239 army_dmg 3951 recalls 0 spread max 275 mean 87
+[autotest] character: gravecaller (The Gravecaller) | starting spell shadow_bolt Lv 5 EVOLVED | Baseline stats (Max HP 120, move speed 110) | innate: none | characters unlocked this run: carrion_lord, bone_oracle, fallen_confessor, plague_scholar | unlocked in the profile: gravecaller, bone_oracle, fallen_confessor, carrion_lord, plague_scholar (saved: false)
+[autotest] stuck_units=0 (touching an obstacle: 0) {  }
+[metric] boss_hp_at_0=0 min_hp_before_0=85
+[autotest] peaks: enemies=122 summons=8 projectiles=51 effects=40 crystals=250
+[autotest] nodes created (pools): enemies=122 summons=8 projectiles=51 effects=40 crystals=250
+[autotest] simulation step: avg 1.29 ms, worst 26.39 ms
+[autotest] power-ups: spawned 16 (magnet=1 feast=5 hyper=2 stasis=3 frenzy=4 nova=1) | collected 13 (magnet=0 feast=4 hyper=2 stasis=3 frenzy=3 nova=1) | expired (magnet=1 feast=1 hyper=0 stasis=0 frenzy=1 nova=0) | lost at cap 0 | pity drops 5 | crystals pulled by Soul Magnet 0
+[autotest] buff uptime: hyper=20s (1.6%, refreshed 0) stasis=15s (1.2%, refreshed 0) frenzy=36s (2.9%, refreshed 0) | soul nova kills: 26
+[autotest] chests: spawned 8, opened 8 (x1=8 x3=0 x5=0), items granted 8 (evolutions 5), pity 6, lost at cap 0, left on ground 0
+[autotest]    chest 06:10 x1: necrotic_expanse 5
+[autotest]    chest 08:00 x1: EVOLVE grave_eruption
+[autotest]    chest 08:51 x1: EVOLVE ossuary_lance
+[autotest]    chest 09:34 x1: EVOLVE soul_rapture
+[autotest]    chest 12:21 x1: EVOLVE pestilence
+[autotest]    chest 14:02 x1: abyssal_focus 2
+[autotest]    chest 16:49 x1: EVOLVE void_barrage
+[autotest]    chest 18:27 x1: dark_restoration
+[autotest] chest beacon: chests marked 8, seen on screen 8 | max off-screen arrows at once 0 | ticks with an arrow 0 (0.0 s)
+[autotest] profane pact: taken no (final Lv 0; never offered or never picked) | oath tier 0 | extra XP from pact 0, from oath 0 | extra soul ash from pact 0, from oath 0
+[autotest] meta upgrades (--meta=none): none | revivals used: 0
+[autotest] soul ash: +655 (time 150 [20:00] + kills 127 [4239] + elites 0 [0] + boss 75 + reckoning 85 [34.3 s] = 437, bonus +0% = +0, pact +0, oath +0) | bounty 500 | new total 1155 | saved: false
+[autotest] difficulty: Necromancer (necromancer) | modifiers: none | foes: HP x0.800 (growth x1.00), dmg x1.000 (growth x1.00), spawn x1.250, speed x1.00, elite chance 0.000, boss HP x1.000 | XP x1.000 | soul ash: difficulty +0%, modifiers +0%, total x1.00
+[autotest] difficulty results: soul ash difficulty +0, modifiers +0 | trickle elites promoted: 0 | holy retribution bursts: 0 (dmg to you 0, to summons 0) | player max HP at start: 120
+[autotest] stage: The Hall of Two Truths | soul ash stage bonus +218 (x1.50) | stages unlocked by this run: none
+[autotest] hyper: off (Necromancer) | foes: HP growth x1.00, dmg growth x1.00, boss HP x1.000 | at 0:00 vs the standard game: HP x1.00, dmg x1.00 | soul ash hyper +0 (+0%) | Reckoning lasted 34.3 s past 0:00 | unlocked: false (by this run: false) | hyper clear recorded: no
+[autotest] skins: character gravecaller, worn default | this run: rot kills 974, high confessors slain 0, seraphine slain with all 4 roles 0 | lifetime: rot 974/5000, confessors 0/50, seraphine full army 0/1 | unlocked 45/184 (new: none) | setup row cards 6
+[autotest] rewards: achievements=1 (a_light_heart) titles=1 unlocks=title:light_of_heart | run: temp raised 0, min HP before 0:00 71%, evolutions 5, boss slain 85.3 s after arrival | one-run achievements met: untouchable, full_ossuary (not checked: --rewards=on) | worn title: none | title row choices 2
+[autotest] demo: on=false | acts=1 | stages=graveyard,crimson_march,sanctum | save=user://save.cfg | full_game_offers=0
+[autotest] feedback: url_set=true | report_chars=122/221/311 (main menu / pause / results samples built, max 1500) | url_chars=608 | opened=never (autotest)
+exit 0

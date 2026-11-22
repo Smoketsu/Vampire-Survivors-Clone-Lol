@@ -96,7 +96,43 @@ const ORDER := ["gravecaller", "umbral_warden", "voidcaller", "bone_oracle", "fa
 	# --- Act IX: the Proving Moon ---
 	"blooded",
 	# --- Act IX: the Ark ---
-	"starborn"]
+	"starborn",
+	# --- Act X: the Smuggler's Cutter ---
+	"marooned_quartermaster",
+	# --- Act X: the Treasure Galleon ---
+	"corsair_queen",
+	# --- Act X: the Maelstrom ---
+	"ghost_helmsman",
+	# --- Act XI (temporary): the Barrow Fields ---
+	"rune_seer",
+	# --- Act XI (temporary): Valgard ---
+	"shield_maiden_hero",
+	# --- Act XI (temporary): Vigrid ---
+	"berserker_hero",
+	# --- Act XII (temporary number): the Necropolis of Sand ---
+	"the_embalmer",
+	# --- Act XII (temporary number): the Temple of the Lioness ---
+	"lion_priestess",
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	"pharaohs_shade",
+	# --- Act XIII (temporary number): the Silver Stair ---
+	"fallen_herald",
+	# --- Act XIII (temporary number): the Wheel of Thrones ---
+	"blind_saint",
+	# --- Act XIII (temporary number): the Empyrean ---
+	"the_unveiled",
+	# --- Act XIV (temporary number): the Fern Basin ---
+	"fern_huntress",
+	# --- Act XIV (temporary number): the Great Plain ---
+	"herd_warden",
+	# --- Act XIV (temporary number): the Last Day ---
+	"skywatcher",
+	# --- Act XV (temporary number): the Greenwood ---
+	"horned_herald",
+	# --- Act XV (temporary number): the Fae Court ---
+	"changeling_princess",
+	# --- Act XV (temporary number): the World-Tree ---
+	"gravegardener"]
 ## The default character (RunConfig, fresh saves, the autotest): today's game.
 const DEFAULT_ID: String = "gravecaller"
 ## Spell level that unlocks a character (owner rule: reach Lv 5 with its spell
@@ -162,8 +198,32 @@ const STAT_LABELS := {
 ##                           she drops; Act VIII)
 ##   beetle_extra            BoneBeetles.on_enemy_killed (extra beetles in every
 ##                           burst; Act IX)
+##   grasp_extra_hands       BarrowGrasp._cast (extra hands in every ring; the
+##                           Barrow Fields, the Hall of the Slain)
 ##   soul_caster_extra_targets  SoulCaster._lock (extra targets each Soul
 ##                           Caster lock takes; Act IX)
+##   cannonade_extra_marks   Cannonade._volley (extra groups each Cannonade
+##                           volley marks; Act X, the Treasure Galleon)
+##   linen_mummy_life        LinenBind._raise_pending (s more each risen Mummy
+##                           lasts; Act XII, temporary)
+##   sword_reach_bonus       FlamingSword._reach (px more reach on every sweep;
+##                           Act XIII, temporary)
+##   wheel_radius_bonus      WheelOfEyes._cast (px more radius on every wheel;
+##                           Act XIII, temporary)
+##   revelation_stun_bonus   Revelation._flash (s more stun on every flash;
+##                           Act XIII, temporary)
+##   pack_leap_raptors       PackLeap._cast (raptors more on every cast;
+##                           Act XIV, temporary)
+##   meteor_radius_bonus     MeteorCall._cast (share more radius of every
+##                           meteor; Act XIV, temporary)
+##   stampede_length_bonus   Stampede._cast (share more run length of every
+##                           charger; Act XIV, temporary)
+##   wild_hunt_riders        WildHunt._cast (riders more in every line;
+##                           Act XV, temporary)
+##   glamour_copies          Glamour._cast (copies more in every cast;
+##                           Act XV, temporary)
+##   root_and_rot_radius_bonus RootAndRot._cast (share more radius of every
+##                           ring; Act XV, temporary)
 const INNATE_KEYS := ["orb_projectile_destroy", "blast_echo_delay", "blast_echo_damage", "spear_shard_max",
 	"spear_shard_cooldown", "summon_corpses", "grace_share", "grace_targets", "grace_range", "contagion_range",
 	"contagion_duration", "death_mark_slow", "bone_wall_duration", "soul_chains_extra_jumps", "wither_rot",
@@ -215,7 +275,43 @@ const INNATE_KEYS := ["orb_projectile_destroy", "blast_echo_delay", "blast_echo_
 	# --- Act IX: the Proving Moon ---
 	"soul_caster_extra_targets",
 	# --- Act IX: the Ark ---
-	"tractor_extra_lifts"]
+	"tractor_extra_lifts",
+	# --- Act X: the Smuggler's Cutter ---
+	"chain_extra",
+	# --- Act X: the Treasure Galleon ---
+	"cannonade_extra_marks",
+	# --- Act X: the Maelstrom ---
+	"anchor_extra",
+	# --- Act XI (temporary): the Barrow Fields ---
+	"grasp_extra_hands",
+	# --- Act XI (temporary): Valgard ---
+	"valkyrie_spear_extra_jumps",
+	# --- Act XI (temporary): Vigrid ---
+	"gungnir_extra_spears",
+	# --- Act XII (temporary number): the Necropolis of Sand ---
+	"linen_mummy_life",
+	# --- Act XII (temporary number): the Temple of the Lioness ---
+	"eye_reach_bonus",
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	"verdict_execute_bonus",
+	# --- Act XIII (temporary number): the Silver Stair ---
+	"sword_reach_bonus",
+	# --- Act XIII (temporary number): the Wheel of Thrones ---
+	"wheel_radius_bonus",
+	# --- Act XIII (temporary number): the Empyrean ---
+	"revelation_stun_bonus",
+	# --- Act XIV (temporary number): the Fern Basin ---
+	"pack_leap_raptors",
+	# --- Act XIV (temporary number): the Great Plain ---
+	"stampede_length_bonus",
+	# --- Act XIV (temporary number): the Last Day ---
+	"meteor_radius_bonus",
+	# --- Act XV (temporary number): the Greenwood ---
+	"wild_hunt_riders",
+	# --- Act XV (temporary number): the Fae Court ---
+	"glamour_copies",
+	# --- Act XV (temporary number): the World-Tree ---
+	"root_and_rot_radius_bonus"]
 
 ## Orbit radius (px) of the Bone Oracle's Ossuary Ward shards around him.
 const SHARD_ORBIT_RADIUS: float = 27.0  # TUNING (not in GDD)
@@ -947,6 +1043,460 @@ const CHARACTERS := {
 		"stats": {"max_hp": 5.0, "move_speed": 0.04},  # TUNING (not in GDD) a light, quick deserter
 		"sprite": "player/starborn",
 		"tint": Color(0.70, 0.86, 0.74),  # TUNING (not in GDD) a pale plasma green over the violet
+		"starts_unlocked": false,
+	},
+	# --- Act X: the Smuggler's Cutter ---
+	# The Marooned Quartermaster (Chain Shot's character; owner-approved Act X
+	# proposal "Rewards": "Chain Shot ... | The Marooned Quartermaster (male)"):
+	# MALE, a lean castaway quartermaster in the necromancer's violet (the art
+	# convention of the last acts, docs/last_acts/PLAN.md: a necromancer of the
+	# act's theme, never one of the Brotherhood): a tricorn, a peg leg, a rusted
+	# shackle and chain on one wrist, a ship's-lantern staff for his focus.
+	# Chain Shot must be unlocked (Captain Crow) before he can be earned, by
+	# the usual Lv 5 rule. Own decision on his innate (the proposal names
+	# none): Spare Shot, one more chain-shot a cast (ChainShot._cast()).
+	"marooned_quartermaster": {
+		"display_name": "The Marooned Quartermaster",  # Owner-approved proposal
+		"title": "They left him on a sandbar with one shot and no powder. He kept the shot.",
+		"spell": "chain_shot",
+		"innate": {
+			"id": "spare_shot", "name": "Spare Shot",
+			"description": "Chain Shot throws one more chain-shot.",
+			"values": {"chain_extra": 1.0},  # TUNING (not in GDD) one more chain-shot a cast
+		},
+		"stats": {"max_hp": 10.0, "move_speed": -0.03},  # TUNING (not in GDD) a castaway's hard hide, a peg leg
+		"sprite": "player/marooned_quartermaster",
+		"tint": Color(0.78, 0.70, 0.92),  # TUNING (not in GDD) the necromancer's violet (his art is violet already)
+		"starts_unlocked": false,
+	},
+	# --- Act X: the Treasure Galleon ---
+	# The Corsair Queen (Cannonade's character; owner-approved proposal
+	# "Rewards": "Cannonade ... | the Corsair Queen (figure style)"; the art
+	# convention of Nov 7, 2026: a necromancer of the act's theme, never a
+	# member of the Brotherhood): FEMALE, in the figure-redesign style (clothed,
+	# chest and hips covered): pale undead-touched skin, a plumed tricorn and a
+	# long coat in the necromancer's violet with bone-white trim and soul-teal
+	# light, a glowing cutlass for her casting focus (player/corsair_queen,
+	# its walk strip, bust rig and idle strip). Cannonade must be unlocked
+	# (Admiral Marrec) before she can be earned, by the usual Lv 5 rule. Own
+	# decision on her innate (the proposal names none): Queen's Ransom, her
+	# Cannonade marks one more group (Cannonade._volley()).
+	"corsair_queen": {
+		"display_name": "The Corsair Queen",  # Owner-approved proposal
+		"title": "She took the Admiral's fleet for her dead, and the sea for her throne.",
+		"spell": "cannonade",
+		"innate": {
+			"id": "queens_ransom", "name": "Queen's Ransom",
+			"description": "Cannonade marks one more group.",
+			"values": {"cannonade_extra_marks": 1.0},  # TUNING (not in GDD) extra marks a volley
+		},
+		"stats": {"max_hp": -5.0, "move_speed": 0.05},  # TUNING (not in GDD) a quick, lightly armoured captain
+		"sprite": "player/corsair_queen",
+		"tint": Color(0.80, 0.66, 0.92),  # TUNING (not in GDD) her own violet (the art is already the necromancer's colours)
+		"starts_unlocked": false,
+	},
+	# --- Act X: the Maelstrom ---
+	# The Ghost Helmsman (Anchor Drop's character; owner-approved proposal
+	# "Rewards": "Anchor Drop ... | The Ghost Helmsman (male)"; the owner's art
+	# convention of Nov 7, 2026: a necromancer of the act's theme, never one of
+	# the enemy faction): MALE, a broad drowned helmsman in a violet hooded
+	# oilskin with bone-white and soul-teal accents, pale undead skin, a
+	# wheel-topped lantern staff for his focus and an anchor charm
+	# (player/ghost_helmsman, the art pass's round 1). Anchor Drop must be
+	# unlocked (Vandermere) before he can be earned, by the usual Lv 5 rule.
+	# Own decision on his innate (the proposal names none): he held the Hollow
+	# Queen's helm in the deep, so his anchor never falls alone: Second Anchor,
+	# one more anchor a cast (AnchorDrop.step()).
+	"ghost_helmsman": {
+		"display_name": "The Ghost Helmsman",  # Owner-approved proposal
+		"title": "He held her helm through a hundred years of drowning.",
+		"spell": "anchor_drop",
+		"innate": {
+			"id": "second_anchor", "name": "Second Anchor",
+			"description": "Anchor Drop drops one more anchor.",
+			"values": {"anchor_extra": 1.0},  # TUNING (not in GDD) extra anchors a cast
+		},
+		"stats": {"max_hp": 15.0, "move_speed": -0.03},  # TUNING (not in GDD) a broad, steady helmsman
+		"sprite": "player/ghost_helmsman",
+		"tint": Color(0.72, 0.94, 0.86),  # TUNING (not in GDD) a pale spectre green over the violet
+		"starts_unlocked": false,
+	},
+	# --- Act XI (temporary): the Barrow Fields ---
+	# The Rune-Seer (Barrow Grasp's character; owner-approved proposal
+	# "Rewards": "Barrow Grasp ... | The Rune-Seer (female, figure style)"; the
+	# playable-character convention, docs/last_acts/PLAN.md: a necromancer of the
+	# act's theme, never one of the hall): FEMALE, in the figure-redesign style
+	# (fully clothed): a violet-robed volva necromancer with a grey fur mantle,
+	# pale undead-touched skin and a rune staff whose rune burns soul-teal (art
+	# player/rune_seer, glide, bust and idle strips). Barrow Grasp must be
+	# unlocked (Hrimgar) before she can be earned, by the usual Lv 5 rule. Own
+	# decision on her innate (the proposal names none): Rune of Binding, two
+	# more hands in every ring of Barrow Grasp (BarrowGrasp._cast()).
+	"rune_seer": {
+		"display_name": "The Rune-Seer",  # Owner-approved proposal
+		"title": "She read the barrows' runes backwards, and the dead in them answered.",
+		"spell": "barrow_grasp",
+		"innate": {
+			"id": "rune_of_binding", "name": "Rune of Binding",
+			"description": "Barrow Grasp raises two more hands in every ring.",
+			"values": {"grasp_extra_hands": 2.0},  # TUNING (not in GDD) extra hands a ring
+		},
+		"stats": {"max_hp": 5.0, "move_speed": 0.02},  # TUNING (not in GDD) a fur mantle against the winter
+		"sprite": "player/rune_seer",
+		"tint": Color(0.70, 0.78, 0.92),  # TUNING (not in GDD) frost blue over the violet (only without her art)
+		"starts_unlocked": false,
+	},
+	# --- Act XI (temporary): Valgard ---
+	# The Shield-Maiden (Valkyrie Spear's character; owner-approved proposal
+	# "Rewards": "Valkyrie Spear ... | The Shield-Maiden (female, figure
+	# style)"; owner note Nov 2026: every playable character is a purple
+	# necromancer of the act's theme): FEMALE, in the figure-redesign style
+	# (clothed), a purple-cloaked necromancer with a bone-rimmed shield and a
+	# soul-flame spear for her focus (the art pass's player/shield_maiden_hero,
+	# with glide and idle strips). Id shield_maiden_hero: "shield_maiden" is the
+	# enemy kind. Valkyrie Spear must be unlocked (Sigrun) before she can be
+	# earned, by the usual Lv 5 rule. Own decision on her innate (the proposal
+	# names none): Shield-Sister, her spear leaps once more
+	# (ValkyrieSpear._cast()).
+	"shield_maiden_hero": {
+		"display_name": "The Shield-Maiden",  # Owner-approved proposal
+		"title": "She stood in the shield wall until it fell. She raised it again.",
+		"spell": "valkyrie_spear",
+		"innate": {
+			"id": "shield_sister", "name": "Shield-Sister",
+			"description": "Valkyrie Spear leaps to one more foe.",
+			"values": {"valkyrie_spear_extra_jumps": 1.0},  # TUNING (not in GDD) extra leaps a cast
+		},
+		"stats": {"max_hp": 10.0, "move_speed": -0.03},  # TUNING (not in GDD) behind her shield: sturdier, a little slower
+		"sprite": "player/shield_maiden_hero",
+		"tint": Color(0.80, 0.70, 0.95),  # TUNING (not in GDD) a pale violet over the violet (her art replaces it)
+		"starts_unlocked": false,
+	},
+	# --- Act XI (temporary): Vigrid ---
+	# The Berserker (Gungnir's character; owner-approved proposal "Rewards":
+	# "Gungnir ... | The Berserker (male)"; id "berserker_hero", so it never
+	# meets the enemy kind "berserker"): MALE, a necromancer of the north in the
+	# necromancer's violet (docs/last_acts/PLAN.md, the art convention): a
+	# purple hood under a bear-skull crest, bone and soul-teal, one soul-teal axe
+	# held close as his casting focus (player/berserker_hero). Gungnir must be
+	# unlocked (Odin) before he can be earned, by the usual Lv 5 rule. Own
+	# decision on his innate (the proposal names none): the bear-shirt's fury
+	# throws one more spear a cast, at the next strongest foe (Gungnir.step()).
+	"berserker_hero": {
+		"display_name": "The Berserker",  # Owner-approved proposal
+		"title": "He put on the bear's skull and went to war with the dead.",
+		"spell": "gungnir",
+		"innate": {
+			"id": "bear_shirt", "name": "Bear-Shirt",
+			"description": "Gungnir throws one more spear.",
+			"values": {"gungnir_extra_spears": 1.0},  # TUNING (not in GDD) extra spears a cast
+		},
+		"stats": {"max_hp": 15.0, "move_speed": -0.03},  # TUNING (not in GDD) a heavy, hardy body
+		"sprite": "player/berserker_hero",
+		"tint": Color(0.86, 0.72, 0.70),  # TUNING (not in GDD) a bear-pelt warmth over the violet (the art carries the look)
+		"starts_unlocked": false,
+	},
+	# --- Act XII (temporary number): the Necropolis of Sand ---
+	# The Embalmer (Linen Bind's character; owner-approved proposal "Rewards":
+	# "Linen Bind ... | The Embalmer (female, figure style)"): FEMALE, in the
+	# figure-redesign style (clothed: chest and hips covered), a necromancer of
+	# the act's theme, never one of the Dynasty (docs/last_acts/PLAN.md: the
+	# art convention): a violet linen robe with bandage wraps, bone and
+	# soul-teal accents, a canopic-jar staff as her casting focus
+	# (player/the_embalmer, 56 px, walk and idle strips). Linen Bind must be
+	# unlocked (Anubis) before she can be earned, by the usual Lv 5 rule. Own
+	# decision on her innate (the proposal names none): Linen Ward, her
+	# Mummies last longer (LinenBind._raise_pending()).
+	"the_embalmer": {
+		"display_name": "The Embalmer",  # Owner-approved proposal
+		"title": "She wrapped the dead of a hundred tombs. Now they rise for her.",
+		"spell": "linen_bind",
+		"innate": {
+			"id": "linen_ward", "name": "Linen Ward",
+			"description": "Linen Bind's Mummies last 4 s longer.",
+			"values": {"linen_mummy_life": 4.0},  # TUNING (not in GDD) s more a risen Mummy lasts
+		},
+		"stats": {"max_hp": 5.0, "spell_area": 0.05},  # TUNING (not in GDD) wrapped in linen; her bandages reach a little wider
+		"sprite": "player/the_embalmer",
+		"tint": Color(0.86, 0.82, 0.92),  # TUNING (not in GDD) pale linen over the violet (her art replaces it)
+		"starts_unlocked": false,
+	},
+	# --- Act XII (temporary number): the Temple of the Lioness ---
+	# The Lion-Priestess (Burning Eye's character; proposal "Rewards": "Burning
+	# Eye ... | The Lion-Priestess (female, figure style)"): FEMALE, in the
+	# figure-redesign style (clothed), a necromancer of the act's theme, never a
+	# member of the Dynasty (docs/last_acts/PLAN.md): a violet priestess dress
+	# under a cream lioness-head head-dress with a violet mane, bone and
+	# soul-teal accents, a sun-disc staff as her focus (assets/sprites/player/
+	# lion_priestess.png, its walk and idle strips). Burning Eye must be
+	# unlocked (Sekhmet) before she can be earned, by the usual Lv 5 rule. Own
+	# decision on her innate (the proposal names none): the Lioness's Gaze, her
+	# eye's beam reaches farther (BurningEye._length()).
+	"lion_priestess": {
+		"display_name": "The Lion-Priestess",  # Owner-approved proposal
+		"title": "She served the lioness. Now the lioness's eye serves the dead.",
+		"spell": "burning_eye",
+		"innate": {
+			"id": "lioness_gaze", "name": "Lioness's Gaze",
+			"description": "Burning Eye's beam reaches a fifth farther.",
+			"values": {"eye_reach_bonus": 0.2},  # TUNING (not in GDD) x 1 + this on the beam's length
+		},
+		"stats": {"max_hp": -5.0, "spell_area": 0.05},  # TUNING (not in GDD) a priestess: a little frailer, her sun a little wider
+		"sprite": "player/lion_priestess",
+		"tint": Color(0.95, 0.78, 0.55),  # TUNING (not in GDD) a sun-warm sand over the violet
+		"starts_unlocked": false,
+	},
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	# The Pharaoh's Shade (Feather's Verdict's character; owner-approved
+	# proposal "Rewards": "Osiris and Ammit | Feather's Verdict ... | The
+	# Pharaoh's Shade (male)"; docs/last_acts/PLAN.md: every playable character
+	# is a necromancer of the act's theme, never one of the enemy faction):
+	# MALE, a violet-robed spectral pharaoh in a nemes, a crook staff with a soul
+	# flame (art player/pharaohs_shade). Feather's Verdict must be unlocked
+	# (Osiris and Ammit) before he can be earned, by the usual Lv 5 rule. Own
+	# decision on his innate (the proposal names none): the crook and flail of a
+	# king who once judged the dead himself: his feathers execute foes a little
+	# healthier (FeathersVerdict._land()).
+	"pharaohs_shade": {
+		"display_name": "The Pharaoh's Shade",  # Owner-approved proposal
+		"title": "He was weighed once. Now he weighs.",
+		"spell": "feathers_verdict",
+		"innate": {
+			"id": "crook_and_flail", "name": "Crook and Flail",
+			"description": "Feather's Verdict executes foes 5% healthier.",
+			"values": {"verdict_execute_bonus": 0.05},  # TUNING (not in GDD) share of max HP added to the execute line
+		},
+		"stats": {"max_hp": 10.0, "move_speed": -0.03},  # TUNING (not in GDD) a king's bearing: sturdier, a little slower
+		"sprite": "player/pharaohs_shade",
+		"tint": Color(0.84, 0.76, 0.52),  # TUNING (not in GDD) a dull royal gold over the violet
+		"starts_unlocked": false,
+	},
+	# --- Act XIII (temporary number): the Silver Stair ---
+	# The Fallen Herald (Flaming Sword's character; owner-approved proposal
+	# "Rewards": "Seraiel | Flaming Sword ... | The Fallen Herald (male)";
+	# docs/last_acts/PLAN.md: every playable character is a necromancer of the
+	# act's theme, never one of the Host): MALE, a violet robe and a torn violet
+	# cope, one broken bone-white wing, a dark trumpet-headed staff with a soul
+	# flame (art player/fallen_herald, docs/host/ART_MANIFEST.md). Flaming Sword
+	# must be unlocked (Seraiel) before he can be earned, by the usual Lv 5
+	# rule. Own decision on his innate (the proposal names none): Torn Wing,
+	# the herald who fell from the Stair still swings the Gate's sword long:
+	# his sweeps reach farther (FlamingSword._reach()).
+	"fallen_herald": {
+		"display_name": "The Fallen Herald",  # Owner-approved proposal
+		"title": "He sounded the trumpet once. Now he answers to the dead.",
+		"spell": "flaming_sword",
+		"innate": {
+			"id": "torn_wing", "name": "Torn Wing",
+			"description": "Flaming Sword reaches 20 px farther.",
+			"values": {"sword_reach_bonus": 20.0},  # TUNING (not in GDD) px more reach on every sweep
+		},
+		"stats": {"max_hp": 5.0, "move_speed": 0.03},  # TUNING (not in GDD) a herald's stride: a little quicker
+		"sprite": "player/fallen_herald",
+		"tint": Color(0.80, 0.84, 0.94),  # TUNING (not in GDD) a pale fallen silver over the violet (his art replaces it)
+		"starts_unlocked": false,
+	},
+	# --- Act XIII (temporary number): the Wheel of Thrones ---
+	# The Blind Saint (Wheel of Eyes' character; owner-approved proposal
+	# "Rewards": "The Throne | Wheel of Eyes ... | The Blind Saint (female,
+	# figure style)"; docs/last_acts/PLAN.md: every playable character is a
+	# necromancer of the act's theme, never one of the Host): FEMALE, in the
+	# figure-redesign style (fully clothed): a violet gown, a violet blindfold,
+	# a staff ringed with a bone wheel of closed eyes (art player/blind_saint,
+	# walk and idle strips, docs/host/ART_MANIFEST.md). Wheel of Eyes must be
+	# unlocked (the Throne) before she can be earned, by the usual Lv 5 rule.
+	# Own decision on her innate (the proposal names none): Inner Sight, she
+	# who closed her eyes to the Throne's sees with the wheel's: her wheels are
+	# larger (WheelOfEyes._cast()).
+	"blind_saint": {
+		"display_name": "The Blind Saint",  # Owner-approved proposal
+		"title": "She would not look on the Throne. Now its eyes look for her.",
+		"spell": "wheel_of_eyes",
+		"innate": {
+			"id": "inner_sight", "name": "Inner Sight",
+			"description": "Wheel of Eyes' wheels are 6 px larger.",
+			"values": {"wheel_radius_bonus": 6.0},  # TUNING (not in GDD) px more radius on every wheel
+		},
+		"stats": {"max_hp": -5.0, "spell_area": 0.05},  # TUNING (not in GDD) a frail saint whose sight reaches wide
+		"sprite": "player/blind_saint",
+		"tint": Color(0.86, 0.82, 0.96),  # TUNING (not in GDD) a pale lilac over the violet (her art replaces it)
+		"starts_unlocked": false,
+	},
+	# --- Act XIII (temporary number): the Empyrean ---
+	# The Unveiled (Revelation's character; owner-approved proposal "Rewards":
+	# "The Voice | Revelation ... | The Unveiled (female, figure style; an angel
+	# who looked on the necromancer and fell)"; docs/last_acts/PLAN.md: every
+	# playable character is a necromancer of the act's theme in violet): FEMALE,
+	# in the figure-redesign style (fully clothed): a violet dress, a lowered
+	# violet veil, small grey wings folded, a staff of a dead star (art
+	# player/the_unveiled, walk and idle strips, docs/host/ART_MANIFEST.md).
+	# Revelation must be unlocked (the Voice) before she can be earned, by the
+	# usual Lv 5 rule. Own decision on her innate (the proposal names none):
+	# Lifted Veil, she who looked on the necromancer and fell holds the light
+	# longer: her flashes stun longer (Revelation._flash()).
+	"the_unveiled": {
+		"display_name": "The Unveiled",  # Owner-approved proposal
+		"title": "She lifted her veil to look on you, and fell.",
+		"spell": "revelation",
+		"innate": {
+			"id": "lifted_veil", "name": "Lifted Veil",
+			"description": "Revelation stuns 0.3 s longer.",
+			"values": {"revelation_stun_bonus": 0.3},  # TUNING (not in GDD) s more stun on every flash
+		},
+		"stats": {"max_hp": -5.0, "move_speed": 0.04},  # TUNING (not in GDD) a frail fallen angel, light on her feet
+		"sprite": "player/the_unveiled",
+		"tint": Color(0.90, 0.86, 0.98),  # TUNING (not in GDD) a pale violet light over the violet (her art replaces it)
+		"starts_unlocked": false,
+	},
+	# --- Act XIV (temporary number): the Fern Basin ---
+	# The Fern Huntress (Pack Leap's character; owner-approved proposal
+	# "Rewards": "Scarmaw | Pack Leap ... | The Fern Huntress (female, figure
+	# style)"; docs/last_acts/PLAN.md: every playable character is a
+	# necromancer of the act's theme in violet, never a beast): FEMALE, in the
+	# figure-redesign style (fully clothed): violet hunting leathers and a violet
+	# fur-trimmed cloak, a raptor-skull headdress, a bone spear-staff with a
+	# soul flame (art player/fern_huntress, walk and idle strips,
+	# docs/titans/ART_MANIFEST.md). Pack Leap must be unlocked (Scarmaw) before
+	# she can be earned, by the usual Lv 5 rule. Own decision on her innate (the
+	# proposal names none): Hunter's Mark, she runs with one more raptor
+	# (PackLeap._cast()).
+	"fern_huntress": {
+		"display_name": "The Fern Huntress",  # Owner-approved proposal
+		"title": "She hunted the hunters of the basin, then raised them.",
+		"spell": "pack_leap",
+		"innate": {
+			"id": "hunters_mark", "name": "Hunter's Mark",
+			"description": "Pack Leap sends one more raptor.",
+			"values": {"pack_leap_raptors": 1.0},  # TUNING (not in GDD) raptors more on every cast
+		},
+		"stats": {"max_hp": -5.0, "move_speed": 0.05},  # TUNING (not in GDD) a huntress: light on her feet
+		"sprite": "player/fern_huntress",
+		"tint": Color(0.80, 0.94, 0.78),  # TUNING (not in GDD) a pale fern green over the violet (her art replaces it)
+		"starts_unlocked": false,
+	},
+	# --- Act XIV (temporary number): the Great Plain ---
+	# The Herd-Warden (Stampede's character; owner-approved proposal "Rewards":
+	# "Old Ironbrow | Stampede ... | The Herd-Warden (male)";
+	# docs/last_acts/PLAN.md: every playable character is a necromancer of the
+	# act's theme in violet, never a beast): MALE: heavy violet robes over a
+	# bone-plated mantle, a ceratopsian skull shoulder piece, a horn-topped
+	# staff (art player/herd_warden, walk strip, docs/titans/ART_MANIFEST.md).
+	# Stampede must be unlocked (Old Ironbrow) before he can be earned, by the
+	# usual Lv 5 rule. Own decision on his innate (the proposal names none):
+	# Lead Bull, his chargers run farther (Stampede._cast()).
+	"herd_warden": {
+		"display_name": "The Herd-Warden",  # Owner-approved proposal
+		"title": "He walked at the head of the old herds, and they follow him still.",
+		"spell": "stampede",
+		"innate": {
+			"id": "lead_bull", "name": "Lead Bull",
+			"description": "Stampede's chargers run 40% farther.",
+			"values": {"stampede_length_bonus": 0.4},  # TUNING (not in GDD) share more run length
+		},
+		"stats": {"max_hp": 10.0, "move_speed": -0.05},  # TUNING (not in GDD) a heavy warden: tough, a little slow
+		"sprite": "player/herd_warden",
+		"tint": Color(0.94, 0.86, 0.72),  # TUNING (not in GDD) a pale dust ochre over the violet (his art replaces it)
+		"starts_unlocked": false,
+	},
+	# --- Act XIV (temporary number): the Last Day ---
+	# The Skywatcher (Meteor Call's character; owner-approved proposal
+	# "Rewards": "Old Gravejaw | Meteor Call ... | The Skywatcher (female,
+	# figure style)"; docs/last_acts/PLAN.md: every playable character is a
+	# necromancer of the act's theme in violet, never a beast): FEMALE, in the
+	# figure-redesign style (fully clothed): a violet star-robed dress, a bone
+	# astrolabe at the hip, a staff crowned with a small falling-star stone (art
+	# player/skywatcher, walk and idle strips, docs/titans/ART_MANIFEST.md).
+	# Meteor Call must be unlocked (Old Gravejaw, slain before the impact)
+	# before she can be earned, by the usual Lv 5 rule. Own decision on her
+	# innate (the proposal names none): Star Reader, her meteors fall wider
+	# (MeteorCall._cast()).
+	"skywatcher": {
+		"display_name": "The Skywatcher",  # Owner-approved proposal
+		"title": "She read the falling star in the sky, and called it down herself.",
+		"spell": "meteor_call",
+		"innate": {
+			"id": "star_reader", "name": "Star Reader",
+			"description": "Meteor Call's meteors strike 30% wider.",
+			"values": {"meteor_radius_bonus": 0.3},  # TUNING (not in GDD) share more radius
+		},
+		"stats": {"max_hp": -5.0, "spell_area": 0.05},  # TUNING (not in GDD) a stargazer: frail, a wide reach
+		"sprite": "player/skywatcher",
+		"tint": Color(0.86, 0.84, 0.98),  # TUNING (not in GDD) a pale star-violet (her art replaces it)
+		"starts_unlocked": false,
+	},
+	# --- Act XV (temporary number): the Greenwood ---
+	# The Horned Herald (Wild Hunt's character; owner-approved proposal
+	# "Rewards": "The Stag King | Wild Hunt ... | The Horned Herald (male)";
+	# docs/last_acts/PLAN.md: every playable character is a necromancer of the
+	# act's theme in violet, never a fae): MALE: violet hunting robes with a
+	# bone-antler hood, a hunting horn of bone at the hip, a staff with a soul
+	# flame between antler tines (art player/horned_herald, walk strip,
+	# docs/year/ART_MANIFEST.md). Wild Hunt must be unlocked (the Stag King)
+	# before he can be earned, by the usual Lv 5 rule. Own decision on his
+	# innate (the proposal names none): Call of the Horn, one more rider in
+	# every line (WildHunt._cast()).
+	"horned_herald": {
+		"display_name": "The Horned Herald",  # Owner-approved proposal
+		"title": "He blew the Stag King's horn, and the Hunt rode for him.",
+		"spell": "wild_hunt",
+		"innate": {
+			"id": "call_of_the_horn", "name": "Call of the Horn",
+			"description": "Wild Hunt sends one more rider in every line.",
+			"values": {"wild_hunt_riders": 1.0},  # TUNING (not in GDD) riders more in every line
+		},
+		"stats": {"max_hp": 5.0, "move_speed": -0.03},  # TUNING (not in GDD) a herald of the hunt: sturdy, a little slower
+		"sprite": "player/horned_herald",
+		"tint": Color(0.82, 0.94, 0.80),  # TUNING (not in GDD) a pale moss green over the violet (his art replaces it)
+		"starts_unlocked": false,
+	},
+	# --- Act XV (temporary number): the Fae Court ---
+	# The Changeling Princess (Glamour's character; owner-approved proposal
+	# "Rewards": "The Summer Queen | Glamour ... | The Changeling Princess
+	# (female, figure style)"; docs/last_acts/PLAN.md: every playable character
+	# is a necromancer of the act's theme in violet, never a fae): FEMALE, in the
+	# figure-redesign style, fully clothed: a violet gown with gossamer-leaf
+	# layers, a bone mask held on a stick, a slim wand with a soul-teal moth (art
+	# player/changeling_princess, walk and idle strips, docs/year/ART_MANIFEST.md).
+	# Glamour must be unlocked (the Summer Queen) before she can be earned, by
+	# the usual Lv 5 rule. Own decision on her innate (the proposal names none):
+	# Many Faces, one more copy in every cast (Glamour._cast()).
+	"changeling_princess": {
+		"display_name": "The Changeling Princess",  # Owner-approved proposal
+		"title": "Left in a fae cradle, she grew up wearing other people's faces.",
+		"spell": "glamour",
+		"innate": {
+			"id": "many_faces", "name": "Many Faces",
+			"description": "Glamour sends one more copy of you in every cast.",
+			"values": {"glamour_copies": 1.0},  # TUNING (not in GDD) copies more in every cast
+		},
+		"stats": {"max_hp": -5.0, "move_speed": 0.04},  # TUNING (not in GDD) a quick, slight changeling
+		"sprite": "player/changeling_princess",
+		"tint": Color(0.98, 0.84, 0.94),  # TUNING (not in GDD) a pale blossom pink over the violet (her art replaces it)
+		"starts_unlocked": false,
+	},
+	# --- Act XV (temporary number): the World-Tree ---
+	# The Gravegardener (Root and Rot's character; owner-approved proposal
+	# "Rewards": "The Green Mother | Root and Rot ... | The Gravegardener (female,
+	# figure style)"; docs/last_acts/PLAN.md: every playable character is a
+	# necromancer of the act's theme in violet): FEMALE, in the figure-redesign
+	# style, fully clothed: a violet gardener's robe with an apron of roots, a
+	# bone trowel-staff with a sprouting soul seed, a wide-brimmed violet hat (art
+	# player/gravegardener, walk and idle strips, docs/year/ART_MANIFEST.md). Root
+	# and Rot must be unlocked (the Green Mother) before she can be earned, by the
+	# usual Lv 5 rule. Own decision on her innate (the proposal names none): Green
+	# Thumb, her rings grow 25% wider (RootAndRot._cast()).
+	"gravegardener": {
+		"display_name": "The Gravegardener",  # Owner-approved proposal
+		"title": "She tends the dead as a gardener tends seeds, and waits for spring.",
+		"spell": "root_and_rot",
+		"innate": {
+			"id": "green_thumb", "name": "Green Thumb",
+			"description": "Root and Rot's rings grow 25% wider.",
+			"values": {"root_and_rot_radius_bonus": 0.25},  # TUNING (not in GDD) share more radius
+		},
+		"stats": {"max_hp": 5.0, "move_speed": -0.03},  # TUNING (not in GDD) a patient gardener: sturdy, unhurried
+		"sprite": "player/gravegardener",
+		"tint": Color(0.84, 0.94, 0.78),  # TUNING (not in GDD) a pale leaf green over the violet (her art replaces it)
 		"starts_unlocked": false,
 	},
 }

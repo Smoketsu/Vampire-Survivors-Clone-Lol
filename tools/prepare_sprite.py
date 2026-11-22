@@ -221,6 +221,29 @@ FACTION_RAMPS = {
     # or the Covenant's crimson (no `violet`, `bone`, `soul`, `crimson` here). Each hue has its own ramp (palette.json),
     # as in Act VIII. The bosses/ and structures/ keys of the act are converted with an explicit --ramps list.
     "concord": ["hull", "gunmetal", "plasma", "laser", "chitin", "vrask", "lumen", "lavender"],
+    # --- The Black Tide (assets/sprites/corsair/) ---
+    # Tarred oak, sailcloth cream, brass, powder-smoke grey, sash red, lantern amber, the navy sea with white foam and the
+    # Brotherhood's weathered skin; the creatures (kraken, serpent) and the ghosts (spectre) are added per key or with --ramps
+    # (make_art.py passes --ramps for every unit). Never the player's violet, the undead's bone or soul teal, or the Covenant's crimson.
+    "corsair": ["oak", "sail", "brass", "powder", "sash", "lantern", "sea", "foam", "tan"],
+    # --- Act VI (final order): the Hall of the Slain (assets/sprites/norse/) ---
+    # Frost white, iron grey, pine green-black, valkyrie pale gold, ice-blue rune glow, the barrow-dead's blue-grey,
+    # plus skin and leather / wood (brown). Hearth amber sits near skin, so keys that need it add it in KEY_RAMPS.
+    # Never the player's violet, the undead's bone or soul teal, or the Covenant's crimson (berserkers and the
+    # fire-giant add crimson / flame per key).
+    "norse": ["frost", "iron", "pine", "valk", "rune", "draugr", "skin", "brown"],
+    # --- Act VII slot: the Necropolis Dynasty (assets/sprites/dynasty/) ---
+    # Blue-black night (Anubis, jackals, Bastet), a DULL bronze-gold for enemy trim (true gold stays the player's reward colour),
+    # lapis, linen wrappings, carnelian, papyrus green, the act's own skin tones (`dynskin`) and wood. Sandstone (`sand`: statues,
+    # the colossus, tombs) is added per key (KEY_RAMPS) because it sits next to the linen and the skin. Never the player's violet,
+    # the undead's bone or soul teal (the Ushabti Sentinel and the Pharaoh's Shade are the player's and add soul / grey).
+    # --- Act X slot: the Celestial Host (assets/sprites/host/): starlight silver, cerulean, dawn rose, cloud and pale skin; never crimson, gold or the player's violet ---
+    "host": ["host_silver", "host_cerulean", "host_rose", "host_cloud", "host_skin"],
+    # --- Act XIV slot: the Age of Titans (assets/sprites/primeval/): fern, dust ochre, tar, lava orange and bone; never crimson, gold or the player's violet ---
+    "primeval": ["primeval_fern", "primeval_ochre", "primeval_tar", "primeval_lava", "primeval_bone"],
+    # --- Act XV slot: the Turning Year (assets/sprites/wild/): moss, bark, blossom, amber leaf, frost and blight; never crimson, UI gold or the player's violet ---
+    "wild": ["wild_moss", "wild_bark", "wild_blossom", "wild_leaf", "wild_frost", "wild_blight", "wild_fire"],
+    "dynasty": ["night", "dyn_bronze", "lapis", "linen", "carnelian", "papyrus", "dynskin", "brown"],
 }
 # Per-key exceptions to FACTION_RAMPS: key -> (ramps added, ramps removed). The arcane
 # blue of the Mage and Lich and the icy cyan of the frost summons never mix (GDD 15.0 art
@@ -240,6 +263,22 @@ KEY_RAMPS = {
     "bosses/hive_mother": (["hive", "hive_bone", "gold"], ["violet", "bone", "soul", "crimson"]),  # her purple chitin, cream spines and gold eyes only (the bosses/ folder has no faction set)
     "concord/prism": ([], ["chitin", "vrask", "plasma"]),  # the Star-Seer: hull gown, laser trim, lumen hair, lavender skin
     "concord/grey_drone": ([], ["lavender", "lumen", "vrask", "chitin"]),  # a silver grey with a plasma probe
+    # --- Act VI (final order): the Hall of the Slain ---
+    "norse/berserker": (["crimson"], []),  # red fury eyes and blood
+    # The three playable characters are NECROMANCERS of the act (owner note): violet, bone, soul teal, pale skin.
+    "player/rune_seer": (["skin", "brown"], ["moss", "arcane", "ice", "crimson", "gold", "flame"]),  # the Norse character (moved from norse/): the same ramps as before
+    "player/shield_maiden_hero": (["skin", "brown"], ["moss", "arcane", "ice", "crimson", "gold", "flame"]),  # the Norse character (moved from norse/): the same ramps as before
+    "player/berserker_hero": (["skin", "brown"], ["moss", "arcane", "ice", "crimson", "gold", "flame"]),  # the Norse character (moved from norse/): the same ramps as before
+    "norse/fire_giant": (["hearth", "flame", "crimson"], ["frost", "draugr"]),  # black iron with amber fire cracks
+    "norse/skald": (["hearth"], []),  # the lyre's warm gold-brown and the horn
+    "norse/wolf_of_the_wastes": ([], ["skin", "valk", "pine"]),  # grey fur, ice-blue eyes
+    "norse/fenrir": (["hearth"], ["skin", "valk", "pine", "frost"]),  # black fur, burning yellow eyes
+    "norse/raven": (["hearth"], ["skin", "valk", "frost", "draugr"]),
+    # --- Act XV slot: the Turning Year: the figures show a little skin ---
+    "wild/dryad": (["skin"], []),
+    "wild/winter_fae": (["skin"], []),
+    "wild/spore_mother": (["skin"], []),
+    "wild/fae_knight": (["skin"], []),
 }
 # Ramps holding less than this share (0-1) of the opaque pixels are dropped (re-snapped).
 RAMP_MIN_SHARE = 0.03

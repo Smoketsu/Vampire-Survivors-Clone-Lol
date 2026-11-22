@@ -1,0 +1,137 @@
+Godot Engine v4.3.stable.official.77dcf97d8 - https://godotengine.org
+
+[autotest] start: seed=11 speed=8x mortal=true timeout=1500s policy=naive meta=none oath=0 pact=false classes=- spells=-
+[autotest] stage: vigrid
+[autotest] difficulty: necromancer | modifiers: none
+[autotest] character: gravecaller (starting spell shadow_bolt)
+[audio] main-thread startup 7.2 ms; 59 sfx ready after 254 ms, music loop after 139 ms (worker threads); display: headless
+[metric] t=60 avg_horde=2.0 now=1 cap=2 w1/2 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=1 lvl=4 kills=82 enemies=36 hp=107 boss_hp=-1 crystals=4 xp=78
+[metric]    summon dmg taken this window: wolf_lunge=15 wolf_of_the_wastes=15 raider=67
+[metric]    alive by kind: { "raider": 30, "wolf_of_the_wastes": 6 } within260=12
+[autotest] t=01:00 lvl=4 kills=82 enemies=36 summons=1/2 projectiles=0 hp=107 step_avg=0.46ms
+[autotest]    unit FSM: { "ENGAGING": 1 }
+[metric] t=120 avg_horde=3.5 now=6 cap=6 w3/3 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r1/1 g0/0 f1/1 b0/0 b0/0 c1/1 deaths_win=3 lvl=9 kills=216 enemies=35 hp=92 boss_hp=-1 crystals=10 xp=238
+[metric]    summon dmg taken this window: wolf_lunge=31 wolf_of_the_wastes=66 raider=155 maiden_bash=32 shield_maiden=37
+[metric]    alive by kind: { "raider": 21, "shield_maiden": 6, "wolf_of_the_wastes": 8 } within260=5
+[autotest] t=02:00 lvl=9 kills=216 enemies=35 summons=6/6 projectiles=0 hp=92 step_avg=0.62ms
+[autotest]    unit FSM: { "CASTING": 2, "ACQUIRING": 3, "ENGAGING": 1 }
+[metric] t=180 avg_horde=5.7 now=6 cap=6 w3/3 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r1/1 g0/0 f1/1 b0/0 b0/0 c1/1 deaths_win=3 lvl=12 kills=342 enemies=56 hp=91 boss_hp=-1 crystals=20 xp=395
+[metric]    summon dmg taken this window: wolf_lunge=20 wolf_of_the_wastes=22 raider=122 maiden_bash=37 shield_maiden=46 giant_boulder=11 giant_stomp=11 frost_giant=32
+[metric]    alive by kind: { "wolf_of_the_wastes": 4, "shield_maiden": 14, "raider": 29, "draugr": 8, "frost_giant": 1 } within260=15
+[autotest] t=03:00 lvl=12 kills=342 enemies=56 summons=6/6 projectiles=0 hp=91 step_avg=0.66ms
+[autotest]    unit FSM: { "ENGAGING": 5, "CASTING": 1 }
+[metric] t=240 avg_horde=5.5 now=11 cap=11 w5/5 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r3/3 g0/0 f2/2 b0/0 b0/0 c1/1 deaths_win=10 lvl=17 kills=498 enemies=55 hp=89 boss_hp=-1 crystals=29 xp=644
+[metric]    summon dmg taken this window: wolf_lunge=17 wolf_of_the_wastes=62 raider=219 maiden_bash=78 shield_maiden=141 giant_boulder=52 giant_stomp=47 frost_giant=52 draugr=206 skald=3
+[metric]    alive by kind: { "draugr": 10, "wolf_of_the_wastes": 2, "raider": 33, "shield_maiden": 10 } within260=15
+[autotest] t=04:00 lvl=17 kills=498 enemies=55 summons=11/11 projectiles=2 hp=89 step_avg=0.74ms
+[autotest]    unit FSM: { "ENGAGING": 7, "CASTING": 4 }
+[metric] t=300 avg_horde=10.8 now=10 cap=11 w4/5 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r3/3 g0/0 f2/2 b0/0 b0/0 c1/1 deaths_win=2 lvl=21 kills=660 enemies=47 hp=95 boss_hp=-1 crystals=27 xp=914
+[metric]    summon dmg taken this window: wolf_lunge=63 wolf_of_the_wastes=68 raider=218 maiden_bash=82 shield_maiden=96 giant_boulder=25 draugr=110 berserker=8
+[metric]    alive by kind: { "raider": 31, "shield_maiden": 6, "wolf_of_the_wastes": 3, "draugr": 5, "frost_giant": 1, "berserker": 1 } within260=14
+[autotest] t=05:00 lvl=21 kills=660 enemies=47 summons=10/11 projectiles=0 hp=95 step_avg=0.77ms
+[autotest]    unit FSM: { "FOLLOWING": 1, "CASTING": 1, "RETURNING": 2, "ENGAGING": 6 }
+[metric] t=360 avg_horde=11.6 now=11 cap=13 w5/5 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r1/3 g0/0 f3/3 b0/0 b0/0 c2/2 deaths_win=4 lvl=24 kills=837 enemies=51 hp=115 boss_hp=-1 crystals=29 xp=1236
+[metric]    summon dmg taken this window: wolf_lunge=43 wolf_of_the_wastes=43 raider=360 maiden_bash=48 shield_maiden=88 giant_boulder=114 giant_stomp=19 frost_giant=77 draugr=155 skald=10 berserker=34 seer=5
+[metric]    alive by kind: { "shield_maiden": 9, "raider": 25, "draugr": 8, "wolf_of_the_wastes": 4, "seer": 1, "frost_giant": 2, "berserker": 1, "skald": 1 } within260=17
+[autotest] t=06:00 lvl=24 kills=837 enemies=51 summons=11/13 projectiles=1 hp=115 step_avg=0.83ms
+[autotest]    unit FSM: { "CASTING": 3, "ENGAGING": 8 }
+[metric] t=420 avg_horde=12.4 now=12 cap=13 w5/5 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r3/3 g0/0 f2/3 b0/0 b0/0 c2/2 deaths_win=4 lvl=28 kills=1025 enemies=51 hp=81 boss_hp=-1 crystals=38 xp=1616
+[metric]    summon dmg taken this window: wolf_lunge=89 wolf_of_the_wastes=110 raider=196 maiden_bash=89 shield_maiden=93 giant_boulder=153 giant_stomp=150 frost_giant=68 draugr=75 skald=16 berserker=17 seer=8
+[metric]    alive by kind: { "draugr": 6, "raider": 23, "frost_giant": 2, "wolf_of_the_wastes": 5, "skald": 4, "shield_maiden": 9, "seer": 1 } within260=9
+[autotest] t=07:00 lvl=28 kills=1025 enemies=51 summons=12/13 projectiles=3 hp=81 step_avg=0.88ms
+[autotest]    unit FSM: { "ENGAGING": 11, "CASTING": 1 }
+[metric] t=480 avg_horde=12.5 now=14 cap=15 w6/6 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r3/3 g0/0 f2/3 b0/0 b0/0 c3/3 deaths_win=11 lvl=31 kills=1203 enemies=60 hp=113 boss_hp=-1 crystals=33 xp=1973
+[metric]    summon dmg taken this window: wolf_lunge=86 wolf_of_the_wastes=147 raider=319 maiden_bash=134 shield_maiden=168 giant_boulder=162 giant_stomp=135 frost_giant=88 draugr=213 skald=22 seer=7 valkyrie_dive=76 valkyrie=9
+[metric]    alive by kind: { "draugr": 9, "raider": 31, "shield_maiden": 14, "frost_giant": 2, "skald": 3, "wolf_of_the_wastes": 1 } within260=16
+[autotest] t=08:00 lvl=31 kills=1203 enemies=60 summons=14/15 projectiles=0 hp=113 step_avg=0.92ms
+[autotest]    unit FSM: { "CASTING": 5, "ENGAGING": 8, "SPAWNING": 1 }
+[metric] t=540 avg_horde=11.2 now=13 cap=15 w6/6 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r1/3 g0/0 f3/3 b0/0 b0/0 c3/3 deaths_win=30 lvl=34 kills=1390 enemies=65 hp=42 boss_hp=-1 crystals=48 xp=2306
+[metric]    summon dmg taken this window: wolf_lunge=37 wolf_of_the_wastes=92 raider=694 maiden_bash=179 shield_maiden=416 giant_boulder=216 giant_stomp=144 frost_giant=111 draugr=426 skald=75 berserker=527 seer=11 valkyrie_dive=66 valkyrie=22
+[metric]    alive by kind: { "shield_maiden": 19, "raider": 16, "draugr": 14, "wolf_of_the_wastes": 5, "berserker": 5, "frost_giant": 1, "seer": 3, "skald": 1, "valkyrie": 1 } within260=12
+[autotest] t=09:00 lvl=34 kills=1390 enemies=65 summons=13/15 projectiles=3 hp=42 step_avg=0.98ms
+[autotest]    unit FSM: { "ENGAGING": 10, "CASTING": 3 }
+[autotest] ===== NECROPATHY AUTOTEST SUMMARY =====
+[autotest] result: NOT COMPLETED (defeat)
+[autotest] time reached: 09:24 elapsed (564.1 s game time, 49.1 s real time); past 0:00: 0.0 s; Reckoning waves: 0
+[autotest] kills: 1444 | level: 35
+[autotest] level pacing: 01:00=L4 03:00=L12 05:00=L21 | reached: L2@00:24 L5@01:05 L10@02:05 L15@03:38 L20@04:40 L25@06:04 L30@07:25 L35@09:16
+[autotest] build complete: no
+[autotest] horde: 6 alive / capacity 17 (warrior 4/8, archer 0/0, mage 0/0, mender 0/0, warder 0/0, bishop 0/0, abomination 0/0, rogue 0/3, gargoyle 0/0, frost_wraith 1/3, bone_hound 0/0, banshee 0/0, corpse_catapult 1/3)
+[autotest] summons spawned: 91, died: 85, hard recalls: 0 (stall recalls: 0)
+[autotest] boss spawned: no | boss defeated: no
+[autotest] player HP: 0 / 120 (invulnerable: false)
+[autotest] picks (35): orb_shield 1, necrotic_vigor 1, soul_recycling 1, grave_dominion 1, dark_command 1, rogue 1, frost_wraith 1, corpse_catapult 1, lingering_malediction 1, necrotic_expanse 1, dark_command 2, warrior 2, necrotic_vigor 2, frost_wraith 2, rogue 2, grave_dominion 2, necrotic_expanse 2, corpse_catapult 2, lingering_malediction 2, orb_shield 2, frost_wraith 3, corpse_catapult 3, shadow_bolt 2, shadow_bolt 3, soul_recycling 2, soul_recycling 3, necrotic_expanse 3, rogue 3, dark_command 3, grave_dominion 3, orb_shield 3, necrotic_vigor 3, frost_wraith 4, shadow_bolt 4, warrior 3
+[autotest] wards on you: 0 total, absorbed 0 dmg | 0 wards in 0 s with 2+ Warders/Bishops alive (0.0 / min) | heal casts: 0 | ally barriers: 0, barrier dmg absorbed: 0
+[autotest] evolutions: none
+[autotest] evolutions by type: spell: none | summon: none
+[autotest] summon evolutions: lich raised 0 (capped 0) | merge converted 0, dissolved 0 | aura pulses 0 | merged classes: none
+[autotest] winter revenant: shatters 0 (capped 0), shatter hits 0, shatter dmg 0 | death novas 0, nova hits 0, nova freezes 0, nova dmg 0
+[autotest] summon output by source (dmg/heal/shield): warrior=9359/0/0 rogue=5185/0/0 frost_wraith=13234/0/0 corpse_catapult=19504/0/0 bash=2532/0/0
+[autotest] summon output by class (dmg/heal/shield): warrior=11892/0/0 rogue=5185/0/0 frost_wraith=13234/0/0 corpse_catapult=19504/0/0
+[autotest] recipe book: 0 / 67 discovered (none) | Recipes view rows built: 67 (saved: false)
+[autotest] codex: 15 entries met this run (spell 2, summon 4, enemy 9, boss 0) | new to the save 15 | save: spell 2/42, summon 4/26, enemy 9/208, boss 0/36, evolutions 0/67
+[autotest] epilogue: parts=5 open=0 seen=0 panels=19 autoplay_pending=false
+[autotest] volleys: shots 2749 | hits 1645 | dmg 10433 | peak 51/320 | capped volleys 0 | boss hits capped 0 | barrages 5 | frost_wraith 4852, corpse_catapult 3515, shadow_bolt 1249, orb_shield 393, rogue 277, warrior 145
+[visual] adaptive quality: level 0, peak 0, steps down 0, up 0
+[autotest] long winter: on | cold level reached 1 | braziers 6 (lit at the end 1) | doused 8 (frost_giant 6, seer 1, the_dark 1) | relit 3 (soul ash 15) | longest out 264.1 s | cold: you 175.5 s, army 2098.5 summon-s | slows 351 | frostbite 0
+[autotest] berserkergang: furies 669 (raider 419, shield_maiden 225, skald 25) | berserkers born in it 14 | shrugged off: slows 112, stuns 0, freezes 54
+[autotest] rune-stones: raised 3 (refused 0) | taken 0 (-) | re-carved 0 | held at the end 3 of 3 | horns 14 (units 42, capped 0) | ward hits 1655 | soul ash 0 | seers: walk ticks 0, carving 0.0 s, curses 27 (landed 25)
+[autotest] norse kinds (spawned/killed): warriors: raider 801/770 first 0:01 (dmg to you 153, to summons 2564), shield_maiden 248/229 first 1:00 (dmg to you 101, to summons 1390), berserker 14/9 first 4:57 (dmg to you 31, to summons 1212), skald 31/27 first 3:40 (dmg to you 5, to summons 135) | hall: valkyrie 3/2 first 7:20 (dmg to you 0, to summons 41), seer 25/22 first 5:00 (dmg to you 0, to summons 45) | wilds: draugr 164/144 first 2:36 (dmg to you 31, to summons 1498), wolf_of_the_wastes 233/228 first 0:02 (dmg to you 18, to summons 653), frost_giant 13/13 first 2:13 (dmg to you 0, to summons 429) | bashes 211 (hit 167), verses 532 (warriors sung 1484), lunges 201 (hit 120), boulders 31 (hits 99), stomps 23 (hits 68), valkyrie dives 5 (summon hits 12), draugr chills 207 | valkyries aloft: whiffs 10, hits 41
+[autotest] norse stage: vigrid (Vigrid, the Last Field) | playable true | boss odin (script odin) | enemy x1.65 HP / x1.20 dmg from 7:00 | soul ash x1.50 | reckoning kind fire_giant, ragnarok true
+[autotest] vigrid: lowest HP before 0:00 2 at 9:22 | the dark took 1 braziers (lit at the end 1/6), camp moves 6 | nearest fire avg 206 px, beyond reach 0s | vanguard fire-giants 0 | miniboss not met, burning footprints 0, burning stomps 0, burns on you 0 / on summons 0
+[autotest] vigrid events (2): 5:00 camp_moves, 5:00 dark_takes
+[autotest] gravebow / bone colossus: gravebow volleys 0, splits 0 (+0 arrows), pierce hits 0, dmg 0 | curses applied 0 (refreshed 0), curse bonus dmg 0 | colossus dmg 0, stomps 0 | taunted enemies 0 | shrapnel bursts 0, hits 0, dmg 0
+[autotest] necro spells: bone_spear: not taken | soul_siphon: not taken | corpse_explosion: not taken | plague_cloud: not taken
+[autotest] later spells: death_mark: not taken | bone_wall: not taken | soul_chains: not taken | wither: not taken | raise_dead: not taken
+[autotest] later spell passives: grim_ledger Lv0 bonus_dmg=0 | spirit_binding Lv0 | restless_dead Lv0 | temporary summons spawned=0
+[autotest] horde passives: bone_plating Lv 0 (dmg prevented 0) | unholy_precision Lv 0 (crits 0, crit bonus dmg 0) | unholy_resilience Lv 0 (dmg prevented 0: area 0, holy 0) | bound_souls Lv 0 (soft recalls 0, hard recalls 0)
+[autotest] class passives: blood_scent Lv 0 (fast: Archers, Rogues, Gargoyles, Bone Hounds, Grave Drones, Succubi, Blood Spawn, Fallen Heroes, Ghost Saucers, Powder Wraiths) | mournsong Lv 0 (extra debuff s 0) | siegecraft Lv 0 (siege bonus dmg 0) | summon dmg to structures 0 (catapults 0)
+[autotest] synergies active at end: deathless, cold_blood, shatterfall | activations: deathless@03:49, cold_blood@03:49, shatterfall@04:25
+[autotest] synergy bonus: flesh_rampart hits=0 dmg=0 | killing_field hits=0 dmg=0 | death_from_above hits=0 dmg=0 | wild_hunt hits=0 dmg=0 | cold_blood hits=292 dmg=1010 | shatterfall hits=184 dmg=1580 | requiem hits=0 dmg=0 | charnel_menagerie hits=0 dmg=0 | baying frenzies=0 | marks staggered=0 swooped=0 | dash resets=0 | requiem +0s
+[autotest] level-up offers: hands 34, new-item cards 18, later items 7 (39%) in 5 hands (15%), distinct later items offered 7
+[autotest] level-up actions: rerolls used 0/2, banishes used 0/2 (banished: none), skips 0
+[autotest] shadow bolt: 11687 dmg in Nearest mode, 0 dmg in Strongest mode; to boss: 0 of 0 total boss dmg
+[autotest] stats: berserk_shrugged_freezes=54 berserk_shrugged_slows=112 bot_dash_crowd=25 bot_dash_hit=16 bot_dash_telegraph=17 braziers_doused=8 braziers_doused_by_frost_giant=6 braziers_doused_by_seer=1 braziers_doused_by_the_dark=1 braziers_moved=6 braziers_placed=6 braziers_relit=3 catapult_boulder_hits=634 catapult_boulders=157 catapult_volleys=157 chest_count_1=1 chest_items=1 chests_opened=1 chests_pity=1 chests_spawned=1 damage_dealt=77681 damage_to_player=439 damage_to_summons=10628 dash_distance=6380 dash_hits_avoided=5 dashes=58 death_corpse_catapult_by_berserker=3 death_corpse_catapult_by_draugr=1 death_corpse_catapult_by_raider=1 death_corpse_catapult_by_shield_maiden=1 death_corpse_catapult_by_wolf_lunge=1 death_frost_wraith_by_berserker=1 death_frost_wraith_by_draugr=1 death_frost_wraith_by_giant_boulder=1 death_frost_wraith_by_giant_stomp=1 death_frost_wraith_by_maiden_bash=1 death_frost_wraith_by_raider=3 death_frost_wraith_by_shield_maiden=1 death_rogue_by_berserker=3 death_rogue_by_draugr=2 death_rogue_by_frost_giant=6 death_rogue_by_maiden_bash=4 death_rogue_by_raider=4 death_rogue_by_shield_maiden=5 death_rogue_by_valkyrie=1 death_rogue_by_wolf_of_the_wastes=3 death_warrior_by_berserker=9 death_warrior_by_draugr=6 death_warrior_by_frost_giant=3 death_warrior_by_giant_boulder=1 death_warrior_by_maiden_bash=2 death_warrior_by_raider=9 death_warrior_by_shield_maiden=6 death_warrior_by_skald=1 death_warrior_by_wolf_lunge=1 death_warrior_by_wolf_of_the_wastes=3 deathless_regen=3636 dmg_bash=2532 dmg_bolt=11687 dmg_corpse_catapult=19504 dmg_frost_wraith=13234 dmg_nova=574 dmg_orb=6701 dmg_orb_shield=393 dmg_resisted_berserker=427 dmg_resisted_draugr=1361 dmg_resisted_frost_giant=557 dmg_resisted_raider=1700 dmg_resisted_seer=213 dmg_resisted_shield_maiden=1172 dmg_resisted_skald=216 dmg_resisted_valkyrie=114 dmg_resisted_wolf_of_the_wastes=427 dmg_rogue=5185 dmg_rogue_bleed=1195 dmg_rogue_dash=6063 dmg_shadow_bolt=1249 dmg_warrior=9359 draugr_chills=207 flat_armor_absorbed_draugr=3166 frost_chills=291 frost_deep_freezes=86 frost_freezes=286 frost_frozen_seconds=293 giant_boulder_hits=99 giant_boulders=31 giant_stomp_hits=68 giant_stomps=23 kill_berserker=9 kill_draugr=144 kill_frost_giant=13 kill_raider=770 kill_seer=22 kill_shield_maiden=229 kill_skald=27 kill_valkyrie=2 kill_wolf_of_the_wastes=228 kills_by_bash=56 kills_by_bolt=336 kills_by_corpse_catapult=264 kills_by_frost_wraith=209 kills_by_nova=31 kills_by_orb=105 kills_by_orb_shield=2 kills_by_rogue=59 kills_by_rogue_bleed=19 kills_by_rogue_dash=94 kills_by_shadow_bolt=10 kills_by_warrior=259 maiden_bash_hits=167 maiden_bashes=211 march_zones_entered=1 norse_air_hits=41 norse_air_whiffs=10 norse_furies=669 norse_fury_raider=419 norse_fury_shield_maiden=225 norse_fury_skald=25 nova_kills=31 objective_ash=15 overkill_redirects=36 player_dmg_from_berserker=31 player_dmg_from_draugr=31 player_dmg_from_giant_boulder=26 player_dmg_from_giant_stomp=19 player_dmg_from_raider=153 player_dmg_from_shield_maiden=101 player_dmg_from_skald=5 player_dmg_from_wolf_lunge=51 player_dmg_from_wolf_of_the_wastes=18 player_healing=65 priest_heals=0 priest_wards=0 pu_collected_feast=2 pu_collected_nova=1 pu_collected_stasis=1 pu_pity_drops=4 pu_spawned_feast=2 pu_spawned_hyper=1 pu_spawned_nova=1 pu_spawned_stasis=1 pu_uptime_stasis=5 rallies=5 rally_buff_time=40 rally_heal=689 rally_knockbacks=37 rally_meter_fills=5 rally_minion_dmg=8145 rally_raised=10 rally_recalled=1 replacements=64 rogue_dash_hits=237 rogue_dashes=152 rune_horn_units=42 rune_horns=14 rune_stones_raised=3 rune_ward_hits=1655 seer_curse_hits=25 seer_curses=27 skald_verses=532 skald_warriors_sung=1484 spawned_berserker=14 spawned_draugr=164 spawned_frost_giant=13 spawned_raider=801 spawned_seer=25 spawned_shield_maiden=248 spawned_skald=31 spawned_valkyrie=3 spawned_wolf_of_the_wastes=233 summon_blinded_seconds=62 summon_blinds=25 summon_blinds_seer=25 summon_chills=207 summon_chills_draugr=207 summon_dmg_from_berserker=1212 summon_dmg_from_draugr=1498 summon_dmg_from_frost_giant=429 summon_dmg_from_giant_boulder=734 summon_dmg_from_giant_stomp=508 summon_dmg_from_maiden_bash=831 summon_dmg_from_raider=2564 summon_dmg_from_seer=45 summon_dmg_from_shield_maiden=1390 summon_dmg_from_skald=135 summon_dmg_from_valkyrie=41 summon_dmg_from_valkyrie_dive=157 summon_dmg_from_wolf_lunge=425 summon_dmg_from_wolf_of_the_wastes=653 summon_healing=4326 summon_specials_cancelled=2 syn_cold_blood_bonus_dmg=1010 syn_cold_blood_hits=292 syn_shatterfall_bonus_dmg=1580 syn_shatterfall_hits=184 synergies_activated=3 valkyrie_dive_hits=12 valkyrie_dives=5 vigrid_dark_took=1 vigrid_fire_px_s=116732 volley_barrages=5 ward_absorbed=0 warrior_bashes=483 warrior_kills=315 wave_events=11 winter_level=1 winter_player_cold_s=175 winter_relight_ash=15 winter_slows=351 winter_summon_cold_s=2098 wolf_lunge_hits=120 wolf_lunges=201 xp_collected=2409 xp_dropped=2527
+[autotest] boss attacks: hammer=0 charge=0 consecrate=0 call=0 judgment=0 | wrath: no | hammer soaked by undead: 0 | charges stopped by undead: 0 (shielding the player: 0) | judgment hits: 0 | call soldiers: 0 | holy zones boss/grave: 0/0
+[autotest] crimson march: zones entered 1 (final: Zone II  -  The Ash Plain) | placed/destroyed/escaped: outposts 0/0/0 generators 0/0/0 carts 0/0/0 standards 0/0/0 | outpost reinforcements 0 | ward zones 0
+[autotest] march enemies: aura buff pulses 0 | halberd cleave hits 0 | dmg resisted: shieldbearer 0, boss 0 | kills: shieldbearer=0 banner_bearer=0 halberdier=0
+[autotest] marshal vael: last stand no | cleave summon hits 0, soaked for the player 0 | command soldiers 0
+[autotest] march events (1): 5:00 zone_II
+[autotest] stage events fired (0): 
+[autotest] templar charges: 0 (body-blocked by warriors: 0) | temporary summons spawned: 0
+[autotest] obstacle collisions resolved: player=80 summons=3654 enemies=5664
+[autotest] class abomination: Lv 0, alive 0/0, deaths 0 | dmg 0 (abomination=0 abom_stomp=0) | abom_stomps=0 abom_stomp_hits=0
+[autotest] class rogue: Lv 3, alive 0/3, deaths 28 | dmg 12443 (rogue=5185 rogue_dash=6063 rogue_bleed=1195) | rogue_dashes=152 rogue_dash_hits=237
+[autotest] class gargoyle: Lv 0, alive 0/0, deaths 0 | dmg 0 (gargoyle=0 gargoyle_swoop=0) | gargoyle_swoops=0 gargoyle_swoop_hits=0
+[autotest] class frost_wraith: Lv 4, alive 1/3, deaths 9 | dmg 13234 (frost_wraith=13234) | frost_deep_freezes=86 frost_freezes=286 frost_boss_freezes=0 frost_frozen_seconds=293 frost_chills=291
+[autotest] class bone_hound: Lv 0, alive 0/0, deaths 0 | dmg 0 (bone_hound=0 hellhound=0 hellhound_burn=0 hellhound_trail=0) | hound_bites=0 hound_pack_bites=0 hound_pack_bonus_dmg=0 hellhound_burns=0 hellhound_trail_patches=0
+[autotest] class banshee: Lv 0, alive 0/0, deaths 0 | dmg 0 (banshee=0 keening_lady=0) | banshee_dirges=0 banshee_dirge_hits=0 dirge_debuff_seconds=0 keening_waves=0 keening_silenced=0 keening_heals_silenced=0
+[autotest] class corpse_catapult: Lv 3, alive 1/3, deaths 7 | dmg 19504 (corpse_catapult=19504 ossuary_engine=0 ossuary_shards=0) | catapult_volleys=157 catapult_boulders=157 catapult_boulder_hits=634 catapult_structure_dmg=0 ossuary_shard_fields=0 hazards_dropped=0
+[autotest] class specials: cancelled by recall 2 | ended inside an obstacle 0
+[autotest] special evolutions: shadow reaper: chain dashes 0, cooldown resets 0, bleed stacks added 0, max stacks 0, rogue bleed dmg (all) 1195 | cathedral horror: stuns 0 (boss 0), stunned s 0.0, stone forms 0, stone s 0.0, dmg prevented by stone 0
+[autotest] grave step: dashes 58 (bot: crowd 25, hit 16, telegraph 17) | hits avoided in dash i-frames 5 | blocked 0, shortened by obstacles 0, ended inside an obstacle 0, avg length 110 px | charges 1, cooldown 5.00 s
+[autotest] dread rally: rallies 5 | meter fills 5, fill times s [122 108 96 78 85] (avg 98 s), meter now 20% | knockbacks 37 | summons called back 1 | heal 689 | minion dmg under buff 8145 (est. +dmg part 2327) | buff time 40 s
+[autotest] army formation: bone_ring: 564s kills 1444 army_dmg 10621 recalls 0 spread max 325 mean 89
+[autotest] character: gravecaller (The Gravecaller) | starting spell shadow_bolt Lv 4 | Baseline stats (Max HP 120, move speed 110) | innate: none | characters unlocked this run: none | unlocked in the profile: gravecaller (saved: false)
+[autotest] stuck_units=0 (touching an obstacle: 0) {  }
+[metric] boss_hp_at_0=-1 min_hp_before_0=2
+[autotest] peaks: enemies=90 summons=15 projectiles=5 effects=37 crystals=63
+[autotest] nodes created (pools): enemies=90 summons=15 projectiles=5 effects=37 crystals=63
+[autotest] simulation step: avg 1.00 ms, worst 24.07 ms
+[autotest] power-ups: spawned 5 (magnet=0 feast=2 hyper=1 stasis=1 frenzy=0 nova=1) | collected 4 (magnet=0 feast=2 hyper=0 stasis=1 frenzy=0 nova=1) | expired (magnet=0 feast=0 hyper=0 stasis=0 frenzy=0 nova=0) | lost at cap 0 | pity drops 4 | crystals pulled by Soul Magnet 0
+[autotest] buff uptime: hyper=0s (0.0%, refreshed 0) stasis=5s (0.9%, refreshed 0) frenzy=0s (0.0%, refreshed 0) | soul nova kills: 31
+[autotest] chests: spawned 1, opened 1 (x1=1 x3=0 x5=0), items granted 1 (evolutions 0), pity 1, lost at cap 0, left on ground 0
+[autotest]    chest 06:00 x1: shadow_bolt 3
+[autotest] chest beacon: chests marked 1, seen on screen 1 | max off-screen arrows at once 0 | ticks with an arrow 0 (0.0 s)
+[autotest] profane pact: taken no (final Lv 0; never offered or never picked) | oath tier 0 | extra XP from pact 0, from oath 0 | extra soul ash from pact 0, from oath 0
+[autotest] meta upgrades (--meta=none): none | revivals used: 0
+[autotest] soul ash: +192 (time 70 [09:24] + kills 43 [1444] + elites 0 [0] + boss 0 + reckoning 0 [0.0 s] + objectives 15 = 128, bonus +0% = +0, pact +0, oath +0) | bounty 0 | new total 192 | saved: false
+[autotest] difficulty: Necromancer (necromancer) | modifiers: none | foes: HP x0.800 (growth x1.00), dmg x1.000 (growth x1.00), spawn x1.250, speed x1.00, elite chance 0.000, boss HP x1.000 | XP x1.000 | soul ash: difficulty +0%, modifiers +0%, total x1.00
+[autotest] difficulty results: soul ash difficulty +0, modifiers +0 | trickle elites promoted: 0 | holy retribution bursts: 0 (dmg to you 0, to summons 0) | player max HP at start: 120
+[autotest] stage: Vigrid, the Last Field | soul ash stage bonus +64 (x1.50) | stages unlocked by this run: none
+[autotest] hyper: off (Necromancer) | foes: HP growth x1.00, dmg growth x1.00, boss HP x1.000 | at 0:00 vs the standard game: HP x1.00, dmg x1.00 | soul ash hyper +0 (+0%) | Reckoning lasted 0.0 s past 0:00 | unlocked: false (by this run: false) | hyper clear recorded: no
+[autotest] skins: character gravecaller, worn default | this run: rot kills 0, high confessors slain 0, seraphine slain with all 4 roles 0 | lifetime: rot 0/5000, confessors 0/50, seraphine full army 0/1 | unlocked 42/172 (new: none) | setup row cards 6
+[autotest] rewards: achievements=0 (none) titles=0 unlocks=none | run: temp raised 0, min HP before 0:00 2%, evolutions 0, boss slain never after arrival | one-run achievements met: none (not checked: --rewards=on) | worn title: none | title row choices 1
+[autotest] demo: on=false | acts=1 | stages=graveyard,crimson_march,sanctum | save=user://save.cfg | full_game_offers=0
+[autotest] feedback: url_set=true | report_chars=122/220/302 (main menu / pause / results samples built, max 1500) | url_chars=595 | opened=never (autotest)
+exit 1

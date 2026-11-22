@@ -62,10 +62,18 @@ static func role(cls: String) -> String:
 ## (and, Act VI, out of the Hell Pits: HellPits.avoid_point(), the one pit
 ## avoid check the horde reads; skipped off Act VI; Act VIII, on a city-block
 ## layout: pulled back toward the necromancer, Arena.free_point_toward(); Act
-## VIII, Fort Kessler: off the live mines, Minefields.avoid_point()).
+## VIII, Fort Kessler: off the live mines, Minefields.avoid_point(); Act X, on
+## a ship's deck: slid inboard first, DeckBounds.walkable_point()).
 static func _place(d: HordeDirector, u: SummonedUnit, offset: Vector2) -> void:
 	var pp := d.game.player.position
 	var post: Vector2  # The post, out of obstacles.
+	# --- Act X: the Black Tide --- on a ship's deck a post that would hang over
+	# the water slides inward along the line to the necromancer
+	# (DeckBounds.walkable_point()): beside the rail the ring flattens into a
+	# half-ring facing the water (terrain, not a summon rule).
+	if d.game.deck != null:
+		var on_deck := d.game.deck.walkable_point(pp + offset, pp, u.radius)  # The post, on the planks.
+		offset = on_deck - pp
 	if d.game.arena.city_blocks != null:
 		# --- Act VIII: the Last Line --- on a city-block layout only, a post inside a
 		# building is pulled back toward the necromancer (Arena.free_point_toward()),

@@ -98,6 +98,14 @@ const STEER_LOOK_BACK: float = 160.0  # TUNING (not in GDD)
 ## fix for the co-op corner trap).
 const STEER_CONTACT_SLACK: float = 1.5  # TUNING (not in GDD) px
 
+## Share (0..1) of its speed a body's velocity must lean along a face, against
+## the slide side it remembers, for Arena._slide_side() to switch to that side
+## (a blocks layout only). A building face is long, so the contact and with it
+## the memory never lapse: a Warrior that first touched a face sliding right,
+## then turned left after its target, had the slide cancel its own walk for good
+## at a building corner (Liberty Heights, seed 7, army policy).
+const SLIDE_FLIP_LEAN: float = 0.5  # TUNING (not in GDD)
+
 # --- Wrecks (CityBlocks.add_wreck(); Convoy places them) ---------------------------------------
 
 ## px: the length (along its street) of one wreck cell.

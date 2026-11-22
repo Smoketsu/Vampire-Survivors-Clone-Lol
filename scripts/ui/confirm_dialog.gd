@@ -29,6 +29,9 @@ var title_text: String = ""
 var body_text: String = ""
 ## Word on the confirm button.
 var confirm_label: String = ""
+## Word on the cancel button ("" = ConfirmData.CANCEL; the Summer Queen's
+## bargain says "Refuse").
+var cancel_label: String = ""
 ## Called after the dialog closed with Confirm.
 var on_confirm: Callable = Callable()
 ## True for a destructive action: crimson panel and confirm button.
@@ -43,7 +46,7 @@ var _return_focus: Control = null
 
 ## Opens a confirm dialog over `host` (see the header) and returns it. If a
 ## dialog is already open on `host`, that one is returned unchanged.
-static func ask(host: Control, title: String, body: String, confirm_label: String, on_confirm: Callable, danger: bool = true) -> ConfirmDialog:
+static func ask(host: Control, title: String, body: String, confirm_label: String, on_confirm: Callable, danger: bool = true, cancel_word: String = "") -> ConfirmDialog:
 	for c: Node in host.get_children():
 		if c is ConfirmDialog and not UiMotion.is_closing(c):
 			return c as ConfirmDialog
@@ -53,6 +56,7 @@ static func ask(host: Control, title: String, body: String, confirm_label: Strin
 	d.confirm_label = confirm_label
 	d.on_confirm = on_confirm
 	d.danger = danger
+	d.cancel_label = cancel_word
 	var vp := host.get_viewport()  # Null when the host is not in the tree.
 	d._return_focus = vp.gui_get_focus_owner() if vp != null else null
 	host.add_child(d)
@@ -86,7 +90,7 @@ func _ready() -> void:
 	row.alignment = BoxContainer.ALIGNMENT_CENTER
 	row.add_theme_constant_override("separation", ConfirmData.BUTTON_GAP)
 	vb.add_child(row)
-	cancel_button = _button(row, ConfirmData.CANCEL, cancel)
+	cancel_button = _button(row, cancel_label if cancel_label != "" else ConfirmData.CANCEL, cancel)
 	confirm_button = _button(row, confirm_label, _confirm)
 	if danger:
 		UiTheme.style_button(confirm_button, "button", "crimson")

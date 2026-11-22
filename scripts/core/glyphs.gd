@@ -82,6 +82,10 @@ static func draw_summon(ci: CanvasItem, cls: String, o: Vector2, r: float, flash
 	if cls.begins_with(TemptData.GLYPH_PREFIX):
 		SilkPalaceGlyphs.draw_enthralled(ci, cls.substr(TemptData.GLYPH_PREFIX.length()), o, r, flash)
 		return  # Act VI: a thrall (Enthrall: the foe's own art, charmed pink, a heart over it).
+	if cls.begins_with(GlamourData.GLYPH_PREFIX):
+		if not SpriteBank.draw(ci, cls.substr(GlamourData.GLYPH_PREFIX.length()), o, flash, GlamourData.TINT):
+			SpriteBank.draw_disc(ci, o, r, GlamourData.TINT)
+		return  # Act XV: an illusory copy of the necromancer (Glamour: the caster's own art in its light).
 	if SpriteBank.draw(ci, "summons/" + cls, o, flash):
 		return  # Sprite art exists (assets/sprites/summons/<cls>.png).
 	match cls:
@@ -149,7 +153,8 @@ static func draw_enemy(ci: CanvasItem, kind: String, o: Vector2, r: float, flash
 	# Empire's (Act III) in empire/, the Olympian Republic's (Act IV) in pantheon/,
 	# the Shogunate's (Act V) in shogunate/, the Inferno's (Act VI) in inferno/,
 	# the Sanguine Court's (Act VII) in court/, the Last Line's (Act VIII) in city/,
-	# the Concord of Stars' (Act IX) in concord/.
+	# the Concord of Stars' (Act IX) in concord/, the Black Tide's (Act X) in corsair/,
+	# the Hall of the Slain's in norse/.
 	if SpriteBank.draw(ci, "enemies/" + kind, o, flash) or SpriteBank.draw(ci, "structures/" + kind, o, flash) \
 			or SpriteBank.draw(ci, "eye/" + kind, o, flash) or SpriteBank.draw(ci, "empire/" + kind, o, flash) \
 			or SpriteBank.draw(ci, "pantheon/" + kind, o, flash) \
@@ -157,7 +162,13 @@ static func draw_enemy(ci: CanvasItem, kind: String, o: Vector2, r: float, flash
 			or SpriteBank.draw(ci, "inferno/" + kind, o, flash) \
 			or SpriteBank.draw(ci, "court/" + kind, o, flash) \
 			or SpriteBank.draw(ci, "city/" + kind, o, flash) \
-			or SpriteBank.draw(ci, "concord/" + kind, o, flash):
+			or SpriteBank.draw(ci, "concord/" + kind, o, flash) \
+			or SpriteBank.draw(ci, "corsair/" + kind, o, flash) \
+			or SpriteBank.draw(ci, "norse/" + kind, o, flash) \
+			or SpriteBank.draw(ci, "dynasty/" + kind, o, flash) \
+			or SpriteBank.draw(ci, "host/" + kind, o, flash) \
+			or SpriteBank.draw(ci, "primeval/" + kind, o, flash) \
+			or SpriteBank.draw(ci, "wild/" + kind, o, flash):  # Act XII / XIII / XIV / XV (temporary): the Necropolis Dynasty's, the Celestial Host's, the Age of Titans', the Turning Year's.
 		return
 	match kind:
 		"recruit":
@@ -184,7 +195,13 @@ static func draw_enemy(ci: CanvasItem, kind: String, o: Vector2, r: float, flash
 									if not CourtGlyphs.draw_enemy(ci, kind, o, r, flash):  # ... else the Sanguine Court's (Act VII) ...
 										if not CityGlyphs.draw_enemy(ci, kind, o, r, flash):  # ... else the Last Line's (Act VIII) ...
 											if not ConcordGlyphs.draw_enemy(ci, kind, o, r, flash):  # ... else the Concord of Stars' (Act IX) ...
-												EyeGlyphs.draw_enemy(ci, kind, o, r, flash)  # ... else the Ancient Eye's (Act II).
+												if not CorsairGlyphs.draw_enemy(ci, kind, o, r, flash):  # ... else the Black Tide's (Act X) ...
+													if not NorseGlyphs.draw_enemy(ci, kind, o, r, flash):  # ... else the Hall of the Slain's ...
+														if not DynastyGlyphs.draw_enemy(ci, kind, o, r, flash):  # ... else the Necropolis Dynasty's (Act XII, temporary) ...
+															if not HostGlyphs.draw_enemy(ci, kind, o, r, flash):  # ... else the Celestial Host's (Act XIII, temporary) ...
+																if not PrimevalGlyphs.draw_enemy(ci, kind, o, r, flash):  # ... else the Age of Titans' (Act XIV, temporary) ...
+																	if not WildGlyphs.draw_enemy(ci, kind, o, r, flash):  # ... else the Turning Year's (Act XV, temporary) ...
+																		EyeGlyphs.draw_enemy(ci, kind, o, r, flash)  # ... else the Ancient Eye's (Act II).
 
 
 ## Covenant Recruit: small crimson round body, ivory tabard, silver helm, spear.

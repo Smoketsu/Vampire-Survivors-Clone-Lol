@@ -83,7 +83,7 @@ const UNLOCKS := {
 	# --- Act III: the Assembly Halls ---
 	# The Motherboard's gifts (owner-approved Act III proposal "Rewards"): the
 	# spell Hollow Puppet and the summon class Grave Drone, each with its
-	# paired passive; Cold Assembly's counter-passive Signal Ghost ("act": 3 on
+	# paired passive; Cold Assembly's counter-passive Signal Ghost ("act": "empire" on
 	# its card row: offered only on Act III stages).
 	"hollow_puppet": {"type": "spell", "boss": "motherboard", "text": "Shut down the Motherboard in the Assembly Halls to unlock."},  # Owner-approved proposal
 	"strings_of_the_dead": {"type": "passive", "boss": "motherboard", "text": "Shut down the Motherboard in the Assembly Halls to unlock."},  # Hollow Puppet's paired passive, unlocked with it
@@ -130,7 +130,7 @@ const UNLOCKS := {
 	# unlocked by Hades; the finale grants the Myrmidon Shades): the spell with its
 	# paired passive, and the summon class with its paired passive, offered on
 	# every stage (no card-row "act" key). The Empty Throne achievement opens the
-	# Act IV epilogue part (EpilogueData.ACT4_PART), not an unlock row.
+	# Republic epilogue part (EpilogueData id act4), not an unlock row.
 	"river_styx": {"type": "spell", "boss": "hades", "text": "Make Hades kneel in the Asphodel Underworld to unlock."},  # Owner-approved proposal
 	"ferrymans_toll": {"type": "passive", "boss": "hades", "text": "Make Hades kneel in the Asphodel Underworld to unlock."},  # River Styx's paired passive, unlocked with it
 	"myrmidon_shade": {"type": "class", "boss": "hades", "text": "Make Hades kneel in the Asphodel Underworld to unlock."},  # Owner-approved proposal: the finale's reward
@@ -148,7 +148,7 @@ const UNLOCKS := {
 	# unlocked by Amaterasu; the finale grants the Oni): the spell with its paired
 	# passive, and the summon class with its paired passive, offered on every
 	# stage (no card-row "act" key). The Sun Goes Out achievement opens the Act V
-	# epilogue part (EpilogueData.ACT5_PART), not an unlock row.
+	# epilogue part (EpilogueData id act5), not an unlock row.
 	"black_sun": {"type": "spell", "boss": "amaterasu", "text": "Put out the sun: defeat Amaterasu on the Road to the Sun to unlock."},  # Owner-approved proposal
 	"stolen_dawn": {"type": "passive", "boss": "amaterasu", "text": "Put out the sun: defeat Amaterasu on the Road to the Sun to unlock."},  # Black Sun's paired passive, unlocked with it
 	"bound_oni": {"type": "class", "boss": "amaterasu", "text": "Put out the sun: defeat Amaterasu on the Road to the Sun to unlock."},  # Owner-approved proposal: the finale's reward
@@ -281,6 +281,175 @@ const UNLOCKS := {
 	"crop_circles": {"type": "passive", "boss": "harvester", "text": "Defeat the Harvester on the Ark of the Concord to unlock."},  # Its paired passive (own decision), unlocked with it
 	"the_unharvested": {"type": "title", "achievement": "last_harvest",
 		"text": "Earn The Last Harvest: beat the Harvester on the Ark of the Concord."},  # Own decision (the clear is recorded as a title, as Acts VI-VIII did)
+	# --- Act X: the Smuggler's Cutter ---
+	# Captain Crow's fall (owner-approved Act X proposal "Rewards": Chain Shot
+	# is Crow's) with its paired passive, offered on every stage; the stage's
+	# achievement Not One Aboard earns the act's counter-passive Barnacle Bones
+	# (offered only in Act X through its card row's "act"; the brief's pairing).
+	"chain_shot": {"type": "spell", "boss": "crow", "text": "Defeat Captain Crow on the Smuggler's Cutter to unlock."},  # Owner-approved Act X proposal
+	"bosuns_whistle": {"type": "passive", "boss": "crow", "text": "Defeat Captain Crow on the Smuggler's Cutter to unlock."},  # Chain Shot's paired passive (owner-approved proposal), unlocked with it
+	"barnacle_bones": {"type": "passive", "achievement": "not_one_aboard", "text": "Earn Not One Aboard: sink five boats before any of their crew climbs aboard, on the Smuggler's Cutter."},  # Brief: Not One Aboard unlocks Barnacle Bones
+	# --- Act X: the Treasure Galleon ---
+	# Admiral Marrec's fall (owner-approved proposal "Rewards": Cannonade is
+	# unlocked by Marrec) with its paired passive, offered on every stage; the
+	# stage's achievement Walked the Plank earns the act's counter-passive Sea
+	# Legs (brief's pairing; offered only in the Black Tide through its card
+	# row's "act").
+	"cannonade": {"type": "spell", "boss": "marrec", "text": "Defeat Admiral Marrec on the Treasure Galleon to unlock."},  # Owner-approved proposal
+	"black_powder": {"type": "passive", "boss": "marrec", "text": "Defeat Admiral Marrec on the Treasure Galleon to unlock."},  # Cannonade's paired passive (owner-approved proposal), unlocked with it
+	"sea_legs": {"type": "passive", "achievement": "walked_the_plank", "text": "Earn Walked the Plank: send 200 foes overboard in one run."},  # Brief: Walked the Plank unlocks Sea Legs
+	# --- Act X: the Maelstrom ---
+	# Vandermere's fall (owner-approved proposal "Rewards": Anchor Drop is
+	# unlocked by Vandermere; the finale grants the Powder Wraith): the spell
+	# with its paired passive, and the summon class with its paired passive,
+	# offered on every stage (no card-row "act" key). The title Captain of the
+	# Dead is Dead Men Tell Tales' reward (it only records the clear: no
+	# epilogue part until the reorder, docs/last_acts/PLAN.md).
+	"anchor_drop": {"type": "spell", "boss": "vandermere", "text": "Defeat Vandermere in the Maelstrom to unlock."},  # Owner-approved proposal
+	"dead_reckoning": {"type": "passive", "boss": "vandermere", "text": "Defeat Vandermere in the Maelstrom to unlock."},  # Anchor Drop's paired passive (owner-approved proposal), unlocked with it
+	"powder_wraith": {"type": "class", "boss": "vandermere", "text": "Defeat Vandermere in the Maelstrom to unlock."},  # Owner-approved proposal: the finale's reward
+	"slow_match": {"type": "passive", "boss": "vandermere", "text": "Defeat Vandermere in the Maelstrom to unlock."},  # Its paired passive (own decision), unlocked with it
+	"captain_of_the_dead": {"type": "title", "achievement": "dead_men_tell_tales",
+		"text": "Earn Dead Men Tell Tales: beat Vandermere with his Oath broken twice."},  # Own decision (the clear is recorded as a title, as Acts VI-IX did)
+	# --- Act XI (temporary): the Barrow Fields ---
+	# Hrimgar's fall (owner-approved proposal "Rewards": Barrow Grasp is
+	# unlocked by Hrimgar) with its paired passive, offered on every stage; the
+	# stage's achievement Keep the Fires earns the act's counter-passive
+	# Fur-Lined Bones (owner decision Nov 7, 2026; offered only in the act
+	# through its card row's "act").
+	"barrow_grasp": {"type": "spell", "boss": "hrimgar", "text": "Defeat Hrimgar the Draugr-King in the Barrow Fields to unlock."},  # Owner-approved proposal
+	"grave_frost": {"type": "passive", "boss": "hrimgar", "text": "Defeat Hrimgar the Draugr-King in the Barrow Fields to unlock."},  # Barrow Grasp's paired passive (owner-approved proposal), unlocked with it
+	"fur_lined_bones": {"type": "passive", "achievement": "keep_the_fires", "text": "Earn Keep the Fires: finish the Barrow Fields with no brazier out for more than 30 s."},  # Owner decision Nov 7, 2026: Keep the Fires unlocks Fur-Lined Bones
+	# --- Act XI (temporary): Valgard ---
+	# Sigrun's fall (owner-approved proposal "Rewards": Valkyrie Spear is
+	# unlocked by Sigrun) with its paired passive, offered on every stage; the
+	# stage's achievement Holmgang earns the act's counter-passive Calm Blood
+	# (brief: Holmgang is Valgard's; offered only in the act through its card
+	# row's "act").
+	"valkyrie_spear": {"type": "spell", "boss": "sigrun", "text": "Slay Sigrun, the Shield-Queen, in Valgard to unlock."},  # Owner-approved proposal
+	"einherjars_oath": {"type": "passive", "boss": "sigrun", "text": "Slay Sigrun, the Shield-Queen, in Valgard to unlock."},  # Valkyrie Spear's paired passive, unlocked with it
+	"calm_blood": {"type": "passive", "achievement": "holmgang", "text": "Earn Holmgang: win Sigrun's duel without a Grave Step."},  # Brief: Holmgang unlocks Calm Blood
+	# --- Act XI (temporary): Vigrid ---
+	# Odin's fall (owner-approved proposal "Rewards": Gungnir is unlocked by Odin
+	# and Fenrir; the finale grants the Draugr Thane): the spell with its paired
+	# passive, and the summon class with its paired passive, offered on every
+	# stage (no card-row "act" key). The title Doom of the Gods is Twilight of
+	# the Wolf's reward (it only records the clear).
+	"gungnir": {"type": "spell", "boss": "odin", "text": "Defeat Odin and Fenrir on Vigrid, the Last Field, to unlock."},  # Owner-approved proposal
+	"runecraft": {"type": "passive", "boss": "odin", "text": "Defeat Odin and Fenrir on Vigrid, the Last Field, to unlock."},  # Gungnir's paired passive (owner-approved proposal), unlocked with it
+	"draugr_thane": {"type": "class", "boss": "odin", "text": "Defeat Odin and Fenrir on Vigrid, the Last Field, to unlock."},  # Owner-approved proposal: the finale's reward
+	"cold_iron": {"type": "passive", "boss": "odin", "text": "Defeat Odin and Fenrir on Vigrid, the Last Field, to unlock."},  # Its paired passive (own decision), unlocked with it
+	"doom_of_the_gods": {"type": "title", "achievement": "twilight_of_the_wolf",
+		"text": "Earn Twilight of the Wolf: beat Odin and Fenrir on Vigrid, the Last Field."},  # Own decision (the clear is recorded as a title, as Act IX did)
+	# --- Act XII (temporary number): the Necropolis of Sand ---
+	# Anubis's fall (owner-approved proposal "Rewards": Linen Bind is unlocked
+	# by Anubis) with its paired passive, offered on every stage; the stage's
+	# achievement No Jars Left earns the Dynasty's counter-passive Embalmed
+	# Bones (own pairing, the brief left it to the lead: the Necropolis teaches
+	# the embalmers' rule; offered only in this act through its card row's
+	# "act").
+	"linen_bind": {"type": "spell", "boss": "anubis", "text": "Slay Anubis on the Necropolis of Sand to unlock."},  # Owner-approved proposal
+	"natron_salts": {"type": "passive", "boss": "anubis", "text": "Slay Anubis on the Necropolis of Sand to unlock."},  # Linen Bind's paired passive (owner-approved proposal), unlocked with it
+	"embalmed_bones": {"type": "passive", "achievement": "no_jars_left", "text": "Earn No Jars Left: break every Canopic Jar on the Necropolis of Sand and slay Anubis."},  # No Jars Left unlocks Embalmed Bones (own pairing)
+	# --- Act XII (temporary number): the Temple of the Lioness ---
+	# Sekhmet's fall (proposal "Rewards": Burning Eye is Sekhmet's) with its
+	# paired passive, offered on every stage; the achievement Names Taken earns
+	# the Dynasty's counter-passive Dune Walkers (the integration's split: the
+	# Necropolis's No Jars Left earns Embalmed Bones; offered only in the act through its card row's "act").
+	"burning_eye": {"type": "spell", "boss": "sekhmet", "text": "Slay Sekhmet at the Temple of the Lioness to unlock."},  # Proposal
+	"desert_fury": {"type": "passive", "boss": "sekhmet", "text": "Slay Sekhmet at the Temple of the Lioness to unlock."},  # Burning Eye's paired passive (proposal), unlocked with it
+	"dune_walkers": {"type": "passive", "achievement": "names_taken", "text": "Earn Names Taken: raise 100 of the Dynasty's dead before their Names return, in one run."},  # The Dynasty's second counter-passive (the integration's split: No Jars Left earns Embalmed Bones)
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	# Osiris and Ammit's fall (owner-approved proposal "Rewards": Feather's
+	# Verdict is unlocked by Osiris and Ammit; the finale grants the Ushabti
+	# Sentinel): the spell with its paired passive, and the summon class with
+	# its paired passive, offered on every stage (no card-row "act" key). The
+	# title Light of Heart is A Light Heart's reward (it only records the
+	# Weighing won until the reorder pass writes the epilogue parts).
+	"feathers_verdict": {"type": "spell", "boss": "osiris", "text": "Defeat Osiris and Ammit in the Hall of Two Truths to unlock."},  # Owner-approved proposal
+	"heavy_heart": {"type": "passive", "boss": "osiris", "text": "Defeat Osiris and Ammit in the Hall of Two Truths to unlock."},  # Feather's Verdict's paired passive (owner-approved proposal), unlocked with it
+	"ushabti_sentinel": {"type": "class", "boss": "osiris", "text": "Defeat Osiris and Ammit in the Hall of Two Truths to unlock."},  # Owner-approved proposal: the finale's reward
+	"answering_words": {"type": "passive", "boss": "osiris", "text": "Defeat Osiris and Ammit in the Hall of Two Truths to unlock."},  # Its paired passive (own decision), unlocked with it
+	"light_of_heart": {"type": "title", "achievement": "a_light_heart",
+		"text": "Earn A Light Heart: win the Weighing with the Scales on your side."},  # Own decision (the win is recorded as a title, as Acts VI-IX did)
+	# --- Act XIII (temporary number): the Silver Stair ---
+	# Seraiel's fall (owner-approved proposal "Rewards": Flaming Sword is
+	# Seraiel's) with its paired passive, offered on every stage; the stage's
+	# achievement Without Sin earns the Host's counter-passive Absolution (owner
+	# answer Nov 9, 2026; offered only in the act through its card row's "act").
+	"flaming_sword": {"type": "spell", "boss": "seraiel", "text": "Slay Seraiel on the Silver Stair to unlock."},  # Owner-approved proposal
+	"fallen_light": {"type": "passive", "boss": "seraiel", "text": "Slay Seraiel on the Silver Stair to unlock."},  # Flaming Sword's paired passive (owner-approved proposal), unlocked with it
+	"absolution": {"type": "passive", "achievement": "without_sin", "text": "Earn Without Sin: slay Seraiel on the Silver Stair with the scales never past their first third."},  # Owner answer (Nov 9, 2026): Without Sin unlocks Absolution
+	# --- Act XIII (temporary number): the Wheel of Thrones ---
+	# The Throne's fall (owner-approved proposal "Rewards": Wheel of Eyes is the
+	# Throne's) with its paired passive, offered on every stage; the stage's
+	# achievement The Wheel Breaks earns the Host's other counter-passive Smoked
+	# Glass (owner answer Nov 9, 2026; offered only in the act through its card
+	# row's "act").
+	"wheel_of_eyes": {"type": "spell", "boss": "throne", "text": "Break the Throne on the Wheel of Thrones to unlock."},  # Owner-approved proposal
+	"all_seeing": {"type": "passive", "boss": "throne", "text": "Break the Throne on the Wheel of Thrones to unlock."},  # Wheel of Eyes' paired passive (owner-approved proposal), unlocked with it
+	"smoked_glass": {"type": "passive", "achievement": "the_wheel_breaks", "text": "Earn The Wheel Breaks: break the Throne by its open Core."},  # Owner answer (Nov 9, 2026): the Host's other achievement unlocks Smoked Glass
+	# --- Act XIII (temporary number): the Empyrean ---
+	# The Voice's fall (owner-approved proposal "Rewards": Revelation is the
+	# Voice's; the finale grants the Bound Ophan): the spell with its paired
+	# passive, and the summon class with its paired passive, offered on every
+	# stage (no card-row "act" key). The Last Word only records the clear until
+	# the reorder pass writes the Part One epilogue part.
+	"revelation": {"type": "spell", "boss": "voice", "text": "Silence the Voice in the Empyrean to unlock."},  # Owner-approved proposal
+	"seventh_seal": {"type": "passive", "boss": "voice", "text": "Silence the Voice in the Empyrean to unlock."},  # Revelation's paired passive (owner-approved proposal), unlocked with it
+	"bound_ophan": {"type": "class", "boss": "voice", "text": "Silence the Voice in the Empyrean to unlock."},  # Owner-approved proposal: the finale's reward
+	"turning_bones": {"type": "passive", "boss": "voice", "text": "Silence the Voice in the Empyrean to unlock."},  # Its paired passive (own decision), unlocked with it
+	# --- Act XIV (temporary number): the Fern Basin ---
+	# Scarmaw's fall (owner-approved proposal "Rewards": Pack Leap is
+	# Scarmaw's) with its paired passive, offered on every stage. The stage has
+	# no achievement of its own (the act's are the Great Plain's and the Last
+	# Day's).
+	"pack_leap": {"type": "spell", "boss": "scarmaw", "text": "Slay Scarmaw in the Fern Basin to unlock."},  # Owner-approved proposal
+	"pack_instinct": {"type": "passive", "boss": "scarmaw", "text": "Slay Scarmaw in the Fern Basin to unlock."},  # Pack Leap's paired passive (owner-approved proposal), unlocked with it
+	# --- Act XIV (temporary number): the Great Plain ---
+	# Old Ironbrow's fall (owner-approved proposal "Rewards": Stampede is
+	# Old Ironbrow's) with its paired passive, offered on every stage; the
+	# counter-passive Hoarder's Bones by the stage's achievement Nothing Taken
+	# (owner answer, Nov 9, 2026), offered only in the act.
+	"stampede": {"type": "spell", "boss": "ironbrow", "text": "Slay Old Ironbrow on the Great Plain to unlock."},  # Owner-approved proposal
+	"calcified_hide": {"type": "passive", "boss": "ironbrow", "text": "Slay Old Ironbrow on the Great Plain to unlock."},  # Stampede's paired passive (owner-approved proposal), unlocked with it
+	"hoarders_bones": {"type": "passive", "achievement": "nothing_taken", "text": "Earn Nothing Taken: finish the Great Plain without losing a crystal pile to a Skyraider."},  # Owner answer (Nov 9, 2026): Nothing Taken unlocks Hoarder's Bones
+	# --- Act XIV (temporary number): the Last Day ---
+	# Old Gravejaw's fall BEFORE the impact (owner-approved proposal "Rewards":
+	# Meteor Call is his; "only a Gravejaw killed before the impact gives his
+	# spell": the Extinction leaves him broken, out of reach), with its paired
+	# passive, and the finale's summon class with its paired passive, offered
+	# on every stage; the counter-passive Thick Marrow by the act's achievement
+	# Trampled (owner answer, Nov 9, 2026), offered only in the act.
+	"meteor_call": {"type": "spell", "boss": "gravejaw", "text": "Slay Old Gravejaw on the Last Day, before the meteor falls, to unlock."},  # Owner-approved proposal
+	"cosmic_dust": {"type": "passive", "boss": "gravejaw", "text": "Slay Old Gravejaw on the Last Day, before the meteor falls, to unlock."},  # Meteor Call's paired passive (owner-approved proposal), unlocked with it
+	# --- Act XV (temporary number): the Greenwood ---
+	# The Stag King's fall (owner-approved proposal "Rewards": Wild Hunt is the
+	# Stag King's) with its paired passive, offered on every stage; the
+	# counter-passive Fallow Ground by the stage's achievement Scorched Earth
+	# (owner answer, Nov 2026), offered only in the act.
+	"wild_hunt": {"type": "spell", "boss": "stag_king", "text": "Slay the Stag King in the Greenwood to unlock."},  # Owner-approved proposal
+	"horn_of_the_hunt": {"type": "passive", "boss": "stag_king", "text": "Slay the Stag King in the Greenwood to unlock."},  # Wild Hunt's paired passive (owner-approved proposal), unlocked with it
+	"fallow_ground": {"type": "passive", "achievement": "scorched_earth", "text": "Earn Scorched Earth: blight half the Greenwood in one run."},  # Owner answer (Nov 2026): Scorched Earth unlocks Fallow Ground
+	# --- Act XV (temporary number): the Fae Court ---
+	# The Summer Queen's fall (owner-approved proposal "Rewards": Glamour is the
+	# Summer Queen's) with its paired passive, offered on every stage; the
+	# counter-passive Deadwood by the stage's achievement A Fair Bargain (owner
+	# answer, Nov 2026), offered only in the act.
+	"glamour": {"type": "spell", "boss": "summer_queen", "text": "Slay the Summer Queen at the Fae Court to unlock."},  # Owner-approved proposal
+	"changeling": {"type": "passive", "boss": "summer_queen", "text": "Slay the Summer Queen at the Fae Court to unlock."},  # Glamour's paired passive (owner-approved proposal), unlocked with it
+	"deadwood": {"type": "passive", "achievement": "a_fair_bargain", "text": "Earn A Fair Bargain: accept every bargain the Summer Queen offers and still win."},  # Owner answer (Nov 2026): A Fair Bargain unlocks Deadwood
+	# --- Act XV (temporary number): the World-Tree ---
+	# The Green Mother's fall (owner-approved proposal "Rewards": Root and Rot is
+	# the Green Mother's) with its paired passive, and the finale's summon class
+	# (the Ossuary Oak) with its paired passive, offered on every stage.
+	"root_and_rot": {"type": "spell", "boss": "green_mother", "text": "Defeat the Green Mother at the World-Tree to unlock."},  # Owner-approved proposal
+	"compost_heart": {"type": "passive", "boss": "green_mother", "text": "Defeat the Green Mother at the World-Tree to unlock."},  # Root and Rot's paired passive (owner-approved proposal), unlocked with it
+	"ossuary_oak": {"type": "class", "boss": "green_mother", "text": "Defeat the Green Mother at the World-Tree to unlock."},  # Owner-approved proposal: the finale's reward
+	"heartwood": {"type": "passive", "boss": "green_mother", "text": "Defeat the Green Mother at the World-Tree to unlock."},  # Its paired passive (own decision), unlocked with it
+	"bonehorn": {"type": "class", "boss": "gravejaw", "text": "Slay Old Gravejaw on the Last Day, before the meteor falls, to unlock."},  # Owner-approved proposal: the finale's reward
+	"petrified_horns": {"type": "passive", "boss": "gravejaw", "text": "Slay Old Gravejaw on the Last Day, before the meteor falls, to unlock."},  # Its paired passive (own decision), unlocked with it
+	"thick_marrow": {"type": "passive", "achievement": "trampled", "text": "Earn Trampled: let the stampedes kill 100 enemies in one run."},  # Owner answer (Nov 9, 2026): Trampled unlocks Thick Marrow
 }
 
 ## End-screen plate heading of a newly unlocked item, by type.

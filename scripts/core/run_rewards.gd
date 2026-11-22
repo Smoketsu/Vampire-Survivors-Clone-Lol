@@ -63,7 +63,7 @@ func counters() -> Dictionary:
 	return {
 		"min_hp_frac": min_hp_frac,
 		"boss_kill_secs": boss_kill_secs,
-		"temp_raised": float(game.horde.temp_spawned),
+		"temp_raised": float(game.horde.temp_spawned) - float(game.stats.get("glamour_copies", 0.0)),  # Act XV: Glamour's copies are illusions, not raised dead (0 without the spell).
 		"evolutions": float(game.stats.get("evolutions", 0.0)),
 	}
 

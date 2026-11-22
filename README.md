@@ -14,10 +14,11 @@ you. Late in a run your summons can evolve into Death Knights, Liches, Profane
 Bishops, Shadow Reapers, Cathedral Horrors, Hellhounds, Keening Ladies and
 Ossuary Engines.
 
-This repository holds the game's campaign: nine acts of three stages each,
-27 playable stages from *The Desecrated Graveyard* (Act I) to *The Ark of the
-Concord* (Act IX), each boss opening the next stage (Acts VI-IX went live in
-Nov 2026), built in Godot 4.3 with no addons. The art is true pixel art (PNGs in `assets/`; the code
+This repository holds the game's campaign: fifteen acts of three stages each (45 stages, every one
+playable), in three Parts of five acts, from *The Desecrated Graveyard* (Act I, Chapter I) to *The
+World-Tree* (Act XV, Chapter XLV), each boss opening the next stage (the act order and every act and
+chapter number come from one list, `StageRegistry.ACT_ORDER`; GDD §15.0 "The reorder pass, part 1"),
+built in Godot 4.3 with no addons. The art is true pixel art (PNGs in `assets/`; the code
 drawings remain as the fallback for any missing image), and the sound and
 music are synthesized at startup. Latest release notes:
 [`docs/release_notes/v0.7.0.md`](docs/release_notes/v0.7.0.md).
@@ -1047,13 +1048,35 @@ Focusing a card turns the menu diorama to the stage's mood (night, dusk,
 dawn). Every stage runs the same
 structure (a 20:00 countdown, its boss with 3:00 left, the Reckoning at 0:00).
 
-| Stage | Unlock | Boss | Soul Ash |
-|---|---|---|---|
-| Chapter I, **The Desecrated Graveyard** | always open | Sir Alaric, the Gravebreaker | ×1.0 |
-| Chapter II, **The Crimson March** | slay Sir Alaric once (GDD §9.3) | Marshal Vael, the Crimson Bulwark | ×1.25 |
-| Chapter III, **The Sanctum of Judgment** | slay Marshal Vael once (GDD §9.3) | Grand Inquisitor Seraphine, Voice of the Dawn | ×1.5 |
+The acts, in campaign order (`StageRegistry.ACT_ORDER`, the one ordered list: act numbers, chapter
+numbers, the unlock chain and the Soul Ash bonus all derive from it). The stage select groups them by
+**Part**: three Part tabs beside the five act tabs of the shown Part; Q / E (LB / RB) step through every
+act in order. Each stage opens once the previous stage's boss falls (GDD §9.3); the first stage of an act
+opens with the previous act's finale boss.
 
-**The stage Soul Ash bonus restarts in every act** (owner decision Oct 2026, GDD §15.0 "Soul Ash per act and difficulty"): stage 1 of an act ×1, stage 2 ×1.25, stage 3 ×1.5. Graveyard / Gullhaven Harbour / Scrap Wastes ×1.0; Crimson March / Hollow Archive / Assembly Halls ×1.25; Sanctum / Ul-Thalos / Iron Citadel ×1.5. Acts IV-IX follow the same rule (the first stage of each act ×1.0, the finale ×1.5). Difficulty is the bigger lever (Initiate ×0.8, Necromancer ×1, Lich ×1.5, Deathlord ×2). The bonuses add on the run subtotal rather than multiply (see Difficulty & run modifiers). Measured payouts: `docs/ossuary/ECONOMY.md`, tool `tools/ash_measure.py`.
+| Part | Act | Chapters | Stages |
+|---|---|---|---|
+| One: the living | I, the Crimson Covenant | I-III | the Desecrated Graveyard, the Crimson March, the Sanctum of Judgment |
+| | II, the Black Tide | IV-VI | the Smuggler's Cutter, the Treasure Galleon, the Maelstrom |
+| | III, the Sanguine Court | VII-IX | Ravensmoor, the Witchwood, Castle Sanguis |
+| | IV, the Last Line | X-XII | Skid Row, Fort Kessler, Liberty Heights |
+| | V, the Shogunate of the Rising Sun | XIII-XV | the Burning Province, Castle Kurogane, the Road to the Sun |
+| Two: gods, hell and heaven | VI, the Hall of the Slain | XVI-XVIII | the Barrow Fields, Valgard, Vigrid |
+| | VII, the Necropolis Dynasty | XIX-XXI | the Necropolis of Sand, the Temple of the Lioness, the Hall of Two Truths |
+| | VIII, the Olympian Republic | XXII-XXIV | the Shores of Ilion, Mount Olympus, the Asphodel Underworld |
+| | IX, the Inferno | XXV-XXVII | the Burning Gate, the Palace of Silk and Ash, Pandemonium |
+| | X, the Celestial Host | XXVIII-XXX | the Silver Stair, the Wheel of Thrones, the Empyrean |
+| Three: beyond and before | XI, the Ancient Eye | XXXI-XXXIII | Gullhaven Harbour, the Hollow Archive, Ul-Thalos |
+| | XII, the Electronic Empire | XXXIV-XXXVI | the Scrap Wastes, the Assembly Halls, the Iron Citadel |
+| | XIII, the Concord of Stars | XXXVII-XXXIX | the Crash Site, the Proving Moon, the Ark of the Concord |
+| | XIV, the Age of Titans | XL-XLII | the Fern Basin, the Great Plain, the Last Day |
+| | XV, the Turning Year | XLIII-XLV | the Greenwood, the Fae Court, the World-Tree |
+
+The sections below were written as each act was built and still name an act by the number it had then
+(for example "Act II" for the Ancient Eye, now Act XI); this table is the current order. A save from before
+the reorder keeps every stage it had opened (save version 3, `[stages] opened`).
+
+**The stage Soul Ash bonus restarts in every act** (owner decision Oct 2026, GDD §15.0 "Soul Ash per act and difficulty"): stage 1 of an act ×1, stage 2 ×1.25, stage 3 ×1.5. Graveyard / Gullhaven Harbour / Scrap Wastes ×1.0; Crimson March / Hollow Archive / Assembly Halls ×1.25; Sanctum / Ul-Thalos / Iron Citadel ×1.5. Every act follows the same rule (the first stage of each act ×1.0, the finale ×1.5), derived from the stage's position in its act (`StageRegistry.ash_mult_of()`), so the reorder kept every stage's bonus. Difficulty is the bigger lever (Initiate ×0.8, Necromancer ×1, Lich ×1.5, Deathlord ×2). The bonuses add on the run subtotal rather than multiply (see Difficulty & run modifiers). Measured payouts: `docs/ossuary/ECONOMY.md`, tool `tools/ash_measure.py`.
 
 ### Characters
 
@@ -2456,21 +2479,700 @@ achievement **The Last Harvest** (beat the Harvester: the title The Unharvested)
 `--spawn=grey_overseer@T`, `luminous_archon@T`, `specimen_tank@T`, `vault_beast@T`, `reactor_vent@T`,
 `reap_emitter@T`; lines `ark`, `ark events`, `ark kinds`, `harvester`, `tractor beam`, `ghost saucer`.
 
+### Act X: the Black Tide (live)
+
+<!-- --- Act X: the Black Tide --- -->
+The Covenant is ash and the only road out of the burning country is the sea. **The Corsair Brotherhood**, a loose fleet
+of cutthroats, gunners and duellists under the black flag, wants the gold the necromancer took from the church's vaults
+and the secret of a crew that never dies; under the ship, the sea has sharks, crabs, serpents and a kraken (GDD §15.0
+"Act X foundation: the Black Tide (phase 1)" and the rows after it; owner-approved proposal
+`docs/proposals/NEW_ACTS_AND_ORDER.md` Part 1). The whole act is fought **on one ship's deck**. It is built as **Act X**
+for now (its final slot is II; the reorder pass moves it), with an **Act X** tab and three playable stages (live since the
+integration, GDD §15.0 "The Black Tide goes live (integration and balance)"): **the Smuggler's Cutter** (960 x 360 deck), **the Treasure Galleon** (1,500 x 540) and **the Maelstrom** (the
+*Hollow Queen*, 1,300 x 500), bosses Captain Crow, Admiral Marrec and Captain Vandermere; defeating the Harvester opens the Cutter and each boss opens the next stage. The act's shared rules:
+
+- **Boarding.** Nobody walks in from the screen edge: every enemy the timeline sends comes **by boat**. A boat shows its
+  lane 3 s ahead (a dotted wake and an amber lantern at the rail), hooks the rail with two grapple lines (40 HP each)
+  and pours one crewman every 0.6 s. Cut both hooks and the boat drifts off with the rest of its crew; sink the hull
+  (Archers, Mages, spells, fliers, or a summon at the rail) and the crew still aboard drowns, leaving a floating crate.
+  Skiffs carry 6, longboats 12, raider ships 24 on two planks; at most 4 boats at a time.
+- **The Deck.** The ship is the arena. You and your army stop at the rail; fliers may hover up to 120 px past it. An
+  enemy knocked past the rail (a powder blast, a stomp, a Bone Wall, the Black Tide's wave) **drowns**, dropping its
+  XP at the rail: knockback is the act's counterplay. Beside the rail the Bone Ring flattens into a half-ring facing the
+  water (its posts slide inboard); on the narrow Cutter it flattens fore and aft. The Cutter fits the screen and the
+  camera stays still; the bigger decks scroll, clamped over the deck.
+- **Strikes from the Sea.** Sharks and kraken arms circle the hull under the water (they cannot be hit while
+  submerged). When one strikes it surfaces and a dark ring marks its target for 1 s: a **shark** leaps onto the deck
+  inside your ring and fights on as a boarder; a **kraken arm** grabs one summon and drags it to the rail, and it is gone
+  overboard after 5 s unless you kill the arm while it is surfaced. Every strike hits both armies. At most 8 swimmers.
+- **The Black Tide.** At 0:00 every boat closes at once and the whole rail boards, the rail band is struck every 3 s,
+  and every 20 s a great wave shoves everything toward the far rail (the boarders drown there).
+- **Music.** "Dead Men's Shanty", the act's own score, with the Black Tide sound pack (wired at the wave 1 integration).
+
+The shared kinds so far: the **Deckhand** (cutlass fodder), the **Musketeer** (ordinary shot), the **Powder Runner**
+(a lit keg that blasts both sides and knocks everyone 60 px; it goes off when he falls, too), the **Swashbuckler** (a
+rapier lunge past your first blocker), the **Boarding Bruiser** (flat armour 3), the **Reef Shark** and the **Kraken
+Arm**, plus the boats and their hooks. The Codex has a **Black Tide** tab (the Brotherhood, the Sea, Boats, Bosses).
+Autotest: `--stage=cutter|galleon|maelstrom`, `--boss=crow|marrec|vandermere`, `--spawn=` with the kinds above; lines
+`boarding`, `deck`, `sea strikes`, `black tide`, `corsair kinds`, `corsair stage`. The deck in the game:
+`docs/tide/deck_spike.png` and `docs/tide/deck_spike_rail.png`.
+
+<!-- --- Act X: the Smuggler's Cutter --- -->
+#### Stage 28: the Smuggler's Cutter (phase 2)
+
+**The Smuggler's Cutter** (`cutter`, built in phase 2; GDD §15.0 "The Smuggler's Cutter (Act X phase 2)" and the rows
+after it). A night-time sloop slips out of a ruined harbour with the Covenant's coast burning behind it. The deck is the
+art pass's night planks with a single mast, one hatch, two deck guns and lashed barrels; two boarding points a side,
+skiffs and longboats only; the camera never moves. Four zones change the look and the timeline, not the map: **the
+Harbour Mouth** (the burning coast), **Open Water**, **the Fog Bank** (a boat shows its lane only for its last 2 s:
+watch the rail) and **the Cove** (black cliffs). The boats come thick and fast, and the shared **Grappler** (a hook line
+that drags one of your dead to the rail) and **Boatswain** (a bellow that speeds and shields his crew) join the crews.
+- **Powder barrels** stand along both rails and are restocked every zone. Any hit sets one off: a blast that hurts both
+  sides and knocks everyone 120 px, so crews crowding the rail go over it.
+- **Bosun Gorran and the Ram Longboat** (the miniboss, 11:00): a heavy longboat shows its lane, rams the hull (your
+  whole army is staggered back) and pours Gorran and his crew aboard. He sweeps his chain-hook through the ring and
+  bellows his crew on. Sink the longboat and the crew still aboard drowns.
+- **Captain Ezekiel Crow, the Gull King** (17:00): **Broadside** (his sloop alongside, out of reach: rolling lines of
+  cannon fire across the deck every 20 s that hit both armies and throw boarders overboard, and his crew boarding
+  double; sink the sloop or outlast it), **the Duel** (he swings aboard on a landing circle and fights with cutlass and
+  pistol, leaping your ring again and again) and **the Fire Ship** (below 40%: his burning sloop rams the hull and
+  burning planks spread as short fire patches until he falls). A short ending text only.
+- **Rewards:** slaying Crow unlocks the spell **Chain Shot** (spectral chain-shots spin out through a line of foes and
+  back, hitting each twice; evolves into **Keelhauler**, which also throws every foe it strikes aside, with the new
+  passive **Bosun's Whistle**: a shorter cooldown) and through it the character **the Marooned Quartermaster** (Spare
+  Shot: one more chain-shot). The achievement **Not One Aboard** (on the Cutter, sink five boats before any of their crew
+  climbs aboard; the crew needs 3 s to climb the hooks here) unlocks the act's counter-passive **Barnacle Bones** (summon
+  hits on boats, hooks and sea beasts deal more; offered only in this act).
+- Autotest lines: `cutter` (barrels, fog boats, the ram, the fire patches, clean sinks), `cutter crew`, `bosun gorran`,
+  `captain crow`; `act X spell` / `act X passives` on any stage when Chain Shot, Bosun's Whistle or Barnacle Bones was
+  taken (`--spells=chain_shot`, `--character=marooned_quartermaster`).
+<!-- --- Act X: the Treasure Galleon --- -->
+#### Stage 29: the Treasure Galleon (phase 2)
+
+A captured treasure galleon on open water at dawn (GDD §15.0 "The Treasure Galleon (Act X phase 2)" and the rows after
+it): a 1,500 x 540 deck that scrolls, a quarterdeck at the stern (its stair is a choke the ring flows round), a
+forecastle, three masts and **eight deck cannons**, five boarding points (one boat at each), boats up to raider ships.
+Four zones change the light and the mix: **the Convoy Lane**, **the Reef** (hull crabs and sharks), **the Storm** (Old
+Hollow-Eye) and **the Gun Deck** (gunboats, faster broadsides).
+
+- **Broadsides.** Every 55-80 s (by zone) an enemy galleon comes alongside and fires a **6-line broadside** straight
+  across the deck: the lanes show for 1.5 s, then hit both armies; the Brotherhood's crew in a lane is thrown toward
+  the far rail and drowns there. The lanes never centre on you: step into a gap.
+- **The deck cannons.** Stand at one (you or any summon) for 3 s and it fires once at the nearest boat, gunboat or
+  surfaced beast, and the splash throws the boarders at that rail into the sea. A world rule: no class or spell owns it.
+- **New kinds:** the **Gunnery Mate** (lobs grenadoes over the ring onto you: a landing circle, then a powder blast
+  that hurts both sides), the **Voodoo Navigator** (marks a spot on your ring for the sea to strike 1.5 s later; kill
+  her and the mark fails), the **Gunboat** (never boards: it shells the deck in lines from the water, and sails off
+  after 75 s) and the **Hull Crab** (climbs the hull and comes over the rail with armour 4). Any Black Tide stage may
+  field them.
+- **Old Hollow-Eye** (the miniboss): the kraken itself. It circles the hull under the water, surfaces to grab your dead
+  with boss-sized tentacles and raises kraken arms beside it; hit it while it is up. After 75 s it tires: it comes up
+  beside you and stays up, striking no more, until it dies.
+- **Admiral Isabeau Marrec, the Sea Wolf** (the boss): **the Fleet** (from her flagship alongside she fires a broadside
+  every 30 s and a raider ship's worth of her crew boards), **the Boarding** (she crosses a plank with her marines:
+  cut both of its hooks first and the plank falls, her marines drown and she pays for the swim; after two falls she
+  swings across on a rope), then a cutlass, pistol and rapier-lunge duel, and **Gold Fever** (cursed coins that keep
+  barriers on her marines and guard her while she stands near them; any blow clears a coin) with a last stand on the
+  quarterdeck.
+- **Rewards:** Marrec unlocks the spell **Cannonade** (spectral cannonballs arc down on the three thickest groups;
+  evolves into **Dead Men's Broadside** with the passive **Black Powder**: wider blasts that throw foes back) and with
+  it the playable **Corsair Queen** (innate Queen's Ransom: one more group marked). The achievement **Walked the Plank**
+  (200 foes overboard in one run) unlocks the counter-passive **Sea Legs** (the army shrugs off drift and pulls; the
+  Black Tide only).
+- **The Black Tide** here also brings a gunboat every 18 s.
+
+Autotest: `--stage=galleon`, `--boss=marrec`, `--spells=cannonade`, `--character=corsair_queen`, `--spawn=` with
+`gunnery_mate`, `voodoo_navigator`, `gunboat`, `hull_crab`, `old_hollow_eye`; lines `galleon`, `broadsides`, `deck
+cannons`, `galleon kinds`, `old hollow-eye`, `galleon threats`, `marrec`, and on any stage `act X spell` / `act X
+passives` when taken.
+#### Stage 30: the Maelstrom (phase 2)
+
+<!-- --- Act X: the Maelstrom --- -->
+The act's finale (GDD §15.0 "The Maelstrom (Act X phase 2)" and the rows after it). The ghost ship *Hollow Queen*, caught in a whirlpool at midnight: a rotting 1,300 x 500 deck (the art pass's
+`tiles/corsair_maelstrom` over its `corsair_water`, tinted per zone, and its deck furniture: masts, hatches, barrels and
+dead guns, with the helm's wheel at the stern), boarded along the **whole rail** by the full roster, up to six boats at
+once. Four zones: **the Fog of Ships** (a gentle roll), **the Gyre**, **the Eye of the Storm** (the deck lies level and
+the sea comes up to look: serpents and the kraken) and **the Drowned Helm**.
+
+- **The Heave.** The whirlpool tilts the deck toward a low side: you, your army and every boarder slide toward that rail
+  at 30 px/s, and the low side flips every 12 s after a 3 s creak; the HUD objective line is the arrow ("The deck heaves:
+  sliding DOWN v v v", "The hull creaks: the deck tips UP ^ ^ ^"), with chevrons along the low rail. Enemies slide by
+  their knockback, so a blow at the low rail tips them overboard.
+- **The Brotherhood's own dead.** The *Hollow Queen*'s **ghost crew** (Ghost Deckhands and Ghost Gunners: the roster's
+  art in a spectre green) boards with the living. A ghost crewman cut down on the deck near you **rises for you** for 7 s
+  (at most 5 at once); one that drowns stays in the sea.
+- **The Sea Serpent** (`corsair_serpent`, a shared swimmer heavy) breaches in a line across the rail band: step out of
+  the lane.
+- **The Ghost Bosun** (miniboss, 8:30) climbs over the rail; each blast of his whistle calls a **spectral longboat** with
+  his drowned crew.
+- **Captain Cornelius Vandermere** (17:00) drifts at you lashed to his wheel, behind **Dead Men's Oath**: while it holds
+  he takes 35% of every hit. Every ghost crewman you raise chips it 2%; broken, he takes 150% for 15 s, then it refills
+  and his crew returns. **The Crew**: spectral longboats on a clock; a fan of lantern shots. **The Maelstrom** (below
+  55% HP): the tilt doubles (the low rail drowns what is pressed on it), the kraken surfaces and strikes the low rail.
+  When he falls the whirlpool closes and the sea is calm (the deck lies level).
+- **The Black Tide** here also brings the kraken up every 24 s (every stage of the act: every 30 s).
+
+Rewards (unlocked by defeating Vandermere, offered on every stage): the spell **Anchor Drop** (a spectral anchor slams
+the strongest foe, stuns it and shocks the ring round it; no pull) evolving into **Abyssal Mooring** (two anchors that
+stay moored and keep shocking) with **Dead Reckoning**; the character **the Ghost Helmsman** (male; innate Second
+Anchor: one more anchor); the summon class **the Powder Wraith** (a skeleton that marches a lit keg into a pack, bursts
+for area damage and a 60 px knockback, and reforms at your ring 12 s later) evolving into **Magazine Lord** (two kegs a
+march, reforms in 8 s) with the new passive **Slow Match** (every summon special knocks farther). Achievement **Dead Men
+Tell Tales** (beat Vandermere with his Oath broken twice; the proposal's three lowered at the integration): the title *Captain of the Dead* (no epilogue part until
+the act reorder).
+
+Autotest: `--stage=maelstrom`, `--boss=vandermere`, `--spells=anchor_drop`, `--classes=powder_wraith`,
+`--character=ghost_helmsman`, `--spawn=` with `ghost_deckhand`, `ghost_gunner`, `ghost_bosun`, `corsair_serpent`; lines
+`maelstrom` (the Heave, raises, longboats, the Bosun, the event log), `maelstrom kinds`, `vandermere`, `black tide
+kraken`, and on any stage `anchor drop` / `powder wraith` when used.
+### The Hall of the Slain (foundation, not yet playable)
+### The Hall of the Slain (playable, temporarily Act XI)
+
+<!-- --- Act XI (temporary): the Hall of the Slain --- -->
+In the north the dead are not owned but chosen, and since the necromancer took the world's dead the god's hall stands
+empty. So the raiders, the shield-maidens, the berserkers, the barrow-dead and the giants come south, and the valkyries
+fly with them (GDD §15.0 "The Hall of the Slain foundation (phase 1)" and the rows after it; the act's section of
+`docs/proposals/LAST_SIX_ACTS.md`, with the owner's decisions of Nov 7, 2026). Its final place is **Act VI**, between the
+Shogunate and the Necropolis Dynasty; until the reorder pass it sits on a temporary **Act XI** tab after the Black Tide, and
+it is tuned for its final slot. Three stages, **the Barrow Fields**, **Valgard, the Hall of Heroes** and **Vigrid,
+the Last Field** (bosses Hrimgar the Draugr-King, Sigrun the Shield-Queen, Odin and Fenrir), playable since the act's
+integration (GDD §15.0 "Hall of the Slain integration"); Captain Vandermere's fall in the Maelstrom opens the Barrow
+Fields (until the Black Tide is built, `--stage=` reaches them). The act's shared rules:
+
+- **The Long Winter** (owner decision, replacing the proposal's Choosing). The cold rises with the clock: a level every
+  5:00, three at most, and the frost creeps in from the edges of the screen. Six **braziers** burn on the field; within
+  220 px of a lit one everything is warm. Out of warmth you and your army are slowed (10% / 20% / 30% by level, the same
+  ground slow as Gullhaven's water) and, from level 2, your summons take frostbite (0.5% / 1% of their health a second).
+  The Norse are born to the cold. **Frost giants and seers douse** the braziers they pass (the fire gutters first); stand
+  within 60 px of a dark brazier for 2 s to relight it (a ring fills; the first relights pay a little Soul Ash).
+- **Berserkergang.** A Norse warrior (raider, shield-maiden, berserker, skald) below 40% health goes berserk for good:
+  +30% speed and damage, red eyes, and slows, stuns and freezes no longer hold it. Berserkers start in the fury. Chip
+  damage pushes warriors into it: burst is the answer.
+- **Rune-Stones.** Carved stones rise during the run (four per stage). Held by the hall, a stone wards every Norse warrior
+  within 300 px (they take 25% less damage) and blows a horn every 60 s that calls a squad. Stand within 120 px of it with
+  more bodies (you and your summons) than the hall has there for 3 s: it is taken (its ward and horn stop, and the first
+  take pays Soul Ash). Seers walk back to re-carve it. Taking a stone never buffs your army.
+- **Ragnarök.** At 0:00 the wolf swallows the sun and the arena goes dark red: the Einherjar of the hall march out at
+  once (gold-lit elite warriors), fire-giants step out of the south edge, and every valkyrie dives at your ring.
+- **Music.** "Horns at the Last Feast", the act's own score, with the Norse sound pack (wired at the wave 1 integration).
+
+The shared kinds: the **Raider** (fodder in crowds), the **Shield-Maiden** (a shield bash that throws one summon back),
+the **Berserker** (always in the fury), the **Skald** (his war-song makes the warriors near him strike faster), the
+**Valkyrie** (a flier with a telegraphed spear dive; aloft, swords cannot reach her), the **Seer** (douses braziers,
+re-carves stones, a curse that blinds one summon), the **Draugr** (armour 3, a cold touch that slows a summon), the
+**Wolf of the Wastes** (packs of five that lunge), the **Frost Giant** (boulders on a landing circle, a stomp; douses
+braziers) and the **Fire-Giant** (Ragnarök's heavy). The Codex has a **Hall** tab. Autotest:
+`--stage=barrow_fields|valgard|vigrid`, `--boss=hrimgar|sigrun|odin`, `--spawn=` with the kinds above
+(`rune_stone@T` raises a stone, `brazier@T` places a brazier); lines `long winter`, `berserkergang`, `rune-stones`,
+`norse kinds`, `ragnarok`, `norse stage`.
+
+### The Hall of the Slain: the Barrow Fields (Stage 16 in the final order)
+
+<!-- --- Act XI (temporary): the Barrow Fields --- -->
+Snowfields of burial mounds above a frozen fjord, and the barrows are cracking open (GDD §15.0 "The Barrow Fields (the
+Hall of the Slain phase 2)" and the rows after it; `docs/norse/BRIEF_PHASE2.md` Agent A). Playable since the act's
+integration. The draugr lead here, men and women, with the living warriors of the hall beside
+them. Four zones on the clock: **the Longshore** (snow down to the fjord, pines), **the Barrows** (5:00, a field of burial
+mounds), **the Frozen Fjord** (10:00, open ice and drifts of deep snow that slow everyone in them, you, your army and
+the enemy alike) and **the Jarl's Hall** (15:00, long tables, shields on posts and two rows of hearths).
+
+- **Braziers by the map.** The Longshore's five fires stand in a loose ring just beyond where you start; each later zone
+  lights its own set around you (four among the mounds, four on the fjord's banks, six hearths in the hall), and the
+  fires left far behind go out of the map. Warmth is near the fight, and fought over: the barrows crack open beside the
+  fires. The braziers flicker and smoke (8-frame loops) on every Norse stage.
+- **Open barrows.** A mound cracks open (2 s, a ring of frost closing on it), then lets a draugr out every 5 s (three of
+  its own at most) until you break it. At most six stand at once.
+- **The Barrow-Wight** (10:30, the miniboss): a draugr chieftain whose howl stuns your whole ring for a second (a frost
+  ring grows for 1 s first) and cracks a barrow near you.
+- **Hrimgar the Draugr-King** (17:00): he rises three times on one health bar. **The Grave**: frost mist bursts on your
+  ring (telegraphed circles that strike and chill) and draugr pour from every mound while new barrows crack. At two
+  thirds of his health he **falls** and sinks; his barrow rises where he fell, and draugr climb out of it. **Break it
+  within 20 s and he never rises again.** Otherwise he climbs out stronger as **the Barrow Lord** (a telegraphed cleave of
+  his greatsword that throws your summons) and, after a second fall, **the Last Rising** (he drags the summons nearest him
+  into the mound at his feet, holding and crushing them). His fall shows a short ending text.
+- **Rewards.** Slaying Hrimgar unlocks **Barrow Grasp** (cold hands burst from the ground in a ring around you and hold
+  your foes; it evolves into **Barrow-Lord's Embrace** with its paired passive **Grave Frost**: two rings of hands that
+  linger and seize what walks into them) and with it **the Rune-Seer** (a volva necromancer; her innate Rune of Binding
+  raises two more hands in every ring). The achievement **Keep the Fires** (reach 0:00 on the Barrow Fields with no
+  brazier ever out for more than 30 s) unlocks the act's counter-passive **Fur-Lined Bones** (the cold slows your summons
+  less, half at Lv 5; offered in this act only).
+
+Autotest: `--stage=barrow_fields`, `--boss=hrimgar`, `--spawn=` with `draugr_female`, `open_barrow`, `barrow_wight`,
+`hrimgar_barrow`; lines `barrow fields` (braziers by zone, barrows, drifts, Keep the Fires, the lowest HP and when),
+`barrow wight`, `hrimgar`, and `norse spell` / `norse passives` when Barrow Grasp, Grave Frost or Fur-Lined Bones was
+taken. The army bot brings its ring to Hrimgar's barrow while he lies in it.
+
+<!-- --- Act XI (temporary): Valgard --- -->
+**Valgard, the Hall of Heroes** (phase 2; GDD §15.0 "Valgard, the Hall of Heroes (the Hall of the Slain phase 2)" and
+the rows after it; playable since the act's integration). A vast feast hall at the edge of the sky. Warriors
+and valkyries lead. Four zones on the art's hall planks and slabs: **the Shield Yard** (shields on posts), **the Mead
+Hall** (long tables without end), **the Hall of Spears** and **the Valkyries' Gate**. The braziers stand by the map: the
+Mead Hall's long hearth either side of the start, the yard fires, and beyond them **the hall's hearths** on a ~900 px
+lattice, lit as you come near (about six in reach at a time), so warmth is a place to hold.
+- **The Feast.** Gold-lit **Einherjar** sit asleep at the long tables. Every horn of a Rune-Stone the hall holds wakes
+  the heroes at the nearest tables (two to four, by zone), who step out and fight; an emptied table fills again after
+  2:30. Take the stones and the horns stop.
+- **The Einherjar Champion** (miniboss, 11:00): a gold-lit hero of a thousand years. His **sweep** (a circle around
+  him) throws your ring back, and his **horn** wakes the tables; below 40% he goes berserk.
+- **Sigrun, the Shield-Queen** (17:00, with her valkyrie wing): **the Charge** (she and her wing mark lines across your
+  ring, then dive along them), **the Holmgang** (from 70%: a square of hazel rods closes around you and her for 15 s;
+  your summons and every other foe are kept out, you cannot leave, and only your **spells** reach her; take 6% of her
+  health and she yields, staggered with her guard down; fail and she heals; a duel every ~30 s), **the Doors of the
+  Hall** (from 35%: ten Einherjar march out of the doors at her side and the tables wake).
+- **Rewards:** **Valkyrie Spear** (a spectral spear dives on the strongest foe and leaps to the next) → **Chooser of the
+  Slain** (+ **Einherjar's Oath**: more leaps and damage; evolved, every fourth foe it slays rises as a Warrior for 12 s),
+  unlocked by Sigrun; **the Shield-Maiden** (Shield-Sister: one more leap); the counter-passive **Calm Blood** (berserk
+  blows on your summons deal up to 20% less; the act only), earned by the achievement **Holmgang** (win Sigrun's duel
+  without a Grave Step).
+- Autotest: `--stage=valgard`, `--boss=sigrun`, `--spawn=einherjar|einherjar_champion|wing_valkyrie@T`,
+  `--character=shield_maiden_hero`, `--spells=valkyrie_spear`, `--passives=calm_blood`; lines `valgard` (the Feast, the
+  hearths, the Champion), `einherjar champion`, `valgard threats`, `sigrun`, and on any stage `norse spell` / `norse
+  passives` when taken.
+
+<!-- --- Act XI (temporary): Vigrid --- -->
+#### Vigrid, the Last Field (phase 2; playable since the act's integration)
+
+The plain where the last battle is fought, under a sky going out (GDD §15.0 "Vigrid, the Last Field (phase 2)" and the
+rows after it). Four zones: **the Frozen Sea** (fjord ice), **the Ash Plain**, **the Giants' March** and **the Field of
+Vigrid** (shields planted in the ash). Giants and wolves lead. The six braziers stand by the map (two by the start, four
+farther out), and **the war-camp moves with the battle**: at each new zone the fires are set up again round you, lit or
+dark as they were. **The Fading Light:** the light fades zone by zone (a darkness over the screen with pools of light at
+the lit braziers and round you), and at every zone change from the Ash Plain on **the dark takes the farthest lit
+brazier** (relight it, or hold the fires you have). **The early dark:** from 15:15 the darkness turns Ragnarök's red and
+a fire-giant of the south steps out of the dark every 75 s until the boss. **Miniboss, the Fire-Giant of the South**
+(12:00): a stomp, and his footprints burn (and his stomp sets the ground alight); keep your ring out of the fire. **Boss,
+Odin and Fenrir:** *the Wolf* (Fenrir breaks his chain and hunts your ring; he swallows one of your dead whole and spits
+it out 4 s later, hurt, while Odin watches out of reach), *the All-Father* (the wolf chained at his side, Odin throws
+**Gungnir**, a homing spear at your strongest summon, or at you while **his ravens** have marked you: only a Bone Wall
+across its path or Grave Step turns it; shoot the ravens down), *Ragnarök* (both at once, rings of fire round you; when
+one falls, the other follows within 30 s). Rewards for Odin's fall, offered on every stage: the spell **Gungnir** (a
+spear of soul-light at the strongest foe on screen that pierces everything in its line) → **Spear of the Hanged** (two
+spears that come back to your hand) with **Runecraft**; the playable **Berserker** (male; Bear-Shirt: one more spear);
+the summon class **the Draugr Thane** (a heavy blocker; every axe blow chills, and its frost cleave chills all before
+it) → **the Barrow King** (the cleave freezes) with **Cold Iron** (your dead strike slowed foes harder); the achievement
+**Twilight of the Wolf** (beat Odin and Fenrir; the title Doom of the Gods). Autotest: `--stage=vigrid`, `--boss=odin`,
+`--spawn=muspel_giant|fenrir|odin_raven@T`, `--spells=gungnir`, `--classes=draugr_thane`, `--character=berserker_hero`;
+lines `vigrid` (the lowest HP before 0:00 and when, the dark, the camp moves, how far the nearest fire was, the
+vanguard, the miniboss), `vigrid events`, `vigrid kinds`, `odin`, and on any stage `gungnir` / `draugr thane` when used.
+### Act XII (temporary number): the Necropolis Dynasty (foundation)
+
+<!-- --- Act XII (temporary number): the Necropolis Dynasty --- -->
+The oldest empire of the dead comes to take its dead back, and the necromancer's with them (proposal
+`docs/proposals/NEW_ACTS_AND_ORDER.md` Part 3; final slot VII of the fifteen-act order, temporary act number 12 until the
+reorder pass, `docs/last_acts/PLAN.md`). Three stub stages are registered under an **Act XII** tab: **the Necropolis of
+Sand** (`necropolis`, Anubis), **the Temple of the Lioness** (`lioness_temple`, Sekhmet) and **the Hall of Two Truths**
+(`two_truths`, Osiris), all three playable since the act went live (Odin's fall on Vigrid opens the first, each boss the next). Every Dynasty stage runs three shared rules (`Game.dynasty`, `DynastyRules`):
+- **Rebirth.** A fallen mummy or tomb guard leaves its **Name**: a small bronze cartouche over the corpse that fills over
+  6 s. **Smash** it (any hit: a summon's blow, a spell, a volley) or **raise** the body (any raise: the Lich, Death Mark's
+  Risen, Grave Tide, Call of the Drowned) before it fills, or the body stands again at 70% health and hits 20% harder (at
+  most twice). An **Embalmer** near a Name makes it fill twice as fast. A **Canopic Jar** holds the Names of every body
+  within 300 px: those cartouches turn lapis and no blow reaches them; break the jar and they crumble. Scarabs never
+  return.
+- **The Black Land.** Quicksand patches slow everyone who wades them (you, your army, the Dynasty). Every 5:00 a
+  **Sandstorm** blows for 40 s (warned 10 s ahead on the HUD): every bow, spell and volley reaches half as far, for both
+  armies, and the sand hides what is past 300 px.
+- **Heka.** Heka Priests write a bronze glyph on one of your summons: it deals 20% less damage and moves 20% slower, and
+  every 2 s the glyph jumps to the next summon on the ring (10 s at most). A **Mender's heal**, a **Profane Bishop's aura**
+  or a **Warder's barrier** clears it, and so does the priest's death.
+- **The Devourer's Hour.** At 0:00 every sarcophagus opens: Rebirth has no limit, the Sandstorm never ends, and the
+  Devourer's shadow runs down telegraphed lanes across the field, savaging your army and eating every Name in its path.
+- **Music.** "The Weighing of the Heart", the Dynasty's own score, with its sound pack (wired at the wave 1 integration).
+
+The shared kinds so far: the **Mummy** (male and female; slow, wrapped, Rebirth; fire hurts them half again), the
+**Scarab Swarm** (fast; its bites tear Warders' barriers), the **Khopesh Guard** (Rebirth; a telegraphed spinning slash),
+the **Heka Priest**, the **Embalmer** (heals soldiers, hastens Names) and the **Canopic Jar**. The Codex has a **Dynasty**
+tab. Autotest: `--stage=necropolis|lioness_temple|two_truths`, `--boss=anubis|sekhmet|osiris`, `--spawn=` with `mummy`,
+`mummy_female`, `scarab_swarm`, `khopesh_guard`, `heka_priest`, `embalmer`, `canopic_jar`; lines `rebirth`, `black land`,
+`heka`, `devourer's hour`, `dynasty kinds`, `dynasty stage`.
+
+<!-- --- Act XII (temporary number): the Necropolis of Sand --- -->
+**The Necropolis of Sand** (`necropolis`, built in phase 2, playable since the act went live; GDD §15.0 "The
+Necropolis of Sand (Act XII phase 2)" and the rows after it). The tomb road at dusk, four zones (the Dunes, the Tomb Road,
+the Sandstorm Pass, the Mortuary Temple; their own floors and the art pass's tombs, obelisks, sphinx heads and fallen
+blocks):
+- **Canopic Jars beside the tombs** (the stage mechanic that teaches Rebirth): from 1:40, every 80 s, a jar rises at the
+  foot of a tomb near you (at most three standing). While it stands, every Name within 300 px is sealed: no blow reaches
+  it, only a raise. Break the jar and its Names crumble. **No Jars Left** (the achievement): slay Anubis with every jar
+  that rose on the stage broken; it unlocks **Embalmed Bones** (the Dynasty's counter-passive: Heka glyphs leave your
+  summons sooner and a cursed summon takes less damage).
+- **Heka runs here:** a glyph must run round the ring for 4 s before a Mender's heal or a Warder's barrier can clear it.
+  **Scarabs** also gnaw your **Orb Shield**: a bite next to a charged orb spends its charge.
+- **The Sandstorm Pass** blows a second storm at 12:30.
+- New kinds: the **Nile Archer** (female; a bow from the dunes, silent while the sand blows) and the **Jackal Warrior**
+  (male, jackal-headed; an elite that hunts in pairs, lunges over your ring and returns). The miniboss at 10:30 is the
+  **Sand Colossus**, a walking statue whose ground slam stuns the summons round him and leaves quicksand: burst him and
+  stay at range.
+- **Anubis, Opener of the Way** (17:00): **the Procession** (four Canopic Jars rise round you and every fallen Name on the
+  map is held while one stands: break them all to end Rebirth; columns of mummies march in behind him), **the Embalmer**
+  (every Name stands again in 3 s anywhere on the map, and he wraps more dead out of the sand), **the Jackal** (he casts off
+  his wrappings and duels you with dashing, afterimage lunges that cut through your ring).
+- His reward: **Linen Bind** (spectral bandages wrap the nearest foes, up to five, and hold them 1.2 s; a wrapped foe that
+  dies rises as your Mummy for a few seconds, stealing its Name) → **Eternal Shroud** with **Natron Salts** (its bindings
+  hit harder and hold longer); evolved, every Mummy that falls bursts into bandages that bind two more foes. Its character
+  is **the Embalmer** (female; innate Linen Ward: her Mummies last 4 s longer).
+Autotest: `--stage=necropolis`, `--boss=anubis`, `--spawn=` also takes `nile_archer`, `jackal_warrior` and
+`sand_colossus`, `--spells=linen_bind`, `--character=the_embalmer`; lines `necropolis`, `necropolis kinds`, `sand
+colossus`, `anubis`, and on any stage `act XII spell` / `act XII passives` when Linen Bind, Natron Salts or Embalmed Bones
+were taken.
+
+#### The Temple of the Lioness (phase 2)
+
+<!-- --- Act XII (temporary number): the Temple of the Lioness --- -->
+The act's second stage (`lioness_temple`, opened by Anubis; GDD §15.0 "The Temple of the Lioness (Dynasty phase 2)"
+and the rows after it): a sun-baked temple of colonnades in four zones, the Avenue of Statues, the Courtyard, the
+Hypostyle Hall and the Sanctuary.
+- **The Awakening Statues.** The statue rows are walls until a zone change, an event or the Lion Warden's roar wakes
+  them: their eyes glow 2 s, the row leaves the map and its stone walks as **Ushabti Statues** or a **Woken Colossus**.
+- **The Bastet Hunter** (elite) runs under the sand at your ranged summons, bursts out and duels; a spell hit reveals her.
+- **The Lion Warden** (miniboss, 11:00): the Hypostyle Hall seals round you with one doorway, and he stands in it. Kill
+  him to pass (the seal falls on its own after a while).
+- **Sekhmet, the Lioness of Retribution** (17:00): **the Hunt** (leaps from pillar to pillar onto your ring and rakes),
+  **the Red Wind** (an early Sandstorm, Heka glyphs at double speed), **the Feast** (unstoppable; break her three wine
+  jars while she drinks and she stumbles for 4 s, the only window she can be hurt).
+- **Rewards:** the spell **Burning Eye** (a solar eye sweeps a beam across an arc) → **Eye of Retribution** with **Desert
+  Fury**; the character **the Lion-Priestess** (innate Lioness's Gaze: the beam reaches farther). The achievement **Names
+  Taken** (raise 100 of the Dynasty's dead before their Names return, in one run) unlocks the counter-passive **Dune
+  Walkers** (quicksand slows your summons less, and the Sandstorm steals less of their reach; offered only in this act).
+  Autotest: `--stage=lioness_temple`, `--boss=sekhmet`, `--spawn=` with `bastet_hunter`, `ushabti_statue`,
+  `woken_colossus`, `lion_warden`; lines `temple`, `temple kinds`, `lion warden`, `temple threats`, and on any stage
+  `temple spell` / `temple passives` when Burning Eye, Desert Fury or Dune Walkers were taken.
+
+#### The Hall of Two Truths (phase 2)
+
+<!-- --- Act XII (temporary number): the Hall of Two Truths --- -->
+The act's finale (`two_truths`, built in phase 2; GDD §15.0 "The Hall of Two Truths (Necropolis Dynasty phase 2)"): the
+judgment hall of the dead in four clock-driven zones, **the Gate of Reeds** (reed mud), **the River of Fire** (basalt
+and braziers), **the Hall of the Scales** (blue-black marble, colonnades and the great Scales) and **the Throne of
+Osiris** (night-blue slabs), each with its floor tile and obstacles (`TwoTruthsGround`, `TwoTruthsGlyphs`).
+- **The Scales.** A Balance bar under the HUD's top line. Every body that **returns** tips it toward the Dynasty; every
+  **raise** tips it toward you, a raise that steals a Name twice as far, a smashed Name a little; it settles back toward
+  level. Past the marks: **Ma'at's favour** (the Dynasty's blows deal 15% less) or **the Dynasty's favour** (15% more,
+  and every Name returns 2 s sooner). Raising the dead is how you win the scale.
+- **The Crocodile Warden** climbs out of his own quicksand, seizes a summon and drags it under (armour 3, Rebirth).
+- **The Devourer's Whelp** (miniboss, 12:30) eats the Names of the dead (they never return), heals a little and grows
+  hungrier each time; it gulps the ring in front of it.
+- **Osiris and Ammit the Devourer** (17:00, one health bar): **the Judge** writes Heka glyphs three at a time, quickens
+  every Name, calls his court and drops Judgment circles under you; **the Weighing** (at two thirds) lays your heart on
+  the Scales for 60 s while he sits immune: end it on the Dynasty's side and Ammit eats 30% of your army, on yours and
+  his shield breaks for a quarter of his health (achievement **A Light Heart**, the title *Light of Heart*); **the
+  Devourer**: Ammit takes the throne, eats every Name on the field and charges in telegraphed lanes. Slay her and the
+  throne is empty.
+- **Rewards** (offered on every stage once Osiris falls): the spell **Feather's Verdict** (a gold feather falls on the
+  strongest foe and executes the weak in a ring round it) → **Heart Devoured** with **Heavy Heart**; the character **the
+  Pharaoh's Shade** (innate Crook and Flail: a higher execute line); the summon class **the Ushabti Sentinel** (a stone
+  blocker that reassembles from its rubble at half health once every 25 s, with a shockwave) → **Eternal Guard** with
+  **Answering Words** (every class special recharges sooner). Autotest lines `two truths`, `two truths events`,
+  `two truths kinds`, `osiris`, and on any stage `feather's verdict` / `ushabti sentinel` when used.
+
+### Act XIII (temporary number): the Celestial Host (foundation)
+
+<!-- --- Act XIII (temporary number): the Celestial Host --- -->
+The throne below is taken, and for the first time heaven comes down itself: the old, strange angels, silver and blue, with
+thin geometric halos (design `docs/proposals/LAST_SIX_ACTS.md` section X; final slot X of the fifteen-act order, the end
+of Part One, temporary act number 13 until the reorder pass, `docs/last_acts/PLAN.md`). Three stub stages are registered
+under an **Act XIII** tab (all three built and playable): **the Silver Stair** (`silver_stair`,
+Seraiel, Warden of the Gate), **the Wheel of Thrones** (`wheel_of_thrones`, the Throne) and **the Empyrean** (`empyrean`,
+the Voice); Osiris's fall in the Hall of Two Truths opens the first, each boss the next. Every Host stage runs three
+shared rules (`Game.host`, `HostRules`):
+- **Judgment.** The scales of Judgment under the HUD's top line weigh your sins: every corpse you raise and every summon
+  you replace after it fell adds weight. At each third a **Judge** descends and comes for you, not your army (Warriors
+  still block him); killing him lightens the scales. Full, **the Verdict**: for 20 s a pillar of light falls on you every
+  5 s (a ring shows where; step out), then the scales are empty again.
+- **Hallowed Light.** Shafts of white light sweep the field, a thin cerulean line running 1.5 s ahead of each. They burn
+  your summons and you, and heal the angels in them. The shadows of the cloud banks and of every pillar are safe ground; a
+  Warder's barrier, your ward or a charged Orb Shield orb takes the burn instead.
+- **Grace.** Every angel (not the lesser lights) wears a halo that shrugs off the first hit of each **kind** of damage:
+  each summon class and each spell is its own kind. A **Dominion** makes the halos near him come back after 10 s.
+- **The Last Trumpet.** At 0:00 seven trumpets sound one after another: each fills the scales, widens the light and sends
+  twice as many Virtues as the last, and after the seventh the sky opens.
+
+The shared kinds so far: the **Lesser Light** (swarms of twelve), the **Virtue** (a mirror-masked spearman), the **Power**
+(her lunge cuts the first two bodies in its line), the **Choir Angel** (heals angels within 200 px), the **Herald** (a
+trumpet that pushes the ring back and calls a squad), the **Dominion** (angels near him move faster; their halos regrow)
+and the **Judge**. The Codex has a **Host** tab. Placeholder floors, obstacles and code-drawn fallbacks until the art pass
+(`docs/host/ART_MANIFEST.md`); music "The Reaping Stars" until the Host's own score. Autotest:
+`--stage=silver_stair|wheel_of_thrones|empyrean`, `--boss=seraiel|throne|voice`, `--spawn=` with `lesser_light`, `virtue`,
+`power`, `choir_angel`, `herald`, `dominion`, `judge`; lines `judgment`, `hallowed light`, `grace`, `last trumpet`, `host
+kinds`, `host stage`. Phase 2 brief: `docs/host/BRIEF_PHASE2.md`.
+
+#### The Silver Stair (stage 37, playable)
+
+A stair of light rising from hell's ashes into the clouds, in four zones: **the Ashen Foot**, **the Stair**, **the Cloud
+Shelf** and **the Gate of Pearl**. **The Stair:** every zone is a wider step: the Light's shafts grow wider with each one,
+and low cloud banks settle near you every half minute or so: their shadows hide your ring from the light. **Cherubs**
+(four faces, wings full of eyes) plant themselves and turn their flaming swords in a full circle: stay out of their reach.
+At 12:00 **the Cherub of the Gate** comes down: its sword never stops turning, a full circle every six seconds. **Seraiel,
+Warden of the Gate** arrives at 17:00: **the Sword** sweeps across your ring (an arc of marks shows where), from two thirds
+of his health **the Gate** splits the stair into lanes that close one by one, a wall of light sweeping each, until only
+one is left (its walls are dawn rose: go there), and **the Trial** fills the scales by a third for every phase of his you
+let run past 40 s. Slaying him unlocks the spell **Flaming Sword** (a spectral sword sweeps a wide arc at the nearest foe;
+evolves into **Sword at the Gate**, a full circle that sweeps back, with the passive **Fallen Light**) and so the **Fallen
+Herald** (innate Torn Wing: the sword reaches 20 px farther). **Without Sin** (slay Seraiel with the scales never past
+their first third) unlocks **Absolution** (your sins weigh up to 30% less; offered only on the Host). Autotest lines
+`silver stair`, `cherubs`, `seraiel`, `act XIII spell`, `act XIII passives`; `--spawn=cherub@T`, `cherub_of_the_gate@T`.
+
+#### The Wheel of Thrones (stage 38, playable)
+
+The turning spheres of heaven, in four zones: **the Sphere of the Moon**, **the Sphere of the Sun**, **the Sphere of the
+Stars** and **the Wheel**. **The turning spheres:** from 2:30, great rings of crystal drift slowly across the map, turning
+as they go: their arcs are walls nobody walks through (you, your dead and the Host alike), so lead your ring through the
+gaps; a ring passing over you never shoves you along. Each zone brings bigger, faster rings, two at once from the Sphere of
+the Stars. **Ophans** (burning wheels within wheels) mark a line and roll straight through your ring, then turn: step out
+of the line, or put a Bone Wall in it. At 12:00 **the Dominion of the Spheres** comes down: while he stands, every halo in
+the zone keeps coming back. **The Throne** arrives at 17:00 and loops: **the Rolling** (it marks a line, then rolls across
+the field and rebounds), **the Gaze** (every eye opens: shafts of Hallowed Light sweep from its rim toward you; find shade)
+and **the Core** (the wheels open for 10 s and the burning eye takes full damage; the closed rims take only a fifth of every
+hit); below half its health every eye opens (faster rolls, more beams). Breaking it unlocks the spell **Wheel of Eyes**
+(burning wheels roll out at the nearest foe and rebound off obstacles and the edge of your sight; evolves into **Ophanim**,
+three great wheels that flare at every rebound, with the passive **All-Seeing**) and so the **Blind Saint** (innate Inner
+Sight: her wheels are 6 px larger). **The Wheel Breaks** (the killing blow on the open Core, with at least 80% of its health
+lost while the Core was open) unlocks **Smoked Glass** (Hallowed Light burns your summons for up to half; offered only on
+the Host). Autotest lines `wheel of thrones`, `ophans`, `throne`, and the `act XIII spell` / `act XIII passives` lines for
+its items; `--spawn=ophan@T`, `dominion_of_the_spheres@T`, `--character=blind_saint`.
+
+#### The Empyrean (stage 39, playable; the act's finale and the end of Part One)
+
+The highest heaven, a white rose of light, in four zones: **the Rose's Edge**, **the Petals**, **the Choir** and **the Heart
+of the Rose**. **The Choir:** every Choir Angel alive widens the shafts of Hallowed Light (up to about a quarter wider with
+four of them; the Last Trumpet still widens them on top): kill the Choir first. Cherubs and Ophans come up from the lower
+heavens from 6:00. At 12:00 **the Herald of the Seventh Trumpet** comes down: every blast of his great trumpet pushes your
+ring back and calls the squad of one of the Rose's earlier zones, in turn, seven times. **The Voice** comes down at 17:00
+near you and **never moves**: go to it. **The Holy** (the light at its strongest: more and wider shafts sweep across you),
+**Be Not Afraid** (a ring of light widens as it lowers the wings from its face; then the screen whitens and every summon in
+the open stops for 2 s: those in shade or behind a barrier are spared) and, from half its health, **the Last Word** (the
+scales read your sins back: every corpse you raised and every summon you replaced this run returns as a Judge, up to
+twelve, in waves of three, until the Voice falls). When it falls, a short ending: heaven, earth and hell answer to the
+necromancer (the Part One epilogue comes with the act order). Silencing it unlocks the spell **Revelation** (a flash that
+strikes, stuns for 1 s and weakens every foe on screen; evolves into **Be Not Afraid**, a longer stun and a second flash a
+moment later, with the passive **Seventh Seal**), and so **the Unveiled** (innate Lifted Veil: her flashes stun 0.3 s
+longer), and the summon class **Bound Ophan** (a wheel of bone and eyes that circles your ring, then rolls straight through
+a pack; evolves into **Throne of Bones**, which rolls back through it too, with the passive **Turning Bones**; it has its
+Ossuary mastery). **The Last Word** (silence the Voice) records the clear. Autotest lines `empyrean`, `seventh herald`,
+`voice`, the `act XIII spell` / `act XIII passives` lines and `bound ophan`; `--spawn=herald_of_the_seventh_trumpet@T`,
+`--character=the_unveiled`, `--classes=bound_ophan`.
+
+### Act XIV (temporary number): the Age of Titans (foundation)
+
+<!-- --- Act XIV (temporary number): the Age of Titans --- -->
+The Ark's vault holds a log of every world the Harvesters reaped; the oldest entry is this one. The necromancer follows it
+through a rift to the day before the meteor and takes the Call for himself. No gods, no armies, no walls: only animals the
+size of houses, and every one that falls leaves a skeleton (design `docs/proposals/LAST_SIX_ACTS.md` section XIV and
+`docs/proposals/NEW_ACTS_AND_ORDER.md` Part 2; final slot XIV of the fifteen-act order, temporary act number 14 until the
+reorder pass, `docs/last_acts/PLAN.md`). Three stages are registered under an **Act XIV** tab, hidden as "Coming
+soon" until phase 2 builds them (all three are built and playable): **the Fern Basin** (`fern_basin`, Scarmaw, the Great Raptor), **the Great Plain**
+(`great_plain`, Old Ironbrow, the Horned Titan) and **the Last Day** (`last_day`, Old Gravejaw, the Tyrant King); the
+Voice's fall in the Empyrean opens the first, each boss the next. Every Titans stage runs three shared rules
+(`Game.primeval`, `PrimevalRules`):
+- **Packs.** Razorclaws hunt in packs: the first of each pack is its **alpha** (a bone-white mark over her head). When the
+  alpha comes close, the pack circles your ring for 2.5 s, holds 1.5 s, then rushes in from the flanks 40% faster. Kill the
+  alpha and the pack loses all of it and charges straight in.
+- **Herds.** Longnecks and Duckbills graze the field as **neutral** giants: they never attack, and drop big XP. Hurt one, or
+  fight close to it, and its whole herd **stampedes**: a dust line shows where the 600 px front will be in 2 s, then it runs
+  straight away from whatever hurt it (owner answer), trampling everyone it crosses, your army and the hunters alike. A rock or a fossil arch on its side
+  shelters you. A herd beast killed near you rises as a **Fossil Giant** for 30 s (four times the HP, at most two).
+- **Scavengers.** Skyraiders circle out of reach and every 8 s one dives (its shadow first) on a pile of up to ten XP
+  crystals and carries it to its nest. Shoot it down and the pile drops where it dies; anything within 200 px of you is
+  safe.
+- **The Stampede of Ash.** At 0:00 the sky burns: herds come stampeding from every side, volcanic bombs fall on
+  telegraphed circles, the packs double and Tyrants roam (on the Fern Basin and the Great Plain; the Last Day's own
+  Reckoning is the Extinction, below).
+
+The shared kinds so far: the **Scuttler** (swarms of twelve), the **Razorclaw**, the **Frill-Spitter** (venom from range),
+the **Longneck** and the **Duckbill** (the herds), the **Skyraider** and the **Tyrant**. The Codex has a **Titans** tab.
+Placeholder floors, obstacles and code-drawn fallbacks until the art pass (`docs/titans/ART_MANIFEST.md`); music "The
+Reaping Stars" until the act's own score. Autotest: `--stage=fern_basin|great_plain|last_day`,
+`--boss=scarmaw|ironbrow|gravejaw`, `--spawn=` with `scuttler`, `razorclaw`, `frill_spitter`, `longneck`, `duckbill`,
+`skyraider`, `tyrant`; lines `packs`, `herds`, `scavengers`, `stampede of ash`, `primeval kinds`, `primeval stage` and
+`primeval damage` (every source of damage to you and to your summons, the largest first, the rules included). Phase 2
+brief: `docs/titans/BRIEF_PHASE2.md`.
+
+#### The Fern Basin (stage 40, playable)
+
+A river basin deep in jungle, in four zones: **the Fern Floor**, **the Tar Seep**, **the River Ford** and **the Nesting
+Hollow**. **Tar Seeps:** black pools (brown water at the ford) slow everyone who wades in, you, your army and the hunters,
+by about a third, and a grazing Longneck or Duckbill that walks into one is stuck there for good: it never runs and never
+frightens its herd, a free kill and a free heavy corpse. From the Tar Seep on, **Bog Crocs** come up in the pools and lie
+with only their eyes above the tar: when your ring passes close, one rears up and lunges at its edge. At 11:40 **Ironjaw,
+the Nest Mother** comes with her nest, which hatches Scuttlers until you break it; while it stands she shrugs off part of
+every blow. **Scarmaw, the Great Raptor** arrives at 17:00: **the Hunt** calls a pack of Razorclaws from each of three sides
+in turn while she leaps over your ring onto a landing circle beside you; from 70% of her health **the Ambush**: she
+vanishes into marked fern patches round you and lunges out of the one that rustles every 8 s; at half health **Blood Up**:
+her alpha-guard comes, and while it lives every Razorclaw you kill comes back and she runs faster (kill the guard). Slaying
+her unlocks the spell **Pack Leap** (spectral raptors mark the strongest foes near you and leap on them; evolves into
+**Apex Pack**, five raptors that each leap on to a second foe, with the passive **Pack Instinct**) and so the **Fern
+Huntress** (innate Hunter's Mark: one more raptor). Autotest lines `fern basin`, `scarmaw`, `act XIV spell`, `act XIV
+passive`; `--spawn=bog_croc@T`, `ironjaw@T`, `primeval_nest@T`, `scarmaw_guard@T`; `--character=fern_huntress`.
+
+#### The Great Plain (stage 41, playable)
+
+Open grassland under a hot sky, in four zones: **the Dust Flats**, **the Watering Hole**, **the Canyon** and **the Bone
+Gate**. Two shared heavies walk the plain: the **Horncharger** paws the ground (a line shows its charge), then runs down
+everything in it, stunning your summons; a charge that hits a rock leaves it stuck there for 2 s. The **Clubtail**'s armour
+plates shrug off the first 5 of every hit, and her tail club sweeps your ring apart (a circle shows it). **The Watering
+Hole:** from 5:00 a lake lies ahead of you (a new one when you walk far from it); the herds gather to drink there, new
+herds come to its shore, and a fight near the water (you within reach and enough foes round it) sends every rested herd
+by the lake stampeding away from you. **The Canyon:** red rock walls make narrow lanes, and a stampede's front there is
+only 340 px wide. At 11:40 **Mother Clubtail** comes with the herd she guards: while one of its beasts grazes near her she
+takes only two thirds of every blow, so drive the herd off (stampede it) or bring it down. **Old Ironbrow, the Horned
+Titan** arrives at 17:00: **the Charge**, a telegraphed charge through your ring that stuns the summons it crosses (into a
+rock, he is stunned for 3 s); **the Herd**, every other charge his herd stampedes the same way behind him; **the Break**,
+at half health he charges the nearest rock and snaps a horn: three short shard lines fly at you, and from then on he
+charges with the stump, faster and more often. Slaying him unlocks the spell **Stampede** (a spectral horned charger
+tramples a line through the thickest foes; evolves into **Herd of Ages**, three chargers abreast that stun what they
+trample, with the passive **Calcified Hide**) and so the **Herd-Warden** (innate Lead Bull: his chargers run 40%
+farther). The achievement **Nothing Taken** (reach 0:00 on the Great Plain without losing one crystal pile to a
+Skyraider) opens the Titans' counter-passive **Hoarder's Bones** (offered in this act only: nothing within 220-300 px of
+you is snatched, and a thief drops its pile after 3-1.4 s of flight). Autotest lines `great plain`, `ironbrow`, `act XIV
+spell`, `act XIV passive`; `--spawn=horncharger@T`, `clubtail@T`, `mother_clubtail@T`; `--character=herd_warden`.
+
+#### The Last Day (stage 42, the act's finale, playable)
+
+The impact basin under a white sky, in four zones: **the Scorched Plain**, **the Ash Forest**, **the Lava Fields** and
+**the Impact Rim**. **Fire from the Sky:** from 0:30 small meteorites fall on telegraphed circles round you (every 12 s,
+then 10, 8 and 6.5 s zone by zone), burning both armies; a small growing meteor beside the HUD clock shows the big one
+coming. The **Stormwing** circles over your ring, beats her wings (a circle shows the gust) and blows your summons 100 px
+out from you, then lands at the ring's edge to peck: hit her then. The **Tyrant** now swallows a summon whole (it is held
+inside for 4 s, still striking; burst the Tyrant and it cuts its way out) and roars your ring still for 1.2 s. At 11:30
+**Thunderwing, the Sky King** comes: a giant pterosaur whose gusts clear the whole ring. **Old Gravejaw, the Tyrant King**
+arrives at 17:00: **the Hunt** (he walks only at you, no summon draws him; his bite lunges through the ring, swallows the
+first summon it reaches and gores the rest), **the Roar** (the ring round him stunned, the herds near him stampede away,
+and beasts answer from the edge of the screen) and **the Last Day** (at 1:00 left he turns toward the impact and
+rampages to the Mound, where he stands exposed, roaring at the sky). **The Extinction** is this stage's Reckoning: at 0:00
+your meteor falls, a 5 s white-out under a one-time ward, then every enemy on the map dies, every corpse near you rises as
+the **Fossil Host** (at most 60, for 30 s) and the run ends in **victory**. A Gravejaw still alive at the impact lies broken
+on 10% of his health, out of reach: only one slain before the fall gives his rewards, the spell **Meteor Call** (a
+telegraphed meteor on the densest group; evolves into **Extinction Event**, three meteors at once, with the passive
+**Cosmic Dust**), the **Skywatcher** (innate Star Reader: her meteors strike 30% wider) and the finale's summon class,
+the **Bonehorn** (a skeletal horned charger that tramples through a pack and trots back to the ring, on every stage;
+evolves into the **Fossil Tyrant**, which roars and stuns where its charge ends, with the passive **Petrified Horns**; it
+has its Ossuary mastery). Achievements: **Trampled** (the stampedes kill 100 enemies in one run, any Titans stage; opens
+the counter-passive **Thick Marrow**, offered in this act only: your summons take 10-40% less from tramples, charges,
+sweeps, gusts, swallows, bombs and meteorites) and **The Day the Sky Fell** (reach the Extinction with no summon lost;
+it records the clear until the reorder pass writes the act's epilogue part). Autotest lines `last day`, `extinction`,
+`gravejaw`, `act XIV spell`, `act XIV passive`, `bonehorn`; `--spawn=stormwing@T`, `thunderwing@T`;
+`--character=skywatcher`, `--classes=bonehorn`.
+
+### Act XV (temporary number): the Turning Year
+
+<!-- --- Act XV (temporary number): the Turning Year --- -->
+A star fell once and the world buried everything under it. Now it remembers how to bury things: death was always part of
+the world's cycle, and the necromancer broke it. After heaven, hell, the stars and the deep past, **the world itself**
+rises to take its dead back: dryads and treants, the fae courts, the great stag, the Wild Hunt and the spirits of the four
+seasons (design `docs/proposals/LAST_SIX_ACTS.md` section XV; final slot XV of the fifteen-act order, **the campaign
+finale and the hardest act**, temporary act number 15 until the reorder pass, `docs/last_acts/PLAN.md`). Three stages
+are registered under an **Act XV** tab: **the Greenwood** (`greenwood`, the Stag King), **the Fae Court**
+(`fae_court`, the Summer Queen) and **the World-Tree** (`world_tree`, the Green Mother, the campaign's last stage), all
+built and playable (below); Old Gravejaw's fall on the Last Day opens the first, each boss the next. Every Wild stage runs three
+shared rules (`Game.wild`, `WildRules`):
+- **The Turning Year.** The 20:00 clock is one year of four 5-minute seasons (the World-Tree's turns twice as fast),
+  shown as a wheel left of the HUD clock, and each season repaints the arena. **Spring:** roots grab anything that stands
+  still for 2 s, both armies, and hold it 1.5 s (a summon is held in place, you are slowed hard until you Grave Step).
+  **Summer:** wildfires sweep in on telegraphed fronts (a smoke line first) and burn both armies and the thickets.
+  **Autumn:** the dead rot in 3 s, so raise them fast, and the blight spreads. **Winter:** snow slows everyone 20%,
+  blizzards cut your sight to 400 px, and the Winter Court comes (the Winter Fae only in winter).
+- **Bloom and Blight.** Where you and your army stand, the grass dies into grey **blight**; the Wild heals on living
+  ground and not on blight. Holding ground builds a dead zone they cannot recover in, but Spring's roots punish standing
+  still. Spring regrows blight quickly; Autumn spreads it.
+- **Overgrowth.** Dryads plant seeds that grow into **thorn thickets**: new obstacles that spread through the run, close
+  lanes and hold a summon caught in them. Wildfires burn them back, and a thicket on dead ground withers.
+- **Spring Returns.** At 0:00 everything grows back at once: the blight is gone, thickets sprout round you, the roots grab
+  twice as fast, the dead are buried at once and the earth pulls your summons down.
+
+The shared kinds: the **Thornling** (swarms of twelve), the **Dryad** (plants thicket seeds), the **Treant** (its strike
+roots the summon it hits), the **Corpse-Bloom** (eats the corpses near it, Corpse Explosion's too, and buds Thornlings),
+the **Fae Knight** (blinks through your ring: keep blockers inside it), the **Winter Fae** (its frost bolts chill your
+summons), the **Great Stag** (a telegraphed antler charge that scatters the ring), the **Rider of the Wild Hunt** (two
+hounds, a long sweep through you; after three sweeps the Hunt rides on), the **Will-o'-Wisp** (lures your summons away)
+and the **Spore Mother** (spores that rot your summons, mould that kills your blight). Rot, the Wither aura, a
+Hellhound's fire, Brimstone and Meteor Call burn thickets back. The Codex has a **Wild** tab. Music "The Turning Year".
+
+**The Greenwood** (stage 43): an old forest that has never been cut. Zones: the Glade, the Deep Wood, the Hunting
+Grounds and the Stag's Hollow. **Sacred groves** (rings of trees) heal the Wild inside them; hold your army in one until
+its ground is blighted for 10 s and it dies for the run. **The Huntsman of the Wild Hunt** (miniboss, 11:40) leads three
+riders in a sweeping line: step out of it. **The Stag King** comes with 3:00 left, in the dead of winter: **the Hunt**
+(spectral riders sweep through you in a line, two crossing lines below half his health), **the Rut** (a charge through
+your ring; into a tree it cracks it into new thickets) and **the Antler Crown** (a ring of thorns grows round him twice;
+while one stands he cannot be hurt: break them or burn them). Slaying him unlocks **Wild Hunt** (spectral riders sweep
+across the screen in a line; evolves into **The Endless Hunt** with **Horn of the Hunt**: the line turns and rides back)
+and so **the Horned Herald** (one more rider in every line). Achievement **Scorched Earth** (blight half the Greenwood in
+one run) unlocks the counter-passive **Fallow Ground** (blight spreads faster; offered only in this act).
+
+**The Fae Court** (stage 44): a court of **endless summer** under a sky that never sets: the year stays at Summer the
+whole run (its wildfires come every 40 s instead of 24), the court's Fae Knights and the Wild Hunt ride from 5:00, and
+only the Winter Prince's minute breaks it. Zones: the Rose Maze (rose hedges), the Revel (open lawns), the Mirror Lake
+and the Throne of Blossoms. **Fairy rings** (mushroom circles) slow whatever stands inside to half speed, moving, attacking
+and casting (your spell cooldowns double inside one), you, your army and the enemy alike (not bosses, minibosses or fliers). **The Winter Prince** (miniboss, 11:40) brings **one minute of winter** into her summer (snow,
+a blizzard, the Winter Court) and throws fans of chilling frost bolts. **The Summer Queen** comes with 3:00 left:
+**petals** (fans of petal bolts), **the Masque** (she vanishes and reappears among four courtiers wearing her face on a
+ring round you; a hit unmasks a courtier, a hit on her unmasks them all), **the Bargain** (at two-thirds and one-third of
+her health the run pauses and she offers a deal: **Accept** for +30% army damage for 60 s while your army cannot heal, then
++40% for 45 s for a fifth of your life as well; **Refuse** and her attacks hit harder and come sooner for the rest of the
+fight; online co-op: either player answers, no answer in 12 s refuses) and **the Court in Bloom** (blossoms round you burst
+into thorns and leave thicket seeds, faster as she falls). Slaying her unlocks **Glamour** (illusory copies of you step
+out round you, draw the enemies' attacks and shatter when they fall or fade; evolves into **Court of Masks** with
+**Changeling**: six copies whose shattering also bewilders the foes it hits) and so **the Changeling Princess** (one more
+copy every cast). Achievement **A Fair Bargain** (accept every bargain the Summer Queen offers and still win) unlocks the
+counter-passive **Deadwood** (roots and thickets hold your summons for less time; offered only in this act).
+
+**The World-Tree** (stage 45, the campaign finale and the hardest stage): the tree at the centre of the world, where
+**the year turns twice as fast** (2:30 a season, so every season comes twice). Zones: the Roots (great roots across dark
+soil), the Trunk Stair, the Crown and the Seed. **The Gardener of Roots** (miniboss, 11:20), a great treant: his
+strikes root your summons, and while he lives the roots grab anything that stands still near him **in every season**.
+**The Green Mother** comes with 3:00 left, a colossal goddess half in bloom and half in frost: **the Turning** (every 13 s
+she casts the next season, so the arena's own spring roots, summer fires, autumn rot and winter snow follow, with a
+burst of that season's attack round you: roots that hold your summons, fire, rot that eats the dead, frost that chills
+them), **the Burial** (from two-thirds of her health she pulls a summon into the earth: a thicket grows over it and holds
+it until your army cuts it down) and **the Last Claim** (from a third of her health she replays the signature rule of
+**seven of the fourteen other acts**, picked at random each run, 8 s each: the Covenant's march, a boarding, the Blood
+Moon, the Wanted stars, the Draw, Berserkergang, Rebirth, the gods' lightning, the hell pits, a Judge's descent, the
+Claims, the Lock-On lines, the Concord's beams or a stampede; she takes half damage while a replay holds). **The ending:**
+beaten, she does not die: she sinks into the roots and plants your dead, and at 0:00 **the First Spring** takes the
+Reckoning's place: the planted dead rise to you and the campaign ends in victory 20 s later (not beaten: Spring Returns,
+as on every Wild stage). Slaying her unlocks **Root and Rot** (a ring of roots grows at the strongest foe and rots
+everything inside; evolves into **Return to Earth** with **Compost Heart**: three rings that also bite) and so **the
+Gravegardener** (her rings grow wider), and the finale summon class **the Ossuary Oak** (a slow tree of bone that roots
+in place among foes as a blocker and lashes every foe around it; evolves into the **World-Root Warden** with
+**Deep Roots**, renamed from Heartwood (owner, Nov 2026): wider lashes that root what they strike). Achievement **The First Spring** (defeat the Green Mother; it
+only records the clear until the reorder pass writes the final epilogue part).
+
+Art still to come for the World-Tree (code shapes until then): `wild/gardener_of_roots` (+ walk), `wild/green_mother`
+(+ idle, poses `_cast`, `_burial`), `player/gravegardener` (+ walk, idle), `summons/ossuary_oak`,
+`summons/world_root_warden`, `obstacles/wild_great_root_m` (+ `_m_v`), `icons/heartwood`, the zone tiles
+`tiles/world_tree_roots|trunk_stair|crown|seed`. Art still to come for the Fae Court (code shapes until then): `wild/winter_prince` (+ walk), `wild/masked_courtier`
+(+ walk), `wild/summer_queen` (+ glide, idle, pose `_bargain`), `wild/summer_queen_mask`, `player/changeling_princess`
+(+ walk, idle), `obstacles/wild_rose_hedge_m` (+ `_m_v`), `tiles/wild_fairy_ring`, the zone tiles
+`tiles/fae_court_rose_maze|revel|mirror_lake|throne_of_blossoms`. Art still to come for the Greenwood (code shapes until then): `wild/hunt_hound`, `wild/huntsman`, `wild/antler_thicket`,
+`wild/stag_king` (+ walk, pose `_horn`), `player/horned_herald` (+ walk), `obstacles/wild_grove_tree`, the zone tiles
+`tiles/greenwood_glade|deep_wood|hunting_grounds|stags_hollow` (`docs/year/ART_MANIFEST.md`). Autotest:
+`--stage=greenwood|fae_court|world_tree`, `--boss=stag_king|summer_queen|green_mother`,
+`--character=horned_herald|changeling_princess|gravegardener`, `--classes=ossuary_oak`, `--spawn=` with `thornling`,
+`dryad`, `treant`, `corpse_bloom`, `fae_knight`, `winter_fae`, `great_stag`, `wild_rider`, `will_o_wisp`,
+`spore_mother`, `hunt_hound`, `huntsman`, `antler_thicket`, `winter_prince`, `masked_courtier`, `gardener_of_roots`,
+`burial_thicket`; **`--last-claim=id,id,...`** (or `all`) forces the Last Claim's slots, in that order, from the Green
+Mother's arrival whatever her health (ids `covenant`, `black_tide`, `sanguine_court`, `last_line`, `shogunate`,
+`hall_of_the_slain`, `necropolis_dynasty`, `olympian_republic`, `inferno`, `celestial_host`, `ancient_eye`,
+`electronic_empire`, `concord`, `age_of_titans`: the slots' check); lines `turning year`, `bloom and blight`,
+`overgrowth`, `spring returns`, `wild kinds`, `wild stage`, `wild damage`, `greenwood`, `wild specials`, `stag king`,
+`fae court`, `summer queen`, `a fair bargain`, `world tree`, `green mother`, `last claim` (which slots ran, in order, and
+each one's effects), `first spring`, and on any stage `act XV spell` / `act XV passive` / `act XV class` when Wild Hunt,
+Horn of the Hunt, Fallow Ground, Glamour, Changeling, Deadwood, Root and Rot, Compost Heart, Deep Roots or the Ossuary
+Oak were taken. The autotest answers every bargain at once (the naive bot refuses, every other bot accepts). Phase 2 brief
+(with the World-Tree's Last Claim): `docs/year/BRIEF_PHASE2.md`.
+
 ### The illustrated epilogue
 
-The campaign epilogue (content wave 2, GDD §15.0 "Illustrated epilogue (content wave 2)") is a short
-cutscene of twelve slides over a black backdrop: one pixel-art picture panel per paragraph (Act I
-"When the Dawn Went Out": the Sanctum burning, the dawn going out over the pilgrim roads, the dead
-drifting to the coast; Act II "The Dead God Serves": the tide pulled back from Gullhaven, the
-Archive's last page burning, Ul-Thalos sinking, Vhal'Neth kneeling to the necromancer; Act III "The
-Machines Go Dark", opened by *Nothing Is Deathless*: the Empire's chrome city of rebuilt citizens,
-Deus Ex Machina on its knees as the necromancer reaches into its core for Varn's soul, the machines
-gone dark and Varn bowing, the risen dead over the ruins of all three acts) and a closing card after
-Act II, "The Beacons Burn", where the holy orders' knights march out under the beacons (it stays after
-Act II once Act III is open). Closing cards are one per act (`EpilogueData.CLOSINGS`, each with an `after`
-key naming its part); the second, "The River Runs Dry", follows the Act III part: a dried riverbed of the
-dead with an empty ferry and a lone lantern far below, gods silhouetted on a marble mountain in golden
-light above, the set-up of Act IV.
+The campaign epilogue (content wave 2, GDD §15.0 "Illustrated epilogue (content wave 2)"; every act since
+the reorder pass, part 2, GDD §15.0 "The reorder pass, part 2 (the story)") is a cutscene over a black
+backdrop: **fifteen parts, one per act, in the act order** (Covenant "When the Dawn Went Out" through the
+Turning Year "The First Spring", the campaign's true ending), each opened by its act's finale achievement
+(Dawn Extinguished, Dead Men Tell Tales, Last Supper, No More Heroes, The Sun Goes Out, Twilight of the
+Wolf, A Light Heart, Empty Throne, Morning Star Falls, The Last Word, The Dead God Serves, Nothing Is
+Deathless, The Last Harvest, The Day the Sky Fell, The First Spring), with one pixel-art picture panel per
+paragraph. `EpilogueData.PARTS` is built from `StageRegistry.ACT_ORDER` (the one order). After every part but
+the last comes a **closing card** that hints at the next act ("The Beacons Burn" Eye to Empire, "The River Runs
+Dry" Dynasty to Republic, "The Pit Keeps Count" Republic to Inferno, and so on; `EpilogueData.CLOSINGS`, each
+with an `after` key naming its part). Panels not painted yet show a flat colour window with the text and the pan
+(`docs/last_acts/EPILOGUE_PANELS.md` lists them).
 
 - Each panel (1024×576 art px, `assets/sprites/epilogue/`) pans slowly in a framed window
   (944×424, 1 art px = 1 layout px through the sharp-pixel shader); the paragraph fades in under it.
@@ -2480,7 +3182,7 @@ light above, the set-up of Act IV.
   first picture as a dark silhouette.
 - **It plays once on its own**: when you return to the main menu after a run, every epilogue part
   that is open and not seen yet plays before you get the menu (Meta `[epilogue] seen_act1` /
-  `seen_act2` / `seen_act3`; an older save that already earned a part sees it after its next run). The
+  `seen_act2` / `seen_act3` / ... and `seen_<act id>` for the ten newer parts; an older save that already earned a part sees it after its next run). The
   **Epilogue** menu item (above Credits, once a part is open) replays everything.
 - **Music:** a slow, sparse "Grave Lullaby" cue (section A only at 3/4 tempo, no timpani, harp or
   crackle; `MenuThemeData.EPILOGUE_VARIANT`, 34.1 s loop) rendered by `MenuThemeSynth` the first
@@ -3172,11 +3874,81 @@ scripts/
                             streak, the saucer's tractor cone, the Final Harvest's eye (textures only; Act IX)
     concord_report.gd       The autotest's Act IX lines (beams, abduction, terraforming, final harvest, concord
                             kinds, concord stage)
+    norse_ground.gd         The Hall of the Slain stubs' placeholder floor (styles snow / hall / ash)
+    norse_glyphs.gd         Code-drawn fallbacks of the Norse kinds, the Rune-Stone, the brazier and the stubs'
+                            obstacles (barrows, pines, boulders, long tables, pillars, ash rocks)
+    norse_report.gd         The autotest's Hall of the Slain lines (long winter, berserkergang, rune-stones, ragnarok,
+                            norse kinds, norse stage)
+    barrow_fields_ground.gd The Barrow Fields' zone floors (tiles/norse_snow, tiles/norse_ice)
+    barrow_fields_report.gd The autotest's Barrow Fields lines (barrow fields, barrow wight, hrimgar) and its items
+                            (Barrow Grasp, Grave Frost, Fur-Lined Bones)
+    valgard_ground.gd       Valgard's four zone floors (tiles/norse_planks, norse_slabs and code decorations)
+    valgard_report.gd       The autotest's Valgard lines (valgard, einherjar champion, valgard threats, sigrun) and
+                            its items (Valkyrie Spear, Einherjar's Oath, Calm Blood)
+    vigrid_report.gd        The autotest's Vigrid lines (vigrid, vigrid events, vigrid kinds, odin) and the Gungnir /
+                            Draugr Thane item lines
+    vigrid_ground.gd        Vigrid's four zone floors (tiles/norse_ice, tiles/norse_ash; the Hall of the Slain)
     crash_site_report.gd    The autotest's Crash Site lines (crash site, burrowers, acid, brood matriarch, hive
                             mother) and its items (Bone Beetles, Chitin, Anchored; Act IX)
     crash_site_ground.gd    The Crash Site's four zone floors (tiles/crash_site_<style>, Act IX)
     crash_site_glyphs.gd    Code-drawn fallbacks of the Crash Site's obstacles and kinds (Act IX)
     proving_moon_ground.gd  The Proving Moon's four zone floors (tiles/proving_moon_<style>, decals; Act IX)
+    dynasty_ground.gd       The Dynasty stubs' placeholder floor (styles sand / temple / hall; Act XII, temporary)
+    dynasty_glyphs.gd       Code-drawn fallbacks of the Dynasty's kinds and the stubs' obstacles (Act XII)
+    dynasty_report.gd       The autotest's Dynasty lines (rebirth, black land, heka, devourer's hour, dynasty kinds,
+                            dynasty stage; Act XII)
+    necropolis_ground.gd    The Necropolis of Sand's four zone floors (tiles/necropolis_<style>; Act XII, temporary)
+    necropolis_report.gd    The autotest's Necropolis lines (necropolis, necropolis kinds, sand colossus, anubis) and
+                            its items (Linen Bind, Natron Salts, Embalmed Bones; Act XII, temporary)
+    lioness_temple_ground.gd  The Temple of the Lioness's four zone floors (Act XII, temporary)
+    lioness_temple_glyphs.gd  The Temple's obstacles (statue rows, braziers), Sekhmet and the Warden's fallbacks (Act XII)
+    lioness_temple_report.gd  The autotest's Temple lines (temple, kinds, lion warden, threats) and the Burning Eye /
+                            Desert Fury / Dune Walkers item lines (Act XII)
+    two_truths_ground.gd    The Hall of Two Truths' four zone floors (tiles/two_truths_<style>; Act XII, temporary)
+    two_truths_glyphs.gd    The Hall's single-sprite obstacles, the Weighing's Scales and the feather, Osiris / Ammit
+                            fallbacks (Act XII)
+    two_truths_report.gd    The autotest's Hall lines (two truths, events, kinds, osiris) and the Feather's Verdict /
+                            Ushabti Sentinel item lines (Act XII)
+    host_ground.gd          The Host stubs' placeholder floor (styles stair / wheel / rose; Act XIII, temporary)
+    host_glyphs.gd          Code-drawn fallbacks of the Host's kinds and the stubs' obstacles (Act XIII)
+    host_report.gd          The autotest's Host lines (judgment, hallowed light, grace, last trumpet, host kinds,
+                            host stage; Act XIII)
+    silver_stair_ground.gd  The Silver Stair's four zone floors (tiles/silver_stair_<style>, wider steps; Act XIII)
+    silver_stair_report.gd  The autotest's Silver Stair lines (silver stair, cherubs, seraiel) and the Flaming Sword /
+                            Fallen Light / Absolution item lines (Act XIII)
+    wheel_of_thrones_ground.gd  The Wheel of Thrones' four zone floors (tiles/wheel_<style>, a celestial grid; Act XIII)
+    wheel_of_thrones_report.gd  The autotest's Wheel of Thrones lines (wheel of thrones, ophans, throne) and the Wheel of
+                            Eyes / All-Seeing / Smoked Glass item lines (Act XIII)
+    primeval_ground.gd      The Titans stubs' placeholder floor (styles fern / plain / ash; Act XIV, temporary)
+    primeval_glyphs.gd      Code-drawn fallbacks of the Titans' kinds and the stubs' obstacles (Act XIV)
+    primeval_report.gd      The autotest's Titans lines (packs, herds, scavengers, stampede of ash, primeval kinds,
+                            primeval stage, primeval damage; Act XIV)
+    fern_basin_ground.gd    The Fern Basin's four zone floors (tiles/fern_basin_<style>) and its tar pools (the
+                            director's pool_in(); Act XIV)
+    fern_basin_report.gd    The autotest's Fern Basin lines (fern basin, scarmaw) and the Pack Leap / Pack Instinct
+                            item lines (Act XIV)
+    great_plain_ground.gd   The Great Plain's four zone floors (tiles/great_plain_<style>; Act XIV)
+    great_plain_report.gd   The autotest's Great Plain lines (great plain, ironbrow) and the Stampede / Calcified
+                            Hide / Hoarder's Bones item lines (Act XIV)
+    last_day_ground.gd      The Last Day's four zone floors (tiles/last_day_<style>; Act XIV)
+    last_day_report.gd      The autotest's Last Day lines (last day, extinction, gravejaw) and the Meteor Call /
+                            Cosmic Dust / Petrified Horns / Thick Marrow / Bonehorn item lines (Act XIV)
+    wild_ground.gd          The Wild stubs' placeholder floor (styles greenwood / fae / tree; Act XV, temporary)
+    wild_glyphs.gd          Code-drawn fallbacks of the Wild's kinds, the stubs' obstacles and the thorn thicket (Act XV)
+    wild_report.gd          The autotest's Wild lines (turning year, bloom and blight, overgrowth, spring returns,
+                            wild kinds, wild stage, wild damage; Act XV)
+    greenwood_ground.gd     The Greenwood's four zone looks over the act's greenwood floor (tiles/greenwood_<style>,
+                            else tiles/wild_greenwood; Act XV)
+    greenwood_report.gd     The autotest's Greenwood lines (greenwood, wild specials, stag king) and the Wild Hunt /
+                            Horn of the Hunt / Fallow Ground item lines (Act XV)
+    fae_court_ground.gd     The Fae Court's four zone looks over the act's fae floor (tiles/fae_court_<style>, else
+                            tiles/wild_fae; Act XV)
+    fae_court_report.gd     The autotest's Fae Court lines (fae court, summer queen, a fair bargain) and the Glamour /
+                            Changeling / Deadwood item lines (Act XV)
+    world_tree_ground.gd    The World-Tree's four zone looks over the act's tree floor (tiles/world_tree_<style>, else
+                            tiles/wild_tree; Act XV)
+    world_tree_report.gd    The autotest's World-Tree lines (world tree, green mother, last claim, first spring) and the
+                            Root and Rot / Compost Heart / Deep Roots / Ossuary Oak item lines (Act XV)
     proving_moon_glyphs.gd  Code fallbacks of the Warbeast, Vrask'Tal and his skull belt, and the stage's obstacles (Act IX)
     proving_moon_report.gd  The autotest's Proving Moon lines (proving moon, warbeast, threats, vrask'tal; the Soul Caster
                             and passives' item lines; Act IX)
@@ -3185,6 +3957,24 @@ scripts/
                             Tractor Beam's lift column, the Ghost Saucer's beams (textures only; Act IX)
     ark_report.gd           The autotest's Ark lines (ark, ark kinds, harvester) and the Tractor Beam / Ghost
                             Saucer lines (Act IX)
+    corsair_ground.gd       Act X placeholder look: the sea (foam lines) and the ship's deck (planks, rail, hull band)
+                            from Game.deck's outline; redrawn on cell change only
+    corsair_glyphs.gd       Code-drawn fallbacks of the Black Tide's kinds, boats and hooks and the stubs' deck
+                            furniture (masts, hatches, barrels, cannons, the wheel; Act X)
+    corsair_report.gd       The autotest's Act X lines (boarding, deck, sea strikes, black tide, corsair kinds,
+                            corsair stage)
+    cutter_ground.gd        The Smuggler's Cutter's floor: the sea tile, the night-deck plank tile in the deck's
+                            outline, a look per zone (the burning coast, the fog's grey, the cove's cliffs; Act X)
+    cutter_report.gd        The autotest's Cutter lines (cutter, cutter crew, bosun gorran, captain crow) and the
+                            Chain Shot / Bosun's Whistle / Barnacle Bones lines (Act X)
+    galleon_ground.gd       The Treasure Galleon's floor: the sea and deck tiles under each zone's look, the
+                            quarterdeck and forecastle, the hatches and barrels as floor dressing (Act X)
+    galleon_report.gd       The autotest's Galleon lines (galleon, broadsides, deck cannons, galleon kinds, old
+                            hollow-eye, galleon threats, marrec) and its items (Cannonade, Black Powder, Sea Legs)
+    maelstrom_report.gd     The autotest's Maelstrom lines (maelstrom, maelstrom kinds, vandermere, black tide
+                            kraken) and the Anchor Drop / Powder Wraith item lines (Act X)
+    maelstrom_ground.gd     The Maelstrom's floor: tiles/corsair_water (tinted per zone) and the Hollow Queen's
+                            tiles/corsair_maelstrom on the deck outline (Act X)
     fort_kessler_report.gd  The autotest's Fort Kessler lines (the stage, its kinds, Mammoth, the threats, Harrow) and
                             its items (Bone Mines, Tripwire, Armour-Piercing Bones)
     fort_kessler_ground.gd  Fort Kessler's floor: CityGround with each zone's look (checkpoints, minefields, aprons,
@@ -3290,8 +4080,16 @@ scripts/
     behaviors/blood_spawn_behavior.gd  Act VII: the Blood Spawn's Bloodthirst (Nosferatu's spill; Thirst Eternal's key)
     behaviors/fallen_hero_behavior.gd  Act VIII: the Fallen Hero's Hero's Slam (the orbit, the dive on the densest pack;
                             Black Paragon's stun and chain; Origin Story's key)
+    behaviors/powder_wraith_behavior.gd  Act X: the Powder Wraith's keg burst and reform; Magazine Lord's
+                            second keg; Slow Match keys
     behaviors/ghost_saucer_behavior.gd  Act IX: the Ghost Saucer's short beams and lifts (EnemyLift); Black
                             Mothership's three beams and two lifts; Crop Circles' key
+    behaviors/ushabti_sentinel_behavior.gd  Act XII (temporary): the Ushabti Sentinel's reassembly (on_lethal(), the
+                            rubble, the shockwave); Eternal Guard's keys; Answering Words' key
+    behaviors/bonehorn_behavior.gd  Act XIV (temporary): the Bonehorn's trampling charge through the densest pack
+                            and its trot back; Fossil Tyrant's roar; Petrified Horns' keys
+    behaviors/ossuary_oak_behavior.gd  Act XV (temporary): the Ossuary Oak roots among foes and lashes every foe
+                            round it; the World-Root Warden's roots; Deep Roots' keys
     golem_kit.gd            Content wave 2: Ossuary Hunger, the Ossuary Titan's heal, barrier and
                             collapse wall (HordeDirector.golems, created by the first Golem)
     golem_texts.gd          Content wave 2: Bone Golem / Grave Masonry / Ossuary Titan card and
@@ -3515,6 +4313,39 @@ scripts/
                             the guest squads, the cracks of Paragon's craters
       boss_paragon.gd       Paragon: the Hero (heat vision, the punch's fling), Hope (the roster Supers not yet
                             killed), No Restraint (the dives, the craters); paragon_sky.gd draws the white sky
+    corsair/                The Black Tide (Act X): its kits ("<id>_kit.gd", loaded by name after the Concord's)
+                            and bosses ("boss_<id>.gd", phase 2), and the act's shared rules:
+      corsair_rules.gd      Game.corsair: owns the deck, the boats, the sea and the Black Tide; route_spawn() (the
+                            one spawn route of a corsair stage), powder_blast(), danger_push(), the Sea Legs /
+                            Barnacle Bones hooks (null on Acts I to IX)
+      deck_bounds.gd        THE DECK (Game.deck): the convex outline, clamp_point() / walkable_point() (the ring
+                            posts), contain_all() (last step of Arena.resolve_all(): the rail, the fliers' band,
+                            drowning overboard, drops), the camera clamp, the rail and perimeter helpers
+      boarding_party.gd     BOARDING: the capped queue, lanes, boats, grapple hooks, the pour, repel and sink
+      sea_strikes.gd        STRIKES FROM THE SEA: the swimmers (submerged, surfacing, cap 8), leaps, tentacle
+                            grabs (held_until, dragged overboard), strike() for ownerless circles
+      black_tide.gd         The Black Tide Reckoning: the whole rail boards, rail strikes, the great wave
+      corsair_kit.gd        CorsairKit: the water state, surfacing, the submerged look, Barnacle Bones' read
+      *_kit.gd              deckhand, musketeer, powder_runner (the keg), swashbuckler (the lunge),
+                            boarding_bruiser, reef_shark, kraken_arm, corsair_boat, boarding_hook; grappler (the
+                            hook line's drag to the rail), boatswain (the bellow: bellow_at()); the
+                            Maelstrom's corsair_serpent (the breach), ghost_crew (base) / ghost_deckhand /
+                            ghost_gunner, ghost_bosun (the whistle)
+      cutter_director.gd    The Smuggler's Cutter: powder barrels restocked per zone, the Fog Bank's hidden lanes,
+                            Bosun Gorran's ram longboat (the hull stagger, ram_stagger()), the Fire Ship's patches
+                            (HellPits.open_pit()), Not One Aboard (Act X)
+      powder_barrel_kit.gd, bosun_gorran_kit.gd  The Cutter's barrel (any hit: the powder blast) and miniboss
+                            (the chain sweep, the bellow)
+      boss_crow.gd          Captain Crow: Broadside (his sloop, the cannon lines, his crew), the Duel (leaps,
+                            pistol, cutlass), the Fire Ship
+      galleon_director.gd   The Treasure Galleon: its zones, the broadsides (also Marrec's), the deck cannons (a
+                            world rule), Old Hollow-Eye's event, the HUD objectives
+      boss_marrec.gd        Admiral Marrec: the Fleet, the Boarding (the plank and its hooks), the duel, Gold Fever
+      *_kit.gd (Galleon)    gunnery_mate (grenadoes), voodoo_navigator (marks), gunboat (shells in lines, launch()),
+                            hull_crab (the climb), old_hollow_eye (the miniboss), cursed_coin, marrec
+      maelstrom_director.gd The Maelstrom: the Heave, the raised ghost crew, the Ghost Bosun, the spectral
+                            longboats (BoardingParty.launch_boat()), the ghost boats circling (Act X)
+      boss_vandermere.gd    Captain Vandermere: Dead Men's Oath, the Crew, the lantern volley, the Maelstrom
     concord/                The Concord of Stars (Act IX): its kits ("<id>_kit.gd", loaded by name after the
                             City's) and bosses ("boss_<id>.gd", phase 2), and the act's shared rules:
       concord_rules.gd      Game.concord: owns the beams, Abduction, Terraforming and the Final Harvest;
@@ -3557,6 +4388,149 @@ scripts/
                             Terraforming.seed(), the Reaping's lifts (Abduction.lift())
       boss_harvester.gd     The Harvester: the Council (swarms, the cloak, beams), the Reaping (emitters, the cap
                             lifted), the Gardener (rings of turf, adds)
+    norse/                  The Hall of the Slain (temporarily Act XI): its kits ("<id>_kit.gd", loaded by name
+                            after the Concord's folder; NorseKit base: the fury's looks, the stone ward, the skald's
+                            song, the Einherjar) and its shared rules:
+      norse_rules.gd        Game.norse: owns the Long Winter, the Rune-Stones and Ragnarök; BERSERKERGANG
+                            (enter_fury(), the one writer of Enemy.berserk); the draugr's cold touch
+      vigrid_director.gd, vigrid_light.gd  Vigrid: the Fading Light (the dark takes a brazier per zone, the
+                            war-camp moves, the darkness look), the early dark's vanguard, the miniboss event
+      boss_odin.gd, fenrir_kit.gd, odin_raven_kit.gd, muspel_giant_kit.gd  Odin and Fenrir (the Wolf, the
+                            All-Father's Gungnir and ravens, Ragnarök), the Fire-Giant of the South's burning tracks
+      long_winter.gd        THE LONG WINTER: the cold level, the braziers (place()), the slow (TerrainSlow) and
+                            frostbite out of warmth, the douse and the relight, the frost vignette
+      rune_stones.gd        THE RUNE-STONES: raise_stone(), the ward, the horn (horn_blown), the capture, the carving
+      ragnarok.gd           Ragnarök: the red sky, the Einherjar's march, the fire-giants, every valkyrie dives
+      raider_kit.gd, shield_maiden_kit.gd, berserker_kit.gd, skald_kit.gd, norse_valkyrie_kit.gd, seer_kit.gd,
+      draugr_kit.gd, wolf_of_the_wastes_kit.gd, frost_giant_kit.gd, fire_giant_kit.gd, rune_stone_kit.gd,
+      brazier_kit.gd        The shared kinds (the bash, the song, the dive, the carving and curse, the lunge, the
+                            boulder and stomp; the two structure bodies hand their spot to the rules)
+      barrow_fields_director.gd  The Barrow Fields: braziers by the map, THE ONE BARROW PATH (open_barrow()), the
+                            Frozen Fjord's drifts, Keep the Fires, the Barrow-Wight
+      open_barrow_kit.gd, hrimgar_barrow_kit.gd, barrow_wight_kit.gd  The open barrow, Hrimgar's barrow, the miniboss
+      boss_hrimgar.gd       Hrimgar the Draugr-King: the Grave, his falls into the barrow, the Barrow Lord, the Last
+                            Rising (the drag)
+      valgard_director.gd   Valgard: THE FEAST (seated Einherjar at the long tables, wake_feast() on every horn),
+                            the hall's hearths on a lattice (LongWinter.place()), the Einherjar Champion's event
+      einherjar_kit.gd, einherjar_champion_kit.gd, wing_valkyrie_kit.gd  Valgard's kinds (the woken heroes; the
+                            miniboss's sweep and horn; Sigrun's wing and its charge lanes, the one charge hit lane())
+      boss_sigrun.gd        Sigrun, the Shield-Queen: the Charge, the Holmgang (the spell-only rule), the Doors of
+                            the Hall; holmgang.gd is the square of hazel rods (the one keep-out path)
+    dynasty/                The Necropolis Dynasty (Act XII, temporary number): its kits ("<id>_kit.gd", loaded by
+                            name after the Concord's) and bosses ("boss_<id>.gd", phase 2), and the act's shared rules:
+      dynasty_rules.gd      Game.dynasty: owns Rebirth, the quicksand, the Sandstorm, Heka and the Devourer's Hour;
+                            the reach multipliers, the Embalmed Bones / Dune Walkers hooks, the bot's danger hint
+      rebirth.gd            REBIRTH: on_death() (the cartouche), on_raise() (HordeDirector.raise_corpse() steals the
+                            Name), smash() (CombatResolver, no kill), return_body(), the Canopic Jars, place_jar()
+      quicksand.gd          THE BLACK LAND's ground: fixed hashed patches, add_patch(), the slow (FenWater.wade())
+      lioness_temple_director.gd The Temple of the Lioness's director: the Awakening Statues (wake_rows()), the Lion
+                            Warden's sealed hall
+      boss_sekhmet.gd       Sekhmet: the Hunt, the Red Wind, the Feast and its wine jars (sekhmet_data.gd, wine_jar_kit.gd)
+      bastet_hunter_kit.gd, lion_warden_kit.gd, woken_colossus_kit.gd, ushabti_statue_kit.gd  The Temple's kinds
+      two_truths_director.gd The Hall of Two Truths' director: the Scales (truth_scales.gd, the HUD's scales_bar.gd),
+                            the Devourer's Whelp and the Crocodile Wardens' events, Osiris watching from the empty throne
+      boss_osiris.gd        Osiris and Ammit the Devourer: the Judge, the Weighing, the Devourer (osiris_data.gd)
+      crocodile_warden_kit.gd, devourers_whelp_kit.gd  The wardens' drag into the sand; the Whelp that eats the Names
+      sandstorm.gd          THE SANDSTORM clock: is_up(), reach_mult(), force(), start_endless(), the veil, the HUD line
+      heka.gd               HEKA: write() (CombatResolver.curse_unit()), the jumps, cleanse(), the sigils
+      devourers_hour.gd     THE DEVOURER'S HOUR (the act's Reckoning): Rebirth unlimited, the endless storm, the lanes
+      dynasty_kit.gd        Base kit: returns, the storm on a ranged kind's bow, the fire weakness, registration
+      mummy_kit.gd, mummy_female_kit.gd, scarab_swarm_kit.gd, khopesh_guard_kit.gd, heka_priest_kit.gd,
+      embalmer_kit.gd, canopic_jar_kit.gd, cartouche_kit.gd  The shared kinds, the jar and the cartouche
+      nile_archer_kit.gd, jackal_warrior_kit.gd  The Necropolis's shared kinds (the storm-silenced bow, the lunge)
+      sand_colossus_kit.gd  The Necropolis's miniboss: the ground slam (stun, quicksand), the miniboss bar
+      necropolis_director.gd The Necropolis of Sand: THE CANOPIC JARS beside the tombs (place_jar_near(), the one
+                            jar placer), NO JARS LEFT, the Sandstorm Pass's storm, the Sand Colossus event
+      boss_anubis.gd        Anubis, Opener of the Way: the Procession (Rebirth.set_procession()), the Embalmer
+                            (DynastyRules.embalm_all), the Jackal (afterimage lunges)
+    host/                   The Celestial Host (Act XIII, temporary number): its kits ("<id>_kit.gd", loaded by
+                            name after the Dynasty's) and bosses ("boss_<id>.gd", phase 2), and the act's shared rules:
+      host_rules.gd         Game.host: owns Judgment, Hallowed Light, Grace and the Last Trumpet; the sin hooks, the
+                            Absolution / Smoked Glass hooks, the bot's danger hint
+      judgment.gd           JUDGMENT: add() (the one weight write), the Judges at each third, the Verdict's pillars;
+                            judgment_bar.gd is the HUD's scales
+      hallowed_light.gd     HALLOWED LIGHT: the shafts (add_shaft()), the burn, the angels' heal, shaded();
+                            cloud_shade.gd is the cloud banks' shadows (in_shade(), add_shade())
+      grace.gd              GRACE: absorbs() (the one halo read, from CombatResolver.damage_enemy()), the Dominions'
+                            regrowth
+      last_trumpet.gd       The Last Trumpet: seven trumpets after 0:00 (the scales, the light, the Host), the sky opens
+      host_kit.gd           Base kit: the halo (seen kinds), registration, the code-drawn halo ring
+      lesser_light_kit.gd, virtue_kit.gd, power_kit.gd, choir_angel_kit.gd, herald_kit.gd, dominion_kit.gd,
+      judge_kit.gd          The shared kinds (the Power's lunge, the Herald's blast, the Judge's hunt)
+      cherub_kit.gd         The Cherub and the Cherub of the Gate: the turning sword, sweep() (the one blade test,
+                            Seraiel's Sword too) (the Silver Stair)
+      silver_stair_director.gd  The Silver Stair: the Stair's steps and low cloud banks, Without Sin, the Cherub of
+                            the Gate (game.enemies.silver_stair)
+      boss_seraiel.gd       Seraiel, Warden of the Gate: the Sword, the Gate (lanes closed by shafts), the Trial
+      ophan_kit.gd          The Ophan: the marked line, the roll straight through the ring, the turn (the Wheel of Thrones)
+      spheres_dominion_kit.gd  The Dominion of the Spheres: a Dominion whose regrowth covers the zone, the miniboss bar
+      wheel_of_thrones_director.gd  The Wheel of Thrones: the turning spheres (moving crystal walls, contain_all() from
+                            Arena.resolve_all()), the Dominion of the Spheres, The Wheel Breaks (game.enemies.wheel_of_thrones)
+      boss_throne.gd        The Throne: the Rolling (rebounds), the Gaze (shafts from the rim), the Core (rims take a fifth)
+    primeval/               The Age of Titans (Act XIV, temporary number): its kits ("<id>_kit.gd", loaded by name
+                            after the Host's) and bosses ("boss_<id>.gd", phase 2), and the act's shared rules:
+      primeval_rules.gd     Game.primeval: owns Packs, Herds, Scavengers and the Stampede of Ash; the one telegraph
+                            layer, the Hoarder's Bones / Thick Marrow hooks, the bot's danger hint
+      pack_brain.gd         PACKS: forming (the alpha first), steer() (circle, hold, rush), the alpha's death
+      herds.gd              HERDS: the neutral beasts, launch() (the one stampede), the trample and the shelter, the
+                            Fossil Giants
+      scavengers.gd         SCAVENGERS: the dive clock, the piles (XpManager.take()), drop and nest
+      stampede_of_ash.gd    The Stampede of Ash: herds from every side and volcanic bombs after 0:00
+      primeval_kit.gd       Base kit: registration, move(); herd_beast_kit.gd the herd beasts' base
+      scuttler_kit.gd, razorclaw_kit.gd, frill_spitter_kit.gd, longneck_kit.gd, duckbill_kit.gd, skyraider_kit.gd,
+      tyrant_kit.gd         The shared kinds (the alpha's look, the herds' steering, the Skyraider's dive)
+      bog_croc_kit.gd       The Bog Croc: submerged in the tar, the lunge; bite_first() (the one lunge bite, Ironjaw's
+                            and Scarmaw's too) (the Fern Basin)
+      ironjaw_kit.gd        Ironjaw, the Nest Mother: the Iron Jaw lunge, the nest's ward, the miniboss bar
+      primeval_nest_kit.gd  Ironjaw's nest: hatches Scuttlers until it is broken
+      fern_basin_director.gd  The Fern Basin: the Tar Seeps (pool_in(), the slows, the trapped beasts), the Bog Crocs,
+                            Ironjaw and her nest (game.enemies.fern_basin)
+      boss_scarmaw.gd       Scarmaw, the Great Raptor: the Hunt (packs, the leap), the Ambush (fern patches), Blood Up
+      horncharger_kit.gd    The Horncharger: the telegraphed charge, stuck in a rock; gore() / rock_ahead() (the one
+                            charge hit and rock test, Old Ironbrow's too) (the Great Plain)
+      clubtail_kit.gd       The Clubtail and Mother Clubtail: the tail sweep, the matriarch's herd guard, the
+                            miniboss bar
+      great_plain_director.gd  The Great Plain: the Watering Hole (the lake, Herds.gather, fights start stampedes),
+                            the Canyon's narrow front, Mother Clubtail, Nothing Taken (game.enemies.great_plain)
+      boss_ironbrow.gd      Old Ironbrow, the Horned Titan: the Charge (into a rock), the Herd, the Break (shards, the
+                            stump)
+      stormwing_kit.gd      The Stormwing and Thunderwing, the Sky King: the circle, the wing gust, the landing (the
+                            Last Day)
+      last_day_director.gd  The Last Day: Fire from the Sky, the growing meteor (meteor_dial.gd), Thunderwing
+                            (game.enemies.last_day)
+      extinction.gd         The Extinction, the Last Day's Reckoning (PrimevalRules.extinction): the white-out, the
+                            ward, the impact, the Fossil Host, the victory
+      boss_gravejaw.gd      Old Gravejaw, the Tyrant King: the Hunt (the bite, the swallow), the Roar, the Last Day
+    wild/                   The Turning Year (Act XV, temporary number): its kits ("<id>_kit.gd", loaded by name
+                            after the Titans') and bosses ("boss_<id>.gd", phase 2), and the act's shared rules:
+      wild_rules.gd         Game.wild: owns the year, the ground, the thickets and Spring Returns; the under / over
+                            layers, the season tint, the Deadwood / Fallow Ground hooks, the bot's danger hint
+      season_cycle.gd       THE TURNING YEAR: season() (the one season read; set_override()), the roots, the
+                            wildfires, the rot (corpse_life()), the snow and blizzards, the timeline helper
+      season_wheel.gd       The HUD's wheel of the year
+      bloom_field.gd        BLOOM AND BLIGHT: the coarse blight grid (blight_at()), the heal on living ground
+      thickets.gd           OVERGROWTH: plant() (the one planting path), the thickets (Arena.add_obstacle()), the
+                            catches, the spread, burn_line() / burn_at(), the withering
+      spring_returns.gd     Spring Returns: the blight wiped, sprouting thickets, burials after 0:00
+      wild_kit.gd           Base kit: registration, trample() (the one Wild trample), line_push(); dryad_kit.gd the
+                            seeds; winter_fae_kit.gd the chilling frost bolt
+      wild_charge_kit.gd    The Wild Hunt's shared charge (windup, line, trample) and lead() (a leader's line);
+                            great_stag_kit.gd, wild_rider_kit.gd (hounds, the Hunt passes), hunt_hound_kit.gd,
+                            huntsman_kit.gd (the Greenwood's miniboss, three riders in his line)
+      treant_kit.gd, fae_knight_kit.gd, will_o_wisp_kit.gd, spore_mother_kit.gd, corpse_bloom_kit.gd  The root, the
+                            blink, the lure, the spores and mould, the meals and buds; thornling_kit.gd plain
+      greenwood_director.gd The Greenwood: the sacred groves (grove_in(), heal, blight), the Huntsman, Scorched Earth
+      boss_stag_king.gd     The Stag King: the Hunt, the Rut, the Antler Crown (antler_thicket_kit.gd, crown_burn())
+      fae_court_director.gd The Fae Court: the endless summer (set_override()), the fairy rings (ring_in(), half speed),
+                            the Winter Prince's minute of winter (winter_prince_kit.gd: the frost fan)
+      boss_summer_queen.gd  The Summer Queen: petals, the Masque (masked_courtier_kit.gd), the Bargain (ConfirmDialog,
+                            WildRules.take_bargain(), CoopLockstep.Cmd.BARGAIN), the Court in Bloom
+      world_tree_director.gd The World-Tree: the Gardener of Roots (gardener_of_roots_kit.gd: the call through
+                            SeasonCycle.call_roots())
+      boss_green_mother.gd  The Green Mother: the Turning (set_override() and the season bursts), the Burial
+                            (burial_thicket_kit.gd), the Last Claim (last_claim.gd: seven acts' rules through their
+                            own paths), the ending
+      first_spring.gd       The First Spring: the World-Tree's ending in Spring Returns' place (WildRules)
     pantheon/               The Olympian Republic (Act IV): its kits ("<id>_kit.gd", loaded by name after the
                             Eye's and the Empire's) and bosses ("boss_<id>.gd"), and the act's shared rules:
       pantheon_rules.gd     Game.pantheon: owns the wrath, the Phalanx and Glory, the one front test
@@ -3846,18 +4820,151 @@ scripts/
     ark_enemy_data.gd       The Ark's own kinds: the Luminous Archon, the specimen tank, the freed beast, the
                             reactor vent, the Reaping emitter (Act IX; the Grey Overseer is a shared row)
     harvester_data.gd       The Harvester's arrival, phases and numbers (Act IX)
+    linen_bind_data.gd      Linen Bind / Eternal Shroud rules, Natron Salts keys, Linen Ward key (Act XII,
+                            temporary; the spell node is abilities/spells/linen_bind.gd)
+    anubis_data.gd          Anubis, Opener of the Way: his row, phases and numbers (Act XII, temporary)
+    flaming_sword_data.gd   Flaming Sword / Sword at the Gate rules, Fallen Light keys, Torn Wing key (Act XIII,
+                            temporary; the spell node is abilities/spells/flaming_sword.gd)
+    seraiel_data.gd         Seraiel, Warden of the Gate: his row, phases, the Sword, the Gate, the Trial (Act XIII)
+    wheel_of_eyes_data.gd   Wheel of Eyes / Ophanim rules, All-Seeing keys, Inner Sight key (Act XIII, temporary;
+                            the spell node is abilities/spells/wheel_of_eyes.gd)
+    throne_data.gd          The Throne: its row, the cycle, the Rolling, the Gaze, the Core, The Wheel Breaks share (Act XIII)
+    pack_leap_data.gd       Pack Leap / Apex Pack rules, Pack Instinct keys, Hunter's Mark key (Act XIV, temporary;
+                            the spell node is abilities/spells/pack_leap.gd)
+    scarmaw_data.gd         Scarmaw, the Great Raptor: her row, the Hunt, the Ambush, Blood Up (Act XIV)
+    stampede_data.gd        Stampede / Herd of Ages rules, Calcified Hide keys, Lead Bull key (Act XIV, temporary;
+                            the spell node is abilities/spells/stampede.gd)
+    ironbrow_data.gd        Old Ironbrow, the Horned Titan: his row, the Charge, the Herd, the Break (Act XIV)
+    meteor_call_data.gd     Meteor Call / Extinction Event rules, Cosmic Dust keys, Star Reader key (Act XIV,
+                            temporary; the spell node is abilities/spells/meteor_call.gd)
+    gravejaw_data.gd        Old Gravejaw, the Tyrant King: his row, the Hunt, the Roar, the Last Day (Act XIV)
+    wild_hunt_data.gd       Wild Hunt / The Endless Hunt rules, Horn of the Hunt keys, Call of the Horn key (Act XV,
+                            temporary; the spell node is abilities/spells/wild_hunt.gd)
+    stag_king_data.gd       The Stag King, Lord of the Greenwood: his row, the Rut, the Hunt, the Antler Crown (Act XV)
+    glamour_data.gd         Glamour / Court of Masks rules, Changeling keys, Many Faces key (Act XV, temporary; the
+                            spell node is abilities/spells/glamour.gd)
+    summer_queen_data.gd    The Summer Queen of the Fae: her row, petals, the Masque, the BARGAINS, the Court in Bloom (Act XV)
+    green_mother_data.gd    The Green Mother: her row, the Turning, the Burial, LAST_CLAIM and the fourteen SLOTS (Act XV)
+    root_and_rot_data.gd    Root and Rot / Return to Earth rules, Compost Heart keys, Green Thumb key (Act XV,
+                            temporary; the spell node is abilities/spells/root_and_rot.gd)
     tractor_lift_data.gd    Tractor Beam / Abduction rules, Starseed keys, Deserter's Signal key (Act IX; the
                             spell node is abilities/spells/tractor_lift.gd, the lift helper abilities/enemy_lift.gd)
+    burning_eye_data.gd     Burning Eye / Eye of Retribution rules, Desert Fury keys, Lioness's Gaze key (Act XII,
+                            temporary; the spell node is abilities/spells/burning_eye.gd)
+    feathers_verdict_data.gd  Feather's Verdict / Heart Devoured rules, Heavy Heart keys, Crook and Flail key (Act XII,
+                            temporary; the spell node is abilities/spells/feathers_verdict.gd)
     concord_rules_data.gd   Act IX's shared rules: RACES, BEAMS and BEAM_STYLES, ABDUCTION, TERRAFORMING,
                             FINAL_HARVEST, the SOUNDS map, the Mirror Bones / Anchored keys
     stages/crash_site_stage.gd     Act IX stubs: the Crash Site, the Proving Moon and the Ark of the Concord; act 9,
     stages/proving_moon_stage.gd   "concord": true, zones, the "terraforming" overrides, a timeline of the shared
     stages/ark_stage.gd            kinds of all four races, the Final Harvest, placeholder floors / bosses; the
                                    Proving Moon reads "gravity" (ConcordRules.gravity())
+    corsair_enemy_data.gd   The Black Tide's shared kinds (Deckhand, Musketeer, Powder Runner, Swashbuckler, Boarding
+                            Bruiser, Reef Shark, Kraken Arm), the boats (skiff, longboat, raider_ship) and the
+                            grapple hook; the crew / water / strike / boat / hook / keg / lunge keys; the Black Tide's
+                            kind and companions (Act X; cutter_ / galleon_ / maelstrom_enemy_data.gd: each stage's
+                            own; the Cutter's block adds the shared Grappler and Boatswain)
+    cutter_enemy_data.gd    The Smuggler's Cutter's table: the powder barrel, Bosun Gorran, his ram longboat,
+                            Crow's sloop (Act X)
+    crow_data.gd            Captain Crow's arrival and fight (Broadside, the Duel, the Fire Ship) (Act X)
+    chain_shot_data.gd      Chain Shot / Keelhauler rules, Bosun's Whistle key, Spare Shot key (Act X; the spell
+                            node is abilities/spells/chain_shot.gd)
+    corsair_rules_data.gd   Act X's shared rules: DECK, BOARDING (BOAT_CREW, BOAT_PLANKS), SEA (TENTACLE, LEAP),
+                            BLACK_TIDE, the SOUNDS map, the Sea Legs / Barnacle Bones keys
+    galleon_data.gd         The Treasure Galleon's systems: BROADSIDE, CANNONS, the floor dressing, Walked the
+                            Plank's goal; marrec_data.gd: Admiral Marrec; cannonade_data.gd: Cannonade's fixed rules
+    stages/cutter_stage.gd         Act X: the Smuggler's Cutter (built: zones, the "cutter" config), the Treasure Galleon and the Maelstrom; act 10
+    stages/galleon_stage.gd        (temporary; final slot II), "corsair": true, "deck", "boarding", "sea", a FIXED
+    stages/maelstrom_stage.gd      furniture layout ("fixed"), a timeline of the shared kinds, the Black Tide,
+                                   placeholder look / bosses (the Maelstrom is built: zones, MAELSTROM, the
+                                   timeline with the ghost crew, the deck furniture art)
+    maelstrom_enemy_data.gd The Maelstrom's table: the ghost crew, the Ghost Bosun, the spectral longboat (Act X)
+    vandermere_data.gd      Vandermere's arrival and fight: the Oath, the Crew, the volley, the Maelstrom (Act X)
+    anchor_drop_data.gd     Anchor Drop / Abyssal Mooring rules, Dead Reckoning keys, Second Anchor key (Act X; the
+                            spell node is abilities/spells/anchor_drop.gd)
     proving_moon_enemy_data.gd  The Proving Moon's table: the Warbeast (Act IX)
+    norse_enemy_data.gd     The Hall of the Slain's shared kinds (raider, shield_maiden, berserker, skald, valkyrie,
+                            seer, draugr, wolf_of_the_wastes, frost_giant, fire_giant) and the rune_stone / brazier
+                            structure rows (barrow_fields_ / valgard_ / vigrid_enemy_data.gd: each stage's own;
+                            the Barrow Fields': draugr_female, open_barrow, barrow_wight, hrimgar_barrow;
+                            Valgard's: einherjar, einherjar_champion, wing_valkyrie)
+    hrimgar_data.gd         Hrimgar's arrival and numbers (the Grave, the Barrow Lord, the Last Rising, his falls)
+    barrow_grasp_data.gd    Barrow Grasp / Barrow-Lord's Embrace rules, Grave Frost and Rune of Binding keys (the
+                            spell node is abilities/spells/barrow_grasp.gd)
+    sigrun_data.gd          Sigrun's arrival and numbers (the Charge, the Holmgang, the Doors of the Hall; Valgard)
+    valkyrie_spear_data.gd  Valkyrie Spear / Chooser of the Slain rules, Einherjar's Oath keys, Shield-Sister key
+                            (Valgard; the spell node is abilities/spells/valkyrie_spear.gd)
+    norse_rules_data.gd     The Hall of the Slain's shared rules: LONG_WINTER, EINHERJAR, BERSERK, RUNE_STONES,
+                            RAGNAROK, the SOUNDS map, the Fur-Lined Bones / Keep the Fires keys
+    vigrid_enemy_data.gd    Vigrid's own kinds: the Fire-Giant of the South, Fenrir, Odin's ravens
+    odin_data.gd            Odin and Fenrir's arrival, phases and numbers
+    gungnir_data.gd         Gungnir / Spear of the Hanged rules, Runecraft keys, Bear-Shirt key (the spell node is
+                            abilities/spells/gungnir.gd; the Draugr Thane is horde/behaviors/draugr_thane_behavior.gd)
+    stages/barrow_fields_stage.gd  The Hall of the Slain stages (temporarily act 11, final slot VI): "norse": true,
+    stages/valgard_stage.gd        zones, the "long_winter" / "rune_stones" overrides, a timeline of the shared kinds
+                                   (Valgard, phase 2: four zones, the braziers by the map, VALGARD for its director,
+                                   Sigrun)
+    stages/vigrid_stage.gd         with four "rune_stone" events, Ragnarök, placeholder floors / bosses
     vrask_tal_data.gd       Vrask'Tal's arrival and numbers (the Stalk, the Duel, the Last Trophy and its bomb)
     soul_caster_data.gd     Soul Caster / Apex Predator rules, Trophy Rack keys, First Blood key (Act IX; the spell
                             node is abilities/spells/soul_caster.gd)
+    dynasty_enemy_data.gd   The Necropolis Dynasty's shared kinds (Mummy, female Mummy, Scarab Swarm, Khopesh Guard,
+                            Heka Priest, Embalmer), the Canopic Jar and the cartouche; the group / rebirth /
+                            fire_taken / embalms / holds_names / storm_silenced keys; the Devourer's Hour's kind and
+                            companions, and the Necropolis's Nile Archer and Jackal Warrior (Act XII, temporary;
+                            necropolis_ / lioness_temple_ / two_truths_enemy_data.gd: each stage's own; the
+                            Necropolis's holds the Sand Colossus)
+    dynasty_rules_data.gd   Act XII's shared rules: REBIRTH, JARS, QUICKSAND, SANDSTORM, HEKA, DEVOURER, FIRE_SOURCES,
+                            the SOUNDS map, the Embalmed Bones / Dune Walkers keys
+    stages/necropolis_stage.gd     Act XII (built, playable): the Necropolis of Sand, the Temple of the Lioness and the Hall of Two
+    stages/lioness_temple_stage.gd Truths; act 12, "dynasty": true, zones, the rule overrides, a timeline of the shared
+    stages/two_truths_stage.gd     kinds, the Devourer's Hour, placeholder floors / bosses
+                                   (the Hall of Two Truths built: four zones, the Scales, the Whelp, Osiris and Ammit;
+                                   two_truths_enemy_data.gd the Whelp, osiris_data.gd, feathers_verdict_data.gd)
+    host_enemy_data.gd      The Celestial Host's shared kinds (Lesser Light, Virtue, Power, Choir Angel, Herald,
+                            Dominion, Judge); the group / halo / regrows / judge / lunge / blast keys; the Last
+                            Trumpet's kind and companions (Act XIII, temporary; silver_stair_ / wheel_of_thrones_ /
+                            empyrean_enemy_data.gd: each stage's own; the Silver Stair's holds the Cherub of the Gate,
+                            and its block in the shared file the Cherub; the Wheel of Thrones' the Dominion of the
+                            Spheres, and its block the Ophan; the Empyrean's the Herald of the Seventh Trumpet)
+    host_rules_data.gd      Act XIII's shared rules: JUDGMENT, LIGHT, CLOUDS, GRACE, TRUMPET, the SOUNDS map, the
+                            Absolution / Smoked Glass keys
+    stages/silver_stair_stage.gd     Act XIII (built, playable): the Silver Stair, the Wheel of Thrones and the Empyrean;
+    stages/wheel_of_thrones_stage.gd act 13, "host": true, zones, the rule overrides, a timeline, the Last Trumpet: the
+    stages/empyrean_stage.gd         Silver Stair's Stair, Cherub of the Gate and Seraiel; the Wheel of Thrones' turning
+                                     spheres, Dominion of the Spheres and Throne; the Empyrean's Choir, Herald of the
+                                     Seventh Trumpet and Voice (empyrean_enemy_data.gd, voice_data.gd, revelation_data.gd)
+    primeval_enemy_data.gd  The Age of Titans' shared kinds (Scuttler, Razorclaw, Frill-Spitter, Longneck, Duckbill,
+                            Skyraider, Tyrant); the group / pack / herd / fright / scavenger keys; the Stampede of
+                            Ash's kind and companions; the Fern Basin's block the Bog Croc, the Great Plain's the
+                            Horncharger and the Clubtail (Act XIV, temporary; fern_basin_ / great_plain_ /
+                            last_day_enemy_data.gd: each stage's own; the Fern Basin's holds Ironjaw, her nest and
+                            Scarmaw's alpha-guard, the Great Plain's Mother Clubtail; the Last Day's block the
+                            Stormwing and the Tyrant's swallow / roar keys, its own table Thunderwing)
+    primeval_rules_data.gd  Act XIV's shared rules: PACKS, HERDS, SCAVENGERS, ASH, EXTINCTION (the Last Day's
+                            Reckoning), the SOUNDS map, the Hoarder's Bones / Thick Marrow keys
+    stages/fern_basin_stage.gd       Act XIV stubs: the Fern Basin, the Great Plain and the Last Day; act 14,
+    stages/great_plain_stage.gd      "primeval": true, zones, the rule overrides, a timeline of the shared kinds, the
+    stages/last_day_stage.gd         Stampede of Ash, placeholder floors / bosses ("playable": false; the Fern Basin is
+                                     built: its zones and tar, the Bog Crocs, Ironjaw, Scarmaw, "playable": true; the
+                                     Great Plain too: its zones, the Watering Hole, the Canyon, Mother Clubtail, Ironbrow;
+                                     and the Last Day: Fire from the Sky, Thunderwing, Gravejaw, the Extinction)
+    wild_enemy_data.gd      The Turning Year's shared kinds (Thornling, Dryad, Treant, Corpse-Bloom, Fae Knight,
+                            Winter Fae, Great Stag, Rider of the Wild Hunt, Will-o'-Wisp, Spore Mother); the group /
+                            season / plant keys, the specials' keys and the Hound of the Wild Hunt; Spring Returns'
+                            kind and companions (Act XV, temporary; greenwood_enemy_data.gd: the Huntsman and the
+                            Antler Crown's thorn; fae_court_enemy_data.gd: the Winter Prince and the Masque's
+                            courtier; world_tree_enemy_data.gd: the Gardener of Roots and the burial thicket)
+    wild_rules_data.gd      Act XV's shared rules: SEASONS, ROOTS, WILDFIRE, AUTUMN_RULES, WINTER_RULES, BLOOM,
+                            THICKETS, SPRING_RETURNS, the SOUNDS map, the Deadwood / Fallow Ground keys,
+                            FIRST_SPRING (the World-Tree's ending)
+    stages/greenwood_stage.gd        Act XV: the Greenwood, the Fae Court and the World-Tree; act 15, "wild": true,
+    stages/fae_court_stage.gd        zones, the rule overrides, a timeline of the shared kinds with season weights,
+    stages/world_tree_stage.gd       Spring Returns (the Greenwood built: four zones, the groves, the Huntsman, the
+                                     Stag King; the Fae Court built: four zones, the endless summer, the fairy rings,
+                                     the Winter Prince, the Summer Queen; the World-Tree built: four zones, the year
+                                     twice as fast, the Gardener of Roots, the Green Mother and the First Spring; all
+                                     three "playable": true)
     stages/ravensmoor_stage.gd     Act VII stubs: Ravensmoor, the Witchwood and Castle Sanguis; act 7,
     stages/witchwood_stage.gd      "court": true, zones, the "moon" overrides, a timeline of the shared kinds,
     stages/castle_sanguis_stage.gd the Endless Feast, placeholder floors / bosses (the Witchwood built: four
@@ -4102,7 +5209,7 @@ Options (after `--`):
 | `--spells=a,b,...` | Any policy first takes these spells (ids from `AbilityData.SPELL_ORDER`, e.g. `bone_spear,soul_siphon,corpse_explosion,plague_cloud` or the later `death_mark,bone_wall,soul_chains` / `wither,raise_dead`) and their evolution passives, which also get ×8 card weight in hands and chests so they are offered reliably (a test-only hook; without `--spells` the draw is unchanged), never banishes them, and stops taking other new actives (or passives) once the free slots are down to the forced spells (or passives) still missing plus one spare, because chests can fill slots too (a hand with nothing else is rerolled or skipped). The `army`, `evolve` and `summon` bots never take a new item that is not on their build list (they reroll or skip), so the newer spells and the later summon classes do not change those baselines (`--classes` / `--spells` items are exempt); the `summon` and `army` bots also keep active slots free for the core classes they still lack (summon: Warriors, Mages, Menders, Warders; army: those plus Archers). Use it to exercise a spell and reach its evolution. |
 | `--passives=a,b,...` | Any policy first takes these passives (ids from `PassiveData.ORDER` except the Pact, e.g. `unholy_precision,unholy_resilience` or `blood_scent,mournsong,siegecraft`) exactly like the `--spells` items (score, ×8 card weight, slot reservation, never banished), so a passive's effect can be exercised. |
 | Bone Golem (content wave 2) | `--classes=bone_golem,...` and `--passives=grave_masonry` force the locked Golem and its passive. A run that had either prints a `bone golem` line: `absorbed=<n> max_growth=<%> bulwarks=<n> titan=<bool> bone_bastion_prevented=<dmg>`, then its level, alive / capacity, deaths, damage by source (slams with their volleys, splash, the Titan's wall), slams and slam hits, planted seconds, taunts, Grave Masonry's level and damage prevented, the Titan's heal, barriers and walls, and whether Bone Bastion was active. |
-| `--stage=ID` | Stage to play: `graveyard` (default), `crimson_march`, `sanctum`, the Act II stages `harbour`, `archive` and `spire`, the Act III stages `wastes`, `assembly` and `citadel`, the Act IV stages `ilion`, `olympus` and `underworld`, the Act V stages `province`, `kurogane` and `sun_road`, the Act VI stages `burning_gate`, `silk_palace` and `pandemonium`, the Act VII stages `ravensmoor`, `witchwood` and `castle_sanguis` (the summary adds the `bloodfeast`, `night wings`, `blood moon`, `court kinds`, `endless feast` and `court stage` lines; `--boss=vargr\|isolde\|carmilla`), the Act VIII stages `skid_row`, `fort_kessler` and `liberty_heights` (city blocks; the summary adds the `city blocks`, `armour`, `supers`, `civilians`, `escalation`, `city kinds`, `martial law` and `city stage` lines; `--boss=don_marrow\|harrow\|paragon`; `--spawn=` takes `civilian`, `street_thug`, `gang_gunner`, `riot_cop`, `squad_car`, `swat_breacher`, `field_medic`, `rifleman`, `tank`, `blitz` and `city_wreck`, Skid Row's `armoured_limo`, `big_sal` and `bounty_board`, and Fort Kessler's `machine_gunner`, `attack_helicopter` and `mammoth`; Skid Row adds `skid row` (Big Sal, the Bounty, No Witnesses), `tear gas`, `big sal` and `don marrow` lines, Fort Kessler adds the `fort kessler`, `fort kessler kinds`, `mammoth`, `fort kessler threats` (top summon-damage and summon-death sources) and `harrow` lines, and on any stage `act VIII spell` / `act VIII passives` when Hearse Run, Black Car, Kevlar Bones, Bone Mines, Tripwire or Armour-Piercing Bones were taken), or the Act IX stages `crash_site`, `proving_moon` and `ark` (see *Act IX* above). Stage locks are ignored. Act II runs print a `dread` line (peak, average, end, Dread calmed by kills, seconds per 25-Dread step, Dread by source) and a `claims` line (claims, Thralls freed, expired, still risen at the end, refusals by the cap, claims by class). Gullhaven adds `tide` (level, seawall, High Water, surges and shoves, seconds in water for you / summons / enemies / swimmers), `harbour` and `harbour events` (buoys sunk and when, tolls, wave and trickle size, caches and chests, the Harbourmaster), `harbour kinds` / `harbour tricks` (also on any stage where a Harbour kind spawned, e.g. `--spawn=deep_kin@60x3`), `merrow` (when he is the boss, also `--boss=merrow`), `act II spell` (Undertow when learned) and `act II passives` (Salt of the Deep, Brinewalker). |
+| `--stage=ID` | Stage to play (any of the 45 stage ids; the act numbers in this cell are the ones each act had when it was built, the final numbers are in the *Stages* table): `graveyard` (default), `crimson_march`, `sanctum`, the Act II stages `harbour`, `archive` and `spire`, the Act III stages `wastes`, `assembly` and `citadel`, the Act IV stages `ilion`, `olympus` and `underworld`, the Act V stages `province`, `kurogane` and `sun_road`, the Act VI stages `burning_gate`, `silk_palace` and `pandemonium`, the Act VII stages `ravensmoor`, `witchwood` and `castle_sanguis` (the summary adds the `bloodfeast`, `night wings`, `blood moon`, `court kinds`, `endless feast` and `court stage` lines; `--boss=vargr\|isolde\|carmilla`), the Act VIII stages `skid_row`, `fort_kessler` and `liberty_heights` (city blocks; the summary adds the `city blocks`, `armour`, `supers`, `civilians`, `escalation`, `city kinds`, `martial law` and `city stage` lines; `--boss=don_marrow\|harrow\|paragon`; `--spawn=` takes `civilian`, `street_thug`, `gang_gunner`, `riot_cop`, `squad_car`, `swat_breacher`, `field_medic`, `rifleman`, `tank`, `blitz` and `city_wreck`, Skid Row's `armoured_limo`, `big_sal` and `bounty_board`, and Fort Kessler's `machine_gunner`, `attack_helicopter` and `mammoth`; Skid Row adds `skid row` (Big Sal, the Bounty, No Witnesses), `tear gas`, `big sal` and `don marrow` lines, Fort Kessler adds the `fort kessler`, `fort kessler kinds`, `mammoth`, `fort kessler threats` (top summon-damage and summon-death sources) and `harrow` lines, and on any stage `act VIII spell` / `act VIII passives` when Hearse Run, Black Car, Kevlar Bones, Bone Mines, Tripwire or Armour-Piercing Bones were taken), the Act IX stages `crash_site`, `proving_moon` and `ark` (see *Act IX* above), the Act X stages `cutter`, `galleon` and `maelstrom` (see *Act X: the Black Tide* above), the Hall of the Slain's stages `barrow_fields`, `valgard` and `vigrid` (temporarily Act XI; see *The Hall of the Slain* above), or the temporary Act XII stages `necropolis`, `lioness_temple` and `two_truths` (see *Act XII: the Necropolis Dynasty* above), or the temporary Act XIII stages `silver_stair`, `wheel_of_thrones` and `empyrean` (see *Act XIII: the Celestial Host* above), or the temporary Act XIV stages `fern_basin`, `great_plain` and `last_day` (all built; see *Act XIV: the Age of Titans* above), or the temporary Act XV stages `greenwood` and `fae_court` (built) and `world_tree` (a stub; see *Act XV: the Turning Year* above). Stage locks are ignored. Act II runs print a `dread` line (peak, average, end, Dread calmed by kills, seconds per 25-Dread step, Dread by source) and a `claims` line (claims, Thralls freed, expired, still risen at the end, refusals by the cap, claims by class). Gullhaven adds `tide` (level, seawall, High Water, surges and shoves, seconds in water for you / summons / enemies / swimmers), `harbour` and `harbour events` (buoys sunk and when, tolls, wave and trickle size, caches and chests, the Harbourmaster), `harbour kinds` / `harbour tricks` (also on any stage where a Harbour kind spawned, e.g. `--spawn=deep_kin@60x3`), `merrow` (when he is the boss, also `--boss=merrow`), `act II spell` (Undertow when learned) and `act II passives` (Salt of the Deep, Brinewalker). |
 | (the Hollow Archive) | `--stage=archive` adds `archive` (tomes burned and when, Nothing Unwritten, seconds in ink / spores, the orrery's risings, turns and pushes, the Librarian), `archive rifts` (opened and when, closed early, closed by themselves, cultists spat out) and `archive events` lines; any Archive kind adds `archive enemies` (spawned / killed per kind), `archive kits` (curses, wraith rises and dives, spore clouds and their summon damage, mass splits, Librarian beams, summons turned, lashes, kills) and `archive hazards`; the Archivist adds `archivist` (phase times, kill time, pages and their hits, Footnotes and the damage wasted on copies, Erasure steps and pushes); Forbidden Verse adds `act ii spells`, Marginalia / Iron Mind `act ii passives`. `--spawn=` takes `scribe`, `ink_wraith`, `spore_pilgrim`, `gibbering_mass`, `librarian`, `archive_rift`, `unwritten_one`; `--boss=archivist`; `--character=heretic_scribe`. |
 | (Act III) | `--stage=wastes\|assembly\|citadel` (the Act III stubs) prints `line of fire` (shots fired, rails, arcs; stopped by summons, absorbed by barriers, stopped by Bone Walls, Orb intercepts; reached you and the damage; expired, capped, peak), `lock-on` (lines painted on you / on summons, refused at the cap, fired, cancelled by a slain Spotter, rails stopped by summons or reaching you, most lines at once), `steel` (machine and cyborg kills, Grave Gunners raised per raising effect, their damage and kills), `purge protocol` (orbital salvos and strikes, hits), `empire kinds` (spawned / killed and damage per kind), `empire stage` and `ranged share` (the share of Empire spawns that attack from range; every Act III stage). The Empire's lines also print on any stage where an Empire kind was forced: `--spawn=scout_drone@60x10,line_trooper@90x6,spotter@120`. Grave Gunners need a raising effect, e.g. `--spells=death_mark` or `--ultimate=grave_tide`; `--boss=kestrel\|motherboard\|deus_ex_machina`. The Scrap Wastes (`--stage=wastes`) adds `wastes` (pylons raised / destroyed and when, the share of shooter reach samples boosted, shrunk or storm-halved, storms, the Trojan Horse, objective Soul Ash), `wastes kinds` (Aegis shield blocks and breaks, mortar shells, rockets launched / intercepted / hitting you / shot down, decoys; also wherever a Wastes kind was forced, e.g. `--spawn=aegis_bot@60x6,mortar_walker@90x2,trojan_horse@120`), `trojan horse` and `kestrel` (when she is the boss, also `--boss=kestrel`). On any stage, `act III spell` (Death Ray when learned, e.g. `--spells=death_ray`) and `act III passives` (Conductive Marrow, Lead-Lined Bones, e.g. `--passives=lead_lined_bones`). |
 | (Act IV) | `--stage=ilion\|olympus\|underworld` (the Act IV stubs) prints `divine wrath` (the stage's kind; salvos and strikes per kind: waves, bolts, fissures; damage to enemies with the kills, to summons and to you; fodder drowned, lightning chains, corpses swallowed, shades spat, capped strikes, whether the Twilight began), `phalanx` (walls formed, bodies locked, front hits by shots and melee with the damage prevented, flank breaks, most bodies locked at once), `glory` (stacks gained, the peak, heroes killed and with how many stacks, chests and Soul Ash bounty), `pantheon kinds` (spawned / killed and damage per kind) and `pantheon stage`. The lines also print on any stage where a Pantheon kind was forced: `--spawn=hoplite@60x8,hero@90,shade_of_dead@30x12,bronze_titan@120`; `--boss=achilles\|zeus\|hades` (placeholder boss scripts until phase 2). |
@@ -4117,6 +5224,7 @@ Options (after `--`):
 | (the Iron Citadel) | `--stage=citadel` adds `citadel` (gates raised / broken / locked down, garrison spawns, wall pushes, laser cycles and their hits on you, summons and enemies, citadel gun salvos, strikes and hits, turrets placed / destroyed / left behind, guests, objective Soul Ash), `citadel events`, `citadel kinds` (Duelist lunges: blocked / reached you / summons sliced; turret bursts; Valkyrie 2.0: spawned, killed and time to kill, dashes (blocked, hit you), bashes, storms, summon hits) and, when it fought, `deus ex machina` (phase times, plates broken, chaingun / salvo / footfall / stomp counts and hits, drones launched and downed, exposures, lances and their blocked ticks, hangars, pulses, teleports, machines gone dark, damage to you by attack). On every stage, `scrap swarm` (level, damage, kills, bolts, kill drones, peak drones, orbit radius; Machine Soul's bonus damage) and `iron revenant` (level, damage by source, bursts, shells, salvos, missiles; Recoil Frame) print only when used. |
 | `--unlocks=all\|none` | `all` lets every lockable Act II item (UnlockData) be offered; `none` (default) is a fresh save's card pool. Items forced by `--spells` / `--passives` / `--classes` are open either way. It opens the card pool only, never the achievement rewards (ultimates, titles, skins). |
 | `--rewards=on\|off` | Content wave 2: `on` checks the five one-run achievements (Mass Grave, Untouchable, Full Ossuary, Deathlord's Due, Swift Judgment) in memory, as the game does; by default (`off`) the autotest leaves them unchecked (unless `--meta-save`), so the default summaries' bounty and Soul Ash are unchanged. Every summary ends with a `rewards` line: achievements earned this run, titles open, reward items unlocked (`ultimate:` / `title:` / `skin:`), the run counters (temporary undead raised, lowest HP before 0:00, evolutions, the boss's lifetime after arrival), the one-run achievements this run met and whether they were checked, the worn title, and the setup screen's title row built once headless. |
+| `--keep-fires` | The Hall of the Slain: the bot becomes a fire-keeper; on a Norse stage it walks to the brazier that has been out longest before anything but its own danger (`LongWinter.keeper_point()`), to show that the Barrow Fields' **Keep the Fires** (no brazier out more than 30 s) can be earned. Off by default (the default runs are unchanged). |
 | `--boss=ID` | Puts another boss in the stage's boss slot at the stage's boss time: `alaric`, `vael` or `seraphine` (`StageRegistry.BOSS_ARRIVALS`), e.g. `--boss=seraphine` to test Grand Inquisitor Seraphine on the Graveyard. With her the summary adds a `seraphine` line. |
 | `--difficulty=ID` | Difficulty level (GDD §8.4): `initiate`, `necromancer` (default, today's game), `lich` or `deathlord` (names work too, any case). |
 | (chest beacon) | Every summary has a `chest beacon` line: chests marked (lying in the world while the run plays; a chest opened the tick it dropped is never marked), chests seen on screen, the most off-screen arrows at once (after merging and the cap of 4) and the physics ticks (and game seconds) with an arrow. It is counted headless from the logical view (the necromancer at the centre, the visible area at the camera zoom, the desktop layout) and never drawn. |
@@ -4283,12 +5391,15 @@ uptime.
 time, and everything that ships waits for all of them (GDD §15.0 "Parallel CI and lean testing": about 8-10 minutes from a push to
 the live build instead of about 30):
 
-1. **test:** twenty-five parallel jobs, one per playthrough. Each imports the project with Godot 4.3 headless and runs
+1. **test:** thirty-eight parallel jobs, one per playthrough. Each imports the project with Godot 4.3 headless and runs
    one full 20-minute autotest: the Graveyard with the naive and the army policy, the Crimson March
-   (`--stage=crimson_march`), the Sanctum (`--stage=sanctum --policy=army`) and each stage of Acts II and IV-IX with the
-   army policy (`--stage=harbour`, `archive`, `spire`, `ilion`, `olympus`, `underworld`, `province`, `kurogane`,
+   (`--stage=crimson_march`), the Sanctum (`--stage=sanctum --policy=army`) and each stage of Acts II, IV-IX and X-XII with
+   the army policy (`--stage=harbour`, `archive`, `spire`, `ilion`, `olympus`, `underworld`, `province`, `kurogane`,
    `sun_road`, `burning_gate`, `silk_palace`, `pandemonium`, `ravensmoor`, `witchwood`, `castle_sanguis`, `skid_row`,
-   `fort_kessler`, `liberty_heights`, `crash_site`, `proving_moon`, `ark`) (`--quit-after 15000`, at most 10-15
+   `fort_kessler`, `liberty_heights`, `crash_site`, `proving_moon`, `ark`, the Black Tide's `cutter`, `galleon`,
+   `maelstrom`, the Hall of the Slain's `barrow_fields`, `valgard`, `vigrid` and the Necropolis Dynasty's `necropolis`,
+   `lioness_temple`, `two_truths`, the Celestial Host's `silver_stair`, `wheel_of_thrones`, `empyrean` and the Age of
+   Titans' `fern_basin`, `great_plain` and `last_day`; the other last acts get theirs as they go live) (`--quit-after 15000`, at most 10-15
    wall-clock minutes per run).
    A job fails on any `SCRIPT ERROR`, `ERROR:` or `WARNING:` line, or if its run doesn't complete; one failure does
    not cancel the others. Logs: `test-logs-<id>`.

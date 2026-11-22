@@ -1,0 +1,210 @@
+Godot Engine v4.3.stable.official.77dcf97d8 - https://godotengine.org
+
+[autotest] start: seed=7 speed=8x mortal=true timeout=1500s policy=army meta=none oath=0 pact=false classes=abomination,rogue,gargoyle,frost_wraith spells=-
+[autotest] stage: harbour
+[autotest] difficulty: necromancer | modifiers: none
+[autotest] character: gravecaller (starting spell shadow_bolt)
+[autotest] forced class abomination raised to Lv 1
+[autotest] forced class rogue raised to Lv 1
+[autotest] forced class gargoyle raised to Lv 1
+[autotest] forced class frost_wraith raised to Lv 1
+[audio] main-thread startup 12.2 ms; 59 sfx ready after 338 ms, music loop after 338 ms (worker threads); display: headless
+[metric] t=60 avg_horde=6.4 now=8 cap=8 w2/2 a0/0 m0/0 m0/0 w0/0 b0/0 a1/1 r2/2 g2/2 f1/1 b0/0 b0/0 c0/0 deaths_win=0 lvl=5 kills=93 enemies=44 hp=120 boss_hp=-1 crystals=7 xp=86
+[metric]    summon dmg taken this window: eye_initiate=12
+[metric]    alive by kind: { "eye_initiate": 44 } within260=5
+[autotest] t=01:00 lvl=5 kills=93 enemies=44 summons=8/8 projectiles=1 hp=120 step_avg=0.90ms
+[autotest]    unit FSM: { "ENGAGING": 7, "SPAWNING": 1 }
+[metric] t=120 avg_horde=9.0 now=12 cap=12 w5/5 a0/0 m0/0 m0/0 w0/0 b0/0 a1/1 r3/3 g2/2 f1/1 b0/0 b0/0 c0/0 deaths_win=0 lvl=9 kills=242 enemies=40 hp=120 boss_hp=-1 crystals=10 xp=232
+[metric]    summon dmg taken this window: eye_initiate=92 eye_chanter=4
+[metric]    alive by kind: { "eye_initiate": 40 } within260=8
+[autotest] t=02:00 lvl=9 kills=242 enemies=40 summons=12/12 projectiles=1 hp=120 step_avg=0.95ms
+[autotest]    unit FSM: { "ENGAGING": 8, "CASTING": 4 }
+[metric] t=180 avg_horde=12.8 now=14 cap=14 w6/6 a0/0 m0/0 m0/0 w0/0 b0/0 a1/1 r4/4 g2/2 f1/1 b0/0 b0/0 c0/0 deaths_win=0 lvl=13 kills=416 enemies=61 hp=120 boss_hp=-1 crystals=31 xp=410
+[metric]    summon dmg taken this window: eye_initiate=173 eye_chanter=17
+[metric]    alive by kind: { "eye_initiate": 54, "eye_chanter": 4, "bell_buoy": 2, "deep_kin": 1 } within260=5
+[autotest] t=03:00 lvl=13 kills=416 enemies=61 summons=14/14 projectiles=1 hp=120 step_avg=1.03ms
+[autotest]    unit FSM: { "ENGAGING": 13, "CASTING": 1 }
+[metric] t=240 avg_horde=15.3 now=17 cap=17 w7/7 a0/0 m0/0 m0/0 w0/0 b0/0 a2/2 r4/4 g2/2 f2/2 b0/0 b0/0 c0/0 deaths_win=0 lvl=18 kills=611 enemies=58 hp=120 boss_hp=-1 crystals=24 xp=722
+[metric]    summon dmg taken this window: eye_initiate=170 eye_chanter=18 deep_kin_leap=187 deep_kin=57
+[metric]    alive by kind: { "eye_initiate": 53, "eye_chanter": 3, "deep_kin": 2 } within260=5
+[autotest] t=04:00 lvl=18 kills=611 enemies=58 summons=17/17 projectiles=0 hp=120 step_avg=1.09ms
+[autotest]    unit FSM: { "FOLLOWING": 4, "ACQUIRING": 3, "CASTING": 1, "ENGAGING": 9 }
+[metric] t=300 avg_horde=17.2 now=18 cap=18 w7/7 a0/0 m0/0 m0/0 w0/0 b0/0 a2/2 r4/4 g3/3 f2/2 b0/0 b0/0 c0/0 deaths_win=0 lvl=21 kills=797 enemies=44 hp=120 boss_hp=-1 crystals=23 xp=960
+[metric]    summon dmg taken this window: eye_initiate=51 eye_chanter=14 deep_kin_leap=58 deep_kin=17
+[metric]    alive by kind: { "eye_initiate": 41, "eye_chanter": 1, "deep_kin": 2 } within260=3
+[autotest] t=05:00 lvl=21 kills=797 enemies=44 summons=18/18 projectiles=1 hp=120 step_avg=1.17ms
+[autotest]    unit FSM: { "ENGAGING": 8, "FOLLOWING": 8, "REPOSITIONING": 1, "ACQUIRING": 1 }
+[metric] t=360 avg_horde=18.7 now=20 cap=20 w9/9 a0/0 m0/0 m0/0 w0/0 b0/0 a2/2 r4/4 g3/3 f2/2 b0/0 b0/0 c0/0 deaths_win=1 lvl=24 kills=980 enemies=68 hp=120 boss_hp=-1 crystals=40 xp=1200
+[metric]    summon dmg taken this window: eye_initiate=216 eye_chanter=36 deep_kin_leap=215 deep_kin=157 tide_caller=34 tide_wall=11
+[metric]    alive by kind: { "eye_initiate": 59, "tide_caller": 1, "eye_chanter": 2, "deep_kin": 4, "smuggler_cache": 2 } within260=0
+[autotest] t=06:00 lvl=24 kills=980 enemies=68 summons=20/20 projectiles=2 hp=120 step_avg=1.24ms
+[autotest]    unit FSM: { "FOLLOWING": 20 }
+[metric] t=420 avg_horde=23.6 now=25 cap=26 w10/10 a0/0 m0/0 m0/0 w0/0 b0/0 a3/3 r5/5 g4/4 f3/4 b0/0 b0/0 c0/0 deaths_win=5 lvl=27 kills=1190 enemies=73 hp=120 boss_hp=-1 crystals=51 xp=1547
+[metric]    summon dmg taken this window: eye_initiate=258 eye_chanter=38 deep_kin_leap=1145 deep_kin=201 tide_caller=9 tide_wall=11
+[metric]    alive by kind: { "tide_caller": 5, "eye_initiate": 55, "deep_kin": 8, "eye_chanter": 5 } within260=15
+[autotest] t=07:00 lvl=27 kills=1190 enemies=73 summons=25/26 projectiles=2 hp=120 step_avg=1.32ms
+[autotest]    unit FSM: { "ENGAGING": 15, "FOLLOWING": 6, "CASTING": 4 }
+[metric] t=480 avg_horde=23.7 now=25 cap=26 w10/10 a0/0 m0/0 m0/0 w0/0 b0/0 a3/3 r5/5 g4/4 f3/4 b0/0 b0/0 c0/0 deaths_win=9 lvl=31 kills=1396 enemies=63 hp=120 boss_hp=-1 crystals=43 xp=1929
+[metric]    summon dmg taken this window: eye_initiate=236 eye_chanter=31 deep_kin_leap=1253 deep_kin=318 tide_caller=81 tide_wall=25
+[metric]    alive by kind: { "eye_chanter": 7, "eye_initiate": 47, "deep_kin": 8, "tide_caller": 1 } within260=9
+[autotest] t=08:00 lvl=31 kills=1396 enemies=63 summons=25/26 projectiles=2 hp=120 step_avg=1.37ms
+[autotest]    unit FSM: { "FOLLOWING": 5, "RETURNING": 1, "ENGAGING": 8, "ACQUIRING": 6, "REPOSITIONING": 2, "CASTING": 3 }
+[metric] t=540 avg_horde=25.8 now=28 cap=28 w11/11 a0/0 m0/0 m0/0 w0/0 b0/0 a4/4 r5/5 g4/4 f4/4 b0/0 b0/0 c0/0 deaths_win=4 lvl=34 kills=1625 enemies=72 hp=120 boss_hp=-1 crystals=60 xp=2285
+[metric]    summon dmg taken this window: eye_initiate=335 eye_chanter=86 deep_kin_leap=868 deep_kin=285 tide_caller=21 tide_wall=40
+[metric]    alive by kind: { "eye_initiate": 59, "eye_chanter": 4, "tide_caller": 6, "deep_kin": 3 } within260=2
+[autotest] t=09:00 lvl=34 kills=1625 enemies=72 summons=28/28 projectiles=5 hp=120 step_avg=1.44ms
+[autotest]    unit FSM: { "ENGAGING": 2, "FOLLOWING": 23, "REPOSITIONING": 1, "ACQUIRING": 1, "RETURNING": 1 }
+[metric] t=600 avg_horde=29.2 now=32 cap=32 w12/12 a0/0 m0/0 m0/0 w0/0 b0/0 a4/4 r6/6 g5/5 f5/5 b0/0 b0/0 c0/0 deaths_win=2 lvl=36 kills=1869 enemies=77 hp=120 boss_hp=-1 crystals=92 xp=2652
+[metric]    summon dmg taken this window: eye_initiate=291 eye_chanter=35 deep_kin_leap=1685 deep_kin=165 tide_caller=59 tide_wall=14
+[metric]    alive by kind: { "eye_initiate": 59, "eye_chanter": 7, "deep_kin": 5, "tide_caller": 6 } within260=16
+[autotest] t=10:00 lvl=36 kills=1869 enemies=77 summons=32/32 projectiles=2 hp=120 step_avg=1.49ms
+[autotest]    unit FSM: { "ENGAGING": 12, "ACQUIRING": 1, "CASTING": 4, "FOLLOWING": 13, "RETURNING": 1, "REPOSITIONING": 1 }
+[metric] t=660 avg_horde=33.0 now=36 cap=36 w13/13 a0/0 m0/0 m0/0 w0/0 b0/0 a5/5 r7/7 g6/6 f5/5 b0/0 b0/0 c0/0 deaths_win=9 lvl=39 kills=2148 enemies=82 hp=120 boss_hp=-1 crystals=116 xp=3129
+[metric]    summon dmg taken this window: eye_initiate=507 eye_chanter=152 deep_kin_leap=1643 deep_kin=504 tide_caller=74 tide_wall=31 drowned_thrall=10 netcaster_net=134 netcaster=128
+[metric]    alive by kind: { "eye_initiate": 59, "netcaster": 8, "eye_chanter": 5, "deep_kin": 3, "tide_caller": 6, "harbourmaster": 1 } within260=5
+[autotest] t=11:00 lvl=39 kills=2148 enemies=82 summons=36/36 projectiles=2 hp=120 step_avg=1.58ms
+[autotest]    unit FSM: { "FOLLOWING": 18, "CASTING": 2, "ENGAGING": 12, "REPOSITIONING": 2, "RETURNING": 2 }
+[metric] t=720 avg_horde=33.2 now=33 cap=36 w13/13 a0/0 m0/0 m0/0 w0/0 b0/0 a5/5 r4/7 g6/6 f5/5 b0/0 b0/0 c0/0 deaths_win=28 lvl=43 kills=2442 enemies=76 hp=120 boss_hp=-1 crystals=124 xp=3833
+[metric]    summon dmg taken this window: eye_initiate=751 eye_chanter=165 deep_kin_leap=3279 deep_kin=704 tide_caller=160 tide_wall=164 drowned_thrall=23 netcaster_net=173 netcaster=216 harbourmaster_hurl=109 harbourmaster=476 harbourmaster_sweep=971
+[metric]    alive by kind: { "deep_kin": 9, "eye_initiate": 51, "tide_caller": 7, "eye_chanter": 5, "netcaster": 3, "smuggler_cache": 1 } within260=8
+[autotest] t=12:00 lvl=43 kills=2442 enemies=76 summons=33/36 projectiles=5 hp=120 step_avg=1.67ms
+[autotest]    unit FSM: { "FOLLOWING": 2, "ENGAGING": 14, "ACQUIRING": 5, "CASTING": 7, "REPOSITIONING": 1, "RETURNING": 4 }
+[metric] t=780 avg_horde=35.0 now=36 cap=36 w13/13 a0/0 m0/0 m0/0 w0/0 b0/0 a5/5 r7/7 g6/6 f5/5 b0/0 b0/0 c0/0 deaths_win=7 lvl=46 kills=2665 enemies=116 hp=120 boss_hp=-1 crystals=138 xp=4253
+[metric]    summon dmg taken this window: eye_initiate=318 eye_chanter=132 deep_kin_leap=3009 deep_kin=562 tide_caller=43 tide_wall=48 netcaster_net=121 netcaster=90
+[metric]    alive by kind: { "tide_caller": 8, "netcaster": 12, "eye_initiate": 90, "deep_kin": 2, "eye_chanter": 4 } within260=17
+[autotest] t=13:00 lvl=46 kills=2665 enemies=116 summons=36/36 projectiles=1 hp=120 step_avg=1.73ms
+[autotest]    unit FSM: { "FOLLOWING": 8, "ENGAGING": 14, "CASTING": 7, "ACQUIRING": 6, "REPOSITIONING": 1 }
+[metric] t=840 avg_horde=34.3 now=36 cap=36 w13/13 a0/0 m0/0 m0/0 w0/0 b0/0 a5/5 r7/7 g6/6 f5/5 b0/0 b0/0 c0/0 deaths_win=10 lvl=49 kills=3003 enemies=97 hp=120 boss_hp=-1 crystals=174 xp=4857
+[metric]    summon dmg taken this window: eye_initiate=908 eye_chanter=158 deep_kin_leap=1769 deep_kin=464 tide_caller=251 tide_wall=97 netcaster_net=221 netcaster=247
+[metric]    alive by kind: { "tide_caller": 7, "eye_initiate": 72, "netcaster": 6, "eye_chanter": 5, "deep_kin": 7 } within260=12
+[autotest] t=14:00 lvl=49 kills=3003 enemies=97 summons=36/36 projectiles=3 hp=120 step_avg=1.83ms
+[autotest]    unit FSM: { "RETURNING": 2, "ACQUIRING": 20, "FOLLOWING": 3, "ENGAGING": 9, "CASTING": 2 }
+[metric] t=900 avg_horde=35.0 now=35 cap=36 w13/13 a0/0 m0/0 m0/0 w0/0 b0/0 a5/5 r6/7 g6/6 f5/5 b0/0 b0/0 c0/0 deaths_win=9 lvl=51 kills=3322 enemies=98 hp=120 boss_hp=-1 crystals=183 xp=5408
+[metric]    summon dmg taken this window: eye_initiate=981 eye_chanter=135 deep_kin_leap=2792 deep_kin=836 tide_caller=134 tide_wall=46 netcaster_net=292 netcaster=233
+[metric]    alive by kind: { "eye_initiate": 67, "netcaster": 8, "tide_caller": 6, "deep_kin": 11, "eye_chanter": 6 } within260=17
+[autotest] t=15:00 lvl=51 kills=3322 enemies=98 summons=35/36 projectiles=6 hp=120 step_avg=1.90ms
+[autotest]    unit FSM: { "ENGAGING": 22, "CASTING": 5, "FOLLOWING": 3, "RETURNING": 3, "REPOSITIONING": 1, "SPAWNING": 1 }
+[autotest] build complete (only fallback cards left) at 15:13, level 52
+[metric] t=960 avg_horde=33.6 now=35 cap=36 w13/13 a0/0 m0/0 m0/0 w0/0 b0/0 a5/5 r6/7 g6/6 f5/5 b0/0 b0/0 c0/0 deaths_win=15 lvl=54 kills=3673 enemies=131 hp=120 boss_hp=-1 crystals=195 xp=6082
+[metric]    summon dmg taken this window: eye_initiate=970 eye_chanter=236 deep_kin_leap=3009 deep_kin=1522 tide_caller=273 tide_wall=14 drowned_thrall=15 netcaster_net=242 netcaster=334
+[metric]    alive by kind: { "eye_initiate": 96, "tide_caller": 13, "deep_kin": 11, "netcaster": 5, "eye_chanter": 6 } within260=25
+[autotest] t=16:00 lvl=54 kills=3673 enemies=131 summons=35/36 projectiles=2 hp=120 step_avg=1.98ms
+[autotest]    unit FSM: { "ENGAGING": 16, "CASTING": 12, "FOLLOWING": 3, "RETURNING": 3, "REPOSITIONING": 1 }
+[autotest] boss spawned at 1020.0 s
+[autotest] Shadow Bolt aim switched to Strongest
+[metric] t=1020 avg_horde=34.6 now=35 cap=36 w13/13 a0/0 m0/0 m0/0 w0/0 b0/0 a5/5 r6/7 g6/6 f5/5 b0/0 b0/0 c0/0 deaths_win=12 lvl=58 kills=4028 enemies=121 hp=120 boss_hp=36400 crystals=37 xp=7111
+[metric]    summon dmg taken this window: eye_initiate=889 eye_chanter=252 deep_kin_leap=2842 deep_kin=1138 tide_caller=173 drowned_thrall=16 netcaster_net=248 netcaster=289
+[metric]    alive by kind: { "eye_initiate": 78, "netcaster": 10, "deep_kin": 13, "eye_chanter": 11, "tide_caller": 8, "boss": 1 } within260=3
+[autotest] t=17:00 lvl=58 kills=4028 enemies=121 summons=35/36 projectiles=5 hp=120 step_avg=2.05ms
+[autotest]    unit FSM: { "FOLLOWING": 8, "ACQUIRING": 5, "REPOSITIONING": 3, "ENGAGING": 10, "CASTING": 9 }
+[metric] t=1080 avg_horde=34.0 now=36 cap=36 w13/13 a0/0 m0/0 m0/0 w0/0 b0/0 a5/5 r7/7 g6/6 f5/5 b0/0 b0/0 c0/0 deaths_win=21 lvl=59 kills=4301 enemies=82 hp=120 boss_hp=12526 crystals=88 xp=7554
+[metric]    summon dmg taken this window: eye_initiate=913 eye_chanter=330 deep_kin_leap=2333 deep_kin=979 tide_caller=107 netcaster_net=294 netcaster=421 merrow_wave=1368 boss=781 merrow_lash=189 merrow_whirl=773
+[metric]    alive by kind: { "eye_chanter": 5, "eye_initiate": 65, "deep_kin": 8, "boss": 1, "tide_caller": 2, "netcaster": 1 } within260=8
+[autotest] t=18:00 lvl=59 kills=4301 enemies=82 summons=36/36 projectiles=5 hp=120 step_avg=2.08ms
+[autotest]    unit FSM: { "ENGAGING": 18, "CASTING": 9, "RETURNING": 7, "FOLLOWING": 1, "REPOSITIONING": 1 }
+[autotest] boss defeated at 1105.1 s
+[metric] t=1140 avg_horde=35.1 now=34 cap=36 w13/13 a0/0 m0/0 m0/0 w0/0 b0/0 a5/5 r5/7 g6/6 f5/5 b0/0 b0/0 c0/0 deaths_win=9 lvl=63 kills=4502 enemies=136 hp=120 boss_hp=0 crystals=55 xp=8506
+[metric]    summon dmg taken this window: eye_initiate=852 eye_chanter=179 deep_kin_leap=2390 deep_kin=736 tide_caller=67 netcaster_net=33 netcaster=55 boss=782 merrow_lash=182 merrow_whirl=1178
+[metric]    alive by kind: { "eye_initiate": 104, "deep_kin": 11, "tide_caller": 5, "netcaster": 5, "eye_chanter": 11 } within260=24
+[autotest] t=19:00 lvl=63 kills=4502 enemies=136 summons=34/36 projectiles=4 hp=120 step_avg=2.10ms
+[autotest]    unit FSM: { "CASTING": 8, "ENGAGING": 19, "ACQUIRING": 4, "FOLLOWING": 3 }
+[autotest] countdown reached 0:00 at 1200.0 s - THE RECKONING begins
+[metric] t=1200 avg_horde=35.4 now=34 cap=36 w13/13 a0/0 m0/0 m0/0 w0/0 b0/0 a5/5 r6/7 g6/6 f4/5 b0/0 b0/0 c0/0 deaths_win=12 lvl=65 kills=4819 enemies=94 hp=120 boss_hp=0 crystals=27 xp=9187
+[metric]    summon dmg taken this window: eye_initiate=1413 eye_chanter=447 deep_kin_leap=2022 deep_kin=1716 tide_caller=211 tide_wall=37 netcaster_net=302 netcaster=428
+[metric]    alive by kind: { "eye_initiate": 65, "tide_caller": 9, "netcaster": 4, "deep_kin": 7, "eye_chanter": 6, "deep_herald": 3 } within260=17
+[autotest] t=20:00 lvl=65 kills=4819 enemies=94 summons=34/36 projectiles=3 hp=120 step_avg=2.13ms
+[autotest]    unit FSM: { "RETURNING": 2, "REPOSITIONING": 3, "FOLLOWING": 3, "ENGAGING": 17, "CASTING": 9 }
+[autotest] ===== NECROPATHY AUTOTEST SUMMARY =====
+[autotest] result: VICTORY / RUN COMPLETE (run_complete)
+[autotest] time reached: 20:17 elapsed (1217.5 s game time, 221.0 s real time); past 0:00: 17.5 s; Reckoning waves: 2
+[autotest] kills: 4886 | level: 65
+[autotest] level pacing: 01:00=L5 03:00=L13 05:00=L21 10:00=L36 15:00=L51 17:00=L58 20:00=L65 | reached: L2@00:26 L5@00:59 L10@02:09 L15@03:17 L20@04:32 L25@06:09 L30@07:33 L35@09:15 L40@11:01 L45@12:20 L50@14:24 L55@16:17 L60@18:04
+[autotest] build complete: at 15:13, level 52
+[autotest] horde: 15 alive / capacity 36 (warrior 3/13, archer 0/0, mage 0/0, mender 0/0, warder 0/0, bishop 0/0, abomination 1/5, rogue 4/7, gargoyle 4/6, frost_wraith 3/5, bone_hound 0/0, banshee 0/0, corpse_catapult 0/0)
+[autotest] summons spawned: 203, died: 188, hard recalls: 0 (stall recalls: 0)
+[autotest] boss spawned: yes at 1020.0 s | boss defeated: yes at 1105.1 s | boss HP left: 0 / 36400
+[autotest] player HP: 0 / 120 (invulnerable: false)
+[autotest] picks (76): abomination 1 (forced), rogue 1 (forced), gargoyle 1 (forced), frost_wraith 1 (forced), dark_command 1, gargoyle 2, shadow_bolt 2, rogue 2, rogue 3, warrior 2, rogue 4, warrior 3, abomination 2, warrior 4, rogue 5, frost_wraith 2, gargoyle 3, abomination 3, frost_wraith 3, shadow_bolt 3, grave_dominion 1, dark_command 2, frost_wraith 4, gargoyle 4, abomination 4, warrior 5, dark_command 3, shadow_bolt 4, grave_dominion 2, gargoyle 5, dark_command 4, frost_wraith 5, abomination 5, dark_command 5, soul_recycling 1, necrotic_vigor 1, necrotic_vigor 2, EVOLVE death_knight, necrotic_vigor 3, grave_dominion 3, soul_recycling 2, necrotic_vigor 4, grave_dominion 4, warding_ritual 1, grave_dominion 5, soul_recycling 3, soul_recycling 4, warding_ritual 2, unholy_resilience 1, necrotic_vigor 5, soul_recycling 5, shadow_bolt 5, EVOLVE winter_revenant, warding_ritual 3, unholy_resilience 2, warding_ritual 4, unholy_resilience 3, warding_ritual 5, unholy_resilience 4, unholy_resilience 5, EVOLVE cathedral_horror, dark_restoration, skip, skip, skip, skip, skip, skip, skip, skip, dark_restoration, skip, dark_restoration, skip, skip, skip
+[autotest] wards on you: 0 total, absorbed 0 dmg | 0 wards in 0 s with 2+ Warders/Bishops alive (0.0 / min) | heal casts: 0 | ally barriers: 0, barrier dmg absorbed: 0
+[autotest] evolutions: death_knight@08:01, winter_revenant@12:13, cathedral_horror@14:54
+[autotest] evolutions by type: spell: none | summon: death_knight@08:01, winter_revenant@12:13, cathedral_horror@14:54
+[autotest] summon evolutions: lich raised 0 (capped 0) | merge converted 0, dissolved 0 | aura pulses 0 | merged classes: none
+[autotest] winter revenant: shatters 314 (capped 0), shatter hits 589, shatter dmg 24089 | death novas 9, nova hits 26, nova freezes 14, nova dmg 2956
+[autotest] summon output by source (dmg/heal/shield): warrior=8334/0/0 abomination=29259/0/0 rogue=30765/0/0 gargoyle=22163/0/0 frost_wraith=68318/0/0 bash=944/0/0 death_knight=120459/5133/0 death_knight_bash=14396/0/0 death_knight_cleave=8599/0/0 winter_revenant=38308/0/0 cathedral_horror=38165/0/0 winter_revenant_shatter=24089/0/0 winter_revenant_nova=2956/0/0
+[autotest] summon output by class (dmg/heal/shield): warrior=152733/5133/0 abomination=29259/0/0 rogue=30765/0/0 gargoyle=60328/0/0 frost_wraith=133672/0/0
+[autotest] recipe book: 3 / 83 discovered (death_knight, winter_revenant, cathedral_horror) | Recipes view rows built: 83 (saved: false)
+[autotest] codex: 14 entries met this run (spell 1, summon 5, enemy 7, boss 1) | new to the save 14 | save: spell 1/54, summon 5/30, enemy 7/260, boss 1/45, evolutions 3/83
+[autotest] epilogue: parts=15 (acts=15) open=0 seen=0 panels=59 cards_ok=true autoplay_pending=false
+[autotest] volleys: shots 37278 | hits 16880 | dmg 207756 | peak 289/320 | capped volleys 0 | boss hits capped 488 | barrages 6 | warrior 73618, gargoyle 38535, winter_revenant 38308, abomination 17650, shadow_bolt 14923, frost_wraith 14203, rogue 10517
+[visual] adaptive quality: level 0, peak 3, steps down 4, up 4
+[autotest] victory screen: title=The Tide Turns best_overtime=17 new_record=true highlights=7
+[autotest] dread: peak 0 | average 0.0 | end 0 | calmed by kills 0 | time per step 0:1218s 1:0s 2:0s 3:0s 4:0s | raised by: nothing
+[autotest] claims: claims 32 | freed 32 | expired 0 | still risen at the end 0 | cap refusals 0 | by class: frost_wraith 3, gargoyle 5, rogue 20, warrior 4
+[autotest] gravebow / bone colossus: gravebow volleys 0, splits 0 (+0 arrows), pierce hits 0, dmg 0 | curses applied 0 (refreshed 0), curse bonus dmg 0 | colossus dmg 0, stomps 293 | taunted enemies 0 | shrapnel bursts 0, hits 0, dmg 0
+[autotest] necro spells: bone_spear: not taken | soul_siphon: not taken | corpse_explosion: not taken | plague_cloud: not taken
+[autotest] later spells: death_mark: not taken | bone_wall: not taken | soul_chains: not taken | wither: not taken | raise_dead: not taken
+[autotest] later spell passives: grim_ledger Lv0 bonus_dmg=0 | spirit_binding Lv0 | restless_dead Lv0 | temporary summons spawned=0
+[autotest] horde passives: bone_plating Lv 0 (dmg prevented 0) | unholy_precision Lv 0 (crits 0, crit bonus dmg 0) | unholy_resilience Lv 5 (dmg prevented 11121: area 11121, holy 0) | bound_souls Lv 0 (soft recalls 17, hard recalls 0)
+[autotest] class passives: blood_scent Lv 0 (fast: Archers, Rogues, Gargoyles, Bone Hounds, Grave Drones, Succubi, Blood Spawn, Fallen Heroes, Ghost Saucers, Powder Wraiths, Bound Ophans, Bonehorns) | mournsong Lv 0 (extra debuff s 0) | siegecraft Lv 0 (siege bonus dmg 0) | summon dmg to structures 3528 (catapults 0)
+[autotest] synergies active at end: deathless, flesh_rampart, death_from_above, cold_blood, charnel_menagerie | activations: death_from_above@00:59, deathless@01:27, flesh_rampart@02:09, cold_blood@02:56, charnel_menagerie@02:56
+[autotest] synergy bonus: flesh_rampart hits=863 dmg=4537 | killing_field hits=0 dmg=0 | death_from_above hits=825 dmg=3099 | wild_hunt hits=0 dmg=0 | cold_blood hits=842 dmg=5325 | shatterfall hits=0 dmg=0 | requiem hits=0 dmg=0 | charnel_menagerie hits=13729 dmg=32077 | baying frenzies=0 | marks staggered=618 swooped=1030 | dash resets=91 | requiem +0s
+[autotest] level-up offers: hands 67, new-item cards 68, later items 22 (32%) in 17 hands (25%), distinct later items offered 10
+[autotest] level-up actions: rerolls used 2/2, banishes used 1/2 (banished: abyssal_focus), skips 12
+[autotest] shadow bolt: 83919 dmg in Nearest mode, 36616 dmg in Strongest mode; to boss: 3765 of 36400 total boss dmg
+[autotest] stats: abom_stomp_hits=631 abom_stomps=293 boss_advance_time=9 boss_atk_lash=5 boss_atk_sermon=2 boss_atk_wave=3 boss_atk_whirl=3 boss_kills=1 bossdmg_abom_stomp=1202 bossdmg_abomination=1946 bossdmg_bolt=3765 bossdmg_cathedral_horror=4857 bossdmg_death_knight=4407 bossdmg_death_knight_bash=383 bossdmg_death_knight_cleave=18 bossdmg_frost_wraith=2634 bossdmg_gargoyle_swoop=3613 bossdmg_rogue=3326 bossdmg_rogue_bleed=3202 bossdmg_rogue_dash=4234 bossdmg_shadow_bolt=179 bossdmg_winter_revenant=1663 bossdmg_winter_revenant_shatter=963 bot_dash_telegraph=96 chest_count_1=8 chest_evolutions=3 chest_items=8 chests_opened=8 chests_pity=3 chests_spawned=8 claims=32 damage_dealt=687043 damage_to_player=60 damage_to_summons=76200 dash_distance=10560 dashes=96 death_abomination_by_deep_herald=6 death_frost_wraith_by_deep_herald=2 death_frost_wraith_by_deep_kin=2 death_frost_wraith_by_deep_kin_leap=11 death_frost_wraith_by_eye_initiate=1 death_frost_wraith_by_harbourmaster_hurl=1 death_frost_wraith_by_harbourmaster_sweep=2 death_frost_wraith_by_merrow_wave=1 death_frost_wraith_by_tide_wall=1 death_gargoyle_by_deep_herald=4 death_gargoyle_by_deep_kin=3 death_gargoyle_by_deep_kin_leap=1 death_gargoyle_by_eye_initiate=1 death_gargoyle_by_harbourmaster=1 death_gargoyle_by_netcaster=1 death_rogue_by_boss=3 death_rogue_by_deep_herald=4 death_rogue_by_deep_kin=18 death_rogue_by_deep_kin_leap=63 death_rogue_by_eye_initiate=16 death_rogue_by_harbourmaster=1 death_rogue_by_harbourmaster_sweep=1 death_rogue_by_merrow_lash=1 death_rogue_by_merrow_wave=4 death_rogue_by_merrow_whirl=2 death_rogue_by_netcaster=4 death_rogue_by_netcaster_net=4 death_rogue_by_tide_caller=2 death_rogue_by_tide_wall=2 death_warrior_by_boss=2 death_warrior_by_deep_herald=12 death_warrior_by_deep_kin=2 death_warrior_by_deep_kin_leap=3 death_warrior_by_eye_initiate=1 death_warrior_by_harbourmaster=1 death_warrior_by_merrow_whirl=1 death_warrior_by_netcaster=1 death_warrior_by_tide_caller=2 deathless_regen=46762 deep_kin_leap_summon_hits=1300 deep_kin_leaps=451 dmg_abom_stomp=31184 dmg_abomination=29259 dmg_bash=944 dmg_bolt=120535 dmg_cathedral_horror=38165 dmg_death_knight=120459 dmg_death_knight_bash=14396 dmg_death_knight_cleave=8599 dmg_frost_wraith=68318 dmg_gargoyle=22163 dmg_gargoyle_swoop=62955 dmg_nova=3812 dmg_resisted_deep_kin=628 dmg_resisted_eye_chanter=390 dmg_resisted_eye_initiate=1099 dmg_resisted_netcaster=477 dmg_resisted_tide_caller=294 dmg_rogue=30765 dmg_rogue_bleed=6032 dmg_rogue_dash=40837 dmg_shadow_bolt=14923 dmg_warrior=8334 dmg_winter_revenant=38308 dmg_winter_revenant_nova=2956 dmg_winter_revenant_shatter=24089 elite_kills=6 enemy_stunned_seconds=81 enemy_stuns=332 evolutions=3 frost_boss_freezes=26 frost_chills=1613 frost_deep_freezes=331 frost_freezes=970 frost_frozen_seconds=717 gargoyle_swoop_hits=1048 gargoyle_swoops=456 harbour_buoy_tolls=6 harbour_buoys_placed=3 harbour_buoys_sunk=3 harbour_cache_chests=3 harbour_caches_broken=3 harbour_caches_placed=3 harbour_harbourmasters_killed=1 harbour_harbourmasters_spawned=1 harbour_toll_spawns=24 harbourmaster_drags=34 harbourmaster_hurls=3 harbourmaster_kills=1 harbourmaster_reels=3 harbourmaster_spawned=1 harbourmaster_sweeps=2 harbourmaster_ttk=44 heal_by_death_knight=5133 horror_boss_stuns=43 horror_stone_dmg_prevented=4279 horror_stone_forms=226 horror_stone_seconds=445 horror_stuns=332 kill_bell_buoy=3 kill_boss=1 kill_deep_kin=446 kill_drowned_thrall=32 kill_eye_chanter=274 kill_eye_initiate=3774 kill_harbourmaster=1 kill_netcaster=158 kill_smuggler_cache=3 kill_tide_caller=194 kills_by_abom_stomp=225 kills_by_abomination=176 kills_by_bash=23 kills_by_bolt=852 kills_by_cathedral_horror=154 kills_by_death_knight=758 kills_by_death_knight_bash=107 kills_by_death_knight_cleave=46 kills_by_frost_wraith=551 kills_by_gargoyle=222 kills_by_gargoyle_swoop=573 kills_by_nova=48 kills_by_rogue=221 kills_by_rogue_bleed=15 kills_by_rogue_dash=330 kills_by_shadow_bolt=63 kills_by_warrior=220 kills_by_winter_revenant=157 kills_by_winter_revenant_nova=7 kills_by_winter_revenant_shatter=138 levelup_banishes=1 levelup_rerolls=2 levelup_skips=12 march_zones_entered=3 merrow_change_at=1058 merrow_high_water_at=1083 merrow_lash_hits=15 merrow_sermon_pulses=935 merrow_sermons_broken=1 merrow_wave_hits=42 merrow_whirl_hits=61 miniboss_chests=1 minibossdmg_abom_stomp=209 minibossdmg_abomination=368 minibossdmg_bolt=134 minibossdmg_death_knight=1886 minibossdmg_death_knight_bash=200 minibossdmg_death_knight_cleave=39 minibossdmg_frost_wraith=929 minibossdmg_gargoyle=636 minibossdmg_gargoyle_swoop=400 minibossdmg_rogue=1180 minibossdmg_rogue_bleed=183 minibossdmg_rogue_dash=810 minibossdmg_shadow_bolt=14 netcaster_misses=6 netcaster_nets=173 netcaster_nets_cut=54 netcaster_pin_seconds=374 netcaster_pins=162 nova_kills=48 objective_ash=42 overkill_redirects=181 player_dmg_from_eye_initiate=19 player_dmg_from_tide_caller=16 player_dmg_from_tide_wall=24 player_healing=40 priest_heals=0 priest_wards=0 pu_collected_feast=5 pu_collected_frenzy=2 pu_collected_hyper=4 pu_collected_magnet=2 pu_collected_nova=1 pu_collected_stasis=3 pu_expired_magnet=1 pu_magnet_crystals=302 pu_pity_drops=4 pu_spawned_feast=5 pu_spawned_frenzy=2 pu_spawned_hyper=4 pu_spawned_magnet=3 pu_spawned_nova=1 pu_spawned_stasis=3 pu_uptime_frenzy=23 pu_uptime_hyper=39 pu_uptime_stasis=15 rallies=6 rally_buff_time=47 rally_heal=3841 rally_knockbacks=27 rally_meter_fills=6 rally_minion_dmg=55914 rally_raised=27 rally_recalled=22 reckoning_spawned=10 replacements=140 resilience_dmg_prevented=11121 resilience_dmg_prevented_area=11121 rogue_dash_hits=840 rogue_dashes=1158 spawned_deep_kin=460 spawned_drowned_thrall=32 spawned_harbourmaster=1 spawned_netcaster=163 spawned_tide_caller=202 structdmg_abom_stomp=73 structdmg_abomination=119 structdmg_bash=10 structdmg_bolt=384 structdmg_death_knight=267 structdmg_frost_wraith=173 structdmg_gargoyle=418 structdmg_gargoyle_swoop=131 structdmg_rogue=928 structdmg_rogue_bleed=336 structdmg_rogue_dash=623 structdmg_shadow_bolt=13 structdmg_warrior=447 summon_dmg_from_boss=1564 summon_dmg_from_deep_herald=7415 summon_dmg_from_deep_kin=10685 summon_dmg_from_deep_kin_leap=31097 summon_dmg_from_drowned_thrall=67 summon_dmg_from_eye_chanter=2546 summon_dmg_from_eye_initiate=10600 summon_dmg_from_harbourmaster=476 summon_dmg_from_harbourmaster_hurl=109 summon_dmg_from_harbourmaster_sweep=971 summon_dmg_from_merrow_lash=372 summon_dmg_from_merrow_wave=1368 summon_dmg_from_merrow_whirl=1951 summon_dmg_from_netcaster=2521 summon_dmg_from_netcaster_net=2119 summon_dmg_from_tide_caller=1729 summon_dmg_from_tide_wall=602 summon_evolutions=3 summon_healing=55738 summon_soft_recalls=17 summon_specials_cancelled=15 syn_charnel_menagerie_bonus_dmg=32077 syn_charnel_menagerie_hits=13729 syn_cold_blood_bonus_dmg=5325 syn_cold_blood_hits=842 syn_death_from_above_bonus_dmg=3099 syn_death_from_above_hits=825 syn_dfa_resets=91 syn_flesh_rampart_bonus_dmg=4537 syn_flesh_rampart_hits=863 syn_staggered_marks=618 syn_swooped_marks=1030 synergies_activated=5 thralls_freed=32 tide_caller_wall_player_hits=1 tide_caller_wall_summon_hits=38 tide_caller_walls=207 tide_enemy_wet_s=40118 tide_high_water=1 tide_player_wet_s=421 tide_seawall=1 tide_summon_wet_s=13290 tide_surge_shoved_enemies=73 tide_surge_shoved_player=1 tide_surge_shoved_summons=37 tide_surges=4 tide_swimmer_s=3593 volley_barrages=6 ward_absorbed=0 warrior_bashes=1113 warrior_kills=1154 wave_events=26 wr_nova_freezes=14 wr_nova_hits=26 wr_novas=9 wr_shatter_hits=589 wr_shatters=314 xp_collected=9272 xp_dropped=8592
+[autotest] boss attacks: sermon=2 wave=3 lash=5 whirl=3 | wrath: no | hammer soaked by undead: 0 | charges stopped by undead: 0 (shielding the player: 0) | judgment hits: 0 | call soldiers: 0 | holy zones boss/grave: 0/0
+[autotest] crimson march: zones entered 3 (final: Zone IV  -  The Seawall) | placed/destroyed/escaped: outposts 0/0/0 generators 0/0/0 carts 0/0/0 standards 0/0/0 | outpost reinforcements 0 | ward zones 0
+[autotest] march enemies: aura buff pulses 0 | halberd cleave hits 0 | dmg resisted: shieldbearer 0, boss 0 | kills: shieldbearer=0 banner_bearer=0 halberdier=0
+[autotest] marshal vael: last stand no | cleave summon hits 0, soaked for the player 0 | command soldiers 0
+[autotest] march events (3): 5:00 zone_II, 10:00 zone_III, 15:00 zone_IV
+[autotest] tide: level now 0.46 (flooded around you 93%) | seawall yes | high water yes by merrow at 18:03 | surges 4 (5:30, 9:30, 13:30, 17:30) shoved summons 37, enemies 73, you 1 | time in water: you 422 s (resisted 0 s), summons 13291 unit-s, enemies 40119 enemy-s, swimmers 3593 s
+[autotest] harbour: buoys sunk 3/3 (2:41, 3:00, 3:47) | tolls 6 (cultists called 24) | wave size now x0.64, trickle x0.85 | caches broken 3/3 (6:05, 6:20, 12:11), cache chests 3 | harbourmaster killed at 11:44 | objective ash 42
+[autotest] harbour events (11): 2:30 buoys_placed_3, 2:41 buoy_sunk, 3:00 buoy_sunk, 3:47 buoy_sunk, 6:00 caches_placed_2, 6:05 cache_broken, 6:20 cache_broken, 11:00 harbourmaster_arrived, 11:40 caches_placed_1, 11:44 harbourmaster_killed, 12:11 cache_broken
+[autotest] harbour kinds (spawned/killed): deep_kin 460/446 tide_caller 202/194 netcaster 163/158 harbourmaster 1/1 deep_herald 0/0
+[autotest] harbour tricks: deep kin leaps 451 (summon hits 1300, player hits 0) | tide caller lines 207 (summons thrown 38, player hits 1) | nets thrown 173, landed 162, missed 6, cut 54, pinned 375 unit-s | harbourmaster sweeps 2, hurls 3, summons dragged 34, reeled in 3, you dragged 0, kills 1 (avg time to kill 44.6 s) | dmg to player: leap 0, line 24, net 0, sweep 0, hurl 0
+[autotest] merrow: sermons 2 (cultists buffed 935 pulses, broken 1) | brine waves 3 (summon hits 42) | the change at 17:38 | limb lashes 5 (summon hits 15) | whirls 3 (summon hits 61) | high water at 18:03 | dmg to player 0, summons 5256
+[autotest] stage events fired (0): 
+[autotest] templar charges: 0 (body-blocked by warriors: 0) | temporary summons spawned: 0
+[autotest] obstacle collisions resolved: player=0 summons=10373 enemies=16940
+[autotest] class abomination: Lv 5, alive 1/5, deaths 6 | dmg 60444 (abomination=29259 abom_stomp=31184) | abom_stomps=293 abom_stomp_hits=631
+[autotest] class rogue: Lv 5, alive 4/7, deaths 125 | dmg 77636 (rogue=30765 rogue_dash=40837 rogue_bleed=6032) | rogue_dashes=1158 rogue_dash_hits=840
+[autotest] class gargoyle: Lv 5, alive 4/6, deaths 11 | dmg 85118 (gargoyle=22163 gargoyle_swoop=62955) | gargoyle_swoops=456 gargoyle_swoop_hits=1048
+[autotest] class frost_wraith: Lv 5, alive 3/5, deaths 21 | dmg 68318 (frost_wraith=68318) | frost_deep_freezes=331 frost_freezes=970 frost_boss_freezes=26 frost_frozen_seconds=717 frost_chills=1613
+[autotest] class bone_hound: Lv 0, alive 0/0, deaths 0 | dmg 0 (bone_hound=0 hellhound=0 hellhound_burn=0 hellhound_trail=0) | hound_bites=0 hound_pack_bites=0 hound_pack_bonus_dmg=0 hellhound_burns=0 hellhound_trail_patches=0
+[autotest] class banshee: Lv 0, alive 0/0, deaths 0 | dmg 0 (banshee=0 keening_lady=0) | banshee_dirges=0 banshee_dirge_hits=0 dirge_debuff_seconds=0 keening_waves=0 keening_silenced=0 keening_heals_silenced=0
+[autotest] class corpse_catapult: Lv 0, alive 0/0, deaths 0 | dmg 0 (corpse_catapult=0 ossuary_engine=0 ossuary_shards=0) | catapult_volleys=0 catapult_boulders=0 catapult_boulder_hits=0 catapult_structure_dmg=0 ossuary_shard_fields=0 hazards_dropped=0
+[autotest] class specials: cancelled by recall 15 | ended inside an obstacle 0
+[autotest] special evolutions: shadow reaper: chain dashes 0, cooldown resets 0, bleed stacks added 0, max stacks 0, rogue bleed dmg (all) 6032 | cathedral horror: stuns 332 (boss 43), stunned s 81.4, stone forms 226, stone s 445.8, dmg prevented by stone 4279
+[autotest] grave step: dashes 96 (bot: crowd 0, hit 0, telegraph 96) | hits avoided in dash i-frames 0 | blocked 0, shortened by obstacles 0, ended inside an obstacle 0, avg length 110 px | charges 1, cooldown 5.00 s
+[autotest] dread rally: rallies 6 | meter fills 6, fill times s [119 56 57 49 54 47] (avg 64 s), meter now 0% | knockbacks 27 | summons called back 22 | heal 3841 | minion dmg under buff 55914 (est. +dmg part 15975) | buff time 47 s
+[autotest] army formation: bone_ring: 1217s kills 4886 army_dmg 76200 recalls 0 spread max 497 mean 111
+[autotest] character: gravecaller (The Gravecaller) | starting spell shadow_bolt Lv 5 | Baseline stats (Max HP 120, move speed 110) | innate: none | characters unlocked this run: none | unlocked in the profile: gravecaller (saved: false)
+[autotest] stuck_units=0 (touching an obstacle: 0) {  }
+[metric] boss_hp_at_0=0 min_hp_before_0=79
+[autotest] peaks: enemies=161 summons=36 projectiles=14 effects=51 crystals=232
+[autotest] nodes created (pools): enemies=161 summons=36 projectiles=14 effects=51 crystals=233
+[autotest] simulation step: avg 2.14 ms, worst 35.25 ms
+[autotest] power-ups: spawned 18 (magnet=3 feast=5 hyper=4 stasis=3 frenzy=2 nova=1) | collected 17 (magnet=2 feast=5 hyper=4 stasis=3 frenzy=2 nova=1) | expired (magnet=1 feast=0 hyper=0 stasis=0 frenzy=0 nova=0) | lost at cap 0 | pity drops 4 | crystals pulled by Soul Magnet 302
+[autotest] buff uptime: hyper=40s (3.3%, refreshed 0) stasis=15s (1.2%, refreshed 0) frenzy=24s (2.0%, refreshed 0) | soul nova kills: 48
+[autotest] chests: spawned 8, opened 8 (x1=8 x3=0 x5=0), items granted 8 (evolutions 3), pity 3, lost at cap 0, left on ground 0
+[autotest]    chest 06:08 x1: shadow_bolt 4
+[autotest]    chest 06:15 x1: gargoyle 5
+[autotest]    chest 06:21 x1: dark_command 4
+[autotest]    chest 08:01 x1: EVOLVE death_knight
+[autotest]    chest 11:47 x1: soul_recycling 5
+[autotest]    chest 12:13 x1: EVOLVE winter_revenant
+[autotest]    chest 14:54 x1: EVOLVE cathedral_horror
+[autotest]    chest 18:27 x1: dark_restoration
+[autotest] chest beacon: chests marked 8, seen on screen 8 | max off-screen arrows at once 1 | ticks with an arrow 400 (6.7 s)
+[autotest] profane pact: taken no (final Lv 0; never offered or never picked) | oath tier 0 | extra XP from pact 0, from oath 0 | extra soul ash from pact 0, from oath 0
+[autotest] meta upgrades (--meta=none): none | revivals used: 0
+[autotest] soul ash: +480 (time 150 [20:00] + kills 146 [4886] + elites 24 [6] + boss 75 + reckoning 43 [17.5 s] + objectives 42 = 480, bonus +0% = +0, pact +0, oath +0) | bounty 300 | new total 780 | saved: false
+[autotest] difficulty: Necromancer (necromancer) | modifiers: none | foes: HP x0.800 (growth x1.00), dmg x1.000 (growth x1.00), spawn x1.250, speed x1.00, elite chance 0.000, boss HP x1.000 | XP x1.000 | soul ash: difficulty +0%, modifiers +0%, total x1.00
+[autotest] difficulty results: soul ash difficulty +0, modifiers +0 | trickle elites promoted: 0 | holy retribution bursts: 0 (dmg to you 0, to summons 0) | player max HP at start: 120
+[autotest] stage: Gullhaven Harbour | soul ash stage bonus +0 (x1.00) | stages unlocked by this run: archive
+[autotest] hyper: off (Necromancer) | foes: HP growth x1.00, dmg growth x1.00, boss HP x1.000 | at 0:00 vs the standard game: HP x1.00, dmg x1.00 | soul ash hyper +0 (+0%) | Reckoning lasted 17.5 s past 0:00 | unlocked: false (by this run: false) | hyper clear recorded: no
+[autotest] skins: character gravecaller, worn default | this run: rot kills 0, high confessors slain 0, seraphine slain with all 4 roles 0 | lifetime: rot 0/5000, confessors 0/50, seraphine full army 0/1 | unlocked 55/220 (new: ivory_seer) | setup row cards 6
+[autotest] rewards: achievements=2 (bone_legion, low_tide) titles=0 unlocks=none | run: temp raised 0, min HP before 0:00 66%, evolutions 3, boss slain 85.1 s after arrival | one-run achievements met: untouchable (not checked: --rewards=on) | worn title: none | title row choices 1
+[autotest] demo: on=false | acts=1 | stages=graveyard,crimson_march,sanctum | save=user://save.cfg | full_game_offers=0
+[autotest] feedback: url_set=true | report_chars=122/216/312 (main menu / pause / results samples built, max 1500) | url_chars=605 | opened=never (autotest)
+exit 0

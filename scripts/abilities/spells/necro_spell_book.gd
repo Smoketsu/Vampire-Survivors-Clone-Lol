@@ -71,6 +71,9 @@
 ## and Act IX's (the Crash Site, CRASH_SITE_IDS: stepped, with a kill hook; its
 ## own autotest line, CrashSiteReport.item_lines()):
 ##   Bone Beetles     -> BoneBeetles      (evolves into Hive of Bone)
+## and the Hall of the Slain's (the Barrow Fields, BARROW_FIELDS_IDS: stepped
+## only; its own autotest line, BarrowFieldsReport.item_lines()):
+##   Barrow Grasp     -> BarrowGrasp      (evolves into Barrow-Lord's Embrace)
 ## and Act VIII's (Fort Kessler, FORT_KESSLER_IDS: stepped only; its own
 ## autotest line, FortKesslerReport.item_lines()):
 ##   Bone Mines       -> BoneMines        (evolves into Killing Ground)
@@ -83,6 +86,54 @@
 ## and Act IX's (the Ark, ARK_IDS: stepped only; its own autotest line,
 ## ArkReport.item_lines()):
 ##   Tractor Beam     -> TractorLift      (evolves into Abduction)
+## and Act X's (the Smuggler's Cutter, CUTTER_IDS: stepped only; its own
+## autotest line, CutterReport.item_lines()):
+##   Chain Shot       -> ChainShot        (evolves into Keelhauler)
+## and Act X's (the Treasure Galleon, GALLEON_IDS: stepped only; its own
+## autotest line, GalleonReport.item_lines()):
+##   Cannonade        -> Cannonade        (evolves into Dead Men's Broadside)
+## and Act X's (the Maelstrom, MAELSTROM_IDS: stepped only; its own autotest
+## line, MaelstromReport.item_lines()):
+##   Anchor Drop      -> AnchorDrop       (evolves into Abyssal Mooring)
+## and the Hall of the Slain's (temporarily Act XI; Valgard, VALGARD_IDS:
+## stepped only; its own autotest line, ValgardReport.item_lines()):
+##   Valkyrie Spear   -> ValkyrieSpear    (evolves into Chooser of the Slain)
+## and Vigrid's (the Hall of the Slain's finale, VIGRID_IDS: stepped only; its
+## own autotest line, VigridReport.item_lines()):
+##   Gungnir          -> Gungnir          (evolves into Spear of the Hanged)
+## and Act XII's (temporary: the Necropolis of Sand, NECROPOLIS_IDS: stepped,
+## with a kill hook; its own autotest line, NecropolisReport.item_lines()):
+##   Linen Bind       -> LinenBind        (evolves into Eternal Shroud)
+## and the Hall of Two Truths' (temporary Act XII, TWO_TRUTHS_IDS: stepped only;
+## its own autotest line, TwoTruthsReport.item_lines()):
+##   Feather's Verdict -> FeathersVerdict (evolves into Heart Devoured)
+## and the Silver Stair's (temporary Act XIII, SILVER_STAIR_IDS: stepped only;
+## its own autotest line, SilverStairReport.item_lines()):
+##   Flaming Sword    -> FlamingSword     (evolves into Sword at the Gate)
+## and the Wheel of Thrones' (temporary Act XIII, WHEEL_OF_THRONES_IDS: stepped
+## only; its own autotest line, WheelOfThronesReport.item_lines()):
+##   Wheel of Eyes    -> WheelOfEyes      (evolves into Ophanim)
+## and the Empyrean's (temporary Act XIII, EMPYREAN_IDS: stepped only; its own
+## autotest line, EmpyreanReport.item_lines()):
+##   Revelation       -> Revelation       (evolves into Be Not Afraid)
+## and the Fern Basin's (temporary Act XIV, FERN_BASIN_IDS: stepped only; its
+## own autotest line, FernBasinReport.item_lines()):
+##   Pack Leap        -> PackLeap         (evolves into Apex Pack)
+## and the Great Plain's (temporary Act XIV, GREAT_PLAIN_IDS: stepped only; its
+## own autotest line, GreatPlainReport.item_lines()):
+##   Stampede         -> Stampede         (evolves into Herd of Ages)
+## and the Last Day's (temporary Act XIV, LAST_DAY_IDS: stepped only; its
+## own autotest line, LastDayReport.item_lines()):
+##   Meteor Call      -> MeteorCall       (evolves into Extinction Event)
+## and the Greenwood's (temporary Act XV, GREENWOOD_IDS: stepped only; its own
+## autotest line, GreenwoodReport.item_lines()):
+##   Wild Hunt        -> WildHunt         (evolves into The Endless Hunt)
+## and the Fae Court's (temporary Act XV, FAE_COURT_IDS: stepped only; its own
+## autotest line, FaeCourtReport.item_lines()):
+##   Glamour          -> Glamour          (evolves into Court of Masks)
+## and the World-Tree's (temporary Act XV, WORLD_TREE_IDS: stepped only; its
+## own autotest line, WorldTreeReport.item_lines()):
+##   Root and Rot     -> RootAndRot       (evolves into Return to Earth)
 ## Game calls after_physics() once per tick after obstacles are resolved
 ## (Bone Wall holds enemies there).
 ## Each spell node is created the first time its spell is learned and reads
@@ -206,6 +257,80 @@ const PROVING_MOON_IDS := ["soul_caster"]
 ## only (no kill or after-physics hook), reported by ArkReport. Its id is
 ## "tractor_lift" (never the Concord's "tractor_beam" sound / event).
 const ARK_IDS := ["tractor_lift"]
+# --- Act X: the Smuggler's Cutter ---
+## The Smuggler's Cutter's unlockable spell (Captain Crow's reward): stepped
+## only (no kill or after-physics hook), reported by CutterReport.
+const CUTTER_IDS := ["chain_shot"]
+# --- Act X: the Treasure Galleon ---
+## The Treasure Galleon's unlockable spell (Admiral Marrec's reward): stepped
+## only (no kill or after-physics hook), reported by GalleonReport.
+const GALLEON_IDS := ["cannonade"]
+# --- Act X: the Maelstrom ---
+## The Maelstrom's unlockable spell (Vandermere's reward): stepped only (no kill
+## or after-physics hook), reported by MaelstromReport.
+const MAELSTROM_IDS := ["anchor_drop"]
+# --- Act XI (temporary): the Barrow Fields ---
+## The Barrow Fields' unlockable spell (Hrimgar's reward): stepped only (no
+## kill or after-physics hook), reported by BarrowFieldsReport.
+const BARROW_FIELDS_IDS := ["barrow_grasp"]
+# --- Act XI (temporary): Valgard ---
+## Valgard's unlockable spell (Sigrun's reward): stepped only (no kill or
+## after-physics hook; it sees its own kills), reported by ValgardReport.
+const VALGARD_IDS := ["valkyrie_spear"]
+# --- Act XI (temporary): Vigrid ---
+## Vigrid's unlockable spell (Odin's reward): stepped only (no kill or
+## after-physics hook), reported by VigridReport. Its id is "gungnir" (never
+## Odin's own "odin_gungnir" damage tag).
+const VIGRID_IDS := ["gungnir"]
+# --- Act XII (temporary number): the Necropolis of Sand ---
+## The Necropolis of Sand's unlockable spell (Anubis's reward): stepped, with a
+## kill hook (a wrapped foe that dies rises as a Mummy), reported by
+## NecropolisReport.
+const NECROPOLIS_IDS := ["linen_bind"]
+# --- Act XII (temporary number): the Temple of the Lioness ---
+## The Temple of the Lioness's unlockable spell (Sekhmet's reward): stepped
+## only (no kill or after-physics hook), reported by LionessTempleReport.
+const LIONESS_TEMPLE_IDS := ["burning_eye"]
+# --- Act XII (temporary number): the Hall of Two Truths ---
+## The Hall of Two Truths' unlockable spell (Osiris and Ammit's reward):
+## stepped only (no kill or after-physics hook), reported by TwoTruthsReport.
+const TWO_TRUTHS_IDS := ["feathers_verdict"]
+# --- Act XIII (temporary number): the Silver Stair ---
+## The Silver Stair's unlockable spell (Seraiel's reward): stepped only (no
+## kill or after-physics hook), reported by SilverStairReport.
+const SILVER_STAIR_IDS := ["flaming_sword"]
+# --- Act XIII (temporary number): the Wheel of Thrones ---
+## The Wheel of Thrones' unlockable spell (the Throne's reward): stepped only
+## (no kill or after-physics hook), reported by WheelOfThronesReport.
+const WHEEL_OF_THRONES_IDS := ["wheel_of_eyes"]
+# --- Act XIII (temporary number): the Empyrean ---
+## The Empyrean's unlockable spell (the Voice's reward): stepped only (no kill
+## or after-physics hook), reported by EmpyreanReport.
+const EMPYREAN_IDS := ["revelation"]
+# --- Act XIV (temporary number): the Fern Basin ---
+## The Fern Basin's unlockable spell (Scarmaw's reward): stepped only (no kill
+## or after-physics hook), reported by FernBasinReport.
+const FERN_BASIN_IDS := ["pack_leap"]
+# --- Act XIV (temporary number): the Great Plain ---
+## The Great Plain's unlockable spell (Old Ironbrow's reward): stepped only (no
+## kill or after-physics hook), reported by GreatPlainReport.
+const GREAT_PLAIN_IDS := ["stampede"]
+# --- Act XIV (temporary number): the Last Day ---
+## The Last Day's unlockable spell (Old Gravejaw's reward): stepped only (no
+## kill or after-physics hook), reported by LastDayReport.
+const LAST_DAY_IDS := ["meteor_call"]
+# --- Act XV (temporary number): the Greenwood ---
+## The Greenwood's unlockable spell (the Stag King's reward): stepped only (no
+## kill or after-physics hook), reported by GreenwoodReport.
+const GREENWOOD_IDS := ["wild_hunt"]
+# --- Act XV (temporary number): the Fae Court ---
+## The Fae Court's unlockable spell (the Summer Queen's reward): stepped only (no
+## kill or after-physics hook), reported by FaeCourtReport.
+const FAE_COURT_IDS := ["glamour"]
+# --- Act XV (temporary number): the World-Tree ---
+## The World-Tree's unlockable spell (the Green Mother's reward): stepped only
+## (no kill or after-physics hook), reported by WorldTreeReport.
+const WORLD_TREE_IDS := ["root_and_rot"]
 ## Damage-source stat tags of each spell (CombatResolver "dmg_<tag>"), base
 ## spell first, then its evolution's. Used for the autotest summary.
 const SOURCES := {
@@ -266,6 +391,42 @@ const SOURCES := {
 	"soul_caster": ["soul_caster", "apex_predator"],
 	# --- Act IX: the Ark ---
 	"tractor_lift": ["tractor_lift", "star_abduction", "star_abduction_quake"],
+	# --- Act X: the Smuggler's Cutter ---
+	"chain_shot": ["chain_shot", "keelhauler"],
+	# --- Act X: the Treasure Galleon ---
+	"cannonade": ["cannonade", "dead_mens_broadside"],
+	# --- Act X: the Maelstrom ---
+	"anchor_drop": ["anchor_drop", "anchor_drop_shock", "abyssal_mooring", "abyssal_mooring_shock"],
+	# --- Act XI (temporary): the Barrow Fields ---
+	"barrow_grasp": ["barrow_grasp", "barrow_lords_embrace"],
+	# --- Act XI (temporary): Valgard ---
+	"valkyrie_spear": ["valkyrie_spear", "chooser_of_the_slain"],
+	# --- Act XI (temporary): Vigrid ---
+	"gungnir": ["gungnir", "spear_of_the_hanged"],
+	# --- Act XII (temporary number): the Necropolis of Sand ---
+	"linen_bind": ["linen_bind", "eternal_shroud"],
+	# --- Act XII (temporary number): the Temple of the Lioness ---
+	"burning_eye": ["burning_eye", "eye_of_retribution"],
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	"feathers_verdict": ["feathers_verdict", "feathers_verdict_execute", "heart_devoured", "heart_devoured_execute"],
+	# --- Act XIII (temporary number): the Silver Stair ---
+	"flaming_sword": ["flaming_sword", "sword_at_the_gate"],
+	# --- Act XIII (temporary number): the Wheel of Thrones ---
+	"wheel_of_eyes": ["wheel_of_eyes", "ophanim"],
+	# --- Act XIII (temporary number): the Empyrean ---
+	"revelation": ["revelation", "be_not_afraid"],
+	# --- Act XIV (temporary number): the Fern Basin ---
+	"pack_leap": ["pack_leap", "apex_pack"],
+	# --- Act XIV (temporary number): the Great Plain ---
+	"stampede": ["stampede", "herd_of_ages"],
+	# --- Act XIV (temporary number): the Last Day ---
+	"meteor_call": ["meteor_call", "extinction_event"],
+	# --- Act XV (temporary number): the Greenwood ---
+	"wild_hunt": ["wild_hunt", "the_endless_hunt"],
+	# --- Act XV (temporary number): the Fae Court ---
+	"glamour": ["glamour", "court_of_masks"],
+	# --- Act XV (temporary number): the World-Tree ---
+	"root_and_rot": ["root_and_rot", "return_to_earth"],
 }
 
 ## Owning run.
@@ -449,6 +610,168 @@ func step(delta: float) -> void:
 			node = _create(id)
 		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
 		node.step(delta, ab.spell_stats(id))  # The Ark's spell.
+	# --- Act X: the Smuggler's Cutter ---
+	for id: String in CUTTER_IDS:
+		if ab.spell_level(id) <= 0:
+			continue
+		var node: NecroSpell = nodes.get(id)  # The spell's node (created lazily).
+		if node == null:
+			node = _create(id)
+		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
+		node.step(delta, ab.spell_stats(id))  # The Cutter's spell.
+	# --- Act X: the Treasure Galleon ---
+	for id: String in GALLEON_IDS:
+		if ab.spell_level(id) <= 0:
+			continue
+		var node: NecroSpell = nodes.get(id)  # The spell's node (created lazily).
+		if node == null:
+			node = _create(id)
+		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
+		node.step(delta, ab.spell_stats(id))  # The Treasure Galleon's spell.
+	# --- Act X: the Maelstrom ---
+	for id: String in MAELSTROM_IDS:
+		if ab.spell_level(id) <= 0:
+			continue
+		var node: NecroSpell = nodes.get(id)  # The spell's node (created lazily).
+		if node == null:
+			node = _create(id)
+		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
+		node.step(delta, ab.spell_stats(id))  # The Maelstrom's spell.
+	# --- Act XI (temporary): the Barrow Fields ---
+	for id: String in BARROW_FIELDS_IDS:
+		if ab.spell_level(id) <= 0:
+			continue
+		var node: NecroSpell = nodes.get(id)  # The spell's node (created lazily).
+		if node == null:
+			node = _create(id)
+		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
+		node.step(delta, ab.spell_stats(id))  # The Barrow Fields' spell.
+	# --- Act XI (temporary): Valgard ---
+	for id: String in VALGARD_IDS:
+		if ab.spell_level(id) <= 0:
+			continue
+		var node: NecroSpell = nodes.get(id)  # The spell's node (created lazily).
+		if node == null:
+			node = _create(id)
+		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
+		node.step(delta, ab.spell_stats(id))  # Valgard's spell.
+	# --- Act XI (temporary): Vigrid ---
+	for id: String in VIGRID_IDS:
+		if ab.spell_level(id) <= 0:
+			continue
+		var node: NecroSpell = nodes.get(id)  # The spell's node (created lazily).
+		if node == null:
+			node = _create(id)
+		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
+		node.step(delta, ab.spell_stats(id))  # Vigrid's spell.
+	# --- Act XII (temporary number): the Necropolis of Sand ---
+	for id: String in NECROPOLIS_IDS:
+		if ab.spell_level(id) <= 0:
+			continue
+		var node: NecroSpell = nodes.get(id)  # The spell node (created lazily).
+		if node == null:
+			node = _create(id)
+		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
+		node.step(delta, ab.spell_stats(id))  # The Necropolis's spell.
+	# --- Act XII (temporary number): the Temple of the Lioness ---
+	for id: String in LIONESS_TEMPLE_IDS:
+		if ab.spell_level(id) <= 0:
+			continue
+		var node: NecroSpell = nodes.get(id)  # The spell's node (created lazily).
+		if node == null:
+			node = _create(id)
+		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
+		node.step(delta, ab.spell_stats(id))  # The Temple of the Lioness's spell.
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	for id: String in TWO_TRUTHS_IDS:
+		if ab.spell_level(id) <= 0:
+			continue
+		var node: NecroSpell = nodes.get(id)  # The spell's node (created lazily).
+		if node == null:
+			node = _create(id)
+		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
+		node.step(delta, ab.spell_stats(id))  # The Hall of Two Truths' spell.
+	# --- Act XIII (temporary number): the Silver Stair ---
+	for id: String in SILVER_STAIR_IDS:
+		if ab.spell_level(id) <= 0:
+			continue
+		var node: NecroSpell = nodes.get(id)  # The spell's node (created lazily).
+		if node == null:
+			node = _create(id)
+		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
+		node.step(delta, ab.spell_stats(id))  # The Silver Stair's spell.
+	# --- Act XIII (temporary number): the Wheel of Thrones ---
+	for id: String in WHEEL_OF_THRONES_IDS:
+		if ab.spell_level(id) <= 0:
+			continue
+		var node: NecroSpell = nodes.get(id)  # The spell's node (created lazily).
+		if node == null:
+			node = _create(id)
+		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
+		node.step(delta, ab.spell_stats(id))  # The Wheel of Thrones' spell.
+	# --- Act XIII (temporary number): the Empyrean ---
+	for id: String in EMPYREAN_IDS:
+		if ab.spell_level(id) <= 0:
+			continue
+		var node: NecroSpell = nodes.get(id)  # The spell's node (created lazily).
+		if node == null:
+			node = _create(id)
+		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
+		node.step(delta, ab.spell_stats(id))  # The Empyrean's spell.
+	# --- Act XIV (temporary number): the Fern Basin ---
+	for id: String in FERN_BASIN_IDS:
+		if ab.spell_level(id) <= 0:
+			continue
+		var node: NecroSpell = nodes.get(id)  # The spell's node (created lazily).
+		if node == null:
+			node = _create(id)
+		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
+		node.step(delta, ab.spell_stats(id))  # The Fern Basin's spell.
+	# --- Act XIV (temporary number): the Great Plain ---
+	for id: String in GREAT_PLAIN_IDS:
+		if ab.spell_level(id) <= 0:
+			continue
+		var node: NecroSpell = nodes.get(id)  # The spell's node (created lazily).
+		if node == null:
+			node = _create(id)
+		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
+		node.step(delta, ab.spell_stats(id))  # The Great Plain's spell.
+	# --- Act XIV (temporary number): the Last Day ---
+	for id: String in LAST_DAY_IDS:
+		if ab.spell_level(id) <= 0:
+			continue
+		var node: NecroSpell = nodes.get(id)  # The spell's node (created lazily).
+		if node == null:
+			node = _create(id)
+		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
+		node.step(delta, ab.spell_stats(id))  # The Last Day's spell.
+	# --- Act XV (temporary number): the Greenwood ---
+	for id: String in GREENWOOD_IDS:
+		if ab.spell_level(id) <= 0:
+			continue
+		var node: NecroSpell = nodes.get(id)  # The spell's node (created lazily).
+		if node == null:
+			node = _create(id)
+		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
+		node.step(delta, ab.spell_stats(id))  # The Greenwood's spell.
+	# --- Act XV (temporary number): the Fae Court ---
+	for id: String in FAE_COURT_IDS:
+		if ab.spell_level(id) <= 0:
+			continue
+		var node: NecroSpell = nodes.get(id)  # The spell's node (created lazily).
+		if node == null:
+			node = _create(id)
+		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
+		node.step(delta, ab.spell_stats(id))  # The Fae Court's spell.
+	# --- Act XV (temporary number): the World-Tree ---
+	for id: String in WORLD_TREE_IDS:
+		if ab.spell_level(id) <= 0:
+			continue
+		var node: NecroSpell = nodes.get(id)  # The spell's node (created lazily).
+		if node == null:
+			node = _create(id)
+		node.origin = game.player.position  # Co-op drawing (NecroSpell.caster_pos()).
+		node.step(delta, ab.spell_stats(id))  # The World-Tree's spell.
 
 
 ## Content wave 2: the Bone Wall node, created when missing (the Ossuary
@@ -551,6 +874,60 @@ func _create(id: String) -> NecroSpell:
 		# --- Act IX: the Ark ---
 		"tractor_lift":
 			node = TractorLift.new()  # The Ark's spell.
+		# --- Act X: the Smuggler's Cutter ---
+		"chain_shot":
+			node = ChainShot.new()  # The Cutter's spell.
+		# --- Act X: the Treasure Galleon ---
+		"cannonade":
+			node = Cannonade.new()  # The Treasure Galleon's spell.
+		# --- Act X: the Maelstrom ---
+		"anchor_drop":
+			node = AnchorDrop.new()  # The Maelstrom's spell.
+		# --- Act XI (temporary): the Barrow Fields ---
+		"barrow_grasp":
+			node = BarrowGrasp.new()  # The Barrow Fields' spell.
+		# --- Act XI (temporary): Valgard ---
+		"valkyrie_spear":
+			node = ValkyrieSpear.new()  # Valgard's spell.
+		# --- Act XI (temporary): Vigrid ---
+		"gungnir":
+			node = Gungnir.new()  # Vigrid's spell.
+		# --- Act XII (temporary number): the Necropolis of Sand ---
+		"linen_bind":
+			node = LinenBind.new()  # The Necropolis's spell.
+		# --- Act XII (temporary number): the Temple of the Lioness ---
+		"burning_eye":
+			node = BurningEye.new()  # The Temple of the Lioness's spell.
+		# --- Act XII (temporary number): the Hall of Two Truths ---
+		"feathers_verdict":
+			node = FeathersVerdict.new()  # The Hall of Two Truths' spell.
+		# --- Act XIII (temporary number): the Silver Stair ---
+		"flaming_sword":
+			node = FlamingSword.new()  # The Silver Stair's spell.
+		# --- Act XIII (temporary number): the Wheel of Thrones ---
+		"wheel_of_eyes":
+			node = WheelOfEyes.new()  # The Wheel of Thrones' spell.
+		# --- Act XIII (temporary number): the Empyrean ---
+		"revelation":
+			node = Revelation.new()  # The Empyrean's spell.
+		# --- Act XIV (temporary number): the Fern Basin ---
+		"pack_leap":
+			node = PackLeap.new()  # The Fern Basin's spell.
+		# --- Act XIV (temporary number): the Great Plain ---
+		"stampede":
+			node = Stampede.new()  # The Great Plain's spell.
+		# --- Act XIV (temporary number): the Last Day ---
+		"meteor_call":
+			node = MeteorCall.new()  # The Last Day's spell.
+		# --- Act XV (temporary number): the Greenwood ---
+		"wild_hunt":
+			node = WildHunt.new()  # The Greenwood's spell.
+		# --- Act XV (temporary number): the Fae Court ---
+		"glamour":
+			node = Glamour.new()  # The Fae Court's spell.
+		# --- Act XV (temporary number): the World-Tree ---
+		"root_and_rot":
+			node = RootAndRot.new()  # The World-Tree's spell.
 		_:
 			node = PlagueCloud.new()
 	node.game = game
@@ -610,6 +987,11 @@ func on_enemy_killed(e: Enemy) -> void:
 		var node: NecroSpell = nodes.get(id)  # The Crash Site's spell node, if learned.
 		if node != null:
 			node.on_enemy_killed(e)  # Bone Beetles: a slain foe bursts into beetles.
+	# --- Act XII (temporary number): the Necropolis of Sand ---
+	for id: String in NECROPOLIS_IDS:
+		var node: NecroSpell = nodes.get(id)  # The Necropolis's spell node, if learned.
+		if node != null:
+			node.on_enemy_killed(e)  # Linen Bind: a wrapped foe rises as a Mummy.
 
 
 ## Post-movement hook (Game._physics_process, after Arena.resolve_all()):

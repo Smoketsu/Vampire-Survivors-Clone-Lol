@@ -53,8 +53,6 @@ const ENEMY_DAMAGE_MULT: float = 1.5  # TUNING (not in GDD) owner's playtest pas
 ## Elapsed game seconds from which the two multipliers apply to regular
 ## enemies (the boss always gets them).
 const ENEMY_MULT_FROM: float = 420.0  # TUNING (not in GDD) 7:00 (Act III)
-## Soul Ash multiplier of a run on this stage (its own end-screen line).
-const ASH_MULT: float = 1.5  # TUNING (not in GDD) owner decision Oct 2026, GDD §15.0 "Ossuary expansion: owner decisions": every act restarts, stage 3 of Act IV
 
 ## The Reckoning of this stage (keys as GraveyardStage.RECKONING): the Twilight
 ## of the Gods, shared by every Act IV stage: Bronze Titans step out of the
@@ -314,12 +312,8 @@ const STAGE := {
 	"id": ID,
 	"display_name": "The Asphodel Underworld",
 	"short_name": "Underworld",
-	"chapter": "Chapter XII",
-	"act": 4,  # Act IV, the Olympian Republic.
 	"playable": true,  # Owner decision (Oct 25, 2026): "Ship it!" after the art review and three playtest passes (GDD §15.0 "Act IV goes live").
 	"description": "With Olympus silent, go down to the god who started it all: grey fields of asphodel, the River Styx, Charon's ferry and the gates of Tartarus. Hades waits on his throne.",
-	"unlock": {"stage": "olympus", "boss_kills": 1},  # Owner-approved: each boss unlocks the next stage
-	"unlock_text": "Topple Zeus on Mount Olympus to unlock.",
 	"boss": BOSS,
 	"segments": SEGMENTS,
 	"events": EVENTS,
@@ -334,7 +328,6 @@ const STAGE := {
 	"enemy_hp_mult": ENEMY_HP_MULT,
 	"enemy_damage_mult": ENEMY_DAMAGE_MULT,
 	"enemy_mult_from": ENEMY_MULT_FROM,
-	"ash_mult": ASH_MULT,
 	"march": MARCH,
 	"underworld": UNDERWORLD,  # UnderworldDirector (the Styx, Cerberus, guests).
 	"pantheon": true,  # Act IV: Wrath of the Gods, Phalanx, Glory (PantheonRules).

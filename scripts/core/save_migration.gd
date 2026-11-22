@@ -7,6 +7,10 @@
 ## Gravebound folder (the old folder stays as a backup). Runs once per launch
 ## from GameState._ready(), before Settings and Meta load; never in the
 ## autotest, which must not touch user://. Purely file handling: no gameplay.
+## The reorder pass (part 1, save version 3) adds legacy_opened(): the stages a
+## save had opened under the act order before the reorder, which Meta keeps
+## open (Meta._migrate(), [stages] opened); checked by
+## tools/save_migration_check.tscn.
 class_name SaveMigration
 extends RefCounted
 
@@ -14,6 +18,33 @@ extends RefCounted
 const LEGACY_DIR_NAME: String = "Gravebound"
 ## Files carried over, relative to user:// (Meta's profile and the Settings file).
 const FILES: Array[String] = ["save.cfg", "settings.cfg"]
+## The campaign order before the reorder pass (save versions 0-2): each stage
+## opened once the boss of the stage before it here was slain once. Only
+## legacy_opened() reads it; nothing in a run does.
+const LEGACY_ORDER: Array[String] = ["graveyard", "crimson_march", "sanctum", "harbour", "archive", "spire",
+	"wastes", "assembly", "citadel", "ilion", "olympus", "underworld", "province", "kurogane", "sun_road",
+	"burning_gate", "silk_palace", "pandemonium", "ravensmoor", "witchwood", "castle_sanguis",
+	"skid_row", "fort_kessler", "liberty_heights", "crash_site", "proving_moon", "ark",
+	"cutter", "galleon", "maelstrom", "barrow_fields", "valgard", "vigrid",
+	"necropolis", "lioness_temple", "two_truths", "silver_stair", "wheel_of_thrones", "empyrean",
+	"fern_basin", "great_plain", "last_day", "greenwood", "fae_court", "world_tree"]
+
+
+## Stage ids an older save (`cfg`, its [stages] "<id>_boss_kills" records) had
+## opened under LEGACY_ORDER: the first stage and every stage whose legacy
+## predecessor's boss fell at least StageRegistry.UNLOCK_BOSS_KILLS times.
+## A save from before [stages] existed opened the Crimson March through the
+## lifetime boss kills (Meta rebuilds its Graveyard record from them).
+static func legacy_opened(cfg: ConfigFile) -> PackedStringArray:
+	var out := PackedStringArray([LEGACY_ORDER[0]])
+	var need := float(StageRegistry.UNLOCK_BOSS_KILLS)  # Boss kills that opened the next stage.
+	for i in range(1, LEGACY_ORDER.size()):
+		var kills: Variant = cfg.get_value("stages", "%s_boss_kills" % LEGACY_ORDER[i - 1], 0.0)
+		if i == 1 and not cfg.has_section("stages"):
+			kills = cfg.get_value("lifetime", "boss_kills", 0.0)
+		if (typeof(kills) == TYPE_FLOAT or typeof(kills) == TYPE_INT) and float(kills) >= need:
+			out.append(LEGACY_ORDER[i])
+	return out
 
 
 ## Copies FILES from the legacy folder when this install has none of them yet.

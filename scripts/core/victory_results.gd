@@ -32,7 +32,7 @@ extends RefCounted
 static func build(summary: Dictionary) -> Dictionary:
 	var stage_id := String(summary.get("stage_id", StageRegistry.DEFAULT_ID))
 	var texts: Dictionary = VictoryData.STAGES.get(stage_id, {})  # Title and boss line ({} = defaults).
-	var act := StageRegistry.act_of(stage_id)
+	var act := StageRegistry.act_id_of(stage_id)
 	var ash: Dictionary = summary.get("soul_ash", {})  # Meta.award_run() result ({} = none).
 	var overtime := float(summary.get("time_past_zero", 0.0))  # Seconds past 0:00.
 	var before := float(ash.get("best_reckoning_before", 0.0))  # The stage's best before this run.
@@ -40,7 +40,7 @@ static func build(summary: Dictionary) -> Dictionary:
 	return {
 		"stage_id": stage_id,
 		"title": String(texts.get("title", VictoryData.DEFAULT_TITLE)),
-		"line": String(VictoryData.ACT_LINES.get(act, VictoryData.ACT_LINES[1])),
+		"line": String(VictoryData.ACT_LINES.get(act, VictoryData.ACT_LINES["covenant"])),
 		"boss_line": String(texts.get("boss_line", "")) if bool(summary.get("boss_defeated", false)) else "",
 		"overtime": overtime,
 		"best_before": before,

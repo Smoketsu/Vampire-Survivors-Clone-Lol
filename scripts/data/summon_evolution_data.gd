@@ -81,7 +81,19 @@ const ORDER := ["death_knight", "lich", "profane_bishop",
 	# --- Act VIII: Liberty Heights ---
 	"black_paragon",
 	# --- Act IX: the Ark ---
-	"black_mothership"]
+	"black_mothership",
+	# --- Act X: the Maelstrom ---
+	"magazine_lord",
+	# --- Act XI (temporary): Vigrid ---
+	"barrow_king",
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	"eternal_guard",
+	# --- Act XIII (temporary number): the Empyrean ---
+	"throne_of_bones",
+	# --- Act XIV (temporary number): the Last Day ---
+	"fossil_tyrant",
+	# --- Act XV (temporary number): the World-Tree ---
+	"world_root_warden"]
 
 ## Summon skill level every base class needs (user rule: Lv 5).
 const BASE_LEVEL_REQUIRED: int = 5  # TUNING (not in GDD) user rule
@@ -987,6 +999,218 @@ const EVOLUTIONS := {
 		"special_set": {
 			"beams": 3,  # TUNING (not in GDD)
 			"lifts": 2,  # TUNING (not in GDD)
+		},
+	},
+	# --- Act X: the Maelstrom ---
+	# Magazine Lord (owner-approved proposal: "the Powder Wraith ... (evolution
+	# Magazine Lord)"; GDD §15.0 "The Powder Wraith, Magazine Lord and Slow
+	# Match"): Powder Wraith Lv 5 + Slow Match Lv 5 (a NEW passive, own decision,
+	# owner rule: maxed). A large armoured skeleton in a captain's coat with a
+	# tower of lit kegs: two bursts a march (the second at the next pack within
+	# chain_range px), wider, and it reforms sooner. PowderWraithBehavior reads
+	# these special_set keys (final):
+	#   kegs        — bursts a march;
+	#   reform_time — s before it reforms at the ring.
+	"magazine_lord": {
+		"mode": "transform",
+		"bases": ["powder_wraith"],
+		"passive": "slow_match",
+		"passive_level": 5,  # Owner rule: every evolution needs its paired passive maxed
+		"display_name": "Magazine Lord",  # Owner-approved proposal
+		"plural": "Magazine Lords",
+		"icon": "magazine_lord",
+		"description": "A lord of the powder magazine: two kegs a march, wider blasts, and it reforms sooner.",
+		"mult": {
+			"max_hp": 1.5,  # TUNING (not in GDD)
+			"damage": 1.3,  # TUNING (not in GDD)
+		},
+		"set": {
+			"radius": 12.0,  # TUNING (not in GDD) Powder Wraith 10
+		},
+		"special_mult": {
+			"keg_radius": 1.25,  # TUNING (not in GDD)
+		},
+		"special_set": {
+			"kegs": 2,  # TUNING (not in GDD)
+			"reform_time": 8.0,  # TUNING (not in GDD) the Powder Wraith 12
+		},
+	},
+	# --- Act XI (temporary): Vigrid ---
+	# The Barrow King (owner-approved proposal: "the Draugr Thane ... (evolution
+	# Barrow King)"; GDD §15.0 "The Draugr Thane, the Barrow King and Cold
+	# Iron"): Draugr Thane Lv 5 + Cold Iron Lv 5 (a NEW passive, own decision,
+	# owner rule: maxed). A king of the barrows in a crown of rimed iron, his
+	# frost-axe grown huge (summons/barrow_king). DraugrThaneBehavior reads this
+	# special_set key (final):
+	#   cleave_freeze_duration — s the frost cleave FREEZES what it strikes
+	#                            (bosses and minibosses a quarter, elites half).
+	"barrow_king": {
+		"mode": "transform",
+		"bases": ["draugr_thane"],
+		"passive": "cold_iron",
+		"passive_level": 5,  # Owner rule: every evolution needs its paired passive maxed
+		"display_name": "Barrow King",  # Owner-approved proposal
+		"plural": "Barrow Kings",
+		"icon": "barrow_king",
+		"description": "The king of the barrows: his frost cleave freezes what it strikes.",
+		"mult": {
+			"max_hp": 1.4,  # TUNING (not in GDD)
+			"damage": 1.3,  # TUNING (not in GDD)
+		},
+		"set": {
+			"radius": 16.0,  # TUNING (not in GDD) Draugr Thane 14
+			"block_mass": 10.0,  # TUNING (not in GDD) Draugr Thane 7
+		},
+		"special_mult": {
+			"cleave_radius": 1.3,  # TUNING (not in GDD)
+		},
+		"special_set": {
+			"cleave_freeze_duration": 1.0,  # TUNING (not in GDD) s
+		},
+	},
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	# Eternal Guard (owner-approved proposal: "the Ushabti Sentinel ... (evolution
+	# Eternal Guard)"; GDD §15.0 "The Ushabti Sentinel, Eternal Guard and
+	# Answering Words"): Ushabti Sentinel Lv 5 + Answering Words Lv 5 (a NEW
+	# passive, own decision, owner rule: maxed). A taller stone guardian with
+	# true-gold trim (the necromancer's own: art summons/eternal_guard). It
+	# reassembles more often and stands again stronger, with a wider shockwave.
+	# UshabtiSentinelBehavior reads these special_set keys (final):
+	#   reassemble_cooldown / reassemble_hp — its reassembly;
+	#   eternal — the evolution flag (its shockwave's source tag).
+	"eternal_guard": {
+		"mode": "transform",
+		"bases": ["ushabti_sentinel"],
+		"passive": "answering_words",
+		"passive_level": 5,  # Owner rule: every evolution needs its paired passive maxed
+		"display_name": "Eternal Guard",  # Owner-approved proposal
+		"plural": "Eternal Guards",
+		"icon": "eternal_guard",
+		"description": "Stone that will not stay broken: it rises every 15 s at three quarters of its strength.",
+		"mult": {
+			"max_hp": 1.5,  # TUNING (not in GDD)
+			"damage": 1.3,  # TUNING (not in GDD)
+		},
+		"set": {
+			"radius": 13.0,  # TUNING (not in GDD) Ushabti Sentinel 11
+		},
+		"special_mult": {
+			"reform_radius": 1.3,  # TUNING (not in GDD)
+			"reform_damage": 1.4,  # TUNING (not in GDD)
+		},
+		"special_set": {
+			"reassemble_cooldown": 15.0,  # TUNING (not in GDD) Ushabti Sentinel 25
+			"reassemble_hp": 0.75,  # TUNING (not in GDD) Ushabti Sentinel 0.5
+			"eternal": 1,  # The evolution flag (its shockwave's source tag).
+		},
+	},
+	# --- Act XIII (temporary number): the Empyrean ---
+	# Throne of Bones (owner-approved proposal: "the Bound Ophan ... (evolution
+	# Throne of Bones)"; GDD §15.0 "The Bound Ophan, Throne of Bones and Turning
+	# Bones"): Bound Ophan Lv 5 + Turning Bones Lv 5 (a NEW passive, own
+	# decision, owner rule: maxed). A double wheel of bone in soul-teal fire
+	# (art summons/throne_of_bones). It rolls harder and wider, and every roll
+	# ROLLS BACK through the pack the way it came (BoundOphanBehavior reads
+	# these special_set keys, final):
+	#   roll_back — 1: the return pass (each foe may be struck once more);
+	#   throne    — the evolution flag (its roll's source tag).
+	"throne_of_bones": {
+		"mode": "transform",
+		"bases": ["bound_ophan"],
+		"passive": "turning_bones",
+		"passive_level": 5,  # Owner rule: every evolution needs its paired passive maxed
+		"display_name": "Throne of Bones",  # Owner-approved proposal
+		"plural": "Thrones of Bones",
+		"icon": "throne_of_bones",
+		"description": "A double wheel of bone: it rolls through every pack and back again.",
+		"mult": {
+			"max_hp": 1.5,  # TUNING (not in GDD)
+			"damage": 1.3,  # TUNING (not in GDD)
+		},
+		"set": {
+			"radius": 15.0,  # TUNING (not in GDD) Bound Ophan 11 (~44 px sprite)
+		},
+		"special_mult": {
+			"roll_damage": 1.4,  # TUNING (not in GDD)
+			"roll_rim": 1.5,  # TUNING (not in GDD) a wider double rim
+		},
+		"special_set": {
+			"roll_back": 1,  # The return pass through the pack.
+			"throne": 1,  # The evolution flag (its roll's source tag).
+		},
+	},
+	# --- Act XIV (temporary number): the Last Day ---
+	# Fossil Tyrant (owner-approved proposal: "the Bonehorn ... (evolution
+	# Fossil Tyrant)"; GDD §15.0 "The Bonehorn, Fossil Tyrant and Petrified
+	# Horns"): Bonehorn Lv 5 + Petrified Horns Lv 5 (a NEW passive, own
+	# decision, owner rule: maxed). The skeleton of a tyrant, risen in
+	# soul-teal fire (art summons/fossil_tyrant). It charges harder and wider,
+	# and where each charge ends it ROARS (BonehornBehavior reads these
+	# special_set keys, final):
+	#   tyrant      — the evolution flag (its charge's source tag, the roar);
+	#   roar_radius — px round it the roar stuns;
+	#   roar_stun   — s every foe in reach is stunned (bosses / elites less).
+	"fossil_tyrant": {
+		"mode": "transform",
+		"bases": ["bonehorn"],
+		"passive": "petrified_horns",
+		"passive_level": 5,  # Owner rule: every evolution needs its paired passive maxed
+		"display_name": "Fossil Tyrant",  # Owner-approved proposal
+		"plural": "Fossil Tyrants",
+		"icon": "fossil_tyrant",
+		"description": "The skeleton of a tyrant: it tramples through every pack and roars where it stops.",
+		"mult": {
+			"max_hp": 1.5,  # TUNING (not in GDD)
+			"damage": 1.3,  # TUNING (not in GDD)
+		},
+		"set": {
+			"radius": 16.0,  # TUNING (not in GDD) Bonehorn 12 (~52 x 44 px sprite)
+		},
+		"special_mult": {
+			"charge_damage": 1.4,  # TUNING (not in GDD)
+			"charge_rim": 1.5,  # TUNING (not in GDD) wider jaws
+		},
+		"special_set": {
+			"tyrant": 1,  # The evolution flag (its charge's source tag, the roar).
+			"roar_radius": 80.0,  # TUNING (not in GDD) px
+			"roar_stun": 0.8,  # TUNING (not in GDD) s
+		},
+	},
+	# --- Act XV (temporary number): the World-Tree ---
+	# World-Root Warden (owner-approved proposal: "the Ossuary Oak ... (evolution
+	# World-Root Warden)"; GDD §15.0 "The Ossuary Oak, World-Root Warden and
+	# Heartwood"): Ossuary Oak Lv 5 + Deep Roots Lv 5 (id heartwood; a NEW passive, own
+	# decision, owner rule: maxed). A warden of the world's roots in bone (art
+	# summons/world_root_warden). It lashes harder and wider, and every foe its
+	# lash strikes is held by its roots (OssuaryOakBehavior reads these
+	# special_set keys, final):
+	#   warden    — the evolution flag (its lash's source tag, the roots);
+	#   root_slow — 0..1 slow on every foe the lash strikes;
+	#   root_time — s the roots hold it.
+	"world_root_warden": {
+		"mode": "transform",
+		"bases": ["ossuary_oak"],
+		"passive": "heartwood",
+		"passive_level": 5,  # Owner rule: every evolution needs its paired passive maxed
+		"display_name": "World-Root Warden",  # Owner-approved proposal
+		"plural": "World-Root Wardens",
+		"icon": "world_root_warden",
+		"description": "A warden of the world's roots: its lashes strike wider and root every foe they hit.",
+		"mult": {
+			"max_hp": 1.5,  # TUNING (not in GDD)
+			"damage": 1.3,  # TUNING (not in GDD)
+		},
+		"set": {
+			"radius": 18.0,  # TUNING (not in GDD) Ossuary Oak 16 (~56 x 64 px sprite)
+		},
+		"special_mult": {
+			"lash_damage": 1.4,  # TUNING (not in GDD)
+			"lash_radius": 1.3,  # TUNING (not in GDD)
+		},
+		"special_set": {
+			"warden": 1,  # The evolution flag (its lash's source tag, the roots).
+			"root_slow": 0.5,  # TUNING (not in GDD) 0..1
+			"root_time": 1.2,  # TUNING (not in GDD) s
 		},
 	},
 }

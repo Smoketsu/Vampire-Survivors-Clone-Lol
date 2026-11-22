@@ -1,0 +1,204 @@
+Godot Engine v4.3.stable.official.77dcf97d8 - https://godotengine.org
+
+[autotest] start: seed=7 speed=8x mortal=true timeout=1500s policy=army meta=none oath=0 pact=false classes=- spells=-
+[autotest] stage: silver_stair
+[autotest] difficulty: necromancer | modifiers: none
+[autotest] character: gravecaller (starting spell shadow_bolt)
+[audio] main-thread startup 4.4 ms; 59 sfx ready after 290 ms, music loop after 263 ms (worker threads); display: headless
+[metric] t=60 avg_horde=2.4 now=3 cap=4 w1/2 a1/1 m1/1 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=2 lvl=4 kills=73 enemies=28 hp=106 boss_hp=-1 crystals=7 xp=70
+[metric]    summon dmg taken this window: lesser_light=99 virtue=51 hallowed_light=28
+[metric]    alive by kind: { "virtue": 11, "lesser_light": 17 } within260=9
+[autotest] t=01:00 lvl=4 kills=73 enemies=28 summons=3/4 projectiles=0 hp=106 step_avg=0.48ms
+[autotest]    unit FSM: { "ENGAGING": 2, "FOLLOWING": 1 }
+[metric] t=120 avg_horde=3.3 now=4 cap=6 w1/2 a1/1 m1/2 m1/1 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=14 lvl=8 kills=176 enemies=39 hp=104 boss_hp=-1 crystals=30 xp=188
+[metric]    summon dmg taken this window: lesser_light=159 virtue=191 hallowed_light=103 power=82 power_lunge=162
+[metric]    alive by kind: { "power": 8, "lesser_light": 18, "virtue": 13 } within260=13
+[autotest] t=02:00 lvl=8 kills=176 enemies=39 summons=4/6 projectiles=0 hp=104 step_avg=0.53ms
+[autotest]    unit FSM: { "ENGAGING": 4 }
+[metric] t=180 avg_horde=5.3 now=8 cap=9 w3/3 a1/2 m2/2 m1/1 w1/1 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=10 lvl=12 kills=280 enemies=42 hp=120 boss_hp=-1 crystals=18 xp=384
+[metric]    summon dmg taken this window: lesser_light=105 virtue=205 hallowed_light=160 power=151 power_lunge=94
+[metric]    alive by kind: { "power": 11, "lesser_light": 21, "virtue": 9, "herald": 1 } within260=16
+[autotest] t=03:00 lvl=12 kills=280 enemies=42 summons=8/9 projectiles=0 hp=120 step_avg=0.58ms
+[autotest]    unit FSM: { "ACQUIRING": 1, "ENGAGING": 7 }
+[metric] t=240 avg_horde=15.4 now=20 cap=21 w5/5 a4/5 m4/4 m4/4 w3/3 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=7 lvl=17 kills=438 enemies=45 hp=120 boss_hp=-1 crystals=25 xp=684
+[metric]    summon dmg taken this window: lesser_light=200 virtue=373 hallowed_light=494 power=113 power_lunge=306 choir_angel=8 herald=15 judge=12
+[metric]    alive by kind: { "herald": 4, "lesser_light": 23, "virtue": 10, "power": 6, "choir_angel": 2 } within260=8
+[autotest] t=04:00 lvl=17 kills=438 enemies=45 summons=20/21 projectiles=1 hp=120 step_avg=0.69ms
+[autotest]    unit FSM: { "CASTING": 5, "ENGAGING": 14, "REPOSITIONING": 1 }
+[metric] t=300 avg_horde=25.7 now=26 cap=26 w6/6 a6/6 m5/5 m5/5 w4/4 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=23 kills=643 enemies=33 hp=120 boss_hp=-1 crystals=30 xp=1091
+[metric]    summon dmg taken this window: lesser_light=23 virtue=71 hallowed_light=239 power=23 power_lunge=138 herald=3
+[metric]    alive by kind: { "lesser_light": 18, "virtue": 9, "herald": 1, "choir_angel": 3, "power": 2 } within260=5
+[autotest] t=05:00 lvl=23 kills=643 enemies=33 summons=26/26 projectiles=8 hp=120 step_avg=0.78ms
+[autotest]    unit FSM: { "ENGAGING": 16, "CASTING": 5, "ACQUIRING": 2, "REPOSITIONING": 3 }
+[metric] t=360 avg_horde=28.3 now=31 cap=31 w11/11 a6/6 m5/5 m5/5 w4/4 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=27 kills=854 enemies=53 hp=120 boss_hp=-1 crystals=44 xp=1534
+[metric]    summon dmg taken this window: lesser_light=16 virtue=12 hallowed_light=103 power=11 power_lunge=102
+[metric]    alive by kind: { "virtue": 21, "power": 8, "lesser_light": 13, "herald": 3, "choir_angel": 7, "dominion": 1 } within260=15
+[autotest] t=06:00 lvl=27 kills=854 enemies=53 summons=31/31 projectiles=6 hp=120 step_avg=0.84ms
+[autotest]    unit FSM: { "ACQUIRING": 14, "ENGAGING": 12, "CASTING": 5 }
+[metric] t=420 avg_horde=40.0 now=44 cap=44 w13/13 a9/9 m8/8 m7/7 w7/7 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=32 kills=1093 enemies=52 hp=120 boss_hp=-1 crystals=45 xp=2098
+[metric]    summon dmg taken this window: lesser_light=2 virtue=12 hallowed_light=91 power=6 power_lunge=38
+[metric]    alive by kind: { "lesser_light": 19, "virtue": 13, "power": 15, "choir_angel": 1, "cherub": 1, "dominion": 1, "herald": 2 } within260=15
+[autotest] t=07:00 lvl=32 kills=1093 enemies=52 summons=44/44 projectiles=10 hp=120 step_avg=0.93ms
+[autotest]    unit FSM: { "ENGAGING": 26, "REPOSITIONING": 11, "CASTING": 5, "FOLLOWING": 2 }
+[metric] t=480 avg_horde=44.0 now=44 cap=44 w13/13 a9/9 m8/8 m7/7 w7/7 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=36 kills=1325 enemies=48 hp=120 boss_hp=-1 crystals=44 xp=2635
+[metric]    summon dmg taken this window: lesser_light=4 virtue=55 hallowed_light=96 power=9 power_lunge=421 cherub=4 dominion=20 cherub_sword=92
+[metric]    alive by kind: { "dominion": 1, "virtue": 18, "choir_angel": 3, "lesser_light": 18, "herald": 1, "cherub": 2, "power": 5 } within260=7
+[autotest] t=08:00 lvl=36 kills=1325 enemies=48 summons=44/44 projectiles=14 hp=120 step_avg=0.99ms
+[autotest]    unit FSM: { "ACQUIRING": 4, "ENGAGING": 20, "CASTING": 12, "FOLLOWING": 4, "REPOSITIONING": 4 }
+[metric] t=540 avg_horde=44.3 now=45 cap=45 w13/13 a10/10 m8/8 m7/7 w7/7 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=40 kills=1554 enemies=51 hp=120 boss_hp=-1 crystals=42 xp=3169
+[metric]    summon dmg taken this window: lesser_light=1 virtue=27 hallowed_light=14 power=8 power_lunge=56 cherub=3 dominion=1 cherub_sword=9
+[metric]    alive by kind: { "virtue": 15, "power": 13, "lesser_light": 16, "choir_angel": 1, "herald": 1, "dominion": 5 } within260=12
+[autotest] t=09:00 lvl=40 kills=1554 enemies=51 summons=45/45 projectiles=18 hp=120 step_avg=1.09ms
+[autotest]    unit FSM: { "ENGAGING": 31, "REPOSITIONING": 1, "CASTING": 5, "FOLLOWING": 2, "RETURNING": 5, "ACQUIRING": 1 }
+[metric] t=600 avg_horde=45.0 now=45 cap=45 w13/13 a10/10 m8/8 m7/7 w7/7 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=43 kills=1794 enemies=44 hp=120 boss_hp=-1 crystals=80 xp=3700
+[metric]    summon dmg taken this window: virtue=7 hallowed_light=15 power=5 power_lunge=162 cherub=23 dominion=10 cherub_sword=74
+[metric]    alive by kind: { "herald": 3, "power": 12, "lesser_light": 11, "virtue": 16, "dominion": 1, "choir_angel": 1 } within260=6
+[autotest] t=10:00 lvl=43 kills=1794 enemies=44 summons=45/45 projectiles=21 hp=120 step_avg=1.18ms
+[autotest]    unit FSM: { "ENGAGING": 27, "CASTING": 12, "REPOSITIONING": 6 }
+[metric] t=660 avg_horde=45.0 now=45 cap=45 w13/13 a10/10 m8/8 m7/7 w7/7 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=46 kills=2061 enemies=68 hp=120 boss_hp=-1 crystals=99 xp=4291
+[metric]    summon dmg taken this window: virtue=13 power=24 power_lunge=130 cherub_sword=1
+[metric]    alive by kind: { "dominion": 6, "power": 12, "cherub": 3, "virtue": 21, "choir_angel": 7, "lesser_light": 18, "herald": 1 } within260=16
+[autotest] t=11:00 lvl=46 kills=2061 enemies=68 summons=45/45 projectiles=19 hp=120 step_avg=1.27ms
+[autotest]    unit FSM: { "REPOSITIONING": 12, "CASTING": 5, "ENGAGING": 26, "ACQUIRING": 1, "FOLLOWING": 1 }
+[metric] t=720 avg_horde=44.4 now=45 cap=45 w13/13 a10/10 m8/8 m7/7 w7/7 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=3 lvl=49 kills=2325 enemies=75 hp=120 boss_hp=-1 crystals=82 xp=5001
+[metric]    summon dmg taken this window: lesser_light=8 virtue=96 hallowed_light=212 power=69 power_lunge=431 herald=7 cherub=51 dominion=30 cherub_sword=159
+[metric]    alive by kind: { "herald": 4, "power": 19, "dominion": 3, "lesser_light": 18, "virtue": 27, "choir_angel": 3, "cherub_of_the_gate": 1 } within260=18
+[autotest] t=12:00 lvl=49 kills=2325 enemies=75 summons=45/45 projectiles=14 hp=120 step_avg=1.32ms
+[autotest]    unit FSM: { "REPOSITIONING": 5, "ENGAGING": 28, "RETURNING": 1, "CASTING": 9, "FOLLOWING": 1, "ACQUIRING": 1 }
+[metric] t=780 avg_horde=43.0 now=41 cap=45 w13/13 a9/10 m5/8 m7/7 w7/7 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=11 lvl=52 kills=2585 enemies=66 hp=120 boss_hp=-1 crystals=84 xp=5685
+[metric]    summon dmg taken this window: lesser_light=61 virtue=507 hallowed_light=1630 power=209 power_lunge=838 choir_angel=16 herald=9 cherub=63 dominion=78 cherub_sword=1018 cherub_of_the_gate=272
+[metric]    alive by kind: { "dominion": 5, "power": 14, "virtue": 24, "lesser_light": 15, "choir_angel": 4, "herald": 3, "cherub_of_the_gate": 1 } within260=29
+[autotest] t=13:00 lvl=52 kills=2585 enemies=66 summons=41/45 projectiles=10 hp=120 step_avg=1.38ms
+[autotest]    unit FSM: { "ENGAGING": 31, "FOLLOWING": 1, "ACQUIRING": 6, "REPOSITIONING": 1, "CASTING": 2 }
+[metric] t=840 avg_horde=42.8 now=45 cap=45 w13/13 a10/10 m8/8 m7/7 w7/7 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=14 lvl=56 kills=2852 enemies=70 hp=120 boss_hp=-1 crystals=115 xp=6524
+[metric]    summon dmg taken this window: lesser_light=53 virtue=459 hallowed_light=1745 power=218 power_lunge=867 herald=4 dominion=277 cherub_sword=869 cherub_of_the_gate=244
+[metric]    alive by kind: { "lesser_light": 26, "virtue": 20, "herald": 5, "cherub": 1, "dominion": 2, "power": 11, "choir_angel": 5 } within260=9
+[autotest] t=14:00 lvl=56 kills=2852 enemies=70 summons=45/45 projectiles=17 hp=120 step_avg=1.41ms
+[autotest]    unit FSM: { "FOLLOWING": 5, "ACQUIRING": 16, "ENGAGING": 14, "REPOSITIONING": 6, "CASTING": 4 }
+[metric] t=900 avg_horde=44.9 now=45 cap=45 w13/13 a10/10 m8/8 m7/7 w7/7 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=1 lvl=58 kills=3143 enemies=53 hp=120 boss_hp=-1 crystals=114 xp=7239
+[metric]    summon dmg taken this window: lesser_light=38 virtue=222 hallowed_light=246 power=171 power_lunge=812 herald=26 cherub=129 dominion=51 cherub_sword=68
+[metric]    alive by kind: { "virtue": 15, "power": 10, "lesser_light": 17, "herald": 3, "choir_angel": 3, "dominion": 4, "cherub": 1 } within260=0
+[autotest] t=15:00 lvl=58 kills=3143 enemies=53 summons=45/45 projectiles=9 hp=120 step_avg=1.46ms
+[autotest]    unit FSM: { "FOLLOWING": 45 }
+[autotest] build complete (only fallback cards left) at 15:08, level 59
+[metric] t=960 avg_horde=44.8 now=45 cap=45 w13/13 a10/10 m8/8 m7/7 w7/7 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=2 lvl=61 kills=3443 enemies=82 hp=120 boss_hp=-1 crystals=124 xp=7949
+[metric]    summon dmg taken this window: lesser_light=50 virtue=119 hallowed_light=244 power=105 power_lunge=1019 herald=10 cherub=9 dominion=44 cherub_sword=26
+[metric]    alive by kind: { "herald": 5, "lesser_light": 26, "cherub": 3, "virtue": 29, "choir_angel": 3, "power": 10, "dominion": 6 } within260=22
+[autotest] t=16:00 lvl=61 kills=3443 enemies=82 summons=45/45 projectiles=19 hp=120 step_avg=1.51ms
+[autotest]    unit FSM: { "ENGAGING": 33, "CASTING": 7, "ACQUIRING": 4, "REPOSITIONING": 1 }
+[autotest] boss spawned at 1020.0 s
+[autotest] Shadow Bolt aim switched to Strongest
+[metric] t=1020 avg_horde=43.4 now=44 cap=45 w13/13 a9/10 m8/8 m7/7 w7/7 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=17 lvl=65 kills=3769 enemies=77 hp=120 boss_hp=27200 crystals=13 xp=9101
+[metric]    summon dmg taken this window: lesser_light=261 virtue=1203 hallowed_light=2230 power=312 power_lunge=1893 choir_angel=14 herald=41 cherub=213 dominion=523 cherub_sword=280
+[metric]    alive by kind: { "virtue": 26, "lesser_light": 25, "power": 11, "herald": 4, "choir_angel": 2, "dominion": 6, "cherub": 1, "judge": 1, "boss": 1 } within260=19
+[autotest] t=17:00 lvl=65 kills=3769 enemies=77 summons=44/45 projectiles=18 hp=120 step_avg=1.54ms
+[autotest]    unit FSM: { "ENGAGING": 37, "CASTING": 6, "FOLLOWING": 1 }
+[autotest] boss defeated at 1076.4 s
+[metric] t=1080 avg_horde=42.9 now=44 cap=45 w13/13 a9/10 m8/8 m7/7 w7/7 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=20 lvl=68 kills=3980 enemies=41 hp=120 boss_hp=0 crystals=6 xp=10294
+[metric]    summon dmg taken this window: lesser_light=182 virtue=776 hallowed_light=3342 power=422 power_lunge=1019 choir_angel=5 herald=45 cherub=40 dominion=185 seraiel_sword=718 boss=433
+[metric]    alive by kind: { "lesser_light": 11, "power": 10, "virtue": 13, "choir_angel": 5, "herald": 1, "dominion": 1 } within260=6
+[autotest] t=18:00 lvl=68 kills=3980 enemies=41 summons=44/45 projectiles=26 hp=120 step_avg=1.55ms
+[autotest]    unit FSM: { "CASTING": 12, "ENGAGING": 26, "REPOSITIONING": 5, "FOLLOWING": 1 }
+[metric] t=1140 avg_horde=45.0 now=45 cap=45 w13/13 a10/10 m8/8 m7/7 w7/7 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=70 kills=4165 enemies=48 hp=120 boss_hp=0 crystals=11 xp=10728
+[metric]    summon dmg taken this window: lesser_light=38 virtue=246 hallowed_light=203 power=73 power_lunge=1026 dominion=96
+[metric]    alive by kind: { "power": 13, "virtue": 12, "herald": 3, "lesser_light": 12, "choir_angel": 6, "dominion": 2 } within260=11
+[autotest] t=19:00 lvl=70 kills=4165 enemies=48 summons=45/45 projectiles=32 hp=120 step_avg=1.54ms
+[autotest]    unit FSM: { "ENGAGING": 34, "CASTING": 9, "REPOSITIONING": 2 }
+[autotest] countdown reached 0:00 at 1200.0 s - THE RECKONING begins
+[metric] t=1200 avg_horde=43.8 now=42 cap=45 w13/13 a7/10 m8/8 m7/7 w7/7 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=11 lvl=71 kills=4356 enemies=76 hp=120 boss_hp=0 crystals=16 xp=11221
+[metric]    summon dmg taken this window: lesser_light=97 virtue=436 hallowed_light=658 power=241 power_lunge=1365 dominion=174
+[metric]    alive by kind: { "lesser_light": 32, "herald": 3, "choir_angel": 7, "virtue": 21, "power": 8, "dominion": 5 } within260=15
+[autotest] t=20:00 lvl=71 kills=4356 enemies=76 summons=42/45 projectiles=21 hp=120 step_avg=1.54ms
+[autotest]    unit FSM: { "ENGAGING": 33, "ACQUIRING": 2, "REPOSITIONING": 1, "CASTING": 4, "RETURNING": 1, "FOLLOWING": 1 }
+[autotest] ===== NECROPATHY AUTOTEST SUMMARY =====
+[autotest] result: VICTORY / RUN COMPLETE (run_complete)
+[autotest] time reached: 20:38 elapsed (1238.7 s game time, 159.8 s real time); past 0:00: 38.7 s; Reckoning waves: 4
+[autotest] kills: 4437 | level: 71
+[autotest] level pacing: 01:00=L4 03:00=L12 05:00=L23 10:00=L43 15:00=L58 17:00=L65 20:00=L71 | reached: L2@00:24 L5@01:04 L10@02:31 L15@03:35 L20@04:22 L25@05:28 L30@06:26 L35@07:36 L40@08:53 L45@10:35 L50@12:04 L55@13:33 L60@15:33
+[autotest] build complete: at 15:08, level 59
+[autotest] horde: 5 alive / capacity 45 (warrior 2/13, archer 1/10, mage 1/8, mender 0/7, warder 1/7, bishop 0/0, abomination 0/0, rogue 0/0, gargoyle 0/0, frost_wraith 0/0, bone_hound 0/0, banshee 0/0, corpse_catapult 0/0)
+[autotest] summons spawned: 188, died: 183, hard recalls: 0 (stall recalls: 0)
+[autotest] boss spawned: yes at 1020.0 s | boss defeated: yes at 1076.4 s | boss HP left: 0 / 27200
+[autotest] player HP: 0 / 120 (invulnerable: false)
+[autotest] picks (75): shadow_bolt 2, archer 1, mage 1, dark_command 1, mage 2, mender 1, warding_ritual 1, mender 2, warder 1, archer 2, warrior 2, grave_dominion 1, grave_dominion 2, archer 3, dark_command 2, mender 3, grave_dominion 3, necrotic_vigor 1, warder 2, dark_command 3, dark_command 4, soul_recycling 1, warrior 3, mage 3, warrior 4, warrior 5, mender 4, grave_dominion 4, warder 3, grave_dominion 5, mage 4, archer 4, mage 5, mender 5, necrotic_vigor 2, shadow_bolt 3, dark_command 5, EVOLVE death_knight, warder 4, archer 5, warder 5, necrotic_vigor 3, shadow_bolt 4, shadow_bolt 5, skip, necrotic_vigor 4, soul_recycling 2, unholy_precision 1, necrotic_vigor 5, soul_recycling 3, warding_ritual 2, soul_recycling 4, warding_ritual 3, soul_recycling 5, unholy_precision 2, unholy_precision 3, warding_ritual 4, warding_ritual 5, unholy_precision 4, unholy_precision 5, EVOLVE gravebow, skip, skip, skip, skip, skip, skip, dark_restoration, dark_restoration, skip, skip, dark_restoration, skip, skip, skip
+[autotest] wards on you: 251 total, absorbed 750 dmg | 241 wards in 1023 s with 2+ Warders/Bishops alive (14.1 / min) | heal casts: 2035 | ally barriers: 1410, barrier dmg absorbed: 59381
+[autotest] evolutions: death_knight@08:08, gravebow@14:45
+[autotest] evolutions by type: spell: none | summon: death_knight@08:08, gravebow@14:45
+[autotest] summon evolutions: lich raised 0 (capped 0) | merge converted 0, dissolved 0 | aura pulses 0 | merged classes: none
+[autotest] winter revenant: shatters 0 (capped 0), shatter hits 0, shatter dmg 0 | death novas 0, nova hits 0, nova freezes 0, nova dmg 0
+[autotest] summon output by source (dmg/heal/shield): warrior=15036/0/0 archer=89877/0/0 mage=145293/0/0 mender=29236/20521/0 warder=16690/0/32329 bash=2143/0/0 death_knight=235803/2223/0 death_knight_bash=27702/0/0 death_knight_cleave=16995/0/0 gravebow=110353/0/0
+[autotest] summon output by class (dmg/heal/shield): warrior=297681/2223/0 archer=200230/0/0 mage=145293/0/0 mender=29236/20521/0 warder=16690/0/32329
+[autotest] recipe book: 2 / 75 discovered (death_knight, gravebow) | Recipes view rows built: 75 (saved: false)
+[autotest] codex: 16 entries met this run (spell 1, summon 5, enemy 9, boss 1) | new to the save 16 | save: spell 1/48, summon 5/28, enemy 9/236, boss 1/42, evolutions 2/75
+[autotest] epilogue: parts=5 open=0 seen=0 panels=19 autoplay_pending=false
+[autotest] volleys: shots 87539 | hits 47139 | dmg 289078 | peak 309/320 | capped volleys 0 | boss hits capped 1055 | barrages 10 | warrior 148826, mage 39461, archer 33144, mender 25635, gravebow 21980, shadow_bolt 10821, warder 9207
+[visual] adaptive quality: level 0, peak 0, steps down 0, up 0
+[autotest] victory screen: title=The Gate Stands Open best_overtime=38 new_record=true highlights=6
+[autotest] judgment: on | sins: raised 0, replaced 95, refused during a verdict 33 | peak 45.0 / 45 | judges sent 2, slain 2 | verdicts 1 at 20:04 | pillars 7 (hits on you 1, on summons 57) | resets 0
+[autotest] hallowed light: shafts 115 (refused 2) | summon burns 665 (dmg 15654) | burns on you 10 | shaded 580 | blocked 6186 | angel heals 2229 | cloud shadows peak live 13
+[autotest] grace: halos 2418 | hits shrugged off 12072 (9 kinds: warrior 2182, mage 1912, mender 1757, warder 1638, bolt 1579, archer 1422) | regrown by Dominions 36
+[autotest] last trumpet: began 20:00 | trumpets 3 | host called 21 | sky open false | light width x2.14
+[autotest] host kinds (spawned/killed): lights: lesser_light 2155/2118 first 0:01 (dmg to you 53, to summons 2066) | soldiers: virtue 1232/1176 first 0:03 (dmg to you 151, to summons 6430), power 669/652 first 1:03 (dmg to you 0, to summons 2538) | choir: choir_angel 204/196 first 3:02 (dmg to you 0, to summons 88), herald 156/154 first 2:50 (dmg to you 0, to summons 162) | orders: dominion 130/113 first 5:33 (dmg to you 52, to summons 1692), judge 2/2 first 3:43 (dmg to you 34, to summons 12) | guardians: cherub 24/24 first 5:40 (dmg to you 0, to summons 540), cherub_of_the_gate 1/1 first 12:00 (dmg to you 0, to summons 517) | power lunges 588 (summon hits 668, on you 0) | herald blasts 277 (pushed 482, called 936) | choir heals 592
+[autotest] host stage: silver_stair (The Silver Stair) | act 13 | playable true | boss seraiel (script seraiel) | enemy x1.70 HP / x1.50 dmg from 7:00 | soul ash x1.00 | reckoning kind dominion, last trumpet true
+[autotest] silver stair: steps 4 (light x1.24) | low cloud banks 82 | worst third passed 2 | without sin lost | cherub of the gate spawned 1, killed 1 at 13:31 | events: 0:00 step_1, 5:00 step_2, 10:00 step_3, 12:00 cherub_gate, 13:31 cherub_killed, 15:00 step_4, 17:56 boss_down, 17:56 thirds_passed_2
+[autotest] cherubs: cherub 24/24, sweeps 26 | cherub of the gate 1/1 (killed in 92 s) | bodies cut 248 (sword dmg to you 0, to summons 2600)
+[autotest] seraiel: the Sword: sweeps 8 (bodies cut 109) | the Gate 17:33: gates 2, lanes closed 2 (refused 0) | the Gate and the Sword 17:51 | the Trial: survived 0 (weighed 0, refused 0) | killed 56 s after he arrived | dmg to you 17, to summons 1151
+[autotest] gravebow / bone colossus: gravebow volleys 2376, splits 572 (+1144 arrows), pierce hits 1494, dmg 110353 | curses applied 1165 (refreshed 2816), curse bonus dmg 37835 | colossus dmg 0, stomps 0 | taunted enemies 0 | shrapnel bursts 0, hits 0, dmg 0
+[autotest] necro spells: bone_spear: not taken | soul_siphon: not taken | corpse_explosion: not taken | plague_cloud: not taken
+[autotest] later spells: death_mark: not taken | bone_wall: not taken | soul_chains: not taken | wither: not taken | raise_dead: not taken
+[autotest] later spell passives: grim_ledger Lv0 bonus_dmg=0 | spirit_binding Lv0 | restless_dead Lv0 | temporary summons spawned=0
+[autotest] horde passives: bone_plating Lv 0 (dmg prevented 0) | unholy_precision Lv 5 (crits 7876, crit bonus dmg 86571) | unholy_resilience Lv 0 (dmg prevented 0: area 0, holy 0) | bound_souls Lv 0 (soft recalls 14, hard recalls 0)
+[autotest] class passives: blood_scent Lv 0 (fast: Archers, Rogues, Gargoyles, Bone Hounds, Grave Drones, Succubi, Blood Spawn, Fallen Heroes, Ghost Saucers, Powder Wraiths, Bound Ophans) | mournsong Lv 0 (extra debuff s 0) | siegecraft Lv 0 (siege bonus dmg 0) | summon dmg to structures 0 (catapults 0)
+[autotest] synergies active at end: shieldwall, volley, deathless, unholy_host | activations: volley@02:40, deathless@02:40, unholy_host@02:50, shieldwall@04:22
+[autotest] synergy bonus: flesh_rampart hits=0 dmg=0 | killing_field hits=0 dmg=0 | death_from_above hits=0 dmg=0 | wild_hunt hits=0 dmg=0 | cold_blood hits=0 dmg=0 | shatterfall hits=0 dmg=0 | requiem hits=0 dmg=0 | charnel_menagerie hits=0 dmg=0 | baying frenzies=0 | marks staggered=0 swooped=0 | dash resets=0 | requiem +0s
+[autotest] level-up offers: hands 74, new-item cards 84, later items 25 (30%) in 22 hands (30%), distinct later items offered 12
+[autotest] level-up actions: rerolls used 2/2, banishes used 2/2 (banished: orb_shield, abyssal_focus), skips 12
+[autotest] shadow bolt: 43462 dmg in Nearest mode, 33983 dmg in Strongest mode; to boss: 2949 of 27217 total boss dmg
+[autotest] stats: ally_barriers=1410 barrier_absorbed=59381 boss_atk_gate=2 boss_atk_lane_closed=2 boss_atk_sword=8 boss_kill_full_army=1 boss_kills=1 bossdmg_bolt=2949 bossdmg_death_knight=8105 bossdmg_death_knight_bash=828 bossdmg_death_knight_cleave=28 bossdmg_gravebow=11178 bossdmg_mage=3003 bossdmg_mender=438 bossdmg_shadow_bolt=114 bossdmg_warder=570 bot_dash_crowd=5 bot_dash_hit=6 bot_dash_telegraph=142 cherub_cuts=248 cherub_gate_kills=1 cherub_gate_ttk=91 cherub_sweeps=26 chest_count_1=5 chest_evolutions=2 chest_items=5 chests_opened=5 chests_pity=3 chests_spawned=5 choir_heals=592 curse_bonus_dmg=37835 curse_refreshes=2816 curses_applied=1165 damage_dealt=777917 damage_to_player=409 damage_to_summons=47438 dash_distance=16829 dash_hits_avoided=8 dashes=153 death_archer_by_boss=1 death_archer_by_cherub_of_the_gate=2 death_archer_by_cherub_sword=6 death_archer_by_hallowed_light=23 death_archer_by_herald=1 death_archer_by_host_verdict=7 death_archer_by_lesser_light=7 death_archer_by_power=6 death_archer_by_power_lunge=21 death_archer_by_virtue=11 death_mage_by_cherub_sword=5 death_mage_by_hallowed_light=8 death_mage_by_host_verdict=10 death_mage_by_power=1 death_mage_by_power_lunge=13 death_mage_by_virtue=2 death_mender_by_host_verdict=8 death_mender_by_power_lunge=2 death_mender_by_virtue=2 death_warder_by_hallowed_light=3 death_warder_by_host_verdict=8 death_warder_by_power=1 death_warder_by_power_lunge=1 death_warrior_by_dominion=2 death_warrior_by_hallowed_light=1 death_warrior_by_host_verdict=14 death_warrior_by_lesser_light=2 death_warrior_by_power=1 death_warrior_by_power_lunge=3 death_warrior_by_virtue=11 deathless_regen=8098 dmg_archer=89877 dmg_bash=2143 dmg_bolt=77445 dmg_death_knight=235803 dmg_death_knight_bash=27702 dmg_death_knight_cleave=16995 dmg_gravebow=110353 dmg_mage=145293 dmg_mender=29236 dmg_nova=516 dmg_shadow_bolt=10821 dmg_warder=16690 dmg_warrior=15036 elite_kills=1 enemy_healing=39040 evolutions=2 gravebow_pierce_hits=1494 gravebow_split_arrows=1144 gravebow_splits=572 gravebow_volleys=2376 heal_by_death_knight=2223 heal_by_mender=20521 herald_blasts=277 herald_called=936 herald_pushed=482 host_dmg_prevented=19464 judges_sent=2 kill_boss=1 kill_cherub=24 kill_cherub_of_the_gate=1 kill_choir_angel=196 kill_dominion=113 kill_herald=154 kill_judge=2 kill_lesser_light=2118 kill_power=652 kill_virtue=1176 kills_by_archer=621 kills_by_bash=47 kills_by_bolt=601 kills_by_death_knight=936 kills_by_death_knight_bash=145 kills_by_death_knight_cleave=65 kills_by_gravebow=301 kills_by_mage=980 kills_by_mender=225 kills_by_nova=15 kills_by_shadow_bolt=61 kills_by_warder=112 kills_by_warrior=328 levelup_banishes=2 levelup_rerolls=2 levelup_skips=12 light_angel_heals=2229 light_blocked=6186 light_player_burns=10 light_shaded=580 light_shafts=115 light_summon_burns=665 light_summon_dmg=15654 mage_explosions=3104 march_aura_buff_pulses=55648 march_zones_entered=3 miniboss_chests=1 minibossdmg_archer=7683 minibossdmg_bolt=998 minibossdmg_death_knight=5742 minibossdmg_death_knight_bash=815 minibossdmg_death_knight_cleave=53 minibossdmg_mage=2489 minibossdmg_mender=440 minibossdmg_shadow_bolt=99 minibossdmg_warder=594 minion_crit_bonus_dmg=86571 minion_crits=7876 nova_kills=15 overkill_redirects=1752 player_dmg_from_boss=17 player_dmg_from_dominion=52 player_dmg_from_hallowed_light=60 player_dmg_from_host_verdict=38 player_dmg_from_judge=34 player_dmg_from_lesser_light=53 player_dmg_from_seraiel_sword=0 player_dmg_from_virtue=151 player_healing=186 power_lunge_summon_hits=668 power_lunges=588 priest_heals=2035 priest_wards=251 pu_collected_feast=4 pu_collected_frenzy=3 pu_collected_hyper=3 pu_collected_magnet=3 pu_collected_nova=1 pu_collected_stasis=1 pu_expired_stasis=1 pu_magnet_crystals=157 pu_pity_drops=4 pu_spawned_feast=4 pu_spawned_frenzy=3 pu_spawned_hyper=3 pu_spawned_magnet=3 pu_spawned_nova=1 pu_spawned_stasis=2 pu_uptime_frenzy=35 pu_uptime_hyper=29 pu_uptime_stasis=5 rallies=10 rally_buff_time=80 rally_heal=1562 rally_knockbacks=69 rally_meter_fills=10 rally_minion_dmg=90280 rally_raised=15 rally_recalled=23 reckoning_spawned=117 replacements=128 seraiel_kill_time=56 seraiel_phase2_at=1052 seraiel_phase3_at=1070 seraiel_sword_cuts=109 shield_by_warder=32329 shieldwall_barriers=192 silver_stair_banks=82 silver_stair_cherub_killed=1 silver_stair_cherub_spawned=1 silver_stair_steps=4 spawned_cherub=24 spawned_cherub_of_the_gate=1 spawned_choir_angel=204 spawned_dominion=130 spawned_herald=156 spawned_judge=2 spawned_lesser_light=2155 spawned_power=669 spawned_virtue=1232 summon_dmg_from_boss=433 summon_dmg_from_cherub=540 summon_dmg_from_cherub_of_the_gate=517 summon_dmg_from_cherub_sword=2600 summon_dmg_from_choir_angel=88 summon_dmg_from_dominion=1692 summon_dmg_from_hallowed_light=13091 summon_dmg_from_herald=162 summon_dmg_from_host_verdict=4969 summon_dmg_from_judge=12 summon_dmg_from_lesser_light=2066 summon_dmg_from_power=2538 summon_dmg_from_power_lunge=11576 summon_dmg_from_seraiel_sword=718 summon_dmg_from_virtue=6430 summon_evolutions=2 summon_healing=32269 summon_soft_recalls=14 synergies_activated=4 trumpet_host_spawned=21 trumpets=3 verdict_player_hits=1 verdict_summon_hits=57 volley_barrages=10 volley_marked_hits=3579 ward_absorbed=750 warrior_bashes=2216 warrior_kills=1521 wave_events=14 xp_collected=11393 xp_dropped=10602
+[autotest] boss attacks: sword=8 gate=2 lane_closed=2 trial=0 | wrath: no | hammer soaked by undead: 0 | charges stopped by undead: 0 (shielding the player: 0) | judgment hits: 0 | call soldiers: 0 | holy zones boss/grave: 0/0
+[autotest] crimson march: zones entered 3 (final: Zone IV  -  The Gate of Pearl) | placed/destroyed/escaped: outposts 0/0/0 generators 0/0/0 carts 0/0/0 standards 0/0/0 | outpost reinforcements 0 | ward zones 0
+[autotest] march enemies: aura buff pulses 55648 | halberd cleave hits 0 | dmg resisted: shieldbearer 0, boss 0 | kills: shieldbearer=0 banner_bearer=0 halberdier=0
+[autotest] marshal vael: last stand no | cleave summon hits 0, soaked for the player 0 | command soldiers 0
+[autotest] march events (3): 5:00 zone_II, 10:00 zone_III, 15:00 zone_IV
+[autotest] stage events fired (0): 
+[autotest] templar charges: 0 (body-blocked by warriors: 0) | temporary summons spawned: 0
+[autotest] obstacle collisions resolved: player=23 summons=7502 enemies=10465
+[autotest] class abomination: Lv 0, alive 0/0, deaths 0 | dmg 0 (abomination=0 abom_stomp=0) | abom_stomps=0 abom_stomp_hits=0
+[autotest] class rogue: Lv 0, alive 0/0, deaths 0 | dmg 0 (rogue=0 rogue_dash=0 rogue_bleed=0) | rogue_dashes=0 rogue_dash_hits=0
+[autotest] class gargoyle: Lv 0, alive 0/0, deaths 0 | dmg 0 (gargoyle=0 gargoyle_swoop=0) | gargoyle_swoops=0 gargoyle_swoop_hits=0
+[autotest] class frost_wraith: Lv 0, alive 0/0, deaths 0 | dmg 0 (frost_wraith=0) | frost_deep_freezes=0 frost_freezes=0 frost_boss_freezes=0 frost_frozen_seconds=0 frost_chills=0
+[autotest] class bone_hound: Lv 0, alive 0/0, deaths 0 | dmg 0 (bone_hound=0 hellhound=0 hellhound_burn=0 hellhound_trail=0) | hound_bites=0 hound_pack_bites=0 hound_pack_bonus_dmg=0 hellhound_burns=0 hellhound_trail_patches=0
+[autotest] class banshee: Lv 0, alive 0/0, deaths 0 | dmg 0 (banshee=0 keening_lady=0) | banshee_dirges=0 banshee_dirge_hits=0 dirge_debuff_seconds=0 keening_waves=0 keening_silenced=0 keening_heals_silenced=0
+[autotest] class corpse_catapult: Lv 0, alive 0/0, deaths 0 | dmg 0 (corpse_catapult=0 ossuary_engine=0 ossuary_shards=0) | catapult_volleys=0 catapult_boulders=0 catapult_boulder_hits=0 catapult_structure_dmg=0 ossuary_shard_fields=0 hazards_dropped=0
+[autotest] class specials: cancelled by recall 0 | ended inside an obstacle 0
+[autotest] special evolutions: shadow reaper: chain dashes 0, cooldown resets 0, bleed stacks added 0, max stacks 0, rogue bleed dmg (all) 0 | cathedral horror: stuns 0 (boss 0), stunned s 0.0, stone forms 0, stone s 0.0, dmg prevented by stone 0
+[autotest] grave step: dashes 153 (bot: crowd 5, hit 6, telegraph 142) | hits avoided in dash i-frames 8 | blocked 0, shortened by obstacles 0, ended inside an obstacle 0, avg length 110 px | charges 1, cooldown 5.00 s
+[autotest] dread rally: rallies 10 | meter fills 10, fill times s [158 88 66 63 58 60 52 49 63 76] (avg 73 s), meter now 67% | knockbacks 69 | summons called back 23 | heal 1562 | minion dmg under buff 90280 (est. +dmg part 25794) | buff time 80 s
+[autotest] army formation: bone_ring: 1239s kills 4437 army_dmg 47438 recalls 0 spread max 346 mean 108
+[autotest] character: gravecaller (The Gravecaller) | starting spell shadow_bolt Lv 5 | Baseline stats (Max HP 120, move speed 110) | innate: none | characters unlocked this run: none | unlocked in the profile: gravecaller (saved: false)
+[autotest] stuck_units=0 (touching an obstacle: 0) {  }
+[metric] boss_hp_at_0=0 min_hp_before_0=75
+[autotest] peaks: enemies=144 summons=45 projectiles=47 effects=36 crystals=146
+[autotest] nodes created (pools): enemies=144 summons=45 projectiles=47 effects=37 crystals=146
+[autotest] simulation step: avg 1.54 ms, worst 21.91 ms
+[autotest] power-ups: spawned 16 (magnet=3 feast=4 hyper=3 stasis=2 frenzy=3 nova=1) | collected 15 (magnet=3 feast=4 hyper=3 stasis=1 frenzy=3 nova=1) | expired (magnet=0 feast=0 hyper=0 stasis=1 frenzy=0 nova=0) | lost at cap 0 | pity drops 4 | crystals pulled by Soul Magnet 157
+[autotest] buff uptime: hyper=30s (2.4%, refreshed 0) stasis=5s (0.4%, refreshed 0) frenzy=36s (2.9%, refreshed 0) | soul nova kills: 15
+[autotest] chests: spawned 5, opened 5 (x1=5 x3=0 x5=0), items granted 5 (evolutions 2), pity 3, lost at cap 0, left on ground 0
+[autotest]    chest 06:00 x1: mender 4
+[autotest]    chest 08:08 x1: EVOLVE death_knight
+[autotest]    chest 13:32 x1: unholy_precision 3
+[autotest]    chest 14:45 x1: EVOLVE gravebow
+[autotest]    chest 17:57 x1: dark_restoration
+[autotest] chest beacon: chests marked 5, seen on screen 5 | max off-screen arrows at once 0 | ticks with an arrow 0 (0.0 s)
+[autotest] profane pact: taken no (final Lv 0; never offered or never picked) | oath tier 0 | extra XP from pact 0, from oath 0 | extra soul ash from pact 0, from oath 0
+[autotest] meta upgrades (--meta=none): none | revivals used: 0
+[autotest] soul ash: +458 (time 150 [20:00] + kills 133 [4437] + elites 4 [1] + boss 75 + reckoning 96 [38.7 s] = 458, bonus +0% = +0, pact +0, oath +0) | bounty 250 | new total 708 | saved: false
+[autotest] difficulty: Necromancer (necromancer) | modifiers: none | foes: HP x0.800 (growth x1.00), dmg x1.000 (growth x1.00), spawn x1.250, speed x1.00, elite chance 0.000, boss HP x1.000 | XP x1.000 | soul ash: difficulty +0%, modifiers +0%, total x1.00
+[autotest] difficulty results: soul ash difficulty +0, modifiers +0 | trickle elites promoted: 0 | holy retribution bursts: 0 (dmg to you 0, to summons 0) | player max HP at start: 120
+[autotest] stage: The Silver Stair | soul ash stage bonus +0 (x1.00) | stages unlocked by this run: wheel_of_thrones
+[autotest] hyper: off (Necromancer) | foes: HP growth x1.00, dmg growth x1.00, boss HP x1.000 | at 0:00 vs the standard game: HP x1.00, dmg x1.00 | soul ash hyper +0 (+0%) | Reckoning lasted 38.7 s past 0:00 | unlocked: false (by this run: false) | hyper clear recorded: no
+[autotest] skins: character gravecaller, worn default | this run: rot kills 0, high confessors slain 0, seraphine slain with all 4 roles 0 | lifetime: rot 0/5000, confessors 0/50, seraphine full army 0/1 | unlocked 49/196 (new: ivory_seer) | setup row cards 6
+[autotest] rewards: achievements=2 (bone_legion, dread_sovereign) titles=0 unlocks=ultimate:sovereigns_decree | run: temp raised 0, min HP before 0:00 63%, evolutions 2, boss slain 56.4 s after arrival | one-run achievements met: untouchable (not checked: --rewards=on) | worn title: none | title row choices 1
+[autotest] demo: on=false | acts=1 | stages=graveyard,crimson_march,sanctum | save=user://save.cfg | full_game_offers=0
+[autotest] feedback: url_set=true | report_chars=122/215/306 (main menu / pause / results samples built, max 1500) | url_chars=599 | opened=never (autotest)
+exit 0

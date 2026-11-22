@@ -75,6 +75,9 @@
 ## foe that is held, stunned or frozen (Enemy.stun_timer / freeze_timer
 ## running) is raised by held_damage (stat crushing_depths_bonus_dmg); exactly
 ## 1 while the passive is not owned.
+## Vigrid (the Hall of the Slain): Cold Iron — damage_enemy(): a minion attack
+## on a slowed foe (Enemy.slow_timer running) is raised by iron_damage (stat
+## cold_iron_bonus_dmg); exactly 1 while the passive is not owned.
 ## Synergies of the newer classes (SynergyData, SynergyManager): damage_enemy()
 ## multiplies every hit by SynergyManager.hit_mult() once, right after
 ## Siegecraft (the highest mark bonus of the hit's class on a staggered /
@@ -191,12 +194,33 @@
 ## very end of damage_enemy(), a hit that dealt damage tells
 ## ConcordRules.on_enemy_hit(), which burns the alien ground around the enemy
 ## when the source is a SPELL (ConcordRules.burns_ground(), the one test).
+## The Hall of the Slain (the Norse act, temporarily Act XI; GDD §15.0
+## "Berserkergang" and "The Long Winter"; Game.norse is null on every other
+## act, so none of this runs there): BERSERKERGANG's one hook — at the very end
+## of damage_enemy(), a hit that dealt damage tells NorseRules.on_enemy_hit(),
+## which puts a wounded Norse warrior into the fury (Enemy.berserk); the fury
+## shrugs off stun_enemy() and freeze_enemy() here and Enemy.apply_slow()
+## there. damage_unit() tells NorseRules.on_unit_struck() after an enemy's
+## hit (the draugr's cold touch, through chill_unit(): THE one path of an
+## enemy's slow on a summon, writing the summon's existing slow fields).
 ##   the Crash Site (Act IX phase 2) — INFESTATION in damage_enemy(): an egg
 ##             (CrashSiteEnemyData "brood_egg") brought to 0 HP is cleared
 ##             without a kill (CrashSiteDirector.clear_egg(), before the kill
 ##             path), and the kill path records a Concord enemy's death spot
 ##             beside the Ghoul's claim (CrashSiteDirector.on_concord_death():
 ##             an egg is laid there on the Crash Site only).
+## Act XII, temporary (the Necropolis Dynasty; GDD §15.0 "Rebirth" and "Heka";
+## Game.dynasty is null on every other act, so none of this runs there):
+## REBIRTH in damage_enemy(): a cartouche brought to 0 HP is SMASHED without a
+## kill (Rebirth.smash(), before the kill path), and the kill path tells
+## DynastyRules.on_enemy_died() before the raise paths (a fallen mummy or
+## guardian gets its cartouche, which the Lich's raise then finds). HEKA:
+## curse_unit() is THE one path that curses a summon (x damage and move speed,
+## SummonedUnit.curse()) and lift_curse() the one that lifts it.
+## Act XIII, temporary (the Celestial Host; GDD §15.0 "Grace"; Game.host is
+## null on every other act, so none of this runs there): GRACE in
+## damage_enemy(), the one halo stat, first of all: a Host kind's halo shrugs
+## off the first hit of each kind of damage (Grace.absorbs(): the hit deals 0).
 ## Online co-op (CoopSession): every rule above reads the BOUND player's
 ## passives, synergies, meter and innate, so each entry point first binds the
 ## player the hit belongs to (the one path for "whose hit"), then restores the
@@ -279,6 +303,12 @@ func damage_enemy(e: Enemy, amount: float, source: String, as_slot: int = -1, or
 		return dealt_as
 	if not e.active or amount <= 0.0:
 		return 0.0
+	# --- Act XIII (temporary number): the Celestial Host --- GRACE (the one
+	# halo stat): an angel's halo shrugs off the first hit of each kind of
+	# damage (Grace.absorbs(); only while Game.host exists).
+	if game.host != null and game.host.grace.absorbs(e, source):
+		e.on_hit()
+		return 0.0
 	var crit_mult := 1.0  # Unholy Precision multiplier of this hit.
 	var crit := game.abilities.passive_value("unholy_precision", "crit_chance")  # 0..1, 0 when not owned.
 	if crit > 0.0 and is_minion_source(source) and _crit_rng.randf() < crit:
@@ -295,6 +325,13 @@ func damage_enemy(e: Enemy, amount: float, source: String, as_slot: int = -1, or
 	if depths > 0.0 and (e.stun_timer > 0.0 or e.freeze_timer > 0.0) and is_minion_source(source):
 		game.stat_add("crushing_depths_bonus_dmg", amount * depths)
 		amount *= 1.0 + depths
+	# --- Act XI (temporary): Vigrid --- Cold Iron (the Draugr Thane's paired
+	# passive): minion attacks on a slowed foe (Enemy.slow_timer running) deal
+	# iron_damage more; exactly 1 while the passive is not owned.
+	var iron := game.abilities.passive_value("cold_iron", "iron_damage")  # 0 when not owned.
+	if iron > 0.0 and e.slow_timer > 0.0 and is_minion_source(source):
+		game.stat_add("cold_iron_bonus_dmg", amount * iron)
+		amount *= 1.0 + iron
 	# Synergies of the newer classes (SynergyManager.hit_mult(), the one
 	# synergy hit path): the highest mark bonus of the hit's class, times the
 	# Charnel Menagerie. Exactly 1 while none of them is active.
@@ -487,6 +524,11 @@ func damage_enemy(e: Enemy, amount: float, source: String, as_slot: int = -1, or
 	# only asked while Game.concord exists).
 	if e.hp <= 0.0 and game.concord != null and CrashSiteDirector.clear_egg(game, e, source):
 		return dealt
+	# --- Act XII (temporary number): the Necropolis Dynasty --- a cartouche
+	# this hit reached is smashed and leaves WITHOUT a kill (Rebirth.smash();
+	# false for anything but a cartouche, only asked while Game.dynasty exists).
+	if e.hp <= 0.0 and game.dynasty != null and Rebirth.smash(game, e, source):
+		return dealt
 	if e.hp <= 0.0:
 		game.stat_add("kills_by_" + source, 1.0)  # Killing blow per damage source (autotest spell summaries).
 		if source in MetaData.WARRIOR_KILL_SOURCES:
@@ -503,6 +545,12 @@ func damage_enemy(e: Enemy, amount: float, source: String, as_slot: int = -1, or
 		# Site, and nothing runs while the Concord's rules do not exist).
 		if game.concord != null:
 			CrashSiteDirector.on_concord_death(game, e)
+		# --- Act XII (temporary number): the Necropolis Dynasty --- Rebirth: a
+		# fallen mummy or guardian gets its cartouche BEFORE the raise paths
+		# below (the Lich's raise then steals its Name); only while
+		# Game.dynasty exists.
+		if game.dynasty != null:
+			game.dynasty.on_enemy_died(e)
 		game.horde.evolutions.on_enemy_killed(e, source)  # Lich raise-the-dead.
 		game.innates.on_enemy_killed(e, source)  # Character innates (no-op without one).
 		_kill_enemy(e, is_minion_source(source))
@@ -510,6 +558,10 @@ func damage_enemy(e: Enemy, amount: float, source: String, as_slot: int = -1, or
 	# the alien ground around the enemy it hit (only while Game.concord exists).
 	if game.concord != null and dealt > 0.0:
 		game.concord.on_enemy_hit(e, source)
+	# --- Act XI (temporary): the Hall of the Slain --- Berserkergang's one hook:
+	# a wounded Norse warrior goes berserk (only while Game.norse exists).
+	if game.norse != null and dealt > 0.0:
+		game.norse.on_enemy_hit(e, source)
 	return dealt
 
 
@@ -619,6 +671,23 @@ func damage_unit(u: SummonedUnit, amount: float, source: String, by: Enemy = nul
 		if kev < 1.0:
 			game.stat_add("kevlar_dmg_prevented", amount * (1.0 - kev))
 			amount *= kev
+	# --- Act XI (temporary): Valgard --- Calm Blood: a berserk enemy's own blow
+	# deals less (NorseRules.calm_blood_mult(); exactly 1 while the passive is
+	# not owned, for a calm attacker, and off the act: no enemy is berserk).
+	if by != null and by.berserk and game.norse != null:
+		var calm := game.norse.calm_blood_mult(by)  # Share of the hit kept.
+		if calm < 1.0:
+			game.stat_add("calm_blood_dmg_prevented", amount * (1.0 - calm))
+			amount *= calm
+	# --- Act XII (temporary number): the Necropolis of Sand ---
+	# Embalmed Bones (the Dynasty's counter-passive): a CURSED summon (a Heka
+	# glyph on it) takes less (DynastyRules.embalmed_taken_mult(); exactly 1
+	# while the passive is not owned, and off the Dynasty).
+	if game.dynasty != null and u.heka_until > game.elapsed:
+		var emb := game.dynasty.embalmed_taken_mult(u)  # Share of the hit kept.
+		if emb < 1.0:
+			game.stat_add("embalmed_dmg_prevented", amount * (1.0 - emb))
+			amount *= emb
 	var plate := ab.passive_value("bone_plating", "flat_reduction")  # Flat damage off this hit.
 	if plate > 0.0 and not source in PassiveData.PLATING_EXEMPT_SOURCES:
 		var cut := minf(plate, amount * (1.0 - PassiveData.PLATING_MIN_FRACTION))  # Damage actually removed.
@@ -639,7 +708,14 @@ func damage_unit(u: SummonedUnit, amount: float, source: String, by: Enemy = nul
 	game.stat_add("summon_dmg_from_" + source, dealt)
 	if by != null and game.court != null:
 		game.court.feast.on_hit(by, dealt, u.position, true)  # Act VII: Bloodfeast (the one call on summons).
+	if by != null and game.norse != null:
+		game.norse.on_unit_struck(u, by, source, dealt)  # The Hall of the Slain: the draugr's cold touch.
 	if u.hp <= 0.0:
+		# --- Act XII (temporary number): the Hall of Two Truths --- a class special that answers
+		# the lethal blow (the Ushabti Sentinel reassembles; SummonBehavior
+		# .on_lethal() is false for every other class, so nothing changes).
+		if u.behavior != null and u.behavior.on_lethal(u):
+			return
 		game.stat_add("death_" + u.unit_class + "_by_" + source, 1.0)
 		game.horde.colossi.on_unit_killed(u)  # Bone Colossus shrapnel burst.
 		if by != null and game.pantheon != null:
@@ -701,6 +777,24 @@ func damage_player(amount: float, source: String, target: Necromancer = null, by
 		_check_last_rites()
 
 
+## A PRICE paid in life (Act XV, the Fae Court: a bargain struck with the Summer
+## Queen, SummerQueenData.BARGAINS "life_cost"): necromancer `pl` loses `share`
+## (0..1) of his current HP at once, never below 1 and never stopped by a ward,
+## a shield or i-frames (a price, not a blow); counted as player_dmg_from_<source>
+## and life_paid. Nothing else calls it.
+func pay_life(pl: Necromancer, share: float, source: String) -> void:
+	if pl.dead or share <= 0.0:
+		return
+	var lost := minf(pl.hp * share, pl.hp - 1.0)
+	if lost <= 0.0:
+		return
+	pl.hp -= lost
+	pl.queue_redraw()
+	game.stat_add("life_paid", lost)
+	game.stat_add("damage_to_player", lost)
+	game.stat_add("player_dmg_from_" + source, lost)
+
+
 ## Grave Ward (Ossuary expansion step 3, MetaModifiers "ward_hits"): spends one of
 ## the run's warded hits on a hit that would land (not during i-frames) and grants
 ## the normal post-hit i-frames, so one burst never eats two. False (no-op) when no
@@ -737,6 +831,11 @@ func _check_last_rites() -> void:
 ## on any other run).
 func heal_unit(u: SummonedUnit, amount: float) -> float:
 	if not u.active:
+		return 0.0
+	# --- Act XV (temporary number): the Fae Court --- a struck bargain forbids the
+	# army's healing (WildRules.heal_barred(); false unless one holds).
+	if game.wild != null and game.wild.heal_barred():
+		game.stat_add("bargain_heals_barred", 1.0)
 		return 0.0
 	# --- Act VII: Castle Sanguis --- Thirst Eternal (0 while not owned).
 	var thirst := _thirst_eternal(u)  # Extra share of the heal (0..).
@@ -819,6 +918,8 @@ func rot_enemy(e: Enemy, amount: float, until: float) -> void:
 	if e.rot_until <= game.elapsed or a >= e.rot_amp:
 		e.rot_amp = a
 	e.rot_until = maxf(e.rot_until, until)
+	if game.wild != null:
+		game.wild.thickets.burn_at(e.position, WildRulesData.BURN_ROT_REACH)  # Act XV: Rot burns the thorn thickets back (Overgrowth's one burn hook).
 
 
 ## Frost Wraith chill: a slow of `fraction` for `duration` s, shown as a
@@ -949,6 +1050,9 @@ func expose_enemy(e: Enemy, amp: float, from: float, duration: float) -> void:
 func freeze_enemy(e: Enemy, duration: float, boss_mult: float, elite_mult: float) -> float:
 	if not e.active or e.is_reckoning or e.is_structure or duration <= 0.0:
 		return 0.0
+	if e.berserk:
+		game.stat_add("berserk_shrugged_freezes", 1.0)
+		return 0.0  # The Hall of the Slain: Berserkergang (false for every other enemy).
 	var d := duration * cc_mult()  # Freeze time for this enemy (Spirit Binding lengthens it).
 	if e.is_boss or e.is_miniboss:
 		d *= boss_mult
@@ -972,6 +1076,9 @@ func freeze_enemy(e: Enemy, duration: float, boss_mult: float, elite_mult: float
 func stun_enemy(e: Enemy, duration: float, boss_mult: float, elite_mult: float) -> float:
 	if not e.active or e.is_reckoning or e.is_structure or duration <= 0.0:
 		return 0.0
+	if e.berserk:
+		game.stat_add("berserk_shrugged_stuns", 1.0)
+		return 0.0  # The Hall of the Slain: Berserkergang (false for every other enemy).
 	var d := duration * cc_mult()  # Stun time for this enemy (Spirit Binding lengthens it).
 	if e.is_boss or e.is_miniboss:
 		d *= boss_mult
@@ -1004,6 +1111,26 @@ func stun_unit(u: SummonedUnit, duration: float, source: String) -> float:
 	return duration
 
 
+# --- Act XI (temporary): the Hall of the Slain ---
+## THE one path of an ENEMY's slow on a summon (the draugr's cold touch): slows
+## summon `u` by `fraction` (0..1) for at least `duration` s through the
+## summon's existing slow fields (SummonedUnit.holy_slow / holy_slow_timer,
+## read once in its movement; a stronger slow already running wins, no
+## stacking). Ground slows keep their own path (TerrainSlow). Airborne,
+## spawning and dead units are immune. An enemy effect on a unit: summons have
+## no act rule of their own. `source` tags the stats. Returns the fraction
+## applied (0 = immune). Stats: summon_chills, summon_chills_<source>.
+func chill_unit(u: SummonedUnit, fraction: float, duration: float, source: String) -> float:
+	if fraction <= 0.0 or duration <= 0.0 or not u.active or u.airborne \
+			or u.state == SummonedUnit.State.DEAD or u.state == SummonedUnit.State.SPAWNING:
+		return 0.0
+	u.holy_slow = maxf(u.holy_slow if u.holy_slow_timer > 0.0 else 0.0, fraction)
+	u.holy_slow_timer = maxf(u.holy_slow_timer, duration)
+	game.stat_add("summon_chills", 1.0)
+	game.stat_add("summon_chills_" + source, 1.0)
+	return fraction
+
+
 # --- Act V: the Burning Province ---
 ## THE one blind path for summons (Act V: a Kunoichi's smoke bomb, Kage's
 ## smoke fields): blinds summon `u` for `duration` s (SummonedUnit.blind(): it
@@ -1019,6 +1146,29 @@ func blind_unit(u: SummonedUnit, duration: float, source: String) -> float:
 	game.stat_add("summon_blinded_seconds", duration)
 	game.stat_add("summon_blinds_" + source, 1.0)
 	return duration
+
+
+# --- Act XII (temporary number): the Necropolis Dynasty ---
+## THE one curse path for summons (Heka: a priest's glyph): curses summon `u`
+## until game time `until` (SummonedUnit.curse(): x `mult` on its damage and
+## move speed, kept through every stat refresh). Airborne, flying, spawning,
+## dead and charmed units are immune. An enemy effect on a unit: summons have
+## no act rule of their own. `source` tags the stats. Returns true when it
+## took. Stats: summon_curses, summon_curses_<source>.
+func curse_unit(u: SummonedUnit, mult: float, until: float, source: String) -> bool:
+	if not u.active or u.airborne or u.flies or u.charmed or u.state == SummonedUnit.State.SPAWNING \
+			or u.state == SummonedUnit.State.DEAD or until <= game.elapsed:
+		return false
+	u.curse(mult, until)
+	game.stat_add("summon_curses", 1.0)
+	game.stat_add("summon_curses_" + source, 1.0)
+	return true
+
+
+## Lifts the curse on summon `u` (Heka: a cleanse, a jump, the glyph's end);
+## a no-op when it carries none.
+func lift_curse(u: SummonedUnit) -> void:
+	u.uncurse()
 
 
 ## Oni's Resolve (PassiveData "onis_resolve"): the share (0..1) of a stun summon

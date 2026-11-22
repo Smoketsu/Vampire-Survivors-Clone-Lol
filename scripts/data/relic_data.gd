@@ -39,14 +39,15 @@ const PRICE_ROUND: int = 5  # TUNING (not in GDD)
 ## Feat id -> what it asks for. Read by RelicLedger.feat_met():
 ##   difficulty — a victory (0:00 reached, any stage) on this DifficultyData level or
 ##                harder ([clears] best, Meta.best_clear),
-##   hyper_stages — a Hyper clear (any character, [hyper_clears]) of one of these
-##                stages (each act's last stage, whose boss ends the act),
+##   hyper_finales — true: a Hyper clear (any character, [hyper_clears]) of any
+##                act's last stage (StageRegistry.ACT_ORDER, all fifteen acts;
+##                owner decision, Nov 2026),
 ##   text — the one line the Ossuary shows while the feat is missing,
 ##   short — the one word a locked tile shows instead of a price.
 const FEATS := {
 	"lich_clear": {"difficulty": "lich", "text": "Clear a stage on Lich to sell it", "short": "Lich"},  # TUNING (not in GDD)
 	"deathlord_clear": {"difficulty": "deathlord", "text": "Clear a stage on Deathlord to sell it", "short": "Deathlord"},  # TUNING (not in GDD)
-	"hyper_finale": {"hyper_stages": ["sanctum", "spire", "citadel"], "text": "Clear an act's last stage on Hyper to sell it", "short": "Hyper"},  # TUNING (not in GDD)
+	"hyper_finale": {"hyper_finales": true, "text": "Clear an act's last stage on Hyper to sell it", "short": "Hyper"},  # TUNING (not in GDD)
 }
 
 # --- Special effects ---------------------------------------------------------------

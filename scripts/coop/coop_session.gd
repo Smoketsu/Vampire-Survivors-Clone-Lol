@@ -426,6 +426,24 @@ func step(delta: float) -> void:
 	if game.concord != null:
 		bind_primary()
 		game.concord.step(delta)  # Act IX: the Final Harvest, the beams, the lifted summons, the alien ground (before the push-out, as in solo).
+	if game.corsair != null:
+		bind_primary()
+		game.corsair.step(delta)  # Act X: the boats, the sea's strikes, the Black Tide (before the push-out, as in solo).
+	if game.norse != null:
+		bind_primary()
+		game.norse.step(delta)  # The Hall of the Slain: Ragnarök, the Long Winter (each slot's cold), the Rune-Stones (before the push-out, as in solo).
+	if game.dynasty != null:
+		bind_primary()
+		game.dynasty.step(delta)  # Act XII (temporary): the Devourer's Hour, the Sandstorm, the cartouches, the glyphs, the quicksand (before the push-out, as in solo).
+	if game.host != null:
+		bind_primary()
+		game.host.step(delta)  # Act XIII (temporary): the Last Trumpet, the scales, the Light, the halos (before the push-out, as in solo).
+	if game.primeval != null:
+		bind_primary()
+		game.primeval.step(delta)  # Act XIV (temporary): the Stampede of Ash, the packs, the herds, the Skyraiders (before the push-out, as in solo).
+	if game.wild != null:
+		bind_primary()
+		game.wild.step(delta)  # Act XV (temporary): Spring Returns, the seasons, the blight, the thickets (before the push-out, as in solo).
 	if pf != null:
 		tl = pf.lap(PerfProbe.SEC_ENEMIES, tl)
 	bind_primary()

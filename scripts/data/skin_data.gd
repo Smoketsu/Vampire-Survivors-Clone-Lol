@@ -117,6 +117,42 @@ const HYPER_NAMES := {
 	"blooded": "The Gilded Quarry",  # TUNING (not in GDD)
 	# --- Act IX: the Ark ---
 	"starborn": "The Gilded Deserter",  # TUNING (not in GDD)
+	# --- Act X: the Smuggler's Cutter ---
+	"marooned_quartermaster": "The Gilded Castaway",  # TUNING (not in GDD)
+	# --- Act X: the Treasure Galleon ---
+	"corsair_queen": "The Gilded Queen",  # TUNING (not in GDD)
+	# --- Act X: the Maelstrom ---
+	"ghost_helmsman": "The Gilded Helmsman",  # TUNING (not in GDD)
+	# --- Act XI (temporary): the Barrow Fields ---
+	"rune_seer": "The Gilded Volva",  # TUNING (not in GDD)
+	# --- Act XI (temporary): Valgard ---
+	"shield_maiden_hero": "The Gilded Shield",  # TUNING (not in GDD)
+	# --- Act XI (temporary): Vigrid ---
+	"berserker_hero": "The Gilded Bear",  # TUNING (not in GDD)
+	# --- Act XII (temporary number): the Necropolis of Sand ---
+	"the_embalmer": "The Gilded Embalmer",  # TUNING (not in GDD)
+	# --- Act XII (temporary number): the Temple of the Lioness ---
+	"lion_priestess": "The Golden Lioness",  # TUNING (not in GDD)
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	"pharaohs_shade": "The Golden King",  # TUNING (not in GDD)
+	# --- Act XIII (temporary number): the Silver Stair ---
+	"fallen_herald": "The Gilded Herald",  # TUNING (not in GDD)
+	# --- Act XIII (temporary number): the Wheel of Thrones ---
+	"blind_saint": "The Gilded Saint",  # TUNING (not in GDD)
+	# --- Act XIII (temporary number): the Empyrean ---
+	"the_unveiled": "The Gilded Unveiled",  # TUNING (not in GDD)
+	# --- Act XIV (temporary number): the Fern Basin ---
+	"fern_huntress": "The Golden Huntress",  # TUNING (not in GDD)
+	# --- Act XIV (temporary number): the Great Plain ---
+	"herd_warden": "The Golden Warden",  # TUNING (not in GDD)
+	# --- Act XIV (temporary number): the Last Day ---
+	"skywatcher": "The Golden Skywatcher",  # TUNING (not in GDD)
+	# --- Act XV (temporary number): the Greenwood ---
+	"horned_herald": "The Golden Herald",  # TUNING (not in GDD)
+	# --- Act XV (temporary number): the Fae Court ---
+	"changeling_princess": "The Golden Changeling",  # TUNING (not in GDD)
+	# --- Act XV (temporary number): the World-Tree ---
+	"gravegardener": "The Golden Gardener",  # TUNING (not in GDD)
 }
 ## Sprite-multiply tint of each Hyper skin (gilded; the Eclipsed Gravecaller
 ## and the Sunless / Starless pair are darkened with a gold corona instead).
@@ -181,6 +217,42 @@ const HYPER_TINTS := {
 	"blooded": Color(1.2, 1.05, 0.62),  # TUNING (not in GDD) gilded (the drawn skin replaces the tint)
 	# --- Act IX: the Ark ---
 	"starborn": Color(1.2, 1.05, 0.62),  # TUNING (not in GDD) gilded (the drawn skin replaces the tint)
+	# --- Act X: the Smuggler's Cutter ---
+	"marooned_quartermaster": Color(1.2, 1.05, 0.62),  # TUNING (not in GDD) gilded (no drawn Hyper skin yet: the tint)
+	# --- Act X: the Treasure Galleon ---
+	"corsair_queen": Color(1.2, 1.05, 0.62),  # TUNING (not in GDD) gilded (no skin art yet: the tint is the skin)
+	# --- Act X: the Maelstrom ---
+	"ghost_helmsman": Color(1.2, 1.05, 0.62),  # TUNING (not in GDD) gilded (no drawn skin yet: the tint)
+	# --- Act XI (temporary): the Barrow Fields ---
+	"rune_seer": Color(1.2, 1.05, 0.62),  # TUNING (not in GDD) gilded (no drawn Hyper skin yet: the tint over her art)
+	# --- Act XI (temporary): Valgard ---
+	"shield_maiden_hero": Color(1.2, 1.05, 0.62),  # TUNING (not in GDD) gilded
+	# --- Act XI (temporary): Vigrid ---
+	"berserker_hero": Color(1.2, 1.02, 0.6),  # TUNING (not in GDD) gilded (no Hyper skin art yet: the tint carries it)
+	# --- Act XII (temporary number): the Necropolis of Sand ---
+	"the_embalmer": Color(1.2, 1.05, 0.62),  # TUNING (not in GDD) gilded (no drawn skin yet)
+	# --- Act XII (temporary number): the Temple of the Lioness ---
+	"lion_priestess": Color(1.2, 1.05, 0.62),  # TUNING (not in GDD) gilded (the drawn skin replaces the tint)
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	"pharaohs_shade": Color(1.2, 1.05, 0.62),  # TUNING (not in GDD) gilded (no drawn skin: the tint)
+	# --- Act XIII (temporary number): the Silver Stair ---
+	"fallen_herald": Color(1.2, 1.05, 0.62),  # TUNING (not in GDD) gilded (no drawn skin: the tint)
+	# --- Act XIII (temporary number): the Wheel of Thrones ---
+	"blind_saint": Color(1.2, 1.05, 0.62),  # TUNING (not in GDD) gilded (no drawn skin: the tint)
+	# --- Act XIII (temporary number): the Empyrean ---
+	"the_unveiled": Color(1.2, 1.05, 0.62),  # TUNING (not in GDD) gilded (no drawn skin: the tint)
+	# --- Act XIV (temporary number): the Fern Basin ---
+	"fern_huntress": Color(1.2, 1.05, 0.62),  # TUNING (not in GDD) gilded (no drawn skin: the tint)
+	# --- Act XIV (temporary number): the Great Plain ---
+	"herd_warden": Color(1.2, 1.05, 0.62),  # TUNING (not in GDD) gilded (no drawn skin: the tint)
+	# --- Act XIV (temporary number): the Last Day ---
+	"skywatcher": Color(1.2, 1.05, 0.62),  # TUNING (not in GDD) gilded (no drawn skin: the tint)
+	# --- Act XV (temporary number): the Greenwood ---
+	"horned_herald": Color(1.2, 1.05, 0.62),  # TUNING (not in GDD) gilded (no drawn skin: the tint)
+	# --- Act XV (temporary number): the Fae Court ---
+	"changeling_princess": Color(1.2, 1.05, 0.62),  # TUNING (not in GDD) gilded (no drawn skin: the tint)
+	# --- Act XV (temporary number): the World-Tree ---
+	"gravegardener": Color(1.2, 1.05, 0.62),  # TUNING (not in GDD) gilded (no drawn skin: the tint)
 }
 ## Emblem and accent shared by every Hyper skin: a gold sun corona.
 const HYPER_ACCENT := Color(1.0, 0.82, 0.3)  # TUNING (not in GDD) Palette.GOLD

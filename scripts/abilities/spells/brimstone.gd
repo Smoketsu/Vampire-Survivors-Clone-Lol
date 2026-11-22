@@ -159,6 +159,8 @@ func _land(s: Dictionary) -> void:
 	_pit_dps.append(float(s["pit_dps"]))
 	game.stat_add("brimstone_pits", 1.0)
 	game.effects.impact(at, float(s["r"]), Palette.INFERNO_LAVA)
+	if game.wild != null:
+		game.wild.thickets.burn_at(at, float(s["pit_r"]))  # Act XV: fire burns the thorn thickets back (Overgrowth's one burn hook).
 
 
 ## Removes pit `i` (keeps the order: the oldest first).

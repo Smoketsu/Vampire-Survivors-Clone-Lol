@@ -202,8 +202,27 @@ func invalidate_spell_stats() -> void:
 
 ## Applies the Hyper power-up (PowerupManager) to an effective stats row in
 ## place: damage keys x spell_damage_mult(), cooldown keys x
-## spell_cooldown_mult(). Returns `out` unchanged while Hyper is off.
+## spell_cooldown_mult(). Returns `out` unchanged while Hyper is off (and, on a
+## Dynasty run, no Sandstorm blows: it halves "range").
 func _apply_spell_buffs(out: Dictionary) -> Dictionary:
+	# --- Act XII (temporary number): the Necropolis Dynasty --- the Sandstorm:
+	# every spell's aim reach ("range") x DynastyRules.army_reach_mult() while it
+	# blows (the cache is dropped when it rises and falls; only while
+	# Game.dynasty exists, so nothing changes elsewhere).
+	if game.dynasty != null and out.has("range"):
+		var reach := game.dynasty.army_reach_mult()  # x reach now (1 outside a storm).
+		if reach < 1.0:
+			out["range"] = float(out["range"]) * reach
+	# --- The Fae Court --- a fairy ring slows casting: the cooldown keys x
+	# FaeCourtDirector.spell_cooldown_mult() while the bound necromancer stands in
+	# one (the director drops this cache when he steps in or out; null elsewhere).
+	var fc := game.enemies.fae_court if game.enemies != null else null  # The Fae Court's rings.
+	if fc != null:
+		var cm := fc.spell_cooldown_mult(game.player)  # x cooldown (1 outside a ring).
+		if cm != 1.0:
+			for key: String in ["cooldown", "recharge", "pulse_interval"]:
+				if out.has(key):
+					out[key] = float(out[key]) * cm
 	var pw := game.powerups  # Owner of the timed buffs.
 	if pw == null or not pw.is_active("hyper"):
 		return out
@@ -296,6 +315,24 @@ func apply_spell_mods(row: Dictionary, conduit_lvl: int = -1, focus_lvl: int = -
 	if out.has("lift_time"):
 		out["cooldown"] = float(out["cooldown"]) * (1.0 - passive_value(TractorLiftData.STARSEED, TractorLiftData.HASTE_KEY))
 		out["slam_radius"] = float(out.get("slam_radius", 50.0)) * (1.0 + passive_value(TractorLiftData.STARSEED, TractorLiftData.REACH_KEY))
+	# --- Act X: the Maelstrom --- Dead Reckoning: Anchor Drop falls sooner and
+	# its stun holds longer (its keys exist only in the Anchor Drop / Abyssal
+	# Mooring rows; the passive's values are 0 while not owned).
+	if out.has("anchor_stun"):
+		out["cooldown"] = float(out["cooldown"]) * (1.0 - passive_value(AnchorDropData.DEAD_RECKONING, AnchorDropData.HASTE_KEY))
+		out["anchor_stun"] = float(out["anchor_stun"]) * (1.0 + passive_value(AnchorDropData.DEAD_RECKONING, AnchorDropData.STUN_KEY))
+	# --- Act XI (temporary): Vigrid --- Runecraft: Gungnir flies sooner and
+	# its line cuts wider (its key "spear_width" exists only in the Gungnir /
+	# Spear of the Hanged rows; the passive's values are 0 while not owned).
+	if out.has("spear_width"):
+		out["cooldown"] = float(out["cooldown"]) * (1.0 - passive_value(GungnirData.RUNECRAFT, GungnirData.HASTE_KEY))
+		out["spear_width"] = float(out["spear_width"]) * (1.0 + passive_value(GungnirData.RUNECRAFT, GungnirData.WIDTH_KEY))
+	# --- Act XII (temporary number): the Hall of Two Truths --- Heavy Heart: Feather's
+	# Verdict's execute line rises and its ring widens (its keys exist only in
+	# the Feather's Verdict / Heart Devoured rows; 0 while not owned).
+	if out.has("execute"):
+		out["execute"] = float(out["execute"]) + passive_value(FeathersVerdictData.HEAVY_HEART, FeathersVerdictData.LINE_KEY)
+		out["ring"] = float(out.get("ring", 60.0)) * (1.0 + passive_value(FeathersVerdictData.HEAVY_HEART, FeathersVerdictData.REACH_KEY))
 	return out
 
 

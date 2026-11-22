@@ -122,6 +122,15 @@
 ##     escalation, Armour, Supers, Civilians, Martial Law) live in CityRules
 ##     (Game.city). Civilians have their own alive cap: regular_alive() leaves
 ##     them out, and they are never recycled to the spawn ring (they flee off).
+##   * Act X, the Black Tide (GDD §15.0 "Act X foundation: the Black Tide
+##     (phase 1)"): its kinds are looked up through corsair_def() after the
+##     Concord's, its bosses load by name from CORSAIR_BOSS_DIR. On a corsair
+##     stage EVERY timeline spawn (the trickle, wave events, the Reckoning)
+##     goes through CorsairRules.route_spawn() instead of the spawn ring: a
+##     crew kind waits in BoardingParty's queue and comes aboard by boat
+##     (spawn_routed()), a swimmer comes from the sea (SeaStrikes);
+##     regular_alive() counts the waiting crew and leaves the boats and hooks
+##     out (CorsairRules.alive_adjust()), so the budget is unchanged.
 ##   * Act IX, the Concord of Stars (GDD §15.0 "Act IX foundation (phase 1)"):
 ##     its kinds are looked up through concord_def() (ConcordEnemyData, then
 ##     each Act IX stage's table) after the City's, and its bosses load by name
@@ -129,6 +138,43 @@
 ##     Abduction, Terraforming, the Final Harvest) live in ConcordRules
 ##     (Game.concord); this director hands it nothing (its pods spawn through
 ##     spawn_at()).
+##   * The Hall of the Slain (the Norse act, temporarily Act XI; GDD §15.0 "The
+##     Hall of the Slain foundation (phase 1)"): its kinds are looked up
+##     through norse_def() (NorseEnemyData, then each of its stages' tables)
+##     after the Black Tide's, and its bosses load by name from NORSE_BOSS_DIR
+##     after the Black Tide's folder. Its shared rules (the Long Winter,
+##     Berserkergang, the Rune-Stones, Ragnarok) live in NorseRules
+##     (Game.norse); this director hands it the "rune_stone" events.
+##   * Act XII (temporary number), the Necropolis Dynasty (GDD §15.0 "The
+##     Necropolis Dynasty foundation (phase 1)"): its kinds are looked up
+##     through dynasty_def() (DynastyEnemyData, then each Dynasty stage's
+##     table) after the Hall of the Slain's, and its bosses load by name from
+##     DYNASTY_BOSS_DIR after the Norse folder. Its shared rules (Rebirth,
+##     the Black Land, Heka, the Devourer's Hour) live in DynastyRules
+##     (Game.dynasty); the cartouches have their own cap, so regular_alive()
+##     leaves them out.
+##   * Act XIII (temporary number), the Celestial Host (GDD §15.0 "The
+##     Celestial Host foundation (phase 1)"): its kinds are looked up through
+##     host_def() (HostEnemyData, then each Host stage's table) after the
+##     Dynasty's, and its bosses load by name from HOST_BOSS_DIR after the
+##     Dynasty's folder. Its shared rules (Judgment, Hallowed Light, Grace,
+##     the Last Trumpet) live in HostRules (Game.host); its Judges and squads
+##     spawn through spawn_at().
+##   * Act XIV (temporary number), the Age of Titans (GDD §15.0 "The Age of
+##     Titans foundation (phase 1)"): its kinds are looked up through
+##     primeval_def() (PrimevalEnemyData, then each Titans stage's table) after
+##     the Host's, and its bosses load by name from PRIMEVAL_BOSS_DIR after the
+##     Host's folder. Its shared rules (Packs, Herds, Scavengers, the Stampede
+##     of Ash) live in PrimevalRules (Game.primeval); its herds spawn through
+##     spawn_at().
+##   * Act XV (temporary number), the Turning Year (GDD §15.0 "The Turning
+##     Year foundation (phase 1)"): its kinds are looked up through wild_def()
+##     (WildEnemyData, then each Wild stage's table) after the Titans', and its
+##     bosses load by name from WILD_BOSS_DIR after the Titans' folder. Its
+##     shared rules (the seasons, Bloom and Blight, Overgrowth, Spring Returns)
+##     live in WildRules (Game.wild); the trickle's weights and the waves'
+##     groups pass its season's timeline helper (SeasonCycle.timeline_weights()
+##     / filter_groups(): who comes in which season), as the Shogunate's night.
 ##   * Act VII, Ravensmoor (GDD §15.0 "Ravensmoor (Act VII phase 2)"): on a
 ##     stage with a "ravensmoor" config it creates the RavensmoorDirector (the
 ##     sleeping coffins, Coffin Nails, the ghoul packs, Old Greymane;
@@ -150,10 +196,34 @@
 ##     crater, Infestation's eggs, Nothing Hatched, the Brood Matriarch;
 ##     `crash_site`) and hands it the "matriarch" events. Its eggs have their
 ##     own cap: regular_alive() leaves them out. Null elsewhere.
+##   * Act X, the Smuggler's Cutter (GDD §15.0 "The Smuggler's Cutter (Act X
+##     phase 2)"): on a stage with a "cutter" config it owns the
+##     CutterDirector (barrels, the Fog Bank, Gorran's ram, the Fire Ship;
+##     `cutter`) and hands it the "gorran" events; regular_alive() leaves its
+##     barrels and ram longboat out. Null elsewhere.
 ##   * Act IX, the Proving Moon (GDD §15.0 "The Proving Moon (Act IX phase
 ##     2)"): on a stage with a "proving_moon" config it owns the
 ##     ProvingMoonDirector (the Warbeast, the Last Trophy objective;
 ##     `proving_moon`) and hands it the "warbeast" events. Null elsewhere.
+##   * Act X, the Treasure Galleon (GDD §15.0 "The Treasure Galleon (Act X
+##     phase 2)"): on a stage with a "galleon" config it owns the
+##     GalleonDirector (the zones, the broadsides, the deck cannons, Old
+##     Hollow-Eye; `galleon`) and hands it the "hollow_eye" events. Null elsewhere.
+##   * The Hall of the Slain (temporarily Act XI), the Barrow Fields (GDD §15.0
+##     "The Barrow Fields (the Hall of the Slain phase 2)"): on a stage with a
+##     "barrow_fields" config it owns the BarrowFieldsDirector (the braziers by
+##     the map, the open barrows, the Fjord's drifts, Keep the Fires, the
+##     Barrow-Wight; `barrow_fields`) and hands it the "barrow" and "wight"
+##     events. Null elsewhere.
+##   * The Hall of the Slain, Valgard (GDD §15.0 "Valgard, the Hall of Heroes
+##     (the Hall of the Slain phase 2)"): on a stage with a "valgard" config it
+##     owns the ValgardDirector (the Feast, the Einherjar Champion; `valgard`)
+##     and hands it the "einherjar_champion" events. Null elsewhere.
+##   * Act XII (temporary number), the Temple of the Lioness (GDD §15.0 "The
+##     Temple of the Lioness (Dynasty phase 2)"): on a stage with a
+##     "lioness_temple" config it owns the LionessTempleDirector (the Awakening
+##     Statues, the Lion Warden's sealed hall; `lioness_temple`) and hands it
+##     the "statues_wake" and "lion_warden" events. Null elsewhere.
 ##   * Online co-op (CoopSession; docs/coop/DESIGN.md): every enemy steps with
 ##     its NEAREST standing necromancer bound (CoopSession.bind_nearest()), so
 ##     it advances on, aims at and recycles around that one (bosses and kits
@@ -188,6 +258,24 @@ const CITY_BOSS_DIR: String = "res://scripts/enemies/city/"
 # --- Act IX: the Concord of Stars ---
 ## Folder of the Concord of Stars' boss scripts ("boss_<id>.gd", each a Boss; Act IX).
 const CONCORD_BOSS_DIR: String = "res://scripts/enemies/concord/"
+# --- Act X: the Black Tide ---
+## Folder of the Black Tide's boss scripts ("boss_<id>.gd", each a Boss; Act X).
+const CORSAIR_BOSS_DIR: String = "res://scripts/enemies/corsair/"
+# --- Act XI (temporary): the Hall of the Slain ---
+## Folder of the Hall of the Slain's boss scripts ("boss_<id>.gd", each a Boss).
+const NORSE_BOSS_DIR: String = "res://scripts/enemies/norse/"
+# --- Act XII (temporary number): the Necropolis Dynasty ---
+## Folder of the Necropolis Dynasty's boss scripts ("boss_<id>.gd", each a Boss).
+const DYNASTY_BOSS_DIR: String = "res://scripts/enemies/dynasty/"
+# --- Act XIII (temporary number): the Celestial Host ---
+## Folder of the Celestial Host's boss scripts ("boss_<id>.gd", each a Boss).
+const HOST_BOSS_DIR: String = "res://scripts/enemies/host/"
+# --- Act XIV (temporary number): the Age of Titans ---
+## Folder of the Age of Titans' boss scripts ("boss_<id>.gd", each a Boss).
+const PRIMEVAL_BOSS_DIR: String = "res://scripts/enemies/primeval/"
+# --- Act XV (temporary number): the Turning Year ---
+## Folder of the Turning Year's boss scripts ("boss_<id>.gd", each a Boss).
+const WILD_BOSS_DIR: String = "res://scripts/enemies/wild/"
 
 ## The boss entered the arena.
 signal boss_spawned(boss: Boss)
@@ -344,6 +432,11 @@ var liberty_heights: LibertyHeightsDirector = null
 ## Hatched, the Brood Matriarch; StageRegistry "crash_site"; null on every
 ## other stage).
 var crash_site: CrashSiteDirector = null
+# --- Act X: the Smuggler's Cutter ---
+## The Smuggler's Cutter's stage systems (Act X: the powder barrels, the Fog
+## Bank, Bosun Gorran's ram longboat, the Fire Ship's patches, Not One Aboard;
+## StageRegistry "cutter"; null on every other stage).
+var cutter: CutterDirector = null
 # --- Act IX: the Proving Moon ---
 ## The Proving Moon's mechanics (Act IX: the Warbeast, the Last Trophy
 ## objective; StageRegistry "proving_moon"; null on every other stage).
@@ -353,6 +446,84 @@ var proving_moon: ProvingMoonDirector = null
 ## Reactor's vents, the Luminous Archon; StageRegistry "ark"; null on every
 ## other stage).
 var ark: ArkDirector = null
+# --- Act X: the Treasure Galleon ---
+## The Treasure Galleon's mechanics (Act X: the zones, the broadsides, the
+## deck cannons, Old Hollow-Eye; StageRegistry "galleon"; null on every other stage).
+var galleon: GalleonDirector = null
+# --- Act X: the Maelstrom ---
+## The Maelstrom's mechanics (Act X: the Heave, the raised ghost crew, the
+## Ghost Bosun, Vandermere's crew; StageRegistry "maelstrom"; null on every
+## other stage).
+var maelstrom: MaelstromDirector = null
+# --- Act XI (temporary): the Barrow Fields ---
+## The Barrow Fields' mechanics (the Hall of the Slain: the braziers by the
+## map, the open barrows, the Fjord's drifts, Keep the Fires, the Barrow-Wight;
+## StageRegistry "barrow_fields"; null on every other stage).
+var barrow_fields: BarrowFieldsDirector = null
+# --- Act XI (temporary): Valgard ---
+## Valgard's mechanics (the Hall of the Slain: the Feast at the long tables,
+## the Einherjar Champion; StageRegistry "valgard"; null on every other stage).
+var valgard: ValgardDirector = null
+# --- Act XI (temporary): Vigrid ---
+## Vigrid, the Last Field's mechanics (the Hall of the Slain's finale: the
+## Fading Light, the early dark's vanguard, the Fire-Giant of the south;
+## StageRegistry "vigrid"; null on every other stage).
+var vigrid: VigridDirector = null
+# --- Act XII (temporary number): the Necropolis of Sand ---
+## The Necropolis of Sand's mechanics (the Canopic Jars beside the tombs, No
+## Jars Left, the Sandstorm Pass's storm, the Sand Colossus; StageRegistry
+## "necropolis"; null on every other stage).
+var necropolis: NecropolisDirector = null
+# --- Act XII (temporary number): the Temple of the Lioness ---
+## The Temple of the Lioness's mechanics (the Awakening Statues, the Lion
+## Warden's sealed hall; StageRegistry "lioness_temple"; null on every other
+## stage).
+var lioness_temple: LionessTempleDirector = null
+# --- Act XII (temporary number): the Hall of Two Truths ---
+## The Hall of Two Truths' mechanics (temporary Act XII: the Scales, the
+## Devourer's Whelp, the Crocodile Wardens' rise; StageRegistry "two_truths";
+## null on every other stage).
+var two_truths: TwoTruthsDirector = null
+# --- Act XIII (temporary number): the Silver Stair ---
+## The Silver Stair's mechanics (the Stair's steps and low cloud banks, Without
+## Sin, the Cherub of the Gate; StageRegistry "silver_stair"; null on every
+## other stage).
+var silver_stair: SilverStairDirector = null
+# --- Act XIII (temporary number): the Wheel of Thrones ---
+## The Wheel of Thrones' mechanics (the turning spheres' moving walls, the
+## Dominion of the Spheres, The Wheel Breaks; StageRegistry "wheel_of_thrones";
+## null on every other stage).
+var wheel_of_thrones: WheelOfThronesDirector = null
+# --- Act XIII (temporary number): the Empyrean ---
+## The Empyrean's mechanics (the Choir, the Herald of the Seventh Trumpet, The
+## Last Word; StageRegistry "empyrean"; null on every other stage).
+var empyrean: EmpyreanDirector = null
+# --- Act XIV (temporary number): the Fern Basin ---
+## The Fern Basin's mechanics (the Tar Seeps, the Bog Crocs, Ironjaw and her
+## nest; StageRegistry "fern_basin"; null on every other stage).
+var fern_basin: FernBasinDirector = null
+# --- Act XIV (temporary number): the Great Plain ---
+## The Great Plain's mechanics (the Watering Hole, the Canyon's narrow front,
+## Mother Clubtail, Nothing Taken; StageRegistry "great_plain"; null on every
+## other stage).
+var great_plain: GreatPlainDirector = null
+# --- Act XIV (temporary number): the Last Day ---
+## The Last Day's mechanics (Fire from the Sky, the growing meteor,
+## Thunderwing the Sky King; StageRegistry "last_day"; null on every other
+## stage).
+var last_day: LastDayDirector = null
+# --- Act XV (temporary number): the Greenwood ---
+## The Greenwood's mechanics (the sacred groves, the Huntsman of the Wild Hunt,
+## Scorched Earth; StageRegistry "greenwood"; null on every other stage).
+var greenwood: GreenwoodDirector = null
+# --- Act XV (temporary number): the Fae Court ---
+## The Fae Court's mechanics (the endless summer, the fairy rings, the Winter
+## Prince; StageRegistry "fae_court"; null on every other stage).
+var fae_court: FaeCourtDirector = null
+# --- Act XV (temporary number): the World-Tree ---
+## The World-Tree's mechanics (the Gardener of Roots; StageRegistry
+## "world_tree"; null on every other stage).
+var world_tree: WorldTreeDirector = null
 ## Sanctum kit bookkeeping: recent deaths, Confessor revivals, danger hints.
 var rites: CovenantRites
 ## The living miniboss shown on the HUD's miniboss bar (the Cathedral
@@ -545,6 +716,12 @@ func _ready() -> void:
 		crash_site.game = game
 		crash_site.config = stage_def["crash_site"]
 		add_child(crash_site)  # The Crash Site's director.
+	# --- Act X: the Smuggler's Cutter ---
+	if not (stage_def.get("cutter", {}) as Dictionary).is_empty():
+		cutter = CutterDirector.new()
+		cutter.game = game
+		cutter.config = stage_def["cutter"]
+		add_child(cutter)  # The Smuggler's Cutter's director.
 	# --- Act IX: the Proving Moon ---
 	if not (stage_def.get("proving_moon", {}) as Dictionary).is_empty():
 		proving_moon = ProvingMoonDirector.new()
@@ -557,6 +734,108 @@ func _ready() -> void:
 		ark.game = game
 		ark.config = stage_def["ark"]
 		add_child(ark)  # The Ark of the Concord's director.
+	# --- Act X: the Treasure Galleon ---
+	if not (stage_def.get("galleon", {}) as Dictionary).is_empty():
+		galleon = GalleonDirector.new()
+		galleon.game = game
+		galleon.config = stage_def["galleon"]
+		add_child(galleon)  # The Treasure Galleon's director.
+	# --- Act X: the Maelstrom ---
+	if not (stage_def.get("maelstrom", {}) as Dictionary).is_empty():
+		maelstrom = MaelstromDirector.new()
+		maelstrom.game = game
+		maelstrom.config = stage_def["maelstrom"]
+		add_child(maelstrom)  # The Maelstrom's director.
+	# --- Act XI (temporary): the Barrow Fields ---
+	if not (stage_def.get("barrow_fields", {}) as Dictionary).is_empty():
+		barrow_fields = BarrowFieldsDirector.new()
+		barrow_fields.game = game
+		barrow_fields.config = stage_def["barrow_fields"]
+		add_child(barrow_fields)  # The Barrow Fields' director.
+	# --- Act XI (temporary): Valgard ---
+	if not (stage_def.get("valgard", {}) as Dictionary).is_empty():
+		valgard = ValgardDirector.new()
+		valgard.game = game
+		valgard.config = stage_def["valgard"]
+		add_child(valgard)  # Valgard's director.
+	# --- Act XI (temporary): Vigrid ---
+	if not (stage_def.get("vigrid", {}) as Dictionary).is_empty():
+		vigrid = VigridDirector.new()
+		vigrid.game = game
+		vigrid.config = stage_def["vigrid"]
+		add_child(vigrid)  # Vigrid's director.
+	# --- Act XII (temporary number): the Necropolis of Sand ---
+	if not (stage_def.get("necropolis", {}) as Dictionary).is_empty():
+		necropolis = NecropolisDirector.new()
+		necropolis.game = game
+		necropolis.config = stage_def["necropolis"]
+		add_child(necropolis)  # The Necropolis of Sand's director.
+	# --- Act XII (temporary number): the Temple of the Lioness ---
+	if not (stage_def.get("lioness_temple", {}) as Dictionary).is_empty():
+		lioness_temple = LionessTempleDirector.new()
+		lioness_temple.game = game
+		lioness_temple.config = stage_def["lioness_temple"]
+		add_child(lioness_temple)  # The Temple of the Lioness's director.
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	if not (stage_def.get("two_truths", {}) as Dictionary).is_empty():
+		two_truths = TwoTruthsDirector.new()
+		two_truths.game = game
+		two_truths.config = stage_def["two_truths"]
+		add_child(two_truths)  # The Hall of Two Truths' director.
+	# --- Act XIII (temporary number): the Silver Stair ---
+	if not (stage_def.get("silver_stair", {}) as Dictionary).is_empty():
+		silver_stair = SilverStairDirector.new()
+		silver_stair.game = game
+		silver_stair.config = stage_def["silver_stair"]
+		add_child(silver_stair)  # The Silver Stair's director.
+	# --- Act XIII (temporary number): the Wheel of Thrones ---
+	if not (stage_def.get("wheel_of_thrones", {}) as Dictionary).is_empty():
+		wheel_of_thrones = WheelOfThronesDirector.new()
+		wheel_of_thrones.game = game
+		wheel_of_thrones.config = stage_def["wheel_of_thrones"]
+		add_child(wheel_of_thrones)  # The Wheel of Thrones' director.
+	# --- Act XIII (temporary number): the Empyrean ---
+	if not (stage_def.get("empyrean", {}) as Dictionary).is_empty():
+		empyrean = EmpyreanDirector.new()
+		empyrean.game = game
+		empyrean.config = stage_def["empyrean"]
+		add_child(empyrean)  # The Empyrean's director.
+	# --- Act XIV (temporary number): the Fern Basin ---
+	if not (stage_def.get("fern_basin", {}) as Dictionary).is_empty():
+		fern_basin = FernBasinDirector.new()
+		fern_basin.game = game
+		fern_basin.config = stage_def["fern_basin"]
+		add_child(fern_basin)  # The Fern Basin's director.
+	# --- Act XIV (temporary number): the Great Plain ---
+	if not (stage_def.get("great_plain", {}) as Dictionary).is_empty():
+		great_plain = GreatPlainDirector.new()
+		great_plain.game = game
+		great_plain.config = stage_def["great_plain"]
+		add_child(great_plain)  # The Great Plain's director.
+	# --- Act XIV (temporary number): the Last Day ---
+	if not (stage_def.get("last_day", {}) as Dictionary).is_empty():
+		last_day = LastDayDirector.new()
+		last_day.game = game
+		last_day.config = stage_def["last_day"]
+		add_child(last_day)  # The Last Day's director.
+	# --- Act XV (temporary number): the Greenwood ---
+	if not (stage_def.get("greenwood", {}) as Dictionary).is_empty():
+		greenwood = GreenwoodDirector.new()
+		greenwood.game = game
+		greenwood.config = stage_def["greenwood"]
+		add_child(greenwood)  # The Greenwood's director.
+	# --- Act XV (temporary number): the Fae Court ---
+	if not (stage_def.get("fae_court", {}) as Dictionary).is_empty():
+		fae_court = FaeCourtDirector.new()
+		fae_court.game = game
+		fae_court.config = stage_def["fae_court"]
+		add_child(fae_court)  # The Fae Court's director.
+	# --- Act XV (temporary number): the World-Tree ---
+	if not (stage_def.get("world_tree", {}) as Dictionary).is_empty():
+		world_tree = WorldTreeDirector.new()
+		world_tree.game = game
+		world_tree.config = stage_def["world_tree"]
+		add_child(world_tree)  # The World-Tree's director.
 
 
 # =====================================================================================
@@ -701,12 +980,66 @@ func step(delta: float) -> void:
 	# --- Act IX: the Crash Site ---
 	if crash_site != null:
 		crash_site.step(delta)  # The crater, Infestation's eggs, the Brood Matriarch.
+	# --- Act X: the Smuggler's Cutter ---
+	if cutter != null:
+		cutter.step(delta)  # The powder barrels, the Fog Bank, Gorran's ram, the Fire Ship.
 	# --- Act IX: the Proving Moon ---
 	if proving_moon != null:
 		proving_moon.step(delta)  # The Warbeast.
 	# --- Act IX: the Ark ---
 	if ark != null:
 		ark.step(delta)  # The tanks, the vents.
+	# --- Act X: the Treasure Galleon ---
+	if galleon != null:
+		galleon.step(delta)  # The zones, the broadsides, the deck cannons, Old Hollow-Eye.
+	# --- Act X: the Maelstrom ---
+	if maelstrom != null:
+		maelstrom.step(delta)  # The Heave, the raised ghosts, the Ghost Bosun.
+	# --- Act XI (temporary): the Barrow Fields ---
+	if barrow_fields != null:
+		barrow_fields.step(delta)  # The braziers by the map, the drifts, Keep the Fires, the Wight.
+	# --- Act XI (temporary): Valgard ---
+	if valgard != null:
+		valgard.step(delta)  # The Feast, the Einherjar Champion.
+	# --- Act XI (temporary): Vigrid ---
+	if vigrid != null:
+		vigrid.step(delta)  # The Fading Light, the vanguard.
+	# --- Act XII (temporary number): the Necropolis of Sand ---
+	if necropolis != null:
+		necropolis.step(delta)  # The jars beside the tombs, the Pass's storm, the Sand Colossus.
+	# --- Act XII (temporary number): the Temple of the Lioness ---
+	if lioness_temple != null:
+		lioness_temple.step(delta)  # The Awakening Statues, the Warden's seal.
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	if two_truths != null:
+		two_truths.step(delta)  # The Scales.
+	# --- Act XIII (temporary number): the Silver Stair ---
+	if silver_stair != null:
+		silver_stair.step(delta)  # The Stair's steps and banks, Without Sin, the Cherub of the Gate.
+	# --- Act XIII (temporary number): the Wheel of Thrones ---
+	if wheel_of_thrones != null:
+		wheel_of_thrones.step(delta)  # The turning spheres, the Dominion of the Spheres, The Wheel Breaks.
+	# --- Act XIII (temporary number): the Empyrean ---
+	if empyrean != null:
+		empyrean.step(delta)  # The Choir, the Herald of the Seventh Trumpet, The Last Word.
+	# --- Act XIV (temporary number): the Fern Basin ---
+	if fern_basin != null:
+		fern_basin.step(delta)  # The Tar Seeps, the Bog Crocs, Ironjaw and her nest.
+	# --- Act XIV (temporary number): the Great Plain ---
+	if great_plain != null:
+		great_plain.step(delta)  # The Watering Hole, the Canyon, Mother Clubtail, Nothing Taken.
+	# --- Act XIV (temporary number): the Last Day ---
+	if last_day != null:
+		last_day.step(delta)  # Fire from the Sky, the growing meteor, Thunderwing.
+	# --- Act XV (temporary number): the Greenwood ---
+	if greenwood != null:
+		greenwood.step(delta)  # The sacred groves, the Huntsman, Scorched Earth.
+	# --- Act XV (temporary number): the Fae Court ---
+	if fae_court != null:
+		fae_court.step(delta)  # The endless summer, the fairy rings, the Winter Prince.
+	# --- Act XV (temporary number): the World-Tree ---
+	if world_tree != null:
+		world_tree.step(delta)  # The Gardener of Roots.
 
 
 ## The Archive kinds' world hazards (ArchiveHazards), created on first use.
@@ -763,6 +1096,12 @@ func regular_alive() -> int:
 		n -= game.city.civilians.alive_count()  # Act VIII: civilians have their own cap.
 	if crash_site != null:
 		n -= crash_site.eggs_alive()  # Act IX, the Crash Site: Infestation's eggs have their own cap.
+	if game.corsair != null:
+		n += game.corsair.alive_adjust()  # Act X: crew waiting for a boat count; boats and hooks do not.
+	if cutter != null:
+		n -= cutter.structures_alive()  # Act X, the Cutter: the powder barrels and the ram longboat are not crew.
+	if game.dynasty != null:
+		n -= game.dynasty.rebirth.alive_count()  # Act XII (temporary): Rebirth's cartouches have their own cap.
 	return n
 
 
@@ -850,12 +1189,66 @@ func objective_text() -> String:
 	# --- Act IX: the Crash Site ---
 	if crash_site != null and crash_site.objective_override() != "":
 		return crash_site.objective_override()  # The Brood Matriarch.
+	# --- Act X: the Smuggler's Cutter ---
+	if cutter != null and cutter.objective_override() != "":
+		return cutter.objective_override()  # Bosun Gorran.
 	# --- Act IX: the Proving Moon ---
 	if proving_moon != null and proving_moon.objective_override() != "":
 		return proving_moon.objective_override()  # The Last Trophy's countdown, the Warbeast.
 	# --- Act IX: the Ark ---
 	if ark != null and ark.objective_override() != "":
 		return ark.objective_override()  # The Luminous Archon, the Reaping.
+	# --- Act X: the Treasure Galleon ---
+	if galleon != null and galleon.objective_override() != "":
+		return galleon.objective_override()  # The Admiral's plank, a broadside, Old Hollow-Eye.
+	# --- Act X: the Maelstrom ---
+	if maelstrom != null and maelstrom.objective_override() != "":
+		return maelstrom.objective_override()  # The Ghost Bosun, the Heave's arrow (the HUD arrow, owner-approved proposal).
+	# --- Act XI (temporary): the Barrow Fields ---
+	if barrow_fields != null and barrow_fields.objective_override() != "":
+		return barrow_fields.objective_override()  # The Barrow-Wight.
+	# --- Act XI (temporary): Valgard ---
+	if valgard != null and valgard.objective_override() != "":
+		return valgard.objective_override()  # The Einherjar Champion.
+	# --- Act XI (temporary): Vigrid ---
+	if vigrid != null and vigrid.objective_override() != "":
+		return vigrid.objective_override()  # The Fire-Giant of the south, Odin's phases.
+	# --- Act XII (temporary number): the Necropolis of Sand ---
+	if necropolis != null and necropolis.objective_override() != "":
+		return necropolis.objective_override()  # The Sand Colossus, a jar standing near.
+	# --- Act XII (temporary number): the Temple of the Lioness ---
+	if lioness_temple != null and lioness_temple.objective_override() != "":
+		return lioness_temple.objective_override()  # The Lion Warden's sealed hall.
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	if two_truths != null and two_truths.objective_override() != "":
+		return two_truths.objective_override()  # The Whelp, the Weighing.
+	# --- Act XIII (temporary number): the Silver Stair ---
+	if silver_stair != null and silver_stair.objective_override() != "":
+		return silver_stair.objective_override()  # The Cherub of the Gate.
+	# --- Act XIII (temporary number): the Wheel of Thrones ---
+	if wheel_of_thrones != null and wheel_of_thrones.objective_override() != "":
+		return wheel_of_thrones.objective_override()  # The Dominion of the Spheres.
+	# --- Act XIII (temporary number): the Empyrean ---
+	if empyrean != null and empyrean.objective_override() != "":
+		return empyrean.objective_override()  # The Herald of the Seventh Trumpet.
+	# --- Act XIV (temporary number): the Fern Basin ---
+	if fern_basin != null and fern_basin.objective_override() != "":
+		return fern_basin.objective_override()  # Ironjaw and her nest.
+	# --- Act XIV (temporary number): the Great Plain ---
+	if great_plain != null and great_plain.objective_override() != "":
+		return great_plain.objective_override()  # Mother Clubtail.
+	# --- Act XIV (temporary number): the Last Day ---
+	if last_day != null and last_day.objective_override() != "":
+		return last_day.objective_override()  # Thunderwing, the Sky King.
+	# --- Act XV (temporary number): the Greenwood ---
+	if greenwood != null and greenwood.objective_override() != "":
+		return greenwood.objective_override()  # The Huntsman of the Wild Hunt.
+	# --- Act XV (temporary number): the Fae Court ---
+	if fae_court != null and fae_court.objective_override() != "":
+		return fae_court.objective_override()  # The Winter Prince.
+	# --- Act XV (temporary number): the World-Tree ---
+	if world_tree != null and world_tree.objective_override() != "":
+		return world_tree.objective_override()  # The Gardener of Roots.
 	if boss != null and not boss.active:
 		return String(boss_info["dead_objective"])
 	return segments[segment_index]["objective"]
@@ -906,9 +1299,19 @@ func _spawn_trickle(delta: float) -> void:
 		var weights: Dictionary = seg["weights"]  # The segment's kind weights.
 		if game.shogunate != null:
 			weights = game.shogunate.sun.timeline_weights(seg)  # Act V: night kinds only at night (the one timeline helper).
+		if game.wild != null:
+			weights = game.wild.seasons.timeline_weights(seg)  # Act XV (temporary): each season's kinds (the one timeline helper; the weights unchanged off the act).
 		var kind := _pick_kind(game.difficulty.trickle_weights(weights, game.elapsed))
 		var pos := _ring_point(randf() * TAU) if game.coop == null else _ring_point_at(game.coop.spawn_anchor(), randf() * TAU)  # Spawn point on the ring (co-op: each necromancer in turn).
 		var elite := elite_chance > 0.0 and randf() < elite_chance  # Promoted by the level.
+		# --- Act X: the Black Tide --- THE ONE SPAWN ROUTE on a corsair stage: by
+		# boat (BoardingParty) or from the sea (SeaStrikes); never at the ring.
+		if game.corsair != null and game.corsair.routes():
+			game.corsair.route_spawn(resolve_kind(kind), hp_mult, elite, 1.0, false, elite)
+			if elite:
+				game.stat_add("elites_promoted", 1.0)
+			alive += 1
+			continue
 		var e := _spawn_enemy(kind, pos, elite)  # The new soldier.
 		if elite:
 			# A threat, not a loot source: base XP, no elite chest / drop chance.
@@ -1042,6 +1445,17 @@ func _run_event(ev: Dictionary) -> void:
 			game.inferno_rules().portals.start_event(ev)  # Demon portals (they show the event's banner).
 			game.stat_add("wave_events", 1.0)
 			return  # An Act VI portal event.
+		# --- Act XI (temporary): the Hall of the Slain ---
+		"rune_stone":
+			game.norse_rules().stones.start_event(ev)  # Rune-Stones (they show the event's banner).
+			game.stat_add("wave_events", 1.0)
+			return  # A Norse rune-stone event.
+		# --- Act XI (temporary): the Barrow Fields ---
+		"barrow", "wight":
+			if barrow_fields != null:
+				barrow_fields.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return  # The Barrow Fields' open barrows and miniboss.
 		# --- Act VI: the Burning Gate ---
 		"gatekeeper":
 			if burning_gate != null:
@@ -1096,6 +1510,12 @@ func _run_event(ev: Dictionary) -> void:
 				crash_site.start_event(ev)
 			game.stat_add("wave_events", 1.0)
 			return  # The Crash Site's miniboss (CrashSiteDirector).
+		# --- Act X: the Smuggler's Cutter ---
+		"gorran":
+			if cutter != null:
+				cutter.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return  # The Cutter's miniboss and his ram longboat (CutterDirector).
 		# --- Act IX: the Proving Moon ---
 		"warbeast":
 			if proving_moon != null:
@@ -1108,10 +1528,108 @@ func _run_event(ev: Dictionary) -> void:
 				ark.start_event(ev)
 			game.stat_add("wave_events", 1.0)
 			return  # The Ark's miniboss (ArkDirector).
+		# --- Act X: the Treasure Galleon ---
+		"hollow_eye":
+			if galleon != null:
+				galleon.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return  # The Treasure Galleon's miniboss (GalleonDirector).
+		# --- Act X: the Maelstrom ---
+		"ghost_bosun":
+			if maelstrom != null:
+				maelstrom.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return  # The Maelstrom's miniboss (MaelstromDirector).
+		# --- Act XI (temporary): Valgard ---
+		"einherjar_champion":
+			if valgard != null:
+				valgard.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return  # Valgard's miniboss (ValgardDirector).
+		# --- Act XI (temporary): Vigrid ---
+		"muspel_giant":
+			if vigrid != null:
+				vigrid.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return  # Vigrid's miniboss (VigridDirector).
+		# --- Act XII (temporary number): the Necropolis of Sand ---
+		"colossus":
+			if necropolis != null:
+				necropolis.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return  # The Necropolis's miniboss (NecropolisDirector).
+		# --- Act XII (temporary number): the Temple of the Lioness ---
+		"statues_wake", "lion_warden":
+			if lioness_temple != null:
+				lioness_temple.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return  # The Temple's Awakening Statues and miniboss (LionessTempleDirector).
+		# --- Act XII (temporary number): the Hall of Two Truths ---
+		"devourers_whelp", "crocodile_rise":
+			if two_truths != null:
+				two_truths.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return  # The Hall's miniboss and wardens (TwoTruthsDirector).
+		# --- Act XIII (temporary number): the Silver Stair ---
+		"cherub_gate":
+			if silver_stair != null:
+				silver_stair.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return  # The Silver Stair's miniboss (SilverStairDirector).
+		# --- Act XIII (temporary number): the Wheel of Thrones ---
+		"spheres_dominion":
+			if wheel_of_thrones != null:
+				wheel_of_thrones.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return  # The Wheel of Thrones' miniboss (WheelOfThronesDirector).
+		# --- Act XIII (temporary number): the Empyrean ---
+		"seventh_herald":
+			if empyrean != null:
+				empyrean.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return  # The Empyrean's miniboss (EmpyreanDirector).
+		# --- Act XIV (temporary number): the Fern Basin ---
+		"nest_mother":
+			if fern_basin != null:
+				fern_basin.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return  # The Fern Basin's miniboss and her nest (FernBasinDirector).
+		# --- Act XIV (temporary number): the Great Plain ---
+		"herd_mother":
+			if great_plain != null:
+				great_plain.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return  # The Great Plain's miniboss and her herd (GreatPlainDirector).
+		# --- Act XIV (temporary number): the Last Day ---
+		"sky_king":
+			if last_day != null:
+				last_day.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return  # The Last Day's miniboss (LastDayDirector).
+		# --- Act XV (temporary number): the Greenwood ---
+		"huntsman":
+			if greenwood != null:
+				greenwood.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return  # The Greenwood's miniboss and his riders (GreenwoodDirector).
+		# --- Act XV (temporary number): the Fae Court ---
+		"winter_prince":
+			if fae_court != null:
+				fae_court.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return  # The Fae Court's miniboss and his minute of winter (FaeCourtDirector).
+		# --- Act XV (temporary number): the World-Tree ---
+		"gardener":
+			if world_tree != null:
+				world_tree.start_event(ev)
+			game.stat_add("wave_events", 1.0)
+			return  # The World-Tree's miniboss (WorldTreeDirector).
 	show_banner(ev["banner"])
 	var groups: Array = ev["groups"]
 	if game.shogunate != null:
 		groups = game.shogunate.sun.filter_groups(groups)  # Act V: night kinds only at night (the one timeline helper).
+	if game.wild != null:
+		groups = game.wild.seasons.filter_groups(groups)  # Act XV (temporary): other seasons' kinds held back (the one timeline helper).
 	if harbour != null and harbour.wave_mult() < 1.0:
 		groups = _scaled_groups(groups, harbour.wave_mult())  # Act II: sunk bell buoys shrink the Eye's waves.
 	if assembly != null and assembly.wave_mult() < 1.0:
@@ -1186,7 +1704,10 @@ func _spawn_formation_here(formation: String, groups: Array) -> void:
 				var col := i % 8
 				pos = p + dir * (ring + float(row) * WaveData.LINE_SPACING) + perp * (float(col) - 3.5) * WaveData.LINE_SPACING
 		var m := members[i]
-		_spawn_enemy(m["kind"], pos, m["elite"])
+		if game.corsair != null and game.corsair.routes():
+			game.corsair.route_spawn(resolve_kind(m["kind"]), hp_mult, m["elite"], 1.0, false, false)  # Act X: by boat or from the sea.
+		else:
+			_spawn_enemy(m["kind"], pos, m["elite"])
 		alive += 1
 
 
@@ -1211,7 +1732,11 @@ func _spawn_boss() -> void:
 	# SHOGUNATE_BOSS_DIR (Act V), else an Inferno boss from INFERNO_BOSS_DIR
 	# (Act VI), else a Sanguine Court boss from COURT_BOSS_DIR (Act VII), else a
 	# Last Line boss from CITY_BOSS_DIR (Act VIII), else a Concord of Stars boss
-	# from CONCORD_BOSS_DIR (Act IX); Sir Alaric when none exists.
+	# from CONCORD_BOSS_DIR (Act IX), else a Necropolis Dynasty boss from
+	# DYNASTY_BOSS_DIR (Act XII, temporary), else a Celestial Host boss from
+	# HOST_BOSS_DIR (Act XIII, temporary), else an Age of Titans boss from
+	# PRIMEVAL_BOSS_DIR (Act XIV, temporary), else a Turning Year boss from
+	# WILD_BOSS_DIR (Act XV, temporary); Sir Alaric when none exists.
 	var sid := String(boss_info.get("script", boss_info["id"]))  # Boss script id.
 	match sid:
 		"vael":
@@ -1236,6 +1761,18 @@ func _spawn_boss() -> void:
 				path = CITY_BOSS_DIR + "boss_" + sid + ".gd"  # Act VIII: a Last Line boss script.
 			if not ResourceLoader.exists(path):
 				path = CONCORD_BOSS_DIR + "boss_" + sid + ".gd"  # Act IX: a Concord of Stars boss script.
+			if not ResourceLoader.exists(path):
+				path = CORSAIR_BOSS_DIR + "boss_" + sid + ".gd"  # Act X: a Black Tide boss script.
+			if not ResourceLoader.exists(path):
+				path = NORSE_BOSS_DIR + "boss_" + sid + ".gd"  # The Hall of the Slain: a Norse boss script.
+			if not ResourceLoader.exists(path):
+				path = DYNASTY_BOSS_DIR + "boss_" + sid + ".gd"  # Act XII (temporary): a Necropolis Dynasty boss script.
+			if not ResourceLoader.exists(path):
+				path = HOST_BOSS_DIR + "boss_" + sid + ".gd"  # Act XIII (temporary): a Celestial Host boss script.
+			if not ResourceLoader.exists(path):
+				path = PRIMEVAL_BOSS_DIR + "boss_" + sid + ".gd"  # Act XIV (temporary): an Age of Titans boss script.
+			if not ResourceLoader.exists(path):
+				path = WILD_BOSS_DIR + "boss_" + sid + ".gd"  # Act XV (temporary): a Turning Year boss script.
 			boss = (load(path) as Script).new() as Boss if ResourceLoader.exists(path) else BossAlaric.new()
 	add_child(boss)
 	boss.setup_boss(game, _ring_point(randf() * TAU), game.difficulty.boss_hp_mult() * float(stage_def["enemy_hp_mult"]), _next_slot)
@@ -1278,6 +1815,9 @@ func _reckoning_wave_here(r: Dictionary) -> void:
 	var rkind := resolve_kind(rk) if rk != "" else "inquisitor"  # Real kind of the main wave.
 	var rdef: Dictionary = enemy_def(rk) if rk != "" else EnemyData.RECKONING_ENEMY  # Its design row.
 	for i in count:
+		if game.corsair != null and game.corsair.routes():
+			game.corsair.route_spawn(rkind, hp_scale, false, dmg_scale, true, false)  # Act X: the Black Tide comes by boat.
+			continue
 		var e := _spawn_enemy_def(rkind, rdef, _ring_point(offset + TAU * float(i) / float(count)), hp_scale, false)
 		e.damage *= dmg_scale
 		e.is_reckoning = true
@@ -1287,6 +1827,9 @@ func _reckoning_wave_here(r: Dictionary) -> void:
 		var n := int(comp["count"]) + floori(float(reckoning_wave) * float(comp["growth"]))  # Companions this wave.
 		var kind := resolve_kind(String(comp["kind"]))  # Real kind of the companion.
 		for i in n:
+			if game.corsair != null and game.corsair.routes():
+				game.corsair.route_spawn(kind, hp_scale, false, dmg_scale, true, false)  # Act X: by boat (or from the sea).
+				continue
 			var c := _spawn_enemy_def(kind, enemy_def(kind), _ring_point(offset + TAU * (float(i) + 0.5) / float(maxi(1, n))), hp_scale, false)
 			c.damage *= dmg_scale
 			c.is_reckoning = true
@@ -1338,7 +1881,12 @@ func spawn_at(kind: String, pos: Vector2, elite: bool) -> Enemy:
 ## (Act IV: pantheon_def()), then the Shogunate's (Act V: shogunate_def()),
 ## then the Inferno's (Act VI: inferno_def()), then the Sanguine Court's
 ## (Act VII: court_def()), then the Last Line's (Act VIII: city_def()),
-## then the Concord of Stars' (Act IX: concord_def()),
+## then the Concord of Stars' (Act IX: concord_def()), then the Hall of the
+## Slain's (the Norse act: norse_def()),
+## then the Necropolis Dynasty's (Act XII, temporary: dynasty_def()),
+## then the Celestial Host's (Act XIII, temporary: host_def()),
+## then the Age of Titans' (Act XIV, temporary: primeval_def()),
+## then the Turning Year's (Act XV, temporary: wild_def()),
 ## then SanctumEnemyData.ENEMIES (the Sanctum of Judgment's soldiers and the
 ## Cathedral Guardian).
 func enemy_def(kind: String) -> Dictionary:
@@ -1375,6 +1923,24 @@ func enemy_def(kind: String) -> Dictionary:
 	var concord := concord_def(kind)  # Act IX kinds ({} when not a Concord kind).
 	if not concord.is_empty():
 		return concord
+	var corsair := corsair_def(kind)  # Act X kinds ({} when not a Black Tide kind).
+	if not corsair.is_empty():
+		return corsair
+	var norse := norse_def(kind)  # The Hall of the Slain's kinds ({} when not a Norse kind).
+	if not norse.is_empty():
+		return norse
+	var dynasty := dynasty_def(kind)  # Act XII (temporary) kinds ({} when not a Dynasty kind).
+	if not dynasty.is_empty():
+		return dynasty
+	var host := host_def(kind)  # Act XIII (temporary) kinds ({} when not a Host kind).
+	if not host.is_empty():
+		return host
+	var primeval := primeval_def(kind)  # Act XIV (temporary) kinds ({} when not a Titans kind).
+	if not primeval.is_empty():
+		return primeval
+	var wild := wild_def(kind)  # Act XV (temporary) kinds ({} when not a Wild kind).
+	if not wild.is_empty():
+		return wild
 	return SanctumEnemyData.ENEMIES[kind]
 
 
@@ -1505,6 +2071,102 @@ static func concord_def(kind: String) -> Dictionary:
 	return {}
 
 
+# --- Act X: the Black Tide ---
+## Design row of Black Tide kind `kind` (real id), or {} when it is none:
+## CorsairEnemyData (the shared kinds, the boats and the hooks) first, then
+## each Act X stage's own table (phase 2 fills them).
+static func corsair_def(kind: String) -> Dictionary:
+	if CorsairEnemyData.ENEMIES.has(kind):
+		return CorsairEnemyData.ENEMIES[kind]
+	if CutterEnemyData.ENEMIES.has(kind):
+		return CutterEnemyData.ENEMIES[kind]
+	if GalleonEnemyData.ENEMIES.has(kind):
+		return GalleonEnemyData.ENEMIES[kind]
+	if MaelstromEnemyData.ENEMIES.has(kind):
+		return MaelstromEnemyData.ENEMIES[kind]
+	return {}
+
+
+# --- Act XI (temporary): the Hall of the Slain ---
+## Design row of Hall of the Slain kind `kind` (real id), or {} when it is
+## none: NorseEnemyData (the shared kinds and the Rune-Stone) first, then each
+## of the act's stage tables (phase 2 fills them).
+static func norse_def(kind: String) -> Dictionary:
+	if NorseEnemyData.ENEMIES.has(kind):
+		return NorseEnemyData.ENEMIES[kind]
+	if BarrowFieldsEnemyData.ENEMIES.has(kind):
+		return BarrowFieldsEnemyData.ENEMIES[kind]
+	if ValgardEnemyData.ENEMIES.has(kind):
+		return ValgardEnemyData.ENEMIES[kind]
+	if VigridEnemyData.ENEMIES.has(kind):
+		return VigridEnemyData.ENEMIES[kind]
+	return {}
+
+
+# --- Act XII (temporary number): the Necropolis Dynasty ---
+## Design row of Necropolis Dynasty kind `kind` (real id), or {} when it is
+## none: DynastyEnemyData (the shared kinds, the jar and the cartouche) first,
+## then each Dynasty stage's own table (phase 2 fills them).
+static func dynasty_def(kind: String) -> Dictionary:
+	if DynastyEnemyData.ENEMIES.has(kind):
+		return DynastyEnemyData.ENEMIES[kind]
+	if NecropolisEnemyData.ENEMIES.has(kind):
+		return NecropolisEnemyData.ENEMIES[kind]
+	if LionessTempleEnemyData.ENEMIES.has(kind):
+		return LionessTempleEnemyData.ENEMIES[kind]
+	if TwoTruthsEnemyData.ENEMIES.has(kind):
+		return TwoTruthsEnemyData.ENEMIES[kind]
+	return {}
+
+
+# --- Act XIII (temporary number): the Celestial Host ---
+## Design row of Celestial Host kind `kind` (real id), or {} when it is none:
+## HostEnemyData (the shared kinds) first, then each Host stage's own table
+## (phase 2 fills them).
+static func host_def(kind: String) -> Dictionary:
+	if HostEnemyData.ENEMIES.has(kind):
+		return HostEnemyData.ENEMIES[kind]
+	if SilverStairEnemyData.ENEMIES.has(kind):
+		return SilverStairEnemyData.ENEMIES[kind]
+	if WheelOfThronesEnemyData.ENEMIES.has(kind):
+		return WheelOfThronesEnemyData.ENEMIES[kind]
+	if EmpyreanEnemyData.ENEMIES.has(kind):
+		return EmpyreanEnemyData.ENEMIES[kind]
+	return {}
+
+
+# --- Act XIV (temporary number): the Age of Titans ---
+## Design row of Age of Titans kind `kind` (real id), or {} when it is none:
+## PrimevalEnemyData (the shared kinds) first, then each Titans stage's own
+## table (phase 2 fills them).
+static func primeval_def(kind: String) -> Dictionary:
+	if PrimevalEnemyData.ENEMIES.has(kind):
+		return PrimevalEnemyData.ENEMIES[kind]
+	if FernBasinEnemyData.ENEMIES.has(kind):
+		return FernBasinEnemyData.ENEMIES[kind]
+	if GreatPlainEnemyData.ENEMIES.has(kind):
+		return GreatPlainEnemyData.ENEMIES[kind]
+	if LastDayEnemyData.ENEMIES.has(kind):
+		return LastDayEnemyData.ENEMIES[kind]
+	return {}
+
+
+# --- Act XV (temporary number): the Turning Year ---
+## Design row of Turning Year kind `kind` (real id), or {} when it is none:
+## WildEnemyData (the shared kinds) first, then each Wild stage's own table
+## (phase 2 fills them).
+static func wild_def(kind: String) -> Dictionary:
+	if WildEnemyData.ENEMIES.has(kind):
+		return WildEnemyData.ENEMIES[kind]
+	if GreenwoodEnemyData.ENEMIES.has(kind):
+		return GreenwoodEnemyData.ENEMIES[kind]
+	if FaeCourtEnemyData.ENEMIES.has(kind):
+		return FaeCourtEnemyData.ENEMIES[kind]
+	if WorldTreeEnemyData.ENEMIES.has(kind):
+		return WorldTreeEnemyData.ENEMIES[kind]
+	return {}
+
+
 ## True if `kind` is a spawnable enemy kind of any stage's data (real ids;
 ## stage aliases are not resolved here).
 static func is_known_kind(kind: String) -> bool:
@@ -1516,7 +2178,13 @@ static func is_known_kind(kind: String) -> bool:
 			or not inferno_def(kind).is_empty() \
 			or not court_def(kind).is_empty() \
 			or not city_def(kind).is_empty() \
-			or not concord_def(kind).is_empty()  # Act V, Act VI, Act VII, Act VIII, Act IX
+			or not concord_def(kind).is_empty() \
+			or not corsair_def(kind).is_empty() \
+			or not norse_def(kind).is_empty() \
+			or not dynasty_def(kind).is_empty() \
+			or not host_def(kind).is_empty() \
+			or not primeval_def(kind).is_empty() \
+			or not wild_def(kind).is_empty()  # Act V to Act IX, the Black Tide, the Norse act, the Dynasty, the Host, the Titans, the Turning Year
 
 
 ## Registers `e` as the living miniboss (GuardianKit; the HUD shows its bar
@@ -1547,6 +2215,15 @@ func miniboss_alive() -> Enemy:
 ## "kind_aliases", e.g. the Sanctum's "sentinel"), else `kind` itself.
 func resolve_kind(kind: String) -> String:
 	return String(_kind_aliases.get(kind, kind))
+
+
+# --- Act X: the Black Tide ---
+## Spawns `kind` at `pos` (moved out of obstacles and onto the deck) with an
+## explicit HP multiplier, ignoring the caps: THE call BoardingParty (a crewman
+## stepping off his plank, a boat, its hooks) and SeaStrikes (a swimmer) use
+## once the timeline's spawn has waited its turn (CorsairRules.route_spawn()).
+func spawn_routed(kind: String, pos: Vector2, hp_scale: float, elite: bool) -> Enemy:
+	return _spawn_enemy_def(kind, enemy_def(kind), pos, hp_scale, elite)
 
 
 ## Takes an enemy from the pool (or creates one) and activates it.

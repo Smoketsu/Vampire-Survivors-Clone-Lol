@@ -49,15 +49,13 @@ const BOSS_TIME: float = 1020.0  # TUNING (not in GDD) 17:00, as on every stage
 ## Enemy max-HP multiplier of this stage on top of the shared time scaling
 ## (Act VIII starts a step above Castle Sanguis's 1.85; the step goes in HP,
 ## not damage: the Act IV lesson).
-const ENEMY_HP_MULT: float = 2.0  # TUNING (not in GDD) the foundation's placeholder, kept; tuned in the balance pass
+const ENEMY_HP_MULT: float = 1.8  # TUNING (not in GDD) reorder pass part 3 (slot tuning): 2.0 -> 1.8: Act IV's finale now (built as Act VIII), 2/10 bot deaths and mean min HP 38 (before: the foundation's placeholder, kept; tuned in the balance pass)
 ## Enemy damage multiplier of this stage on top of the shared time scaling
 ## (Castle Sanguis's 1.5, kept: the step up is in HP).
-const ENEMY_DAMAGE_MULT: float = 1.3  # TUNING (not in GDD) was 1.5 (the foundation's placeholder); Act VIII pass 3, owner: Stage damage x1.3
+const ENEMY_DAMAGE_MULT: float = 1.05  # TUNING (not in GDD) reorder pass part 3 (slot tuning, round 2: 1.2 -> 1.05, the first round's 1.2 left mean min HP at 45-73, below Acts II and V's ~80): 1.3 -> 1.2: as the HP step (Act IV now; 2/10 deaths, min HP 38) (before: was 1.5 (the foundation's placeholder); Act VIII pass 3, owner: Stage damage x1.3)
 ## Elapsed game seconds from which the two multipliers apply to regular
 ## enemies (the boss always gets them).
 const ENEMY_MULT_FROM: float = 420.0  # TUNING (not in GDD) (Acts III to VII: 7:00)
-## Soul Ash multiplier of a run on this stage (its own end-screen line).
-const ASH_MULT: float = 1.5  # TUNING (not in GDD) owner decision Oct 2026, GDD §15.0 "Ossuary expansion: owner decisions": every act restarts, stage 3 of Act VIII
 
 # =====================================================================================
 # Zones and their look
@@ -311,12 +309,8 @@ const STAGE := {
 	"id": ID,
 	"display_name": "Liberty Heights",
 	"short_name": "Liberty Heights",
-	"chapter": "Chapter XXIV",
-	"act": 8,  # Act VIII, the Last Line.
 	"playable": true,  # Owner decision (Nov 2026): "Ship it" after the art reviews and playtest passes (GDD §15.0 "Acts VI–IX go live").
 	"description": "The heart of the city: the plaza, the skyline and the Heroes' Tower, where the last heroes of the living make their stand.",
-	"unlock": {"stage": "fort_kessler", "boss_kills": 1},  # Owner-approved: each Act VIII stage opens the next
-	"unlock_text": "Defeat General Harrow at Fort Kessler to unlock.",
 	"boss": BOSS,
 	"segments": SEGMENTS,
 	"events": EVENTS,
@@ -331,7 +325,6 @@ const STAGE := {
 	"enemy_hp_mult": ENEMY_HP_MULT,
 	"enemy_damage_mult": ENEMY_DAMAGE_MULT,
 	"enemy_mult_from": ENEMY_MULT_FROM,
-	"ash_mult": ASH_MULT,
 	"march": MARCH,  # The four clock-driven zones (MarchDirector).
 	"liberty_heights": LIBERTY_HEIGHTS,  # LibertyHeightsDirector (the zone Supers, guests, the cracks).
 	"city": true,  # Act VIII: Armour, Supers, Civilians, the escalation (CityRules).

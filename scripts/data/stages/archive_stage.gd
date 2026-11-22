@@ -51,8 +51,6 @@ const ENEMY_DAMAGE_MULT: float = 1.2  # TUNING (not in GDD)
 ## Elapsed game seconds from which the two multipliers apply to regular
 ## enemies: Zone II (the boss always gets them).
 const ENEMY_MULT_FROM: float = 420.0  # TUNING (not in GDD) (Act II integration: 300.0; the naive bot died in 7 of 8 runs)
-## Soul Ash multiplier of a run on this stage (its own end-screen line).
-const ASH_MULT: float = 1.25  # TUNING (not in GDD) owner decision Oct 2026, GDD §15.0 "Ossuary expansion: owner decisions"; each act restarts at x1 / x1.25 / x1.5
 
 ## The Unwritten: the Archive's Reckoning (keys as GraveyardStage.RECKONING
 ## plus SanctumStage.RECKONING's companions; "kind" the main wave's kind):
@@ -359,12 +357,8 @@ const STAGE := {
 	"id": ID,
 	"display_name": "The Hollow Archive",
 	"short_name": "Archive",
-	"chapter": "Chapter V",
-	"act": 2,  # Act II, the Ancient Eye.
 	"playable": true,  # Act II integration (balance-checked, 8-seed batches); the owner playtests it from here.
 	"description": "A buried library and observatory under the cliffs where the Eye keeps its god's scripture. Rifts fold the stacks and open doors behind you; the Archivist, Keeper of the Unwritten, guards the last page.",
-	"unlock": {"stage": "harbour", "boss_kills": 1},  # owner-approved: each boss unlocks the next stage
-	"unlock_text": "Slay Abbot Merrow in Gullhaven Harbour to unlock.",
 	"boss": BOSS,
 	"segments": SEGMENTS,
 	"events": EVENTS,
@@ -378,7 +372,6 @@ const STAGE := {
 	"enemy_hp_mult": ENEMY_HP_MULT,
 	"enemy_damage_mult": ENEMY_DAMAGE_MULT,
 	"enemy_mult_from": ENEMY_MULT_FROM,
-	"ash_mult": ASH_MULT,
 	"march": MARCH,
 	"archive": ARCHIVE,
 	"dread": true,  # Act II: Dread on the necromancer (DreadMeter).

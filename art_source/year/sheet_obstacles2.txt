@@ -1,0 +1,7 @@
+A sheet of 3 separate pixel-art game OBSTACLE sprites for a top-down 2D horde-survival game (three-quarter top-down view, camera above and slightly in front), in one row, evenly spaced with wide empty gaps, on a FULLY TRANSPARENT background (real alpha). An enchanted forest. LOW-RESOLUTION pixel art, chunky simple shapes, crisp square pixels, a clean 1-pixel dark outline #14100C, flat colours, at most 3 shades per material, light from the top-left. No ground, no shadows, no text.
+From left to right:
+1. a SACRED GROVE TREE: a tall slender living tree with a round green crown, pale trunk, a few small white blossoms (about 36 px wide, 46 px tall);
+2. a ROSE-MAZE HEDGE segment: a long horizontal stretch of dense dark-green hedge covered in pink and red roses (about 96 px wide, 30 px tall);
+3. a GREAT ROOT: a long horizontal thick bark-brown root of the world tree arching out of the ground with moss on top (about 96 px wide, 26 px tall).
+Colours: bark brown #553C27 #86603E #B08A60; moss #274D24 #599641 #9CCB72; blossom pink #9C5272 #EFA6C3 #FBD9E6; rose red only on the hedge's roses.
+Attached: a game sprite of this game for pixel size, outline weight and flat look.

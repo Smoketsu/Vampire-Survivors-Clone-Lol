@@ -1,0 +1,12 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, a FOSSIL TYRANT: the skeleton of a great tyrannosaur, bone white with a huge skull and open jaw, bare ribcage, small arm bones, long tail bones, soul-teal fire burning in the eye sockets and the ribcage, standing side-on.
+
+LOW-RESOLUTION pixel art: the whole SUBJECT is only 44 pixels tall and about 52 pixels wide, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes. No anti-aliasing, no gradients, no dithering, no glow haze. A skeleton: no human features, no clothes, no weapons.
+
+Subject sex: no sex (a skeleton).
+
+Colours: ONLY flat fills: bone white #9C9078 #E7DEC9 #F8F6EE; dark socket shade #231C18; soul teal #1C6B58 #3DCC94. NO red, NO gold, NO purple.
+
+Outline: a clean 1-pixel dark outline around the whole subject in tar black #120F0D. Light from the top-left. Keep the main shapes clearly brighter than a near-black ground.
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, no dark glow around the subject), one subject only, centred, filling about 85% of the image. No ground, no cast shadow, no text, no frame.
+Attached: (1) a game sprite of this game for pixel size, outline weight and flat look; (2) concept art of this creature for its shape only (re-colour it to the list; keep it flat, chunky and low-resolution).

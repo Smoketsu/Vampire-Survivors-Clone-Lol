@@ -108,7 +108,43 @@ const ORDER := ["void_barrage", "eclipse_ward", "abyssal_detonation",
 	# --- Act IX: the Proving Moon ---
 	"apex_predator",
 	# --- Act IX: the Ark ---
-	"star_abduction"]
+	"star_abduction",
+	# --- Act X: the Smuggler's Cutter ---
+	"keelhauler",
+	# --- Act X: the Treasure Galleon ---
+	"dead_mens_broadside",
+	# --- Act X: the Maelstrom ---
+	"abyssal_mooring",
+	# --- Act XI (temporary): the Barrow Fields ---
+	"barrow_lords_embrace",
+	# --- Act XI (temporary): Valgard ---
+	"chooser_of_the_slain",
+	# --- Act XI (temporary): Vigrid ---
+	"spear_of_the_hanged",
+	# --- Act XII (temporary number): the Necropolis of Sand ---
+	"eternal_shroud",
+	# --- Act XII (temporary number): the Temple of the Lioness ---
+	"eye_of_retribution",
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	"heart_devoured",
+	# --- Act XIII (temporary number): the Silver Stair ---
+	"sword_at_the_gate",
+	# --- Act XIII (temporary number): the Wheel of Thrones ---
+	"ophanim",
+	# --- Act XIII (temporary number): the Empyrean ---
+	"be_not_afraid",
+	# --- Act XIV (temporary number): the Fern Basin ---
+	"apex_pack",
+	# --- Act XIV (temporary number): the Great Plain ---
+	"herd_of_ages",
+	# --- Act XIV (temporary number): the Last Day ---
+	"extinction_event",
+	# --- Act XV (temporary number): the Greenwood ---
+	"the_endless_hunt",
+	# --- Act XV (temporary number): the Fae Court ---
+	"court_of_masks",
+	# --- Act XV (temporary number): the World-Tree ---
+	"return_to_earth"]
 
 ## Evolution definitions.
 ##   base         — spell id that evolves (AbilityData.SPELLS key).
@@ -801,6 +837,370 @@ const EVOLUTIONS := {
 		"stats": {
 			"damage": 88.0, "cooldown": 2.4, "lifts": 3, "lift_time": 1.2, "slam_radius": 70.0, "slam_share": 0.5,  # TUNING (not in GDD) first pass 96 / 0.55
 			"pull": 120.0, "pull_force": 260.0, "quake_share": 0.18,  # TUNING (not in GDD) the evolution flag: the pull round each slam (first pass 0.3: 244k damage, 95k of it quake, in the forced seed-7 Graveyard run)
+		},
+	},
+	# --- Act X: the Smuggler's Cutter ---
+	# Keelhauler (GDD §15.0 "Chain Shot, Keelhauler, Bosun's Whistle and the
+	# Marooned Quartermaster (Act X)"; owner-approved proposal "Chain Shot ->
+	# Keelhauler (+ Bosun's Whistle)"): Chain Shot + Bosun's Whistle (a NEW
+	# passive, owner rule: at Lv 5). Own decision on its kit: heavier, wider
+	# shots that KNOCK every foe they strike `knock` px off the line (never a
+	# boss, miniboss or structure; on the Black Tide's decks, over the rail).
+	# No pull (owner: the act's spells knock back, chain and bombard). Detected
+	# by the "knock" key.
+	"keelhauler": {
+		"base": "chain_shot",
+		"passive": "bosuns_whistle",
+		"display_name": "Keelhauler",  # Owner-approved proposal
+		"icon": "keelhauler",
+		"description": "Barnacled chain-shots tear through the line and back, throwing every foe they strike aside.",
+		"labels": {"damage": "Hit damage", "shots": "Chain-shots", "knock": "Knockback (px)", "cooldown": "Cooldown (s)"},
+		"stats": {
+			"damage": 12.0, "shots": 3, "range": 320.0, "speed": 440.0, "width": 22.0, "cooldown": 2.4,  # TUNING (not in GDD) integration balance 16 -> 12 (159k with the base in the forced seed-7 Cutter run, 2.5x the top summon class); first pass 27 / 2.2 s (185k in the forced seed-7 run, 3.4x the Death Knights), then 19 (177k, 1.7x the Mages: its knocks drown more)
+			"knock": 80.0,  # TUNING (not in GDD) the evolution flag: px each struck foe is knocked off the line
+		},
+	},
+	# --- Act X: the Treasure Galleon ---
+	# Dead Men's Broadside (GDD §15.0 "Cannonade, Dead Men's Broadside, Black
+	# Powder and the Corsair Queen (Act X)"; owner-approved proposal "Cannonade
+	# -> Dead Men's Broadside (+ Black Powder)"): Cannonade + Black Powder (a NEW
+	# passive, owner rule: at Lv 5). Own decision on its kit: five marks,
+	# wider blasts, and every mark takes a second ball `salvo` s later dealing
+	# `salvo_share` of the damage (a double broadside). Detected by the "salvo" key.
+	"dead_mens_broadside": {
+		"base": "cannonade",
+		"passive": "black_powder",
+		"display_name": "Dead Men's Broadside",  # Owner-approved proposal
+		"icon": "dead_mens_broadside",
+		"description": "Five groups marked at once, and a second ghostly ball follows every first.",
+		"labels": {"damage": "Ball damage", "marks": "Groups marked", "salvo": "Second ball after (s)", "cooldown": "Cooldown (s)"},
+		"stats": {
+			"damage": 26.0, "marks": 5, "radius": 42.0, "range": 380.0, "cooldown": 2.8,  # TUNING (not in GDD) integration balance 30 -> 26 (232k with the base, above the Death Knights); first pass 40 / 2.6 s (the forced seed-7 run: 261k from the evolution alone)
+			"salvo": 0.45,  # TUNING (not in GDD) the evolution flag: s between the two balls of a mark
+			"salvo_share": 0.5,  # TUNING (not in GDD) x the damage of the second ball
+		},
+	},
+	# --- Act X: the Maelstrom ---
+	# Abyssal Mooring (GDD §15.0 "Anchor Drop, Abyssal Mooring, Dead Reckoning
+	# and the Ghost Helmsman"; owner-approved proposal "Anchor Drop -> Abyssal
+	# Mooring (+ Dead Reckoning)"): Anchor Drop + Dead Reckoning (a NEW passive,
+	# owner rule: at Lv 5). Two anchors a cast, harder, a wider shock and a
+	# longer stun, and each anchor stays MOORED `moor` s where it fell, shocking
+	# the foes within moor_radius px every moor_every s for moor_share x the
+	# damage (no pull). Detected by the "moor" key.
+	"abyssal_mooring": {
+		"base": "anchor_drop",
+		"passive": "dead_reckoning",
+		"display_name": "Abyssal Mooring",  # Owner-approved proposal
+		"icon": "abyssal_mooring",
+		"description": "Two anchors fall from the abyss; each stays moored where it lands, shocking all around it.",
+		"labels": {"damage": "Slam damage", "cooldown": "Cooldown (s)", "anchors": "Anchors", "anchor_stun": "Stun (s)", "ring_radius": "Shock (px)", "ring_share": "Shock damage", "moor": "Moored (s)", "moor_share": "Mooring pulse"},
+		"stats": {
+			"damage": 80.0, "cooldown": 2.5, "anchors": 2, "anchor_stun": 1.5, "ring_radius": 70.0, "ring_share": 0.18,  # TUNING (not in GDD) integration balance 90 / 0.3 -> 80 / 0.18 (345k in the forced seed-7 Maelstrom run, 1.5x the top summon class); first passes 74 px / 0.55, then 0.42 (404k in the forced seed-7 Maelstrom run)
+			"moor": 2.0, "moor_every": 0.6, "moor_share": 0.06, "moor_radius": 64.0,  # TUNING (not in GDD) integration balance 0.08 -> 0.06; the evolution flag: the moored anchor's pulses (first pass 2.4 s / 0.18 / 70 px: 437k damage in the forced seed-7 Maelstrom run)
+		},
+	},
+	# --- Act XI (temporary): the Barrow Fields ---
+	# Barrow-Lord's Embrace (GDD §15.0 "Barrow Grasp, Barrow-Lord's Embrace,
+	# Grave Frost and the Rune-Seer"; owner-approved proposal "Barrow Grasp ->
+	# Barrow-Lord's Embrace (+ Grave Frost)"): Barrow Grasp + Grave Frost (a NEW
+	# passive, owner rule: at Lv 5). Own decision on its kit: two rings of hands
+	# (the inner at ring_step of the outer), and every hand LINGERS `linger` s,
+	# grabbing again every BarrowGraspData.LINGER_TICK s. Detected by "linger".
+	"barrow_lords_embrace": {
+		"base": "barrow_grasp",
+		"passive": "grave_frost",
+		"display_name": "Barrow-Lord's Embrace",  # Owner-approved proposal
+		"icon": "barrow_lords_embrace",
+		"description": "Two rings of barrow hands rise around you and linger, seizing every foe that walks into them.",
+		"labels": {"damage": "Damage", "hands": "Hands", "rings": "Rings", "hold": "Hold", "linger": "Linger (s)", "cooldown": "Cooldown"},
+		"stats": {
+			"damage": 32.0, "hands": 11, "ring": 170.0, "radius": 33.0, "hold": 1.7, "cooldown": 3.4,  # TUNING (not in GDD)
+			"rings": 2, "ring_step": 0.55, "linger": 2.2,  # TUNING (not in GDD) the evolution flag: two rings, lingering hands
+		},
+	},
+	# --- Act XI (temporary): Valgard ---
+	# Chooser of the Slain (GDD §15.0 "Valkyrie Spear, Chooser of the Slain,
+	# Einherjar's Oath and the Shield-Maiden (Valgard)"; owner-approved
+	# proposal "Valkyrie Spear -> Chooser of the Slain (+ Einherjar's Oath)"):
+	# Valkyrie Spear + Einherjar's Oath (a NEW passive, owner rule: at Lv 5).
+	# Own decision on its kit: more leaps and damage, x elite_mult on elites,
+	# minibosses and bosses, and the spear CHOOSES THE SLAIN: every
+	# chosen_every-th foe it kills (that leaves a corpse) rises for risen_time s
+	# as a temporary Warrior of the army (HordeDirector.spawn_temporary(), the
+	# one temporary-summon path: Restless Dead applies), at most risen_cap at
+	# once. Detected by the "risen_time" key.
+	"chooser_of_the_slain": {
+		"base": "valkyrie_spear",
+		"passive": "einherjars_oath",
+		"display_name": "Chooser of the Slain",  # Owner-approved proposal
+		"icon": "chooser_of_the_slain",
+		"description": "More leaps and harder strikes, and the foes it slays rise to fight for you.",
+		"labels": {"damage": "Spear damage", "jumps": "Leaps", "elite_mult": "Vs elites and bosses", "risen_time": "Chosen rise (s)", "cooldown": "Cooldown (s)"},
+		"stats": {
+			"damage": 62.0, "jumps": 5, "falloff": 0.84, "chain": 210.0, "range": 390.0, "cooldown": 2.0,  # TUNING (not in GDD)
+			"elite_mult": 1.35,  # TUNING (not in GDD) x on elites, minibosses and bosses
+			"chosen_every": 4,  # TUNING (not in GDD) every 4th kill of the spear rises
+			"risen_time": 12.0,  # TUNING (not in GDD) the evolution flag: s a chosen warrior fights
+			"risen_cap": 4,  # TUNING (not in GDD) chosen warriors at once
+			"risen_hp": 0.8,  # TUNING (not in GDD) x the Warrior's HP
+			"risen_damage": 0.8,  # TUNING (not in GDD) x the Warrior's damage
+		},
+	},
+	# --- Act XI (temporary): Vigrid ---
+	# Spear of the Hanged (GDD §15.0 "Gungnir, Spear of the Hanged, Runecraft
+	# and the Berserker"; owner-approved proposal "Gungnir -> Spear of the
+	# Hanged (+ Runecraft)"): Gungnir + Runecraft (a NEW passive, owner rule: at
+	# Lv 5). The god hung nine nights on his own spear for the runes: two spears
+	# a cast, wider and longer, and each RETURNS along its line return_delay s
+	# later for return_share x the damage. Detected by the "return_share" key.
+	"spear_of_the_hanged": {
+		"base": "gungnir",
+		"passive": "runecraft",
+		"display_name": "Spear of the Hanged",  # Owner-approved proposal
+		"icon": "spear_of_the_hanged",
+		"description": "Two spears fly at the strongest foes and come back to your hand through everything in their line.",
+		"labels": {"damage": "Damage", "cooldown": "Cooldown (s)", "spears": "Spears", "spear_width": "Width (px)", "length": "Reach (px)", "return_share": "Return damage"},
+		"stats": {
+			"damage": 74.0, "cooldown": 2.3, "spears": 2, "spear_width": 14.0, "length": 740.0,  # TUNING (not in GDD) first pass 84 / 2.2 / 15
+			"return_share": 0.4, "return_delay": 0.35,  # TUNING (not in GDD) the evolution flag: the spear comes back (first pass 0.5: 331k evolved damage in the forced seed-7 run)
+		},
+	},
+	# --- Act XII (temporary number): the Necropolis of Sand ---
+	# Eternal Shroud (GDD §15.0 "Linen Bind, Eternal Shroud, Natron Salts and
+	# the Embalmer (Act XII)"; owner-approved proposal "Linen Bind -> Eternal
+	# Shroud (+ Natron Salts)"): Linen Bind + Natron Salts (a NEW passive,
+	# owner rule: at Lv 5). Own decision on its kit: more foes, longer holds
+	# and Mummies, and every risen Mummy that falls bursts into bandages that
+	# wrap burst_wraps foes within burst_reach px (half the bind damage; held
+	# and wrapped the same, so the shroud feeds itself). Detected by the
+	# "burst_wraps" key.
+	"eternal_shroud": {
+		"base": "linen_bind",
+		"passive": "natron_salts",
+		"display_name": "Eternal Shroud",  # Owner-approved proposal
+		"icon": "eternal_shroud",
+		"description": "The shroud never ends: more foes wrapped, and every Mummy that falls bursts into bandages that bind the next.",
+		"labels": {"damage": "Bind damage", "targets": "Foes wrapped", "hold": "Hold (s)", "burst_wraps": "Wraps when a Mummy falls", "cap": "Mummies at most"},
+		"stats": {
+			"damage": 44.0, "targets": 7, "hold": 1.5, "mark": 4.0, "range": 330.0, "cooldown": 2.2, "life": 12.0, "cap": 10,  # TUNING (not in GDD)
+			"burst_wraps": 2, "burst_reach": 90.0,  # TUNING (not in GDD) the evolution flag: foes a falling Mummy's bandages wrap, within px
+		},
+	},
+	# --- Act XII (temporary number): the Temple of the Lioness ---
+	# Eye of Retribution (GDD §15.0 "Burning Eye, Eye of Retribution, Desert
+	# Fury and the Lion-Priestess (Dynasty phase 2)"; owner-approved proposal
+	# "Burning Eye -> Eye of Retribution (+ Desert Fury)"): Burning Eye + Desert
+	# Fury (a NEW passive, owner rule: at Lv 5). Own decision on its kit: the
+	# beam sweeps a wider arc THERE AND BACK (each pass strikes), and whenever
+	# the necromancer is hurt the eye opens again at once, at most every
+	# `retribution` s (the goddess of retribution). Detected by the
+	# "retribution" key.
+	"eye_of_retribution": {
+		"base": "burning_eye",
+		"passive": "desert_fury",
+		"display_name": "Eye of Retribution",  # Owner-approved proposal
+		"icon": "eye_of_retribution",
+		"description": "The eye sweeps there and back, and every blow you take opens it again.",
+		"labels": {"damage": "Beam damage", "arc": "Arc (deg)", "range": "Range (px)", "cooldown": "Cooldown (s)", "retribution": "Answers a blow every (s)"},
+		"stats": {
+			"damage": 60.0, "arc": 140.0, "range": 320.0, "width": 18.0, "sweep_time": 0.6, "cooldown": 2.6,  # TUNING (not in GDD) two passes a sweep
+			"retribution": 1.6,  # TUNING (not in GDD) the evolution flag: least s between two sweeps called by a blow
+		},
+	},
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	# Heart Devoured (GDD §15.0 "Feather's Verdict, Heart Devoured, Heavy Heart
+	# and the Pharaoh's Shade"; owner-approved proposal "Feather's Verdict ->
+	# Heart Devoured (+ Heavy Heart)"): Feather's Verdict + Heavy Heart (a NEW
+	# passive, owner rule: at Lv 5). Two feathers a cast on the strongest foes
+	# in turn, a higher line and a wider ring, and every execution heals the
+	# necromancer devour_heal HP (at most devour_cap a cast). Detected by the
+	# "feathers" key.
+	"heart_devoured": {
+		"base": "feathers_verdict",
+		"passive": "heavy_heart",
+		"display_name": "Heart Devoured",  # Owner-approved proposal
+		"icon": "heart_devoured",
+		"description": "Two feathers fall, and every heart they find too light is devoured: each one heals you.",
+		"labels": {"damage": "Feather damage", "cooldown": "Cooldown (s)", "feathers": "Feathers", "execute": "Executes under", "ring": "Ring (px)", "devour_heal": "Heal per heart"},
+		"stats": {
+			"damage": 92.0, "cooldown": 2.6, "range": 320.0, "feathers": 2, "execute": 0.3, "ring": 88.0,  # TUNING (not in GDD)
+			"devour_heal": 0.5, "devour_cap": 6.0,  # TUNING (not in GDD) the evolution's heal (HP an execution, HP a cast at most)
+		},
+	},
+	# --- Act XIII (temporary number): the Silver Stair ---
+	# Sword at the Gate (GDD §15.0 "Flaming Sword, Sword at the Gate, Fallen
+	# Light and the Fallen Herald"; owner-approved proposal "Flaming Sword ->
+	# Sword at the Gate (+ Fallen Light)"): Flaming Sword + Fallen Light (a NEW
+	# passive, owner rule: at Lv 5). Own decision on its kit: the sword turns a
+	# full circle round the necromancer (Seraiel's guard at the Gate), and
+	# echo_delay s later it sweeps back once more for echo_share of the damage.
+	# Detected by the "echo_share" key.
+	"sword_at_the_gate": {
+		"base": "flaming_sword",
+		"passive": "fallen_light",
+		"display_name": "Sword at the Gate",  # Owner-approved proposal
+		"icon": "sword_at_the_gate",
+		"description": "The sword turns a full circle round you, then sweeps back once more.",
+		"labels": {"damage": "Sword damage", "radius": "Reach (px)", "cooldown": "Cooldown (s)", "echo_share": "Echo damage"},
+		"stats": {
+			"damage": 72.0, "arc": 360.0, "radius": 165.0, "cooldown": 1.7,  # TUNING (not in GDD) a full circle
+			"echo_share": 0.5, "echo_delay": 0.3,  # TUNING (not in GDD) the evolution flag: share of the damage the way back strikes, s after the first sweep
+		},
+	},
+	# --- Act XIII (temporary number): the Wheel of Thrones ---
+	# Ophanim (GDD §15.0 "Wheel of Eyes, Ophanim, All-Seeing and the Blind
+	# Saint"; owner-approved proposal "Wheel of Eyes -> Ophanim (+
+	# All-Seeing)"): Wheel of Eyes + All-Seeing (a NEW passive, owner rule: at
+	# Lv 5). Own decision on its kit: three larger wheels within wheels, and
+	# every rebound FLARES: every foe within flare_radius px of the wall takes
+	# flare_share of the damage. Detected by the "flare_share" key.
+	"ophanim": {
+		"base": "wheel_of_eyes",
+		"passive": "all_seeing",
+		"display_name": "Ophanim",  # Owner-approved proposal
+		"icon": "ophanim",
+		"description": "Three great wheels within wheels roll out, and they flare at every wall they rebound from.",
+		"labels": {"damage": "Wheel damage", "count": "Wheels", "radius": "Size (px)", "cooldown": "Cooldown (s)", "flare_share": "Flare damage"},
+		"stats": {
+			"damage": 46.0, "count": 3, "speed": 260.0, "life": 3.6, "radius": 26.0, "cooldown": 2.0,  # TUNING (not in GDD) three great wheels
+			"flare_share": 0.6, "flare_radius": 60.0,  # TUNING (not in GDD) the evolution flag: share of the damage a rebound's flare strikes, px round the wall
+		},
+	},
+	# --- Act XIII (temporary number): the Empyrean ---
+	# Be Not Afraid (GDD §15.0 "Revelation, Be Not Afraid, Seventh Seal and the
+	# Unveiled"; owner-approved proposal "Revelation -> Be Not Afraid (+
+	# Seventh Seal)"): Revelation + Seventh Seal (a NEW passive, owner rule: at
+	# Lv 5). Own decision on its kit: a longer stun, deeper weakening, and
+	# echo_delay s after the flash a SECOND flash strikes every foe on screen
+	# for echo_share of the damage (no second stun). Detected by the
+	# "echo_share" key.
+	"be_not_afraid": {
+		"base": "revelation",
+		"passive": "seventh_seal",
+		"display_name": "Be Not Afraid",  # Owner-approved proposal
+		"icon": "be_not_afraid",
+		"description": "The unveiled light holds every foe on screen longer, and flashes again a moment later.",
+		"labels": {"damage": "Flash damage", "stun": "Stun (s)", "weaken_cut": "Their damage cut", "cooldown": "Cooldown (s)", "echo_share": "Second flash"},
+		"stats": {
+			"damage": 24.0, "stun": 1.5, "weaken_slow": 0.25, "weaken_cut": 0.25, "weaken_time": 5.0, "cooldown": 6.5,  # TUNING (not in GDD) first passes 52 (513k in a run) and 28 (376k; Flaming Sword 320k)
+			"echo_share": 0.5, "echo_delay": 1.0,  # TUNING (not in GDD) the evolution flag: share of the damage the second flash strikes, s after the first
+		},
+	},
+	# --- Act XIV (temporary number): the Fern Basin ---
+	# Apex Pack (GDD §15.0 "Pack Leap, Apex Pack, Pack Instinct and the Fern
+	# Huntress"; owner-approved proposal "Pack Leap -> Apex Pack (+ Pack
+	# Instinct)"): Pack Leap + Pack Instinct (a NEW passive, owner rule: at
+	# Lv 5). Own decision on its kit: five raptors, and each one that lands
+	# leaps on to the nearest unmarked foe within chain_reach px for chain_share
+	# of the damage (Scarmaw's packs never stop at one kill). Detected by the
+	# "chain_share" key.
+	"apex_pack": {
+		"base": "pack_leap",
+		"passive": "pack_instinct",
+		"display_name": "Apex Pack",  # Owner-approved proposal
+		"icon": "apex_pack",
+		"description": "Five raptors leap on the strongest foes, and each leaps on to another.",
+		"labels": {"damage": "Leap damage", "raptors": "Raptors", "radius": "Pounce (px)", "cooldown": "Cooldown (s)", "chain_share": "Second leap"},
+		"stats": {
+			"damage": 70.0, "raptors": 5, "range": 380.0, "radius": 36.0, "pounce_share": 0.5, "cooldown": 2.0,  # TUNING (not in GDD)
+			"chain_share": 0.6, "chain_reach": 160.0,  # TUNING (not in GDD) the evolution flag: share of the damage the second leap strikes, px it looks for its foe
+		},
+	},
+	# --- Act XIV (temporary number): the Great Plain ---
+	# Herd of Ages (GDD §15.0 "Stampede, Herd of Ages, Calcified Hide and the
+	# Herd-Warden"; owner-approved proposal "Stampede -> Herd of Ages (+
+	# Calcified Hide)"): Stampede + Calcified Hide (a NEW passive, owner rule: at
+	# Lv 5). Own decision on its kit: `herd` chargers run abreast and every foe
+	# they trample is stunned `stun` s (a herd of the old titans runs
+	# everything down). Detected by the "herd" key.
+	"herd_of_ages": {
+		"base": "stampede",
+		"passive": "calcified_hide",
+		"display_name": "Herd of Ages",  # Owner-approved proposal
+		"icon": "herd_of_ages",
+		"description": "Three spectral titans run abreast, trampling and stunning everything in their way.",
+		"labels": {"damage": "Trample damage", "length": "Run (px)", "radius": "Width (px)", "cooldown": "Cooldown (s)", "herd": "Chargers", "stun": "Stun (s)"},
+		"stats": {
+			"damage": 66.0, "range": 380.0, "length": 460.0, "speed": 580.0, "radius": 32.0, "cooldown": 2.4,  # TUNING (not in GDD)
+			"herd": 3, "stun": 0.6,  # TUNING (not in GDD) the evolution flag: chargers abreast, s every trampled foe is stunned
+		},
+	},
+	# --- Act XIV (temporary number): the Last Day ---
+	# Extinction Event (GDD §15.0 "Meteor Call, Extinction Event, Cosmic Dust
+	# and the Skywatcher"; owner-approved proposal "Meteor Call -> Extinction
+	# Event (+ Cosmic Dust)"): Meteor Call + Cosmic Dust (a NEW passive, owner
+	# rule: at Lv 5). Own decision on its kit: `meteors` meteors a cast, each on
+	# a distinct dense group (the end of a world, in small). Detected by the
+	# "meteors" key.
+	"extinction_event": {
+		"base": "meteor_call",
+		"passive": "cosmic_dust",
+		"display_name": "Extinction Event",  # Owner-approved proposal
+		"icon": "extinction_event",
+		"description": "Three meteors fall at once, each on its own dense group of foes.",
+		"labels": {"damage": "Meteor damage", "radius": "Radius (px)", "cooldown": "Cooldown (s)", "meteors": "Meteors"},
+		"stats": {
+			"damage": 96.0, "range": 420.0, "radius": 68.0, "delay": 0.8, "cooldown": 2.8,  # TUNING (not in GDD)
+			"meteors": 3,  # TUNING (not in GDD) the evolution flag: meteors a cast
+		},
+	},
+	# --- Act XV (temporary number): the Greenwood ---
+	# The Endless Hunt (GDD §15.0 "Wild Hunt, The Endless Hunt, Horn of the Hunt
+	# and the Horned Herald"; owner-approved proposal "Wild Hunt -> The Endless
+	# Hunt (+ Horn of the Hunt)"): Wild Hunt + Horn of the Hunt (a NEW passive,
+	# owner rule: at Lv 5). Own decision on its kit: a wider line, and at the end
+	# of each sweep the riders turn and ride back `returns` time(s), striking
+	# every foe again (the hunt that never ends). Detected by the "returns" key.
+	"the_endless_hunt": {
+		"base": "wild_hunt",
+		"passive": "horn_of_the_hunt",
+		"display_name": "The Endless Hunt",  # Owner-approved proposal
+		"icon": "the_endless_hunt",
+		"description": "Six spectral riders sweep across the screen, then turn and ride back through the foes.",
+		"labels": {"damage": "Rider damage", "riders": "Riders", "radius": "Reach (px)", "cooldown": "Cooldown (s)", "returns": "Rides back"},
+		"stats": {
+			"damage": 50.0, "riders": 6, "range": 380.0, "length": 740.0, "speed": 660.0, "radius": 22.0, "cooldown": 2.8,  # TUNING (not in GDD)
+			"returns": 1,  # TUNING (not in GDD) the evolution flag: sweeps back after the first
+		},
+	},
+	# --- Act XV (temporary number): the Fae Court ---
+	# Court of Masks (GDD §15.0 "Glamour, Court of Masks, Changeling and the
+	# Changeling Princess"; owner-approved proposal "Glamour -> Court of Masks
+	# (+ Changeling)"): Glamour + Changeling (a NEW passive, owner rule: at Lv 5).
+	# Own decision on its kit: six sturdier copies, and each shattering also
+	# bewilders the foes it strikes for `bewilder` s (slower and weaker, through
+	# the one debuff path). Detected by the "bewilder" key.
+	"court_of_masks": {
+		"base": "glamour",
+		"passive": "changeling",
+		"display_name": "Court of Masks",  # Owner-approved proposal
+		"icon": "court_of_masks",
+		"description": "Six masked copies of you hold the ring, then shatter and bewilder the foes round them.",
+		"labels": {"damage": "Shatter damage", "copies": "Copies", "hp": "Copy HP (x Warrior)", "life": "Copy life (s)", "cooldown": "Cooldown (s)", "bewilder": "Bewilder (s)"},
+		"stats": {
+			"damage": 78.0, "copies": 6, "hp": 3.6, "life": 9.0, "taunt": 150.0, "range": 360.0, "radius": 72.0, "cooldown": 5.5,  # TUNING (not in GDD)
+			"bewilder": 3.0,  # TUNING (not in GDD) the evolution flag: s each shattering bewilders
+		},
+	},
+	# --- Act XV (temporary number): the World-Tree ---
+	# Return to Earth (GDD §15.0 "Root and Rot, Return to Earth, Compost Heart
+	# and the Gravegardener"; owner-approved proposal "Root and Rot -> Return to
+	# Earth (+ Compost Heart)"): Root and Rot + Compost Heart (a NEW passive,
+	# owner rule: at Lv 5). Own decision on its kit: `rings` rings a cast, each
+	# at its own strong foe, and the roots bite every foe inside for `bite`
+	# every tick (the earth takes them back). Detected by the "rings" key.
+	"return_to_earth": {
+		"base": "root_and_rot",
+		"passive": "compost_heart",
+		"display_name": "Return to Earth",  # Owner-approved proposal
+		"icon": "return_to_earth",
+		"description": "Three rings of roots at once: they rot every foe inside and drag them back into the earth.",
+		"labels": {"damage": "Root damage", "rot": "Rot", "radius": "Radius (px)", "duration": "Ring time (s)", "cooldown": "Cooldown (s)", "rings": "Rings", "bite": "Root bite"},
+		"stats": {
+			"damage": 48.0, "rot": 0.22, "slow": 0.45, "radius": 76.0, "duration": 5.0, "range": 400.0, "cooldown": 3.6,  # TUNING (not in GDD)
+			"rings": 3,  # TUNING (not in GDD) the evolution flag: rings a cast
+			"bite": 6.0,  # TUNING (not in GDD) damage every tick (0.5 s) to every foe inside
 		},
 	},
 }

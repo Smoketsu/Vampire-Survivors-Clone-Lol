@@ -1,0 +1,8 @@
+A sheet of 4 separate pixel-art game ICON SYMBOLS in one row, evenly spaced with a wide empty gap between them, on a FULLY TRANSPARENT background (real alpha). Each symbol is simple, bold and centred in its part of the image, drawn as chunky low-resolution pixel art (each symbol about 24 pixels wide on a coarse grid, shown enlarged with crisp square pixels, nearest-neighbour, 1-pixel dark outline, flat colours, at most 3 shades per colour, light from the top-left). No frame, no badge background, no text, no letters, no people.
+From left to right:
+1. NOTHING TAKEN: a glowing orange crystal inside a closed bone-white claw cage.
+2. TRAMPLED: a big three-toed footprint pressing into cracked ochre earth.
+3. THE DAY THE SKY FELL: a white streak across a dark sky ending in a volcanic-orange burst.
+4. BONEHORN: a skeletal horned charger skull with a bone-white horn and soul-teal glowing eye sockets (#3DCC94).
+Colours: fern green #24451F #4D8534 #8CC46A; dust ochre #7E552A #C89448 #E8C88A; bone white #9C9078 #E7DEC9 #F8F6EE; volcanic orange #8A2E0C #EF6B1C #FFC070; tar #231C18 #4A3A30; ghost soul-teal #3DCC94 only where named. NO red, NO gold. Teal #3DCC94 only for item 4.
+Attached: an approved icon of this game: match its pixel size, outline weight and flat look (only the symbol, not its frame).

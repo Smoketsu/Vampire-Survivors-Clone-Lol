@@ -1,0 +1,12 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, ONE THORNLING: a tiny twig creature, a bark-brown body of knotted twigs, two stick legs, moss tufts on its back, sharp thorn claws, one small pink blossom on its head; just one creature, small and simple.
+
+LOW-RESOLUTION pixel art: the whole SUBJECT is only 20 pixels tall and about 22 pixels wide, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no soft glow haze.
+
+Subject sex: no sex (fodder).
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: moss green #274D24 #599641 #9CCB72; bark brown #553C27 #86603E #B08A60; blossom pink #9C5272 #EFA6C3 #FBD9E6; amber leaf #8A5420 #D9953C #F2C67A; frost #6F8AA4 #B9CEE0 #E4EDF5; pale skin #B8A8A0 #E8DCD4. NO red, NO crimson, NO violet, NO purple, NO yellow-gold.
+
+Outline: a clean 1-pixel dark outline around the whole subject in deep bark #14100C. Light from the top-left. Keep the main shapes clearly brighter than a near-black ground.
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, no dark glow around the subject), one subject only, centred, filling about 85% of the image. No ground, no cast shadow, no text, no frame. Draw ONLY ONE subject (no companions, no hounds, no extra creatures).
+Attached: (1) a game sprite of this game for pixel size, outline weight and flat look; (2) concept art of this unit for its shape and colours only (keep it flat, chunky and low-resolution; ignore any neighbouring figures in it).

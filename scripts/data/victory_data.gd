@@ -55,26 +55,52 @@ const STAGES := {
 	"crash_site": {"title": "The Hatchery Burns", "boss_line": "The Hive Mother falls back into her crater."},  # TUNING (not in GDD) Act IX placeholder
 	"proving_moon": {"title": "The Hunt Is Over", "boss_line": "Vrask'Tal's last trophy is his own."},  # TUNING (not in GDD) Act IX placeholder
 	"ark": {"title": "The Harvest Ends", "boss_line": "The Harvester falls, and the stars go dark."},  # TUNING (not in GDD) Act IX placeholder
+	# --- Act X: the Black Tide (placeholders until each stage is built) ---
+	"cutter": {"title": "The Cutter Holds", "boss_line": "Captain Crow goes into the sea with his gulls."},  # TUNING (not in GDD) Act X placeholder
+	"galleon": {"title": "The Gold Is Yours", "boss_line": "Admiral Marrec's flagship burns to the waterline."},  # TUNING (not in GDD) Act X placeholder
+	"maelstrom": {"title": "The Sea Is Calm", "boss_line": "Vandermere's oath breaks, and the whirlpool closes."},  # TUNING (not in GDD) Act X placeholder
+	# --- Act XI (temporary): the Hall of the Slain (placeholders until each stage is built) ---
+	"barrow_fields": {"title": "The Barrows Are Silent", "boss_line": "Hrimgar sinks into his barrow and does not rise."},  # TUNING (not in GDD) placeholder
+	"valgard": {"title": "The Hall Stands Empty", "boss_line": "Sigrun falls, and the doors of the hall swing shut."},  # TUNING (not in GDD) placeholder
+	"vigrid": {"title": "The Twilight Ends", "boss_line": "Odin and Fenrir fall together on the last field."},  # TUNING (not in GDD) placeholder
+	# --- Act XII (temporary number): the Necropolis Dynasty (placeholders until each stage is built) ---
+	"necropolis": {"title": "The Procession Ends", "boss_line": "Anubis lays down his flail, and the road of tombs is quiet."},  # TUNING (not in GDD) Act XII placeholder
+	"lioness_temple": {"title": "The Lioness Sleeps", "boss_line": "Sekhmet's fury burns out, and the temple falls quiet."},  # TUNING (not in GDD) Act XII placeholder
+	"two_truths": {"title": "The Scales Are Empty", "boss_line": "Osiris falls from his throne, and no one weighs the dead again."},  # TUNING (not in GDD) Act XII placeholder
+	# --- Act XIII (temporary number): the Celestial Host (placeholders until each stage is built) ---
+	"silver_stair": {"title": "The Gate Stands Open", "boss_line": "Seraiel lays down his sword before the Gate of Pearl."},  # TUNING (not in GDD) Act XIII placeholder
+	"wheel_of_thrones": {"title": "The Wheel Breaks", "boss_line": "The Throne stops turning, and its eyes close."},  # TUNING (not in GDD) Act XIII placeholder
+	"empyrean": {"title": "Heaven Is Silent", "boss_line": "The Voice folds its wings and is silent."},  # TUNING (not in GDD) Act XIII placeholder
+	# --- Act XIV (temporary number): the Age of Titans (placeholders until each stage is built) ---
+	"fern_basin": {"title": "The Pack Is Broken", "boss_line": "Scarmaw falls in the ferns, and her packs scatter."},  # TUNING (not in GDD) Act XIV placeholder
+	"great_plain": {"title": "The Herd Runs On", "boss_line": "Old Ironbrow falls, and the herd breaks around him."},  # TUNING (not in GDD) Act XIV placeholder
+	"last_day": {"title": "The Sky Fell", "boss_line": "Old Gravejaw falls before the meteor does."},  # TUNING (not in GDD) Act XIV placeholder
+	# --- Act XV (temporary number): the Turning Year (placeholders until each stage is built) ---
+	"greenwood": {"title": "The Hunt Is Over", "boss_line": "The Stag King falls in the snow, and the Wild Hunt scatters."},  # TUNING (not in GDD) Act XV placeholder
+	"fae_court": {"title": "The Summer Ends", "boss_line": "The Summer Queen's masks fall, and her court wilts."},  # TUNING (not in GDD) Act XV placeholder
+	"world_tree": {"title": "The First Spring", "boss_line": "The Green Mother gives you the last claim: your dead are planted now."},  # TUNING (not in GDD) Act XV placeholder
 }
 ## Title of a victory on a stage missing from STAGES.
 const DEFAULT_TITLE: String = "Victory"  # TUNING (not in GDD)
-## Act number -> the line under the title (the first line of the card; the boss
-## line follows it when the boss fell). Absent act = act 1's line.
+## Act id (StageRegistry.ACT_ORDER "id") -> the line under the title (the first
+## line of the card; the boss line follows it when the boss fell). Absent act =
+## the Covenant's line.
 const ACT_LINES := {
-	1: "You outlasted the Covenant. The Reckoning claimed you at last.",  # TUNING (not in GDD; the old shared subtitle)
-	2: "You outlasted the Eye. The Reckoning claimed you at last.",  # TUNING (not in GDD)
-	3: "You outlasted the Empire. The Purge Protocol deleted you at last.",  # TUNING (not in GDD) Act III
-	4: "You outlasted the gods. Their twilight buried you at last.",  # TUNING (not in GDD) Act IV
-	# --- Act V: the Shogunate of the Rising Sun ---
-	5: "You outlasted the Shogunate. The Endless Night swallowed you at last.",  # TUNING (not in GDD) Act V
-	# --- Act VI: the Inferno ---
-	6: "You outlasted the Inferno. The Last Judgment took you at last.",  # TUNING (not in GDD) Act VI
-	# --- Act VII: the Sanguine Court ---
-	7: "You outlasted the Court. The Endless Feast drank you dry at last.",  # TUNING (not in GDD) Act VII
-	# --- Act VIII: the Last Line ---
-	8: "You outlasted the city. Martial Law ground you down at last.",  # TUNING (not in GDD) Act VIII
-	# --- Act IX: the Concord of Stars ---
-	9: "You outlasted the Concord. The Final Harvest reaped you at last.",  # TUNING (not in GDD) Act IX
+	"covenant": "You outlasted the Covenant. The Reckoning claimed you at last.",  # TUNING (not in GDD; the old shared subtitle)
+	"eye": "You outlasted the Eye. The Reckoning claimed you at last.",  # TUNING (not in GDD)
+	"empire": "You outlasted the Empire. The Purge Protocol deleted you at last.",  # TUNING (not in GDD)
+	"pantheon": "You outlasted the gods. Their twilight buried you at last.",  # TUNING (not in GDD)
+	"shogunate": "You outlasted the Shogunate. The Endless Night swallowed you at last.",  # TUNING (not in GDD)
+	"inferno": "You outlasted the Inferno. The Last Judgment took you at last.",  # TUNING (not in GDD)
+	"court": "You outlasted the Court. The Endless Feast drank you dry at last.",  # TUNING (not in GDD)
+	"city": "You outlasted the city. Martial Law ground you down at last.",  # TUNING (not in GDD)
+	"concord": "You outlasted the Concord. The Final Harvest reaped you at last.",  # TUNING (not in GDD)
+	"corsair": "You outlasted the Brotherhood. The Black Tide dragged you under at last.",  # TUNING (not in GDD)
+	"norse": "You outlasted the hall. Ragnarok took you at last.",  # TUNING (not in GDD)
+	"dynasty": "You outlasted the Dynasty. The Devourer ate you at last.",  # TUNING (not in GDD)
+	"host": "You outlasted heaven. The Last Trumpet sounded for you at last.",  # TUNING (not in GDD)
+	"primeval": "You outlasted the old world. The Stampede of Ash ran you down at last.",  # TUNING (not in GDD)
+	"wild": "You outlasted the turning year. Spring returned and buried you at last.",  # TUNING (not in GDD)
 }
 
 # --- The last stand (LastStand; seconds of real time from its start) ----------------

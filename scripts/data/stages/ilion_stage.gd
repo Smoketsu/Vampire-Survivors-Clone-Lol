@@ -53,8 +53,6 @@ const ENEMY_DAMAGE_MULT: float = 1.35  # TUNING (not in GDD) placeholder, tuned 
 ## Elapsed game seconds from which the two multipliers apply to regular
 ## enemies (the boss always gets them).
 const ENEMY_MULT_FROM: float = 420.0  # TUNING (not in GDD) placeholder (Act III: 7:00)
-## Soul Ash multiplier of a run on this stage (its own end-screen line).
-const ASH_MULT: float = 1.0  # TUNING (not in GDD) owner decision Oct 2026, GDD §15.0 "Ossuary expansion: owner decisions": every act restarts, stage 1 of Act IV
 
 ## Wrath of the Gods on this stage (DivineWrath): Poseidon's waves. Any other
 ## key overrides PantheonRulesData.WRATH["waves"] ({} = those defaults).
@@ -317,12 +315,8 @@ const STAGE := {
 	"id": ID,
 	"display_name": "The Shores of Ilion",
 	"short_name": "Ilion",
-	"chapter": "Chapter X",
-	"act": 4,  # Act IV, the Olympian Republic.
 	"playable": true,  # Owner decision (Oct 25, 2026): "Ship it!" after the art review and three playtest passes (GDD §15.0 "Act IV goes live").
 	"description": "The beach below a besieged city: beached warships, a siege camp and the great walls of Troy. The gods have come down to take the dead back, and Achilles leads their host.",
-	"unlock": {"stage": "citadel", "boss_kills": 1},  # Owner-approved: Deus Ex Machina's fall opens Act IV
-	"unlock_text": "Bring down Deus Ex Machina in the Iron Citadel to unlock.",
 	"boss": BOSS,
 	"segments": SEGMENTS,
 	"events": EVENTS,
@@ -337,7 +331,6 @@ const STAGE := {
 	"enemy_hp_mult": ENEMY_HP_MULT,
 	"enemy_damage_mult": ENEMY_DAMAGE_MULT,
 	"enemy_mult_from": ENEMY_MULT_FROM,
-	"ash_mult": ASH_MULT,
 	"march": MARCH,  # The four clock-driven zones (MarchDirector).
 	"ilion": ILION,  # IlionDirector: siege towers, Polyphemus.
 	"pantheon": true,  # Act IV: Wrath of the Gods, Phalanx, Glory (PantheonRules).

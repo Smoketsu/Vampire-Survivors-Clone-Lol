@@ -330,6 +330,15 @@ var blinded_until: float = 0.0
 ## place; it comes back (set_charmed(false, ...)) when the charm ends. Still
 ## counted in its class (no replacement rises). Always false off Act VI.
 var charmed: bool = false
+# --- Act XII (temporary number): the Necropolis Dynasty ---
+## Game time (s) until which a HEKA glyph curses this summon (0 = never /
+## lifted). Written only by THE one curse path, CombatResolver.curse_unit()
+## (through curse()); Heka moves and lifts it. Always 0 off the Dynasty.
+var heka_until: float = 0.0
+## x on this summon's damage and move speed while cursed (1 = not cursed;
+## DynastyRulesData.HEKA mult, 0.8). apply_stats() re-applies it, so the curse
+## survives every HordeDirector.compute_stats() refresh.
+var heka_mult: float = 1.0
 
 
 # =====================================================================================
@@ -346,6 +355,8 @@ func activate(p_director: HordeDirector, p_game: Game, cls: String, stats: Dicti
 	position = pos
 	velocity = Vector2.ZERO
 	_stall_since = -1.0  # No stall window carried over from the pooled unit's last life.
+	heka_until = 0.0  # Act XII (temporary): no Heka glyph carried over (before apply_stats() reads it).
+	heka_mult = 1.0
 	volley_count = 0  # Bullet heaven pass: attack releases toward the next volley.
 	max_hp = 0.0
 	apply_stats(stats, false)
@@ -484,6 +495,9 @@ func apply_stats(stats: Dictionary, preserve_pct: bool = true) -> void:
 	_wo = w["overkill"]
 	if behavior != null:
 		behavior.adjust_stats(self)  # Per-unit kit stats (Bone Golem growth / Bulwark; no-op elsewhere).
+	if heka_mult != 1.0:
+		damage *= heka_mult  # Act XII (temporary): a Heka glyph's curse outlives the refresh.
+		move_speed *= heka_mult
 	if preserve_pct:
 		hp = max_hp * frac
 	if motion != null:
@@ -686,7 +700,8 @@ func _heal_target_valid() -> bool:
 		return false
 	if heal_target is SummonedUnit:
 		var u := heal_target as SummonedUnit
-		return u.active and u.generation == heal_target_gen and u.state != State.DEAD and u.hp < u.max_hp - 0.5
+		return u.active and u.generation == heal_target_gen and u.state != State.DEAD \
+				and (u.hp < u.max_hp - 0.5 or u.heka_until > game.elapsed)  # Act XII (temporary): a cursed summon still wants its cleanse.
 	var p := heal_target as Necromancer
 	if p == null or p.dead:
 		return false
@@ -886,9 +901,12 @@ func _choose_heal_target() -> Node2D:
 		if not a.active or a.state == State.DEAD or a.state == State.SPAWNING:
 			continue
 		var missing := a.max_hp - a.hp - a.incoming_heal
-		if missing <= 0.5:
+		var cursed := a.heka_until > game.elapsed  # Act XII (temporary): a Heka glyph is worth a heal (the cleanse).
+		if missing <= 0.5 and not cursed:
 			continue
-		var s := _heal_score(missing, a.max_hp, a.heal_role_priority)
+		var s := _heal_score(maxf(missing, 0.0), a.max_hp, a.heal_role_priority)
+		if cursed:
+			s += float(DynastyRulesData.HEKA["heal_priority"])
 		if a.hp < a.max_hp * UnitData.HEAL_CRITICAL_FRACTION:
 			s += UnitData.HEAL_CRITICAL_BONUS
 		if s > best_score:
@@ -1000,6 +1018,31 @@ func compel(point: Vector2, until: float, speed_mult: float) -> bool:
 ## that needs no target still runs). Spawning and dead units are immune; an
 ## airborne one (a Gargoyle's swoop) flies above the smoke. Returns true when
 ## it took hold.
+# --- Act XII (temporary number): the Necropolis Dynasty ---
+## Called ONLY by CombatResolver.curse_unit() (the one curse path): curses this
+## summon until game time `until`, x `mult` on its damage and move speed (a
+## curse already on it is replaced).
+func curse(mult: float, until: float) -> void:
+	uncurse()
+	heka_mult = mult
+	heka_until = until
+	damage *= mult
+	move_speed *= mult
+	queue_redraw()
+
+
+## Lifts the curse (CombatResolver.lift_curse()); a no-op when none is on it.
+func uncurse() -> void:
+	if heka_mult == 1.0:
+		heka_until = 0.0
+		return
+	damage /= heka_mult
+	move_speed /= heka_mult
+	heka_mult = 1.0
+	heka_until = 0.0
+	queue_redraw()
+
+
 func blind(until: float) -> bool:
 	if not active or airborne or state == State.SPAWNING or state == State.DEAD:
 		return false
@@ -1311,6 +1354,8 @@ func _release_attack() -> void:
 				if _heal_target_valid():
 					var healed := 0.0
 					if heal_target is SummonedUnit:
+						if game.dynasty != null:
+							game.dynasty.heka.cleanse(heal_target as SummonedUnit, dmg_source)  # Act XII (temporary): a Mender's heal clears a Heka glyph.
 						healed = game.combat.heal_unit(heal_target as SummonedUnit, heal_amount)
 					else:
 						healed = game.combat.heal_player(heal_amount)

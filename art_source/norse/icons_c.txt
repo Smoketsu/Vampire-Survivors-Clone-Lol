@@ -1,0 +1,8 @@
+A sheet of FOUR separate pixel-art game ICON SYMBOLS in one row, evenly spaced with wide empty gaps between them, on a FULLY TRANSPARENT background (real alpha). Each symbol is simple, bold and centred in its quarter of the image, drawn as chunky low-resolution pixel art (each symbol about 24 pixels wide on a coarse grid, shown enlarged with crisp square pixels, nearest-neighbour, 1-pixel dark outline, flat colours, at most 3 shades per colour, light from the top-left). No frame, no badge background, no text, no letters.
+From left to right:
+1. BARROW-LORD'S EMBRACE: a large frost-blue skeletal hand clutching upward out of a ring of gold-edged grave mounds, bright ice glow.
+2. CHOOSER OF THE SLAIN: a gold valkyrie wing carrying a small glowing hero silhouette upward, gold rays.
+3. SPEAR OF THE HANGED: a long gold spear with a rope noose looped on its shaft, bright ice-blue rune on the blade, gold rays.
+4. BARROW KING: a jagged grey iron crown with ice-blue gems on a frost-covered tower shield.
+Colours: black #0B0F16; ice-blue rune glow #3F72C4 #8FD0FF #E0F4FF; frost white #A9BBCC #EAF2FA; iron grey #2B3139 #5B6570 #8F99A3; pale gold #B08A3C #F5D77A; pine green #1F4A3A; ember amber #F0902E. Never violet.
+Attached: an approved icon of this game: match its pixel size, outline weight and flat look (only the symbol, not its frame).

@@ -71,6 +71,24 @@ func spawn(pos: Vector2, value: int) -> void:
 	active.append(c)
 
 
+# --- Act XIV (temporary number): the Age of Titans ---
+## Scavengers (a Skyraider's snatch, PrimevalRules): takes crystal `c` out of
+## the world (pooled, no XP granted) and returns its value; 0 when it was not
+## lying in the world. The value is given back unchanged when the thief dies
+## (spawn()), so XP values never change.
+func take(c: XpCrystal) -> int:
+	var i := active.find(c)
+	if i < 0 or not c.active:
+		return 0
+	var v := c.value
+	c.active = false
+	c.visible = false
+	active[i] = active[active.size() - 1]
+	active.pop_back()
+	_pool.append(c)
+	return v
+
+
 ## Magnet + collection update.
 func step(delta: float) -> void:
 	if game.coop != null:

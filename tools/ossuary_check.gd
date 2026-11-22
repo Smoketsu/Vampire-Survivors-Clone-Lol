@@ -368,7 +368,7 @@ func _check_masteries() -> void:
 		_check(MasteryData.is_masterable(cls) == not evolved, "%s %s a mastery" % [cls, "has no" if evolved else "has"])
 		covered += 0 if evolved else 1
 	_check(covered == MasteryData.CLASSES.size(), "every offerable class is in MasteryData.CLASSES")
-	_check(MasteryData.cost_up_to(3) == 760 and MasteryData.total_cost() == 760 * MasteryData.CLASSES.size(), "masteries cost 760 a class, %d in all (got %d)" % [760 * MasteryData.CLASSES.size(), MasteryData.total_cost()])  # Act VII: 22 classes (the Succubus, the Archfiend, the Blood Spawn) = 16,720; Act VIII: 23 (the Fallen Hero) = 17,480; Act IX: 24 (the Ghost Saucer) = 18,240; the total follows the class list so each new class needs no edit here
+	_check(MasteryData.cost_up_to(3) == 760 and MasteryData.total_cost() == 760 * MasteryData.CLASSES.size(), "masteries cost 760 a class, %d in all (got %d)" % [760 * MasteryData.CLASSES.size(), MasteryData.total_cost()])  # Act VII: 22 classes (the Succubus, the Archfiend, the Blood Spawn) = 16,720; Act VIII: 23 (the Fallen Hero) = 17,480; Act IX: 24 (the Ghost Saucer) = 18,240; Act X, the Maelstrom: 25 (the Powder Wraith) = 19,000; the total follows the class list so each new class needs no edit here
 	print("[ossuary_check] masteries: %d classes x %d / %d / %d = %d" % [MasteryData.CLASSES.size(), MasteryData.PRICES[0], MasteryData.PRICES[1], MasteryData.PRICES[2], MasteryData.total_cost()])
 	# Unlock rule and purchases.
 	Meta._reset()
@@ -419,7 +419,7 @@ func _check_masteries() -> void:
 	_write_old(old_p, 2, 70, {"necrotic_marrow": 5}, false)
 	Meta.save_path = old_p
 	Meta.load_save()
-	_check(Meta.load_status == "ok" and Meta.mastery_spent_total() == 0 and Meta.class_lv5.is_empty(), "a save without the sections loads with none")
+	_check(Meta.load_status == "migrated" and Meta.mastery_spent_total() == 0 and Meta.class_lv5.is_empty(), "a save without the sections loads with none")  # A version-2 file migrates to 3 (the reorder pass).
 	for f: String in ["masteries.cfg", "v2_nomasteries.cfg"]:
 		DirAccess.remove_absolute(_path(f))
 	Meta.save_path = Meta.DEFAULT_PATH

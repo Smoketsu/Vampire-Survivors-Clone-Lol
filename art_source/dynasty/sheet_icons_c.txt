@@ -1,0 +1,8 @@
+A sheet of 4 separate pixel-art game ICON SYMBOLS in one row, evenly spaced with a wide empty gap between them, on a FULLY TRANSPARENT background (real alpha). Each symbol is simple, bold and centred in its part of the image, drawn as chunky low-resolution pixel art (each symbol about 24 pixels wide on a coarse grid, shown enlarged with crisp square pixels, nearest-neighbour, 1-pixel dark outline, flat colours, at most 3 shades per colour, light from the top-left). No frame, no badge background, no text, no letters, no hieroglyph writing.
+From left to right:
+1. ETERNAL SHROUD: a tall linen-wrapped mummy shape glowing with soul-teal light under a gold halo of bandages.
+2. EYE OF RETRIBUTION: a large carnelian-red and true-gold Eye of Ra with a beam of red light shining from it.
+3. HEART DEVOURED: a crocodile-headed jaw biting down on a dark red heart, a gold feather behind it.
+4. NAMES TAKEN: a gold oval cartouche (a rounded rectangle ring with a bar at one end) with three simple glyph marks inside and a small teal glow.
+Colours: linen #8F8670 #C9C0A4 #F0E8D2; true gold #8A5A12 #E0A92E #FFDC66; soul teal #1C6B58 #3DCC94 #A8FFD2; carnelian #7B1E16 #BF3B2B #E87855; papyrus green #285A30 #4E8F40 #8CC45E; dark #0B0A10.
+Attached: an approved icon of this game: match its pixel size, outline weight and flat look (only the symbol, not its frame).

@@ -60,16 +60,14 @@ const BOSS_TIME: float = 1020.0  # TUNING (not in GDD) 17:00, as on every stage
 
 ## Enemy max-HP multiplier of this stage on top of the shared time scaling
 ## (the Sanctum's is 1.1: Act II starts a little above it and climbs).
-const ENEMY_HP_MULT: float = 1.15  # TUNING (not in GDD)
+const ENEMY_HP_MULT: float = 1.4  # TUNING (not in GDD) reorder pass part 3 (slot tuning): 1.15 -> 1.4: Act XI now (built as Act II), 0/10 bot deaths and mean min HP 106 left it the safest stage of Part Three
 ## Enemy damage multiplier of this stage on top of the shared time scaling.
-const ENEMY_DAMAGE_MULT: float = 1.22  # TUNING (not in GDD) 1.15 left the naive bot dying no more often than on the Sanctum (4/9 vs 2/4); the army bot had a wide margin (min HP 95-116)
+const ENEMY_DAMAGE_MULT: float = 1.7  # TUNING (not in GDD) reorder pass part 3 (slot tuning): 1.22 -> 1.7: as the HP step (Act XI now; 0/10 deaths, min HP 106) (before: 1.15 left the naive bot dying no more often than on the Sanctum (4/9 vs 2/4); the army bot had a wide margin (min HP 95-116))
 ## Elapsed game seconds from which the two multipliers apply to regular
 ## enemies (the boss always gets them): Zone II, the Fish Market (the
 ## Sanctum's from Zone III; from 0:00 they would lift an Initiate past the
 ## starting Shadow Bolt's one-shot, the March's lesson).
 const ENEMY_MULT_FROM: float = 300.0  # TUNING (not in GDD)
-## Soul Ash multiplier of a run on this stage (its own end-screen line).
-const ASH_MULT: float = 1.0  # TUNING (not in GDD) owner decision Oct 2026, GDD §15.0 "Ossuary expansion: owner decisions"; each act restarts at x1 / x1.25 / x1.5
 
 ## "The Deep Rises": the Harbour's Reckoning (same escalation as every stage;
 ## keys as GraveyardStage.RECKONING) with the stage's own main kind:
@@ -419,12 +417,8 @@ const STAGE := {
 	"id": ID,
 	"display_name": "Gullhaven Harbour",
 	"short_name": "Gullhaven",
-	"chapter": "Chapter IV",
-	"act": 2,  # Act II, the Ancient Eye.
 	"playable": true,  # Act II integration (balance-checked, 8-seed batches); the owner playtests it from here.
 	"description": "A fishing town at low tide, at night, where the Ancient Eye has lived in the open for generations. The tide rises on the clock and floods the lanes; sink the bell buoys, raid the smugglers' caches and silence Abbot Silas Merrow, Voice of the Deep.",
-	"unlock": {"stage": "sanctum", "boss_kills": 1},  # owner-approved: each boss unlocks the next stage
-	"unlock_text": "Slay Grand Inquisitor Seraphine in the Sanctum of Judgment to unlock.",
 	"boss": BOSS,
 	"segments": SEGMENTS,
 	"events": EVENTS,
@@ -438,7 +432,6 @@ const STAGE := {
 	"enemy_hp_mult": ENEMY_HP_MULT,
 	"enemy_damage_mult": ENEMY_DAMAGE_MULT,
 	"enemy_mult_from": ENEMY_MULT_FROM,
-	"ash_mult": ASH_MULT,
 	"march": MARCH,  # The clock-driven zones (MarchDirector).
 	"tide": TIDE,  # The tide (TideDirector).
 	"harbour": HARBOUR,  # Buoys, caches, the Harbourmaster (HarbourDirector).

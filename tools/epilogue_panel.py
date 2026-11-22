@@ -81,6 +81,9 @@ PANEL_OPTS = {
     "act5_4": {"y_bias": 0.26, "drop": ["skin", "ice"]},  # The eclipsed sun and the broken relics (round 3 redo): the band keeps both the black sun and the mirror and crown.
     "close_act5": {"drop": ["skin", "ice"]},  # The Pit with its ledger of souls: the default drops.
 }
+# Reorder pass, part 2 (docs/last_acts/EPILOGUE_PANELS.md): every other panel made by docs/last_acts/tools/gen_epilogue_panels.py
+# uses the default drops; --all gives any panel without an entry above these.
+DEFAULT_OPTS = {"drop": ["skin", "ice"]}
 
 
 def oklab(c: np.ndarray) -> np.ndarray:
@@ -179,7 +182,9 @@ def main() -> None:
     a = ap.parse_args()
     if a.all:
         for src in sorted(SRC_DIR.glob("*.png")):
-            o = PANEL_OPTS.get(src.stem, {})
+            if src.stem.endswith("_old"):  # Kept previous sources of redone panels, not panels.
+                continue
+            o = PANEL_OPTS.get(src.stem, DEFAULT_OPTS)
             convert(src, src.stem, o.get("x_bias", 0.5), o.get("y_bias", 0.5), set(o.get("drop", [])),
                     o.get("clusters", CLUSTERS))
         return

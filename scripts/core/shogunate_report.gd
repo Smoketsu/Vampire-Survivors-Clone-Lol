@@ -54,12 +54,12 @@ static func print_lines(game: Game, st: Dictionary) -> void:
 			" | ".join(parts), int(st.get("samurai_draws", 0.0)), int(st.get("teppo_shots", 0.0)), int(st.get("ninja_shuriken", 0.0)),
 			int(st.get("oni_smashes", 0.0)), int(st.get("oni_stuns", 0.0))])
 	var sd := game.stage_def  # The run's stage.
-	if StageRegistry.act_of(String(sd["id"])) == 5:
+	if StageRegistry.act_id_of(String(sd["id"])) == "shogunate":
 		var boss: Dictionary = sd["boss"]
 		print("[autotest] shogunate stage: %s (%s) | playable %s | boss %s (script %s) | enemy x%.2f HP / x%.2f dmg from %s | soul ash x%.2f | reckoning kind %s, endless night %s" % [
 			String(sd["id"]), String(sd["display_name"]), str(StageRegistry.is_playable(String(sd["id"]))),
 			String(boss["id"]), String(boss.get("script", boss["id"])), float(sd["enemy_hp_mult"]), float(sd["enemy_damage_mult"]),
-			EmpireReport._clock(float(sd.get("enemy_mult_from", 0.0))), float(sd["ash_mult"]),
+			EmpireReport._clock(float(sd.get("enemy_mult_from", 0.0))), StageRegistry.ash_mult_of(String(sd["id"])),
 			String((sd["reckoning"] as Dictionary).get("kind", "inquisitor")), str(not sh.sun.endless.is_empty())])
 	# --- Act V: the Burning Province ---
 	ProvinceReport.print_lines(game, st)  # The paddies, the fires, the stage's kinds, Shuten-doji, Kage (each when it ran).

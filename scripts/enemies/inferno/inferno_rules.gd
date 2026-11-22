@@ -69,6 +69,8 @@ func step(delta: float) -> void:
 	judgment.step(delta)
 	if enabled:
 		pits.step(delta)
+	elif pits.count > 0:
+		pits.step_opened(delta)  # Act X, the Cutter: Crow's fire patches (open_pit() off Act VI: no fixed or timed pits).
 	portals.step(delta)
 	temptation.step(delta)
 
@@ -105,8 +107,8 @@ func play_sound(event: String, pos: Vector2 = Vector2.INF) -> void:
 ## the brute's slam, come through CovenantRites.danger_push()).
 func danger_push(p: Vector2) -> Vector2:
 	var push := judgment.danger_push(p)
-	if enabled:
-		push += pits.danger_push(p)
+	if enabled or pits.count > 0:
+		push += pits.danger_push(p)  # (Off Act VI only opened pits exist: Crow's fire patches.)
 	return push
 
 

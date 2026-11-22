@@ -159,11 +159,16 @@ func fire_aoe(pos: Vector2, dest: Vector2, damage: float, speed: float, splash: 
 ## Fires a Covenant arrow in direction `dir`. `kind` / `source` default to
 ## an archer arrow; Holy Retribution (a run modifier) fires RADIANT_BOLTs
 ## tagged "holy_retribution" (the player_dmg_from_* / summon_dmg_from_* stat).
+## Act XV (temporary number), the Turning Year: `chill` > 0 (the Winter Fae's
+## frost bolt) chills the summon it strikes by that fraction for `chill_time` s
+## (CombatResolver.chill_unit()); 0, every other shot, changes nothing.
 func fire_hostile(pos: Vector2, dir: Vector2, damage: float, speed: float, undead_mult: float,
-		kind: Projectile.Kind = Projectile.Kind.ENEMY_ARROW, source: String = "archer_arrow") -> void:
+		kind: Projectile.Kind = Projectile.Kind.ENEMY_ARROW, source: String = "archer_arrow", chill: float = 0.0, chill_time: float = 0.0) -> void:
 	var p := _acquire()
 	if p == null:
 		return
+	p.chill_slow = chill
+	p.chill_time = chill_time
 	p.kind = kind
 	p.source = source
 	p.hostile = true
@@ -342,6 +347,8 @@ func _hostile_hits(p: Projectile) -> bool:
 	for u: SummonedUnit in _tmp:
 		if u.active and u.position.distance_to(p.position) <= u.radius + p.radius:
 			game.combat.damage_unit(u, p.damage * p.undead_mult, p.source)
+			if p.chill_slow > 0.0 and u.active:
+				game.combat.chill_unit(u, p.chill_slow, p.chill_time, p.source)  # Act XV: the Winter Fae's frost bolt.
 			return false
 	return true
 
@@ -369,6 +376,8 @@ func _hostile_hits_coop(p: Projectile) -> bool:
 	for u: SummonedUnit in _tmp:
 		if u.active and u.position.distance_to(p.position) <= u.radius + p.radius:
 			game.combat.damage_unit(u, p.damage * p.undead_mult, p.source)
+			if p.chill_slow > 0.0 and u.active:
+				game.combat.chill_unit(u, p.chill_slow, p.chill_time, p.source)  # Act XV: the Winter Fae's frost bolt.
 			return false
 	return true
 

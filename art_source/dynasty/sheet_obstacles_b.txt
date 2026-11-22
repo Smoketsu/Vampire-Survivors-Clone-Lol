@@ -1,0 +1,9 @@
+A sheet of 5 separate pixel-art game OBSTACLE sprites for a top-down 2D horde-survival game (three-quarter top-down view, camera above and slightly in front), laid out in one row, evenly spaced with wide empty gaps between them, on a FULLY TRANSPARENT background (real alpha). Ancient Egyptian necropolis, sandstone with lapis blue and dull bronze painted details. LOW-RESOLUTION pixel art, chunky simple shapes, crisp square pixels (nearest-neighbour), a clean 1-pixel dark outline, flat colours, at most 3 shades per material, light from the top-left. No ground under them, no cast shadows, no text, no hieroglyph writing.
+From left to right:
+1. a LONG COLONNADE: five round sandstone columns with lapis-painted capitals joined by a stone beam on top (about 70 px wide, 32 px tall);
+2. the GREAT SCALES: a huge gold-bronze balance scale on a sandstone pedestal, two wide pans hanging from a beam, a small feather weight on one pan (about 64 px wide, 56 px tall);
+3. a stone BRAZIER: a sandstone bowl on a pillar holding a bright fire (about 16 px wide, 28 px tall);
+4. a broken SPHINX HEAD half-buried in sand, lapis striped headdress, weathered (about 34 px wide, 28 px tall);
+5. a heap of broken sandstone BLOCKS and a snapped column (about 36 px wide, 24 px tall).
+Colours: sandstone #8C6B3E #D2B574 #F0DDA6; lapis #16327C #2B54B8 #5F8BE6; dull bronze #6B5A22 #A38E3C #D2BB62; papyrus green #285A30 #4E8F40; night #1B2038 #2E3660; fire #BF3B2B #E87855 #FFDC66.
+Attached: a game sprite of this game for pixel size, outline weight and flat look.

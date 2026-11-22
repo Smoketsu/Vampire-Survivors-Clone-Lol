@@ -458,6 +458,12 @@ func _fire(v: Dictionary, from: Vector2, aim: Vector2, base_damage: float, sourc
 		_pos[i] = start
 		_vel[i] = Vector2.RIGHT.rotated(ang) * speed
 		_life[i] = float(v["life"]) * VolleyData.LIFE_MULT
+		# --- Act XII (temporary number): the Necropolis Dynasty --- the
+		# Sandstorm: a volley flies half as far while it blows (its life x
+		# DynastyRules.army_reach_mult(); not the rain, which falls from above;
+		# only while Game.dynasty exists).
+		if game.dynasty != null and pattern != "rain":
+			_life[i] *= game.dynasty.army_reach_mult()
 		_dmg[i] = dmg
 		_rad[i] = float(v["radius"])
 		_curve[i] = float(v.get("curve", 0.0)) if pattern == "spiral" else 0.0

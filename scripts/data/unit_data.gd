@@ -64,7 +64,25 @@ const CLASS_ORDER := ["warrior", "archer", "mage", "mender", "warder", "bishop",
 		"fallen_hero",
 		# --- Act IX: the Ark ---
 		# Unlockable (UnlockData: defeating the Harvester), so a fresh save never offers it.
-		"ghost_saucer"]
+		"ghost_saucer",
+		# --- Act X: the Maelstrom ---
+		# Unlockable (UnlockData: defeating Vandermere), so a fresh save never offers it.
+		"powder_wraith",
+		# --- Act XI (temporary): Vigrid ---
+		# Unlockable (UnlockData: defeating Odin), so a fresh save never offers it.
+		"draugr_thane",
+		# --- Act XII (temporary number): the Hall of Two Truths ---
+		# Unlockable (UnlockData: defeating Osiris and Ammit), so a fresh save never offers it.
+		"ushabti_sentinel",
+		# --- Act XIII (temporary number): the Empyrean ---
+		# Unlockable (UnlockData: defeating the Voice), so a fresh save never offers it.
+		"bound_ophan",
+		# --- Act XIV (temporary number): the Last Day ---
+		# Unlockable (UnlockData: slaying Old Gravejaw), so a fresh save never offers it.
+		"bonehorn",
+		# --- Act XV (temporary number): the World-Tree ---
+		# Unlockable (UnlockData: slaying the Green Mother), so a fresh save never offers it.
+		"ossuary_oak"]
 ## The four GDD §4.2 summon ROLES ("all 4 classes": the Dread Sovereign
 ## achievement), in SynergyManager.classes_met() format: an entry that is an
 ## Array means "any one of these", so after the priest split either priest
@@ -1376,6 +1394,340 @@ const UNITS := {
 			"hover_lift": 16.0,  # TUNING (not in GDD) px the hull hovers above its shadow (drawing only)
 		},
 	},
+	# --- Act X: the Maelstrom ---
+	# The Powder Wraith (owner-approved proposal: "Finale summon class: the
+	# Powder Wraith, a skeleton carrying a lit keg that walks into a pack and
+	# bursts (area damage and a 60 px knockback), then reforms at the ring after
+	# 12 s (evolution Magazine Lord). It is a class special, so it works on every
+	# stage"; GDD §15.0 "The Powder Wraith, Magazine Lord and Slow Match"): an
+	# undead skeleton (no sex) with a lit powder keg on its shoulder. It fights
+	# with a short blade on the Bone Ring's front posts between kegs; its
+	# special (PowderWraithBehavior, "keg_burst") marches it into the densest
+	# pack and bursts it there, and it reforms at the ring reform_time s later.
+	# Unlockable (UnlockData), then offered on every stage.
+	"powder_wraith": {
+		"display_name": "Powder Wraith",  # Owner-approved proposal
+		"plural": "Powder Wraiths",
+		"description": "Skeletons with lit kegs that march into a pack, burst, and reform at your ring.",  # Card text: one short sentence (owner rule).
+		"max_hp": 60.0,  # TUNING (not in GDD) a skeleton (Warrior 90)
+		"damage": 7.0,  # TUNING (not in GDD) a short blade (melee) between kegs
+		"attack_interval": 1.1,  # TUNING (not in GDD) s
+		"attack_range": 8.0,  # TUNING (not in GDD) edge-to-edge reach (px)
+		"move_speed": 96.0,  # TUNING (not in GDD) px/s
+		"radius": 10.0,  # TUNING (not in GDD) px
+		"acquisition_range": 200.0,  # TUNING (not in GDD) px
+		"replenish_interval": 12.0,  # TUNING (not in GDD) s (a fallen one; a burst one reforms on its own clock)
+		"band_min": 50.0,  # TUNING (not in GDD) px, with the front
+		"band_max": 110.0,  # TUNING (not in GDD)
+		"w_pursuit": 1.0,  # TUNING (not in GDD)
+		"w_formation": 0.4,  # TUNING (not in GDD)
+		"w_separation": 0.8,  # TUNING (not in GDD)
+		"w_threat": 0.05,  # TUNING (not in GDD)
+		"attack_profile": "melee",
+		"target_profile": "skirmisher",
+		"windup": 0.15,  # TUNING (not in GDD) s
+		"projectile_speed": 0.0,
+		"splash_radius": 0.0,
+		"heal_amount": 0.0,
+		"kite_distance": 0.0,
+		"heal_role_priority": 0.6,  # TUNING (not in GDD)
+		"formation": "front",  # It marches out from the ring's front posts.
+		"capacity_bonus_mult": 0.5,  # TUNING (not in GDD) Grave Dominion V: +2
+		"behavior": "keg_burst",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"special": {
+			"keg_damage": 40.0,  # TUNING (not in GDD) AoE damage of the burst
+			"keg_radius": 64.0,  # TUNING (not in GDD) px (the Powder Runner's keg 64)
+			"keg_knockback": 60.0,  # Owner-approved proposal: a 60 px knockback (px pushed; Slow Match lengthens it)
+			"keg_cooldown": 3.0,  # TUNING (not in GDD) s after it reforms before it lights the next keg
+			"keg_range": 260.0,  # TUNING (not in GDD) px from its necromancer it looks for a pack
+			"keg_min_enemies": 3,  # TUNING (not in GDD) foes around the pick (an elite / boss alone also counts)
+			"keg_speed": 150.0,  # TUNING (not in GDD) px/s it marches with the fuse lit
+			"keg_trigger": 20.0,  # TUNING (not in GDD) px from the pack's foe it bursts
+			"keg_march": 2.2,  # TUNING (not in GDD) s at most it marches (it bursts wherever it is then)
+			"reform_time": 12.0,  # Owner-approved proposal: it reforms at the ring after 12 s (not a *_duration key: nothing lengthens it)
+			"kegs": 1,  # Bursts a keg (Magazine Lord 2: a second blast at the next pack)
+			"chain_range": 130.0,  # TUNING (not in GDD) px from a burst Magazine Lord looks for its next pack
+			"keg_shake": 2.0,  # TUNING (not in GDD) screen-shake request (px, Juice)
+			"cluster_bonus": 0.4,  # TUNING (not in GDD) target-score bonus x cluster fullness while the keg is ready
+		},
+	},
+	# --- Act XI (temporary): Vigrid ---
+	# The Draugr Thane (owner-approved proposal: "Finale summon class the Draugr
+	# Thane: a heavy undead jarl, a blocker whose frost-axe slows what it hits
+	# (evolution Barrow King)"; GDD §15.0 "The Draugr Thane, the Barrow King and
+	# Cold Iron"): a jarl risen from his barrow in rimed mail, a frost-axe,
+	# soul-teal eyes (summons/draugr_thane). A heavy blocker on the Bone Ring's
+	# front posts (formation "front", it blocks like the Abomination); every
+	# axe blow CHILLS what it strikes, and its FROST CLEAVE (DraugrThaneBehavior,
+	# "frost_axe") sweeps a sector before it, chilling everything in it. No act
+	# rule (owner rule: summons work the same everywhere). Unlockable
+	# (UnlockData), then offered on every stage.
+	"draugr_thane": {
+		"display_name": "Draugr Thane",  # Owner-approved proposal
+		"plural": "Draugr Thanes",
+		"description": "Undead jarls that hold the front; their frost-axes slow whatever they strike.",  # Card text: one short sentence (owner rule).
+		"max_hp": 230.0,  # TUNING (not in GDD) a heavy (Abomination 260, Bound Oni 240)
+		"damage": 16.0,  # TUNING (not in GDD) an axe blow (Abomination 16)
+		"attack_interval": 1.5,  # TUNING (not in GDD) s
+		"attack_range": 16.0,  # TUNING (not in GDD) edge-to-edge reach (px)
+		"move_speed": 62.0,  # TUNING (not in GDD) px/s, a heavy's pace
+		"radius": 14.0,  # TUNING (not in GDD) px
+		"acquisition_range": 140.0,  # TUNING (not in GDD) px
+		"replenish_interval": 18.0,  # TUNING (not in GDD) s, slow to rebuild
+		"band_min": 45.0,  # TUNING (not in GDD) px, with the front
+		"band_max": 95.0,  # TUNING (not in GDD)
+		"w_pursuit": 1.0,  # TUNING (not in GDD)
+		"w_formation": 0.4,  # TUNING (not in GDD)
+		"w_separation": 0.8,  # TUNING (not in GDD)
+		"w_threat": 0.0,  # TUNING (not in GDD) a jarl never shies away
+		"attack_profile": "melee",
+		"target_profile": "guard",
+		"windup": 0.3,  # TUNING (not in GDD) s
+		"projectile_speed": 0.0,
+		"splash_radius": 0.0,
+		"heal_amount": 0.0,
+		"kite_distance": 0.0,
+		"heal_role_priority": 0.9,  # TUNING (not in GDD) healers value the jarl
+		"block_radius": 18.0,  # TUNING (not in GDD) px, blocks like the Abomination
+		"block_mass": 7.0,  # TUNING (not in GDD) (Abomination 8)
+		"engaged_speed_mult": 0.45,  # TUNING (not in GDD) touching enemies move at 45%
+		"formation": "front",  # Owner-approved proposal: "a blocker"
+		"capacity_bonus_mult": 0.4,  # TUNING (not in GDD) Grave Dominion V: +2, like the Abominations
+		"behavior": "frost_axe",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"special": {
+			"axe_slow": 0.3,  # Owner-approved proposal "slows what it hits"; TUNING (not in GDD) share of speed
+			"axe_slow_duration": 1.6,  # TUNING (not in GDD) s (special_duration lengthens it)
+			"cleave_damage": 20.0,  # TUNING (not in GDD) to every foe in the sector
+			"cleave_radius": 50.0,  # TUNING (not in GDD) px of the sector before it
+			"cleave_cooldown": 6.0,  # TUNING (not in GDD) s
+			"cleave_windup": 0.45,  # TUNING (not in GDD) s the axe is raised (the sector telegraphed)
+			"cleave_recover": 0.3,  # TUNING (not in GDD) s it stands after the sweep
+			"cleave_slow": 0.45,  # TUNING (not in GDD) share of speed the sweep takes
+			"cleave_slow_duration": 2.2,  # TUNING (not in GDD) s (special_duration lengthens it)
+			"cleave_trigger": 26.0,  # TUNING (not in GDD) px edge to edge: it sweeps when a foe is this close
+		},
+	},
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	# The Ushabti Sentinel (owner-approved proposal: "Finale summon class: the
+	# Ushabti Sentinel, a stone servant that reassembles once every 25 s when
+	# slain, at half health (evolution Eternal Guard). It is a class special, so
+	# it works everywhere"; GDD §15.0 "The Ushabti Sentinel, Eternal Guard and
+	# Answering Words"): a mummiform stone shabti, no sex, the necromancer's
+	# own servant (soul-teal eyes; art summons/ushabti_sentinel). A BLOCKER on
+	# the Bone Ring (formation "front", it physically blocks like a Warrior);
+	# its class special ("reassemble", UshabtiSentinelBehavior) answers the
+	# blow that would slay it: it falls to rubble for rubble_time s and stands
+	# again at reassemble_hp of its health with a stone shockwave, once every
+	# reassemble_cooldown s. Unlockable (UnlockData), then offered on every stage.
+	"ushabti_sentinel": {
+		"display_name": "Ushabti Sentinel",  # Owner-approved proposal
+		"plural": "Ushabti Sentinels",
+		"description": "A stone servant that holds the line and rises again from its rubble.",  # Card text: one short sentence (owner rule).
+		"max_hp": 110.0,  # TUNING (not in GDD) a stone blocker (Warrior 60, Abomination 260); it gets a second life every 25 s
+		"damage": 12.0,  # TUNING (not in GDD) a stone fist
+		"attack_interval": 1.3,  # TUNING (not in GDD) s
+		"attack_range": 18.0,  # TUNING (not in GDD) edge-to-edge melee reach (px)
+		"move_speed": 70.0,  # TUNING (not in GDD) px/s; stone is slower than bone (Warrior 85)
+		"radius": 11.0,  # TUNING (not in GDD) px (~46 px sprite)
+		"acquisition_range": 150.0,  # TUNING (not in GDD)
+		"replenish_interval": 14.0,  # TUNING (not in GDD) s; slow to carve again (it rebuilds itself instead)
+		"band_min": 35.0,  # TUNING (not in GDD) inner defense band, as the Warrior
+		"band_max": 85.0,  # TUNING (not in GDD)
+		"w_pursuit": 1.0,  # TUNING (not in GDD)
+		"w_formation": 0.4,  # TUNING (not in GDD)
+		"w_separation": 0.8,  # TUNING (not in GDD)
+		"w_threat": 0.0,  # TUNING (not in GDD) stone never shies away
+		"attack_profile": "melee",
+		"target_profile": "guard",
+		"windup": 0.25,  # TUNING (not in GDD) s
+		"projectile_speed": 0.0,
+		"splash_radius": 0.0,
+		"heal_amount": 0.0,
+		"kite_distance": 0.0,
+		"heal_role_priority": 0.9,  # TUNING (not in GDD) healers value a blocker
+		"block_radius": 13.0,  # TUNING (not in GDD) blocks like a Warrior (px)
+		"block_mass": 5.0,  # TUNING (not in GDD) heavier than a Warrior (3), lighter than an Abomination (8)
+		"engaged_speed_mult": 0.5,  # TUNING (not in GDD) touching enemies move at 50%
+		"formation": "front",  # A blocker's post on the Bone Ring.
+		"capacity_bonus_mult": 0.4,  # TUNING (not in GDD) Grave Dominion V: +2
+		"behavior": "reassemble",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"special": {
+			"reassemble_cooldown": 25.0,  # Owner-approved proposal: "reassembles once every 25 s" (Answering Words and special_haste shorten it)
+			"reassemble_hp": 0.5,  # Owner-approved proposal: "at half health"
+			"rubble_time": 1.2,  # TUNING (not in GDD) s it lies in rubble (no hit lands; it still blocks)
+			"reform_damage": 18.0,  # TUNING (not in GDD) the stone shockwave as it stands
+			"reform_radius": 50.0,  # TUNING (not in GDD) px round it
+		},
+	},
+	# --- Act XIII (temporary number): the Empyrean ---
+	# The Bound Ophan (owner-approved proposal: "Finale summon class the Bound
+	# Ophan: a wheel of bone and eyes that orbits the Bone Ring and rolls
+	# through packs (evolution Throne of Bones)"; GDD §15.0 "The Bound Ophan,
+	# Throne of Bones and Turning Bones"): a wheel of bone with soul-teal eyes,
+	# no sex, the necromancer's own (art summons/bound_ophan). A ground body on
+	# the Bone Ring's front posts; its class special ("orbit_roll",
+	# BoundOphanBehavior) works on every stage: with a pack within roll_range px
+	# of its necromancer it ORBITS the ring for roll_orbit s (striking what it
+	# rolls over), then ROLLS straight through the pack and roll_past px beyond
+	# (each foe struck once a roll). Unlockable (UnlockData), then offered on
+	# every stage.
+	"bound_ophan": {
+		"display_name": "Bound Ophan",  # Owner-approved proposal
+		"plural": "Bound Ophans",
+		"description": "A wheel of bone and eyes that circles your ring and rolls through packs.",  # Card text: one short sentence (owner rule).
+		"max_hp": 90.0,  # TUNING (not in GDD) a bone wheel (Warrior 60, Fallen Hero 110)
+		"damage": 10.0,  # TUNING (not in GDD) a rim blow (melee)
+		"attack_interval": 1.1,  # TUNING (not in GDD) s
+		"attack_range": 12.0,  # TUNING (not in GDD) edge-to-edge reach (px)
+		"move_speed": 100.0,  # TUNING (not in GDD) px/s; a wheel rolls fast
+		"radius": 11.0,  # TUNING (not in GDD) px (~30 px sprite)
+		"acquisition_range": 180.0,  # TUNING (not in GDD) px
+		"replenish_interval": 12.0,  # TUNING (not in GDD) s
+		"band_min": 45.0,  # TUNING (not in GDD) px, with the front
+		"band_max": 100.0,  # TUNING (not in GDD)
+		"w_pursuit": 1.0,  # TUNING (not in GDD)
+		"w_formation": 0.4,  # TUNING (not in GDD)
+		"w_separation": 0.8,  # TUNING (not in GDD)
+		"w_threat": 0.0,  # TUNING (not in GDD) a wheel never shies away
+		"attack_profile": "melee",
+		"target_profile": "skirmisher",
+		"windup": 0.15,  # TUNING (not in GDD) s
+		"projectile_speed": 0.0,
+		"splash_radius": 0.0,
+		"heal_amount": 0.0,
+		"kite_distance": 0.0,
+		"heal_role_priority": 0.6,  # TUNING (not in GDD)
+		"formation": "front",  # Owner-approved proposal: it orbits the Bone Ring
+		"capacity_bonus_mult": 0.5,  # TUNING (not in GDD) Grave Dominion V: +2
+		"behavior": "orbit_roll",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"special": {
+			"roll_damage": 22.0,  # TUNING (not in GDD) to every foe it rolls over (once a roll; the orbit's strikes too)
+			"roll_cooldown": 6.0,  # TUNING (not in GDD) s between two rolls
+			"roll_orbit": 0.8,  # TUNING (not in GDD) s it circles the ring before it rolls
+			"roll_orbit_speed": 2.6,  # TUNING (not in GDD) rad/s round the necromancer while it circles
+			"roll_speed": 300.0,  # TUNING (not in GDD) px/s straight through the pack
+			"roll_range": 260.0,  # TUNING (not in GDD) px from its necromancer it looks for a pack
+			"roll_past": 70.0,  # TUNING (not in GDD) px it rolls on beyond the pack's centre
+			"roll_min_enemies": 3,  # TUNING (not in GDD) foes round the pick (an elite or the boss alone also counts)
+			"roll_rim": 8.0,  # TUNING (not in GDD) px beyond its radius its rim strikes
+			"roll_knockback": 120.0,  # TUNING (not in GDD) px/s impulse sideways, divided by the foe's mass
+		},
+	},
+	# --- Act XIV (temporary number): the Last Day ---
+	# The Bonehorn (owner-approved proposal: "Finale summon class: the
+	# Bonehorn, a skeletal ceratopsian that charges in a straight line through
+	# a pack, trampling and knocking back, then trots back to the ring
+	# (evolution Fossil Tyrant). It is a class special, so it works on every
+	# stage."; GDD §15.0 "The Bonehorn, Fossil Tyrant and Petrified Horns"): a
+	# skeletal horned charger, bone-white with soul-teal eye sockets, no sex,
+	# the necromancer's own (art summons/bonehorn). A ground body on the Bone
+	# Ring's front posts; its class special ("trample_charge",
+	# BonehornBehavior) works on every stage: with a pack within charge_range
+	# px of its necromancer it paws for charge_windup s, then CHARGES straight
+	# through the pack and charge_past px beyond (each foe trampled once a
+	# charge, knocked along the run), then trots back to the ring.
+	# Unlockable (UnlockData), then offered on every stage.
+	"bonehorn": {
+		"display_name": "Bonehorn",  # Owner-approved proposal
+		"plural": "Bonehorns",
+		"description": "A skeletal horned charger that tramples through packs and trots back.",  # Card text: one short sentence (owner rule).
+		"max_hp": 95.0,  # TUNING (not in GDD) a bone charger (Bound Ophan 90)
+		"damage": 10.0,  # TUNING (not in GDD) a horn blow (melee)
+		"attack_interval": 1.1,  # TUNING (not in GDD) s
+		"attack_range": 12.0,  # TUNING (not in GDD) edge-to-edge reach (px)
+		"move_speed": 96.0,  # TUNING (not in GDD) px/s; it trots back fast
+		"radius": 12.0,  # TUNING (not in GDD) px (~40 x 34 px sprite)
+		"acquisition_range": 180.0,  # TUNING (not in GDD) px
+		"replenish_interval": 12.0,  # TUNING (not in GDD) s
+		"band_min": 45.0,  # TUNING (not in GDD) px, with the front
+		"band_max": 100.0,  # TUNING (not in GDD)
+		"w_pursuit": 1.0,  # TUNING (not in GDD)
+		"w_formation": 0.4,  # TUNING (not in GDD)
+		"w_separation": 0.8,  # TUNING (not in GDD)
+		"w_threat": 0.0,  # TUNING (not in GDD) a charger never shies away
+		"attack_profile": "melee",
+		"target_profile": "skirmisher",
+		"windup": 0.15,  # TUNING (not in GDD) s
+		"projectile_speed": 0.0,
+		"splash_radius": 0.0,
+		"heal_amount": 0.0,
+		"kite_distance": 0.0,
+		"heal_role_priority": 0.6,  # TUNING (not in GDD)
+		"formation": "front",  # Owner-approved proposal: it trots back to the ring
+		"capacity_bonus_mult": 0.5,  # TUNING (not in GDD) Grave Dominion V: +2
+		"behavior": "trample_charge",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"special": {
+			"charge_damage": 22.0,  # TUNING (not in GDD) to every foe it tramples (once a charge; the Bound Ophan's roll 22)
+			"charge_cooldown": 6.5,  # TUNING (not in GDD) s between two charges
+			"charge_windup": 0.45,  # TUNING (not in GDD) s it paws before it runs
+			"charge_speed": 320.0,  # TUNING (not in GDD) px/s straight through the pack
+			"charge_range": 260.0,  # TUNING (not in GDD) px from its necromancer it looks for a pack
+			"charge_past": 60.0,  # TUNING (not in GDD) px it runs on beyond the pack's centre
+			"charge_min_enemies": 3,  # TUNING (not in GDD) foes round the pick (an elite or the boss alone also counts)
+			"charge_rim": 8.0,  # TUNING (not in GDD) px beyond its radius its horns strike
+			"charge_knockback": 160.0,  # Owner-approved proposal: "trampling and knocking back"; TUNING (not in GDD) px/s impulse along the run, divided by the foe's mass
+		},
+	},
+	# --- Act XV (temporary number): the World-Tree ---
+	# The Ossuary Oak (owner-approved proposal: "Finale summon class the Ossuary
+	# Oak: a slow tree of bone that roots in place as a blocker and lashes
+	# everything around it with thorns (evolution World-Root Warden)"; GDD §15.0
+	# "The Ossuary Oak, World-Root Warden and Heartwood"): a slow tree of bone
+	# with soul-teal knots, no sex, the necromancer's own (art
+	# summons/ossuary_oak). A physical blocker on the Bone Ring's front posts; its
+	# class special ("root_lash", OssuaryOakBehavior) works on every stage: with
+	# foes round it, it roots in place (root_mass) and lashes every foe within
+	# lash_radius px every lash_cooldown s. Unlockable (UnlockData), then
+	# offered on every stage.
+	"ossuary_oak": {
+		"display_name": "Ossuary Oak",  # Owner-approved proposal
+		"plural": "Ossuary Oaks",
+		"description": "A slow tree of bone that roots in place and lashes every foe around it.",  # Card text: one short sentence (owner rule).
+		"max_hp": 320.0,  # TUNING (not in GDD) a blocker of bone (Bone Golem 420, Abomination 260)
+		"damage": 14.0,  # TUNING (not in GDD) a branch blow (melee)
+		"attack_interval": 1.6,  # TUNING (not in GDD) s
+		"attack_range": 16.0,  # TUNING (not in GDD) edge-to-edge reach (px)
+		"move_speed": 44.0,  # Owner-approved proposal: "slow"; TUNING (not in GDD) px/s
+		"rejoin_speed_mult": 1.7,  # TUNING (not in GDD) optional key: catch-up and return speed factor (as the Golem)
+		"radius": 16.0,  # TUNING (not in GDD) px (~48 x 56 px sprite); <= UnitData.MAX_BLOCK_RADIUS
+		"acquisition_range": 150.0,  # TUNING (not in GDD) px; an anchor does not chase far
+		"replenish_interval": 20.0,  # TUNING (not in GDD) s
+		"band_min": 45.0,  # TUNING (not in GDD) with the frontline (px)
+		"band_max": 95.0,  # TUNING (not in GDD)
+		"w_pursuit": 1.0,  # TUNING (not in GDD)
+		"w_formation": 0.35,  # TUNING (not in GDD)
+		"w_separation": 0.8,  # TUNING (not in GDD)
+		"w_threat": 0.0,  # TUNING (not in GDD) a tree never shies away
+		"attack_profile": "melee",
+		"target_profile": "fortress",  # The nearest foes first (an anchor fights what reaches it).
+		"windup": 0.3,  # TUNING (not in GDD) s
+		"projectile_speed": 0.0,
+		"splash_radius": 0.0,
+		"heal_amount": 0.0,
+		"kite_distance": 0.0,
+		"heal_role_priority": 0.8,  # TUNING (not in GDD)
+		"block_radius": 20.0,  # Owner-approved proposal: "as a blocker"; TUNING (not in GDD) px (the Abomination 20)
+		"block_mass": 8.0,  # TUNING (not in GDD) the Abomination 8; rooted it holds with root_mass
+		"engaged_speed_mult": 0.45,  # TUNING (not in GDD) touching enemies move at 45%
+		"formation": "front",  # Owner-approved proposal: a blocker on the ring
+		"capacity_bonus_mult": 0.2,  # TUNING (not in GDD) Grave Dominion V: +1 (a 1-2 body class)
+		"behavior": "root_lash",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"special": {
+			"root_reach": 90.0,  # TUNING (not in GDD) px; foes this close make it root (not area-scaled)
+			"lash_trigger": 2,  # TUNING (not in GDD) foes within root_reach to root (an elite / the boss alone also counts)
+			"root_leash": 170.0,  # TUNING (not in GDD) px; it roots only this near its necromancer (it never roots far behind the ring)
+			"root_mass": 300.0,  # Owner-approved proposal: "roots in place as a blocker"; TUNING (not in GDD) block mass while rooted
+			"lash_radius": 70.0,  # Owner-approved proposal: "lashes everything around it with thorns"; TUNING (not in GDD) px (area-scaled)
+			"lash_damage": 7.0,  # TUNING (not in GDD) to every foe in reach, each lash (first pass 12 every 2.4 s: 70k of lash damage at Lv 5, more than a whole army bot's ring, seed 7)
+			"lash_cooldown": 3.0,  # TUNING (not in GDD) s between two lashes
+		},
+	},
 }
 
 ## Summon-ability progression, one entry per skill level (index 0 = level 1).
@@ -1624,6 +1976,63 @@ const LEVELS := {
 		{"count": 2, "hp_bonus": 0.2, "special_bonus": 0.25},
 		{"count": 3, "hp_bonus": 0.25, "special_bonus": 0.3, "special_area": 0.15},
 		{"count": 3, "hp_bonus": 0.3, "damage_bonus": 0.25, "special_bonus": 0.5, "special_area": 0.2, "special_haste": 0.2},
+	],
+	# --- Act X: the Maelstrom ---
+	# TUNING (not in GDD): 2 -> 4 Powder Wraiths (a burst one is away 12 s);
+	# harder, wider kegs, then sooner.
+	"powder_wraith": [
+		{"count": 2},
+		{"count": 3},
+		{"count": 3, "hp_bonus": 0.2, "special_bonus": 0.25},
+		{"count": 4, "hp_bonus": 0.25, "special_bonus": 0.3, "special_area": 0.15},
+		{"count": 4, "hp_bonus": 0.3, "damage_bonus": 0.25, "special_bonus": 0.5, "special_area": 0.2, "special_haste": 0.2},
+	],
+	# --- Act XI (temporary): Vigrid ---
+	# TUNING (not in GDD): one jarl to a card (a heavy), 1 -> 3 Draugr Thanes;
+	# then harder, wider sweeps and longer chills.
+	"draugr_thane": [
+		{"count": 1},
+		{"count": 1, "hp_bonus": 0.2, "special_bonus": 0.25},
+		{"count": 2, "hp_bonus": 0.2, "special_bonus": 0.25, "special_duration": 0.2},
+		{"count": 2, "hp_bonus": 0.4, "special_bonus": 0.35, "special_area": 0.2, "special_duration": 0.2},
+		{"count": 3, "hp_bonus": 0.4, "damage_bonus": 0.2, "special_bonus": 0.5, "special_area": 0.2, "special_duration": 0.3},
+	],
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	# TUNING (not in GDD): 1 -> 3 Ushabti Sentinels; tougher stone, harder
+	# shockwaves, then quicker reassembly.
+	"ushabti_sentinel": [
+		{"count": 1},
+		{"count": 2},
+		{"count": 2, "hp_bonus": 0.2, "special_bonus": 0.25},
+		{"count": 3, "hp_bonus": 0.25, "special_bonus": 0.3, "special_area": 0.15},
+		{"count": 3, "hp_bonus": 0.3, "damage_bonus": 0.25, "special_bonus": 0.5, "special_area": 0.2, "special_haste": 0.2},
+	],
+	# --- Act XIII (temporary number): the Empyrean ---
+	# TUNING (not in GDD): 1 -> 3 Bound Ophans; harder rims, then quicker rolls.
+	"bound_ophan": [
+		{"count": 1},
+		{"count": 2},
+		{"count": 2, "hp_bonus": 0.2, "special_bonus": 0.25},
+		{"count": 3, "hp_bonus": 0.25, "special_bonus": 0.3, "special_area": 0.15},
+		{"count": 3, "hp_bonus": 0.3, "damage_bonus": 0.25, "special_bonus": 0.5, "special_area": 0.2, "special_haste": 0.2},
+	],
+	# --- Act XIV (temporary number): the Last Day ---
+	# TUNING (not in GDD): 1 -> 3 Bonehorns; harder horns, then quicker charges.
+	"bonehorn": [
+		{"count": 1},
+		{"count": 2},
+		{"count": 2, "hp_bonus": 0.2, "special_bonus": 0.25},
+		{"count": 3, "hp_bonus": 0.25, "special_bonus": 0.3, "special_area": 0.15},
+		{"count": 3, "hp_bonus": 0.3, "damage_bonus": 0.25, "special_bonus": 0.5, "special_area": 0.2, "special_haste": 0.2},
+	],
+	# --- Act XV (temporary number): the World-Tree ---
+	# TUNING (not in GDD): 1 -> 2 Ossuary Oaks; harder thorns, then wider and quicker lashes.
+	"ossuary_oak": [
+		{"count": 1},
+		{"count": 1, "hp_bonus": 0.2, "special_bonus": 0.2},
+		{"count": 2, "hp_bonus": 0.2, "special_bonus": 0.25},
+		{"count": 2, "hp_bonus": 0.3, "special_bonus": 0.35, "special_area": 0.15},
+		{"count": 2, "hp_bonus": 0.4, "damage_bonus": 0.25, "special_bonus": 0.5, "special_area": 0.2, "special_haste": 0.2},
 	],
 }
 

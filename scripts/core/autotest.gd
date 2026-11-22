@@ -252,6 +252,78 @@
 ##     "crash site", "burrowers", "acid", "brood matriarch" and "hive mother"
 ##     lines (CrashSiteReport), and "act IX spell" / "act IX passives" when
 ##     Bone Beetles, Chitin or Anchored was taken.
+##   * Act X, the Black Tide (GDD §15.0 "Act X foundation: the Black Tide
+##     (phase 1)"): --stage=cutter|galleon|maelstrom, --spawn= with its kinds
+##     (deckhand, musketeer, powder_runner, swashbuckler, boarding_bruiser,
+##     reef_shark, kraken_arm; the boats and hooks come with BoardingParty),
+##     --boss=crow|marrec|vandermere. The bot keeps off the rail and steps out
+##     of the strike circles (CorsairRules.danger_push()). When the Black Tide
+##     ran, the summary adds the "boarding", "deck", "sea strikes", "corsair
+##     kinds", "black tide" (after 0:00) and (on an Act X stage) "corsair
+##     stage" lines (CorsairReport).
+##     The Smuggler's Cutter (phase 2) adds the kinds grappler, boatswain,
+##     powder_barrel, bosun_gorran, ram_longboat, crow_sloop; the bot also
+##     steps off the ram longboat's point, out of Crow's cannon lines and
+##     landing circles (his danger_push()) and out of the Fire Ship's patches
+##     (InfernoRules.danger_push()); the "cutter", "cutter crew", "bosun
+##     gorran" and "captain crow" lines (CutterReport), and "act X spell" /
+##     "act X passives" when Chain Shot, Bosun's Whistle or Barnacle Bones was
+##     taken.
+##   * The Hall of the Slain (the Norse act, temporarily Act XI; GDD §15.0 "The
+##     Hall of the Slain foundation (phase 1)"): --stage=barrow_fields|valgard|
+##     vigrid, --spawn= with its kinds (raider, shield_maiden, berserker,
+##     skald, valkyrie, seer, draugr, wolf_of_the_wastes, frost_giant,
+##     fire_giant, rune_stone, brazier), --boss=hrimgar|sigrun|odin. The bot
+##     drifts toward the nearest lit brazier while it stands in the cold and
+##     relights a doused one when calm (NorseRules.warm_point(), the one cold
+##     behaviour; with --keep-fires it walks to the brazier out longest before
+##     anything else, LongWinter.keeper_point()), and takes a Rune-Stone the hall holds when its army holds
+##     and it is calm (_stone_vector(), NorseRules.stone_point()). When the
+##     Norse rules ran, the summary adds the "long winter", "berserkergang",
+##     "rune-stones", "norse kinds", "ragnarok" (after 0:00) and (on a Norse
+##     stage) "norse stage" lines (NorseReport).
+##     The Barrow Fields (phase 2) adds the kinds draugr_female, open_barrow,
+##     barrow_wight, hrimgar_barrow; the bot also steps out of Hrimgar's mist
+##     circles and cleave and the Barrow-Wight's howl; the "barrow fields",
+##     "barrow wight" and "hrimgar" lines (BarrowFieldsReport), and "norse
+##     spell" / "norse passives" when Barrow Grasp, Grave Frost or Fur-Lined
+##     Bones was taken.
+##   * Act XII (temporary number), the Necropolis Dynasty (GDD §15.0 "The
+##     Necropolis Dynasty foundation (phase 1)"):
+##     --stage=necropolis|lioness_temple|two_truths, --spawn= with its kinds
+##     (mummy, mummy_female, scarab_swarm, khopesh_guard, heka_priest,
+##     embalmer, canopic_jar), --boss=anubis|sekhmet|osiris. The bot steps
+##     out of the Devourer's lanes (DynastyRules.danger_push()). When the
+##     Dynasty ran, the summary adds the "rebirth", "black land", "heka",
+##     "dynasty kinds", "devourer's hour" (after 0:00) and (on a Dynasty
+##     stage) "dynasty stage" lines (DynastyReport).
+##   * Act XIII (temporary number), the Celestial Host (GDD §15.0 "The
+##     Celestial Host foundation (phase 1)"):
+##     --stage=silver_stair|wheel_of_thrones|empyrean, --spawn= with its kinds
+##     (lesser_light, virtue, power, choir_angel, herald, dominion, judge),
+##     --boss=seraiel|throne|voice. The bot steps out of the Verdict's pillars
+##     and across the shafts (HostRules.danger_push()). When the Host ran, the
+##     summary adds the "judgment", "hallowed light", "grace", "host kinds",
+##     "last trumpet" (after 0:00) and (on a Host stage) "host stage" lines
+##     (HostReport).
+##   * Act XIV (temporary number), the Age of Titans (GDD §15.0 "The Age of
+##     Titans foundation (phase 1)"): --stage=fern_basin|great_plain|last_day,
+##     --spawn= with its kinds (scuttler, razorclaw, frill_spitter, longneck,
+##     duckbill, skyraider, tyrant), --boss=scarmaw|ironbrow|gravejaw. The bot
+##     steps sideways out of a stampede's path and out of the bomb circles
+##     (PrimevalRules.danger_push()). When the Titans' rules ran, the summary
+##     adds the "packs", "herds", "scavengers", "primeval kinds", "stampede of
+##     ash" (after 0:00) and (on a Titans stage) "primeval stage" lines
+##     (PrimevalReport).
+##   * Act XV (temporary number), the Turning Year (GDD §15.0 "The Turning Year
+##     foundation (phase 1)"): --stage=greenwood|fae_court|world_tree, --spawn=
+##     with its kinds (thornling, dryad, treant, corpse_bloom, fae_knight,
+##     winter_fae, great_stag, wild_rider, will_o_wisp, spore_mother),
+##     --boss=stag_king|summer_queen|green_mother. The bot steps sideways out of
+##     a wildfire's path (WildRules.danger_push()). When the Wild's rules ran,
+##     the summary adds the "turning year", "bloom and blight", "overgrowth",
+##     "spring returns" (after 0:00), "wild kinds", "wild damage" and (on a Wild
+##     stage) "wild stage" lines (WildReport).
 class_name Autotest
 extends Node
 
@@ -295,6 +367,21 @@ const INFERNO_SEAL_PRESSURE_NEAR: float = 2.5
 const INFERNO_SEAL_NEAR: float = 1.6
 ## x the pull while at the ring (it holds its ground through the pour).
 const INFERNO_SEAL_HOLD: float = 2.0
+# --- Act XI (temporary): the Hall of the Slain ---
+## Radius (px) in which the bot looks for a brazier to warm up at or relight.
+const NORSE_WARM_REACH: float = 900.0
+## Crowd pressure (the flee vector's length) above which the bot stays put
+## instead of walking to a brazier.
+const NORSE_WARM_PRESSURE: float = 0.8
+## Radius (px) in which the --keep-fires bot looks for a doused brazier.
+const NORSE_KEEP_REACH: float = 1400.0
+## Radius (px) in which the bot looks for a Rune-Stone the hall holds.
+const NORSE_STONE_RADIUS: float = 600.0
+## Summons the bot's army needs before it goes to take a stone (it must
+## outnumber the hall there).
+const NORSE_STONE_ARMY: int = 8
+## Weight of the walk into a stone's ring in the autopilot mix.
+const NORSE_STONE_WEIGHT: float = 2.0
 # --- Act VII: the Sanguine Court ---
 ## Seconds before a Blood Moon's rise within which the bot holds a full Dread
 ## Rally meter for the moon (unless the necromancer is in danger).
@@ -813,9 +900,14 @@ func _count_stuck(label: String, detail: String) -> void:
 ## True when a summon is trying to get somewhere (not idling in formation,
 ## casting or fighting in reach). A stunned summon (CombatResolver.stun_unit():
 ## Grey Overseer pulses, Gorgons, ...) cannot move, so it never counts: a pack
-## of Overseers chain-stunning the ring is not a pathing fault.
+## of Overseers chain-stunning the ring is not a pathing fault. Act XV
+## (temporary): neither does a summon held in place (SummonedUnit.held_until:
+## the World-Tree's burial) or rooted on purpose (SummonBehavior.rooted(): the
+## Ossuary Oak).
 func _summon_wants_move(u: SummonedUnit) -> bool:
 	if u.stunned_until > game.elapsed:
+		return false
+	if u.held_until > game.elapsed or (u.behavior != null and u.behavior.rooted()):
 		return false
 	match u.state:
 		SummonedUnit.State.RETURNING, SummonedUnit.State.RETREATING, SummonedUnit.State.REPOSITIONING:
@@ -834,6 +926,12 @@ func _summon_wants_move(u: SummonedUnit) -> bool:
 func _enemy_wants_move(e: Enemy) -> bool:
 	if e.engaged_timer > 0.0 or (e.kit != null and e.kit.is_busy()):
 		return false  # Fighting a blocker, or standing in a Sanctum windup / cast.
+	if e.kit is HerdBeastKit:
+		return false  # Act XIV: a herd beast never advances; grazing is a slow drift by design (Herds; a running herd is busy).
+	var sig := game.enemies.boss as BossSigrun  # Valgard's boss, else null.
+	if sig != null and not e.is_boss and sig.holmgang != null and sig.holmgang.active \
+			and sig.holmgang.overlaps(e.position, e.radius + Holmgang.ENEMY_BAND + Holmgang.OUT_GAP + 4.0):
+		return false  # Held at the Holmgang's verge (15 s duel keep-out): a world rule, not a pathing fault.
 	var pl := game.nearest_player(e.position)  # (Co-op: the one it advances on.)
 	if e.is_boss:
 		var b := e as Boss
@@ -1214,6 +1312,16 @@ func _danger_at(pos: Vector2) -> Vector2:
 		danger += game.city.danger_push(pos)  # Act VIII: headlight lanes, landing circles (null elsewhere).
 	if game.concord != null:
 		danger += game.concord.danger_push(pos)  # Act IX: aiming lines and live beams (null elsewhere).
+	if game.corsair != null:
+		danger += game.corsair.danger_push(pos)  # Act X: off the rail, out of the strike circles (null elsewhere).
+	if game.dynasty != null:
+		danger += game.dynasty.danger_push(pos)  # Act XII (temporary): the Devourer's lanes (null elsewhere).
+	if game.host != null:
+		danger += game.host.danger_push(pos)  # Act XIII (temporary): the Verdict's pillars and the shafts (null elsewhere).
+	if game.primeval != null:
+		danger += game.primeval.danger_push(pos)  # Act XIV (temporary): the stampedes' paths and the bomb circles (null elsewhere).
+	if game.wild != null:
+		danger += game.wild.danger_push(pos)  # Act XV (temporary): the wildfires' paths (null elsewhere).
 	return danger
 
 
@@ -1323,6 +1431,18 @@ func get_move_vector() -> Vector2:
 		danger += game.city.danger_push(p)  # Act VIII: headlight lanes, landing circles (null elsewhere).
 	if game.concord != null:
 		danger += game.concord.danger_push(p)  # Act IX: aiming lines and live beams (null elsewhere).
+	if game.corsair != null:
+		danger += game.corsair.danger_push(p)  # Act X: off the rail, out of the strike circles (null elsewhere).
+	if game.norse != null:
+		danger += game.norse.danger_push(p)  # The Hall of the Slain: its own telegraphs (null elsewhere).
+	if game.dynasty != null:
+		danger += game.dynasty.danger_push(p)  # Act XII (temporary): the Devourer's lanes (null elsewhere).
+	if game.host != null:
+		danger += game.host.danger_push(p)  # Act XIII (temporary): the Verdict's pillars and the shafts (null elsewhere).
+	if game.primeval != null:
+		danger += game.primeval.danger_push(p)  # Act XIV (temporary): the stampedes' paths and the bomb circles (null elsewhere).
+	if game.wild != null:
+		danger += game.wild.danger_push(p)  # Act XV (temporary): the wildfires' paths (null elsewhere).
 	var objective := Vector2.ZERO
 	# Walk to shrines any time, to graves under consecration only when calm.
 	var goal := game.enemies.stage.seek_point(p, OBJECTIVE_SEEK_RADIUS, away.length() < 0.2)
@@ -1354,16 +1474,48 @@ func get_move_vector() -> Vector2:
 	# --- Act IV: the Shores of Ilion ---
 	if goal == Vector2.INF and game.enemies.ilion != null and away.length() < 0.2 and policy() in SANCTUM_SEEK_POLICIES:
 		goal = game.enemies.ilion.seek_point(p, OBJECTIVE_SEEK_RADIUS)  # The Shores of Ilion: burn the siege towers when calm.
+	# --- Act XII (temporary number): the Necropolis of Sand ---
+	if goal == Vector2.INF and game.enemies.necropolis != null and away.length() < 0.3 and policy() in SANCTUM_SEEK_POLICIES:
+		goal = game.enemies.necropolis.seek_point(p, OBJECTIVE_SEEK_RADIUS)  # The Necropolis: break the Canopic Jars when calm.
+	# --- Act XIV (temporary number): the Fern Basin ---
+	if goal == Vector2.INF and game.enemies.fern_basin != null and away.length() < 0.3 and policy() in SANCTUM_SEEK_POLICIES:
+		goal = game.enemies.fern_basin.seek_point(p, OBJECTIVE_SEEK_RADIUS)  # The Fern Basin: bring the army to Ironjaw's nest when calm.
+	# --- Act XIII (temporary number): the Silver Stair --- into Seraiel's open lane while the Gate stands (every policy).
+	if game.enemies.boss is BossSeraiel and game.enemies.boss.active:
+		var lane := (game.enemies.boss as BossSeraiel).gate_point(p)
+		if lane != Vector2.INF and p.distance_to(lane) > 24.0:
+			goal = lane
+	# --- Act XI (temporary): the Hall of the Slain --- out of the cold: toward
+	# the nearest lit brazier (or a doused one to relight) unless pressed.
+	if goal == Vector2.INF and game.norse != null and away.length() < NORSE_WARM_PRESSURE:
+		goal = game.norse.warm_point(p, NORSE_WARM_REACH)
+	if game.norse != null and GameState.autotest_keep_fires:
+		# --keep-fires: the fire-keeper walks to the brazier out longest, first.
+		var keep := game.norse.winter.keeper_point(p, NORSE_KEEP_REACH)
+		if keep != Vector2.INF:
+			goal = keep
 	if game.enemies.boss is BossVhalneth and game.enemies.boss.active:
 		# Vhal'Neth never walks: go and fight her arms, then her face (every policy).
 		var at := (game.enemies.boss as BossVhalneth).approach_point(p)
 		if at != Vector2.INF and p.distance_to(at) > 150.0 and away.length() < 0.6:
+			goal = at
+	# --- Act XIII (temporary number): the Empyrean ---
+	if game.enemies.boss is BossVoice and game.enemies.boss.active:
+		# The Voice never moves: bring the army to it while the bot is healthy (every policy).
+		var at := (game.enemies.boss as BossVoice).approach_point(p)
+		if at != Vector2.INF and away.length() < 0.6 and game.player.hp > game.player.max_hp * 0.5:
 			goal = at
 	# --- Act III: the Iron Citadel ---
 	if game.enemies.boss is BossDeusExMachina and game.enemies.boss.active:
 		# The Siege Core is planted: go and bring the army to its shield drones (every policy).
 		var at := (game.enemies.boss as BossDeusExMachina).approach_point(p)
 		if at != Vector2.INF and p.distance_to(at) > 200.0 and away.length() < 0.6:
+			goal = at
+	# --- Act XI (temporary): the Barrow Fields ---
+	if game.enemies.boss is BossHrimgar and game.enemies.boss.active and policy() in SANCTUM_SEEK_POLICIES:
+		# Hrimgar lies in his barrow: bring the army to it and break it (the objective policies).
+		var at := (game.enemies.boss as BossHrimgar).approach_point(p)
+		if at != Vector2.INF and p.distance_to(at) > 120.0 and away.length() < 0.6:
 			goal = at
 	if game.enemies.sinking != null:
 		danger += game.enemies.sinking.danger_push(p) * 0.5  # Ul-Thalos: keep off the shore the sea is about to take.
@@ -1374,6 +1526,11 @@ func get_move_vector() -> Vector2:
 		var seal := _seal_vector(p, away.length())  # Into a demon portal's ring (zero when not sealing).
 		if seal != Vector2.ZERO:
 			objective = seal * INFERNO_SEAL_WEIGHT
+	# --- Act XI (temporary): the Hall of the Slain ---
+	if game.norse != null:
+		var take := _stone_vector(p, away.length())  # Into a Rune-Stone's ring (zero when not taking one).
+		if take != Vector2.ZERO:
+			objective = take * NORSE_STONE_WEIGHT
 	var avoid := game.arena.avoid_vector(p, game.player.radius, OBSTACLE_LOOK)
 	var wander := Vector2.from_angle(game.elapsed * 0.3) * 0.35
 	var loot := _loot_vector(p, away.length())  # Toward a nearby chest / drop when safe.
@@ -1423,6 +1580,31 @@ func _seal_vector(p: Vector2, pressure: float) -> Vector2:
 	if pressure > (INFERNO_SEAL_PRESSURE_NEAR if near else INFERNO_SEAL_PRESSURE):
 		return Vector2.ZERO
 	if d < 6.0:
+		return Vector2.ZERO
+	return to / d * (INFERNO_SEAL_HOLD if near else 1.0)
+
+
+# --- Act XI (temporary): the Hall of the Slain ---
+## The bot's ONE stone-taking behaviour (RuneStones): a pull toward the centre
+## of the nearest stone the hall holds within NORSE_STONE_RADIUS px when its
+## army holds (NORSE_STONE_ARMY summons, which outnumber the hall there), its
+## HP is at least INFERNO_SEAL_HP and the crowd `pressure` is low (at the ring
+## it holds on through more pressure, for the 3 s of the capture). Zero
+## otherwise (and for every policy that does not seek objectives).
+func _stone_vector(p: Vector2, pressure: float) -> Vector2:
+	if not policy() in SANCTUM_SEEK_POLICIES or game.horde.units.size() < NORSE_STONE_ARMY:
+		return Vector2.ZERO
+	if game.player.hp < game.player.max_hp * INFERNO_SEAL_HP:
+		return Vector2.ZERO
+	var at := game.norse.stone_point(p, NORSE_STONE_RADIUS)
+	if at == Vector2.INF:
+		return Vector2.ZERO
+	var to := at - p
+	var d := to.length()
+	var near := d < float(game.norse.stones.cfg["capture_radius"])  # In the ring: hold on.
+	if pressure > (INFERNO_SEAL_PRESSURE_NEAR if near else INFERNO_SEAL_PRESSURE):
+		return Vector2.ZERO
+	if d < 30.0:
 		return Vector2.ZERO
 	return to / d * (INFERNO_SEAL_HOLD if near else 1.0)
 
@@ -1514,6 +1696,12 @@ func finish(summary: Dictionary) -> void:
 	CourtReport.print_lines(game, st_all)  # Act VII: bloodfeast, night wings, blood moon, kinds, the endless feast, the stage (only when the Court ran).
 	CityReport.print_lines(game, st_all)  # Act VIII: city blocks, armour, supers, civilians, escalation, kinds, martial law, the stage (only when the Last Line ran).
 	ConcordReport.print_lines(game, st_all)  # Act IX: beams, abduction, terraforming, the final harvest, kinds, the stage (only when the Concord ran).
+	CorsairReport.print_lines(game, st_all)  # Act X: boarding, the deck, the sea's strikes, the black tide, kinds, the stage (only when the Black Tide ran).
+	NorseReport.print_lines(game, st_all)  # The Hall of the Slain: the long winter, the fury, the stones, ragnarok, kinds, the stage (only when the Norse rules ran).
+	DynastyReport.print_lines(game, st_all)  # Act XII (temporary): rebirth, the black land, heka, the devourer's hour, kinds, the stage (only when the Dynasty ran).
+	HostReport.print_lines(game, st_all)  # Act XIII (temporary): judgment, the light, grace, the last trumpet, kinds, the stage (only when the Host ran).
+	PrimevalReport.print_lines(game, st_all)  # Act XIV (temporary): packs, herds, scavengers, the stampede of ash, kinds, the stage (only when the Titans' rules ran).
+	WildReport.print_lines(game, st_all)  # Act XV (temporary): the year, the blight, the thickets, spring returns, kinds, the stage, the damage (only when the Wild's rules ran).
 	WastesReport.print_items(game, st_all)  # Act III, the Scrap Wastes: Death Ray and its passives (only when taken).
 	IlionReport.print_items(game, st_all)  # Act IV, the Shores of Ilion: Paris's Arrow and its passives (only when taken).
 	# --- Act V: the Burning Province ---
@@ -1589,10 +1777,46 @@ func finish(summary: Dictionary) -> void:
 	LibertyHeightsReport.item_lines(game, st)  # Hero's Fist, Secret Identity, the Fallen Hero, Origin Story (only when used; the stage's own lines are CityReport's).
 	# --- Act IX: the Crash Site ---
 	CrashSiteReport.item_lines(game, st)  # Bone Beetles, Chitin, Anchored (only when taken; the stage's own lines are ConcordReport's).
+	# --- Act XI (temporary): the Barrow Fields ---
+	BarrowFieldsReport.item_lines(game, st)  # Barrow Grasp, Grave Frost, Fur-Lined Bones (only when taken; the stage's own lines are NorseReport's).
 	# --- Act IX: the Proving Moon ---
 	ProvingMoonReport.item_lines(game, st)  # Soul Caster, Trophy Rack, Mirror Bones (only when taken; the stage's own lines are ConcordReport's).
+	# --- Act XII (temporary number): the Temple of the Lioness ---
+	LionessTempleReport.item_lines(game, st)  # Burning Eye, Desert Fury, Dune Walkers (only when taken; the stage's own lines are DynastyReport's).
 	# --- Act IX: the Ark ---
 	ArkReport.item_lines(game, st)  # Tractor Beam, Starseed, the Ghost Saucer, Crop Circles (only when used; the stage's own lines are ConcordReport's).
+	# --- Act X: the Smuggler's Cutter ---
+	CutterReport.item_lines(game, st)  # Chain Shot, Bosun's Whistle, Barnacle Bones (only when taken; the stage's own lines are CorsairReport's).
+	# --- Act X: the Treasure Galleon ---
+	GalleonReport.item_lines(game, st)  # Cannonade, Black Powder, Sea Legs, the Corsair Queen (only when used; the stage's own lines are CorsairReport's).
+	# --- Act X: the Maelstrom ---
+	MaelstromReport.item_lines(game, st)  # Anchor Drop, Dead Reckoning, the Powder Wraith, Slow Match (only when used; the stage's own lines are CorsairReport's).
+	# --- Act XI (temporary): Valgard ---
+	ValgardReport.item_lines(game, st)  # Valkyrie Spear, Einherjar's Oath, Calm Blood (only when taken; the stage's own lines are NorseReport's).
+	# --- Act XI (temporary): Vigrid ---
+	VigridReport.item_lines(game, st)  # Gungnir, Runecraft, the Draugr Thane, Cold Iron (only when used; the stage's own lines are NorseReport's).
+	# --- Act XII (temporary number): the Necropolis of Sand ---
+	NecropolisReport.item_lines(game, st)  # Linen Bind, Natron Salts, Embalmed Bones (only when taken; the stage's own lines are DynastyReport's).
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	TwoTruthsReport.item_lines(game, st)  # Feather's Verdict, Heavy Heart, the Ushabti Sentinel, Answering Words (only when used; the stage's own lines are DynastyReport's).
+	# --- Act XIII (temporary number): the Silver Stair ---
+	SilverStairReport.item_lines(game, st)  # Flaming Sword, Fallen Light, Absolution (only when taken; the stage's own lines are HostReport's).
+	# --- Act XIII (temporary number): the Wheel of Thrones ---
+	WheelOfThronesReport.item_lines(game, st)  # Wheel of Eyes, All-Seeing, Smoked Glass (only when taken; the stage's own lines are HostReport's).
+	# --- Act XIII (temporary number): the Empyrean ---
+	EmpyreanReport.item_lines(game, st)  # Revelation, Seventh Seal, the Bound Ophan, Turning Bones (only when taken; the stage's own lines are HostReport's).
+	# --- Act XIV (temporary number): the Fern Basin ---
+	FernBasinReport.item_lines(game, st)  # Pack Leap, Pack Instinct (only when taken; the stage's own lines are PrimevalReport's).
+	# --- Act XIV (temporary number): the Great Plain ---
+	GreatPlainReport.item_lines(game, st)  # Stampede, Calcified Hide, Hoarder's Bones (only when taken; the stage's own lines are PrimevalReport's).
+	# --- Act XIV (temporary number): the Last Day ---
+	LastDayReport.item_lines(game, st)  # Meteor Call, Cosmic Dust, Petrified Horns, Thick Marrow, the Bonehorn (only when taken; the stage's own lines are PrimevalReport's).
+	# --- Act XV (temporary number): the Greenwood ---
+	GreenwoodReport.item_lines(game, st)  # Wild Hunt, Horn of the Hunt, Fallow Ground (only when taken; the stage's own lines are WildReport's).
+	# --- Act XV (temporary number): the Fae Court ---
+	FaeCourtReport.item_lines(game, st)  # Glamour, Changeling, Deadwood (only when taken; the stage's own lines are WildReport's).
+	# --- Act XV (temporary number): the World-Tree ---
+	WorldTreeReport.item_lines(game, st)  # Root and Rot, Compost Heart, Deep Roots, the Ossuary Oak (only when taken; the stage's own lines are WildReport's).
 	if game.enemies.boss is BossSeraphine:
 		print("[autotest] seraphine: %s" % BossSeraphine.summary_line(st))
 	var fired := game.enemies.stage.fired
@@ -2107,4 +2331,9 @@ func _epilogue_line() -> String:
 				seen += 1
 			else:
 				pending += 1
-	return "parts=%d open=%d seen=%d panels=%d autoplay_pending=%s" % [EpilogueData.PARTS.size(), opened, seen, panels, pending > 0]
+	var cards_ok := true  # Every part but the last has exactly one closing card, and every card follows a part.
+	for i in EpilogueData.PARTS.size():
+		var has_card := not EpilogueData.closing_after(String((EpilogueData.PARTS[i] as Dictionary)["id"])).is_empty()
+		cards_ok = cards_ok and (has_card == (i < EpilogueData.PARTS.size() - 1))
+	cards_ok = cards_ok and EpilogueData.CLOSINGS.size() == EpilogueData.PARTS.size() - 1
+	return "parts=%d (acts=%d) open=%d seen=%d panels=%d cards_ok=%s autoplay_pending=%s" % [EpilogueData.PARTS.size(), StageRegistry.act_count(), opened, seen, panels, cards_ok, pending > 0]

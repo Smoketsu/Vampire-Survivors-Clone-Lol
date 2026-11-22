@@ -84,14 +84,30 @@ def s(x): return x.strip('"') if isinstance(x,str) else x
 def txt(f): return open(D+f).read()
 M={}
 # ---------------- stages
-# Campaign order of every registered stage (StageRegistry.ORDER).
-ORDER_STAGES = [i for i, _ in order('stage_registry.gd', 'ORDER')]
-# Act number -> (act name, faction label) taken from StageRegistry.ACTS ("subtitle" is the act's name).
+# The act order (StageRegistry.ACT_ORDER, the one ordered list): act id, act name and stage ids per act.
 _rt = txt('stage_registry.gd')
-_ab = _rt[_rt.index('const ACTS'):]
-_ab = _ab[:_ab.index('\n}')]
-ACT_NAMES = {int(n): sub for n, sub in re.findall(r'\n\t(\d+): \{"name": "[^"]+", "subtitle": "([^"]+)"', _ab)}
+_ab = _rt[_rt.index('const ACT_ORDER'):]
+_ab = _ab[:_ab.index('\n]')]
+ACT_ROWS = re.findall(r'\{"id": "(\w+)", "subtitle": "([^"]+)", "stages": \[([^\]]*)\]\}', _ab)
+# Campaign order of every registered stage (StageRegistry.ORDER, built from ACT_ORDER).
+ORDER_STAGES = [sid for _, _, st in ACT_ROWS for sid in re.findall(r'"(\w+)"', st)]
+# Act number -> act name.
+ACT_NAMES = {n: sub for n, (_, sub, _) in enumerate(ACT_ROWS, 1)}
+# Act id -> act number (PassiveData "act" rows name an act by id).
+ACT_NUMBER = {aid: n for n, (aid, _, _) in enumerate(ACT_ROWS, 1)}
+
+
+def _roman(n):
+    """Roman numeral of n (StageRegistry.roman())."""
+    out = ''
+    for v, r in [(50, 'L'), (40, 'XL'), (10, 'X'), (9, 'IX'), (5, 'V'), (4, 'IV'), (1, 'I')]:
+        while n >= v:
+            out += r
+            n -= v
+    return out
 M['act_names'] = ACT_NAMES
+# Act number -> act id (StageRegistry.ACT_ORDER "id"), so the renderer keeps its per-act text by id, not by number.
+M['act_ids'] = {n: aid for aid, n in ACT_NUMBER.items()}
 # Boss rows that live in the stage file itself (Acts I and II-stage 1/2 have no XData.ARRIVAL):
 # stage id -> (display name, boss id).
 INLINE_BOSS = {'graveyard': ('Sir Alaric, the Gravebreaker', 'alaric'), 'crimson_march': ('Marshal Vael, the Crimson Bulwark', 'vael')}
@@ -113,13 +129,11 @@ for n, sid in enumerate(ORDER_STAGES, 1):
     s_stage = {"n": n, "id": sid}
     s_stage['name'] = re.search(r'\n\t"display_name":\s*"([^"]+)"', st).group(1)
     s_stage['short'] = re.search(r'\n\t"short_name":\s*"([^"]+)"', st).group(1)
-    s_stage['chapter'] = re.search(r'\n\t"chapter":\s*"([^"]+)"', st).group(1)
-    a = re.search(r'\n\t"act":\s*(\d)', st)
-    s_stage['act'] = int(a.group(1)) if a else 1
+    s_stage['chapter'] = 'Chapter ' + _roman(n)  # StageRegistry.chapter_of()
+    s_stage['act'] = (n - 1) // 3 + 1  # StageRegistry.act_of()
     pl = re.search(r'\n\t"playable":\s*(true|false)', st)
     s_stage['playable'] = (pl.group(1) == 'true') if pl else True
-    am = re.search(r'\n\t"ash_mult":\s*([\d.]+)', st)
-    s_stage['ash'] = float(am.group(1)) if am else const('ASH_MULT')
+    s_stage['ash'] = [1.0, 1.25, 1.5][(n - 1) % 3]  # StageRegistry.ash_mult_of()
     hp = re.search(r'\n\t"enemy_hp_mult":\s*([\d.]+)', st)
     s_stage['hpmult'] = float(hp.group(1)) if hp else const('ENEMY_HP_MULT')
     dm = re.search(r'\n\t"enemy_damage_mult":\s*([\d.]+)', st)
@@ -142,9 +156,18 @@ for n, sid in enumerate(ORDER_STAGES, 1):
         s_stage['bossid'] = re.search(r'"id":\s*"(\w+)"', bt[i:]).group(1)
         s_stage['bossfile'] = _camel_to_snake(bc.group(1)) + '.gd'
     else:
-        s_stage['boss'], s_stage['bossid'] = INLINE_BOSS[sid]
-        s_stage['bossfile'] = ''
+        ib = re.search(r'^const BOSS(?::\s*Dictionary)?\s*:?=\s*\{(.*?)\n\}', t, re.M | re.S)   # inline BOSS dict in the stage file
+        if ib:
+            s_stage['boss'] = re.search(r'"display_name":\s*"([^"]+)"', ib.group(1)).group(1)
+            s_stage['bossid'] = re.search(r'"id":\s*"(\w+)"', ib.group(1)).group(1)
+            s_stage['bossfile'] = s_stage['bossid'] + '_data.gd' if os.path.exists(D + s_stage['bossid'] + '_data.gd') else ''
+        else:
+            s_stage['boss'], s_stage['bossid'] = INLINE_BOSS[sid]
+            s_stage['bossfile'] = ''
     stages.append(s_stage)
+# Unlock chain (StageRegistry.unlock_of(): each stage opens when the previous stage's boss falls); the old per-stage "unlock_text" key is gone.
+for _i, _s in enumerate(stages):
+    _s['unlock'] = ('Slay %s on %s to unlock.' % (stages[_i - 1]['boss'].split(',')[0], stages[_i - 1]['name'])) if _i else ''
 M['stages'] = stages
 STAGE_BY_ID = {s_['id']: s_ for s_ in stages}
 # ---------------- enemies
@@ -153,14 +176,17 @@ STAGE_BY_ID = {s_['id']: s_ for s_ in stages}
 SHARED_ENEMY_FILES = {
     'enemy_data.gd': ('Covenant', 'shared / Graveyard'), 'march_enemy_data.gd': ('Covenant', 'Crimson March'),
     'sanctum_enemy_data.gd': ('Covenant', 'Sanctum'), 'battle_sister_data.gd': ('Covenant', 'Crimson March, Sanctum'),
-    'eye_enemy_data.gd': ('Ancient Eye', 'Act II shared'), 'empire_enemy_data.gd': ('Empire', 'Act III shared'),
-    'pantheon_enemy_data.gd': ('Republic', 'Act IV shared'), 'shogunate_enemy_data.gd': ('Shogunate', 'Act V shared'),
-    'inferno_enemy_data.gd': ('Inferno', 'Act VI shared'), 'court_enemy_data.gd': ('Sanguine Court', 'Act VII shared'),
-    'city_enemy_data.gd': ('Last Line', 'Act VIII shared'), 'concord_enemy_data.gd': ('Concord', 'Act IX shared'),
 }
 # Faction label of each act (enemy tables are grouped by it).
-ACT_FACTION = {1: 'Covenant', 2: 'Ancient Eye', 3: 'Empire', 4: 'Republic', 5: 'Shogunate', 6: 'Inferno', 7: 'Sanguine Court', 8: 'Last Line', 9: 'Concord'}
+_FACTION_OF = {'covenant': 'Covenant', 'eye': 'Ancient Eye', 'empire': 'Empire', 'pantheon': 'Republic', 'shogunate': 'Shogunate',
+               'inferno': 'Inferno', 'court': 'Sanguine Court', 'city': 'Last Line', 'concord': 'Concord', 'corsair': 'Black Tide',
+               'norse': 'Hall of the Slain', 'dynasty': 'Dynasty', 'host': 'Celestial Host', 'primeval': 'Titans', 'wild': 'Turning Year'}
+ACT_FACTION = {n: _FACTION_OF[aid] for aid, n in ACT_NUMBER.items()}
 M['act_faction'] = ACT_FACTION
+for _aid, _n in ACT_NUMBER.items():
+    _f = _aid + '_enemy_data.gd'
+    if os.path.exists(D + _f) and _f not in SHARED_ENEMY_FILES:   # an act's shared kinds: <act id>_enemy_data.gd
+        SHARED_ENEMY_FILES[_f] = (ACT_FACTION[_n], 'Act %s shared' % _roman(_n))
 FILEFAC = dict((f, v[0]) for f, v in SHARED_ENEMY_FILES.items())
 FILESTAGE = dict((f, v[1]) for f, v in SHARED_ENEMY_FILES.items())
 for _p in sorted(glob.glob(D + '*_enemy_data.gd')):
@@ -217,9 +243,27 @@ pa=dict_rows('passive_data.gd',r'^const PASSIVES'); po=order('passive_data.gd','
 un=dict_rows('unit_data.gd',r'^const UNITS'); uo=order('unit_data.gd','CLASS_ORDER')
 se=dict_rows('summon_evolution_data.gd',r'^const EVOLUTIONS'); seo=order('summon_evolution_data.gd','ORDER')
 ch=dict_rows('character_data.gd',r'^const CHARACTERS'); co=order('character_data.gd','ORDER')
+def _norm(x):
+    """Lower-case stage name without a leading 'the ' and anything after a comma (section comments name stages loosely)."""
+    x = x.lower().split(',')[0].strip()
+    return x[4:] if x.startswith('the ') else x
+# Normalised stage name -> stage (the data's section comments say "Act XI (temporary): the Barrow Fields": the act number
+# in them is the one the row was built under, so the origin is rebuilt from the stage's FINAL act).
+_STAGE_BY_NAME = {}
+for _s in stages:
+    _STAGE_BY_NAME[_norm(_s['name'])] = _s
+    _STAGE_BY_NAME[_norm(_s['short'])] = _s
+UNMATCHED_SECTIONS = set()
 def secact(sec):
-    m=re.search(r'Act (I{1,3}|IV|V|VI{0,3}|IX|X)\b',sec or '')
-    return m.group(0) if m else ('Base game' if not sec else sec)
+    """Origin label of a data row from its section comment: 'Base game', 'Act XI: Gullhaven Harbour' (final act of the stage) or the plain text."""
+    if not sec: return 'Base game'
+    m = re.match(r'Act [IVX]+(?: \([^)]*\))?:\s*(.*)', sec)
+    if not m: return sec
+    if m.group(1) == 'Fallen Seraph': return 'Act I: Sanctum'   # the class is unlocked by Seraphine, the Sanctum's boss
+    st = _STAGE_BY_NAME.get(_norm(re.sub(r' \(.*\)$', '', m.group(1))))
+    if st: return 'Act %s: %s' % (_roman(st['act']), st['short'])
+    UNMATCHED_SECTIONS.add(sec)
+    return m.group(1)
 # unlocks
 ut=txt('unlock_data.gd'); blk=ut[ut.index('const UNLOCKS'):ut.index('const PLATE_HEADINGS')]
 unl={}
@@ -253,7 +297,7 @@ for i,sec in po:
         passives.append({'id':'profane_pact','name':'Profane Pact','desc':'A dark pact brings more, stronger foes and richer spoils from every death.','section':'Base game','act':'','kind':'Pact (opt-in difficulty)','paired':[],'unlock':''});continue
     r=pa[i]
     kind='Army' if i in ARMY else ('Spell' if i in SPELLP else 'General')
-    passives.append({'id':i,'name':s(r['display_name']),'desc':s(r['description']),'section':secact(sec),'act':r.get('act',''),'kind':kind,'paired':paired.get(i,[]),'unlock':U.get(i,{}).get('text',''),'classes':r.get('classes','')})
+    passives.append({'id':i,'name':s(r['display_name']),'desc':s(r['description']),'section':secact(sec),'act':ACT_NUMBER.get(s(r.get('act','')),''),'kind':kind,'paired':paired.get(i,[]),'unlock':U.get(i,{}).get('text',''),'classes':r.get('classes','')})
 M['passives']=passives
 # summon classes
 units=[]
@@ -288,7 +332,8 @@ ap=re.split(r'\n\t"(\w+)": \{\n',ask)
 M['ach_skins']=[{'id':ap[i],'name':re.search(r'"display_name": "([^"]+)"',ap[i+1]).group(1),'character':re.search(r'"character": "(\w+)"',ap[i+1]).group(1),'text':re.search(r'"unlock_text": "([^"]+)"',ap[i+1]).group(1)} for i in range(1,len(ap),2)]
 us=sk[sk.index('const UNIVERSAL_SKINS'):sk.index('const UNIVERSAL_ORDER')]
 M['univ_skins']=re.findall(r'\n\t"(\w+)": \{\n\t\t"display_name": "([^"]+)"',us)
-M['casket_skins']=0
+_cs = re.search(r'^const CASKET_SKINS[^\n]*$', sk, re.M).group(0)
+M['casket_skins'] = 0 if re.search(r'\{\}', _cs) else len(re.findall(r'"display_name"', sk[sk.index('const CASKET_SKINS'):]))   # rows of SkinData.CASKET_SKINS (`{}` = none yet)
 # titles
 tt=txt('title_data.gd'); tb=tt[tt.index('const TITLES'):tt.index('const NONE_TEXT')]
 M['titles']=re.findall(r'"(\w+)": \{"display_name": "([^"]+)", "achievement": "(\w+)"',tb)
@@ -312,6 +357,7 @@ for i in range(1,len(ents),2):
     c=[x.strip() for x in costs.group(1).split(',') if x.strip()]
     upg.append({'id':idd,'tree':tree,'name':dn,'desc':ds.group(1) if ds else '','listed':len(c),'levels':10 if idd in deep else len(c),'costs':c})
 M['upgrades']=upg
+M['deep_upgrades']=len(deep)   # upgrades with levels 6-10 (MetaData.DEEP_UPGRADES)
 # relics etc
 rt=txt('relic_data.gd'); rb=rt[rt.index('const RELICS'):rt.index('const AUTOTEST_MAX_RELICS')]
 M['relics']=re.findall(r'\n\t"(\w+)": \{"display_name": "([^"]+)", "icon": "[^"]+",\s*\n\t\t"short": "([^"]+)".*?"price": (\d+)',rb,re.S)
@@ -369,22 +415,33 @@ _sc = _sd[:_sd.index('const SCORES')]
 _sc = _sc[_sc.rindex('## Run-loop scores'):]
 _keys = re.findall(r'^\t"(\w+)": \w+_SCORE', _sd[_sd.index('const SCORES'):_sd.index('const SCORE_PACKS')], re.M)
 _sct = _sd[_sd.index('const SCORES'):_sd.index('const SCORE_PACKS')]   # the table, whose lines may carry the title as a comment
+M['sound_packs'] = sorted(set(re.findall(r'"\w+": "(\w+)",', _sd[_sd.index('const SCORE_PACKS'):_sd.index('const SCORE_PACKS') + 1500].split('\n}')[0])))   # lazily rendered act sound packs
 M['music'] = {k: (re.search(r'"%s" = "([^"]+)"' % k, _sc) or re.search(r'"%s": \w+,\s*#[^\n]*?"([^"]+)"' % k, _sct) or [None, k])[1] for k in _keys}
 M['menu_theme'] = re.search(r'"(Grave Lullaby)"', txt('menu_theme_data.gd')).group(1)
 # Epilogue parts (achievement that opens each, heading, picture panels) and closing cards.
 _ep = txt('epilogue_data.gd')
 _ep_parts = _ep[:_ep.index('const CLOSINGS')]
-_pt = re.split(r'\n\t?\t?"id": "(\w+)",', _ep_parts)
+_ep_parts = _ep_parts[_ep_parts.index('const ROWS'):]
+_pt = re.split(r'\n\t\t"id": "(\w+)",', _ep_parts)
+# Epilogue parts in act order; "act" is the label "Act XI: The Ancient Eye" built from the part's act_id (as EpilogueData does).
 M['epilogue_parts'] = []
 for i in range(1, len(_pt), 2):
     b = _pt[i + 1]
-    M['epilogue_parts'].append({'id': _pt[i], 'achievement': re.search(r'"achievement": "(\w+)"', b).group(1),
-                                'act': re.search(r'"act": "([^"]+)"', b).group(1), 'heading': re.search(r'"heading": "([^"]+)"', b).group(1),
+    aid = re.search(r'"act_id": "(\w+)"', b).group(1)
+    M['epilogue_parts'].append({'id': _pt[i], 'act_id': aid, 'n': ACT_NUMBER[aid], 'achievement': re.search(r'"achievement": "(\w+)"', b).group(1),
+                                'act': 'Act %s: %s' % (_roman(ACT_NUMBER[aid]), ACT_NAMES[ACT_NUMBER[aid]]), 'heading': re.search(r'"heading": "([^"]+)"', b).group(1),
                                 'panels': len(re.findall(r'\["epilogue/', b.split('"panels"')[1]))})
+M['epilogue_parts'].sort(key=lambda p_: p_['n'])
+_part_act = {p_['id']: p_['n'] for p_ in M['epilogue_parts']}
 _cl = _ep[_ep.index('const CLOSINGS'):]
 _cl = _cl[:_cl.index('\n]')]
-M['closings'] = [{'after': a, 'heading': h} for a, h in re.findall(r'"after": "(\w+)".*?"heading": "([^"]+)"', _cl, re.S)]
+# Closing cards: the part each follows (as an act number) and its heading.
+M['closings'] = [{'after': _part_act[a], 'heading': h} for a, h in re.findall(r'"after": "(\w+)".*?"heading": "([^"]+)"', _cl, re.S)]
 cd_ = txt('codex_data.gd')
-M['codex_tabs'] = [b for a, b in re.findall(r'\["(\w+)", "([^"]+)"\]', cd_[cd_.index('const TABS'):cd_.index('const SUMMON_ORDER')])]
+# Codex tabs: the fixed ones, then one faction tab per act in ACT_ORDER (CodexData.tabs()).
+_fixed = re.findall(r'\["\w+", "([^"]+)"\]', cd_[cd_.index('const FIXED_TABS'):cd_.index('const ACT_TAB_NAMES')])
+_actt = dict(re.findall(r'"(\w+)": "([^"]+)"', cd_[cd_.index('const ACT_TAB_NAMES'):cd_.index('## Screen tabs')]))
+M['codex_tabs'] = _fixed + [_actt[aid] for aid, _, _ in ACT_ROWS]
 json.dump(M, open(os.path.join(OUT, 'model.json'), 'w'), indent=1, default=str)
+if UNMATCHED_SECTIONS: print('note: section comments without a stage:', sorted(UNMATCHED_SECTIONS), file=sys.stderr)
 print({k:(len(v) if hasattr(v,'__len__') else v) for k,v in M.items()})

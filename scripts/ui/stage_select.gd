@@ -14,10 +14,13 @@
 ## stage's mood (MenuBackdrop.set_mood(): night, dusk, dawn) and brightens
 ## its scene. Keyboard, mouse and controller navigable (arrows / D-pad
 ## between cards, Enter / A to march, Esc / B back).
-## ACTS (GDD §15.0 "Act II: the Ancient Eye"): the campaign's stages are shown
-## one act at a time (StageRegistry.ACTS / "act"): tab buttons above the cards
-## (Q / E, LB / RB, or a click) switch between Act I and Act II; the screen opens
-## on the act of the last stage played. A registered stage that is not yet
+## ACTS (GDD §15.0 "Act II: the Ancient Eye"; Parts: "The reorder pass, part 1
+## (order and numbering)"): the campaign's stages are shown one act at a time
+## (StageRegistry.ACT_ORDER). One row above the cards holds the three Part tabs
+## (StageRegistry.PARTS) and the five act tabs of the shown Part; Q / E (LB /
+## RB) step through every act in order (crossing into the next Part), a click
+## on an act tab shows that act and a click on a Part tab shows its first act.
+## The screen opens on the act of the last stage played. A registered stage that is not yet
 ## playable (StageRegistry "playable": false, the Act II foundation stubs) shows
 ## a locked card reading "Coming soon".
 ## DEMO (DemoMode, GDD §15.0 "Demo mode (owner request, Nov 2026)"): every
@@ -56,10 +59,13 @@ var _content: Control
 var _backdrop: MenuBackdrop = null
 ## Running fade of the content's alpha (null when settled).
 var _content_tween: Tween = null
-## Act shown (StageRegistry.ACTS key).
+## Act shown (StageRegistry act number, 1-based ACT_ORDER position).
 var _act: int = 1
-## Act number -> its tab Button (empty when only one act has stages).
+## Act number -> its tab Button (empty when only one act has stages); only the
+## shown Part's act tabs are visible.
 var _act_tabs: Dictionary = {}
+## Part index (StageRegistry.PARTS) -> its tab Button.
+var _part_tabs: Dictionary = {}
 ## The row holding the shown act's cards.
 var _row: HBoxContainer
 ## Demo: the Wishlist button beside Back (null outside the demo or while
@@ -128,18 +134,30 @@ func _ready() -> void:
 ## Acts that hold at least one stage, in order.
 static func _acts() -> Array:
 	var out: Array = []
-	for a: int in StageRegistry.ACTS:
+	for a: int in range(1, StageRegistry.act_count() + 1):
 		if not StageRegistry.stages_of_act(a).is_empty():
 			out.append(a)
-	out.sort()
 	return out
 
 
-## The act tabs: [Q] Act I · subtitle, Act II · subtitle [E].
+## The tab row: the Part tabs, then [Q] the shown Part's act tabs [E].
 func _act_row() -> Control:
 	var row := HBoxContainer.new()
 	row.alignment = BoxContainer.ALIGNMENT_CENTER
 	row.add_theme_constant_override("separation", 8)
+	for p: int in range(StageRegistry.PARTS.size()):
+		var pb := Button.new()
+		pb.text = String(StageRegistry.PARTS[p]["name"])
+		pb.tooltip_text = String(StageRegistry.PARTS[p]["subtitle"])
+		pb.custom_minimum_size = FrontDoorData.PART_TAB_SIZE
+		pb.focus_mode = Control.FOCUS_NONE  # Clicked; Q / E cross Parts too.
+		pb.set_meta(UiMotion.META_LIFT, false)
+		pb.pressed.connect(func() -> void: _switch_act(p * StageRegistry.ACTS_PER_PART + 1))
+		row.add_child(pb)
+		_part_tabs[p] = pb
+	var gap := Control.new()  # Sets the act tabs apart from the Part tabs.
+	gap.custom_minimum_size = Vector2(FrontDoorData.PART_ACT_GAP, 0.0)
+	row.add_child(gap)
 	var lb := InputHints.chip(InputHints.raw(KEY_Q, JOY_BUTTON_LEFT_SHOULDER))
 	lb.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	row.add_child(lb)
@@ -167,17 +185,23 @@ func _act_row() -> Control:
 ## Text of act `a`'s tab: "Act IV · The Olympian Republic" when `full`, else
 ## "Act IV" (compact tabs, FrontDoorData.ACT_TABS_FULL_MAX).
 static func _act_text(a: int, full: bool) -> String:
-	var info: Dictionary = StageRegistry.ACTS[a]
-	return "%s · %s" % [String(info["name"]), String(info["subtitle"])] if full else String(info["name"])
+	var label := StageRegistry.act_name(a)  # "Act IV".
+	return "%s · %s" % [label, StageRegistry.act_subtitle(a)] if full else label
 
 
-## Act IV: with more acts than FrontDoorData.ACT_TABS_FULL_MAX, only the shown
-## act's tab keeps its full text and size, the others are compact (the row
-## fits six acts at 1280 x 600 layout px); with fewer, every tab is full.
+## Only the shown Part's act tabs are visible. With more acts in the Part than
+## FrontDoorData.ACT_TABS_FULL_MAX, only the shown act's tab keeps its full
+## text and size, the others are compact (the row fits 1280 x 600 layout px).
 func _size_act_tabs() -> void:
-	var compact := _act_tabs.size() > FrontDoorData.ACT_TABS_FULL_MAX  # Too many acts for full tabs.
+	var part := StageRegistry.part_of_act(_act)  # The shown Part.
+	var shown := 0  # Act tabs in the shown Part.
+	for a: int in _act_tabs:
+		if StageRegistry.part_of_act(a) == part:
+			shown += 1
+	var compact := shown > FrontDoorData.ACT_TABS_FULL_MAX  # Too many acts for full tabs.
 	for a: int in _act_tabs:
 		var b := _act_tabs[a] as Button
+		b.visible = StageRegistry.part_of_act(a) == part
 		var full := not compact or a == _act  # This tab shows its subtitle.
 		b.text = _act_text(a, full)
 		b.custom_minimum_size = FrontDoorData.ACT_TAB_SIZE if full else FrontDoorData.ACT_TAB_COMPACT_SIZE
@@ -187,9 +211,11 @@ func _size_act_tabs() -> void:
 ## `focus_id`'s card when it is in the act and unlocked, else the act's first.
 func _show_act(act: int, focus_id: String = "") -> void:
 	_act = act
-	_size_act_tabs()  # Act IV: compact tabs beyond three acts.
+	_size_act_tabs()  # The shown Part's tabs; compact beyond three acts.
 	for a: int in _act_tabs:
 		UiTheme.style_button(_act_tabs[a] as Button, "button", "gold" if a == act else "")
+	for p: int in _part_tabs:
+		UiTheme.style_button(_part_tabs[p] as Button, "button", "gold" if p == StageRegistry.part_of_act(act) else "")
 	for c: Node in _row.get_children():
 		_row.remove_child(c)
 		c.queue_free()
@@ -254,7 +280,7 @@ func _build_card(id: String) -> Button:
 	gap.custom_minimum_size = Vector2(0, 4)
 	gap.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	box.add_child(gap)
-	box.add_child(UiTheme.tier_label(String(def["chapter"]), UiTheme.Tier.LABEL, UiTheme.TEXT_DIM))
+	box.add_child(UiTheme.tier_label(StageRegistry.chapter_of(id), UiTheme.Tier.LABEL, UiTheme.TEXT_DIM))
 	box.add_child(UiTheme.tier_label(String(def["display_name"]), UiTheme.Tier.NAME, UiTheme.TEXT_GOLD if unlocked else UiTheme.TEXT_DIM))
 	var line := String(FrontDoorData.STAGE_LINES.get(id, ""))  # The one line.
 	if unlocked:
@@ -265,7 +291,7 @@ func _build_card(id: String) -> Button:
 	spacer.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	spacer.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	box.add_child(spacer)
-	box.add_child(_footer(id, def) if unlocked else _locked_footer())
+	box.add_child(_footer(id) if unlocked else _locked_footer())
 	return b
 
 
@@ -296,24 +322,23 @@ func _lock_line(def: Dictionary) -> Control:
 	return row
 
 
-## "Slay <boss>" for the stage `def` requires (StageRegistry unlock), else
-## the stage's own unlock text; "Coming soon" for a stage not yet playable;
+## "Slay <boss>" for the stage `def` requires (StageRegistry.unlock_of()),
+## else "Locked"; "Coming soon" for a stage not yet playable;
 ## "Full game" for a stage outside the demo (DemoMode).
 static func _lock_text(def: Dictionary) -> String:
 	if not bool(def.get("playable", true)):
 		return FrontDoorData.COMING_SOON
 	if not DemoMode.allows_stage(String(def["id"])):
 		return DemoMode.lock_line()
-	var req: Dictionary = def.get("unlock", {})
-	var need := String(req.get("stage", ""))  # Stage whose boss must fall.
+	var need := StageRegistry.unlock_of(String(def["id"]))  # Stage whose boss must fall.
 	if StageRegistry.STAGES.has(need):
 		return "Slay %s" % String(StageRegistry.STAGES[need]["boss"]["short_name"])
-	return String(def.get("unlock_text", "Locked"))
+	return "Locked"
 
 
 ## An unlocked card's footer: best time and boss kills (pixel icons), the
 ## Soul Ash bonus, and the Hyper badge once cleared on Hyper.
-func _footer(id: String, def: Dictionary) -> Control:
+func _footer(id: String) -> Control:
 	var rec := Meta.stage_record(id)
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 12)
@@ -321,8 +346,8 @@ func _footer(id: String, def: Dictionary) -> Control:
 	var best := int(float(rec["best_time"]))  # Best time (s).
 	row.add_child(_stat("hourglass", "%d:%02d" % [floori(float(best) / 60.0), best % 60] if best > 0 else "--:--"))
 	row.add_child(_stat("skull_crown", "%d" % int(float(rec["boss_kills"]))))
-	if float(def["ash_mult"]) > 1.0:
-		row.add_child(_stat("ember", "×%.2f" % float(def["ash_mult"]), MetaGlyphs.EMBER.lightened(0.25)))
+	if StageRegistry.ash_mult_of(id) > 1.0:
+		row.add_child(_stat("ember", "×%.2f" % StageRegistry.ash_mult_of(id), MetaGlyphs.EMBER.lightened(0.25)))
 	var fill := Control.new()
 	fill.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	fill.mouse_filter = Control.MOUSE_FILTER_IGNORE

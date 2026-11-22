@@ -53,6 +53,18 @@ const CLASSES: Array[String] = [
 	"fallen_hero",
 	# --- Act IX: the Ark ---
 	"ghost_saucer",
+	# --- Act X: the Maelstrom ---
+	"powder_wraith",
+	# --- Act XI (temporary): Vigrid ---
+	"draugr_thane",
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	"ushabti_sentinel",
+	# --- Act XIII (temporary number): the Empyrean ---
+	"bound_ophan",
+	# --- Act XIV (temporary number): the Last Day ---
+	"bonehorn",
+	# --- Act XV (temporary number): the World-Tree ---
+	"ossuary_oak",
 ]  # TUNING (not in GDD) every offerable summon class of all nine acts
 
 ## Evolved-only class -> the classes whose mastery it uses (the best level
@@ -92,6 +104,18 @@ const FLAVOUR := {
 	"fallen_hero": "A hero who fights for you now.",  # TUNING (not in GDD) Act VIII's finale class
 	# --- Act IX: the Ark ---
 	"ghost_saucer": "A saucer that harvests for you now.",  # TUNING (not in GDD) Act IX's finale class
+	# --- Act X: the Maelstrom ---
+	"powder_wraith": "A keg that always comes back.",  # TUNING (not in GDD) the Black Tide's finale class
+	# --- Act XI (temporary): Vigrid ---
+	"draugr_thane": "A jarl who keeps his oath past the grave.",  # TUNING (not in GDD) the Hall of the Slain's finale class
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	"ushabti_sentinel": "A servant of stone that answers only you.",  # TUNING (not in GDD) the Dynasty's finale class
+	# --- Act XIII (temporary number): the Empyrean ---
+	"bound_ophan": "A wheel of heaven that turns for you now.",  # TUNING (not in GDD) the Celestial Host's finale class
+	# --- Act XIV (temporary number): the Last Day ---
+	"bonehorn": "The old herds run again, and they run for you.",  # TUNING (not in GDD) the Age of Titans' finale class
+	# --- Act XV (temporary number): the World-Tree ---
+	"ossuary_oak": "A tree of bone that roots where your dead were planted.",  # TUNING (not in GDD) the Turning Year's finale class (the campaign's)
 }  # TUNING (not in GDD) flavour only
 
 ## Autotest profile "max" owns every level of every mastery; "none" and "mid"

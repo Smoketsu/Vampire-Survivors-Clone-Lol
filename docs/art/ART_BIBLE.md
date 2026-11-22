@@ -3150,3 +3150,143 @@ the ring, the true form's glow over the base sprite when its art is missing.
 
 ### Act IX art review, round 1 (figures)
 The Hive Mother (all poses) was redrawn with wider hips and a bigger bust; the Broodbound is an alien insect woman in bright green and gold (base converted from `art_source/crash_site/raw/broodbound_flat.png`, thin trim lines removed before conversion; skins Hyper / Untouchable / Deathlord regenerated from her); the Starborn Deathlord wears a black half-mask visor. Rebuilt by `art_source/crash_site/make_art.py` (figures step) and `art_source/ark/make_art.py`. Rig lines in `tools/walk_cycle.py`.
+
+### The Black Tide (corsair), shared art and audio (Nov 2026)
+
+See `docs/tide/ART_MANIFEST.md` (the full file list) and GDD §15.0 "The Black Tide art and audio". Look: tarred oak, sailcloth cream, brass,
+powder-smoke grey, sash red, lantern amber on a navy sea with white foam; ink `corsair_ink` #0A0D18. Ramps `oak sail brass powder sash lantern
+sea foam kraken serpent spectre tan`; the kraken (purple), serpent (teal) and ghosts (spectre) are creature / ghost ramps passed with `--ramps`.
+Every unit is converted by `art_source/corsair/make_art.py` (`gen`, `convert`, `strips`, `gen_sheets`, `sheets`): `pixelate_source.py` then
+`prepare_sprite.py --no-cleanup --no-prune` (`--no-levels` except the dark ghosts and the skeleton summons). Hover stills get 2 empty rows
+above and below (HEIGHTS = art + 4). Floors and sea are drawn by `tools/corsair_tiles.py` straight from the palette.
+
+### Act VII slot: the Necropolis Dynasty (art, Nov 2026)
+
+<!-- --- the Necropolis Dynasty --- -->
+The Dynasty's look (GDD §15.0 "The Necropolis Dynasty art and audio"; `docs/proposals/LAST_SIX_ACTS.md` section VII; approved concepts
+`art_source/concepts/final5/dynasty_lineup.png`, `dynasty_bosses.png`, `dynasty_stage.png`): blue-black desert night with **lapis blue**,
+**sandstone**, **linen**, **carnelian red** and **papyrus green**, and a **dull bronze-gold** for every enemy collar, band and blade:
+true gold (`gold`) stays the player's reward colour and appears only on the mechanic markers (cartouche, Heka glyph), the Heka priest's
+staff glow and the player's own characters, Ushabti Sentinel evolution and gold-frame icons. Ink `#0A0B16` (`dyn_ink`) outlines the act.
+**Palette:** eight one-hue ramps (the Act VIII lesson), `night`, `bronze`, `lapis`, `sand`, `linen`, `carnelian`, `papyrus`, `dynskin`
+(Egyptian skin tones, its own ramp because the Covenant `skin` is a pale peach); `prepare_sprite.py` folder `dynasty/` takes night, bronze,
+lapis, linen, carnelian, papyrus, dynskin and brown; sandstone is added per call with `--ramps` (it sits beside linen and skin).
+**Sprites** (`assets/sprites/dynasty/`, heights in `SpriteData.HEIGHTS`; full list in `docs/dynasty/ART_MANIFEST.md`): one API image each
+(`tools/gen_image.py`, a game sprite plus the concept crop as references, prompts beside the raws in `art_source/dynasty/`), male figures
+converted straight (`--ink-l 0.15 --no-prune`), **female figures** (female mummy, Nile Archer, Embalmer, Bastet Hunter, Sekhmet and the
+Embalmer and Lion-Priestess characters) through `pixelate_source.py` first (it keeps the face, collar and hourglass), all with bust rigs and
+idle strips; Osiris (on his throne) and the canopic jars are stills. Rebuilt by `art_source/dynasty/make_art.py` (units, strips),
+`make_props.py` (obstacles, icon badges on the approved violet / gold frames, markers) and `dynasty_tiles.py` (13 dark seamless floors and
+the quicksand). Known soft spots: the mummy's green eyes fell below the cleanup threshold at 40 px; the pixelated women are noisy (as the
+Act IX women); the scarab swarm is drawn with `--no-cleanup` to keep its beetles apart. Rig lines in `tools/walk_cycle.py`
+("# --- Act VII slot: the Necropolis Dynasty ---"), boxes read by eye, not yet reviewed in game.
+
+### Act X slot: the Celestial Host (art and audio, foundation, Nov 2026)
+
+The Host's look (GDD §15.0 "The Celestial Host art and audio (foundation)"; approved concepts `art_source/concepts/act15/host*.png`):
+**starlight white, pale silver, cerulean and dawn rose**, never crimson and never warm gold (gold stays the player's reward colour; it
+appears only in the gold icon frames). Halos are drawn by the code (`HostKit.draw_over()`), never painted into a unit. Ink `#0E1626`
+(`host_ink`). **Palette:** five one-hue ramps `host_silver`, `host_cerulean`, `host_rose`, `host_cloud`, `host_skin` (tools/palette.json;
+`prepare_sprite.py` folder `host/` takes exactly these). **Sprites** (`assets/sprites/host/`, heights in `SpriteData.FLAT_SIZES`): the seven
+roster kinds (Lesser Light, Virtue, Power, Choir Angel, Herald, Dominion, Judge), one API image each (`tools/gen_image.py`, a game sprite
+plus the concept crop as references, prompts beside the raws in `art_source/host/`), every figure through `pixelate_source.py` first (the
+grid-mode conversion turned the armoured ones to mush), walk strips (robe glide with a 1 px float; the Lesser Light hovers, its still has 2
+empty rows on top), the two women (Power, Choir Angel; figure redesign, fully clothed) with bust rigs and idle strips. Also: 4 obstacle kinds
+(+ `_v`), 16 icon badges on the approved violet / gold frames, 2 floors (`tiles/host_stair`, `tiles/host_cloud_shadow`), the halo, cracked
+halo, scales and pillar markers and the shaft / telegraph line / trumpet ring effects (drawn procedurally by `host_tiles.py`).
+Rebuilt by `art_source/host/make_art.py`, `make_props.py` and `host_tiles.py`. Known soft spots: the Virtue's torso is a flat grey, the
+Judge is 58 px wide (sword and scales), the standing petal is nearly square (the model drew it diagonal), the generated icons' extra fifth
+symbol is discarded. Phase 2 art (bosses, stage-only kinds, characters, summon class, zone floors) is not made yet.
+
+### Act XIV slot: the Age of Titans (art and audio, foundation, Nov 2026)
+
+The Titans' look (GDD §15.0 "The Age of Titans art and audio (foundation)"; approved concepts `art_source/concepts/final5/titans_*.png`):
+**fern green, dust ochre, tar black, volcanic orange and bone white**, plus the meteor's white streak; never crimson, never gold (gold stays
+the reward colour, only in the gold icon frames), never the necromancer's violet; no humans. Ink `#120F0D` (`primeval_ink`). **Palette:** five
+one-hue ramps `primeval_fern`, `primeval_ochre`, `primeval_tar`, `primeval_lava`, `primeval_bone` (tools/palette.json; `prepare_sprite.py` folder
+`primeval/` takes exactly these; the values are the `PRIMEVAL_*` constants of `palette.gd`). **Sprites** (`assets/sprites/primeval/`, heights in
+`SpriteData.HEIGHTS`): the eight foundation kinds (Scuttler, Razorclaw, Razorclaw Alpha, Frill Spitter, Longneck, Duckbill, Skyraider, Tyrant),
+one API image each (a game beast plus the concept crop as references, prompts beside the raws in `art_source/titans/`), every beast but the
+Scuttler through `pixelate_source.py` first, the art height chosen so the width fits the manifest box; 8-frame walk strips (`legs` rigs; the
+Skyraider flaps as a `hover` rig; its strip is `_walk`, the only name the code loads). Animals: no bust rigs, no idle strips, the alpha is told by
+her crest. Also 2 obstacle kinds (the fossil with `_v`), 16 icon badges on the approved violet / gold frames, 3 floors (`tiles/primeval_fern`,
+`_plain`, `_ash`), 3 markers and 4 effect files, drawn procedurally by `titans_tiles.py`. Rebuilt by `art_source/titans/make_art.py`,
+`make_props.py`, `titans_tiles.py`. Known soft spots: the Tyrant's tar-black hide is mostly tar-brown with fern stripes (the model kept the
+concept's greens); the Razorclaw Alpha is 28 px wide (the model drew her upright and narrow), the Duckbill 48; the Scuttler is a pale single-colour
+speck at 20 px; the Skyraider's wing flap is a plain 4 px shear. Phase 2 art (the two other Plain / Basin beasts, minibosses, bosses, characters,
+summon class, zone floors, tree fern, canyon wall, lava rock, tar patch) is not made.
+
+### Act X slot: the Celestial Host (phase 2 art, Nov 2026)
+
+| Key | What |
+|---|---|
+| `host/cherub` (58 rows with 2 for the bob), `cherub_of_the_gate` (78) | four faces (lion, ox, eagle, man) and four wings covered in eyes, a flaming sword; hover strips |
+| `host/seraiel` (96), `seraiel_raised` | the Warden of the Gate, male, four wings, flaming sword; walk strip; pose 1 sword raised |
+| `host/ophan` (52), `throne` (96), `throne_open`, `throne_core` (32) | burning silver wheels of eyes; roll strips (Throne turns, the Ophan squeezes); pose 1 = wheels parted; the Core's eye |
+| `host/dominion_of_the_spheres` (70), `herald_of_the_seventh_trumpet` (70) | larger Dominion (ring crown) and Herald (great trumpet), male; walk strips |
+| `host/voice` (106), `voice_unveiled` (104) | six wings in a white-and-rose lotus; the unveiled face is pure light, no features |
+| `player/fallen_herald` (46x56), `blind_saint` (38x56), `the_unveiled` (42x56) | violet necromancers; the two women in the figure-redesign style, fully clothed, bust rigs, walk + idle strips |
+| `summons/bound_ophan`, `throne_of_bones` | bone wheels with soul-teal eyes / fire; roll strips |
+| `icons/turning_bones`, `obstacles/host_pearl_gate` (72x80) | the passive's badge; the Gate of Pearl |
+| `tiles/silver_stair_*`, `wheel_*`, `empyrean_*` (12) | procedural 128x128 floors (`host_floors.py`) |
+
+### Act X slot: the Celestial Host, art review round 3 (owner marks, Nov 2026)
+
+Round 1 marks redone (commit `50cdff1b`; 18 images on the review page, was / now): **wings beat on every winged angel** (the walk strips of the Lesser Light, Virtue, Power, Choir Angel,
+Herald, Judge, Dominion, Cherub, Cherub of the Gate, Seraiel, Dominion of the Spheres, Herald of the Seventh Trumpet and the Voice, the idle strips of the Choir Angel and Power, and the
+Unveiled's folded wing; `wings` entries in the `tools/walk_cycle.py` rigs "Act X slot": each wing turned about its shoulder pivot, laid behind the body, pixels only move); the bust boxes of
+the Blind Saint and the Unveiled refit onto the chest (`tools/bust_check.py`); the **Virtue redrawn** (28 -> 22 px wide, four wings) and the **unveiled Voice redrawn as a woman** (a face
+of light, no features, `art_source/host/voice_unveiled.txt`). Review page generator `docs/last_acts/tools/make_wave2_review_r3.py`.
+
+### Act XIV slot: the Age of Titans (phase 2 art, Nov 2026)
+
+| Key | What |
+|---|---|
+| `primeval/bog_croc` (44x30, walk), `bog_croc_submerged` (32x12, drawn on the grid), `ironjaw` (72x60, walk), `primeval_nest` (40x32) + `_dead` (derived: scorched grey), `scarmaw_guard` (32x40, walk) | the Fern Basin's hunter, miniboss, her nest and the boss's alpha-guard; animals, sex named in every prompt, no figure style |
+| `primeval/scarmaw` (60x60, walk) + `scarmaw_leap` pose | the Great Raptor (female), pose 1 for `BossPoseData` |
+| `primeval/horncharger` (54x48), `clubtail` (48x44), `mother_clubtail` (68x60), `ironbrow` (92x80) + `ironbrow_broken` pose | the Great Plain's titans; walk strips |
+| `primeval/stormwing` (52x44) + `_landed`, `thunderwing` (70x64) | the Last Day's pterosaurs: fly strips with moving wings (`hover` rig, `flap` part, as the Skyraider) |
+| `primeval/gravejaw` (102x104, walk) + `gravejaw_roar` pose | the Tyrant King |
+| `player/fern_huntress` (38x56), `skywatcher` (36x56) | violet necromancers, figure-redesign style, fully clothed, bust rigs, walk + idle strips (`tools/bust_check.py` boxes on the chest) |
+Bust box rule (round 4 redo of the Blind Saint, Fern Huntress, Skywatcher, Dryad; `tools/bust_check.py`): measured on the approved Wither Witch, Soulbinder and Battle Sister, the box starts 1-2 rows under the head / hood-mask bottom, is 6-8 rows tall (about 0.37-0.52 of the hip row for hooded robes), and stays above the waist / belt, 8-12 px wide on the torso columns over the brightest chest pixels, never on the head, arm, staff or focus.
+| `player/herd_warden` (44x56) | violet necromancer, male, walk strip |
+| `summons/bonehorn` (40x34), `fossil_tyrant` (48x44), `fossil_giant` (48x48) | skeletons in bone / soul-teal; walk strips |
+| `obstacles/primeval_tree_fern_m` (40x38), `primeval_canyon_wall_m` + `_v` (96x30), `primeval_lava_rock_m` (38x38), `icons/petrified_horns` | props and the Bonehorn's passive badge |
+| `tiles/fern_basin_*`, `great_plain_*`, `last_day_*` (12), `tiles/primeval_tar` | procedural 128x128 floors with visible features (fronds, tar bubbles, ripples, eggshells, cracks, hoof prints, strata, bones, embers, stumps, lava seams, impact cracks) by `titans_floors.py` |
+
+Made by `art_source/titans/gen_phase2.py` (prompts + raw API images), `make_phase2.py` (pixelate + `prepare_sprite.py`, stills, props, strips), `titans_floors.py`; rigs "Act XIV slot,
+phase 2" in `walk_cycle.py`. Known flaws: the Scarmaw leap and the Ironbrow `_broken` poses read close to their bases (the model kept the pose; the Ironbrow's horn stump is the
+orange X crack), the two women's figure style is faint at 36-38 px wide (cloak and hat dominate), the Bog Croc / Gravejaw tar-dark hides sit near the dark floors' value, the Herd-Warden is 44 px wide (box 42).
+
+### Act XV slot: the Turning Year (art and audio, foundation, Nov 2026)
+
+The Wild's look (GDD §15.0 "The Turning Year art and audio (foundation)"; approved concepts `art_source/concepts/final5/year_*.png`): **moss, bark,
+blossom pink, amber leaf and frost white**, with the blight a dead grey that reads strongly against the green; never crimson (the wildfire is orange-red),
+never the UI gold (the leaves are amber), never the necromancer's violet. Ink `#14100C` (`wild_ink`). **Palette:** seven one-hue ramps `wild_moss`, `wild_bark`,
+`wild_blossom`, `wild_leaf`, `wild_frost`, `wild_blight`, `wild_fire` (tools/palette.json; `prepare_sprite.py` folder `wild/` takes these, the figures add `skin` through
+`KEY_RAMPS`; the values are the `WILD_*` constants of `palette.gd`). **Sprites** (`assets/sprites/wild/`, heights in `FLAT_SIZES`): the ten shared kinds (Thornling,
+Dryad, Treant, Corpse-Bloom + `_dead`, Fae Knight, Winter Fae, Great Stag, Wild Rider, Will-o'-Wisp, Spore Mother), one API image each (the lineup crop plus a
+style sprite as references, prompts beside the raws in `art_source/year/`), all but the Thornling and the Wisp through `pixelate_source.py` first; 8-frame walk
+strips (`legs` rigs for the Thornling, Treant, Knight, Stag and Rider; `robe` for the three women; the Wisp glides as a `hover` rig, its still padded with 2 empty
+rows), and 24-frame idle strips for the Dryad, Winter Fae and Spore Mother (bust boxes checked with `tools/bust_check.py`); the Winter Fae's two frost wings beat
+(`wings`, walk and idle). Also 3 obstacle kinds (the oak and the standing stone in two sizes `_s` / `_l`, the stone with `_v`; the thorn thicket `_m`), 16 icon badges
+on the approved violet / gold frames, 3 floors (`tiles/wild_greenwood`, `wild_fae`, `wild_tree`: seamless 128 px, neutral and darker than the Titans' so the four
+`WildRulesData.SEASON_TINTS` read; ferns, fallen leaves and roots / petals and a toadstool ring / bark roots and cracks), 4 markers (`wild_roots`, `wild_sprout`,
+`wild_blight` tiling, `wild_season_wheel`) and 7 effect files (`fx/wild_smoke_line`, `wild_fire_front`, `wild_blizzard`, `wild_snowfall`, `wild_leaves`,
+`wild_thicket_burn`, `wild_bury`) drawn by `art_source/year/year_tiles.py` (seeded, reproducible). Not made (phase 2 in `docs/year/ART_MANIFEST.md`): the hunt hound,
+huntsman, winter prince, gardener, the three bosses, the three characters, the Ossuary Oak summons, the zone floors and grove / hedge / root obstacles. Tools: `gen_prompts.py`,
+`gen_sheets.py`, `make_art.py`, `make_props.py`, `year_tiles.py` in `art_source/year/`; 17 API images (about $0.25, ledger `docs/art/generation_ledger.csv`).
+Known flaws: the Dryad is 36 px wide (box 34); the Winter Fae and the Wild Rider read bluish-grey; the dead Corpse-Bloom is brown rather than grey.
+
+### Act XV slot, phase 2: the Turning Year's stage art (Nov 2026)
+
+| Items | Notes |
+|---|---|
+| `wild/hunt_hound`, `huntsman`, `antler_thicket`, `winter_prince`, `gardener_of_roots` | creatures and minibosses (hound / Huntsman / Prince male or none, the Gardener a treant); legs rigs, the Prince and the Stag King robe rigs (cloaks) |
+| `wild/stag_king` (+ `_horn`) | male boss, robe rig with the staff rigid; the horn pose reuses the base's art height |
+| `wild/summer_queen` (+ `_mask`, `_bargain`) | **female**, figure style, fully clothed; floating robe rig, bust box (23-35, rows 16-24), **butterfly wings beat** (`wings` entries, walk and idle) |
+| `wild/masked_courtier`, `wild/green_mother` (+ `_cast`, `_burial`) | female, figure style; bust boxes on the chest (checked with `tools/bust_check.py` at scale 8), idle strips; the courtier is 46 x 52 (her rapier widens her) |
+| `player/horned_herald`, `changeling_princess`, `gravegardener` | violet necromancers (42 / 40 / 40 x 56), the two women with bust rigs and idle strips |
+| `summons/ossuary_oak`, `world_root_warden` | bone trees (28 x 56, 36 x 64), `legs` walk strips |
+| floors (13) | `art_source/year/year_floors.py`: glade (flowers), deep wood (mushrooms, roots), hunting grounds (hoof prints, shed antlers), stag's hollow (dais, bones), rose maze (flagged paths, petals), revel (dance rings, confetti), mirror lake (ripples, lily pads), throne of blossoms (petal carpet), roots, trunk stair (bark ledges), crown (canopy), seed (soul-teal rings), fairy ring (round patch, transparent outside) |
+Known flaws: the Changeling Princess's crossed arms sit under her bust box; art_check lightness FAILs are against the Covenant floors only (the Wild stages have their own).

@@ -200,6 +200,11 @@ var inscribed_until: float = 0.0
 var glory: int = 0
 ## Body radius (px) before Glory grows it (set on activation).
 var glory_base_radius: float = 0.0
+# --- Act XII (temporary number): the Necropolis Dynasty ---
+## Times this body has RETURNED (Rebirth, DynastyRulesData.REBIRTH: 0..2, more
+## in the Devourer's Hour): hit_mult() multiplies its every hit by
+## damage_mult per return. 0 for every other enemy, so hit_mult() is unchanged.
+var reborn: int = 0
 # --- Act V: the Shogunate of the Rising Sun ---
 ## True for an ETHEREAL body (ShogunateEnemyData "ethereal": the onryō): it
 ## drifts through obstacles (it also sets phases_obstacles, so
@@ -387,6 +392,14 @@ var stun_timer: float = 0.0
 ## Seconds left of a Frost Wraith chill (the slow itself is slow_timer; this
 ## only drives the frost tint).
 var chill_timer: float = 0.0
+# --- Act XI (temporary): the Hall of the Slain ---
+## BERSERKERGANG (GDD §15.0 "Berserkergang"): true while this Norse warrior is
+## in the fury, for good once it starts: +BERSERK damage (hit_mult()) and
+## +speed (physics_step()), and slows (apply_slow()), stuns and freezes
+## (CombatResolver.stun_enemy() / freeze_enemy()) no longer hold. THE one enemy
+## stat of the rule, written only by NorseRules.enter_fury(); false for every
+## enemy of every other act, so nothing changes there.
+var berserk: bool = false
 ## Facing sign (+1 right / -1 left).
 var _facing: float = 1.0
 ## Reusable query buffer.
@@ -420,6 +433,7 @@ var _rush_hit_player: bool = false
 func activate(p_game: Game, p_kind: String, def: Dictionary, pos: Vector2, hp_mult: float, elite: bool, slot: int) -> void:
 	game = p_game
 	kind = p_kind
+	berserk = false  # The Hall of the Slain: no fury yet (only NorseRules.enter_fury() sets it).
 	generation += 1
 	active = true
 	is_elite = elite
@@ -508,6 +522,7 @@ func activate(p_game: Game, p_kind: String, def: Dictionary, pos: Vector2, hp_mu
 		target_priority = minf(1.0, target_priority + 0.2)
 	hp = max_hp
 	glory = 0  # Act IV: Glory stacks (heroes only gain any).
+	reborn = 0  # Act XII (temporary): Rebirth sets it on a returned body after its activation.
 	glory_base_radius = radius
 	incoming_damage = 0.0
 	attack_cd = randf() * attack_interval
@@ -632,7 +647,12 @@ func motion_lunge(dir: Vector2, power: float) -> void:
 ## kind's in empire/ (Act III), an Olympian Republic kind's in pantheon/ (Act
 ## IV), a Shogunate kind's in shogunate/ (Act V), an Inferno kind's in inferno/
 ## (Act VI), a Sanguine Court kind's in court/ (Act VII), a Last Line kind's
-## in city/ (Act VIII), a Concord of Stars kind's in concord/ (Act IX): used
+## in city/ (Act VIII), a Concord of Stars kind's in concord/ (Act IX), a
+## Black Tide kind's in corsair/ (Act X), a Hall of the Slain kind's in
+## norse/ (Act XI), a Necropolis Dynasty kind's in dynasty/ (Act XII) and a
+## Celestial Host kind's in host/ (Act XIII), an Age of Titans kind's in
+## primeval/ (Act XIV) and a Turning Year kind's in wild/ (Act XV; the six
+## numbers are temporary until the reorder): used
 ## when it has no enemies/ art (visual only;
 ## every Act I kind keeps its enemies/ key).
 func motion_sprite_key() -> String:
@@ -656,6 +676,18 @@ func motion_sprite_key() -> String:
 			return "city/" + kind  # Act VIII: a Last Line kind's art.
 		if SpriteBank.has("concord/" + kind):
 			return "concord/" + kind  # Act IX: a Concord of Stars kind's art.
+		if SpriteBank.has("corsair/" + kind):
+			return "corsair/" + kind  # Act X: a Black Tide kind's art.
+		if SpriteBank.has("norse/" + kind):
+			return "norse/" + kind  # The Hall of the Slain: a Norse kind's art.
+		if SpriteBank.has("dynasty/" + kind):
+			return "dynasty/" + kind  # Act XII (temporary): a Necropolis Dynasty kind's art.
+		if SpriteBank.has("host/" + kind):
+			return "host/" + kind  # Act XIII (temporary): a Celestial Host kind's art.
+		if SpriteBank.has("primeval/" + kind):
+			return "primeval/" + kind  # Act XIV (temporary): an Age of Titans kind's art.
+		if SpriteBank.has("wild/" + kind):
+			return "wild/" + kind  # Act XV (temporary): a Turning Year kind's art.
 	return key
 
 
@@ -713,7 +745,11 @@ func apply_mark(duration: float) -> void:
 
 
 ## Applies a slow of `fraction` (0..1 of speed removed) for `duration` s.
+## A berserk Norse warrior shrugs it off (Berserkergang; false elsewhere).
 func apply_slow(fraction: float, duration: float) -> void:
+	if berserk:
+		game.stat_add("berserk_shrugged_slows", 1.0)
+		return
 	var f := fraction * (1.0 - slow_resist)
 	if slow_timer <= 0.0 or f > slow_factor:
 		slow_factor = f
@@ -889,6 +925,12 @@ func hit_mult() -> float:
 		m *= 1.0 - weaken_cut  # Dirge: weakened hits.
 	if glory > 0:
 		m *= 1.0 + float(PantheonRulesData.GLORY["damage_per_stack"]) * float(glory)  # Act IV: Glory.
+	if berserk:
+		m *= 1.0 + float(NorseRulesData.BERSERK["damage"])  # The Hall of the Slain: Berserkergang.
+	if reborn > 0 and game.dynasty != null:
+		m *= pow(float(game.dynasty.rebirth.cfg["damage_mult"]), float(reborn))  # Act XII (temporary): Rebirth's stamp.
+	if game.enemies.two_truths != null and (kit is DynastyKit or is_boss):
+		m *= game.enemies.two_truths.scales.enemy_mult()  # Act XII (temporary), the Hall of Two Truths: the Scales' favour.
 	return m
 
 
@@ -986,7 +1028,7 @@ func physics_step(delta: float) -> void:
 			# Hysteresis: once off the straight line it takes a longer clear look to
 			# go straight again (no flip-flop at the edge of the look-ahead).
 			var look := CityBlockData.STEER_LOOK if street_hint == Vector2.ZERO else CityBlockData.STEER_LOOK_BACK
-			var sd := game.arena.city_blocks.street_dir(position, goal, radius, look)  # This tick's decision.
+			var sd := game.arena.city_blocks.street_dir(position, goal, radius, look, street_hint)  # This tick's decision.
 			street_hint = Vector2.ZERO if sd.dot(move) > 0.999 else sd  # ZERO: straight was clear.
 		if street_hint != Vector2.ZERO:
 			move = street_hint
@@ -1000,6 +1042,8 @@ func physics_step(delta: float) -> void:
 		spd *= EnemyData.SHOOT_SLOW_MULT
 	if buff_time > 0.0:
 		spd *= buff_speed  # Banner / Holy Standard aura.
+	if berserk:
+		spd *= 1.0 + float(NorseRulesData.BERSERK["speed"])  # The Hall of the Slain: Berserkergang.
 	velocity = move * spd + sep * spd * EnemyData.SEPARATION_STRENGTH
 	position += (velocity + knockback) * delta
 	_update_facing()
@@ -1154,9 +1198,11 @@ func resolve_blocking() -> void:
 		u.try_bash(self, n)
 
 
-## Shared countdowns (flash, slow, cooldowns).
+## Shared countdowns (flash, slow, cooldowns). A Fae Court fairy ring slows the
+## attack timer (FaeCourtDirector.enemy_attack_rate(); null elsewhere).
 func _tick_timers(delta: float) -> void:
-	attack_cd -= delta
+	var fc := game.enemies.fae_court  # The Fae Court's rings (null on every other stage).
+	attack_cd -= delta if fc == null else delta * fc.enemy_attack_rate(self)
 	heal_cd -= delta
 	orb_hit_cd -= delta
 	if slow_timer > 0.0:

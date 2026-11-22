@@ -1,0 +1,213 @@
+Godot Engine v4.3.stable.official.77dcf97d8 - https://godotengine.org
+
+[autotest] start: seed=7 speed=8x mortal=true timeout=1500s policy=evolve meta=none oath=0 pact=false classes=- spells=bone_spear,soul_siphon,corpse_explosion,plague_cloud
+[autotest] stage: ark
+[autotest] difficulty: necromancer | modifiers: none
+[autotest] character: gravecaller (starting spell shadow_bolt)
+[audio] main-thread startup 8.8 ms; 59 sfx ready after 436 ms, music loop after 432 ms (worker threads); display: headless
+[metric] t=60 avg_horde=2.0 now=2 cap=2 w2/2 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=6 kills=88 enemies=38 hp=118 boss_hp=-1 crystals=5 xp=135
+[metric]    summon dmg taken this window: grey_drone=37 broodling=12
+[metric]    alive by kind: { "grey_drone": 29, "broodling": 8, "concord_terraformer": 1 } within260=9
+[autotest] t=01:00 lvl=6 kills=88 enemies=38 summons=2/2 projectiles=2 hp=118 step_avg=0.79ms
+[autotest]    unit FSM: { "ENGAGING": 1, "CASTING": 1 }
+[metric] t=120 avg_horde=1.6 now=2 cap=2 w2/2 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=11 kills=220 enemies=55 hp=116 boss_hp=-1 crystals=21 xp=345
+[metric]    summon dmg taken this window: grey_drone=52 broodling=8
+[metric]    alive by kind: { "grey_drone": 29, "broodling": 12, "grey_overseer": 6, "saucer": 6, "concord_terraformer": 2 } within260=24
+[autotest] t=02:00 lvl=11 kills=220 enemies=55 summons=2/2 projectiles=0 hp=116 step_avg=0.98ms
+[autotest]    unit FSM: { "FOLLOWING": 2 }
+[metric] t=180 avg_horde=1.5 now=2 cap=2 w2/2 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=19 kills=394 enemies=45 hp=120 boss_hp=-1 crystals=18 xp=765
+[metric]    summon dmg taken this window: grey_drone=29
+[metric]    alive by kind: { "grey_drone": 24, "broodling": 13, "grey_overseer": 6, "concord_terraformer": 1, "saucer": 1 } within260=3
+[autotest] t=03:00 lvl=19 kills=394 enemies=45 summons=2/2 projectiles=0 hp=120 step_avg=1.04ms
+[autotest]    unit FSM: { "FOLLOWING": 2 }
+[metric] t=240 avg_horde=1.8 now=2 cap=2 w2/2 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=24 kills=566 enemies=60 hp=120 boss_hp=-1 crystals=11 xp=1173
+[metric]    summon dmg taken this window: grey_drone=24 broodling=16 lumen_sentinel=18
+[metric]    alive by kind: { "grey_drone": 37, "broodling": 7, "saucer": 3, "prism": 5, "lumen_sentinel": 4, "concord_terraformer": 1, "grey_overseer": 3 } within260=11
+[autotest] t=04:00 lvl=24 kills=566 enemies=60 summons=2/2 projectiles=0 hp=120 step_avg=1.11ms
+[autotest]    unit FSM: { "FOLLOWING": 2 }
+[metric] t=300 avg_horde=1.7 now=2 cap=2 w2/2 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=27 kills=757 enemies=52 hp=120 boss_hp=-1 crystals=50 xp=1546
+[metric]    summon dmg taken this window: grey_drone=5 broodling=7 lumen_sentinel=6
+[metric]    alive by kind: { "grey_overseer": 5, "grey_drone": 28, "lumen_sentinel": 5, "broodling": 7, "saucer": 2, "concord_terraformer": 2, "prism": 2, "specimen_tank": 1 } within260=6
+[autotest] t=05:00 lvl=27 kills=757 enemies=52 summons=2/2 projectiles=2 hp=120 step_avg=1.13ms
+[autotest]    unit FSM: { "FOLLOWING": 1, "ENGAGING": 1 }
+[metric] t=360 avg_horde=1.6 now=2 cap=2 w2/2 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=31 kills=969 enemies=61 hp=120 boss_hp=-1 crystals=83 xp=2004
+[metric]    summon dmg taken this window: grey_drone=37 broodling=5 lumen_sentinel=8 vrask_hunter=9
+[metric]    alive by kind: { "grey_drone": 36, "broodling": 11, "lumen_sentinel": 4, "grey_overseer": 3, "vrask_hunter": 1, "specimen_tank": 3, "prism": 1, "concord_terraformer": 1, "saucer": 1 } within260=4
+[autotest] t=06:00 lvl=31 kills=969 enemies=61 summons=2/2 projectiles=1 hp=120 step_avg=1.22ms
+[autotest]    unit FSM: { "FOLLOWING": 1, "ENGAGING": 1 }
+[metric] t=420 avg_horde=1.9 now=2 cap=2 w2/2 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=36 kills=1189 enemies=63 hp=120 boss_hp=-1 crystals=101 xp=2539
+[metric]    summon dmg taken this window: grey_drone=8 broodling=2 lumen_sentinel=6 vrask_hunter=21 vault_beast=17
+[metric]    alive by kind: { "grey_drone": 39, "concord_terraformer": 1, "grey_overseer": 5, "lumen_sentinel": 3, "broodling": 9, "saucer": 2, "vrask_hunter": 2, "specimen_tank": 2 } within260=7
+[autotest] t=07:00 lvl=36 kills=1189 enemies=63 summons=2/2 projectiles=1 hp=120 step_avg=1.28ms
+[autotest]    unit FSM: { "ENGAGING": 2 }
+[metric] t=480 avg_horde=1.5 now=2 cap=2 w2/2 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=1 lvl=39 kills=1411 enemies=74 hp=120 boss_hp=-1 crystals=89 xp=3100
+[metric]    summon dmg taken this window: grey_drone=98 broodling=37 lumen_sentinel=33 vrask_hunter=27 vault_beast=38
+[metric]    alive by kind: { "grey_drone": 38, "broodling": 16, "saucer": 4, "lumen_sentinel": 6, "grey_overseer": 8, "vrask_hunter": 2 } within260=24
+[autotest] t=08:00 lvl=39 kills=1411 enemies=74 summons=2/2 projectiles=0 hp=120 step_avg=1.33ms
+[autotest]    unit FSM: { "FOLLOWING": 1, "ENGAGING": 1 }
+[metric] t=540 avg_horde=1.5 now=2 cap=2 w2/2 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=42 kills=1671 enemies=30 hp=120 boss_hp=-1 crystals=138 xp=3607
+[metric]    summon dmg taken this window: grey_drone=100 broodling=15 lumen_sentinel=31
+[metric]    alive by kind: { "broodling": 5, "grey_drone": 19, "concord_terraformer": 2, "grey_overseer": 2, "saucer": 2 } within260=0
+[autotest] t=09:00 lvl=42 kills=1671 enemies=30 summons=2/2 projectiles=1 hp=120 step_avg=1.35ms
+[autotest]    unit FSM: { "CASTING": 1, "FOLLOWING": 1 }
+[metric] t=600 avg_horde=1.9 now=2 cap=2 w2/2 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=44 kills=1845 enemies=65 hp=120 boss_hp=-1 crystals=153 xp=3945
+[metric]    summon dmg taken this window: grey_drone=9 broodling=25 lumen_sentinel=3
+[metric]    alive by kind: { "grey_drone": 39, "concord_terraformer": 2, "prism": 3, "lumen_sentinel": 5, "grey_overseer": 4, "broodling": 9, "vrask_hunter": 2, "reactor_vent": 1 } within260=6
+[autotest] t=10:00 lvl=44 kills=1845 enemies=65 summons=2/2 projectiles=3 hp=120 step_avg=1.37ms
+[autotest]    unit FSM: { "FOLLOWING": 2 }
+[metric] t=660 avg_horde=2.0 now=2 cap=2 w2/2 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=1 lvl=47 kills=2073 enemies=74 hp=120 boss_hp=-1 crystals=183 xp=4473
+[metric]    summon dmg taken this window: lumen_sentinel=53 vrask_hunter=103
+[metric]    alive by kind: { "broodling": 17, "lumen_sentinel": 5, "grey_drone": 32, "grey_overseer": 6, "concord_terraformer": 3, "vrask_hunter": 4, "prism": 4, "reactor_vent": 2, "saucer": 1 } within260=7
+[autotest] t=11:00 lvl=47 kills=2073 enemies=74 summons=2/2 projectiles=2 hp=120 step_avg=1.44ms
+[autotest]    unit FSM: { "FOLLOWING": 1, "RETURNING": 1 }
+[metric] t=720 avg_horde=2.0 now=2 cap=2 w2/2 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=49 kills=2323 enemies=65 hp=120 boss_hp=-1 crystals=213 xp=5051
+[metric]    summon dmg taken this window: lumen_sentinel=73
+[metric]    alive by kind: { "grey_drone": 39, "concord_terraformer": 3, "vrask_hunter": 2, "saucer": 2, "prism": 1, "lumen_sentinel": 6, "broodling": 6, "grey_overseer": 5, "reactor_vent": 1 } within260=3
+[autotest] t=12:00 lvl=49 kills=2323 enemies=65 summons=2/2 projectiles=5 hp=120 step_avg=1.48ms
+[autotest]    unit FSM: { "FOLLOWING": 2 }
+[metric] t=780 avg_horde=2.0 now=2 cap=2 w2/2 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=52 kills=2550 enemies=76 hp=120 boss_hp=-1 crystals=218 xp=5612
+[metric]    summon dmg taken this window: lumen_sentinel=45 luminous_archon=25
+[metric]    alive by kind: { "grey_drone": 39, "grey_overseer": 5, "concord_terraformer": 3, "broodling": 16, "prism": 4, "vrask_hunter": 3, "lumen_sentinel": 5, "luminous_archon": 1 } within260=1
+[autotest] t=13:00 lvl=52 kills=2550 enemies=76 summons=2/2 projectiles=20 hp=120 step_avg=1.52ms
+[autotest]    unit FSM: { "FOLLOWING": 2 }
+[metric] t=840 avg_horde=1.9 now=2 cap=2 w2/2 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=1 lvl=54 kills=2790 enemies=71 hp=120 boss_hp=-1 crystals=239 xp=6089
+[metric]    summon dmg taken this window: grey_drone=71 lumen_sentinel=44 luminous_archon=101
+[metric]    alive by kind: { "lumen_sentinel": 10, "broodling": 12, "grey_overseer": 7, "grey_drone": 27, "saucer": 6, "concord_terraformer": 3, "prism": 4, "vrask_hunter": 1, "luminous_archon": 1 } within260=2
+[autotest] t=14:00 lvl=54 kills=2790 enemies=71 summons=2/2 projectiles=19 hp=120 step_avg=1.57ms
+[autotest]    unit FSM: { "FOLLOWING": 1, "ENGAGING": 1 }
+[metric] t=900 avg_horde=3.4 now=8 cap=8 w8/8 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=4 lvl=57 kills=3037 enemies=67 hp=120 boss_hp=-1 crystals=230 xp=6803
+[metric]    summon dmg taken this window: broodling=43 lumen_sentinel=117 vrask_hunter=45 luminous_archon=167
+[metric]    alive by kind: { "grey_drone": 33, "grey_overseer": 4, "concord_terraformer": 2, "broodling": 15, "prism": 5, "lumen_sentinel": 6, "saucer": 2 } within260=0
+[autotest] t=15:00 lvl=57 kills=3037 enemies=67 summons=8/8 projectiles=25 hp=120 step_avg=1.61ms
+[autotest]    unit FSM: { "FOLLOWING": 8 }
+[autotest] build complete (only fallback cards left) at 15:33, level 58
+[metric] t=960 avg_horde=7.9 now=7 cap=8 w7/8 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=59 kills=3313 enemies=68 hp=120 boss_hp=-1 crystals=250 xp=7352
+[metric]    summon dmg taken this window: grey_drone=4 broodling=27 lumen_sentinel=390 vrask_hunter=99
+[metric]    alive by kind: { "grey_drone": 27, "grey_overseer": 8, "concord_terraformer": 3, "broodling": 18, "lumen_sentinel": 8, "saucer": 2, "vrask_hunter": 2 } within260=3
+[autotest] t=16:00 lvl=59 kills=3313 enemies=68 summons=7/8 projectiles=17 hp=120 step_avg=1.65ms
+[autotest]    unit FSM: { "FOLLOWING": 3, "RETURNING": 4 }
+[autotest] boss spawned at 1020.0 s
+[autotest] Shadow Bolt aim switched to Strongest
+[metric] t=1020 avg_horde=7.5 now=8 cap=8 w8/8 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=5 lvl=61 kills=3582 enemies=83 hp=119 boss_hp=25500 crystals=248 xp=8044
+[metric]    summon dmg taken this window: broodling=31 lumen_sentinel=398 vrask_hunter=194
+[metric]    alive by kind: { "grey_overseer": 8, "grey_drone": 40, "concord_terraformer": 3, "saucer": 4, "broodling": 11, "prism": 1, "lumen_sentinel": 11, "vrask_hunter": 4, "boss": 1 } within260=8
+[autotest] t=17:00 lvl=61 kills=3582 enemies=83 summons=8/8 projectiles=14 hp=119 step_avg=1.70ms
+[autotest]    unit FSM: { "RETURNING": 2, "ENGAGING": 3, "CASTING": 2, "FOLLOWING": 1 }
+[metric] t=1080 avg_horde=4.8 now=5 cap=8 w5/8 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=11 lvl=65 kills=3842 enemies=61 hp=120 boss_hp=16825 crystals=11 xp=9292
+[metric]    summon dmg taken this window: grey_drone=63 broodling=15 lumen_sentinel=296 vrask_hunter=112 boss=339 harvester_beam=229
+[metric]    alive by kind: { "saucer": 4, "broodling": 9, "concord_terraformer": 3, "grey_drone": 30, "lumen_sentinel": 5, "grey_overseer": 4, "boss": 1, "reap_emitter": 4, "prism": 1 } within260=5
+[autotest] t=18:00 lvl=65 kills=3842 enemies=61 summons=5/8 projectiles=17 hp=120 step_avg=1.72ms
+[autotest]    unit FSM: { "FOLLOWING": 5 }
+[metric] t=1140 avg_horde=6.9 now=6 cap=8 w6/8 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=4 lvl=66 kills=4028 enemies=77 hp=120 boss_hp=14261 crystals=68 xp=9619
+[metric]    summon dmg taken this window: grey_drone=45 broodling=165 lumen_sentinel=104 harvester_beam=494
+[metric]    alive by kind: { "grey_drone": 41, "concord_terraformer": 3, "broodling": 15, "grey_overseer": 4, "saucer": 2, "lumen_sentinel": 9, "boss": 1, "prism": 2 } within260=1
+[autotest] t=19:00 lvl=66 kills=4028 enemies=77 summons=6/8 projectiles=17 hp=120 step_avg=1.74ms
+[autotest]    unit FSM: { "FOLLOWING": 6 }
+[autotest] boss defeated at 1189.2 s
+[autotest] countdown reached 0:00 at 1200.0 s - THE RECKONING begins
+[metric] t=1200 avg_horde=3.5 now=4 cap=8 w4/8 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=16 lvl=71 kills=4266 enemies=85 hp=120 boss_hp=0 crystals=101 xp=11162
+[metric]    summon dmg taken this window: lumen_sentinel=196 boss=325 harvester_beam=749
+[metric]    alive by kind: { "grey_drone": 42, "concord_terraformer": 3, "broodling": 24, "grey_overseer": 5, "saucer": 3, "lumen_sentinel": 6, "prism": 1, "vrask_hunter": 1 } within260=4
+[autotest] t=20:00 lvl=71 kills=4266 enemies=85 summons=4/8 projectiles=10 hp=120 step_avg=1.76ms
+[autotest]    unit FSM: { "FOLLOWING": 4 }
+[metric] t=1260 avg_horde=4.3 now=1 cap=8 w1/8 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=12 lvl=72 kills=4519 enemies=146 hp=58 boss_hp=0 crystals=106 xp=11708
+[metric]    summon dmg taken this window: grey_drone=100 broodling=249 lumen_sentinel=135 vrask_hunter=50 mothership_eye=734
+[metric]    alive by kind: { "grey_drone": 31, "broodling": 49, "concord_terraformer": 3, "grey_overseer": 14, "saucer": 30, "lumen_sentinel": 11, "vrask_hunter": 8 } within260=58
+[autotest] t=21:00 lvl=72 kills=4519 enemies=146 summons=1/8 projectiles=10 hp=58 step_avg=1.80ms
+[autotest]    unit FSM: { "FOLLOWING": 1 }
+[autotest] ===== NECROPATHY AUTOTEST SUMMARY =====
+[autotest] result: VICTORY / RUN COMPLETE (run_complete)
+[autotest] time reached: 21:03 elapsed (1263.8 s game time, 270.0 s real time); past 0:00: 63.8 s; Reckoning waves: 7
+[autotest] kills: 4524 | level: 72
+[autotest] level pacing: 01:00=L6 03:00=L19 05:00=L27 10:00=L44 15:00=L57 17:00=L61 20:00=L71 | reached: L2@00:26 L5@00:47 L10@01:46 L15@02:22 L20@03:10 L25@04:09 L30@05:30 L35@06:42 L40@08:06 L45@10:08 L50@12:02 L55@14:12 L60@16:16
+[autotest] build complete: at 15:33, level 58
+[autotest] horde: 1 alive / capacity 8 (warrior 1/8, archer 0/0, mage 0/0, mender 0/0, warder 0/0, bishop 0/0, abomination 0/0, rogue 0/0, gargoyle 0/0, frost_wraith 0/0, bone_hound 0/0, banshee 0/0, corpse_catapult 0/0)
+[autotest] summons spawned: 105, died: 56, hard recalls: 2 (stall recalls: 0)
+[autotest] boss spawned: yes at 1020.0 s | boss defeated: yes at 1189.2 s | boss HP left: 0 / 25500
+[autotest] player HP: 0 / 120 (invulnerable: false)
+[autotest] picks (79): plague_cloud 1, soul_conduit 1, lingering_malediction 1, necrotic_expanse 1, corpse_explosion 1, necrotic_expanse 2, shade_stride 1, lingering_malediction 2, shade_stride 2, plague_cloud 2, bone_spear 1, bone_spear 2, lingering_malediction 3, corpse_explosion 2, shade_stride 3, vampiric_rite 1, necrotic_expanse 3, lingering_malediction 4, plague_cloud 3, bone_spear 3, bone_spear 4, corpse_explosion 3, necrotic_expanse 4, vampiric_rite 2, corpse_explosion 4, shade_stride 4, lingering_malediction 5, bone_spear 5, necrotic_expanse 5, vampiric_rite 3, vampiric_rite 4, vampiric_rite 5, plague_cloud 4, shade_stride 5, plague_cloud 5, corpse_explosion 5, shadow_bolt 2, soul_siphon 1, soul_siphon 2, EVOLVE ossuary_lance, soul_siphon 3, soul_siphon 4, EVOLVE grave_eruption, soul_siphon 5, shadow_bolt 3, EVOLVE soul_rapture, soul_conduit 2, EVOLVE pestilence, shadow_bolt 4, warding_ritual 1, soul_conduit 3, shadow_bolt 5, soul_conduit 4, warding_ritual 2, soul_conduit 5, EVOLVE void_barrage, warding_ritual 3, warding_ritual 4, warding_ritual 5, warrior 2, warrior 3, warrior 4, warrior 5, skip, skip, skip, skip, skip, skip, skip, skip, skip, skip, dark_restoration, skip, skip, dark_restoration, skip, skip
+[autotest] wards on you: 0 total, absorbed 0 dmg | 0 wards in 0 s with 2+ Warders/Bishops alive (0.0 / min) | heal casts: 0 | ally barriers: 0, barrier dmg absorbed: 0
+[autotest] evolutions: ossuary_lance@08:01, grave_eruption@08:41, soul_rapture@09:29, pestilence@10:04, void_barrage@12:33
+[autotest] evolutions by type: spell: ossuary_lance@08:01, grave_eruption@08:41, soul_rapture@09:29, pestilence@10:04, void_barrage@12:33 | summon: none
+[autotest] summon evolutions: lich raised 0 (capped 0) | merge converted 0, dissolved 0 | aura pulses 0 | merged classes: none
+[autotest] winter revenant: shatters 0 (capped 0), shatter hits 0, shatter dmg 0 | death novas 0, nova hits 0, nova freezes 0, nova dmg 0
+[autotest] summon output by source (dmg/heal/shield): warrior=4160/0/0 bash=755/0/0
+[autotest] summon output by class (dmg/heal/shield): warrior=4915/0/0
+[autotest] recipe book: 5 / 83 discovered (void_barrage, ossuary_lance, soul_rapture, grave_eruption, pestilence) | Recipes view rows built: 83 (saved: false)
+[autotest] codex: 20 entries met this run (spell 5, summon 1, enemy 13, boss 1) | new to the save 20 | save: spell 5/54, summon 1/30, enemy 13/260, boss 1/45, evolutions 5/83
+[autotest] epilogue: parts=15 (acts=15) open=1 seen=0 panels=59 cards_ok=true autoplay_pending=true
+[autotest] volleys: shots 34017 | hits 13348 | dmg 177969 | peak 108/320 | capped volleys 0 | boss hits capped 817 | barrages 14 | soul_siphon 87152, bone_spear 54166, shadow_bolt 26238, corpse_explosion 5101, plague_cloud 4410, warrior 900
+[visual] adaptive quality: level 3, peak 3, steps down 6, up 3
+[autotest] victory screen: title=The Harvest Ends best_overtime=63 new_record=true highlights=8
+[autotest] beams: fired 1223 (probe 758, lock 107, sweep 338, eye 20) | refused 98 | cancelled 493 | peak at once 10 | hits on summons 1014 (dmg 5861), on you 147 (dmg 434) | reflected by orb 0, by barrier 0 (enemy hits 0, dmg 0) | prism splits 9 | bone wall stops 0
+[autotest] abduction: lifts 110 (windups 159, lost 36) | rescues 44 (saucer fell) | taken 48 | refused: cap 2, too heavy 0 | peak held 5 | saucers shot down 127 | air: whiffs 137, hits 10545
+[autotest] terraforming: on | pods landed 20, destroyed 17, refused 12 | cells grown 1005, peak live 142, burnt 904 (burns capped 2813), live at the end 101 | healed on turf 134 (brood 8, harvesters 455, vrask 18, luminous 22)
+[autotest] final harvest: began 20:00 | eye beams 8 (refused 0) | saucers spawned 35 | lifts past the cap 5 | peak held 5
+[autotest] concord kinds (spawned/killed): brood: broodling 1411/1364 first 0:01 (dmg to you 149, to summons 723) | harvesters: grey_drone 2403/2373 first 0:00 (dmg to you 18, to summons 716), saucer 157/127 first 1:03 (dmg to you 0, to summons 0), concord_terraformer 20/17 first 0:42 (dmg to you 0, to summons 0), grey_overseer 241/228 first 1:07 (dmg to you 0, to summons 0), specimen_tank 16/8 first 5:00 (dmg to you 0, to summons 0), reactor_vent 10/5 first 10:00 (dmg to you 0, to summons 0), reap_emitter 4/3 first 17:52 (dmg to you 0, to summons 0) | vrask: vrask_hunter 78/70 first 5:04 (dmg to you 38, to summons 664) | luminous: lumen_sentinel 243/233 first 3:01 (dmg to you 153, to summons 1976), prism 78/78 first 3:02 (dmg to you 0, to summons 0), luminous_archon 1/1 first 12:30 (dmg to you 17, to summons 295) | vrask cloak cut 39, reveals 85
+[autotest] concord stage: ark (The Ark of the Concord) | playable true | boss harvester (script harvester) | enemy x3.00 HP / x2.50 dmg from 7:00 | soul ash x1.50 | reckoning kind saucer, final harvest true
+[autotest] ark: tanks raised 16, broken 8, left behind 8 | beasts freed 16, bites on the Concord 2 (dmg 37, kills 2) | vents raised 10, broken 5, left behind 5, breaths 21 (cells seeded 94) | archon killed in 131s
+[autotest] ark events (3): 5:00 specimen_tank, 10:00 reactor_vent, 12:30 luminous_archon
+[autotest] ark kinds: grey overseer 241/228, pulses 120 (summons stunned 142), shields 2257 | luminous archon 1/1, lances 17, halos 9 (reflected into it: see beams) | freed beasts 16/16 (no turf heal; dmg to you 0, to summons 55, to the Concord 37) | tanks 16/8 | vents 10/5
+[autotest] harvester: council: swarms 2, cloaks 2 (hits cut 2, spell reveals 6), luminous beams 12 | reaping 17:52 (lasted 55s, emitter lifts 9, emitters destroyed 3) | gardener 18:47 (rings 9, cells seeded 204, adds 32) | killed in 169s | dmg to you 125 (beams 74, touch 51), to summons 2137
+[autotest] gravebow / bone colossus: gravebow volleys 0, splits 0 (+0 arrows), pierce hits 0, dmg 0 | curses applied 0 (refreshed 0), curse bonus dmg 0 | colossus dmg 0, stomps 0 | taunted enemies 0 | shrapnel bursts 0, hits 0, dmg 0
+[autotest] necro spells: bone_spear: Lv5 EVOLVED dmg=171688 (evolved 155771) boss=2037 volleys=1340 | soul_siphon: Lv5 EVOLVED dmg=154511 (evolved 151160) boss=4498 healed=309 summon_heal=1204 bursts=1038 | corpse_explosion: Lv5 EVOLVED dmg=241449 (evolved 214116) boss=1741 bursts=1573 chain=302 | plague_cloud: Lv5 EVOLVED dmg=160614 (evolved 152229) boss=2533 clouds=406 novas=242 rot_bonus_dmg=120060
+[autotest] later spells: death_mark: not taken | bone_wall: not taken | soul_chains: not taken | wither: not taken | raise_dead: not taken
+[autotest] later spell passives: grim_ledger Lv0 bonus_dmg=0 | spirit_binding Lv0 | restless_dead Lv0 | temporary summons spawned=0
+[autotest] horde passives: bone_plating Lv 0 (dmg prevented 0) | unholy_precision Lv 0 (crits 0, crit bonus dmg 0) | unholy_resilience Lv 0 (dmg prevented 0: area 0, holy 0) | bound_souls Lv 0 (soft recalls 16, hard recalls 2)
+[autotest] class passives: blood_scent Lv 0 (fast: Archers, Rogues, Gargoyles, Bone Hounds, Grave Drones, Succubi, Blood Spawn, Fallen Heroes, Ghost Saucers, Powder Wraiths, Bound Ophans, Bonehorns) | mournsong Lv 0 (extra debuff s 0) | siegecraft Lv 0 (siege bonus dmg 0) | summon dmg to structures 695 (catapults 0)
+[autotest] synergies active at end: none | activations: none
+[autotest] synergy bonus: flesh_rampart hits=0 dmg=0 | killing_field hits=0 dmg=0 | death_from_above hits=0 dmg=0 | wild_hunt hits=0 dmg=0 | cold_blood hits=0 dmg=0 | shatterfall hits=0 dmg=0 | requiem hits=0 dmg=0 | charnel_menagerie hits=0 dmg=0 | baying frenzies=0 | marks staggered=0 swooped=0 | dash resets=0 | requiem +0s
+[autotest] level-up offers: hands 75, new-item cards 48, later items 27 (56%) in 21 hands (28%), distinct later items offered 16
+[autotest] level-up actions: rerolls used 2/2, banishes used 2/2 (banished: necrotic_vigor, soul_recycling), skips 14
+[autotest] shadow bolt: 115983 dmg in Nearest mode, 100575 dmg in Strongest mode; to boss: 7365 of 25500 total boss dmg
+[autotest] stats: abduction_lifts=110 abduction_lifts_uncapped=5 abduction_refused_cap=2 abduction_rescues=44 abduction_saucers_down=127 abduction_taken=48 archon_halos=9 archon_kill_time=131 archon_lances=17 archon_spawned=1 ark_beast_bite_dmg=37 ark_beast_bites=2 ark_beast_concord_kills=2 ark_beasts_freed=16 ark_tanks_broken=8 ark_tanks_left=8 ark_tanks_raised=16 ark_vent_breaths=21 ark_vents_broken=5 ark_vents_left=5 ark_vents_raised=10 beam_dmg_summons=5861 beam_dmg_you=434 beam_hits_summons=1014 beam_hits_you=147 beam_prism_splits=9 beams_cancelled=493 beams_fired=1223 beams_fired_eye=20 beams_fired_lock=107 beams_fired_probe=758 beams_fired_sweep=338 beams_refused=98 boss_advance_time=10 boss_atk_archon_lance=17 boss_atk_brood_swarm=2 boss_atk_gardener=1 boss_atk_gardener_adds=6 boss_atk_gardener_ring=9 boss_atk_luminous_beams=12 boss_atk_reaping=1 boss_atk_vrask_cloak=2 boss_kills=1 bossdmg_bash=124 bossdmg_bone_spear=1443 bossdmg_corpse_explosion=318 bossdmg_death_nova=900 bossdmg_eruption=734 bossdmg_eruption_spikes=1006 bossdmg_lance=2037 bossdmg_pestilence=1632 bossdmg_plague_cloud=338 bossdmg_rapture=4296 bossdmg_rapture_burst=201 bossdmg_shadow_bolt=1251 bossdmg_soul_siphon=2937 bossdmg_void=7365 bossdmg_void_shard=0 bossdmg_warrior=908 bot_dash_crowd=1 bot_dash_telegraph=201 chest_count_1=8 chest_evolutions=5 chest_items=8 chests_opened=8 chests_pity=6 chests_spawned=8 concord_air_hits=10545 concord_air_whiffs=137 corpse_bursts=1573 damage_dealt=1132589 damage_to_player=635 damage_to_summons=7305 dash_distance=22220 dash_hits_avoided=3 dashes=202 death_novas=242 death_warrior_by_boss=14 death_warrior_by_broodling=5 death_warrior_by_grey_drone=3 death_warrior_by_harvester_beam=13 death_warrior_by_lumen_sentinel=4 death_warrior_by_luminous_archon=2 death_warrior_by_mothership_eye=4 death_warrior_by_vault_beast=1 death_warrior_by_vrask_hunter=10 dmg_bash=755 dmg_bolt=22678 dmg_bone_spear=54166 dmg_corpse=27333 dmg_corpse_explosion=5101 dmg_death_nova=47062 dmg_eruption=131206 dmg_eruption_spikes=82909 dmg_lance=155771 dmg_nova=5743 dmg_pestilence=105166 dmg_plague=8385 dmg_plague_cloud=4410 dmg_rapture=112465 dmg_rapture_burst=38694 dmg_resisted_boss=20934 dmg_resisted_saucer=638 dmg_resisted_vrask_hunter=235 dmg_shadow_bolt=26238 dmg_siphon=3351 dmg_soul_siphon=87152 dmg_spear=15917 dmg_vault_beast_bite=37 dmg_void=169225 dmg_void_shard=24653 dmg_warrior=4160 enemy_healing=505 eruption_chains=302 evolutions=5 harvest_eye_beams=8 harvester_adds=32 harvester_cloak_cut=2 harvester_gardener_at=1126 harvester_kill_time=169 harvester_reaping_at=1071 harvester_reaping_time=55 harvester_reveals=6 harvester_rings=9 holy_shield_absorbed=231586 holy_shields_broken=1056 kill_boss=1 kill_broodling=1364 kill_concord_terraformer=17 kill_grey_drone=2373 kill_grey_overseer=228 kill_lumen_sentinel=233 kill_luminous_archon=1 kill_prism=78 kill_reactor_vent=5 kill_reap_emitter=3 kill_saucer=127 kill_specimen_tank=8 kill_vault_beast=16 kill_vrask_hunter=70 kills_by_bash=11 kills_by_bolt=345 kills_by_bone_spear=227 kills_by_corpse=580 kills_by_corpse_explosion=19 kills_by_death_nova=121 kills_by_eruption=443 kills_by_eruption_spikes=224 kills_by_lance=409 kills_by_nova=28 kills_by_pestilence=273 kills_by_plague=105 kills_by_plague_cloud=15 kills_by_rapture=288 kills_by_rapture_burst=188 kills_by_shadow_bolt=60 kills_by_siphon=21 kills_by_soul_siphon=317 kills_by_spear=377 kills_by_vault_beast_bite=2 kills_by_void=362 kills_by_void_shard=47 kills_by_warrior=62 levelup_banishes=2 levelup_rerolls=2 levelup_skips=14 march_zones_entered=3 miniboss_chests=1 minibossdmg_bash=4 minibossdmg_bone_spear=811 minibossdmg_corpse_explosion=107 minibossdmg_death_nova=784 minibossdmg_eruption=1032 minibossdmg_eruption_spikes=1144 minibossdmg_lance=1937 minibossdmg_pestilence=1663 minibossdmg_plague_cloud=129 minibossdmg_rapture=2925 minibossdmg_rapture_burst=697 minibossdmg_shadow_bolt=665 minibossdmg_soul_siphon=2242 minibossdmg_void=4075 minibossdmg_void_shard=179 minibossdmg_warrior=92 nova_kills=28 overseer_pulse_stuns=142 overseer_pulses=120 overseer_shields=2257 plague_clouds=406 player_dmg_from_boss=51 player_dmg_from_broodling=149 player_dmg_from_grey_drone=18 player_dmg_from_harvester_beam=74 player_dmg_from_lumen_sentinel=153 player_dmg_from_luminous_archon=17 player_dmg_from_mothership_eye=131 player_dmg_from_vrask_hunter=38 player_healing=315 priest_heals=0 priest_wards=0 pu_collected_feast=6 pu_collected_frenzy=1 pu_collected_hyper=2 pu_collected_magnet=2 pu_collected_nova=1 pu_collected_stasis=3 pu_expired_feast=1 pu_expired_hyper=1 pu_magnet_crystals=272 pu_pity_drops=5 pu_spawned_feast=7 pu_spawned_frenzy=1 pu_spawned_hyper=3 pu_spawned_magnet=2 pu_spawned_nova=1 pu_spawned_stasis=3 pu_uptime_frenzy=12 pu_uptime_hyper=19 pu_uptime_stasis=15 rallies=14 rally_buff_time=112 rally_heal=619 rally_knockbacks=16 rally_meter_fills=14 rally_minion_dmg=1427 rally_raised=21 rally_recalled=10 rapture_bursts=1038 reap_emitter_lifts=9 reap_emitters_down=3 reckoning_spawned=246 replacements=76 rot_bonus_dmg=120060 rot_kills=2022 saucer_windups=159 saucer_windups_lost=36 siphon_healed=309 siphon_summon_heal=1204 spawned_broodling=1411 spawned_concord_terraformer=20 spawned_grey_drone=2403 spawned_grey_overseer=241 spawned_lumen_sentinel=243 spawned_luminous_archon=1 spawned_prism=78 spawned_reactor_vent=10 spawned_reap_emitter=4 spawned_saucer=157 spawned_specimen_tank=16 spawned_vault_beast=16 spawned_vrask_hunter=78 spear_volleys=1340 structdmg_bash=202 structdmg_bolt=1972 structdmg_bone_spear=1379 structdmg_corpse=1458 structdmg_corpse_explosion=260 structdmg_death_nova=1156 structdmg_eruption=2505 structdmg_eruption_spikes=2011 structdmg_lance=5742 structdmg_nova=652 structdmg_pestilence=3318 structdmg_plague=673 structdmg_plague_cloud=157 structdmg_rapture=4614 structdmg_rapture_burst=635 structdmg_shadow_bolt=502 structdmg_siphon=17 structdmg_soul_siphon=684 structdmg_spear=1652 structdmg_void=5883 structdmg_void_shard=435 structdmg_warrior=493 summon_dmg_from_boss=664 summon_dmg_from_broodling=723 summon_dmg_from_grey_drone=716 summon_dmg_from_harvester_beam=1473 summon_dmg_from_lumen_sentinel=1976 summon_dmg_from_luminous_archon=295 summon_dmg_from_mothership_eye=734 summon_dmg_from_vault_beast=55 summon_dmg_from_vrask_hunter=664 summon_healing=1823 summon_soft_recalls=16 summon_stunned_seconds=1022 summon_stuns=252 summon_stuns_abduction=110 summon_stuns_overseer_pulse=142 terra_burns_capped=2813 terra_cells_burnt=904 terra_cells_grown=1005 terra_heal_brood=8 terra_heal_harvesters=455 terra_heal_luminous=22 terra_heal_vrask=18 terra_heals=134 terra_pods_destroyed=17 terra_pods_landed=20 terra_pods_refused=12 terra_seeded_gardener=204 terra_seeded_vents=94 void_shards=9876 volley_barrages=14 vrask_cloak_cut=39 vrask_reveals=85 ward_absorbed=0 warrior_bashes=196 warrior_kills=73 wave_events=12 xp_collected=11724 xp_dropped=10847
+[autotest] boss attacks: brood_swarm=2 vrask_cloak=2 luminous_beams=12 reaping=1 gardener_ring=9 gardener_adds=6 | wrath: no | hammer soaked by undead: 0 | charges stopped by undead: 0 (shielding the player: 0) | judgment hits: 0 | call soldiers: 0 | holy zones boss/grave: 0/0
+[autotest] crimson march: zones entered 3 (final: Zone IV  -  The Bridge of Stars) | placed/destroyed/escaped: outposts 0/0/0 generators 0/0/0 carts 0/0/0 standards 0/0/0 | outpost reinforcements 0 | ward zones 0
+[autotest] march enemies: aura buff pulses 0 | halberd cleave hits 0 | dmg resisted: shieldbearer 0, boss 20934 | kills: shieldbearer=0 banner_bearer=0 halberdier=0
+[autotest] marshal vael: last stand no | cleave summon hits 0, soaked for the player 0 | command soldiers 0
+[autotest] march events (3): 5:00 zone_II, 10:00 zone_III, 15:00 zone_IV
+[autotest] stage events fired (0): 
+[autotest] templar charges: 0 (body-blocked by warriors: 0) | temporary summons spawned: 0
+[autotest] obstacle collisions resolved: player=4 summons=874 enemies=15835
+[autotest] class abomination: Lv 0, alive 0/0, deaths 0 | dmg 0 (abomination=0 abom_stomp=0) | abom_stomps=0 abom_stomp_hits=0
+[autotest] class rogue: Lv 0, alive 0/0, deaths 0 | dmg 0 (rogue=0 rogue_dash=0 rogue_bleed=0) | rogue_dashes=0 rogue_dash_hits=0
+[autotest] class gargoyle: Lv 0, alive 0/0, deaths 0 | dmg 0 (gargoyle=0 gargoyle_swoop=0) | gargoyle_swoops=0 gargoyle_swoop_hits=0
+[autotest] class frost_wraith: Lv 0, alive 0/0, deaths 0 | dmg 0 (frost_wraith=0) | frost_deep_freezes=0 frost_freezes=0 frost_boss_freezes=0 frost_frozen_seconds=0 frost_chills=0
+[autotest] class bone_hound: Lv 0, alive 0/0, deaths 0 | dmg 0 (bone_hound=0 hellhound=0 hellhound_burn=0 hellhound_trail=0) | hound_bites=0 hound_pack_bites=0 hound_pack_bonus_dmg=0 hellhound_burns=0 hellhound_trail_patches=0
+[autotest] class banshee: Lv 0, alive 0/0, deaths 0 | dmg 0 (banshee=0 keening_lady=0) | banshee_dirges=0 banshee_dirge_hits=0 dirge_debuff_seconds=0 keening_waves=0 keening_silenced=0 keening_heals_silenced=0
+[autotest] class corpse_catapult: Lv 0, alive 0/0, deaths 0 | dmg 0 (corpse_catapult=0 ossuary_engine=0 ossuary_shards=0) | catapult_volleys=0 catapult_boulders=0 catapult_boulder_hits=0 catapult_structure_dmg=0 ossuary_shard_fields=0 hazards_dropped=0
+[autotest] class specials: cancelled by recall 0 | ended inside an obstacle 0
+[autotest] special evolutions: shadow reaper: chain dashes 0, cooldown resets 0, bleed stacks added 0, max stacks 0, rogue bleed dmg (all) 0 | cathedral horror: stuns 0 (boss 0), stunned s 0.0, stone forms 0, stone s 0.0, dmg prevented by stone 0
+[autotest] grave step: dashes 202 (bot: crowd 1, hit 0, telegraph 201) | hits avoided in dash i-frames 3 | blocked 0, shortened by obstacles 0, ended inside an obstacle 0, avg length 110 px | charges 1, cooldown 5.00 s
+[autotest] dread rally: rallies 14 | meter fills 14, fill times s [128 79 72 62 56 57 65 48 59 53 54 54 68 45] (avg 64 s), meter now 74% | knockbacks 16 | summons called back 10 | heal 619 | minion dmg under buff 1427 (est. +dmg part 407) | buff time 112 s
+[autotest] army formation: bone_ring: 1264s kills 4524 army_dmg 7305 recalls 2 spread max 1052 mean 145
+[autotest] character: gravecaller (The Gravecaller) | starting spell shadow_bolt Lv 5 EVOLVED | Baseline stats (Max HP 120, move speed 110) | innate: none | characters unlocked this run: bone_oracle, plague_scholar, carrion_lord, fallen_confessor | unlocked in the profile: gravecaller, bone_oracle, fallen_confessor, carrion_lord, plague_scholar (saved: false)
+[autotest] stuck_units=0 (touching an obstacle: 0) {  }
+[metric] boss_hp_at_0=0 min_hp_before_0=68
+[autotest] peaks: enemies=146 summons=8 projectiles=46 effects=34 crystals=250
+[autotest] nodes created (pools): enemies=146 summons=8 projectiles=46 effects=34 crystals=250
+[autotest] simulation step: avg 1.81 ms, worst 34.12 ms
+[autotest] power-ups: spawned 17 (magnet=2 feast=7 hyper=3 stasis=3 frenzy=1 nova=1) | collected 15 (magnet=2 feast=6 hyper=2 stasis=3 frenzy=1 nova=1) | expired (magnet=0 feast=1 hyper=1 stasis=0 frenzy=0 nova=0) | lost at cap 0 | pity drops 5 | crystals pulled by Soul Magnet 272
+[autotest] buff uptime: hyper=20s (1.6%, refreshed 0) stasis=15s (1.2%, refreshed 0) frenzy=12s (0.9%, refreshed 0) | soul nova kills: 28
+[autotest] chests: spawned 8, opened 8 (x1=8 x3=0 x5=0), items granted 8 (evolutions 5), pity 6, lost at cap 0, left on ground 0
+[autotest]    chest 06:01 x1: vampiric_rite 5
+[autotest]    chest 08:01 x1: EVOLVE ossuary_lance
+[autotest]    chest 08:41 x1: EVOLVE grave_eruption
+[autotest]    chest 09:29 x1: EVOLVE soul_rapture
+[autotest]    chest 10:04 x1: EVOLVE pestilence
+[autotest]    chest 12:33 x1: EVOLVE void_barrage
+[autotest]    chest 14:43 x1: warrior 4
+[autotest]    chest 19:53 x1: dark_restoration
+[autotest] chest beacon: chests marked 8, seen on screen 8 | max off-screen arrows at once 0 | ticks with an arrow 0 (0.0 s)
+[autotest] profane pact: taken no (final Lv 0; never offered or never picked) | oath tier 0 | extra XP from pact 0, from oath 0 | extra soul ash from pact 0, from oath 0
+[autotest] meta upgrades (--meta=none): none | revivals used: 0
+[autotest] soul ash: +778 (time 150 [20:00] + kills 135 [4524] + elites 0 [0] + boss 75 + reckoning 159 [63.8 s] = 519, bonus +0% = +0, pact +0, oath +0) | bounty 500 | new total 1278 | saved: false
+[autotest] difficulty: Necromancer (necromancer) | modifiers: none | foes: HP x0.800 (growth x1.00), dmg x1.000 (growth x1.00), spawn x1.250, speed x1.00, elite chance 0.000, boss HP x1.000 | XP x1.000 | soul ash: difficulty +0%, modifiers +0%, total x1.00
+[autotest] difficulty results: soul ash difficulty +0, modifiers +0 | trickle elites promoted: 0 | holy retribution bursts: 0 (dmg to you 0, to summons 0) | player max HP at start: 120
+[autotest] stage: The Ark of the Concord | soul ash stage bonus +259 (x1.50) | stages unlocked by this run: fern_basin
+[autotest] hyper: off (Necromancer) | foes: HP growth x1.00, dmg growth x1.00, boss HP x1.000 | at 0:00 vs the standard game: HP x1.00, dmg x1.00 | soul ash hyper +0 (+0%) | Reckoning lasted 63.8 s past 0:00 | unlocked: false (by this run: false) | hyper clear recorded: no
+[autotest] skins: character gravecaller, worn default | this run: rot kills 2022, high confessors slain 0, seraphine slain with all 4 roles 0 | lifetime: rot 2022/5000, confessors 0/50, seraphine full army 0/1 | unlocked 54/220 (new: none) | setup row cards 6
+[autotest] rewards: achievements=1 (last_harvest) titles=1 unlocks=title:the_unharvested | run: temp raised 0, min HP before 0:00 57%, evolutions 5, boss slain 169.2 s after arrival | one-run achievements met: untouchable, full_ossuary (not checked: --rewards=on) | worn title: none | title row choices 2
+[autotest] demo: on=false | acts=1 | stages=graveyard,crimson_march,sanctum | save=user://save.cfg | full_game_offers=0
+[autotest] feedback: url_set=true | report_chars=122/221/314 (main menu / pause / results samples built, max 1500) | url_chars=611 | opened=never (autotest)
+exit 0

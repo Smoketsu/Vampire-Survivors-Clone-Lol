@@ -56,6 +56,8 @@ static func try_ally_barrier(u: SummonedUnit) -> void:
 	var gained := amount - best.barrier_hp  # Barrier HP actually added.
 	best.barrier_hp = amount
 	best.queue_redraw()
+	if game.dynasty != null:
+		game.dynasty.heka.cleanse(best, u.dmg_source)  # Act XII (temporary): a Warder's ward clears a Heka glyph.
 	u.ally_shield_cd = u.ally_shield_cooldown
 	game.effects.beam(u.position, best.position, Palette.COLD_BLUE)
 	game.stat_add("ally_barriers", 1.0)
@@ -87,6 +89,8 @@ static func aura_pulse(u: SummonedUnit) -> void:
 	if u.aura_heal > 0.0:
 		game.ally_grid.query(u.position, r, _buf)
 		for a: SummonedUnit in _buf:
+			if game.dynasty != null and a.active and a.heka_until > game.elapsed:
+				game.dynasty.heka.cleanse(a, u.dmg_source)  # Act XII (temporary): the Bishop's aura clears a Heka glyph.
 			if a.active and a.state != SummonedUnit.State.SPAWNING and a.hp < a.max_hp:
 				healed += game.combat.heal_unit(a, u.aura_heal)
 		var p := game.player

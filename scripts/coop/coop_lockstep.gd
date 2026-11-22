@@ -17,7 +17,7 @@
 ## ONE INPUT (per tick per slot): the move vector quantized to two signed bytes,
 ## a button byte (Grave Step, the ultimate, the Shadow Bolt aim toggle, with an
 ## optional dash direction byte for the bots) and up to MAX_COMMANDS_PER_TICK
-## commands (Cmd: level-up pick / reroll / banish / skip, chest confirm, pause,
+## commands (Cmd: level-up pick / reroll / banish / skip, chest confirm, pause, the Summer Queen's bargain,
 ## resume, leave), each a [command, argument] byte pair. Both machines apply
 ## the DECODED values at the same tick, slot 0 then slot 1, so the local player
 ## plays his own quantized input exactly like the partner's machine does.
@@ -61,7 +61,9 @@ class_name CoopLockstep
 extends RefCounted
 
 ## Commands (one byte each, with a one-byte argument).
-enum Cmd { NONE, PICK, REROLL, BANISH, SKIP, CHEST_OK, PAUSE, RESUME, LEAVE }
+enum Cmd { NONE, PICK, REROLL, BANISH, SKIP, CHEST_OK, PAUSE, RESUME, LEAVE,
+		# --- Act XV (temporary number): the Fae Court --- the Summer Queen's bargain (argument 1 accept, 2 refuse).
+		BARGAIN }
 
 ## Button bits of one input.
 const BTN_DASH: int = 1
@@ -568,6 +570,10 @@ func _apply_command(s: int, c: int, arg: int) -> void:
 		Cmd.LEAVE:
 			if s == remote:
 				_on_partner_gone("leave")
+		# --- Act XV (temporary number): the Fae Court ---
+		Cmd.BARGAIN:
+			if game.enemies.boss is BossSummerQueen:
+				(game.enemies.boss as BossSummerQueen).answer_bargain(arg == 1)  # The first answer counts (a late one is a no-op).
 
 
 # =====================================================================================

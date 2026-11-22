@@ -1,0 +1,8 @@
+A sheet of 5 separate pixel-art game DECK FURNITURE PIECES (top-down game obstacles) in one row, evenly spaced with wide empty gaps between them, on a FULLY TRANSPARENT background (real alpha). Each is simple, bold and centred in its share of the image, drawn as chunky low-resolution pixel art (shown enlarged with crisp square pixels, nearest-neighbour, 1-pixel dark outline, flat colours, at most 3 shades per colour, light from the top-left). No frame, no badge background, no ground shadow, no text, no letters.
+From left to right:
+1. a ship's MAST seen from above: a thick round tarred-oak mast stub with a brass-banded base, ropes coiled round it and a furled cream sail bundle on top (a round object, about 36 px across)
+2. a ship's HATCH cover seen from above: a rectangular wooden grating hatch with iron corner brackets and a rope handle (a rectangle about 44 x 30 px)
+3. a small cluster of two POWDER BARRELS seen from above, tarred oak with iron bands, one with a red stripe (about 28 px across)
+4. a big stack of four POWDER BARRELS lashed together with rope seen from above, iron bands, a spilled bit of black powder (about 38 px across)
+5. a DECK CANNON on a wooden carriage seen from above, pointing right, a black iron barrel with a brass muzzle ring and brass wheels (a rectangle about 40 x 22 px)
+Colours: tarred oak #2B1D14 #4A3220 #7A5632; brass #7A5A1C #C4912A #EBC85A; powder grey #2E3239 #5E636C #9498A0; sailcloth cream #8F8466 #D6CBA4 #F0E9CE; sash red #6A1620 #B02A30 #E2563F; lantern amber #B0661C #F2A63A #FFDF8A; navy #0E1A33 #1B3560 #2F5F96; foam white #8FB4D2 #D8E9F4; ghost green #1D4F4A #46A78F #B7F0DC; dark #0B0A10.

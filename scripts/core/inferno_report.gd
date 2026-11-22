@@ -58,12 +58,12 @@ static func print_lines(game: Game, st: Dictionary) -> void:
 			int(st.get("hand_hits_summons", 0.0)), int(st.get("hand_hits_enemies", 0.0)),
 			int(st.get("player_dmg_from_" + InfernoRulesData.HAND_SOURCE, 0.0)), int(st.get("summon_dmg_from_" + InfernoRulesData.HAND_SOURCE, 0.0))])
 	var sd := game.stage_def  # The run's stage.
-	if StageRegistry.act_of(String(sd["id"])) == 6:
+	if StageRegistry.act_id_of(String(sd["id"])) == "inferno":
 		var boss: Dictionary = sd["boss"]
 		print("[autotest] inferno stage: %s (%s) | playable %s | boss %s (script %s) | enemy x%.2f HP / x%.2f dmg from %s | soul ash x%.2f | reckoning kind %s, last judgment %s" % [
 			String(sd["id"]), String(sd["display_name"]), str(StageRegistry.is_playable(String(sd["id"]))),
 			String(boss["id"]), String(boss.get("script", boss["id"])), float(sd["enemy_hp_mult"]), float(sd["enemy_damage_mult"]),
-			EmpireReport._clock(float(sd.get("enemy_mult_from", 0.0))), float(sd["ash_mult"]),
+			EmpireReport._clock(float(sd.get("enemy_mult_from", 0.0))), StageRegistry.ash_mult_of(String(sd["id"])),
 			String((sd["reckoning"] as Dictionary).get("kind", "inquisitor")), str(not inf.judgment.cfg.is_empty())])
 	# --- Act VI: the Burning Gate ---
 	BurningGateReport.print_lines(game, st)  # The Gatekeeper, the river, Gate Crashed, the stage's kinds, Moloch (each when it ran).

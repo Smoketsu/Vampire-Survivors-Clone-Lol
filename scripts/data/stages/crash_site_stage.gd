@@ -40,12 +40,10 @@ const BOSS_TIME: float = 1020.0  # TUNING (not in GDD) 17:00, as on every stage
 const ENEMY_HP_MULT: float = 2.15  # TUNING (not in GDD) brief: a step above Liberty Heights (placeholder, tuned in the balance pass)
 ## Enemy damage multiplier of this stage on top of the shared time scaling
 ## (Liberty Heights's 1.5, kept: the step up is in HP).
-const ENEMY_DAMAGE_MULT: float = 1.5  # TUNING (not in GDD) placeholder, tuned in the balance pass
+const ENEMY_DAMAGE_MULT: float = 1.7  # TUNING (not in GDD) reorder pass part 3 (slot tuning): 1.5 -> 1.7: Act XIII now (built as Act IX), 1/10 bot deaths and mean min HP 69 (before: placeholder, tuned in the balance pass)
 ## Elapsed game seconds from which the two multipliers apply to regular
 ## enemies (the boss always gets them).
 const ENEMY_MULT_FROM: float = 420.0  # TUNING (not in GDD) placeholder (Acts III to VIII: 7:00)
-## Soul Ash multiplier of a run on this stage (its own end-screen line).
-const ASH_MULT: float = 1.0  # TUNING (not in GDD) owner decision Oct 2026, GDD §15.0 "Ossuary expansion: owner decisions": every act restarts, stage 1 of Act IX
 
 ## The four zones (owner-approved proposal names), each from `start` game
 ## seconds (clock-driven, MarchDirector): its floor look ("ground": a
@@ -254,12 +252,8 @@ const STAGE := {
 	"id": ID,
 	"display_name": "The Crash Site",
 	"short_name": "Crash Site",
-	"chapter": "Chapter XXV",
-	"act": 9,  # Act IX, the Concord of Stars.
 	"playable": true,  # Owner decision (Nov 2026): "Ship it" after the art reviews and playtest passes (GDD §15.0 "Acts VI–IX go live").
 	"description": "A Harvester scout ship lies broken in the ruins of the capital, and the Brood is hatching from it: the Concord has come to find out why the dead no longer rise for its harvest.",
-	"unlock": {"stage": "liberty_heights", "boss_kills": 1},  # Brief: Paragon's fall opens Act IX
-	"unlock_text": "Defeat Paragon at Liberty Heights to unlock.",
 	"boss": BOSS,
 	"segments": SEGMENTS,
 	"events": EVENTS,
@@ -274,7 +268,6 @@ const STAGE := {
 	"enemy_hp_mult": ENEMY_HP_MULT,
 	"enemy_damage_mult": ENEMY_DAMAGE_MULT,
 	"enemy_mult_from": ENEMY_MULT_FROM,
-	"ash_mult": ASH_MULT,
 	"march": MARCH,  # The four clock-driven zones (MarchDirector).
 	"crash_site": CRASH_SITE,  # CrashSiteDirector: the crater, Infestation's eggs, Nothing Hatched, the Brood Matriarch.
 	"concord": true,  # Act IX: Beams, Abduction, Terraforming (ConcordRules).

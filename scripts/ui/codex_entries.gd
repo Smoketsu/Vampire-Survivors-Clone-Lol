@@ -147,6 +147,60 @@ static func section_entries(section: String) -> Array:
 				var b := _boss(id)
 				b["section"] = section
 				out.append(b)  # Act IX bosses.
+		# --- Act X: the Black Tide ---
+		"corsair_crew", "corsair_sea", "corsair_boats":
+			for id: String in _corsair_list(section):
+				out.append(_covenant(id, section))  # Act X kinds.
+		"corsair_bosses":
+			for id: String in CodexData.CORSAIR_BOSSES:
+				var b := _boss(id)
+				b["section"] = section
+				out.append(b)  # Act X bosses.
+		# --- Act XI (temporary): the Hall of the Slain (grouped by group) ---
+		"norse_warriors", "norse_hall", "norse_wilds":
+			for id: String in _norse_list(section):
+				out.append(_covenant(id, section))  # The Norse kinds, by group.
+		"norse_bosses":
+			for id: String in CodexData.NORSE_BOSSES:
+				var b := _boss(id)
+				b["section"] = section
+				out.append(b)  # The Hall of the Slain's bosses.
+		# --- Act XII (temporary number): the Necropolis Dynasty (grouped by group) ---
+		"dynasty_dead", "dynasty_beasts", "dynasty_guard", "dynasty_priests", "dynasty_stone":
+			for id: String in _dynasty_list(section):
+				out.append(_covenant(id, section))  # Act XII kinds, by group.
+		"dynasty_bosses":
+			for id: String in CodexData.DYNASTY_BOSSES:
+				var b := _boss(id)
+				b["section"] = section
+				out.append(b)  # Act XII bosses.
+		# --- Act XIII (temporary number): the Celestial Host (grouped by group) ---
+		"host_lights", "host_soldiers", "host_choir", "host_orders", "host_guardians":
+			for id: String in _host_list(section):
+				out.append(_covenant(id, section))  # Act XIII kinds, by group.
+		"host_bosses":
+			for id: String in CodexData.HOST_BOSSES:
+				var b := _boss(id)
+				b["section"] = section
+				out.append(b)  # Act XIII bosses.
+		# --- Act XIV (temporary number): the Age of Titans (grouped by group) ---
+		"primeval_swarm", "primeval_hunters", "primeval_herds", "primeval_fliers", "primeval_titans":
+			for id: String in _primeval_list(section):
+				out.append(_covenant(id, section))  # Act XIV kinds, by group.
+		"primeval_bosses":
+			for id: String in CodexData.PRIMEVAL_BOSSES:
+				var b := _boss(id)
+				b["section"] = section
+				out.append(b)  # Act XIV bosses.
+		# --- Act XV (temporary number): the Turning Year (grouped by group) ---
+		"wild_growth", "wild_fae", "wild_hunt", "wild_spirits":
+			for id: String in _wild_list(section):
+				out.append(_covenant(id, section))  # Act XV kinds, by group.
+		"wild_bosses":
+			for id: String in CodexData.WILD_BOSSES:
+				var b := _boss(id)
+				b["section"] = section
+				out.append(b)  # Act XV bosses.
 	return out
 
 
@@ -229,6 +283,17 @@ static func _city_list(section: String) -> Array[String]:
 	return CodexData.CITY_HEROES
 
 
+# --- Act X: the Black Tide ---
+## The Black Tide kinds of section `section` (CodexData.CORSAIR_*).
+static func _corsair_list(section: String) -> Array[String]:
+	match section:
+		"corsair_crew":
+			return CodexData.CORSAIR_CREW
+		"corsair_sea":
+			return CodexData.CORSAIR_SEA
+	return CodexData.CORSAIR_BOATS
+
+
 # --- Act IX: the Concord of Stars ---
 ## The Concord kinds of race section `section` (CodexData.CONCORD_*).
 static func _concord_list(section: String) -> Array[String]:
@@ -240,6 +305,73 @@ static func _concord_list(section: String) -> Array[String]:
 		"concord_vrask":
 			return CodexData.CONCORD_VRASK
 	return CodexData.CONCORD_LUMINOUS
+
+
+# --- Act XI (temporary): the Hall of the Slain ---
+## The Norse kinds of group section `section` (CodexData.NORSE_*).
+static func _norse_list(section: String) -> Array[String]:
+	match section:
+		"norse_warriors":
+			return CodexData.NORSE_WARRIORS
+		"norse_hall":
+			return CodexData.NORSE_HALL
+	return CodexData.NORSE_WILDS
+# --- Act XII (temporary number): the Necropolis Dynasty ---
+## The Dynasty kinds of group section `section` (CodexData.DYNASTY_*).
+static func _dynasty_list(section: String) -> Array[String]:
+	match section:
+		"dynasty_dead":
+			return CodexData.DYNASTY_DEAD
+		"dynasty_beasts":
+			return CodexData.DYNASTY_BEASTS
+		"dynasty_guard":
+			return CodexData.DYNASTY_GUARD
+		"dynasty_priests":
+			return CodexData.DYNASTY_PRIESTS
+	return CodexData.DYNASTY_STONE
+
+
+# --- Act XIII (temporary number): the Celestial Host ---
+## The Host kinds of group section `section` (CodexData.HOST_*).
+static func _host_list(section: String) -> Array[String]:
+	match section:
+		"host_lights":
+			return CodexData.HOST_LIGHTS
+		"host_soldiers":
+			return CodexData.HOST_SOLDIERS
+		"host_choir":
+			return CodexData.HOST_CHOIR
+		"host_guardians":
+			return CodexData.HOST_GUARDIANS
+	return CodexData.HOST_ORDERS
+
+
+# --- Act XIV (temporary number): the Age of Titans ---
+## The Titans kinds of group section `section` (CodexData.PRIMEVAL_*).
+static func _primeval_list(section: String) -> Array[String]:
+	match section:
+		"primeval_swarm":
+			return CodexData.PRIMEVAL_SWARM
+		"primeval_hunters":
+			return CodexData.PRIMEVAL_HUNTERS
+		"primeval_herds":
+			return CodexData.PRIMEVAL_HERDS
+		"primeval_fliers":
+			return CodexData.PRIMEVAL_FLIERS
+	return CodexData.PRIMEVAL_TITANS
+
+
+# --- Act XV (temporary number): the Turning Year ---
+## The Wild kinds of group section `section` (CodexData.WILD_*).
+static func _wild_list(section: String) -> Array[String]:
+	match section:
+		"wild_growth":
+			return CodexData.WILD_GROWTH
+		"wild_fae":
+			return CodexData.WILD_FAE
+		"wild_hunt":
+			return CodexData.WILD_HUNT
+	return CodexData.WILD_SPIRITS
 
 
 static func _covenant(id: String, section: String) -> Dictionary:
@@ -268,6 +400,18 @@ static func _covenant(id: String, section: String) -> Dictionary:
 		sprite = "city/" + id  # ...a Last Line kind (Act VIII)...
 	elif not SpriteBank.has(sprite) and SpriteBank.has("concord/" + id):
 		sprite = "concord/" + id  # ...a Concord of Stars kind (Act IX)...
+	elif not SpriteBank.has(sprite) and SpriteBank.has("corsair/" + id):
+		sprite = "corsair/" + id  # ...a Black Tide kind (Act X)...
+	elif not SpriteBank.has(sprite) and SpriteBank.has("norse/" + id):
+		sprite = "norse/" + id  # ...a Hall of the Slain kind...
+	elif not SpriteBank.has(sprite) and SpriteBank.has("dynasty/" + id):
+		sprite = "dynasty/" + id  # ...a Necropolis Dynasty kind (Act XII, temporary)...
+	elif not SpriteBank.has(sprite) and SpriteBank.has("host/" + id):
+		sprite = "host/" + id  # ...a Celestial Host kind (Act XIII, temporary)...
+	elif not SpriteBank.has(sprite) and SpriteBank.has("primeval/" + id):
+		sprite = "primeval/" + id  # ...an Age of Titans kind (Act XIV, temporary)...
+	elif not SpriteBank.has(sprite) and SpriteBank.has("wild/" + id):
+		sprite = "wild/" + id  # ...a Turning Year kind (Act XV, temporary)...
 	elif not SpriteBank.has(sprite):
 		sprite = "structures/" + id  # ...or a structure.
 	var kills := Meta.codex_kill_count(id)  # Lifetime kills of this kind.

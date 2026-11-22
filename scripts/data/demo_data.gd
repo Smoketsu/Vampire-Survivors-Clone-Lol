@@ -17,11 +17,11 @@ const FEATURE_TAG: String = "demo"  # TUNING (not in GDD)
 
 # ------------------------------------------------------------------ content
 
-## Acts (StageRegistry.ACTS keys) whose stages the demo lets the player play.
+## Acts (StageRegistry.ACT_ORDER ids) whose stages the demo lets the player play.
 ## Every other act's tab and stage cards stay visible, locked with LOCK_LINE.
 ## Act I = the Desecrated Graveyard, the Crimson March and the Sanctum of
-## Judgment (the marketing plan's free tier). Add an act number to widen it.
-const ACTS: Array[int] = [1]  # TUNING (not in GDD) owner request: an Act I demo
+## Judgment (the marketing plan's free tier). Add an act id to widen it.
+const ACTS: Array[String] = ["covenant"]  # TUNING (not in GDD) owner request: an Act I demo
 
 ## Lockable items (UnlockData ids) the demo may still unlock and offer: the
 ## rewards Act I content can earn (achievement rewards and the Bone Golem from

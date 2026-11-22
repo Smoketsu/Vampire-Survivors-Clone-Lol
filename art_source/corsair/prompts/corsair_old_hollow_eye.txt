@@ -1,0 +1,12 @@
+Pixel-art game sprite for a top-down 2D horde-survival game (like Vampire Survivors). Three-quarter top-down view (camera above and slightly in front), FULL BODY, FACING RIGHT, a menacing pose
+
+LOW-RESOLUTION pixel art: the whole SUBJECT is only 72 pixels tall and about 76 wide, drawn on a coarse pixel grid and shown enlarged so every pixel is a big crisp square block (nearest-neighbour). Chunky, simple, readable shapes; no detail smaller than 2 pixels except the eyes and small glints. No anti-aliasing, no gradients, no dithering, no texture noise, no soft glow haze, no fine trims, lacing or engravings.
+
+Subject (creature, no sex): OLD HOLLOW-EYE, a miniboss creature: a gigantic KRAKEN, a WHOLE OCTOPUS-like monster seen from above-front, a big bulbous purple head-mantle covered in barnacles and old harpoon scars, ONE pale blind HOLLOW EYE socket (a single huge cloudy white eye) in the middle of its head, and eight thick tentacles spreading out and curling around it with two rows of cream suckers, all rising from a ring of white FOAM. Signature shape: the big scarred head with the single hollow eye and the spread of curling tentacles.
+
+Colours: ONLY flat fills from this list, at most 3 shades per material: kraken purple #3A2150 #6B3C86 #A877BC; cream #8F8466 #D6CBA4 #F0E9CE; foam white #8FB4D2 #D8E9F4 #F6FBFF; navy #0E1A33 #1B3560
+
+Outline: a clean 1-pixel dark outline around the whole subject in the darkest shade of each part's own colour (never pure black). Light from the top-left: the top-left edges one shade lighter. Keep the main shapes clearly brighter than a near-black ground (#161A1C).
+
+Output: a square PNG with a FULLY TRANSPARENT background (real alpha, not a checkerboard, not white, no dark glow around the subject), one subject only, centred, filling about 85% of the image height. No ground, no cast shadow, no scenery, no text, no frame, no watermark. Draw ONLY ONE subject.
+Attached: (1) a game sprite for pixel size, outline weight and flat look (not its subject or colours); (2) concept art of this unit for its shape and colours only (do NOT copy its painted shading or detail level; redraw it as chunky low-resolution pixel art).

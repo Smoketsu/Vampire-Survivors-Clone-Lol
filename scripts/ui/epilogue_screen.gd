@@ -172,7 +172,7 @@ static func _all_slides(all: bool) -> Array:
 			if not card.is_empty():
 				s.append(_closing_slide(card))
 		else:
-			var goal := String((MetaData.ACHIEVEMENTS[String(part["achievement"])] as Dictionary)["description"])
+			var goal := EpilogueData.finale_boss_name(part)  # The boss whose defeat opens this part.
 			var first: Array = (part["panels"] as Array)[0]  # Its first panel, shown as a silhouette.
 			s.append({"panel": String(first[0]), "from": first[1], "to": first[2], "act": String(part["act"]),
 				"heading": EpilogueData.SEALED_HEADING, "text": EpilogueData.SEALED % goal, "tag": "", "sealed": true})

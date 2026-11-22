@@ -1,0 +1,7 @@
+A sheet of 3 separate pixel-art game OBSTACLE sprites for a top-down 2D horde-survival game (three-quarter top-down view, camera above and slightly in front), laid out in one row, evenly spaced with wide empty gaps between them, on a FULLY TRANSPARENT background (real alpha). An enchanted forest. LOW-RESOLUTION pixel art, chunky simple shapes, crisp square pixels (nearest-neighbour), a clean 1-pixel dark outline #14100C, flat colours, at most 3 shades per material, light from the top-left. No ground under them, no cast shadows, no text.
+From left to right:
+1. an old OAK TRUNK: a thick round trunk seen from above-front with moss on the bark and a few leaves (about 36 px wide, 36 px tall);
+2. a mossy STANDING STONE: a grey standing stone lying lengthwise with moss on top (about 52 px wide, 30 px tall);
+3. a THORN THICKET: a round tangled mound of bark-brown bramble canes with long thorns, a few moss tufts and three small pink blossoms (about 52 px wide, 52 px tall).
+Colours: bark brown #553C27 #86603E #B08A60; moss #274D24 #599641 #9CCB72; stone grey #57524D #86807A #B9CEE0; blossom pink #EFA6C3 only for the few small blossoms.
+Attached: a game sprite of this game for pixel size, outline weight and flat look.

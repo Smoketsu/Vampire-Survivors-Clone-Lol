@@ -103,6 +103,30 @@ const MUSIC_SIREN: StringName = &"siren"
 ## play_music() mode: the Act IX in-run loop "The Reaping Stars" (SoundData.STARSONG_SCORE;
 ## a stage whose STAGE has "music": "starsong").
 const MUSIC_STARSONG: StringName = &"starsong"
+# --- The Black Tide ---
+## play_music() mode: the Black Tide in-run loop "Dead Men's Shanty" (SoundData.SHANTY_SCORE;
+## a stage whose STAGE has "music": "shanty").
+const MUSIC_SHANTY: StringName = &"shanty"
+# --- Act VI (final order): the Hall of the Slain ---
+## play_music() mode: the Hall of the Slain in-run loop "Horns at the Last Feast" (SoundData.VALHALL_SCORE;
+## a stage whose STAGE has "music": "valhall").
+const MUSIC_VALHALL: StringName = &"valhall"
+# --- the Necropolis Dynasty (Act VII slot) ---
+## play_music() mode: the Dynasty in-run loop "The Weighing of the Heart" (SoundData.WEIGHING_SCORE;
+## a stage whose STAGE has "music": "weighing").
+const MUSIC_WEIGHING: StringName = &"weighing"
+# --- the Celestial Host (Act X slot) ---
+## play_music() mode: the Host in-run loop "Hosanna in the Silence" (SoundData.HOSANNA_SCORE;
+## a stage whose STAGE has "music": "hosanna").
+const MUSIC_HOSANNA: StringName = &"hosanna"
+# --- the Age of Titans (Act XIV slot) ---
+## play_music() mode: the Titans in-run loop "Before the Fall" (SoundData.PRIMORDIAL_SCORE;
+## a stage whose STAGE has "music": "primordial").
+const MUSIC_PRIMORDIAL: StringName = &"primordial"
+# --- the Turning Year (Act XV slot) ---
+## play_music() mode: the Turning Year in-run loop "The Turning Year" (SoundData.WILDWOOD_SCORE;
+## a stage whose STAGE has "music": "wildwood").
+const MUSIC_WILDWOOD: StringName = &"wildwood"
 ## play_music() mode: the epilogue's slow "Grave Lullaby" cue (content wave 2;
 ## MenuThemeData.EPILOGUE_VARIANT, rendered the first time the epilogue plays).
 const MUSIC_EPILOGUE: StringName = &"epilogue"
@@ -115,14 +139,24 @@ const SYNTH_SEED: int = 9001
 ## Fixed synth seed of each score loop (SoundData.SCORES id -> seed); the tide
 ## keeps the SYNTH_SEED - 2 it always had.
 const SCORE_SEEDS := {"tide": SYNTH_SEED - 2, "iron": SYNTH_SEED - 3, "bronze": SYNTH_SEED - 4, "sun": SYNTH_SEED - 5,
-	"brimstone": SYNTH_SEED - 6, "sanguine": SYNTH_SEED - 7, "siren": SYNTH_SEED - 8, "starsong": SYNTH_SEED - 9}
+	"brimstone": SYNTH_SEED - 6, "sanguine": SYNTH_SEED - 7, "siren": SYNTH_SEED - 8, "starsong": SYNTH_SEED - 9,
+	"shanty": SYNTH_SEED - 10, "valhall": SYNTH_SEED - 11, "weighing": SYNTH_SEED - 12,
+	"hosanna": SYNTH_SEED - 13, "primordial": SYNTH_SEED - 14, "wildwood": SYNTH_SEED - 15}
 ## Seed base of the lazily rendered sound packs (pack sound i uses PACK_SEED + i).
 const PACK_SEED: int = SYNTH_SEED + 5000
 ## Seed offset of each lazily rendered pack (pack sound i of pack P uses
 ## PACK_SEED + PACK_SEED_OFFSETS[P] + i), so a pack's sounds never depend on
 ## which pack was asked for first. The Act III pack keeps offset 0 (its
 ## seeds are what they always were).
-const PACK_SEED_OFFSETS := {"empire": 0, "pantheon": 1000, "shogunate": 2000, "inferno": 3000, "court": 4000, "city": 5000, "concord": 6000}
+const PACK_SEED_OFFSETS := {"empire": 0, "pantheon": 1000, "shogunate": 2000, "inferno": 3000, "court": 4000, "city": 5000, "concord": 6000,
+	# The last acts (wave 1): Black Tide 7000, Norse 8000, Dynasty 9000.
+	"corsair": 7000, "norse": 8000, "dynasty": 9000,
+	# The Celestial Host: 10000.
+	"host": 10000,
+	# The Age of Titans: 11000.
+	"titans": 11000,
+	# The Turning Year: 12000.
+	"wild": 12000}
 ## A card_select within this many ms replaces the generic ui_confirm click.
 const CONFIRM_SUPPRESS_MSEC: int = 120  # TUNING (not in GDD)
 ## Sounds that replace the generic ui_confirm click of the same press when
@@ -555,6 +589,18 @@ func prepare_pack(pack: String) -> void:
 		defs = SoundData.CITY_SOUNDS  # Act VIII
 	elif pack == "concord":
 		defs = SoundData.CONCORD_SOUNDS  # Act IX
+	elif pack == "corsair":
+		defs = SoundData.CORSAIR_SOUNDS  # the Black Tide
+	elif pack == "norse":
+		defs = SoundData.NORSE_SOUNDS  # Act VI (final order): the Hall of the Slain
+	elif pack == "dynasty":
+		defs = SoundData.DYNASTY_SOUNDS  # the Necropolis Dynasty
+	elif pack == "host":
+		defs = SoundData.HOST_SOUNDS  # the Celestial Host
+	elif pack == "titans":
+		defs = SoundData.TITANS_SOUNDS  # the Age of Titans
+	elif pack == "wild":
+		defs = SoundData.WILD_SOUNDS  # the Turning Year
 	var k := 0  # Index of the sound within its pack (its seed).
 	_mutex.lock()  # The worker reads the queue and recipes.
 	for id: String in defs:

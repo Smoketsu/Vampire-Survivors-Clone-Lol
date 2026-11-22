@@ -63,12 +63,12 @@ static func print_lines(game: Game, st: Dictionary) -> void:
 			m.supers_back, "on" if m.act_roster else "off", m.act_called,
 			", ".join(city.supers.met) if not city.supers.met.is_empty() else "none"])
 	var sd := game.stage_def  # The run's stage.
-	if StageRegistry.act_of(String(sd["id"])) == 8:
+	if StageRegistry.act_id_of(String(sd["id"])) == "city":
 		var boss: Dictionary = sd["boss"]
 		print("[autotest] city stage: %s (%s) | playable %s | boss %s (script %s) | enemy x%.2f HP / x%.2f dmg from %s | soul ash x%.2f | reckoning kind %s, martial law %s" % [
 			String(sd["id"]), String(sd["display_name"]), str(StageRegistry.is_playable(String(sd["id"]))),
 			String(boss["id"]), String(boss.get("script", boss["id"])), float(sd["enemy_hp_mult"]), float(sd["enemy_damage_mult"]),
-			EmpireReport._clock(float(sd.get("enemy_mult_from", 0.0))), float(sd["ash_mult"]),
+			EmpireReport._clock(float(sd.get("enemy_mult_from", 0.0))), StageRegistry.ash_mult_of(String(sd["id"])),
 			String((sd["reckoning"] as Dictionary).get("kind", "inquisitor")), str(not city.martial.cfg.is_empty())])
 	# Phase 2: each Act VIII stage's own lines go here (its stage, kinds and boss).
 	# --- Act VIII: Skid Row ---

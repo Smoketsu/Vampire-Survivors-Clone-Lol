@@ -47,6 +47,8 @@ const REASON_NAMES: Dictionary = {
 	"run_complete": "died in the Reckoning",  # TUNING (not in GDD)
 	"defeat": "died before 0:00",  # TUNING (not in GDD)
 	"timeout": "time limit",  # TUNING (not in GDD) autotest only
+	"extinction": "the Extinction ended it",  # TUNING (not in GDD) Act XIV, the Last Day: the meteor's victory
+	"first_spring": "the First Spring ended it",  # TUNING (not in GDD) Act XV, the World-Tree: the campaign's ending
 }
 ## Text appended to a report that REPORT_MAX_CHARS cut short.
 const CUT_MARK: String = "..."  # TUNING (not in GDD)

@@ -47,6 +47,24 @@
 ## in view (CityGlyphs, textures), and free_point_toward() pulls a Bone Ring
 ## post inside a building back toward the necromancer (StanceFormations, on a
 ## blocks layout only). Null on every other stage, so nothing changes there.
+## Act X, the Black Tide (GDD §15.0 "The Deck"): when Game.deck (DeckBounds) is
+## set, the ship's deck is the arena through ONE rule: resolve_all() ends with
+## deck.contain_all() (the necromancer and the army stop at the rail, a deck
+## enemy knocked past it drowns, swimmers and boats stay in the water, fliers
+## keep within their band), and free_point() clamps every placement onto the
+## deck. A layout with a "fixed" list (the deck's furniture) generates exactly
+## those obstacles (_fixed_obstacle(); at most one per cell, each at least
+## ArenaData.CELL_MARGIN from its cell's edges) instead of the hashed scatter.
+## Without a deck and a fixed list (every other stage) nothing here changes.
+## Act XIII, the Wheel of Thrones (GDD §15.0 "The Wheel of Thrones (Act XIII
+## phase 2)"): when a WheelOfThronesDirector is set as `wheel`, resolve_all()
+## ends with wheel.contain_all(): its turning crystal rings are MOVING WALLS
+## with gaps (bodies put back on their side, sliding toward the gaps). Null on
+## every other stage, so nothing changes there.
+## Act XV (temporary number), the Turning Year (GDD §15.0 "Overgrowth"): the
+## thorn thickets grow mid-run through add_obstacle() (one obstacle a cell,
+## put into the cell table, so every lookup sees it) and leave through
+## remove_obstacle(). Nothing calls it on any other stage.
 class_name Arena
 extends Node2D
 
@@ -74,6 +92,12 @@ class Obstacle:
 
 ## Owning run.
 var game: Game
+# --- Act XII (temporary number): the Temple of the Lioness ---
+## Obstacles taken out of the layout (the Temple's Awakening Statues,
+## remove_obstacle()): Vector3i(cell x, cell y, layout seed) -> true, so a cell
+## looked at again (a redraw, a cache drop) never rebuilds what woke. Empty on
+## every other stage, so nothing changes there.
+var _removed: Dictionary = {}
 ## Bodies pushed out of an obstacle this run, by body type (autotest stat).
 var resolved_player: int = 0
 ## Summon/obstacle overlaps resolved this run.
@@ -119,6 +143,10 @@ var citadel: CitadelDirector = null
 ## The city-block layout (CityBlocks; created in _ready() when the stage's zone
 ## layout has "blocks", null on every other stage): see the header.
 var city_blocks: CityBlocks = null
+# --- Act XIII (temporary number): the Wheel of Thrones ---
+## The turning spheres' director (set by WheelOfThronesDirector, null on every
+## other stage): its crystal rings are moving walls (see the header).
+var wheel: WheelOfThronesDirector = null
 
 
 func _ready() -> void:
@@ -190,6 +218,10 @@ func obstacle_at(pos: Vector2) -> Obstacle:
 
 ## Builds the (hash-chosen) obstacle of cell `key`, or `_empty`.
 func _generate(key: Vector2i) -> Obstacle:
+	if not _removed.is_empty() and _removed.has(Vector3i(key.x, key.y, int(_layout.get("layout_seed", 0)))):
+		return _empty  # Act XII (temporary): a statue row that woke and walked off.
+	if _layout.has("fixed"):
+		return _fixed_obstacle(key)  # Act X: the deck's authored furniture.
 	_rng.seed = hash(Vector3i(key.x, key.y, int(_layout["layout_seed"])))
 	if _rng.randf() >= float(_layout["density"]):
 		return _empty
@@ -257,6 +289,73 @@ func _generate(key: Vector2i) -> Obstacle:
 	return o
 
 
+# --- Act XII (temporary number): the Temple of the Lioness ---
+## Takes obstacle `o` out of the layout for good (THE removal path; the
+## Temple's Awakening Statues): its cell is empty from now on and stays so
+## under this layout (recorded in `_removed`), and the layer is redrawn.
+## False when `o` is no longer this cell's obstacle (a zone change rebuilt it).
+func remove_obstacle(o: Obstacle) -> bool:
+	var key := Vector2i(floori(o.center.x * _inv_cell), floori(o.center.y * _inv_cell))
+	if _cells.get(key) != o:
+		return false
+	_cells[key] = _empty
+	_removed[Vector3i(key.x, key.y, int(_layout.get("layout_seed", 0)))] = true
+	queue_redraw()
+	return true
+
+
+# --- Act XV (temporary number): the Turning Year ---
+## Puts obstacle `o` (built by the caller, its centre inside its cell's inner
+## square: ArenaData.CELL_MARGIN from each edge) into the layout mid-run: THE
+## path for an obstacle added on a scattered layout (the Turning Year's thorn
+## thickets, Thickets._grow(); at most one obstacle a cell, as the city's
+## wrecks). False when the cell already holds one, or the layout is a city or
+## a fixed deck (no free cells). Taken out again with remove_obstacle().
+## Nothing on any other stage calls it.
+func add_obstacle(o: Obstacle) -> bool:
+	if city_blocks != null or _layout.has("fixed"):
+		return false
+	if obstacle_at(o.center) != null:
+		return false  # Generates (and caches) the cell first: taken.
+	_cells[Vector2i(floori(o.center.x * _inv_cell), floori(o.center.y * _inv_cell))] = o
+	queue_redraw()
+	return true
+
+
+# --- Act X: the Black Tide ---
+## The authored obstacle of cell `key` on a FIXED layout (the layout's "fixed"
+## list: each {kind, at (world px), size (index into the kind's sizes)}; a rect
+## kind lies along x unless the entry has "vertical": true), or `_empty`. The
+## first entry whose centre lies in the cell wins. No RNG: the furniture is
+## the same in every run.
+func _fixed_obstacle(key: Vector2i) -> Obstacle:
+	for f: Dictionary in _layout["fixed"]:
+		var at: Vector2 = f["at"]
+		if Vector2i(floori(at.x * _inv_cell), floori(at.y * _inv_cell)) != key:
+			continue
+		var kind := String(f["kind"])
+		var def: Dictionary = _kinds[kind]
+		var sizes: Array = def["sizes"]  # Circle radii or rect long sides (px), smallest first.
+		var o := Obstacle.new()
+		o.kind = kind
+		o.center = at.round()
+		o.variant = absi(hash(Vector3i(key.x, key.y, 1013)))  # Cosmetic only.
+		o.size_index = clampi(int(f.get("size", 0)), 0, sizes.size() - 1)
+		var size := float(sizes[o.size_index])  # This variant's radius / long side (px).
+		var vertical := bool(f.get("vertical", false))  # A rect laid out along y.
+		if String(def["shape"]) == "circle":
+			o.is_circle = true
+			o.radius = minf(size, ArenaData.MAX_HALF_EXTENT)
+		else:
+			o.is_circle = false
+			var long_half := minf(size * 0.5, ArenaData.MAX_HALF_EXTENT)
+			var short_half := float(def["short"]) * 0.5
+			o.half = Vector2(short_half, long_half) if vertical else Vector2(long_half, short_half)
+		o.art_key = EnvironmentArt.obstacle_key(kind, o.size_index, sizes.size(), vertical)
+		return o
+	return _empty
+
+
 ## Act III, the Assembly Halls (optional layout key "free_bands", GDD §15.0
 ## "The Assembly Halls (Act III phase 2)"): true when `p` lies within a band's
 ## half width plus `margin` px of the centre line of one of `bands` (repeating
@@ -312,6 +411,8 @@ func is_blocked(pos: Vector2, r: float) -> bool:
 ## the origin cannot round away in 32-bit floats.
 func free_point(pos: Vector2, r: float) -> Vector2:
 	var p := pos if shore == null else shore.clamp_point(pos, r)  # Ul-Thalos: never in the sea.
+	if game.deck != null:
+		p = game.deck.clamp_point(p, r)  # Act X: never over the water.
 	for _i in 3:
 		var o := obstacle_at(p)
 		if o == null:
@@ -320,6 +421,8 @@ func free_point(pos: Vector2, r: float) -> Vector2:
 		if push == Vector2.ZERO:
 			return p
 		p += push * 1.05 + push.normalized() * ArenaData.FREE_POINT_MARGIN
+	if game.deck != null:
+		return game.deck.clamp_point(p, r)  # Act X: still on the deck.
 	return p if shore == null else shore.clamp_point(p, r)
 
 
@@ -416,6 +519,10 @@ func resolve_all(delta: float) -> void:
 		shore.contain_all()  # Ul-Thalos: the sea is the edge of the world.
 	if citadel != null:
 		citadel.contain_all()  # Act III, the Iron Citadel: the Shield Gate walls.
+	if game.deck != null:
+		game.deck.contain_all()  # Act X, the Black Tide: the rail is the edge of the world (and drowns).
+	if wheel != null:
+		wheel.contain_all(delta)  # Act XIII, the Wheel of Thrones: the turning spheres' moving walls.
 
 
 # --- Act VIII: the Last Line ---
@@ -461,6 +568,8 @@ func _slide_side(id: int, vt: float, speed: float, offset: float, now: float) ->
 	var side := 0.0
 	if mem != null and (mem as Vector2).y >= now:
 		side = (mem as Vector2).x
+		if city_blocks != null and side * vt < -speed * CityBlockData.SLIDE_FLIP_LEAN:
+			side = -side  # Act VIII: see SLIDE_FLIP_LEAN (a long face keeps the contact, so the memory never lapses).
 	elif absf(vt) > speed * 0.1:
 		side = signf(vt)
 	else:
@@ -602,12 +711,30 @@ func _draw_obstacle(o: Obstacle) -> void:
 	# --- Act IX: the Concord of Stars ---
 	if ConcordGlyphs.draw_obstacle(self, o):
 		return  # An Act IX stub's placeholder obstacle kind.
+	# --- Act X: the Black Tide ---
+	if CorsairGlyphs.draw_obstacle(self, o):
+		return  # An Act X stub's placeholder deck furniture.
+	# --- Act XII (temporary number): the Necropolis Dynasty ---
+	if DynastyGlyphs.draw_obstacle(self, o):
+		return  # A Dynasty stub's placeholder obstacle kind.
+	# --- Act XIII (temporary number): the Celestial Host ---
+	if HostGlyphs.draw_obstacle(self, o):
+		return  # A Host stub's placeholder obstacle kind.
+	# --- Act XIV (temporary number): the Age of Titans ---
+	if PrimevalGlyphs.draw_obstacle(self, o):
+		return  # A Titans stub's placeholder obstacle kind.
+	# --- Act XV (temporary number): the Turning Year ---
+	if WildGlyphs.draw_obstacle(self, o):
+		return  # A Turning Year thorn thicket or stub's placeholder obstacle kind.
 	# --- Act IX: the Proving Moon ---
 	if ProvingMoonGlyphs.draw_obstacle(self, o):
 		return  # A Proving Moon obstacle kind (Act IX).
 	# --- Act IX: the Ark ---
 	if ArkGlyphs.draw_obstacle(self, o):
 		return  # An Ark of the Concord obstacle kind (Act IX).
+	# --- Act XI (temporary): the Hall of the Slain ---
+	if NorseGlyphs.draw_obstacle(self, o):
+		return  # A Norse stub's placeholder obstacle kind.
 	var c := o.center
 	var dark := Color(0.06, 0.06, 0.07)
 	match o.kind:

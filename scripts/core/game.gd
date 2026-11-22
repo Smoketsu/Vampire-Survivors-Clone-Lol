@@ -88,6 +88,39 @@
 ## Final Harvest), stepped after the City's and before the obstacle push-out;
 ## null on Acts I to VIII unless a Concord kind forced there asks for it
 ## (concord_rules()).
+## Act X, the Black Tide (GDD §15.0 "Act X foundation: the Black Tide (phase
+## 1)"): `corsair` (CorsairRules) runs the pirate act's shared rules (Boarding,
+## the Deck, Strikes from the Sea, the Black Tide), stepped after the
+## Concord's and before the obstacle push-out; `deck` (DeckBounds) is its walkable
+## deck, read by Arena (the push-out ends with deck.contain_all(), free_point()
+## clamps onto it), StanceFormations (the ring posts) and the camera clamp.
+## Both null on Acts I to IX (a Black Tide kind forced elsewhere makes the rules
+## through corsair_rules(), never a deck).
+## The Hall of the Slain (the Norse act, temporarily Act XI; GDD §15.0 "The
+## Hall of the Slain foundation (phase 1)"): `norse` (NorseRules) runs its
+## shared rules (the Long Winter, Berserkergang, the Rune-Stones, Ragnarök),
+## stepped after the Concord's and before the obstacle push-out; null on every
+## other act unless a Norse kind forced there asks for it (norse_rules()).
+## Temporary Act XII (GDD §15.0 "The Necropolis Dynasty foundation (phase 1)"):
+## `dynasty` (DynastyRules) runs the Necropolis Dynasty's shared rules (Rebirth,
+## the Black Land, Heka, the Devourer's Hour), stepped after the Concord's and
+## before the obstacle push-out; null on every other act unless a Dynasty kind
+## forced there asks for it (dynasty_rules()).
+## Temporary Act XIII (GDD §15.0 "The Celestial Host foundation (phase 1)"):
+## `host` (HostRules) runs the Celestial Host's shared rules (Judgment,
+## Hallowed Light, Grace, the Last Trumpet), stepped after the Dynasty's and
+## before the obstacle push-out; null on every other act unless a Host kind
+## forced there asks for it (host_rules()).
+## Temporary Act XIV (GDD §15.0 "The Age of Titans foundation (phase 1)"):
+## `primeval` (PrimevalRules) runs the Age of Titans' shared rules (Packs,
+## Herds, Scavengers, the Stampede of Ash), stepped after the Host's and before
+## the obstacle push-out; null on every other act unless a Titans kind forced
+## there asks for it (primeval_rules()).
+## Temporary Act XV (GDD §15.0 "The Turning Year foundation (phase 1)"):
+## `wild` (WildRules) runs the Turning Year's shared rules (the seasons, Bloom
+## and Blight, Overgrowth, Spring Returns), stepped after the Titans' and
+## before the obstacle push-out; null on every other act unless a Wild kind
+## forced there asks for it (wild_rules()).
 ## Online co-op (docs/coop/DESIGN.md): `coop` (CoopSession) holds two player
 ## slots in this one simulation; the per-player fields below (player, horde,
 ## abilities, grave_step, dread_rally, ultimates, stance, character, innates,
@@ -263,6 +296,39 @@ var city: CityRules = null
 ## stage's STAGE has "concord": true, or a Concord kind spawned on another stage
 ## asked for it through concord_rules(); Acts I to VIII never create it).
 var concord: ConcordRules = null
+# --- Act X: the Black Tide ---
+## Act X, the Black Tide's shared rules (CorsairRules; null unless the stage's
+## STAGE has "corsair": true, or a Black Tide kind spawned on another stage asked
+## for it through corsair_rules(); Acts I to IX never create it).
+var corsair: CorsairRules = null
+## Act X: the ship's deck, the arena of a corsair stage (DeckBounds; created by
+## CorsairRules on a stage with "corsair" and a "deck"; null everywhere else).
+var deck: DeckBounds = null
+# --- Act XI (temporary): the Hall of the Slain ---
+## The Hall of the Slain's shared rules (NorseRules; null unless the stage's
+## STAGE has "norse": true, or a Norse kind spawned on another stage asked for
+## it through norse_rules(); no other act ever creates it).
+var norse: NorseRules = null
+# --- Act XII (temporary number): the Necropolis Dynasty ---
+## The Necropolis Dynasty's shared rules (DynastyRules; null unless the stage's
+## STAGE has "dynasty": true, or a Dynasty kind spawned on another stage asked
+## for it through dynasty_rules(); no other act creates it).
+var dynasty: DynastyRules = null
+# --- Act XIII (temporary number): the Celestial Host ---
+## The Celestial Host's shared rules (HostRules; null unless the stage's STAGE
+## has "host": true, or a Host kind spawned on another stage asked for it
+## through host_rules(); no other act creates it).
+var host: HostRules = null
+# --- Act XIV (temporary number): the Age of Titans ---
+## The Age of Titans' shared rules (PrimevalRules; null unless the stage's
+## STAGE has "primeval": true, or a Titans kind spawned on another stage asked
+## for it through primeval_rules(); no other act creates it).
+var primeval: PrimevalRules = null
+# --- Act XV (temporary number): the Turning Year ---
+## The Turning Year's shared rules (WildRules; null unless the stage's STAGE
+## has "wild": true, or a Wild kind spawned on another stage asked for it
+## through wild_rules(); no other act creates it).
+var wild: WildRules = null
 ## Content wave 2: the run counters of the one-run achievements (RunRewards;
 ## never null once _ready ran; reads the run only, never changes gameplay).
 var rewards: RunRewards
@@ -459,6 +525,100 @@ func _ready() -> void:
 		# --- Act IX: the Ark ---
 		"ark":
 			ground = ArkGround.new()  # Act IX: the Ark of the Concord's four zone floors (ArkStage.ZONES).
+		# --- Act X: the Black Tide ---
+		"corsair":
+			var csg := CorsairGround.new()  # Act X placeholder: the sea and the deck (the STAGE's "floor").
+			csg.look = stage_def.get("floor", {})
+			csg.game = self
+			ground = csg
+		# --- Act X: the Smuggler's Cutter ---
+		"cutter":
+			var cug := CutterGround.new()  # Act X: the Cutter's tiled sea and deck, a look per zone (CutterStage.ZONES).
+			cug.look = stage_def.get("floor", {})
+			cug.game = self
+			ground = cug
+		# --- Act X: the Treasure Galleon ---
+		"galleon":
+			var gag := GalleonGround.new()  # Act X: the galleon's deck and sea tiles, the four zones' looks (GalleonStage.ZONES).
+			gag.look = stage_def.get("floor", {})
+			gag.game = self
+			ground = gag
+		# --- Act X: the Maelstrom ---
+		"maelstrom":
+			var mg := MaelstromGround.new()  # Act X: the Hollow Queen's deck and the whirlpool's sea (the art pass's tiles).
+			mg.look = stage_def.get("floor", {})
+			mg.game = self
+			ground = mg
+		# --- Act XI (temporary): the Hall of the Slain ---
+		"norse":
+			var nog := NorseGround.new()  # The Norse stubs' placeholder floor (the STAGE's "floor").
+			nog.look = stage_def.get("floor", {})
+			ground = nog
+		# --- Act XI (temporary): the Barrow Fields ---
+		"barrow_fields":
+			ground = BarrowFieldsGround.new()  # The Barrow Fields' zone floors (BarrowFieldsStage.ZONES).
+		# --- Act XI (temporary): Valgard ---
+		"valgard":
+			ground = ValgardGround.new()  # Valgard's four zone floors (ValgardStage.ZONES).
+		# --- Act XI (temporary): Vigrid ---
+		"vigrid":
+			ground = VigridGround.new()  # Vigrid, the Last Field's four zone floors (VigridStage.ZONES).
+		# --- Act XII (temporary number): the Necropolis Dynasty ---
+		"dynasty":
+			var dyg := DynastyGround.new()  # The Dynasty stubs' placeholder floor (the STAGE's "floor").
+			dyg.look = stage_def.get("floor", {})
+			ground = dyg
+		# --- Act XIII (temporary number): the Celestial Host ---
+		"host":
+			var hog := HostGround.new()  # The Host stubs' placeholder floor (the STAGE's "floor").
+			hog.look = stage_def.get("floor", {})
+			ground = hog
+		# --- Act XIV (temporary number): the Age of Titans ---
+		"primeval":
+			var prg := PrimevalGround.new()  # The Titans stubs' placeholder floor (the STAGE's "floor").
+			prg.look = stage_def.get("floor", {})
+			ground = prg
+		# --- Act XV (temporary number): the Turning Year ---
+		"wild":
+			var wdg := WildGround.new()  # The Wild stubs' placeholder floor (the STAGE's "floor").
+			wdg.look = stage_def.get("floor", {})
+			ground = wdg
+		# --- Act XII (temporary number): the Necropolis of Sand ---
+		"necropolis":
+			ground = NecropolisGround.new()  # The Necropolis of Sand's four zone floors (NecropolisStage.ZONES).
+		# --- Act XII (temporary number): the Temple of the Lioness ---
+		"lioness_temple":
+			ground = LionessTempleGround.new()  # The Temple of the Lioness's four zone floors (LionessTempleStage.ZONES).
+		# --- Act XII (temporary number): the Hall of Two Truths ---
+		"two_truths":
+			ground = TwoTruthsGround.new()  # The Hall of Two Truths' four zone floors (TwoTruthsStage.ZONES).
+		# --- Act XIII (temporary number): the Silver Stair ---
+		"silver_stair":
+			ground = SilverStairGround.new()  # The Silver Stair's four zone floors (SilverStairStage.ZONES).
+		# --- Act XIII (temporary number): the Wheel of Thrones ---
+		"wheel_of_thrones":
+			ground = WheelOfThronesGround.new()  # The Wheel of Thrones' four zone floors (WheelOfThronesStage.ZONES).
+		# --- Act XIII (temporary number): the Empyrean ---
+		"empyrean":
+			ground = EmpyreanGround.new()  # The Empyrean's four zone floors (EmpyreanStage.ZONES).
+		# --- Act XIV (temporary number): the Fern Basin ---
+		"fern_basin":
+			ground = FernBasinGround.new()  # The Fern Basin's four zone floors and its tar pools (FernBasinStage.ZONES).
+		# --- Act XIV (temporary number): the Great Plain ---
+		"great_plain":
+			ground = GreatPlainGround.new()  # The Great Plain's four zone floors (GreatPlainStage.ZONES).
+		# --- Act XIV (temporary number): the Last Day ---
+		"last_day":
+			ground = LastDayGround.new()  # The Last Day's four zone floors (LastDayStage.ZONES).
+		# --- Act XV (temporary number): the Greenwood ---
+		"greenwood":
+			ground = GreenwoodGround.new()  # The Greenwood's four zone floors (GreenwoodStage.ZONES).
+		# --- Act XV (temporary number): the Fae Court ---
+		"fae_court":
+			ground = FaeCourtGround.new()  # The Fae Court's four zone floors (FaeCourtStage.ZONES).
+		# --- Act XV (temporary number): the World-Tree ---
+		"world_tree":
+			ground = WorldTreeGround.new()  # The World-Tree's four zone floors (WorldTreeStage.ZONES).
 		_:
 			ground = Ground.new()
 	add_child(ground)
@@ -551,6 +711,18 @@ func _ready() -> void:
 		city_rules()  # Act VIII: the Last Line's shared rules.
 	if bool(stage_def.get("concord", false)):
 		concord_rules()  # Act IX: the Concord of Stars' shared rules.
+	if bool(stage_def.get("corsair", false)):
+		corsair_rules()  # Act X: the Black Tide's shared rules (and the deck).
+	if bool(stage_def.get("norse", false)):
+		norse_rules()  # The Hall of the Slain's shared rules.
+	if bool(stage_def.get("dynasty", false)):
+		dynasty_rules()  # Act XII (temporary): the Necropolis Dynasty's shared rules.
+	if bool(stage_def.get("host", false)):
+		host_rules()  # Act XIII (temporary): the Celestial Host's shared rules.
+	if bool(stage_def.get("primeval", false)):
+		primeval_rules()  # Act XIV (temporary): the Age of Titans' shared rules.
+	if bool(stage_def.get("wild", false)):
+		wild_rules()  # Act XV (temporary): the Turning Year's shared rules.
 
 	if autotest != null:
 		player.invulnerable = not GameState.autotest_mortal
@@ -858,6 +1030,18 @@ func _physics_process(delta: float) -> void:
 		city.step(delta)  # Act VIII: the escalation, the civilians, wrecks and shells, Martial Law (pushed out of buildings next).
 	if concord != null:
 		concord.step(delta)  # Act IX: the Final Harvest, the beams, the lifted summons, the alien ground (pods pushed out next).
+	if corsair != null:
+		corsair.step(delta)  # Act X: the boats, the sea's strikes, the Black Tide (the deck clamp runs in the push-out next).
+	if norse != null:
+		norse.step(delta)  # The Hall of the Slain: Ragnarök, the Long Winter, the Rune-Stones (pushed out next).
+	if dynasty != null:
+		dynasty.step(delta)  # Act XII (temporary): the Devourer's Hour, the Sandstorm, the cartouches, the glyphs, the quicksand (returned bodies pushed out next).
+	if host != null:
+		host.step(delta)  # Act XIII (temporary): the Last Trumpet, the scales, the Light, the halos (pushed summons pushed out next).
+	if primeval != null:
+		primeval.step(delta)  # Act XIV (temporary): the Stampede of Ash, the packs, the herds, the Skyraiders (trampled summons pushed out next).
+	if wild != null:
+		wild.step(delta)  # Act XV (temporary): Spring Returns, the seasons, the blight, the thickets (bodies in a new thicket pushed out next).
 	if pf != null:
 		tl = pf.lap(PerfProbe.SEC_ENEMIES, tl)
 	arena.resolve_all(delta)
@@ -929,9 +1113,12 @@ func coop_sim_tick(delta: float) -> void:
 
 func _process(_delta: float) -> void:
 	# Camera follow + trauma-based screen shake (Juice autoload, cosmetic).
-	camera.position = player.position
+	var focus := player.position  # Where the camera looks.
+	if deck != null:
+		focus = deck.camera_point(player.position, view_size())  # Act X: the camera stays over the deck (visual only).
+	camera.position = focus
 	camera.offset = Juice.camera_offset()
-	ground.update_view(player.position)
+	ground.update_view(focus)
 	if perf != null:
 		perf.frame()  # --perf: rendered-frame times (the Web measurement).
 	if monitor != null:
@@ -1040,14 +1227,81 @@ func concord_rules() -> ConcordRules:
 	return concord
 
 
+# --- Act X: the Black Tide ---
+## The Black Tide's shared rules (Act X), created on first use: at the start of
+## an Act X run (with its deck), or when a Black Tide kind forced onto another
+## stage is activated (CorsairKit.reset()), so its kit runs there (no deck, no
+## boats and no sea off Act X: that kind simply walks).
+func corsair_rules() -> CorsairRules:
+	if corsair == null:
+		corsair = CorsairRules.new(self)
+		add_child(corsair)
+	return corsair
+# --- Act XI (temporary): the Hall of the Slain ---
+## The Hall of the Slain's shared rules, created on first use: at the start of
+## a Norse run, or when a Norse kind forced onto another stage is activated
+## (NorseKit.reset()), so the fury works there (the cold, the braziers, the
+## timeline's stones and Ragnarök stay off off the act).
+func norse_rules() -> NorseRules:
+	if norse == null:
+		norse = NorseRules.new(self)
+		add_child(norse)
+	return norse
+# --- Act XII (temporary number): the Necropolis Dynasty ---
+## The Necropolis Dynasty's shared rules, created on first use: at the start of
+## a Dynasty run, or when a Dynasty kind forced onto another stage is activated
+## (DynastyKit.reset()), so its Rebirth and its glyphs work there (the clocks
+## stay off off the act).
+func dynasty_rules() -> DynastyRules:
+	if dynasty == null:
+		dynasty = DynastyRules.new(self)
+		add_child(dynasty)
+	return dynasty
+
+
+# --- Act XIII (temporary number): the Celestial Host ---
+## The Celestial Host's shared rules, created on first use: at the start of a
+## Host run, or when a Host kind forced onto another stage is activated
+## (HostKit.reset()), so its halo works there (the clocks stay off off the act).
+func host_rules() -> HostRules:
+	if host == null:
+		host = HostRules.new(self)
+		add_child(host)
+	return host
+
+
+# --- Act XIV (temporary number): the Age of Titans ---
+## The Age of Titans' shared rules, created on first use: at the start of a
+## Titans run, or when a Titans kind forced onto another stage is activated
+## (PrimevalKit.reset()), so its pack, herd or theft works there (the clocks
+## stay off off the act).
+func primeval_rules() -> PrimevalRules:
+	if primeval == null:
+		primeval = PrimevalRules.new(self)
+		add_child(primeval)
+	return primeval
+
+
+# --- Act XV (temporary number): the Turning Year ---
+## The Turning Year's shared rules, created on first use: at the start of a
+## Wild run, or when a Wild kind forced onto another stage is activated
+## (WildKit.reset()), so its seeds grow there (the clocks stay off off the act).
+func wild_rules() -> WildRules:
+	if wild == null:
+		wild = WildRules.new(self)
+		add_child(wild)
+	return wild
+
+
 # --- Act IV: the Asphodel Underworld ---
 ## THE ONE SWITCH that creates the Claims path (EyeClaims, Act II's "the fight
 ## over the dead") outside Act II: Hades, Lord of the Dead (BossHades), calls it
 ## when he arrives, so his Reclaiming turns the summons he marks into his shades
 ## through the same HordeDirector.claim_fallen() path (GDD §15.0 "The Asphodel
 ## Underworld (Act IV phase 2)"). An Act II stage still creates `claims` from
-## its STAGE key in _ready() exactly as before (this returns that one); no other
-## caller exists, so Acts I and III never create it.
+## its STAGE key in _ready() exactly as before (this returns that one). Its one
+## other caller is the World-Tree's Green Mother (Act XV, temporary: the Last
+## Claim's Ancient Eye slot, LastClaim), so Acts I and III never create it.
 func claims_rules() -> EyeClaims:
 	if claims == null:
 		claims = EyeClaims.new(self)
@@ -1354,7 +1608,7 @@ func build_summary() -> Dictionary:
 		"reason": end_reason,
 		"stage_id": String(stage_def["id"]),
 		"stage_name": String(stage_def["display_name"]),
-		"stage_ash_mult": float(stage_def["ash_mult"]),
+		"stage_ash_mult": StageRegistry.ash_mult_of(String(stage_def["id"])),
 		"character_id": character.id,
 		"character_name": character.display_name(),
 		"unlocked_characters": character.unlocked_this_run.duplicate(),

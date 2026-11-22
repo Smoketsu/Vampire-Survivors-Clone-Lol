@@ -29,6 +29,9 @@
 ##                       (content wave 2: the Bone Golem).
 ##   damage_taken_mult(u, source)  share of an enemy hit the unit still takes
 ##                       (Act IV: the Myrmidon Shades' shield wall).
+##   on_lethal(u)        the blow that would slay it: true when the special
+##                       answers it and the unit lives on (Act XII, the
+##                       Ushabti Sentinel's reassembly).
 ##
 ## Determinism (CLAUDE.md): only the seeded global RNG, never instance ids.
 class_name SummonBehavior
@@ -173,6 +176,15 @@ func taunt_reach(_u: SummonedUnit) -> float:
 ## Shades' locked shield wall. 1 = no cut (every other class).
 func damage_taken_mult(_u: SummonedUnit, _source: String) -> float:
 	return 1.0
+
+
+# --- Act XII (temporary number): the Hall of Two Truths --- (a generic hook; false for every other class)
+
+## The blow that would slay the unit (CombatResolver.damage_unit(), before the
+## death): true when the special answers it and the unit lives on (the Ushabti
+## Sentinel reassembles). False = it dies as usual.
+func on_lethal(_u: SummonedUnit) -> bool:
+	return false
 
 
 # =====================================================================================

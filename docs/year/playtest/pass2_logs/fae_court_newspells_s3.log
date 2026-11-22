@@ -1,0 +1,208 @@
+Godot Engine v4.3.stable.official.77dcf97d8 - https://godotengine.org
+
+[autotest] start: seed=3 speed=8x mortal=true timeout=1500s policy=evolve meta=none oath=0 pact=false classes=- spells=bone_spear,soul_siphon,corpse_explosion,plague_cloud
+[autotest] stage: fae_court
+[autotest] difficulty: necromancer | modifiers: none
+[autotest] character: gravecaller (starting spell shadow_bolt)
+[audio] main-thread startup 16.9 ms; 59 sfx ready after 359 ms, music loop after 248 ms (worker threads); display: headless
+[metric] t=60 avg_horde=1.9 now=2 cap=2 w2/2 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=1 lvl=4 kills=79 enemies=35 hp=118 boss_hp=-1 crystals=8 xp=80
+[metric]    summon dmg taken this window: thornling=148 dryad=21
+[metric]    alive by kind: { "thornling": 26, "dryad": 9 } within260=13
+[autotest] t=01:00 lvl=4 kills=79 enemies=35 summons=2/2 projectiles=0 hp=118 step_avg=0.58ms
+[autotest]    unit FSM: { "ENGAGING": 2 }
+[metric] t=120 avg_horde=1.5 now=2 cap=2 w2/2 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=5 lvl=9 kills=209 enemies=39 hp=120 boss_hp=-1 crystals=24 xp=236
+[metric]    summon dmg taken this window: thornling=204 dryad=15 will_o_wisp=4 wild_wildfire=21
+[metric]    alive by kind: { "thornling": 28, "dryad": 9, "will_o_wisp": 2 } within260=9
+[autotest] t=02:00 lvl=9 kills=209 enemies=39 summons=2/2 projectiles=0 hp=120 step_avg=0.64ms
+[autotest]    unit FSM: { "ENGAGING": 2 }
+[metric] t=180 avg_horde=1.8 now=2 cap=2 w2/2 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=3 lvl=13 kills=343 enemies=33 hp=120 boss_hp=-1 crystals=27 xp=423
+[metric]    summon dmg taken this window: thornling=133 dryad=19 will_o_wisp=1 wild_wildfire=21
+[metric]    alive by kind: { "thornling": 26, "will_o_wisp": 2, "dryad": 5 } within260=7
+[autotest] t=03:00 lvl=13 kills=343 enemies=33 summons=2/2 projectiles=0 hp=120 step_avg=0.63ms
+[autotest]    unit FSM: { "FOLLOWING": 2 }
+[metric] t=240 avg_horde=1.6 now=1 cap=2 w1/2 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=4 lvl=16 kills=492 enemies=47 hp=111 boss_hp=-1 crystals=40 xp=615
+[metric]    summon dmg taken this window: thornling=181 dryad=7 will_o_wisp=2 treant=12
+[metric]    alive by kind: { "treant": 3, "thornling": 34, "dryad": 8, "will_o_wisp": 2 } within260=10
+[autotest] t=04:00 lvl=16 kills=492 enemies=47 summons=1/2 projectiles=0 hp=111 step_avg=0.70ms
+[autotest]    unit FSM: { "ENGAGING": 1 }
+[metric] t=300 avg_horde=1.8 now=2 cap=2 w2/2 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=2 lvl=21 kills=656 enemies=33 hp=120 boss_hp=-1 crystals=7 xp=967
+[metric]    summon dmg taken this window: thornling=50 dryad=14 will_o_wisp=4 wild_wildfire=24 treant=82
+[metric]    alive by kind: { "thornling": 20, "dryad": 8, "treant": 5 } within260=2
+[autotest] t=05:00 lvl=21 kills=656 enemies=33 summons=2/2 projectiles=1 hp=120 step_avg=0.74ms
+[autotest]    unit FSM: { "FOLLOWING": 2 }
+[metric] t=360 avg_horde=1.5 now=1 cap=2 w1/2 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=6 lvl=25 kills=829 enemies=39 hp=120 boss_hp=-1 crystals=13 xp=1305
+[metric]    summon dmg taken this window: thornling=36 dryad=20 will_o_wisp=2 wild_wildfire=13 treant=273 fae_knight=43
+[metric]    alive by kind: { "dryad": 5, "fae_knight": 5, "thornling": 27, "treant": 1, "will_o_wisp": 1 } within260=7
+[autotest] t=06:00 lvl=25 kills=829 enemies=39 summons=1/2 projectiles=0 hp=120 step_avg=0.76ms
+[autotest]    unit FSM: { "ENGAGING": 1 }
+[metric] t=420 avg_horde=1.9 now=2 cap=2 w2/2 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=1 lvl=28 kills=1009 enemies=32 hp=120 boss_hp=-1 crystals=37 xp=1587
+[metric]    summon dmg taken this window: thornling=3 will_o_wisp=5 wild_wildfire=14 treant=22 fae_knight=17
+[metric]    alive by kind: { "thornling": 25, "dryad": 6, "fae_knight": 1 } within260=1
+[autotest] t=07:00 lvl=28 kills=1009 enemies=32 summons=2/2 projectiles=0 hp=120 step_avg=0.77ms
+[autotest]    unit FSM: { "FOLLOWING": 2 }
+[metric] t=480 avg_horde=2.0 now=2 cap=2 w2/2 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=30 kills=1182 enemies=40 hp=120 boss_hp=-1 crystals=41 xp=1892
+[metric]    summon dmg taken this window: treant=12 fae_knight=10 hunt_hound=12 great_stag=27
+[metric]    alive by kind: { "thornling": 23, "treant": 3, "fae_knight": 5, "dryad": 5, "will_o_wisp": 1, "wild_rider": 1, "hunt_hound": 2 } within260=4
+[autotest] t=08:00 lvl=30 kills=1182 enemies=40 summons=2/2 projectiles=0 hp=120 step_avg=0.79ms
+[autotest]    unit FSM: { "FOLLOWING": 1, "ENGAGING": 1 }
+[metric] t=540 avg_horde=1.5 now=2 cap=2 w2/2 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=6 lvl=33 kills=1356 enemies=41 hp=120 boss_hp=-1 crystals=48 xp=2230
+[metric]    summon dmg taken this window: thornling=73 dryad=20 wild_wildfire=43 treant=39 fae_knight=40 hunt_hound=9 wild_rider=63
+[metric]    alive by kind: { "thornling": 32, "dryad": 4, "treant": 1, "fae_knight": 4 } within260=11
+[autotest] t=09:00 lvl=33 kills=1356 enemies=41 summons=2/2 projectiles=0 hp=120 step_avg=0.82ms
+[autotest]    unit FSM: { "ENGAGING": 1, "FOLLOWING": 1 }
+[metric] t=600 avg_horde=1.5 now=1 cap=2 w1/2 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=6 lvl=35 kills=1525 enemies=46 hp=100 boss_hp=-1 crystals=64 xp=2468
+[metric]    summon dmg taken this window: thornling=36 dryad=7 treant=173 fae_knight=76 hunt_hound=50 wild_rider=16
+[metric]    alive by kind: { "dryad": 11, "thornling": 28, "treant": 4, "wild_rider": 1, "will_o_wisp": 2 } within260=7
+[autotest] t=10:00 lvl=35 kills=1525 enemies=46 summons=1/2 projectiles=0 hp=100 step_avg=0.84ms
+[autotest]    unit FSM: { "ENGAGING": 1 }
+[metric] t=660 avg_horde=1.6 now=2 cap=2 w2/2 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=3 lvl=38 kills=1727 enemies=41 hp=120 boss_hp=-1 crystals=67 xp=2905
+[metric]    summon dmg taken this window: thornling=22 dryad=30 treant=95 fae_knight=59 great_stag=74
+[metric]    alive by kind: { "dryad": 5, "thornling": 26, "fae_knight": 6, "will_o_wisp": 3, "spore_mother": 1 } within260=1
+[autotest] t=11:00 lvl=38 kills=1727 enemies=41 summons=2/2 projectiles=1 hp=120 step_avg=0.87ms
+[autotest]    unit FSM: { "ENGAGING": 1, "FOLLOWING": 1 }
+[metric] t=720 avg_horde=1.8 now=2 cap=2 w2/2 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=2 lvl=40 kills=1913 enemies=43 hp=120 boss_hp=-1 crystals=79 xp=3227
+[metric]    summon dmg taken this window: fae_knight=17 great_stag=35 winter_prince=79
+[metric]    alive by kind: { "treant": 3, "thornling": 20, "fae_knight": 1, "winter_fae": 5, "dryad": 10, "spore_mother": 1, "will_o_wisp": 2, "winter_prince": 1 } within260=3
+[autotest] t=12:00 lvl=40 kills=1913 enemies=43 summons=2/2 projectiles=3 hp=120 step_avg=0.90ms
+[autotest]    unit FSM: { "RETURNING": 2 }
+[metric] t=780 avg_horde=2.2 now=3 cap=3 w3/3 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=2 lvl=43 kills=2101 enemies=43 hp=120 boss_hp=-1 crystals=115 xp=3782
+[metric]    summon dmg taken this window: treant=147 winter_prince=7 winter_fae=40
+[metric]    alive by kind: { "thornling": 31, "dryad": 4, "treant": 2, "will_o_wisp": 4, "fae_knight": 1, "winter_fae": 1 } within260=0
+[autotest] t=13:00 lvl=43 kills=2101 enemies=43 summons=3/3 projectiles=0 hp=120 step_avg=0.93ms
+[autotest]    unit FSM: { "FOLLOWING": 3 }
+[metric] t=840 avg_horde=2.7 now=1 cap=3 w1/3 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=4 lvl=46 kills=2297 enemies=42 hp=120 boss_hp=-1 crystals=20 xp=4343
+[metric]    summon dmg taken this window: treant=192 hunt_hound=13 great_stag=14 wild_rider=98
+[metric]    alive by kind: { "thornling": 30, "fae_knight": 2, "dryad": 1, "treant": 4, "great_stag": 3, "spore_mother": 2 } within260=9
+[autotest] t=14:00 lvl=46 kills=2297 enemies=42 summons=1/3 projectiles=3 hp=120 step_avg=0.96ms
+[autotest]    unit FSM: { "RETURNING": 1 }
+[metric] t=900 avg_horde=3.8 now=5 cap=5 w5/5 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=4 lvl=48 kills=2492 enemies=41 hp=120 boss_hp=-1 crystals=56 xp=4734
+[metric]    summon dmg taken this window: wild_wildfire=71 treant=59 fae_knight=45 great_stag=370 wild_rider=28
+[metric]    alive by kind: { "thornling": 25, "treant": 3, "hunt_hound": 2, "spore_mother": 3, "fae_knight": 2, "will_o_wisp": 2, "dryad": 3, "wild_rider": 1 } within260=3
+[autotest] t=15:00 lvl=48 kills=2492 enemies=41 summons=5/5 projectiles=6 hp=120 step_avg=0.99ms
+[autotest]    unit FSM: { "FOLLOWING": 3, "ENGAGING": 2 }
+[metric] t=960 avg_horde=4.2 now=3 cap=5 w3/5 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=8 lvl=50 kills=2701 enemies=43 hp=120 boss_hp=-1 crystals=21 xp=5272
+[metric]    summon dmg taken this window: treant=32 fae_knight=23 hunt_hound=19 great_stag=535 wild_rider=49
+[metric]    alive by kind: { "thornling": 33, "spore_mother": 1, "treant": 2, "dryad": 2, "fae_knight": 5 } within260=8
+[autotest] t=16:00 lvl=50 kills=2701 enemies=43 summons=3/5 projectiles=6 hp=120 step_avg=1.02ms
+[autotest]    unit FSM: { "ENGAGING": 3 }
+[autotest] boss spawned at 1020.0 s
+[autotest] Shadow Bolt aim switched to Strongest
+[metric] t=1020 avg_horde=4.7 now=5 cap=5 w5/5 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=1 lvl=52 kills=2925 enemies=39 hp=120 boss_hp=17600 crystals=70 xp=5645
+[metric]    summon dmg taken this window: dryad=12 wild_wildfire=41 treant=49
+[metric]    alive by kind: { "treant": 2, "thornling": 26, "spore_mother": 1, "dryad": 6, "fae_knight": 3, "boss": 1 } within260=1
+[autotest] t=17:00 lvl=52 kills=2925 enemies=39 summons=5/5 projectiles=6 hp=120 step_avg=1.03ms
+[autotest]    unit FSM: { "ENGAGING": 4, "CASTING": 1 }
+[metric] t=1080 avg_horde=3.5 now=2 cap=5 w2/5 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=10 lvl=53 kills=3120 enemies=34 hp=59 boss_hp=6698 crystals=110 xp=5936
+[metric]    summon dmg taken this window: treant=35 great_stag=43 summer_queen_bloom=122 summer_queen_petals=293 masked_courtier=151 boss=112
+[metric]    alive by kind: { "thornling": 25, "treant": 1, "boss": 1, "fae_knight": 1, "dryad": 6 } within260=4
+[autotest] t=18:00 lvl=53 kills=3120 enemies=34 summons=2/5 projectiles=6 hp=59 step_avg=1.05ms
+[autotest]    unit FSM: { "RETURNING": 2 }
+[autotest] boss defeated at 1100.2 s
+[metric] t=1140 avg_horde=5.8 now=8 cap=8 w8/8 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=4 lvl=57 kills=3284 enemies=51 hp=120 boss_hp=0 crystals=39 xp=6939
+[metric]    summon dmg taken this window: summer_queen_bloom=91 summer_queen_petals=116 boss=68
+[metric]    alive by kind: { "thornling": 32, "dryad": 16, "great_stag": 2 } within260=0
+[autotest] t=19:00 lvl=57 kills=3284 enemies=51 summons=8/8 projectiles=24 hp=120 step_avg=1.06ms
+[autotest]    unit FSM: { "FOLLOWING": 8 }
+[autotest] build complete (only fallback cards left) at 19:21, level 58
+[autotest] countdown reached 0:00 at 1200.0 s - THE RECKONING begins
+[metric] t=1200 avg_horde=8.0 now=8 cap=8 w8/8 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=58 kills=3480 enemies=52 hp=120 boss_hp=0 crystals=78 xp=7215
+[metric]    summon dmg taken this window: fae_knight=31 great_stag=192
+[metric]    alive by kind: { "thornling": 37, "dryad": 10, "great_stag": 1, "treant": 1, "fae_knight": 3 } within260=0
+[autotest] t=20:00 lvl=58 kills=3480 enemies=52 summons=8/8 projectiles=24 hp=120 step_avg=1.07ms
+[autotest]    unit FSM: { "FOLLOWING": 8 }
+[autotest] ===== NECROPATHY AUTOTEST SUMMARY =====
+[autotest] result: VICTORY / RUN COMPLETE (run_complete)
+[autotest] time reached: 20:52 elapsed (1252.3 s game time, 209.2 s real time); past 0:00: 52.3 s; Reckoning waves: 6
+[autotest] kills: 3699 | level: 59
+[autotest] level pacing: 01:00=L4 03:00=L13 05:00=L21 10:00=L35 15:00=L48 17:00=L52 20:00=L58 | reached: L2@00:23 L5@01:02 L10@02:06 L15@03:28 L20@04:48 L25@05:57 L30@07:41 L35@09:41 L40@11:43 L45@13:47 L50@15:41 L55@18:22
+[autotest] build complete: at 19:21, level 58
+[autotest] horde: 1 alive / capacity 8 (warrior 1/8, archer 0/0, mage 0/0, mender 0/0, warder 0/0, bishop 0/0, abomination 0/0, rogue 0/0, gargoyle 0/0, frost_wraith 0/0, bone_hound 0/0, banshee 0/0, corpse_catapult 0/0)
+[autotest] summons spawned: 91, died: 90, hard recalls: 0 (stall recalls: 0)
+[autotest] boss spawned: yes at 1020.0 s | boss defeated: yes at 1100.2 s | boss HP left: 0 / 17600
+[autotest] player HP: 0 / 120 (invulnerable: false)
+[autotest] picks (65): plague_cloud 1, lingering_malediction 1, lingering_malediction 2, soul_siphon 1, plague_cloud 2, necrotic_expanse 1, vampiric_rite 1, soul_siphon 2, vampiric_rite 2, vampiric_rite 3, shade_stride 1, necrotic_expanse 2, shade_stride 2, plague_cloud 3, soul_siphon 3, shade_stride 3, plague_cloud 4, soul_siphon 4, lingering_malediction 3, bone_spear 1, bone_spear 2, bone_spear 3, necrotic_expanse 3, bone_spear 4, necrotic_expanse 4, lingering_malediction 4, soul_siphon 5, shade_stride 4, corpse_explosion 1, vampiric_rite 4, necrotic_expanse 5, corpse_explosion 2, lingering_malediction 5, corpse_explosion 3, corpse_explosion 4, corpse_explosion 5, EVOLVE grave_eruption, plague_cloud 5, bone_spear 5, EVOLVE pestilence, vampiric_rite 5, EVOLVE soul_rapture, shadow_bolt 2, shade_stride 5, soul_conduit 1, EVOLVE ossuary_lance, warrior 2, shadow_bolt 3, soul_conduit 2, shadow_bolt 4, warrior 3, shadow_bolt 5, abyssal_focus 1, soul_conduit 3, abyssal_focus 2, soul_conduit 4, abyssal_focus 3, soul_conduit 5, EVOLVE void_barrage, abyssal_focus 4, abyssal_focus 5, warrior 4, warrior 5, skip, skip
+[autotest] wards on you: 0 total, absorbed 0 dmg | 0 wards in 0 s with 2+ Warders/Bishops alive (0.0 / min) | heal casts: 0 | ally barriers: 0, barrier dmg absorbed: 0
+[autotest] evolutions: grave_eruption@10:16, pestilence@10:58, soul_rapture@11:39, ossuary_lance@12:10, void_barrage@18:14
+[autotest] evolutions by type: spell: grave_eruption@10:16, pestilence@10:58, soul_rapture@11:39, ossuary_lance@12:10, void_barrage@18:14 | summon: none
+[autotest] summon evolutions: lich raised 0 (capped 0) | merge converted 0, dissolved 0 | aura pulses 0 | merged classes: none
+[autotest] winter revenant: shatters 0 (capped 0), shatter hits 0, shatter dmg 0 | death novas 0, nova hits 0, nova freezes 0, nova dmg 0
+[autotest] summon output by source (dmg/heal/shield): warrior=5910/0/0 bash=1296/0/0
+[autotest] summon output by class (dmg/heal/shield): warrior=7207/0/0
+[autotest] recipe book: 5 / 83 discovered (void_barrage, ossuary_lance, soul_rapture, grave_eruption, pestilence) | Recipes view rows built: 83 (saved: false)
+[autotest] codex: 19 entries met this run (spell 5, summon 1, enemy 12, boss 1) | new to the save 19 | save: spell 5/54, summon 1/30, enemy 12/260, boss 1/45, evolutions 5/83
+[autotest] epilogue: parts=5 open=0 seen=0 panels=19 autoplay_pending=false
+[autotest] volleys: shots 26580 | hits 9999 | dmg 135086 | peak 96/320 | capped volleys 0 | boss hits capped 184 | barrages 12 | soul_siphon 79294, bone_spear 36700, shadow_bolt 10191, plague_cloud 4751, corpse_explosion 3372, warrior 775
+[visual] adaptive quality: level 2, peak 2, steps down 3, up 1
+[autotest] victory screen: title=The Summer Ends best_overtime=52 new_record=true highlights=8
+[autotest] turning year: on | seasons summer 0:00, winter 11:40, summer 12:40, spring_returns 20:00 | roots: you 0, summons 3, enemies 6 | wildfires 29: burned summons 13 (raw dmg 253), you 1, enemies 429 (killed 36) | snow refreshes 117 | blizzards 1 | wave groups held 0
+[autotest] bloom and blight: on | peak cells 47 (dead 1) | cells now 6 | the Wild healed 42398 on living ground
+[autotest] overgrowth: seeds 150 (capped 0, blocked 46, died 0) | thickets grown 98 (peak 15, standing 11) | burnt 67 | withered 0 | spreads 37 | summons caught 18
+[autotest] spring returns: began 20:00 | sproutings 9 | burials 15 (raw dmg 3094)
+[autotest] wild kinds (spawned/killed): growth: thornling 2948/2901 first 0:01 (dmg to you 85, to summons 923), dryad 440/418 first 0:09 (dmg to you 9, to summons 170), treant 59/39 first 3:00 (dmg to you 329, to summons 1409) | fae: fae_knight 169/149 first 5:20 (dmg to you 146, to summons 555), winter_fae 21/21 first 11:44 (dmg to you 40, to summons 40), winter_prince 1/1 first 11:40 (dmg to you 21, to summons 86), masked_courtier 12/12 first 16:30 (dmg to you 0, to summons 151) | hunt: great_stag 18/18 first 7:31 (dmg to you 79, to summons 1421), wild_rider 12/12 first 7:25 (dmg to you 104, to summons 255), hunt_hound 24/24 first 7:25 (dmg to you 0, to summons 104) | spirits: will_o_wisp 82/82 first 1:05 (dmg to you 2, to summons 20), spore_mother 21/21 first 10:20 (dmg to you 10, to summons 0)
+[autotest] wild stage: fae_court (The Fae Court) | act 15 | playable true | boss summer_queen (script summer_queen) | enemy x2.20 HP / x1.40 dmg from 8:00 | soul ash x1.25 | season 300 s | reckoning kind treant, spring returns true
+[autotest] wild damage (you/summons): treant 329/1409, great_stag 79/1421, thornling 85/923, wild_burial 0/916, fae_knight 146/555, summer_queen_petals 152/410, wild_rider 104/255, wild_wildfire 30/251, boss 44/181, summer_queen_bloom 0/213, dryad 9/170, masked_courtier 0/151, winter_prince 21/86, hunt_hound 0/104, winter_fae 40/40, will_o_wisp 2/20, summer_bargain 14/0, spore_mother 10/0
+[autotest] wild specials: treant roots 60 | fae blinks 166 | stag charges 23 (hit 14, you 0) | rider sweeps 13 (hit 5, you 1; hounds 24, hound hits 5; rode on 0) | wisp lures 14 | spore puffs 83 (rots 0, mould cells 15) | bloom meals 0 (corpses eaten 0, thornlings budded 0) | huntsman sweeps hit 0, you 0
+[autotest] fae court: fairy rings: slowed you 239, summons 534, enemies 10884 | winter prince spawned 1, killed 1 at 12:06 (winter 60 s, fans 5, bolts 25) | events: 11:40 winter_prince, 12:06 prince_down, 12:40 summer_returns
+[autotest] summer queen: petals: 19 fans (91 bolts) | the Masque: 2 (faces 8, unmasked 12, found 2, courtier bolts 0) | the Bargain: offered 2, accepted 2, refused 0 | the Court in Bloom: 9 (blossoms 36, hit 11, you 0, seeds 9) | killed 80 s after she arrived | dmg to you 196, to summons 804
+[autotest] a fair bargain: offered 2, accepted 2, refused 0 | army heals barred 18 | life paid 14 | earned yes (if the run is won)
+[autotest] gravebow / bone colossus: gravebow volleys 0, splits 0 (+0 arrows), pierce hits 0, dmg 0 | curses applied 0 (refreshed 0), curse bonus dmg 0 | colossus dmg 0, stomps 0 | taunted enemies 0 | shrapnel bursts 0, hits 0, dmg 0
+[autotest] necro spells: bone_spear: Lv5 EVOLVED dmg=101035 (evolved 82200) boss=1937 volleys=1142 | soul_siphon: Lv5 EVOLVED dmg=120500 (evolved 91683) boss=2495 healed=610 summon_heal=736 bursts=693 | corpse_explosion: Lv5 EVOLVED dmg=122088 (evolved 110333) boss=2541 bursts=991 chain=228 | plague_cloud: Lv5 EVOLVED dmg=110332 (evolved 100471) boss=2545 clouds=404 novas=226 rot_bonus_dmg=77135
+[autotest] later spells: death_mark: not taken | bone_wall: not taken | soul_chains: not taken | wither: not taken | raise_dead: not taken
+[autotest] later spell passives: grim_ledger Lv0 bonus_dmg=0 | spirit_binding Lv0 | restless_dead Lv0 | temporary summons spawned=0
+[autotest] horde passives: bone_plating Lv 0 (dmg prevented 0) | unholy_precision Lv 0 (crits 0, crit bonus dmg 0) | unholy_resilience Lv 0 (dmg prevented 0: area 0, holy 0) | bound_souls Lv 0 (soft recalls 4, hard recalls 0)
+[autotest] class passives: blood_scent Lv 0 (fast: Archers, Rogues, Gargoyles, Bone Hounds, Grave Drones, Succubi, Blood Spawn, Fallen Heroes, Ghost Saucers, Powder Wraiths, Bound Ophans, Bonehorns) | mournsong Lv 0 (extra debuff s 0) | siegecraft Lv 0 (siege bonus dmg 0) | summon dmg to structures 0 (catapults 0)
+[autotest] synergies active at end: none | activations: none
+[autotest] synergy bonus: flesh_rampart hits=0 dmg=0 | killing_field hits=0 dmg=0 | death_from_above hits=0 dmg=0 | wild_hunt hits=0 dmg=0 | cold_blood hits=0 dmg=0 | shatterfall hits=0 dmg=0 | requiem hits=0 dmg=0 | charnel_menagerie hits=0 dmg=0 | baying frenzies=0 | marks staggered=0 swooped=0 | dash resets=0 | requiem +0s
+[autotest] level-up offers: hands 61, new-item cards 52, later items 20 (38%) in 18 hands (30%), distinct later items offered 14
+[autotest] level-up actions: rerolls used 2/2, banishes used 1/2 (banished: soul_recycling), skips 2
+[autotest] shadow bolt: 33576 dmg in Nearest mode, 85287 dmg in Strongest mode; to boss: 3720 of 17599 total boss dmg
+[autotest] stats: bargain_heals_barred=18 bargains_accepted=2 bargains_offered=2 blight_full_peak=1 blight_peak_cells=47 blizzards=1 bloom_heal=42398 boss_atk_bargain=2 boss_atk_bloom=9 boss_atk_masque=2 boss_atk_petals=19 boss_kills=1 bossdmg_bash=36 bossdmg_bolt=3370 bossdmg_bone_spear=1019 bossdmg_corpse_explosion=172 bossdmg_death_nova=816 bossdmg_eruption=1093 bossdmg_eruption_spikes=1447 bossdmg_lance=1937 bossdmg_pestilence=1729 bossdmg_plague_cloud=158 bossdmg_rapture=2024 bossdmg_rapture_burst=471 bossdmg_shadow_bolt=641 bossdmg_soul_siphon=2083 bossdmg_void=349 bossdmg_warrior=246 bot_dash_crowd=20 bot_dash_hit=10 bot_dash_telegraph=63 chaplain_heals=994 chest_count_1=7 chest_evolutions=5 chest_items=7 chests_opened=7 chests_pity=5 chests_spawned=7 corpse_bursts=991 damage_dealt=743319 damage_to_player=1072 damage_to_summons=7113 dash_distance=10229 dash_hits_avoided=9 dashes=93 death_novas=226 death_warrior_by_boss=3 death_warrior_by_dryad=2 death_warrior_by_fae_knight=5 death_warrior_by_great_stag=13 death_warrior_by_hunt_hound=1 death_warrior_by_masked_courtier=2 death_warrior_by_summer_queen_bloom=3 death_warrior_by_summer_queen_petals=6 death_warrior_by_thornling=13 death_warrior_by_treant=22 death_warrior_by_wild_burial=15 death_warrior_by_wild_rider=3 death_warrior_by_wild_wildfire=1 death_warrior_by_will_o_wisp=1 dmg_bash=1296 dmg_bolt=48715 dmg_bone_spear=36700 dmg_corpse=11755 dmg_corpse_explosion=3372 dmg_death_nova=32106 dmg_eruption=67469 dmg_eruption_spikes=42863 dmg_lance=82200 dmg_pestilence=68365 dmg_plague=9861 dmg_plague_cloud=4751 dmg_rapture=73485 dmg_rapture_burst=18197 dmg_shadow_bolt=10191 dmg_siphon=28817 dmg_soul_siphon=79294 dmg_spear=18835 dmg_void=63212 dmg_void_shard=6935 dmg_warrior=5910 dmg_wild_wildfire=28979 elite_kills=1 enemy_healing=50025 eruption_chains=228 evolutions=5 fae_blinks=166 great_stag_charge_hits=14 great_stag_charges=23 hunt_hound_charge_hits=5 hunt_hounds_brought=24 kill_boss=1 kill_dryad=418 kill_fae_knight=149 kill_great_stag=18 kill_hunt_hound=24 kill_masked_courtier=12 kill_spore_mother=21 kill_thornling=2901 kill_treant=39 kill_wild_rider=12 kill_will_o_wisp=82 kill_winter_fae=21 kill_winter_prince=1 kills_by_bash=29 kills_by_bolt=468 kills_by_bone_spear=114 kills_by_corpse=130 kills_by_corpse_explosion=11 kills_by_death_nova=112 kills_by_eruption=313 kills_by_eruption_spikes=146 kills_by_lance=262 kills_by_pestilence=201 kills_by_plague=139 kills_by_plague_cloud=17 kills_by_rapture=211 kills_by_rapture_burst=95 kills_by_shadow_bolt=18 kills_by_siphon=343 kills_by_soul_siphon=599 kills_by_spear=221 kills_by_void=145 kills_by_void_shard=6 kills_by_warrior=83 kills_by_wild_wildfire=36 levelup_banishes=1 levelup_rerolls=2 levelup_skips=2 life_paid=14 march_zones_entered=3 masque_faces=8 masque_found=2 masque_unmasked=12 miniboss_chests=1 minibossdmg_bash=14 minibossdmg_bolt=765 minibossdmg_bone_spear=751 minibossdmg_corpse_explosion=110 minibossdmg_death_nova=526 minibossdmg_eruption=468 minibossdmg_eruption_spikes=517 minibossdmg_pestilence=1120 minibossdmg_plague_cloud=137 minibossdmg_rapture=1688 minibossdmg_soul_siphon=1497 minibossdmg_spear=278 minibossdmg_warrior=90 mould_cells=15 plague_clouds=404 player_dmg_from_boss=44 player_dmg_from_dryad=9 player_dmg_from_fae_knight=146 player_dmg_from_great_stag=79 player_dmg_from_spore_mother=10 player_dmg_from_summer_bargain=14 player_dmg_from_summer_queen_petals=152 player_dmg_from_thornling=85 player_dmg_from_treant=329 player_dmg_from_wild_rider=104 player_dmg_from_wild_wildfire=30 player_dmg_from_will_o_wisp=2 player_dmg_from_winter_fae=40 player_dmg_from_winter_prince=21 player_healing=646 priest_heals=0 priest_wards=0 prince_bolts=25 prince_fans=5 prince_killed=1 prince_kills=1 prince_spawned=1 prince_ttk=26 prince_winter_s=60 pu_collected_feast=2 pu_collected_frenzy=1 pu_collected_hyper=1 pu_collected_magnet=4 pu_expired_feast=2 pu_expired_frenzy=1 pu_expired_hyper=2 pu_magnet_crystals=442 pu_pity_drops=5 pu_spawned_feast=4 pu_spawned_frenzy=2 pu_spawned_hyper=3 pu_spawned_magnet=4 pu_uptime_frenzy=12 pu_uptime_hyper=10 queen_bloom_blossoms=36 queen_bloom_hits=11 queen_bloom_seeds=9 queen_kill_time=80 queen_petal_bolts=91 rallies=12 rally_buff_time=96 rally_heal=337 rally_knockbacks=18 rally_meter_fills=12 rally_minion_dmg=1123 rally_raised=11 rally_recalled=3 rapture_bursts=693 reckoning_spawned=183 replacements=72 returns_burials=15 returns_bury_dmg=3094 returns_sprouts=9 ring_slows_enemies=10884 ring_slows_summons=534 ring_slows_you=239 roots_enemies=6 roots_summons=3 rot_bonus_dmg=77135 rot_kills=1701 season_turns=3 siphon_healed=610 siphon_summon_heal=736 snow_slows=117 spawned_dryad=440 spawned_fae_knight=169 spawned_great_stag=18 spawned_hunt_hound=24 spawned_masked_courtier=12 spawned_spore_mother=21 spawned_thornling=2948 spawned_treant=59 spawned_wild_rider=12 spawned_will_o_wisp=82 spawned_winter_fae=21 spawned_winter_prince=1 spear_volleys=1142 spore_puffs=83 summon_chills=7 summon_chills_winter_fae=3 summon_chills_winter_prince=4 summon_dmg_from_boss=181 summon_dmg_from_dryad=170 summon_dmg_from_fae_knight=555 summon_dmg_from_great_stag=1421 summon_dmg_from_hunt_hound=104 summon_dmg_from_masked_courtier=151 summon_dmg_from_summer_queen_bloom=213 summon_dmg_from_summer_queen_petals=410 summon_dmg_from_thornling=923 summon_dmg_from_treant=1409 summon_dmg_from_wild_burial=916 summon_dmg_from_wild_rider=255 summon_dmg_from_wild_wildfire=251 summon_dmg_from_will_o_wisp=20 summon_dmg_from_winter_fae=40 summon_dmg_from_winter_prince=86 summon_healing=1073 summon_soft_recalls=4 summon_stunned_seconds=8 summon_stuns=16 summon_stuns_great_stag=13 summon_stuns_wild_rider=3 thicket_catches=18 thicket_seeds=150 thicket_seeds_blocked=46 thicket_spreads=37 thickets_burnt=67 thickets_grown=98 treant_roots=60 void_shards=3444 volley_barrages=12 ward_absorbed=0 warrior_bashes=264 warrior_kills=112 wave_events=10 wild_rider_charge_hits=5 wild_rider_charge_on_you=1 wild_rider_charges=13 wildfire_enemies=429 wildfire_fronts=29 wildfire_kills=36 wildfire_player=1 wildfire_summon_dmg=253 wildfire_summons=13 wisp_lures=14 xp_collected=7522 xp_dropped=6856
+[autotest] boss attacks: petals=19 masque=2 bargain=2 bloom=9 | wrath: no | hammer soaked by undead: 0 | charges stopped by undead: 0 (shielding the player: 0) | judgment hits: 0 | call soldiers: 0 | holy zones boss/grave: 0/0
+[autotest] crimson march: zones entered 3 (final: Zone IV  -  The Throne of Blossoms) | placed/destroyed/escaped: outposts 0/0/0 generators 0/0/0 carts 0/0/0 standards 0/0/0 | outpost reinforcements 0 | ward zones 0
+[autotest] march enemies: aura buff pulses 0 | halberd cleave hits 0 | dmg resisted: shieldbearer 0, boss 0 | kills: shieldbearer=0 banner_bearer=0 halberdier=0
+[autotest] marshal vael: last stand no | cleave summon hits 0, soaked for the player 0 | command soldiers 0
+[autotest] march events (3): 5:00 zone_II, 10:00 zone_III, 15:00 zone_IV
+[autotest] stage events fired (0): 
+[autotest] templar charges: 0 (body-blocked by warriors: 0) | temporary summons spawned: 0
+[autotest] obstacle collisions resolved: player=98 summons=769 enemies=10498
+[autotest] class abomination: Lv 0, alive 0/0, deaths 0 | dmg 0 (abomination=0 abom_stomp=0) | abom_stomps=0 abom_stomp_hits=0
+[autotest] class rogue: Lv 0, alive 0/0, deaths 0 | dmg 0 (rogue=0 rogue_dash=0 rogue_bleed=0) | rogue_dashes=0 rogue_dash_hits=0
+[autotest] class gargoyle: Lv 0, alive 0/0, deaths 0 | dmg 0 (gargoyle=0 gargoyle_swoop=0) | gargoyle_swoops=0 gargoyle_swoop_hits=0
+[autotest] class frost_wraith: Lv 0, alive 0/0, deaths 0 | dmg 0 (frost_wraith=0) | frost_deep_freezes=0 frost_freezes=0 frost_boss_freezes=0 frost_frozen_seconds=0 frost_chills=0
+[autotest] class bone_hound: Lv 0, alive 0/0, deaths 0 | dmg 0 (bone_hound=0 hellhound=0 hellhound_burn=0 hellhound_trail=0) | hound_bites=0 hound_pack_bites=0 hound_pack_bonus_dmg=0 hellhound_burns=0 hellhound_trail_patches=0
+[autotest] class banshee: Lv 0, alive 0/0, deaths 0 | dmg 0 (banshee=0 keening_lady=0) | banshee_dirges=0 banshee_dirge_hits=0 dirge_debuff_seconds=0 keening_waves=0 keening_silenced=0 keening_heals_silenced=0
+[autotest] class corpse_catapult: Lv 0, alive 0/0, deaths 0 | dmg 0 (corpse_catapult=0 ossuary_engine=0 ossuary_shards=0) | catapult_volleys=0 catapult_boulders=0 catapult_boulder_hits=0 catapult_structure_dmg=0 ossuary_shard_fields=0 hazards_dropped=0
+[autotest] class specials: cancelled by recall 0 | ended inside an obstacle 0
+[autotest] special evolutions: shadow reaper: chain dashes 0, cooldown resets 0, bleed stacks added 0, max stacks 0, rogue bleed dmg (all) 0 | cathedral horror: stuns 0 (boss 0), stunned s 0.0, stone forms 0, stone s 0.0, dmg prevented by stone 0
+[autotest] grave step: dashes 93 (bot: crowd 20, hit 10, telegraph 63) | hits avoided in dash i-frames 9 | blocked 0, shortened by obstacles 0, ended inside an obstacle 0, avg length 110 px | charges 1, cooldown 5.00 s
+[autotest] dread rally: rallies 12 | meter fills 12, fill times s [133 104 90 78 79 81 76 72 75 67 72 82] (avg 84 s), meter now 77% | knockbacks 18 | summons called back 3 | heal 337 | minion dmg under buff 1123 (est. +dmg part 321) | buff time 96 s
+[autotest] army formation: bone_ring: 1252s kills 3699 army_dmg 7113 recalls 0 spread max 468 mean 110
+[autotest] character: gravecaller (The Gravecaller) | starting spell shadow_bolt Lv 5 EVOLVED | Baseline stats (Max HP 120, move speed 110) | innate: none | characters unlocked this run: fallen_confessor, carrion_lord, plague_scholar, bone_oracle | unlocked in the profile: gravecaller, bone_oracle, fallen_confessor, carrion_lord, plague_scholar (saved: false)
+[autotest] stuck_units=0 (touching an obstacle: 0) {  }
+[metric] boss_hp_at_0=0 min_hp_before_0=36
+[autotest] peaks: enemies=118 summons=8 projectiles=36 effects=28 crystals=195
+[autotest] nodes created (pools): enemies=118 summons=8 projectiles=36 effects=28 crystals=195
+[autotest] simulation step: avg 1.11 ms, worst 20.11 ms
+[autotest] power-ups: spawned 13 (magnet=4 feast=4 hyper=3 stasis=0 frenzy=2 nova=0) | collected 8 (magnet=4 feast=2 hyper=1 stasis=0 frenzy=1 nova=0) | expired (magnet=0 feast=2 hyper=2 stasis=0 frenzy=1 nova=0) | lost at cap 0 | pity drops 5 | crystals pulled by Soul Magnet 442
+[autotest] buff uptime: hyper=10s (0.8%, refreshed 0) stasis=0s (0.0%, refreshed 0) frenzy=12s (1.0%, refreshed 0) | soul nova kills: 0
+[autotest] chests: spawned 7, opened 7 (x1=7 x3=0 x5=0), items granted 7 (evolutions 5), pity 5, lost at cap 0, left on ground 0
+[autotest]    chest 06:01 x1: necrotic_expanse 4
+[autotest]    chest 10:16 x1: EVOLVE grave_eruption
+[autotest]    chest 10:58 x1: EVOLVE pestilence
+[autotest]    chest 11:39 x1: EVOLVE soul_rapture
+[autotest]    chest 12:10 x1: EVOLVE ossuary_lance
+[autotest]    chest 18:14 x1: EVOLVE void_barrage
+[autotest]    chest 18:23 x1: warrior 4
+[autotest] chest beacon: chests marked 7, seen on screen 7 | max off-screen arrows at once 0 | ticks with an arrow 0 (0.0 s)
+[autotest] profane pact: taken no (final Lv 0; never offered or never picked) | oath tier 0 | extra XP from pact 0, from oath 0 | extra soul ash from pact 0, from oath 0
+[autotest] meta upgrades (--meta=none): none | revivals used: 0
+[autotest] soul ash: +586 (time 150 [20:00] + kills 110 [3699] + elites 4 [1] + boss 75 + reckoning 130 [52.3 s] = 469, bonus +0% = +0, pact +0, oath +0) | bounty 300 | new total 886 | saved: false
+[autotest] difficulty: Necromancer (necromancer) | modifiers: none | foes: HP x0.800 (growth x1.00), dmg x1.000 (growth x1.00), spawn x1.250, speed x1.00, elite chance 0.000, boss HP x1.000 | XP x1.000 | soul ash: difficulty +0%, modifiers +0%, total x1.00
+[autotest] difficulty results: soul ash difficulty +0, modifiers +0 | trickle elites promoted: 0 | holy retribution bursts: 0 (dmg to you 0, to summons 0) | player max HP at start: 120
+[autotest] stage: The Fae Court | soul ash stage bonus +117 (x1.25) | stages unlocked by this run: world_tree
+[autotest] hyper: off (Necromancer) | foes: HP growth x1.00, dmg growth x1.00, boss HP x1.000 | at 0:00 vs the standard game: HP x1.00, dmg x1.00 | soul ash hyper +0 (+0%) | Reckoning lasted 52.3 s past 0:00 | unlocked: false (by this run: false) | hyper clear recorded: no
+[autotest] skins: character gravecaller, worn default | this run: rot kills 1701, high confessors slain 0, seraphine slain with all 4 roles 0 | lifetime: rot 1701/5000, confessors 0/50, seraphine full army 0/1 | unlocked 54/220 (new: none) | setup row cards 6
+[autotest] rewards: achievements=1 (a_fair_bargain) titles=0 unlocks=none | run: temp raised 0, min HP before 0:00 30%, evolutions 5, boss slain 80.2 s after arrival | one-run achievements met: full_ossuary (not checked: --rewards=on) | worn title: none | title row choices 1
+[autotest] demo: on=false | acts=1 | stages=graveyard,crimson_march,sanctum | save=user://save.cfg | full_game_offers=0
+[autotest] feedback: url_set=true | report_chars=122/212/312 (main menu / pause / results samples built, max 1500) | url_chars=609 | opened=never (autotest)
+exit 0

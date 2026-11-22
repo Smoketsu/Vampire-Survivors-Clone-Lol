@@ -52,8 +52,6 @@ const ENEMY_DAMAGE_MULT: float = 1.05  # TUNING (not in GDD)
 ## early kills halved and about 1 Crimson March run in 3 snowballed into a
 ## starved army (30 foes alive at 1:00 instead of 15).
 const ENEMY_MULT_FROM: float = 240.0  # TUNING (not in GDD)
-## Soul Ash multiplier of a run on this stage (shown as its own end-screen line).
-const ASH_MULT: float = 1.25  # TUNING (not in GDD) owner decision Oct 2026, GDD §15.0 "Ossuary expansion: owner decisions"; each act restarts at x1 / x1.25 / x1.5
 
 ## The Reckoning (same escalation as the Graveyard; only the flavour differs).
 ## Keys as GraveyardStage.RECKONING.
@@ -410,10 +408,7 @@ const STAGE := {
 	"id": ID,
 	"display_name": "The Crimson March",  # GDD §8.2
 	"short_name": "Crimson March",
-	"chapter": "Chapter II",
 	"description": "Counteroffensive and siege. Lead your army down the burned road, through the checkpoint and the siege camp to the Covenant fortress. Destroy outposts, ward generators and supply carts, then break Marshal Vael, the Crimson Bulwark.",  # GDD §8.2 theme / story
-	"unlock": {"stage": "graveyard", "boss_kills": 1},  # GDD §9.3: defeat the previous stage's boss
-	"unlock_text": "Slay Sir Alaric in the Desecrated Graveyard to unlock.",
 	"boss": BOSS,
 	"segments": SEGMENTS,
 	"events": EVENTS,
@@ -427,6 +422,5 @@ const STAGE := {
 	"enemy_hp_mult": ENEMY_HP_MULT,
 	"enemy_damage_mult": ENEMY_DAMAGE_MULT,
 	"enemy_mult_from": ENEMY_MULT_FROM,
-	"ash_mult": ASH_MULT,
 	"march": MARCH,
 }

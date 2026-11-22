@@ -3,16 +3,11 @@
 # On every push / pull request (test and export run at the same time; the
 # release and publish jobs wait for both, GDD 15.0 "Parallel CI and lean testing"):
 #   1. test   - one parallel job per playthrough: imports the project with Godot 4.3 headless and runs the
-#               automated full playthrough (--autotest) on the Graveyard
-#               (naive and army policies), on the Crimson March
-#               (--stage=crimson_march) and in the Sanctum of Judgment
-#               (--stage=sanctum, army policy so its objectives are
-#               exercised), and on the three Act II stages (--stage=harbour,
-#               archive, spire; army policy), the three Act IV stages (--stage=ilion,
-#               olympus, underworld; army policy), the three Act V stages (--stage=province,
-#               kurogane, sun_road; army policy) and the twelve Act VI-IX stages (--stage=burning_gate,
-#               silk_palace, pandemonium, ravensmoor, witchwood, castle_sanguis, skid_row, fort_kessler,
-#               liberty_heights, crash_site, proving_moon, ark; army policy). Fails on any script error/warning or if a run
+#               automated full playthrough (--autotest) on every stage, in the act order
+#               (StageRegistry.ACT_ORDER; the matrix rows are grouped by Part and named "Act N Stage M"):
+#               the Graveyard twice (naive and army policies), the Crimson March (naive) and the
+#               other 43 stages with the army policy (so their objectives are exercised): 46 jobs.
+#               Fails on any script error/warning or if a run
 #               doesn't complete.
 #   2. export - builds single-file Windows (.exe) and Linux executables and the
 #               no-threads Web build (index.html + .js + .wasm + .pck, any static
@@ -86,31 +81,55 @@ jobs:
         #   timeout - wall-clock limit in seconds (`timeout`), above a normal run's
         #             ~1.5-3 min; the Act II stages are slower, so they get 900 s.
         include:
-          - {id: graveyard, name: "Graveyard, naive", args: "", timeout: 600}
-          - {id: graveyard_army, name: "Graveyard, army policy", args: "--policy=army", timeout: 600}
-          - {id: march, name: "Stage 2, the Crimson March", args: "--stage=crimson_march", timeout: 600}
-          - {id: sanctum, name: "Stage 3, the Sanctum of Judgment", args: "--stage=sanctum --policy=army", timeout: 600}
-          - {id: harbour, name: "Act II Stage 4, Gullhaven Harbour", args: "--stage=harbour --policy=army", timeout: 900}
-          - {id: archive, name: "Act II Stage 5, the Hollow Archive", args: "--stage=archive --policy=army", timeout: 900}
-          - {id: spire, name: "Act II Stage 6, Ul-Thalos", args: "--stage=spire --policy=army", timeout: 900}
-          - {id: ilion, name: "Act IV Stage 10, the Shores of Ilion", args: "--stage=ilion --policy=army", timeout: 900}
-          - {id: olympus, name: "Act IV Stage 11, Mount Olympus", args: "--stage=olympus --policy=army", timeout: 900}
-          - {id: underworld, name: "Act IV Stage 12, the Asphodel Underworld", args: "--stage=underworld --policy=army", timeout: 900}
+          # --- Part One: the living ---
+          - {id: graveyard, name: "Act I Stage 1, the Desecrated Graveyard, naive", args: "", timeout: 600}
+          - {id: graveyard_army, name: "Act I Stage 1, the Desecrated Graveyard, army policy", args: "--policy=army", timeout: 600}
+          - {id: march, name: "Act I Stage 2, the Crimson March", args: "--stage=crimson_march", timeout: 600}
+          - {id: sanctum, name: "Act I Stage 3, the Sanctum of Judgment", args: "--stage=sanctum --policy=army", timeout: 600}
+          - {id: cutter, name: "Act II Stage 4, the Smuggler's Cutter", args: "--stage=cutter --policy=army", timeout: 900}
+          - {id: galleon, name: "Act II Stage 5, the Treasure Galleon", args: "--stage=galleon --policy=army", timeout: 900}
+          - {id: maelstrom, name: "Act II Stage 6, the Maelstrom", args: "--stage=maelstrom --policy=army", timeout: 900}
+          - {id: ravensmoor, name: "Act III Stage 7, Ravensmoor", args: "--stage=ravensmoor --policy=army", timeout: 900}
+          - {id: witchwood, name: "Act III Stage 8, the Witchwood", args: "--stage=witchwood --policy=army", timeout: 900}
+          - {id: castle_sanguis, name: "Act III Stage 9, Castle Sanguis", args: "--stage=castle_sanguis --policy=army", timeout: 900}
+          - {id: skid_row, name: "Act IV Stage 10, Skid Row", args: "--stage=skid_row --policy=army", timeout: 900}
+          - {id: fort_kessler, name: "Act IV Stage 11, Fort Kessler", args: "--stage=fort_kessler --policy=army", timeout: 900}
+          - {id: liberty_heights, name: "Act IV Stage 12, Liberty Heights", args: "--stage=liberty_heights --policy=army", timeout: 900}
           - {id: province, name: "Act V Stage 13, the Burning Province", args: "--stage=province --policy=army", timeout: 900}
           - {id: kurogane, name: "Act V Stage 14, Castle Kurogane", args: "--stage=kurogane --policy=army", timeout: 900}
           - {id: sun_road, name: "Act V Stage 15, the Road to the Sun", args: "--stage=sun_road --policy=army", timeout: 900}
-          - {id: burning_gate, name: "Act VI Stage 16, the Burning Gate", args: "--stage=burning_gate --policy=army", timeout: 900}
-          - {id: silk_palace, name: "Act VI Stage 17, the Palace of Silk and Ash", args: "--stage=silk_palace --policy=army", timeout: 900}
-          - {id: pandemonium, name: "Act VI Stage 18, Pandemonium", args: "--stage=pandemonium --policy=army", timeout: 900}
-          - {id: ravensmoor, name: "Act VII Stage 19, Ravensmoor", args: "--stage=ravensmoor --policy=army", timeout: 900}
-          - {id: witchwood, name: "Act VII Stage 20, the Witchwood", args: "--stage=witchwood --policy=army", timeout: 900}
-          - {id: castle_sanguis, name: "Act VII Stage 21, Castle Sanguis", args: "--stage=castle_sanguis --policy=army", timeout: 900}
-          - {id: skid_row, name: "Act VIII Stage 22, Skid Row", args: "--stage=skid_row --policy=army", timeout: 900}
-          - {id: fort_kessler, name: "Act VIII Stage 23, Fort Kessler", args: "--stage=fort_kessler --policy=army", timeout: 900}
-          - {id: liberty_heights, name: "Act VIII Stage 24, Liberty Heights", args: "--stage=liberty_heights --policy=army", timeout: 900}
-          - {id: crash_site, name: "Act IX Stage 25, the Crash Site", args: "--stage=crash_site --policy=army", timeout: 900}
-          - {id: proving_moon, name: "Act IX Stage 26, the Proving Moon", args: "--stage=proving_moon --policy=army", timeout: 900}
-          - {id: ark, name: "Act IX Stage 27, the Ark of the Concord", args: "--stage=ark --policy=army", timeout: 900}
+          # --- Part Two: gods, hell and heaven ---
+          - {id: barrow_fields, name: "Act VI Stage 16, the Barrow Fields", args: "--stage=barrow_fields --policy=army", timeout: 900}
+          - {id: valgard, name: "Act VI Stage 17, Valgard", args: "--stage=valgard --policy=army", timeout: 900}
+          - {id: vigrid, name: "Act VI Stage 18, Vigrid, the Last Field", args: "--stage=vigrid --policy=army", timeout: 900}
+          - {id: necropolis, name: "Act VII Stage 19, the Necropolis of Sand", args: "--stage=necropolis --policy=army", timeout: 900}
+          - {id: lioness_temple, name: "Act VII Stage 20, the Temple of the Lioness", args: "--stage=lioness_temple --policy=army", timeout: 900}
+          - {id: two_truths, name: "Act VII Stage 21, the Hall of Two Truths", args: "--stage=two_truths --policy=army", timeout: 900}
+          - {id: ilion, name: "Act VIII Stage 22, the Shores of Ilion", args: "--stage=ilion --policy=army", timeout: 900}
+          - {id: olympus, name: "Act VIII Stage 23, Mount Olympus", args: "--stage=olympus --policy=army", timeout: 900}
+          - {id: underworld, name: "Act VIII Stage 24, the Asphodel Underworld", args: "--stage=underworld --policy=army", timeout: 900}
+          - {id: burning_gate, name: "Act IX Stage 25, the Burning Gate", args: "--stage=burning_gate --policy=army", timeout: 900}
+          - {id: silk_palace, name: "Act IX Stage 26, the Palace of Silk and Ash", args: "--stage=silk_palace --policy=army", timeout: 900}
+          - {id: pandemonium, name: "Act IX Stage 27, Pandemonium", args: "--stage=pandemonium --policy=army", timeout: 900}
+          - {id: silver_stair, name: "Act X Stage 28, the Silver Stair", args: "--stage=silver_stair --policy=army", timeout: 900}
+          - {id: wheel_of_thrones, name: "Act X Stage 29, the Wheel of Thrones", args: "--stage=wheel_of_thrones --policy=army", timeout: 900}
+          - {id: empyrean, name: "Act X Stage 30, the Empyrean", args: "--stage=empyrean --policy=army", timeout: 900}
+          # --- Part Three: beyond and before ---
+          - {id: harbour, name: "Act XI Stage 31, Gullhaven Harbour", args: "--stage=harbour --policy=army", timeout: 900}
+          - {id: archive, name: "Act XI Stage 32, the Hollow Archive", args: "--stage=archive --policy=army", timeout: 900}
+          - {id: spire, name: "Act XI Stage 33, Ul-Thalos", args: "--stage=spire --policy=army", timeout: 900}
+          - {id: wastes, name: "Act XII Stage 34, the Scrap Wastes", args: "--stage=wastes --policy=army", timeout: 900}
+          - {id: assembly, name: "Act XII Stage 35, the Assembly Halls", args: "--stage=assembly --policy=army", timeout: 900}
+          - {id: citadel, name: "Act XII Stage 36, the Iron Citadel", args: "--stage=citadel --policy=army", timeout: 900}
+          - {id: crash_site, name: "Act XIII Stage 37, the Crash Site", args: "--stage=crash_site --policy=army", timeout: 900}
+          - {id: proving_moon, name: "Act XIII Stage 38, the Proving Moon", args: "--stage=proving_moon --policy=army", timeout: 900}
+          - {id: ark, name: "Act XIII Stage 39, the Ark of the Concord", args: "--stage=ark --policy=army", timeout: 900}
+          - {id: fern_basin, name: "Act XIV Stage 40, the Fern Basin", args: "--stage=fern_basin --policy=army", timeout: 900}
+          - {id: great_plain, name: "Act XIV Stage 41, the Great Plain", args: "--stage=great_plain --policy=army", timeout: 900}
+          - {id: last_day, name: "Act XIV Stage 42, the Last Day", args: "--stage=last_day --policy=army", timeout: 900}
+          - {id: greenwood, name: "Act XV Stage 43, the Greenwood", args: "--stage=greenwood --policy=army", timeout: 900}
+          - {id: fae_court, name: "Act XV Stage 44, the Fae Court", args: "--stage=fae_court --policy=army", timeout: 900}
+          - {id: world_tree, name: "Act XV Stage 45, the World-Tree", args: "--stage=world_tree --policy=army", timeout: 900}
     steps:
       - uses: actions/checkout@v4
 
@@ -157,6 +176,16 @@ jobs:
             echo "::error::Errors/warnings during the Ossuary check"; exit 1
           fi
           grep -qF "[ossuary_check] PASS" ossuary_check.log
+
+      - name: Act order and save migration check (the reorder pass)
+        if: matrix.id == 'graveyard'
+        run: |
+          set -euo pipefail
+          timeout 60 "$GODOT_BIN" --headless res://tools/save_migration_check.tscn -- --autotest --check-dir="$RUNNER_TEMP/save_migration_check" 2>&1 | tee save_migration_check.log
+          if grep -qE "SCRIPT ERROR|ERROR:|WARNING:" save_migration_check.log; then
+            echo "::error::Errors/warnings during the save migration check"; exit 1
+          fi
+          grep -qF "[save_migration_check] PASS" save_migration_check.log
 
       - name: Demo mode check (demo gates on, full game unchanged)
         if: matrix.id == 'graveyard'

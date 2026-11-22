@@ -724,6 +724,98 @@ const STARSONG_SCORE := {
 			[18.5, 698.46, 2.6], [21.5, 440.0, 2.3]]},  # TUNING (not in GDD) [start (s), Hz, length (s)]
 }
 
+# --- Act X (temporary number): the Black Tide ---
+## "Dead Men's Shanty", the Black Tide run loop (GDD §15.0 "The Black Tide art and audio"): the
+## RunLoopSynth score of every stage whose STAGE has "music": "shanty". A sea shanty gone dark, in
+## D minor with the harmonic A major pull (Dm, Bb, Gm, A), 4/4 at 120 bpm: eight 2 s bars, a 16 s
+## loop, four 4 s chord segments. A stamped foot-drum on every beat (the existing "drums" job), an
+## oom-pah-pah of plucked strings (the existing "waltz" job, four beats a bar), an accordion-like
+## reed pad (the existing "organ" job, a fast attack and a gentle vibrato), a tin-whistle tune
+## (the existing "flute" job), a bell buoy tolling far off (the existing "hits") and a fog horn
+## swelling twice a loop (the existing "horn"), over a deep D drone and a swelling sea-wind bed.
+## No new job. Rendered lazily (Sfx), never under the autotest, so every earlier loop and the
+## startup bank stay sample for sample what they were.
+const SHANTY_SCORE := {
+	"loop_seconds": 16.0,  # TUNING (not in GDD) eight 4/4 bars of 2 s (120 bpm)
+	"root_hz": 36.71,  # TUNING (not in GDD) D1, the drone under D minor
+	"chords": [
+		[146.83, 174.61, 220.0],
+		[116.54, 146.83, 174.61],
+		[98.0, 116.54, 146.83],
+		[110.0, 138.59, 164.81],
+	],  # TUNING (not in GDD) Dm, Bb, Gm, A (the raised third of A is the shanty's dark pull)
+	"drone_lp_hz": 65.0,  # TUNING (not in GDD) the hull's low hum
+	"wind_lp_hz": 170.0,  # TUNING (not in GDD) sea wind and the slap of water
+	"wind_swells": 4.0,  # TUNING (not in GDD) the swell: four breaths a loop
+	"vibrato_hz": 0.4,  # TUNING (not in GDD)
+	"vibrato_depth": 0.004,  # TUNING (not in GDD)
+	# The stamped foot-drum: a thump on every beat (0.5 s), the first beat of each bar accented.
+	"drums": {"step": 0.5, "hz0": 100.0, "hz1": 50.0, "dur": 0.28, "amp": 0.36, "decay": 0.09,
+		"accent_every": 4, "accent_amp": 0.56, "slap": 0.16, "ghost_at": 0.5, "ghost_amp": 0.0},  # TUNING (not in GDD)
+	# Oom-pah-pah: a plucked bass on beat 1, the chord on beats 2 to 4 (Dm Dm Bb Bb Gm Gm A A).
+	"waltz": {"beat": 0.5, "beats_per_bar": 4, "dur": 0.4, "bass_amp": 0.2, "chord_amp": 0.045, "decay": 0.14,
+		"lp0": 1700.0, "lp1": 600.0,
+		"bars": [
+			[73.42, [293.66, 349.23, 440.0]], [73.42, [293.66, 349.23, 440.0]],
+			[58.27, [293.66, 349.23, 466.16]], [58.27, [293.66, 349.23, 466.16]],
+			[49.0, [293.66, 392.0, 466.16]], [49.0, [293.66, 392.0, 466.16]],
+			[55.0, [277.18, 329.63, 440.0]], [55.0, [277.18, 329.63, 440.0]],
+		]},  # TUNING (not in GDD) [bass Hz, [chord Hz, ...]] per bar
+	# The accordion: reedy sine partials, a quick swell under each chord root.
+	"organ": {"attack": 0.4, "decay": 1.2, "vib_hz": 5.5, "vib_depth": 0.004,
+		"partials": [[1.0, 0.07], [2.0, 0.055], [3.0, 0.04], [4.0, 0.025], [5.0, 0.012]],
+		"notes": [[0.0, 146.83, 3.9], [4.0, 116.54, 3.9], [8.0, 98.0, 3.9], [12.0, 110.0, 3.8]]},  # TUNING (not in GDD) [start (s), Hz, length (s)]
+	# The tin whistle: a slow, sad tune over the four chords; every note ends before the loop does.
+	"flute": {"amp": 0.07, "breath": 0.06, "attack": 0.12, "decay": 1.1, "vib_hz": 5.0, "vib_depth": 0.01,
+		"notes": [[0.0, 587.33, 1.5], [1.75, 698.46, 0.9], [2.75, 659.25, 1.2],
+			[4.0, 587.33, 1.5], [5.75, 698.46, 0.9], [6.75, 587.33, 1.2],
+			[8.0, 783.99, 1.5], [9.75, 698.46, 0.9], [10.75, 587.33, 1.2],
+			[12.0, 554.37, 1.5], [13.75, 659.25, 0.9], [14.75, 440.0, 1.1]]},  # TUNING (not in GDD) [start (s), Hz, length (s)]
+	# The bell buoy: a dull inharmonic toll far off, once every 8 s, 4 s into the loop.
+	"hits": {"every": 8.0, "offset": 4.0, "root_hz": 392.0, "dur": 2.6, "decay": 0.9,
+		"partials": [[1.0, 0.05], [2.4, 0.03], [3.9, 0.014]], "click": 0.008},  # TUNING (not in GDD)
+	# The fog horn: two slow, low swells a loop (a saw and its fifth through a rising low-pass).
+	"horn": {"starts": [0.0, 8.0], "dur": 6.5, "attack": 2.2, "decay": 3.0, "amp": 0.05,
+		"lp0": 240.0, "lp1": 800.0,
+		"notes": [[73.42, 110.0], [98.0, 146.83]]},  # TUNING (not in GDD) [root, fifth] (Hz) per swell
+}
+
+# --- Act VI (final order): the Hall of the Slain ---
+## "Horns at the Last Feast", the Hall of the Slain run loop (GDD §15.0 "Hall of the Slain art and audio"): the RunLoopSynth
+## score of every stage whose STAGE has "music": "valhall". Slow war drums (the existing Act VI "drums" job, 75 bpm), long low
+## horn calls (the existing "horn" job with a quicker attack, it is the Reckoning's colour: Gjallarhorn), a cold drone and
+## a bare organ pad of open fifths in A Aeolian (A, G, F, G: Am, G, F, G without thirds) and a few frozen chimes (the existing
+## "hits" job). No new job: nothing in the synth changed. 16 s, 20 beats at 75 bpm. Rendered lazily (Sfx), never under the autotest.
+const VALHALL_SCORE := {
+	"loop_seconds": 16.0,  # TUNING (not in GDD) 20 drum beats of 0.8 s
+	"root_hz": 27.5,  # TUNING (not in GDD) A0, a cold drone under A
+	"chords": [
+		[110.0, 164.81, 220.0],
+		[98.0, 146.83, 196.0],
+		[87.31, 130.81, 174.61],
+		[98.0, 146.83, 196.0],
+	],  # TUNING (not in GDD) open fifths, no thirds: bare and cold
+	"drone_lp_hz": 55.0,  # TUNING (not in GDD) a deep frozen hum
+	"wind_lp_hz": 420.0,  # TUNING (not in GDD) a snow wind
+	"wind_swells": 3.0,  # TUNING (not in GDD)
+	"vibrato_hz": 0.3,  # TUNING (not in GDD)
+	"vibrato_depth": 0.002,  # TUNING (not in GDD)
+	# War drums: a skin thump every 0.8 s, every 4th a heavy accent, a soft ghost hit a half beat later.
+	"drums": {"step": 0.8, "hz0": 95.0, "hz1": 46.0, "dur": 0.42, "amp": 0.42, "decay": 0.14,
+		"accent_every": 4, "accent_amp": 0.68, "slap": 0.14, "ghost_at": 0.5, "ghost_amp": 0.17},  # TUNING (not in GDD)
+	# Frozen chimes: a quiet inharmonic ping every 4 s, 2 s into each segment.
+	"hits": {"every": 4.0, "offset": 2.0, "root_hz": 660.0, "dur": 2.0, "decay": 0.7,
+		"partials": [[1.0, 0.04], [2.76, 0.02], [5.4, 0.008]], "click": 0.01},  # TUNING (not in GDD)
+	# The bare organ pad: sine partials, a slow swell, one note per half loop (A, then G).
+	"organ": {"attack": 2.2, "decay": 4.0, "vib_hz": 0.4, "vib_depth": 0.002,
+		"partials": [[1.0, 0.09], [2.0, 0.07], [3.0, 0.04], [4.0, 0.025], [6.0, 0.012]],
+		"notes": [[0.0, 110.0, 7.6], [8.0, 98.0, 7.6]]},  # TUNING (not in GDD) [start (s), Hz, length (s)]
+	# The horn calls: two long, low brass swells a loop (a saw and its fifth through a low-pass that opens).
+	"horn": {"starts": [1.6, 9.6], "dur": 5.2, "attack": 0.9, "decay": 3.0, "amp": 0.065,
+		"lp0": 360.0, "lp1": 1300.0,
+		"notes": [[110.0, 164.81], [98.0, 146.83]]},  # TUNING (not in GDD) [root, fifth] (Hz) per call
+}
+
 ## Run-loop scores by STAGE "music" id (Sfx.play_music() modes; "" / absent =
 ## the Act I loop): "tide" = "Below the Tide" (Act II), "iron" = "Iron Requiem"
 ## (Act III), "bronze" = "Hymn of Bronze" (Act IV), "sun" = "The Setting Sun" (Act V), "brimstone" = "Hymn of the Pit" (Act VI), "sanguine" = "Waltz of the Red Moon" (Act VII), "siren" = "Sirens at Midnight" (Act VIII). Each has its own fixed synth seed (Sfx.SCORE_SEEDS).
@@ -737,6 +829,18 @@ const SCORES := {
 	"siren": SIREN_SCORE,  # Act VIII
 	# --- Act IX: the Concord of Stars ---
 	"starsong": STARSONG_SCORE,  # Act IX: "The Reaping Stars"
+	# --- The Black Tide ---
+	"shanty": SHANTY_SCORE,  # the Black Tide: "Dead Men's Shanty"
+	# --- Act VI (final order): the Hall of the Slain ---
+	"valhall": VALHALL_SCORE,  # "Horns at the Last Feast"
+	# --- the Necropolis Dynasty (Act VII slot) ---
+	"weighing": WEIGHING_SCORE,  # "The Weighing of the Heart"
+	# --- the Celestial Host (Act X slot) ---
+	"hosanna": HOSANNA_SCORE,  # "Hosanna in the Silence"
+	# --- the Age of Titans (Act XIV slot) ---
+	"primordial": PRIMORDIAL_SCORE,  # "Before the Fall"
+	# --- the Turning Year (Act XV slot) ---
+	"wildwood": WILDWOOD_SCORE,  # "The Turning Year"
 }
 ## Sound pack each score asks for when its run starts (Sfx.prepare_pack():
 ## "empire" = EMPIRE_SOUNDS, the Act III effects; "pantheon" = PANTHEON_SOUNDS,
@@ -750,6 +854,14 @@ const SCORE_PACKS := {
 	"siren": "city",  # Act VIII
 	# --- Act IX: the Concord of Stars ---
 	"starsong": "concord",  # Act IX: the Concord sound pack
+	# --- The Black Tide ---
+	"shanty": "corsair",  # the Black Tide sound pack
+	# --- Act VI (final order): the Hall of the Slain ---
+	"valhall": "norse",  # the Norse sound pack
+	"weighing": "dynasty",  # the Necropolis Dynasty sound pack
+	"hosanna": "host",  # the Celestial Host sound pack
+	"primordial": "titans",  # the Age of Titans sound pack
+	"wildwood": "wild",  # the Turning Year sound pack
 }
 
 ## Act III sound effects (the Electronic Empire; recipe keys as SOUNDS). Kept
@@ -1823,4 +1935,706 @@ const CONCORD_SOUNDS: Dictionary = {  # TUNING (not in GDD)
 			{"wave": "square", "f0": 210.0, "f1": 130.0, "dur": 1.1, "amp": 0.08, "attack": 0.1, "decay": 0.6, "lp0": 1600.0, "lp1": 900.0, "vib_hz": 18.0, "vib_depth": 0.05},
 			{"wave": "noise", "dur": 1.2, "amp": 0.12, "attack": 0.1, "decay": 0.6, "lp0": 3000.0, "lp1": 1500.0},
 			{"wave": "sine", "f0": 70.0, "f1": 50.0, "dur": 1.3, "amp": 0.22, "attack": 0.1, "decay": 0.7}]},
+}
+
+# --- The Black Tide ---
+## The Black Tide sound effects (the Corsair Brotherhood and the sea; recipe keys as SOUNDS). Kept OUT of SOUNDS like
+## the other packs: Sfx renders it lazily the first time a Black Tide run's music ("shanty") is asked for
+## (Sfx.prepare_pack("corsair"); seeds Sfx.PACK_SEED + Sfx.PACK_SEED_OFFSETS["corsair"] + i, offset 7000). Sounds are
+## only ever appended at the END (the pack's seeds follow its order). Nothing plays them until the stage code wires
+## its sound map (docs/tide/ART_MANIFEST.md lists what each is for).
+const CORSAIR_SOUNDS: Dictionary = {  # TUNING (not in GDD)
+	# A deck cannon: a flat crack, a low thump and a rolling boom.
+	"cannon_fire": {"dur": 1.1, "volume_db": -9.0, "max_voices": 3, "min_interval": 90, "pitch_var": 0.05, "priority": 3,
+		"layers": [
+			{"wave": "noise", "dur": 0.08, "amp": 0.6, "attack": 0.001, "decay": 0.02, "lp0": 9000.0, "lp1": 2500.0},
+			{"wave": "sine", "f0": 130.0, "f1": 38.0, "dur": 0.7, "amp": 0.75, "attack": 0.002, "decay": 0.22},
+			{"wave": "noise", "start": 0.03, "dur": 0.9, "amp": 0.4, "attack": 0.01, "decay": 0.32, "lp0": 1600.0, "lp1": 160.0},
+			{"wave": "saw", "f0": 70.0, "f1": 40.0, "start": 0.04, "dur": 0.6, "amp": 0.2, "attack": 0.005, "decay": 0.25, "lp0": 400.0}]},
+	# A cannonball lands: a splintering crunch and a short low thud.
+	"cannon_hit": {"dur": 0.5, "volume_db": -11.0, "max_voices": 4, "min_interval": 60, "pitch_var": 0.08, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.2, "amp": 0.5, "attack": 0.001, "decay": 0.06, "lp0": 5000.0, "lp1": 700.0},
+			{"wave": "sine", "f0": 110.0, "f1": 45.0, "dur": 0.4, "amp": 0.6, "attack": 0.002, "decay": 0.12},
+			{"wave": "square", "f0": 190.0, "f1": 90.0, "dur": 0.12, "amp": 0.12, "attack": 0.001, "decay": 0.04, "lp0": 1500.0}]},
+	# A musket shot: a sharp crack with a short hiss of smoke.
+	"musket_shot": {"dur": 0.5, "volume_db": -15.0, "max_voices": 4, "min_interval": 60, "pitch_var": 0.08, "priority": 1,
+		"layers": [
+			{"wave": "noise", "dur": 0.05, "amp": 0.55, "attack": 0.001, "decay": 0.012, "lp0": 9000.0, "lp1": 3500.0},
+			{"wave": "sine", "f0": 220.0, "f1": 70.0, "dur": 0.2, "amp": 0.3, "attack": 0.001, "decay": 0.06},
+			{"wave": "noise", "start": 0.04, "dur": 0.4, "amp": 0.1, "attack": 0.02, "decay": 0.15, "lp0": 4500.0, "lp1": 1500.0}]},
+	# The grapple is thrown: a rope whirring through the air, a rising swish.
+	"hook_throw": {"dur": 0.6, "volume_db": -16.0, "max_voices": 3, "min_interval": 120, "pitch_var": 0.06, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.5, "amp": 0.2, "attack": 0.25, "decay": 0.12, "lp0": 800.0, "lp1": 5000.0},
+			{"wave": "sine", "f0": 300.0, "f1": 900.0, "dur": 0.45, "amp": 0.07, "attack": 0.3, "decay": 0.1, "vib_hz": 24.0, "vib_depth": 0.03},
+			{"wave": "tri", "f0": 180.0, "f1": 420.0, "dur": 0.45, "amp": 0.1, "attack": 0.3, "decay": 0.1, "lp0": 1500.0}]},
+	# The hook bites the rail: an iron clank, a wooden thunk and a taut rope's creak.
+	"hook_bite": {"dur": 0.7, "volume_db": -12.0, "max_voices": 4, "min_interval": 80, "pitch_var": 0.07, "priority": 2,
+		"layers": [
+			{"wave": "sine", "f0": 1250.0, "f1": 1180.0, "dur": 0.4, "amp": 0.16, "attack": 0.001, "decay": 0.09},
+			{"wave": "sine", "f0": 2870.0, "f1": 2790.0, "dur": 0.3, "amp": 0.07, "attack": 0.001, "decay": 0.06},
+			{"wave": "noise", "dur": 0.05, "amp": 0.5, "attack": 0.001, "decay": 0.012, "lp0": 3500.0, "lp1": 900.0},
+			{"wave": "sine", "f0": 140.0, "f1": 70.0, "dur": 0.2, "amp": 0.4, "attack": 0.001, "decay": 0.06},
+			{"wave": "saw", "f0": 210.0, "f1": 250.0, "start": 0.15, "dur": 0.5, "amp": 0.05, "attack": 0.1, "decay": 0.3, "lp0": 700.0, "vib_hz": 14.0, "vib_depth": 0.06}]},
+	# A hook line is cut: a sharp snap and a falling lash of rope.
+	"hook_cut": {"dur": 0.45, "volume_db": -13.0, "max_voices": 3, "min_interval": 80, "pitch_var": 0.08, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.03, "amp": 0.6, "attack": 0.001, "decay": 0.008, "lp0": 8000.0, "lp1": 3000.0},
+			{"wave": "sine", "f0": 900.0, "f1": 160.0, "dur": 0.25, "amp": 0.2, "attack": 0.001, "decay": 0.08},
+			{"wave": "noise", "start": 0.05, "dur": 0.3, "amp": 0.12, "attack": 0.01, "decay": 0.12, "lp0": 3500.0, "lp1": 900.0}]},
+	# A small splash: something light falls into the sea.
+	"splash": {"dur": 0.6, "volume_db": -15.0, "max_voices": 4, "min_interval": 50, "pitch_var": 0.12, "priority": 1,
+		"layers": [
+			{"wave": "noise", "dur": 0.5, "amp": 0.3, "attack": 0.02, "decay": 0.15, "lp0": 5500.0, "lp1": 900.0},
+			{"wave": "sine", "f0": 400.0, "f1": 120.0, "dur": 0.2, "amp": 0.15, "attack": 0.001, "decay": 0.07},
+			{"wave": "noise", "start": 0.15, "dur": 0.4, "amp": 0.08, "attack": 0.05, "decay": 0.15, "lp0": 3000.0, "lp1": 600.0}]},
+	# A man goes overboard: a heavy splash and a gurgle sinking away.
+	"overboard": {"dur": 1.0, "volume_db": -12.0, "max_voices": 3, "min_interval": 70, "pitch_var": 0.1, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.8, "amp": 0.4, "attack": 0.01, "decay": 0.25, "lp0": 4500.0, "lp1": 400.0},
+			{"wave": "sine", "f0": 220.0, "f1": 60.0, "dur": 0.4, "amp": 0.4, "attack": 0.002, "decay": 0.13},
+			{"wave": "sine", "f0": 160.0, "f1": 90.0, "start": 0.3, "dur": 0.6, "amp": 0.08, "attack": 0.05, "decay": 0.3, "vib_hz": 11.0, "vib_depth": 0.1}]},
+	# A shark leaps and lands: a surge of water, a wet slam.
+	"shark_leap": {"dur": 0.9, "volume_db": -12.0, "max_voices": 2, "min_interval": 150, "pitch_var": 0.06, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.4, "amp": 0.3, "attack": 0.25, "decay": 0.1, "lp0": 800.0, "lp1": 4500.0},
+			{"wave": "noise", "start": 0.4, "dur": 0.5, "amp": 0.45, "attack": 0.004, "decay": 0.16, "lp0": 3800.0, "lp1": 500.0},
+			{"wave": "sine", "f0": 140.0, "f1": 50.0, "start": 0.4, "dur": 0.4, "amp": 0.5, "attack": 0.002, "decay": 0.14}]},
+	# The kraken surfaces: a deep, wet groan with a bubbling rumble under it.
+	"kraken_rise": {"dur": 2.4, "volume_db": -9.0, "max_voices": 2, "min_interval": 600, "pitch_var": 0.04, "priority": 3,
+		"layers": [
+			{"wave": "saw", "f0": 44.0, "f1": 78.0, "dur": 2.0, "amp": 0.24, "attack": 0.8, "decay": 1.0, "lp0": 160.0, "lp1": 480.0, "vib_hz": 3.5, "vib_depth": 0.04},
+			{"wave": "sine", "f0": 38.0, "f1": 31.0, "start": 0.1, "dur": 2.2, "amp": 0.4, "attack": 0.5, "decay": 1.2},
+			{"wave": "noise", "dur": 2.0, "amp": 0.18, "attack": 0.7, "decay": 0.8, "lp0": 300.0, "lp1": 1400.0, "vib_hz": 9.0, "vib_depth": 0.3},
+			{"wave": "tri", "f0": 90.0, "f1": 55.0, "start": 0.6, "dur": 1.4, "amp": 0.1, "attack": 0.3, "decay": 0.7, "lp0": 500.0, "vib_hz": 7.0, "vib_depth": 0.08}]},
+	# A tentacle seizes a summon: a slick, crushing squeeze and a snap of timber.
+	"tentacle_grab": {"dur": 0.9, "volume_db": -11.0, "max_voices": 3, "min_interval": 150, "pitch_var": 0.06, "priority": 3,
+		"layers": [
+			{"wave": "noise", "dur": 0.35, "amp": 0.35, "attack": 0.004, "decay": 0.12, "lp0": 3000.0, "lp1": 400.0},
+			{"wave": "sine", "f0": 160.0, "f1": 55.0, "dur": 0.5, "amp": 0.5, "attack": 0.003, "decay": 0.18},
+			{"wave": "saw", "f0": 130.0, "f1": 90.0, "start": 0.1, "dur": 0.7, "amp": 0.1, "attack": 0.05, "decay": 0.4, "lp0": 450.0, "vib_hz": 16.0, "vib_depth": 0.1},
+			{"wave": "noise", "start": 0.3, "dur": 0.5, "amp": 0.15, "attack": 0.02, "decay": 0.2, "lp0": 2000.0, "lp1": 300.0, "vib_hz": 20.0, "vib_depth": 0.4}]},
+	# A powder keg bursts: a bright flash, a heavy boom, a shower of splinters.
+	"powder_blast": {"dur": 1.2, "volume_db": -8.0, "max_voices": 3, "min_interval": 70, "pitch_var": 0.06, "priority": 3,
+		"layers": [
+			{"wave": "noise", "dur": 0.12, "amp": 0.7, "attack": 0.001, "decay": 0.03, "lp0": 10000.0, "lp1": 3000.0},
+			{"wave": "sine", "f0": 100.0, "f1": 28.0, "dur": 0.9, "amp": 0.85, "attack": 0.002, "decay": 0.3},
+			{"wave": "noise", "start": 0.02, "dur": 1.0, "amp": 0.5, "attack": 0.008, "decay": 0.34, "lp0": 2400.0, "lp1": 120.0},
+			{"wave": "noise", "start": 0.2, "dur": 0.4, "amp": 0.12, "attack": 0.01, "decay": 0.14, "lp0": 9000.0, "lp1": 4000.0, "vib_hz": 40.0, "vib_depth": 0.5},
+			{"wave": "saw", "f0": 55.0, "f1": 32.0, "start": 0.03, "dur": 0.7, "amp": 0.2, "attack": 0.005, "decay": 0.3, "lp0": 300.0}]},
+	# A lit fuse: a short, spitting hiss, rising a little.
+	"fuse_hiss": {"dur": 0.8, "volume_db": -20.0, "max_voices": 4, "min_interval": 200, "pitch_var": 0.1, "priority": 1,
+		"layers": [
+			{"wave": "noise", "dur": 0.75, "amp": 0.16, "attack": 0.05, "decay": 0.5, "lp0": 5000.0, "lp1": 9000.0, "vib_hz": 35.0, "vib_depth": 0.5},
+			{"wave": "noise", "start": 0.1, "dur": 0.01, "amp": 0.25, "attack": 0.001, "decay": 0.003, "lp0": 9000.0},
+			{"wave": "noise", "start": 0.33, "dur": 0.01, "amp": 0.22, "attack": 0.001, "decay": 0.003, "lp0": 9000.0},
+			{"wave": "noise", "start": 0.55, "dur": 0.01, "amp": 0.25, "attack": 0.001, "decay": 0.003, "lp0": 9000.0}]},
+	# A cutlass clash: a ringing steel scrape and two quick strikes.
+	"cutlass_clash": {"dur": 0.5, "volume_db": -16.0, "max_voices": 4, "min_interval": 50, "pitch_var": 0.1, "priority": 1,
+		"layers": [
+			{"wave": "noise", "dur": 0.04, "amp": 0.45, "attack": 0.001, "decay": 0.01, "lp0": 9000.0, "lp1": 4000.0},
+			{"wave": "sine", "f0": 1760.0, "f1": 1700.0, "dur": 0.4, "amp": 0.14, "attack": 0.001, "decay": 0.1},
+			{"wave": "sine", "f0": 2640.0, "f1": 2580.0, "start": 0.01, "dur": 0.3, "amp": 0.08, "attack": 0.001, "decay": 0.07},
+			{"wave": "sine", "f0": 4180.0, "start": 0.015, "dur": 0.2, "amp": 0.04, "attack": 0.001, "decay": 0.05},
+			{"wave": "noise", "start": 0.1, "dur": 0.03, "amp": 0.3, "attack": 0.001, "decay": 0.008, "lp0": 8000.0, "lp1": 3000.0}]},
+	# A cutlass slash: a quick whistling swish ending in a soft cut.
+	"cutlass_slash": {"dur": 0.3, "volume_db": -17.0, "max_voices": 4, "min_interval": 45, "pitch_var": 0.1, "priority": 1,
+		"layers": [
+			{"wave": "noise", "dur": 0.22, "amp": 0.25, "attack": 0.08, "decay": 0.05, "lp0": 2000.0, "lp1": 7000.0},
+			{"wave": "sine", "f0": 700.0, "f1": 1900.0, "dur": 0.18, "amp": 0.06, "attack": 0.08, "decay": 0.04},
+			{"wave": "noise", "start": 0.19, "dur": 0.06, "amp": 0.2, "attack": 0.001, "decay": 0.02, "lp0": 3000.0, "lp1": 800.0}]},
+	# The bosun's whistle: a shrill two-tone pipe, kept soft.
+	"bosun_whistle": {"dur": 0.9, "volume_db": -19.0, "max_voices": 2, "min_interval": 250, "pitch_var": 0.03, "priority": 2,
+		"layers": [
+			{"wave": "sine", "f0": 2300.0, "f1": 3100.0, "dur": 0.35, "amp": 0.14, "attack": 0.03, "decay": 0.25, "vib_hz": 28.0, "vib_depth": 0.02},
+			{"wave": "sine", "f0": 3100.0, "f1": 2900.0, "start": 0.38, "dur": 0.5, "amp": 0.14, "attack": 0.03, "decay": 0.3, "vib_hz": 28.0, "vib_depth": 0.02},
+			{"wave": "noise", "dur": 0.85, "amp": 0.03, "attack": 0.03, "decay": 0.4, "lp0": 6000.0, "lp1": 8000.0}]},
+	# A hull groans and the deck tilts: a long, low creak of working timber.
+	"hull_creak": {"dur": 1.6, "volume_db": -17.0, "max_voices": 2, "min_interval": 500, "pitch_var": 0.08, "priority": 1,
+		"layers": [
+			{"wave": "saw", "f0": 95.0, "f1": 140.0, "dur": 1.5, "amp": 0.14, "attack": 0.4, "decay": 0.8, "lp0": 600.0, "lp1": 1100.0, "vib_hz": 13.0, "vib_depth": 0.07},
+			{"wave": "square", "f0": 61.0, "f1": 90.0, "dur": 1.4, "amp": 0.06, "attack": 0.5, "decay": 0.7, "lp0": 380.0, "vib_hz": 9.0, "vib_depth": 0.09},
+			{"wave": "noise", "dur": 1.4, "amp": 0.06, "attack": 0.4, "decay": 0.6, "lp0": 700.0, "lp1": 1500.0, "vib_hz": 17.0, "vib_depth": 0.5}]},
+	# A plank crashes onto the rail, or falls away: a heavy wooden slap.
+	"plank_drop": {"dur": 0.7, "volume_db": -12.0, "max_voices": 2, "min_interval": 150, "pitch_var": 0.07, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.15, "amp": 0.5, "attack": 0.001, "decay": 0.045, "lp0": 3000.0, "lp1": 500.0},
+			{"wave": "sine", "f0": 120.0, "f1": 55.0, "dur": 0.4, "amp": 0.6, "attack": 0.002, "decay": 0.13},
+			{"wave": "square", "f0": 250.0, "f1": 150.0, "start": 0.08, "dur": 0.2, "amp": 0.05, "attack": 0.002, "decay": 0.06, "lp0": 900.0}]},
+	# The great wave: a rising wash, a heavy break and a long hiss of foam.
+	"wave_crash": {"dur": 2.2, "volume_db": -10.0, "max_voices": 2, "min_interval": 1500, "pitch_var": 0.04, "priority": 3,
+		"layers": [
+			{"wave": "noise", "dur": 1.0, "amp": 0.3, "attack": 0.8, "decay": 0.2, "lp0": 300.0, "lp1": 3500.0},
+			{"wave": "noise", "start": 0.8, "dur": 1.4, "amp": 0.5, "attack": 0.05, "decay": 0.6, "lp0": 4500.0, "lp1": 600.0},
+			{"wave": "sine", "f0": 80.0, "f1": 34.0, "start": 0.8, "dur": 1.2, "amp": 0.5, "attack": 0.03, "decay": 0.4}]},
+	# Cursed coins spin up round Marrec: a handful of bright, tinny chimes.
+	"coin_chime": {"dur": 0.9, "volume_db": -19.0, "max_voices": 3, "min_interval": 100, "pitch_var": 0.06, "priority": 1,
+		"layers": [
+			{"wave": "sine", "f0": 1760.0, "dur": 0.5, "amp": 0.1, "attack": 0.001, "decay": 0.14},
+			{"wave": "sine", "f0": 2349.0, "start": 0.07, "dur": 0.5, "amp": 0.09, "attack": 0.001, "decay": 0.14},
+			{"wave": "sine", "f0": 2637.0, "start": 0.15, "dur": 0.5, "amp": 0.08, "attack": 0.001, "decay": 0.14},
+			{"wave": "sine", "f0": 3520.0, "start": 0.22, "dur": 0.5, "amp": 0.05, "attack": 0.001, "decay": 0.12},
+			{"wave": "noise", "start": 0.0, "dur": 0.01, "amp": 0.2, "attack": 0.001, "decay": 0.003, "lp0": 9000.0}]},
+	# The Oath breaks and ghost crew moan: a low, hollow wail through a narrow filter.
+	"ghost_moan": {"dur": 1.8, "volume_db": -17.0, "max_voices": 2, "min_interval": 500, "pitch_var": 0.06, "priority": 2,
+		"layers": [
+			{"wave": "tri", "f0": 220.0, "f1": 165.0, "dur": 1.7, "amp": 0.14, "attack": 0.6, "decay": 0.9, "lp0": 900.0, "vib_hz": 5.5, "vib_depth": 0.03},
+			{"wave": "tri", "f0": 223.0, "f1": 167.0, "dur": 1.7, "amp": 0.1, "attack": 0.6, "decay": 0.9, "lp0": 900.0, "vib_hz": 4.0, "vib_depth": 0.03},
+			{"wave": "noise", "dur": 1.6, "amp": 0.05, "attack": 0.6, "decay": 0.7, "lp0": 500.0, "lp1": 1200.0}]},
+}
+
+# --- Act VI (final order): the Hall of the Slain ---
+## The Hall of the Slain's sound effects (recipe keys as SOUNDS). Kept OUT of SOUNDS like the other packs: Sfx renders it
+## lazily the first time a Norse run's music ("valhall") is asked for (Sfx.prepare_pack("norse"); seeds Sfx.PACK_SEED +
+## Sfx.PACK_SEED_OFFSETS["norse"] + i). Nothing plays them until the stage code wires them to the rules.
+const NORSE_SOUNDS: Dictionary = {  # TUNING (not in GDD)
+	# A valkyrie dives: a rising rush of wings, a falling spear-shriek and a gold chime on the strike.
+	"valkyrie_dive": {"dur": 1.2, "volume_db": -14.0, "max_voices": 3, "min_interval": 200, "pitch_var": 0.05, "priority": 3,
+		"layers": [
+			{"wave": "noise", "dur": 0.9, "amp": 0.26, "attack": 0.6, "decay": 0.25, "lp0": 600.0, "lp1": 6000.0},
+			{"wave": "sine", "f0": 1800.0, "f1": 520.0, "dur": 0.8, "amp": 0.1, "attack": 0.05, "decay": 0.4},
+			{"wave": "tri", "f0": 900.0, "f1": 260.0, "dur": 0.8, "amp": 0.06, "attack": 0.05, "decay": 0.4, "lp0": 3000.0},
+			{"wave": "sine", "f0": 1760.0, "start": 0.8, "dur": 0.4, "amp": 0.1, "attack": 0.002, "decay": 0.15},
+			{"wave": "sine", "f0": 2637.0, "start": 0.8, "dur": 0.35, "amp": 0.05, "attack": 0.002, "decay": 0.12}]},
+	# A berserker bellows: a growling saw, breath noise and a chest thump.
+	"berserk_roar": {"dur": 1.0, "volume_db": -12.0, "max_voices": 2, "min_interval": 350, "pitch_var": 0.08, "priority": 2,
+		"layers": [
+			{"wave": "saw", "f0": 120.0, "f1": 70.0, "dur": 0.9, "amp": 0.2, "attack": 0.05, "decay": 0.4, "lp0": 1400.0, "lp1": 600.0, "vib_hz": 28.0, "vib_depth": 0.06},
+			{"wave": "square", "f0": 60.0, "f1": 45.0, "dur": 0.85, "amp": 0.1, "attack": 0.05, "decay": 0.4, "lp0": 500.0},
+			{"wave": "noise", "dur": 0.8, "amp": 0.14, "attack": 0.06, "decay": 0.35, "lp0": 2200.0, "lp1": 900.0},
+			{"wave": "sine", "f0": 70.0, "f1": 40.0, "dur": 0.3, "amp": 0.3, "attack": 0.004, "decay": 0.12}]},
+	# A Rune-Stone is taken: a cold ringing chime that dies into a stone thrum.
+	"rune_capture": {"dur": 1.6, "volume_db": -13.0, "max_voices": 2, "min_interval": 400, "pitch_var": 0.03, "priority": 3,
+		"layers": [
+			{"wave": "sine", "f0": 880.0, "dur": 1.4, "amp": 0.16, "attack": 0.002, "decay": 0.9},
+			{"wave": "sine", "f0": 1318.5, "dur": 1.2, "amp": 0.09, "attack": 0.002, "decay": 0.7},
+			{"wave": "sine", "f0": 2437.0, "dur": 0.9, "amp": 0.04, "attack": 0.002, "decay": 0.5},
+			{"wave": "noise", "dur": 0.08, "amp": 0.2, "attack": 0.001, "decay": 0.03, "lp0": 2500.0},
+			{"wave": "sine", "f0": 73.4, "f1": 55.0, "start": 0.05, "dur": 1.3, "amp": 0.26, "attack": 0.02, "decay": 0.8}]},
+	# The hall's horn calls a squad: a long low brass note with a fifth, a rough start and a swell.
+	"horn_call": {"dur": 2.2, "volume_db": -11.0, "max_voices": 2, "min_interval": 800, "pitch_var": 0.02, "priority": 3,
+		"layers": [
+			{"wave": "saw", "f0": 110.0, "dur": 2.0, "amp": 0.2, "attack": 0.25, "decay": 1.2, "lp0": 380.0, "lp1": 1100.0, "vib_hz": 5.0, "vib_depth": 0.006},
+			{"wave": "saw", "f0": 164.8, "start": 0.05, "dur": 1.9, "amp": 0.1, "attack": 0.3, "decay": 1.2, "lp0": 420.0, "lp1": 1200.0, "vib_hz": 5.0, "vib_depth": 0.006},
+			{"wave": "sine", "f0": 55.0, "dur": 2.0, "amp": 0.24, "attack": 0.2, "decay": 1.3},
+			{"wave": "noise", "dur": 0.2, "amp": 0.06, "attack": 0.05, "decay": 0.08, "lp0": 900.0}]},
+	# A frost giant's stomp: a deep thud, a shatter of ice and a long rumble.
+	"frost_giant_stomp": {"dur": 1.0, "volume_db": -10.0, "max_voices": 2, "min_interval": 250, "pitch_var": 0.06, "priority": 3,
+		"layers": [
+			{"wave": "sine", "f0": 80.0, "f1": 28.0, "dur": 0.8, "amp": 0.42, "attack": 0.003, "decay": 0.35},
+			{"wave": "noise", "dur": 0.5, "amp": 0.35, "attack": 0.002, "decay": 0.2, "lp0": 1800.0, "lp1": 200.0},
+			{"wave": "noise", "start": 0.04, "dur": 0.3, "amp": 0.12, "attack": 0.001, "decay": 0.1, "lp0": 9000.0, "lp1": 5000.0},
+			{"wave": "sine", "f0": 3300.0, "start": 0.05, "dur": 0.2, "amp": 0.04, "attack": 0.001, "decay": 0.08},
+			{"wave": "tri", "f0": 45.0, "start": 0.1, "dur": 0.85, "amp": 0.16, "attack": 0.03, "decay": 0.5, "lp0": 160.0}]},
+	# An Einherjar returns to the field: a rising golden swell and a soft horn note.
+	"einherjar_rise": {"dur": 1.5, "volume_db": -15.0, "max_voices": 3, "min_interval": 300, "pitch_var": 0.04, "priority": 2,
+		"layers": [
+			{"wave": "sine", "f0": 440.0, "f1": 880.0, "dur": 1.2, "amp": 0.1, "attack": 0.8, "decay": 0.4},
+			{"wave": "sine", "f0": 660.0, "f1": 1320.0, "dur": 1.2, "amp": 0.05, "attack": 0.9, "decay": 0.4},
+			{"wave": "noise", "dur": 1.0, "amp": 0.06, "attack": 0.6, "decay": 0.3, "lp0": 800.0, "lp1": 6000.0},
+			{"wave": "saw", "f0": 130.8, "start": 0.7, "dur": 0.7, "amp": 0.1, "attack": 0.1, "decay": 0.35, "lp0": 500.0, "lp1": 1200.0}]},
+}
+
+# --- the Necropolis Dynasty (Act VII slot; stage key dynasty) ---
+## "The Weighing of the Heart", the Dynasty's run loop (GDD §15.0 "The Necropolis Dynasty art and audio"): the
+## RunLoopSynth score of every stage whose STAGE has "music": "weighing". Frame drums, a reed drone and a
+## mournful modal melody in G Hijaz (G Ab B C D Eb F#), 24 s: eight 3 s bars of eight steps (0.375 s), four 6 s
+## chord segments (G5, Ab over Eb, G with F#, C5). The frame drums are the existing "machine" job in the
+## maqsum pattern (dum on 0 and 4, tek on 2, 3 and 6, a faint finger-cymbal tick on every step, in place of the
+## heartbeat); the reed drone is the existing "organ" job on odd partials (a reedy hum on a low G) over a very
+## deep drone; the melody is the existing "flute" job (a breathy ney with a wide vibrato); a sparse sistrum
+## shimmer is the existing "hits" job; a low "horn" swell blooms twice a loop (the Reckoning's colour: the
+## Devourer's Hour). Never shrill: everything above 1 kHz is a sine or low-passed. Rendered lazily (Sfx), never
+## under the autotest; its fixed seed is Sfx.SCORE_SEEDS["weighing"].
+const WEIGHING_SCORE := {
+	"loop_seconds": 24.0,  # TUNING (not in GDD) eight bars of 3 s
+	"root_hz": 49.0,  # TUNING (not in GDD) G1, a very low desert hum under G
+	"chords": [
+		[98.0, 146.83, 196.0],
+		[103.83, 155.56, 196.0],
+		[98.0, 146.83, 185.0],
+		[130.81, 196.0, 261.63],
+	],  # TUNING (not in GDD) G5 (open), Ab over Eb, G with the F# leading tone, C5
+	"drone_lp_hz": 70.0,  # TUNING (not in GDD) a soft, deep hum
+	"wind_lp_hz": 420.0,  # TUNING (not in GDD) blown sand
+	"wind_swells": 3.0,  # TUNING (not in GDD)
+	"vibrato_hz": 0.3,  # TUNING (not in GDD)
+	"vibrato_depth": 0.002,  # TUNING (not in GDD)
+	# Frame drums in the maqsum: 8 steps of 0.375 s a bar (dum, tek, tek / dum, tek), a faint finger-cymbal tick on each step.
+	"machine": {"step": 0.375, "steps_per_bar": 8, "kick_steps": [0, 4], "snare_steps": [2, 3, 6],
+		"hat_steps": [0, 1, 2, 3, 4, 5, 6], "open_hat_steps": [7], "kick_amp": 0.38, "snare_amp": 0.1,
+		"hat_amp": 0.022, "open_hat_amp": 0.035, "kick_hz0": 150.0, "kick_hz1": 72.0, "kick_dur": 0.28,
+		"snare_dur": 0.12, "hat_dur": 0.04, "open_hat_dur": 0.2},  # TUNING (not in GDD)
+	# The reed drone: a low G on odd partials (a reedy hum), swelling in over a second, re-struck each segment.
+	"organ": {"attack": 1.0, "decay": 3.0, "vib_hz": 5.0, "vib_depth": 0.002,
+		"partials": [[1.0, 0.05], [3.0, 0.035], [5.0, 0.022], [7.0, 0.012]],
+		"notes": [[0.0, 98.0, 5.9], [6.0, 103.83, 5.9], [12.0, 98.0, 5.9], [18.0, 130.81, 5.8]]},  # TUNING (not in GDD) [start (s), Hz, length (s)]
+	# The mournful reed melody (G Hijaz): four phrases of six seconds, each answering the last.
+	"flute": {"amp": 0.09, "breath": 0.06, "attack": 0.18, "decay": 1.1, "vib_hz": 5.2, "vib_depth": 0.014,
+		"notes": [
+			[0.4, 587.33, 1.6], [2.2, 523.25, 1.0], [3.4, 493.88, 0.9], [4.4, 415.3, 1.5],
+			[6.4, 493.88, 1.4], [8.0, 523.25, 1.0], [9.2, 587.33, 2.2],
+			[12.4, 622.25, 1.5], [14.0, 587.33, 1.0], [15.2, 493.88, 1.0], [16.4, 415.3, 1.4],
+			[18.4, 392.0, 1.8], [20.4, 415.3, 0.9], [21.5, 493.88, 1.0], [22.6, 392.0, 1.0]]},  # TUNING (not in GDD) [start (s), Hz, length (s)]
+	# A sistrum shimmer: a quiet, thin ping every 6 s, 3 s into each segment.
+	"hits": {"every": 6.0, "offset": 3.0, "root_hz": 2400.0, "dur": 0.9, "decay": 0.3,
+		"partials": [[1.0, 0.012], [1.51, 0.008], [2.3, 0.005]], "click": 0.008},  # TUNING (not in GDD)
+	# The Devourer's swell: a low G and D that bloom and fade twice a loop.
+	"horn": {"starts": [0.5, 12.5], "dur": 5.6, "attack": 2.6, "decay": 2.4, "amp": 0.035,
+		"lp0": 200.0, "lp1": 800.0,
+		"notes": [[49.0, 73.42], [49.0, 73.42]]},  # TUNING (not in GDD)
+}
+
+## Necropolis Dynasty sound effects (recipe keys as SOUNDS). Kept OUT of SOUNDS like the other packs: Sfx renders
+## it lazily the first time a Dynasty run's music ("weighing") is asked for (Sfx.prepare_pack("dynasty"); seeds
+## Sfx.PACK_SEED + Sfx.PACK_SEED_OFFSETS["dynasty"] + i, offset 9000). Nothing plays them until the stage agents wire the sound map.
+const DYNASTY_SOUNDS: Dictionary = {  # TUNING (not in GDD)
+	# A Name appears on a cartouche over a fallen body: a bright little bell, two partials, a faint shimmer.
+	"cartouche_chime": {"dur": 0.9, "volume_db": -17.0, "max_voices": 4, "min_interval": 90, "pitch_var": 0.06, "priority": 1,
+		"layers": [
+			{"wave": "sine", "f0": 1568.0, "dur": 0.8, "amp": 0.16, "attack": 0.002, "decay": 0.3},
+			{"wave": "sine", "f0": 4328.0, "dur": 0.5, "amp": 0.05, "attack": 0.002, "decay": 0.15},
+			{"wave": "sine", "f0": 2349.0, "start": 0.07, "dur": 0.6, "amp": 0.07, "attack": 0.002, "decay": 0.22},
+			{"wave": "noise", "dur": 0.02, "amp": 0.03, "attack": 0.001, "decay": 0.006, "lp0": 8000.0}]},
+	# A body returns (Rebirth): a low groan that rises through a dry rasp, ending on a thump.
+	"rebirth_groan": {"dur": 1.7, "volume_db": -12.0, "max_voices": 2, "min_interval": 250, "pitch_var": 0.06, "priority": 3,
+		"layers": [
+			{"wave": "saw", "f0": 52.0, "f1": 84.0, "dur": 1.4, "amp": 0.2, "attack": 0.5, "decay": 0.7, "lp0": 200.0, "lp1": 600.0, "vib_hz": 6.0, "vib_depth": 0.03},
+			{"wave": "noise", "dur": 1.2, "amp": 0.12, "attack": 0.5, "decay": 0.5, "lp0": 300.0, "lp1": 1400.0},
+			{"wave": "sine", "f0": 110.0, "f1": 140.0, "start": 0.3, "dur": 1.2, "amp": 0.1, "attack": 0.6, "decay": 0.5, "vib_hz": 5.0, "vib_depth": 0.04},
+			{"wave": "sine", "f0": 90.0, "f1": 42.0, "start": 1.15, "dur": 0.5, "amp": 0.3, "attack": 0.004, "decay": 0.18}]},
+	# The Sandstorm blows in: a long, swelling roar of sand and a low wind moan.
+	"sandstorm": {"dur": 3.4, "volume_db": -17.0, "max_voices": 1, "min_interval": 3000, "pitch_var": 0.02, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 3.2, "amp": 0.22, "attack": 1.4, "decay": 1.4, "lp0": 500.0, "lp1": 2600.0},
+			{"wave": "noise", "start": 0.4, "dur": 2.6, "amp": 0.08, "attack": 1.2, "decay": 1.2, "lp0": 3500.0, "lp1": 6000.0},
+			{"wave": "sine", "f0": 70.0, "f1": 95.0, "dur": 3.2, "amp": 0.18, "attack": 1.3, "decay": 1.5, "vib_hz": 0.8, "vib_depth": 0.08},
+			{"wave": "sine", "f0": 196.0, "f1": 233.0, "start": 0.6, "dur": 2.4, "amp": 0.04, "attack": 1.2, "decay": 1.0, "vib_hz": 5.0, "vib_depth": 0.03}]},
+	# A Canopic Jar breaks: a crack, bright pottery shards and a low thud.
+	"jar_shatter": {"dur": 0.8, "volume_db": -12.0, "max_voices": 3, "min_interval": 100, "pitch_var": 0.08, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.1, "amp": 0.4, "attack": 0.001, "decay": 0.03, "lp0": 9000.0, "lp1": 3500.0},
+			{"wave": "tri", "f0": 1900.0, "f1": 1500.0, "start": 0.03, "dur": 0.08, "amp": 0.08, "attack": 0.001, "decay": 0.03},
+			{"wave": "tri", "f0": 2600.0, "f1": 2000.0, "start": 0.09, "dur": 0.07, "amp": 0.07, "attack": 0.001, "decay": 0.025},
+			{"wave": "tri", "f0": 1300.0, "f1": 1000.0, "start": 0.16, "dur": 0.09, "amp": 0.06, "attack": 0.001, "decay": 0.03},
+			{"wave": "noise", "start": 0.12, "dur": 0.4, "amp": 0.1, "attack": 0.002, "decay": 0.2, "lp0": 6000.0, "lp1": 2500.0},
+			{"wave": "sine", "f0": 130.0, "f1": 60.0, "dur": 0.4, "amp": 0.34, "attack": 0.003, "decay": 0.15}]},
+	# A scarab swarm rushes: dense little clicks and a faint wobbling whirr.
+	"scarab_swarm": {"dur": 0.9, "volume_db": -21.0, "max_voices": 3, "min_interval": 150, "pitch_var": 0.1, "priority": 1,
+		"layers": [
+			{"wave": "noise", "dur": 0.7, "amp": 0.06, "attack": 0.15, "decay": 0.3, "lp0": 6500.0, "lp1": 3500.0},
+			{"wave": "sine", "f0": 2900.0, "f1": 3300.0, "dur": 0.7, "amp": 0.03, "attack": 0.1, "decay": 0.3, "vib_hz": 28.0, "vib_depth": 0.05},
+			{"wave": "noise", "start": 0.04, "dur": 0.01, "amp": 0.3, "attack": 0.001, "decay": 0.004, "lp0": 6500.0},
+			{"wave": "noise", "start": 0.11, "dur": 0.01, "amp": 0.26, "attack": 0.001, "decay": 0.004, "lp0": 7000.0},
+			{"wave": "noise", "start": 0.17, "dur": 0.01, "amp": 0.32, "attack": 0.001, "decay": 0.004, "lp0": 6000.0},
+			{"wave": "noise", "start": 0.26, "dur": 0.01, "amp": 0.24, "attack": 0.001, "decay": 0.004, "lp0": 7000.0},
+			{"wave": "noise", "start": 0.33, "dur": 0.01, "amp": 0.3, "attack": 0.001, "decay": 0.004, "lp0": 6500.0},
+			{"wave": "noise", "start": 0.43, "dur": 0.01, "amp": 0.22, "attack": 0.001, "decay": 0.004, "lp0": 7000.0},
+			{"wave": "noise", "start": 0.52, "dur": 0.01, "amp": 0.26, "attack": 0.001, "decay": 0.004, "lp0": 6000.0}]},
+	# A Heka glyph is written on a summon: a rising whisper of two glassy tones and a small bell at the end.
+	"heka_glyph": {"dur": 1.0, "volume_db": -16.0, "max_voices": 3, "min_interval": 120, "pitch_var": 0.05, "priority": 2,
+		"layers": [
+			{"wave": "sine", "f0": 440.0, "f1": 880.0, "dur": 0.7, "amp": 0.12, "attack": 0.4, "decay": 0.25},
+			{"wave": "sine", "f0": 447.0, "f1": 893.0, "dur": 0.7, "amp": 0.07, "attack": 0.4, "decay": 0.25},
+			{"wave": "tri", "f0": 220.0, "f1": 330.0, "dur": 0.6, "amp": 0.06, "attack": 0.3, "decay": 0.25, "lp0": 700.0},
+			{"wave": "noise", "dur": 0.6, "amp": 0.04, "attack": 0.4, "decay": 0.15, "lp0": 1500.0, "lp1": 5000.0},
+			{"wave": "sine", "f0": 1760.0, "start": 0.62, "dur": 0.38, "amp": 0.09, "attack": 0.002, "decay": 0.14}]},
+}
+
+
+# --- the Celestial Host (Act X slot; stage key host) ---
+## "Hosanna in the Silence", the Host's run loop (GDD §15.0 "The Celestial Host art and audio (foundation)"): the
+## RunLoopSynth score of every stage whose STAGE has "music": "hosanna". Slow, vast and bright: a sustained choir pad (the
+## existing "organ" job on a few pure partials), a sung line (the existing "choir" job), high bell tones (the existing
+## "hits"), a long silver trumpet call twice a loop (the existing "horn" job with its filter opened up), and no drums until a
+## soft timpani swell at the loop's end (the existing "machine" job, three kicks and nothing else). D Mixolydian (D C G Am: a
+## major mode with a lowered seventh, so it reads holy but strange), 24 s, four 6 s chord segments. Never shrill: everything
+## above 1 kHz is a sine or low-passed. Rendered lazily (Sfx), never under the autotest; its fixed seed is Sfx.SCORE_SEEDS["hosanna"].
+const HOSANNA_SCORE := {
+	"loop_seconds": 24.0,  # TUNING (not in GDD) four 6 s chord segments
+	"root_hz": 36.71,  # TUNING (not in GDD) D1, a very low drone under D
+	"chords": [
+		[146.83, 220.0, 293.66],
+		[130.81, 196.0, 261.63],
+		[196.0, 246.94, 293.66],
+		[110.0, 164.81, 220.0],
+	],  # TUNING (not in GDD) D5 (open), C (the lowered seventh), G, Am
+	"drone_lp_hz": 60.0,  # TUNING (not in GDD) a soft, deep hum
+	"wind_lp_hz": 700.0,  # TUNING (not in GDD) thin high air
+	"wind_swells": 2.0,  # TUNING (not in GDD)
+	"vibrato_hz": 0.3,  # TUNING (not in GDD)
+	"vibrato_depth": 0.002,  # TUNING (not in GDD)
+	# The timpani swell: three soft low kicks at the loop's end (steps 26, 28 and 30 of 32 at 0.75 s), no snare, no hats.
+	"machine": {"step": 0.75, "steps_per_bar": 32, "kick_steps": [26, 28, 30], "snare_steps": [],
+		"hat_steps": [], "open_hat_steps": [], "kick_amp": 0.24, "snare_amp": 0.0,
+		"hat_amp": 0.0, "open_hat_amp": 0.0, "kick_hz0": 95.0, "kick_hz1": 48.0, "kick_dur": 0.7,
+		"snare_dur": 0.1, "hat_dur": 0.04, "open_hat_dur": 0.2},  # TUNING (not in GDD)
+	# The choir pad: pure partials, swelling in over 2 s, re-struck each segment.
+	"organ": {"attack": 2.0, "decay": 4.0, "vib_hz": 0.4, "vib_depth": 0.002,
+		"partials": [[1.0, 0.05], [2.0, 0.035], [3.0, 0.02], [4.0, 0.012]],
+		"notes": [[0.0, 293.66, 5.9], [6.0, 261.63, 5.9], [12.0, 392.0, 5.9], [18.0, 220.0, 5.8]]},  # TUNING (not in GDD) [start (s), Hz, length (s)]
+	# The sung line: detuned saws through a low-pass, a vowel-like swell (A4 up to D5 and back).
+	"choir": {"amp": 0.028, "attack": 1.4, "decay": 2.4, "lp0": 1100.0, "lp1": 1600.0, "vib_hz": 4.5, "vib_depth": 0.006,
+		"detune": 1.004, "octave_amp": 0.35,
+		"notes": [
+			[0.5, 440.0, 3.0], [3.5, 587.33, 2.4],
+			[6.5, 523.25, 2.8], [9.5, 392.0, 2.4],
+			[12.5, 493.88, 3.0], [15.5, 587.33, 2.4],
+			[18.5, 440.0, 2.6], [21.5, 369.99, 2.3]]},  # TUNING (not in GDD) [start (s), Hz, length (s)]
+	# Bell tones: a clear, quiet ping every 6 s, 3 s into each segment.
+	"hits": {"every": 6.0, "offset": 3.0, "root_hz": 1760.0, "dur": 2.0, "decay": 0.6,
+		"partials": [[1.0, 0.04], [2.76, 0.02], [5.4, 0.008]], "click": 0.008},  # TUNING (not in GDD)
+	# The silver trumpet: a long soft swell of a saw and its fifth, filter opened, twice a loop.
+	"horn": {"starts": [6.5, 18.5], "dur": 5.0, "attack": 2.0, "decay": 2.4, "amp": 0.03,
+		"lp0": 700.0, "lp1": 2200.0,
+		"notes": [[293.66, 440.0], [392.0, 587.33]]},  # TUNING (not in GDD)
+}
+
+## Celestial Host sound effects (recipe keys as SOUNDS), one per HostRulesData.SOUNDS event. Kept OUT of SOUNDS like the other
+## packs: Sfx renders it lazily the first time a Host run's music ("hosanna") is asked for (Sfx.prepare_pack("host"); seeds
+## Sfx.PACK_SEED + Sfx.PACK_SEED_OFFSETS["host"] + i, offset 10000). Nothing plays them until the lead points the sound map at them.
+const HOST_SOUNDS: Dictionary = {  # TUNING (not in GDD)
+	# The scales tip a third: a small bright bell.
+	"scales_tip": {"dur": 0.8, "volume_db": -17.0, "max_voices": 3, "min_interval": 100, "pitch_var": 0.05, "priority": 1,
+		"layers": [
+			{"wave": "sine", "f0": 2093.0, "dur": 0.7, "amp": 0.15, "attack": 0.002, "decay": 0.26},
+			{"wave": "sine", "f0": 5760.0, "dur": 0.4, "amp": 0.04, "attack": 0.002, "decay": 0.12},
+			{"wave": "sine", "f0": 3136.0, "start": 0.06, "dur": 0.5, "amp": 0.06, "attack": 0.002, "decay": 0.2}]},
+	# A Judge descends: a falling chord and a rush of wings.
+	"judge_descend": {"dur": 1.5, "volume_db": -13.0, "max_voices": 2, "min_interval": 200, "pitch_var": 0.04, "priority": 3,
+		"layers": [
+			{"wave": "sine", "f0": 880.0, "f1": 440.0, "dur": 1.3, "amp": 0.12, "attack": 0.15, "decay": 0.8},
+			{"wave": "sine", "f0": 1108.0, "f1": 554.0, "dur": 1.3, "amp": 0.08, "attack": 0.15, "decay": 0.8},
+			{"wave": "sine", "f0": 1319.0, "f1": 660.0, "dur": 1.3, "amp": 0.06, "attack": 0.15, "decay": 0.8},
+			{"wave": "noise", "dur": 1.0, "amp": 0.1, "attack": 0.2, "decay": 0.5, "lp0": 3500.0, "lp1": 900.0}]},
+	# A Judge is slain: a glass ring breaking.
+	"judge_slain": {"dur": 1.1, "volume_db": -13.0, "max_voices": 3, "min_interval": 100, "pitch_var": 0.06, "priority": 3,
+		"layers": [
+			{"wave": "noise", "dur": 0.08, "amp": 0.36, "attack": 0.001, "decay": 0.025, "lp0": 9000.0, "lp1": 4000.0},
+			{"wave": "sine", "f0": 2637.0, "dur": 0.9, "amp": 0.12, "attack": 0.002, "decay": 0.35},
+			{"wave": "sine", "f0": 3951.0, "start": 0.04, "dur": 0.7, "amp": 0.07, "attack": 0.002, "decay": 0.28},
+			{"wave": "tri", "f0": 1800.0, "f1": 1300.0, "start": 0.1, "dur": 0.1, "amp": 0.06, "attack": 0.001, "decay": 0.04},
+			{"wave": "noise", "start": 0.1, "dur": 0.5, "amp": 0.08, "attack": 0.002, "decay": 0.25, "lp0": 8000.0, "lp1": 3000.0}]},
+	# The Verdict is read: a deep struck bell.
+	"verdict": {"dur": 2.6, "volume_db": -10.0, "max_voices": 1, "min_interval": 600, "pitch_var": 0.02, "priority": 4,
+		"layers": [
+			{"wave": "sine", "f0": 110.0, "dur": 2.4, "amp": 0.3, "attack": 0.004, "decay": 1.2},
+			{"wave": "sine", "f0": 264.0, "dur": 2.0, "amp": 0.14, "attack": 0.004, "decay": 0.9},
+			{"wave": "sine", "f0": 453.0, "dur": 1.4, "amp": 0.07, "attack": 0.004, "decay": 0.6},
+			{"wave": "noise", "dur": 0.05, "amp": 0.2, "attack": 0.001, "decay": 0.015, "lp0": 1800.0}]},
+	# A pillar of light falls: a white roar and a deep thump.
+	"pillar_fall": {"dur": 1.4, "volume_db": -11.0, "max_voices": 3, "min_interval": 120, "pitch_var": 0.05, "priority": 3,
+		"layers": [
+			{"wave": "noise", "dur": 1.1, "amp": 0.24, "attack": 0.35, "decay": 0.5, "lp0": 6500.0, "lp1": 1500.0},
+			{"wave": "sine", "f0": 330.0, "f1": 220.0, "dur": 1.0, "amp": 0.06, "attack": 0.4, "decay": 0.4},
+			{"wave": "sine", "f0": 90.0, "f1": 40.0, "start": 0.4, "dur": 0.8, "amp": 0.34, "attack": 0.004, "decay": 0.3}]},
+	# A shaft of light is about to open: a thin rising tone.
+	"light_warn": {"dur": 1.3, "volume_db": -17.0, "max_voices": 3, "min_interval": 150, "pitch_var": 0.04, "priority": 2,
+		"layers": [
+			{"wave": "sine", "f0": 600.0, "f1": 1800.0, "dur": 1.2, "amp": 0.1, "attack": 0.9, "decay": 0.25},
+			{"wave": "sine", "f0": 606.0, "f1": 1815.0, "dur": 1.2, "amp": 0.05, "attack": 0.9, "decay": 0.25},
+			{"wave": "noise", "dur": 1.0, "amp": 0.03, "attack": 0.8, "decay": 0.15, "lp0": 4000.0, "lp1": 7000.0}]},
+	# The Light burns: a hiss of searing light.
+	"light_burn": {"dur": 0.6, "volume_db": -19.0, "max_voices": 4, "min_interval": 120, "pitch_var": 0.08, "priority": 1,
+		"layers": [
+			{"wave": "noise", "dur": 0.5, "amp": 0.14, "attack": 0.02, "decay": 0.3, "lp0": 9000.0, "lp1": 5000.0},
+			{"wave": "saw", "f0": 220.0, "f1": 180.0, "dur": 0.4, "amp": 0.04, "attack": 0.02, "decay": 0.25, "lp0": 700.0}]},
+	# A halo takes a hit: a soft glass chime.
+	"halo_absorb": {"dur": 0.7, "volume_db": -16.0, "max_voices": 3, "min_interval": 90, "pitch_var": 0.05, "priority": 1,
+		"layers": [
+			{"wave": "sine", "f0": 1568.0, "dur": 0.6, "amp": 0.12, "attack": 0.002, "decay": 0.22},
+			{"wave": "sine", "f0": 2349.0, "start": 0.05, "dur": 0.5, "amp": 0.06, "attack": 0.002, "decay": 0.18},
+			{"wave": "noise", "dur": 0.02, "amp": 0.03, "attack": 0.001, "decay": 0.006, "lp0": 8000.0}]},
+	# A halo regrows: a rising shimmer.
+	"halo_regrow": {"dur": 1.0, "volume_db": -18.0, "max_voices": 3, "min_interval": 150, "pitch_var": 0.04, "priority": 1,
+		"layers": [
+			{"wave": "sine", "f0": 784.0, "f1": 1568.0, "dur": 0.9, "amp": 0.08, "attack": 0.5, "decay": 0.3},
+			{"wave": "sine", "f0": 1175.0, "f1": 2350.0, "start": 0.1, "dur": 0.8, "amp": 0.05, "attack": 0.4, "decay": 0.3},
+			{"wave": "noise", "dur": 0.8, "amp": 0.03, "attack": 0.5, "decay": 0.2, "lp0": 5000.0, "lp1": 9000.0}]},
+	# The Last Trumpet: a long silver trumpet blast.
+	"trumpet": {"dur": 2.0, "volume_db": -12.0, "max_voices": 1, "min_interval": 500, "pitch_var": 0.02, "priority": 4,
+		"layers": [
+			{"wave": "saw", "f0": 466.0, "f1": 470.0, "dur": 1.8, "amp": 0.14, "attack": 0.1, "decay": 0.7, "lp0": 1800.0, "lp1": 3200.0, "vib_hz": 5.5, "vib_depth": 0.01},
+			{"wave": "saw", "f0": 698.0, "dur": 1.7, "amp": 0.06, "attack": 0.12, "decay": 0.7, "lp0": 2400.0},
+			{"wave": "sine", "f0": 932.0, "dur": 1.7, "amp": 0.05, "attack": 0.12, "decay": 0.7},
+			{"wave": "noise", "dur": 0.15, "amp": 0.05, "attack": 0.01, "decay": 0.06, "lp0": 3000.0}]},
+	# A Herald sounds: a short trumpet call and a gust.
+	"herald_blast": {"dur": 0.9, "volume_db": -14.0, "max_voices": 2, "min_interval": 200, "pitch_var": 0.05, "priority": 2,
+		"layers": [
+			{"wave": "saw", "f0": 392.0, "dur": 0.3, "amp": 0.12, "attack": 0.03, "decay": 0.15, "lp0": 2200.0},
+			{"wave": "saw", "f0": 523.0, "start": 0.28, "dur": 0.55, "amp": 0.13, "attack": 0.03, "decay": 0.3, "lp0": 2400.0, "vib_hz": 5.5, "vib_depth": 0.01},
+			{"wave": "noise", "start": 0.2, "dur": 0.6, "amp": 0.08, "attack": 0.1, "decay": 0.35, "lp0": 3500.0, "lp1": 1000.0}]},
+	# A Power lunges: a white-flame sword cut.
+	"power_lunge": {"dur": 0.45, "volume_db": -15.0, "max_voices": 3, "min_interval": 100, "pitch_var": 0.08, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.28, "amp": 0.2, "attack": 0.01, "decay": 0.12, "lp0": 9000.0, "lp1": 2500.0},
+			{"wave": "saw", "f0": 900.0, "f1": 300.0, "dur": 0.25, "amp": 0.06, "attack": 0.005, "decay": 0.1, "lp0": 2500.0},
+			{"wave": "sine", "f0": 1800.0, "f1": 900.0, "dur": 0.2, "amp": 0.05, "attack": 0.003, "decay": 0.08}]},
+}
+
+# --- the Age of Titans (Act XIV slot; stage key primeval) ---
+## "Before the Fall", the Titans' run loop (GDD §15.0 "The Age of Titans art and audio (foundation)"): the RunLoopSynth score of
+## every stage whose STAGE has "music": "primordial". Slow, heavy and wide: low tom-like drums in a loping 6/8 (the existing
+## "drums" job, a beat every 0.5 s, an accent every sixth), a breathy flute melody over a long deep drone and organ pad (the
+## "flute" and "organ" jobs), distant beast-like horn calls (the "horn" job) and a high thin sine tone, sparse, that climbs a
+## little each segment like the streak in the sky (the "arp" job on two notes a segment). D Dorian over D1, 24 s, four 6 s
+## chord segments (Dm, C, Bb, A). Rendered lazily (Sfx), never under the autotest; its fixed seed is Sfx.SCORE_SEEDS["primordial"].
+const PRIMORDIAL_SCORE := {
+	"loop_seconds": 24.0,  # TUNING (not in GDD) 48 drum beats of 0.5 s, four 6 s chord segments
+	"root_hz": 36.71,  # TUNING (not in GDD) D1, a very low drone under D
+	"chords": [
+		[73.42, 110.0, 146.83],
+		[65.41, 98.0, 130.81],
+		[58.27, 87.31, 116.54],
+		[55.0, 82.41, 110.0],
+	],  # TUNING (not in GDD) Dm, C, Bb, A: open fifths with a low root
+	"drone_lp_hz": 58.0,  # TUNING (not in GDD) a deep, heavy hum
+	"wind_lp_hz": 520.0,  # TUNING (not in GDD) warm jungle air
+	"wind_swells": 2.0,  # TUNING (not in GDD)
+	"vibrato_hz": 0.3,  # TUNING (not in GDD)
+	"vibrato_depth": 0.002,  # TUNING (not in GDD)
+	# Tom-like drums: a low thump every 0.5 s, every 6th (a 6/8 bar) a heavy accent, a soft ghost hit a half beat after the others.
+	"drums": {"step": 0.5, "hz0": 105.0, "hz1": 52.0, "dur": 0.38, "amp": 0.34, "decay": 0.13,
+		"accent_every": 6, "accent_amp": 0.6, "slap": 0.1, "ghost_at": 0.5, "ghost_amp": 0.12},  # TUNING (not in GDD)
+	# The breathy flute: a slow, wandering tune; every note ends before the loop does.
+	"flute": {"amp": 0.08, "breath": 0.07, "attack": 0.3, "decay": 1.4, "vib_hz": 4.4, "vib_depth": 0.011,
+		"notes": [[0.5, 587.33, 2.4], [3.2, 698.46, 1.6], [5.0, 587.33, 0.9],
+			[6.5, 523.25, 2.6], [9.4, 587.33, 1.4], [11.0, 440.0, 0.9],
+			[12.5, 466.16, 2.6], [15.4, 523.25, 1.6], [17.2, 587.33, 0.9],
+			[18.5, 440.0, 2.4], [21.0, 493.88, 1.2], [22.4, 440.0, 1.3]]},  # TUNING (not in GDD) [start (s), Hz, length (s)]
+	# The pad: a low organ, one note a segment (D, C, Bb, A).
+	"organ": {"attack": 2.0, "decay": 3.6, "vib_hz": 0.4, "vib_depth": 0.002,
+		"partials": [[1.0, 0.09], [2.0, 0.06], [3.0, 0.03], [4.0, 0.016]],
+		"notes": [[0.0, 73.42, 5.9], [6.0, 65.41, 5.9], [12.0, 58.27, 5.9], [18.0, 55.0, 5.8]]},  # TUNING (not in GDD) [start (s), Hz, length (s)]
+	# Distant beast calls: two long, low brass swells a loop (a saw and its fifth through a low-pass that opens).
+	"horn": {"starts": [3.0, 15.0], "dur": 5.0, "attack": 1.6, "decay": 2.6, "amp": 0.05,
+		"lp0": 300.0, "lp1": 1000.0,
+		"notes": [[73.42, 110.0], [58.27, 87.31]]},  # TUNING (not in GDD) [root, fifth] (Hz) per call
+	# The streak in the sky: a high, thin sine every 3 s, two a segment, a step higher each segment.
+	"arp": {"step": 3.0, "dur": 1.6, "amp": 0.03, "decay": 0.5, "lp0": 3200.0, "wave": "sine",
+		"chords": [
+			[880.0, 987.77],
+			[1046.5, 1174.7],
+			[1318.5, 1480.0],
+			[1760.0, 1975.5],
+		]},  # TUNING (not in GDD) two tones per segment, climbing
+}
+
+## Age of Titans sound effects (recipe keys as SOUNDS), one per PrimevalRulesData.SOUNDS event. Kept OUT of SOUNDS like the other
+## packs: Sfx renders it lazily the first time a Titans run's music ("primordial") is asked for (Sfx.prepare_pack("titans"); seeds
+## Sfx.PACK_SEED + Sfx.PACK_SEED_OFFSETS["titans"] + i, offset 11000).
+const TITANS_SOUNDS: Dictionary = {  # TUNING (not in GDD)
+	# Ferns rustle on both flanks, a low chatter.
+	"pack_rustle": {"dur": 0.9, "volume_db": -17.0, "max_voices": 3, "min_interval": 150, "pitch_var": 0.06, "priority": 1,
+		"layers": [
+			{"wave": "noise", "dur": 0.8, "amp": 0.1, "attack": 0.25, "decay": 0.4, "lp0": 3800.0, "lp1": 1800.0},
+			{"wave": "tri", "f0": 420.0, "f1": 520.0, "start": 0.15, "dur": 0.08, "amp": 0.05, "attack": 0.004, "decay": 0.04},
+			{"wave": "tri", "f0": 500.0, "f1": 400.0, "start": 0.4, "dur": 0.08, "amp": 0.05, "attack": 0.004, "decay": 0.04},
+			{"wave": "tri", "f0": 460.0, "f1": 560.0, "start": 0.6, "dur": 0.07, "amp": 0.04, "attack": 0.004, "decay": 0.03}]},
+	# A held, rising hiss: the pack is about to rush.
+	"pack_hiss": {"dur": 1.2, "volume_db": -15.0, "max_voices": 2, "min_interval": 250, "pitch_var": 0.04, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 1.1, "amp": 0.16, "attack": 0.8, "decay": 0.25, "lp0": 3000.0, "lp1": 8000.0},
+			{"wave": "saw", "f0": 180.0, "f1": 260.0, "dur": 1.0, "amp": 0.03, "attack": 0.7, "decay": 0.25, "lp0": 600.0}]},
+	# Claws on earth and a shriek.
+	"pack_rush": {"dur": 0.7, "volume_db": -13.0, "max_voices": 3, "min_interval": 150, "pitch_var": 0.07, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.5, "amp": 0.18, "attack": 0.005, "decay": 0.2, "lp0": 2500.0, "lp1": 900.0},
+			{"wave": "saw", "f0": 900.0, "f1": 1700.0, "start": 0.05, "dur": 0.4, "amp": 0.08, "attack": 0.01, "decay": 0.2, "lp0": 2800.0, "vib_hz": 12.0, "vib_depth": 0.03},
+			{"wave": "sine", "f0": 90.0, "f1": 60.0, "dur": 0.3, "amp": 0.2, "attack": 0.003, "decay": 0.12}]},
+	# A broken screech and the pack's yelps.
+	"alpha_slain": {"dur": 1.3, "volume_db": -12.0, "max_voices": 2, "min_interval": 300, "pitch_var": 0.05, "priority": 3,
+		"layers": [
+			{"wave": "saw", "f0": 1500.0, "f1": 380.0, "dur": 0.9, "amp": 0.12, "attack": 0.01, "decay": 0.5, "lp0": 2600.0, "vib_hz": 14.0, "vib_depth": 0.05},
+			{"wave": "noise", "dur": 0.4, "amp": 0.12, "attack": 0.005, "decay": 0.18, "lp0": 4000.0, "lp1": 1200.0},
+			{"wave": "tri", "f0": 900.0, "f1": 500.0, "start": 0.55, "dur": 0.15, "amp": 0.07, "attack": 0.004, "decay": 0.06},
+			{"wave": "tri", "f0": 1000.0, "f1": 600.0, "start": 0.8, "dur": 0.15, "amp": 0.06, "attack": 0.004, "decay": 0.06}]},
+	# A deep rolling rumble and a bellow.
+	"stampede_warn": {"dur": 2.2, "volume_db": -11.0, "max_voices": 1, "min_interval": 600, "pitch_var": 0.03, "priority": 3,
+		"layers": [
+			{"wave": "noise", "dur": 2.0, "amp": 0.2, "attack": 1.0, "decay": 0.8, "lp0": 260.0, "lp1": 140.0},
+			{"wave": "saw", "f0": 82.0, "f1": 66.0, "dur": 1.9, "amp": 0.12, "attack": 0.7, "decay": 0.9, "lp0": 420.0, "vib_hz": 5.0, "vib_depth": 0.02},
+			{"wave": "sine", "f0": 41.0, "dur": 2.0, "amp": 0.3, "attack": 1.0, "decay": 0.8}]},
+	# Heavy footfalls in rhythm.
+	"stampede_run": {"dur": 1.2, "volume_db": -13.0, "max_voices": 2, "min_interval": 350, "pitch_var": 0.03, "priority": 2,
+		"layers": [
+			{"wave": "sine", "f0": 70.0, "f1": 36.0, "dur": 0.25, "amp": 0.34, "attack": 0.003, "decay": 0.1},
+			{"wave": "sine", "f0": 66.0, "f1": 34.0, "start": 0.3, "dur": 0.25, "amp": 0.3, "attack": 0.003, "decay": 0.1},
+			{"wave": "sine", "f0": 72.0, "f1": 36.0, "start": 0.6, "dur": 0.25, "amp": 0.34, "attack": 0.003, "decay": 0.1},
+			{"wave": "sine", "f0": 64.0, "f1": 32.0, "start": 0.9, "dur": 0.25, "amp": 0.3, "attack": 0.003, "decay": 0.1},
+			{"wave": "noise", "dur": 1.1, "amp": 0.08, "attack": 0.1, "decay": 0.5, "lp0": 500.0, "lp1": 300.0}]},
+	# A heavy thud and bones cracking.
+	"trample": {"dur": 0.6, "volume_db": -12.0, "max_voices": 4, "min_interval": 80, "pitch_var": 0.07, "priority": 2,
+		"layers": [
+			{"wave": "sine", "f0": 95.0, "f1": 40.0, "dur": 0.35, "amp": 0.4, "attack": 0.003, "decay": 0.14},
+			{"wave": "noise", "dur": 0.06, "amp": 0.28, "attack": 0.001, "decay": 0.02, "lp0": 4500.0},
+			{"wave": "noise", "start": 0.08, "dur": 0.04, "amp": 0.2, "attack": 0.001, "decay": 0.015, "lp0": 5500.0},
+			{"wave": "noise", "start": 0.15, "dur": 0.04, "amp": 0.16, "attack": 0.001, "decay": 0.015, "lp0": 6500.0}]},
+	# Stone cracking and a hollow bone groan.
+	"fossil_rise": {"dur": 1.4, "volume_db": -13.0, "max_voices": 2, "min_interval": 250, "pitch_var": 0.05, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.5, "amp": 0.2, "attack": 0.01, "decay": 0.25, "lp0": 1600.0, "lp1": 600.0},
+			{"wave": "noise", "start": 0.2, "dur": 0.05, "amp": 0.22, "attack": 0.001, "decay": 0.02, "lp0": 5000.0},
+			{"wave": "saw", "f0": 120.0, "f1": 90.0, "start": 0.3, "dur": 1.0, "amp": 0.08, "attack": 0.35, "decay": 0.5, "lp0": 500.0, "vib_hz": 3.0, "vib_depth": 0.02},
+			{"wave": "sine", "f0": 55.0, "start": 0.2, "dur": 1.0, "amp": 0.2, "attack": 0.05, "decay": 0.6}]},
+	# A falling whistle and a screech.
+	"skyraider_dive": {"dur": 1.0, "volume_db": -14.0, "max_voices": 2, "min_interval": 250, "pitch_var": 0.06, "priority": 2,
+		"layers": [
+			{"wave": "sine", "f0": 2600.0, "f1": 700.0, "dur": 0.8, "amp": 0.08, "attack": 0.01, "decay": 0.45},
+			{"wave": "saw", "f0": 1700.0, "f1": 1100.0, "start": 0.55, "dur": 0.4, "amp": 0.09, "attack": 0.01, "decay": 0.2, "lp0": 3000.0, "vib_hz": 13.0, "vib_depth": 0.04},
+			{"wave": "noise", "dur": 0.8, "amp": 0.06, "attack": 0.3, "decay": 0.3, "lp0": 6000.0, "lp1": 2000.0}]},
+	# A beak clack and crystals chiming away.
+	"snatch": {"dur": 1.0, "volume_db": -15.0, "max_voices": 3, "min_interval": 150, "pitch_var": 0.05, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.03, "amp": 0.34, "attack": 0.001, "decay": 0.01, "lp0": 3500.0},
+			{"wave": "noise", "start": 0.07, "dur": 0.03, "amp": 0.28, "attack": 0.001, "decay": 0.01, "lp0": 3000.0},
+			{"wave": "sine", "f0": 2349.0, "f1": 3136.0, "start": 0.12, "dur": 0.8, "amp": 0.09, "attack": 0.002, "decay": 0.3},
+			{"wave": "sine", "f0": 3520.0, "start": 0.2, "dur": 0.6, "amp": 0.05, "attack": 0.002, "decay": 0.22}]},
+	# Crystals scatter on stone.
+	"pile_drop": {"dur": 0.9, "volume_db": -15.0, "max_voices": 3, "min_interval": 120, "pitch_var": 0.07, "priority": 2,
+		"layers": [
+			{"wave": "sine", "f0": 2093.0, "dur": 0.5, "amp": 0.08, "attack": 0.002, "decay": 0.18},
+			{"wave": "sine", "f0": 2794.0, "start": 0.07, "dur": 0.45, "amp": 0.07, "attack": 0.002, "decay": 0.16},
+			{"wave": "sine", "f0": 3322.0, "start": 0.16, "dur": 0.4, "amp": 0.06, "attack": 0.002, "decay": 0.14},
+			{"wave": "noise", "dur": 0.4, "amp": 0.1, "attack": 0.002, "decay": 0.15, "lp0": 7000.0, "lp1": 3000.0}]},
+	# A falling roar of fire.
+	"bomb_warn": {"dur": 1.5, "volume_db": -13.0, "max_voices": 2, "min_interval": 300, "pitch_var": 0.04, "priority": 3,
+		"layers": [
+			{"wave": "noise", "dur": 1.4, "amp": 0.2, "attack": 0.2, "decay": 0.7, "lp0": 2200.0, "lp1": 500.0},
+			{"wave": "saw", "f0": 700.0, "f1": 140.0, "dur": 1.3, "amp": 0.06, "attack": 0.1, "decay": 0.7, "lp0": 1200.0}]},
+	# A molten crack and a splash of embers.
+	"bomb_land": {"dur": 1.1, "volume_db": -11.0, "max_voices": 3, "min_interval": 120, "pitch_var": 0.06, "priority": 3,
+		"layers": [
+			{"wave": "sine", "f0": 100.0, "f1": 38.0, "dur": 0.6, "amp": 0.4, "attack": 0.003, "decay": 0.25},
+			{"wave": "noise", "dur": 0.1, "amp": 0.36, "attack": 0.001, "decay": 0.035, "lp0": 5000.0},
+			{"wave": "noise", "start": 0.08, "dur": 0.9, "amp": 0.12, "attack": 0.02, "decay": 0.5, "lp0": 3500.0, "lp1": 900.0},
+			{"wave": "sine", "f0": 2200.0, "f1": 800.0, "start": 0.1, "dur": 0.4, "amp": 0.03, "attack": 0.003, "decay": 0.15}]},
+	# The sky burns: a long low roar of herds.
+	"ash_horn": {"dur": 3.0, "volume_db": -10.0, "max_voices": 1, "min_interval": 800, "pitch_var": 0.02, "priority": 4,
+		"layers": [
+			{"wave": "saw", "f0": 73.0, "f1": 58.0, "dur": 2.8, "amp": 0.16, "attack": 0.8, "decay": 1.4, "lp0": 380.0, "lp1": 900.0, "vib_hz": 4.0, "vib_depth": 0.015},
+			{"wave": "saw", "f0": 110.0, "f1": 87.0, "dur": 2.6, "amp": 0.08, "attack": 0.9, "decay": 1.3, "lp0": 600.0},
+			{"wave": "noise", "dur": 2.6, "amp": 0.14, "attack": 1.0, "decay": 1.2, "lp0": 600.0, "lp1": 250.0},
+			{"wave": "sine", "f0": 36.0, "dur": 2.8, "amp": 0.3, "attack": 0.8, "decay": 1.4}]},
+}
+
+# --- the Turning Year (Act XV slot; stage key wild) ---
+## "The Turning Year", the Wild's run loop (GDD §15.0 "The Turning Year art and audio (foundation)"): the RunLoopSynth score of
+## every stage whose STAGE has "music": "wildwood". Pastoral and vast: a lilting 3/4 flute tune (the existing "flute" job, a
+## 1.5 s bar) over a soft organ drone, plucked harp (the existing "arp" job on a "tri" wave, one note every 0.5 s: three to a
+## bar), bright bell tones like birdsong (the existing "hits" job), a low hunting-horn call on the turn of each section (the
+## existing "horn" job, at 0 s, 6 s, 12 s and 18 s) and the default heartbeat (the existing heartbeat job: no "drums" key) as the year's
+## slow pulse. G Lydian over G1 (G, D, Em, C), 24 s, four 6 s chord segments. Rendered lazily (Sfx), never under the autotest; its
+## fixed seed is Sfx.SCORE_SEEDS["wildwood"].
+const WILDWOOD_SCORE := {
+	"loop_seconds": 24.0,  # TUNING (not in GDD) four 6 s chord segments (four 1.5 s bars each)
+	"root_hz": 49.0,  # TUNING (not in GDD) G1, a low drone under G
+	"chords": [
+		[98.0, 146.83, 196.0],
+		[73.42, 110.0, 146.83],
+		[82.41, 123.47, 164.81],
+		[65.41, 98.0, 130.81],
+	],  # TUNING (not in GDD) G, D, Em, C: open fifths with a low root
+	"drone_lp_hz": 70.0,  # TUNING (not in GDD) a soft, deep hum
+	"wind_lp_hz": 900.0,  # TUNING (not in GDD) warm leafy air
+	"wind_swells": 3.0,  # TUNING (not in GDD)
+	"vibrato_hz": 0.3,  # TUNING (not in GDD)
+	"vibrato_depth": 0.002,  # TUNING (not in GDD)
+	# The lilting flute: two-note and three-note phrases on the bar (1.5 s), every note ends before the loop does.
+	"flute": {"amp": 0.08, "breath": 0.05, "attack": 0.2, "decay": 1.0, "vib_hz": 4.8, "vib_depth": 0.01,
+		"notes": [[0.0, 587.33, 1.0], [1.5, 659.25, 0.5], [2.0, 587.33, 0.9], [3.0, 493.88, 1.4], [4.5, 587.33, 1.4],
+			[6.0, 587.33, 1.0], [7.5, 440.0, 0.5], [8.0, 587.33, 0.9], [9.0, 554.37, 1.4], [10.5, 440.0, 1.4],
+			[12.0, 493.88, 1.0], [13.5, 587.33, 0.5], [14.0, 659.25, 0.9], [15.0, 587.33, 1.4], [16.5, 493.88, 1.4],
+			[18.0, 523.25, 1.0], [19.5, 587.33, 0.5], [20.0, 783.99, 0.9], [21.0, 659.25, 1.4], [22.5, 587.33, 1.3]]},  # TUNING (not in GDD) [start (s), Hz, length (s)]
+	# The pad: a low organ, one note a segment (G, D, E, C).
+	"organ": {"attack": 1.6, "decay": 3.8, "vib_hz": 0.4, "vib_depth": 0.002,
+		"partials": [[1.0, 0.08], [2.0, 0.05], [3.0, 0.025], [4.0, 0.012]],
+		"notes": [[0.0, 98.0, 5.9], [6.0, 73.42, 5.9], [12.0, 82.41, 5.9], [18.0, 65.41, 5.8]]},  # TUNING (not in GDD) [start (s), Hz, length (s)]
+	# The harp: a plucked triangle, one note every 0.5 s up the segment's chord.
+	"arp": {"step": 0.5, "dur": 0.9, "amp": 0.035, "decay": 0.35, "lp0": 3600.0, "wave": "tri",
+		"chords": [
+			[392.0, 587.33, 783.99],
+			[293.66, 440.0, 587.33],
+			[329.63, 493.88, 659.25],
+			[261.63, 392.0, 523.25],
+		]},  # TUNING (not in GDD) the chord's notes, an octave or two up
+	# Birdsong bells: a clear, quiet ping every 3 s.
+	"hits": {"every": 3.0, "offset": 1.5, "root_hz": 2093.0, "dur": 1.2, "decay": 0.4,
+		"partials": [[1.0, 0.035], [2.76, 0.015], [5.4, 0.006]], "click": 0.006},  # TUNING (not in GDD)
+	# The hunting horn: a low brass call at the turn of each section.
+	"horn": {"starts": [0.0, 6.0, 12.0, 18.0], "dur": 3.4, "attack": 1.2, "decay": 1.8, "amp": 0.04,
+		"lp0": 260.0, "lp1": 800.0,
+		"notes": [[98.0, 146.83], [73.42, 110.0], [82.41, 123.47], [65.41, 98.0]]},  # TUNING (not in GDD) [root, fifth] (Hz) per call
+}
+
+## Turning Year sound effects (recipe keys as SOUNDS), one per WildRulesData.SOUNDS event. Kept OUT of SOUNDS like the other
+## packs: Sfx renders it lazily the first time a Wild run's music ("wildwood") is asked for (Sfx.prepare_pack("wild"); seeds
+## Sfx.PACK_SEED + Sfx.PACK_SEED_OFFSETS["wild"] + i, offset 12000).
+const WILD_SOUNDS: Dictionary = {  # TUNING (not in GDD)
+	# A bell of wood and wind: the year turns.
+	"season_turn": {"dur": 1.8, "volume_db": -12.0, "max_voices": 1, "min_interval": 600, "pitch_var": 0.03, "priority": 3,
+		"layers": [
+			{"wave": "sine", "f0": 392.0, "dur": 1.6, "amp": 0.16, "attack": 0.004, "decay": 0.7},
+			{"wave": "sine", "f0": 1082.0, "dur": 1.0, "amp": 0.05, "attack": 0.004, "decay": 0.4},
+			{"wave": "tri", "f0": 196.0, "dur": 1.2, "amp": 0.1, "attack": 0.004, "decay": 0.5},
+			{"wave": "noise", "dur": 1.6, "amp": 0.07, "attack": 0.6, "decay": 0.7, "lp0": 1800.0, "lp1": 700.0}]},
+	# Roots cracking up through soil, a creak.
+	"roots_grab": {"dur": 0.7, "volume_db": -13.0, "max_voices": 3, "min_interval": 120, "pitch_var": 0.07, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.06, "amp": 0.3, "attack": 0.001, "decay": 0.02, "lp0": 3500.0},
+			{"wave": "noise", "start": 0.1, "dur": 0.05, "amp": 0.24, "attack": 0.001, "decay": 0.02, "lp0": 4200.0},
+			{"wave": "saw", "f0": 140.0, "f1": 90.0, "dur": 0.6, "amp": 0.07, "attack": 0.05, "decay": 0.35, "lp0": 520.0, "vib_hz": 9.0, "vib_depth": 0.04},
+			{"wave": "sine", "f0": 80.0, "f1": 45.0, "dur": 0.3, "amp": 0.25, "attack": 0.003, "decay": 0.12}]},
+	# A rising crackle and a gust of smoke.
+	"wildfire_warn": {"dur": 1.6, "volume_db": -14.0, "max_voices": 2, "min_interval": 300, "pitch_var": 0.04, "priority": 3,
+		"layers": [
+			{"wave": "noise", "dur": 1.5, "amp": 0.14, "attack": 1.0, "decay": 0.4, "lp0": 1800.0, "lp1": 6000.0},
+			{"wave": "noise", "start": 0.3, "dur": 0.03, "amp": 0.3, "attack": 0.001, "decay": 0.01, "lp0": 6000.0},
+			{"wave": "noise", "start": 0.7, "dur": 0.03, "amp": 0.3, "attack": 0.001, "decay": 0.01, "lp0": 6500.0},
+			{"wave": "noise", "start": 1.0, "dur": 0.03, "amp": 0.3, "attack": 0.001, "decay": 0.01, "lp0": 7000.0},
+			{"wave": "saw", "f0": 110.0, "f1": 200.0, "dur": 1.4, "amp": 0.03, "attack": 0.9, "decay": 0.4, "lp0": 500.0}]},
+	# A roar of dry grass catching.
+	"wildfire_burn": {"dur": 2.4, "volume_db": -11.0, "max_voices": 1, "min_interval": 700, "pitch_var": 0.03, "priority": 3,
+		"layers": [
+			{"wave": "noise", "dur": 2.2, "amp": 0.24, "attack": 0.3, "decay": 1.4, "lp0": 3200.0, "lp1": 700.0},
+			{"wave": "saw", "f0": 70.0, "f1": 55.0, "dur": 2.2, "amp": 0.12, "attack": 0.4, "decay": 1.4, "lp0": 380.0, "vib_hz": 5.0, "vib_depth": 0.02},
+			{"wave": "sine", "f0": 40.0, "dur": 2.2, "amp": 0.28, "attack": 0.4, "decay": 1.4}]},
+	# A howling white wind.
+	"blizzard": {"dur": 2.8, "volume_db": -14.0, "max_voices": 1, "min_interval": 900, "pitch_var": 0.03, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 2.6, "amp": 0.2, "attack": 1.2, "decay": 1.2, "lp0": 2400.0, "lp1": 1200.0},
+			{"wave": "sine", "f0": 520.0, "f1": 760.0, "dur": 2.6, "amp": 0.03, "attack": 1.2, "decay": 1.2, "vib_hz": 0.7, "vib_depth": 0.08},
+			{"wave": "sine", "f0": 700.0, "f1": 480.0, "start": 0.4, "dur": 2.2, "amp": 0.025, "attack": 1.0, "decay": 1.0, "vib_hz": 0.5, "vib_depth": 0.08}]},
+	# Thorns snaking up, a woody snap.
+	"thicket_grow": {"dur": 0.9, "volume_db": -14.0, "max_voices": 3, "min_interval": 120, "pitch_var": 0.06, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 0.5, "amp": 0.14, "attack": 0.2, "decay": 0.25, "lp0": 1200.0, "lp1": 3600.0},
+			{"wave": "saw", "f0": 200.0, "f1": 420.0, "dur": 0.5, "amp": 0.05, "attack": 0.1, "decay": 0.25, "lp0": 900.0},
+			{"wave": "noise", "start": 0.5, "dur": 0.03, "amp": 0.32, "attack": 0.001, "decay": 0.01, "lp0": 3000.0},
+			{"wave": "sine", "f0": 150.0, "f1": 70.0, "start": 0.5, "dur": 0.25, "amp": 0.18, "attack": 0.003, "decay": 0.1}]},
+	# Thorns crackling to ash.
+	"thicket_burn": {"dur": 1.2, "volume_db": -14.0, "max_voices": 3, "min_interval": 120, "pitch_var": 0.06, "priority": 2,
+		"layers": [
+			{"wave": "noise", "dur": 1.1, "amp": 0.14, "attack": 0.05, "decay": 0.7, "lp0": 5000.0, "lp1": 1500.0},
+			{"wave": "noise", "start": 0.1, "dur": 0.03, "amp": 0.3, "attack": 0.001, "decay": 0.01, "lp0": 6000.0},
+			{"wave": "noise", "start": 0.3, "dur": 0.03, "amp": 0.26, "attack": 0.001, "decay": 0.01, "lp0": 6500.0},
+			{"wave": "noise", "start": 0.55, "dur": 0.03, "amp": 0.22, "attack": 0.001, "decay": 0.01, "lp0": 7000.0},
+			{"wave": "sine", "f0": 90.0, "f1": 50.0, "dur": 0.4, "amp": 0.14, "attack": 0.01, "decay": 0.2}]},
+	# Earth closing, a deep thud.
+	"bury": {"dur": 0.9, "volume_db": -12.0, "max_voices": 3, "min_interval": 120, "pitch_var": 0.05, "priority": 2,
+		"layers": [
+			{"wave": "sine", "f0": 80.0, "f1": 34.0, "dur": 0.6, "amp": 0.42, "attack": 0.003, "decay": 0.25},
+			{"wave": "noise", "dur": 0.6, "amp": 0.2, "attack": 0.01, "decay": 0.35, "lp0": 700.0, "lp1": 250.0},
+			{"wave": "noise", "start": 0.05, "dur": 0.05, "amp": 0.18, "attack": 0.001, "decay": 0.02, "lp0": 2500.0}]},
+	# Spring Returns: every bird and leaf at once, a vast green chord.
+	"spring_horn": {"dur": 3.2, "volume_db": -10.0, "max_voices": 1, "min_interval": 1000, "pitch_var": 0.02, "priority": 4,
+		"layers": [
+			{"wave": "saw", "f0": 98.0, "dur": 3.0, "amp": 0.1, "attack": 0.9, "decay": 1.5, "lp0": 500.0, "lp1": 1500.0, "vib_hz": 4.0, "vib_depth": 0.012},
+			{"wave": "saw", "f0": 147.0, "dur": 3.0, "amp": 0.07, "attack": 1.0, "decay": 1.5, "lp0": 700.0, "lp1": 1800.0},
+			{"wave": "saw", "f0": 196.0, "dur": 3.0, "amp": 0.05, "attack": 1.1, "decay": 1.4, "lp0": 900.0, "lp1": 2400.0},
+			{"wave": "sine", "f0": 49.0, "dur": 3.0, "amp": 0.26, "attack": 0.9, "decay": 1.5},
+			{"wave": "sine", "f0": 2349.0, "f1": 3136.0, "start": 0.5, "dur": 0.5, "amp": 0.04, "attack": 0.01, "decay": 0.2},
+			{"wave": "sine", "f0": 3136.0, "f1": 2637.0, "start": 1.1, "dur": 0.4, "amp": 0.035, "attack": 0.01, "decay": 0.15},
+			{"wave": "sine", "f0": 2637.0, "f1": 3520.0, "start": 1.7, "dur": 0.5, "amp": 0.03, "attack": 0.01, "decay": 0.2}]},
 }

@@ -110,7 +110,43 @@ const SPELL_ORDER := ["shadow_bolt", "orb_shield", "shadow_blast",
 	# --- Act IX: the Proving Moon ---
 	"soul_caster",
 	# --- Act IX: the Ark ---
-	"tractor_lift"]
+	"tractor_lift",
+	# --- Act X: the Smuggler's Cutter ---
+	"chain_shot",
+	# --- Act X: the Treasure Galleon ---
+	"cannonade",
+	# --- Act X: the Maelstrom ---
+	"anchor_drop",
+	# --- Act XI (temporary): the Barrow Fields ---
+	"barrow_grasp",
+	# --- Act XI (temporary): Valgard ---
+	"valkyrie_spear",
+	# --- Act XI (temporary): Vigrid ---
+	"gungnir",
+	# --- Act XII (temporary number): the Necropolis of Sand ---
+	"linen_bind",
+	# --- Act XII (temporary number): the Temple of the Lioness ---
+	"burning_eye",
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	"feathers_verdict",
+	# --- Act XIII (temporary number): the Silver Stair ---
+	"flaming_sword",
+	# --- Act XIII (temporary number): the Wheel of Thrones ---
+	"wheel_of_eyes",
+	# --- Act XIII (temporary number): the Empyrean ---
+	"revelation",
+	# --- Act XIV (temporary number): the Fern Basin ---
+	"pack_leap",
+	# --- Act XIV (temporary number): the Great Plain ---
+	"stampede",
+	# --- Act XIV (temporary number): the Last Day ---
+	"meteor_call",
+	# --- Act XV (temporary number): the Greenwood ---
+	"wild_hunt",
+	# --- Act XV (temporary number): the Fae Court ---
+	"glamour",
+	# --- Act XV (temporary number): the World-Tree ---
+	"root_and_rot"]
 
 ## Spell definitions.
 ##   display_name — UI name.
@@ -941,6 +977,443 @@ const SPELLS := {
 			{"damage": 78.0, "cooldown": 2.6, "lift_time": 1.0, "slam_radius": 64.0, "slam_share": 0.57},  # TUNING (not in GDD) Hero's Fist Lv5 72 / 2.4 s
 		],
 	},
+	# --- Act X: the Smuggler's Cutter ---
+	# Chain Shot (GDD §15.0 "Chain Shot, Keelhauler, Bosun's Whistle and the
+	# Marooned Quartermaster (Act X)"; owner-approved proposal: "a spectral
+	# chain-shot spins through a line of enemies and returns"; unlocked by
+	# slaying Captain Crow, UnlockData): every `cooldown` s `shots` chain-shots
+	# fly `range` px out at `speed` px/s through the nearest foes and spin back
+	# to the necromancer, striking every foe within `width` px once out and
+	# once back for `damage`. Logic: ChainShot; fixed rules: ChainShotData;
+	# Bosun's Whistle (its paired passive) shortens its cooldown. A line
+	# piercer that hits twice (Hearse Run's lane, half its damage a hit).
+	"chain_shot": {
+		"display_name": "Chain Shot",  # Owner-approved proposal
+		"icon": "chain_shot",
+		"description": "A spectral chain-shot spins through a line of foes and returns.",
+		"shared_card_pool": true,  # TUNING (not in GDD) an unlocked Act X spell: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Hit damage", "shots": "Chain-shots", "range": "Range (px)", "cooldown": "Cooldown (s)"},
+		"levels": [
+			{"damage": 8.0, "shots": 1, "range": 230.0, "speed": 380.0, "width": 14.0, "cooldown": 2.8},  # TUNING (not in GDD) every foe in the line is hit twice (first pass 11)
+			{"damage": 10.0, "shots": 1, "range": 240.0, "speed": 390.0, "width": 15.0, "cooldown": 2.7},  # TUNING (not in GDD) first pass 13
+			{"damage": 10.0, "shots": 2, "range": 250.0, "speed": 400.0, "width": 16.0, "cooldown": 2.6},  # TUNING (not in GDD) first pass 15
+			{"damage": 12.0, "shots": 2, "range": 265.0, "speed": 410.0, "width": 17.0, "cooldown": 2.5},  # TUNING (not in GDD) first pass 18
+			{"damage": 14.0, "shots": 3, "range": 280.0, "speed": 420.0, "width": 18.0, "cooldown": 2.4},  # TUNING (not in GDD) Hearse Run Lv5 26 / 2.8 s (one hit a foe); first pass 21; integration balance 10/12/13/15/18 -> 8/10/10/12/14 (the forced seed-7 Cutter run: 159k, 2.5x the top summon class)
+		],
+	},
+	# --- Act X: the Treasure Galleon ---
+	# Cannonade (GDD §15.0 "Cannonade, Dead Men's Broadside, Black Powder and
+	# the Corsair Queen (Act X)"; owner-approved proposal: "spectral
+	# cannonballs arc down on three marked groups"; unlocked by slaying Admiral
+	# Marrec, UnlockData): every `cooldown` s it marks up to `marks` dense
+	# groups within `range` px, and a spectral ball lands on each after
+	# CannonadeData.FALL_TIME s: `damage` to every foe within `radius` px.
+	# Stat keys: damage, marks, radius (px), range (px), cooldown (s). Logic:
+	# Cannonade; fixed rules: CannonadeData; Black Powder (its paired passive)
+	# widens the blasts and knocks the foes outward. An area spell (Brimstone's
+	# numbers, three marks from the first level).
+	"cannonade": {
+		"display_name": "Cannonade",  # Owner-approved proposal
+		"icon": "cannonade",
+		"description": "Spectral cannonballs arc down on the three thickest groups of foes.",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Ball damage", "marks": "Groups marked", "radius": "Blast radius", "cooldown": "Cooldown (s)"},
+		"levels": [
+			{"damage": 13.0, "marks": 3, "radius": 30.0, "range": 340.0, "cooldown": 3.6},  # TUNING (not in GDD) owner-approved proposal: three marked groups; first pass 18 / 3.4 s
+			{"damage": 15.0, "marks": 3, "radius": 32.0, "range": 345.0, "cooldown": 3.4},  # TUNING (not in GDD)
+			{"damage": 19.0, "marks": 3, "radius": 34.0, "range": 350.0, "cooldown": 3.2},  # TUNING (not in GDD)
+			{"damage": 22.0, "marks": 4, "radius": 36.0, "range": 355.0, "cooldown": 3.0},  # TUNING (not in GDD)
+			{"damage": 26.0, "marks": 4, "radius": 38.0, "range": 360.0, "cooldown": 2.8},  # TUNING (not in GDD) first pass 38 / 2.7 s (the forced seed-7 run: 322k damage, far ahead of the army); integration balance 14/17/21/25/30 -> 13/15/19/22/26 (232k beside the Death Knights' 214k)
+		],
+	},
+	# --- Act X: the Maelstrom ---
+	# Anchor Drop (GDD §15.0 "Anchor Drop, Abyssal Mooring, Dead Reckoning and
+	# the Ghost Helmsman"; owner-approved proposal: "a spectral anchor slams the
+	# strongest enemy, stuns it and shocks a ring around it (no pull)"; unlocked
+	# by defeating Vandermere, UnlockData): every `cooldown` s a spectral anchor
+	# falls on the strongest foe within AnchorDropData.AIM_RANGE px: `damage`, a
+	# stun of anchor_stun s (CombatResolver.stun_enemy(); bosses a quarter), and
+	# ring_share x the damage to the foes within ring_radius px. Logic:
+	# AnchorDrop; fixed rules: AnchorDropData. A single-target blow with a stun
+	# and a splash, the act's answer to a heavy (no pull: the act's spells
+	# knock, chain and bombard).
+	"anchor_drop": {
+		"display_name": "Anchor Drop",  # Owner-approved proposal
+		"icon": "anchor_drop",
+		"description": "A spectral anchor slams the strongest foe, stuns it and shocks the ring around it.",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Slam damage", "cooldown": "Cooldown (s)", "anchor_stun": "Stun (s)", "ring_radius": "Shock (px)", "ring_share": "Shock damage"},
+		"levels": [
+			{"damage": 34.0, "cooldown": 3.4, "anchor_stun": 0.8, "ring_radius": 48.0, "ring_share": 0.2},  # TUNING (not in GDD)
+			{"damage": 42.0, "cooldown": 3.25, "anchor_stun": 0.9, "ring_radius": 52.0, "ring_share": 0.21},  # TUNING (not in GDD)
+			{"damage": 51.0, "cooldown": 3.1, "anchor_stun": 1.0, "ring_radius": 56.0, "ring_share": 0.22},  # TUNING (not in GDD)
+			{"damage": 61.0, "cooldown": 2.95, "anchor_stun": 1.1, "ring_radius": 60.0, "ring_share": 0.23},  # TUNING (not in GDD)
+			{"damage": 72.0, "cooldown": 2.8, "anchor_stun": 1.2, "ring_radius": 64.0, "ring_share": 0.25},  # TUNING (not in GDD) integration balance: ring_share 0.3-0.4 -> 0.2-0.25 (the shock ring dealt 148k of the forced seed-7 Maelstrom run's 345k, 1.5x the top summon class); Tractor Beam Lv5 78 / 2.6 s; the stun is its edge (first pass shock 0.54 at 68 px: the shock ring dealt most of its damage)
+		],
+	},
+	# --- Act XI (temporary): the Barrow Fields ---
+	# Barrow Grasp (GDD §15.0 "Barrow Grasp, Barrow-Lord's Embrace, Grave Frost
+	# and the Rune-Seer"; owner-approved proposal: "cold hands burst from the
+	# ground in a ring and hold enemies"; unlocked by slaying Hrimgar,
+	# UnlockData). Every `cooldown` s `hands` hands burst on a ring `ring` px
+	# around the necromancer; each grabs every foe within `radius` px once:
+	# `damage` and a hold of `hold` s (CombatResolver.stun_enemy(): bosses keep a
+	# quarter, elites 60%; the berserk shrug it off). Stat keys: damage, hands,
+	# ring (px), radius (px), hold (s), cooldown (s). Logic: BarrowGrasp; fixed
+	# rules: BarrowGraspData; Grave Frost (its paired passive) makes every hand
+	# hit harder and hold longer.
+	"barrow_grasp": {
+		"display_name": "Barrow Grasp",  # Owner-approved proposal
+		"icon": "barrow_grasp",
+		"description": "Cold hands burst from the ground in a ring around you and hold your foes.",
+		"shared_card_pool": true,  # TUNING (not in GDD) an unlocked spell: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Damage", "hands": "Hands", "hold": "Hold", "cooldown": "Cooldown"},
+		"levels": [
+			{"damage": 14.0, "hands": 6, "ring": 160.0, "radius": 26.0, "hold": 1.0, "cooldown": 4.5},  # TUNING (not in GDD)
+			{"damage": 17.0, "hands": 7, "ring": 160.0, "radius": 27.0, "hold": 1.1, "cooldown": 4.2},  # TUNING (not in GDD)
+			{"damage": 20.0, "hands": 8, "ring": 160.0, "radius": 28.0, "hold": 1.2, "cooldown": 4.0},  # TUNING (not in GDD)
+			{"damage": 24.0, "hands": 9, "ring": 165.0, "radius": 30.0, "hold": 1.4, "cooldown": 3.7},  # TUNING (not in GDD)
+			{"damage": 28.0, "hands": 10, "ring": 165.0, "radius": 32.0, "hold": 1.6, "cooldown": 3.4},  # TUNING (not in GDD)
+		],
+	},
+	# --- Act XI (temporary): Valgard ---
+	# Valkyrie Spear (GDD §15.0 "Valkyrie Spear, Chooser of the Slain,
+	# Einherjar's Oath and the Shield-Maiden (Valgard)"; owner-approved
+	# proposal: "a spectral spear dives on the strongest enemy and chains to the
+	# next"; unlocked by slaying Sigrun, UnlockData): every `cooldown` s a
+	# spectral spear falls on the enemy with the most HP left within `range`
+	# px of the necromancer, strikes it for `damage`, then leaps to the nearest
+	# enemy it has not struck within `chain` px, `jumps` times, each strike x
+	# `falloff` of the last. Stat keys: damage, jumps, falloff, chain (px),
+	# range (px), cooldown (s). Logic: ValkyrieSpear; fixed rules:
+	# ValkyrieSpearData; Einherjar's Oath (its paired passive) adds jumps and
+	# damage. A strong single-target opener with a short chain.
+	"valkyrie_spear": {
+		"display_name": "Valkyrie Spear",  # Owner-approved proposal
+		"icon": "valkyrie_spear",
+		"description": "A spectral spear dives on the strongest foe, then leaps to the next.",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Spear damage", "jumps": "Leaps", "falloff": "Kept per leap", "cooldown": "Cooldown (s)"},
+		"levels": [
+			{"damage": 26.0, "jumps": 2, "falloff": 0.75, "chain": 150.0, "range": 360.0, "cooldown": 2.8},  # TUNING (not in GDD) Soul Caster Lv1 20 x 3 / 2.6 s
+			{"damage": 32.0, "jumps": 2, "falloff": 0.76, "chain": 160.0, "range": 365.0, "cooldown": 2.65},  # TUNING (not in GDD)
+			{"damage": 38.0, "jumps": 3, "falloff": 0.77, "chain": 170.0, "range": 370.0, "cooldown": 2.5},  # TUNING (not in GDD)
+			{"damage": 45.0, "jumps": 3, "falloff": 0.78, "chain": 180.0, "range": 375.0, "cooldown": 2.35},  # TUNING (not in GDD)
+			{"damage": 52.0, "jumps": 3, "falloff": 0.8, "chain": 190.0, "range": 380.0, "cooldown": 2.2},  # TUNING (not in GDD) ~70 dps over a full chain, as Soul Caster Lv5
+		],
+	},
+	# --- Act XI (temporary): Vigrid ---
+	# Gungnir (GDD §15.0 "Gungnir, Spear of the Hanged, Runecraft and the
+	# Berserker"; owner-approved proposal: "a spear thrown at the strongest
+	# enemy on screen that pierces everything in its line"; unlocked by
+	# defeating Odin, UnlockData): every `cooldown` s a spear of soul-light is
+	# thrown at the strongest foe within GungnirData.AIM_RANGE px and strikes
+	# every foe within `spear_width` px of its `length` px line for `damage`. Logic:
+	# Gungnir; fixed rules: GungnirData. A single-target opener that also cuts a
+	# lane through the crowd behind its mark (the spell-only build's missing
+	# single-target damage, with a line's reach).
+	"gungnir": {
+		"display_name": "Gungnir",  # Owner-approved proposal
+		"icon": "gungnir",
+		"description": "A spear of soul-light flies at the strongest foe on screen and pierces everything in its line.",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Damage", "cooldown": "Cooldown (s)", "spear_width": "Width (px)", "length": "Reach (px)"},
+		"levels": [
+			{"damage": 32.0, "cooldown": 3.0, "spear_width": 9.0, "length": 600.0},  # TUNING (not in GDD)
+			{"damage": 40.0, "cooldown": 2.85, "spear_width": 10.0, "length": 620.0},  # TUNING (not in GDD)
+			{"damage": 48.0, "cooldown": 2.7, "spear_width": 11.0, "length": 640.0},  # TUNING (not in GDD)
+			{"damage": 58.0, "cooldown": 2.55, "spear_width": 12.0, "length": 660.0},  # TUNING (not in GDD)
+			{"damage": 68.0, "cooldown": 2.4, "spear_width": 13.0, "length": 680.0},  # TUNING (not in GDD) Tractor Beam Lv5 78 / 2.6 s, on a whole line
+		],
+	},
+	# --- Act XII (temporary number): the Necropolis of Sand ---
+	# Linen Bind (GDD §15.0 "Linen Bind, Eternal Shroud, Natron Salts and the
+	# Embalmer (Act XII)"; owner-approved proposal: "spectral bandages wrap up
+	# to 5 enemies and hold them 1.2 s; wrapped enemies that die rise as
+	# temporary Mummies"; unlocked by slaying Anubis, then offered on every
+	# stage). Every `cooldown` s it wraps up to `targets` foes within `range`
+	# px (the nearest first): `damage` each, held `hold` s, wrapped `mark` s;
+	# a wrapped foe that dies rises as a Mummy for `life` s, at most `cap`
+	# alive. Logic: LinenBind; fixed rules: LinenBindData. Natron Salts (its
+	# paired passive) makes every binding hit harder and hold longer.
+	"linen_bind": {
+		"display_name": "Linen Bind",  # Owner-approved proposal
+		"icon": "linen_bind",
+		"description": "Spectral bandages wrap the nearest foes and hold them; the wrapped who die rise as your Mummies.",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Bind damage", "targets": "Foes wrapped", "hold": "Hold (s)", "cooldown": "Cooldown (s)", "cap": "Mummies at most"},
+		"levels": [
+			{"damage": 16.0, "targets": 3, "hold": 1.2, "mark": 3.0, "range": 250.0, "cooldown": 3.2, "life": 8.0, "cap": 3},  # TUNING (not in GDD) owner-approved proposal: a 1.2 s hold
+			{"damage": 20.0, "targets": 3, "hold": 1.2, "mark": 3.0, "range": 260.0, "cooldown": 3.0, "life": 8.0, "cap": 4},  # TUNING (not in GDD)
+			{"damage": 24.0, "targets": 4, "hold": 1.2, "mark": 3.2, "range": 270.0, "cooldown": 2.85, "life": 9.0, "cap": 5},  # TUNING (not in GDD)
+			{"damage": 29.0, "targets": 4, "hold": 1.2, "mark": 3.4, "range": 285.0, "cooldown": 2.7, "life": 9.0, "cap": 6},  # TUNING (not in GDD)
+			{"damage": 34.0, "targets": 5, "hold": 1.2, "mark": 3.5, "range": 300.0, "cooldown": 2.5, "life": 10.0, "cap": 7},  # TUNING (not in GDD) owner-approved proposal: "up to 5 enemies"
+		],
+	},
+	# --- Act XII (temporary number): the Temple of the Lioness ---
+	# Burning Eye (GDD §15.0 "Burning Eye, Eye of Retribution, Desert Fury and
+	# the Lion-Priestess (Dynasty phase 2)"; proposal: "a solar eye fires a beam
+	# that sweeps a 90° arc"; unlocked by slaying Sekhmet, UnlockData): every
+	# `cooldown` s a solar eye over the necromancer fires a beam `range` px long
+	# and `width` px wide at the nearest foe and sweeps it across `arc` degrees
+	# in `sweep_time` s; every foe it crosses takes `damage` once a pass. A FIRE
+	# source (DynastyRulesData.FIRE_SOURCES: mummies take x1.5). Its "range" is a
+	# spell range like any other (the Sandstorm halves it). Logic: BurningEye;
+	# fixed rules: BurningEyeData. A sweeping crowd spell between Death Ray (a
+	# full circle) and Shadow Blast.
+	"burning_eye": {
+		"display_name": "Burning Eye",  # Owner-approved proposal
+		"icon": "burning_eye",
+		"description": "A solar eye opens over you and sweeps its burning beam across the foes before you.",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Beam damage", "arc": "Arc (deg)", "range": "Range (px)", "cooldown": "Cooldown (s)"},
+		"levels": [
+			{"damage": 22.0, "arc": 90.0, "range": 230.0, "width": 12.0, "sweep_time": 0.55, "cooldown": 2.8},  # TUNING (not in GDD) owner-approved proposal: a 90° arc
+			{"damage": 28.0, "arc": 90.0, "range": 245.0, "width": 12.0, "sweep_time": 0.55, "cooldown": 2.65},  # TUNING (not in GDD)
+			{"damage": 35.0, "arc": 100.0, "range": 260.0, "width": 13.0, "sweep_time": 0.6, "cooldown": 2.5},  # TUNING (not in GDD)
+			{"damage": 43.0, "arc": 100.0, "range": 275.0, "width": 14.0, "sweep_time": 0.6, "cooldown": 2.35},  # TUNING (not in GDD)
+			{"damage": 52.0, "arc": 110.0, "range": 290.0, "width": 15.0, "sweep_time": 0.65, "cooldown": 2.2},  # TUNING (not in GDD) Death Ray Lv5 for comparison
+		],
+	},
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	# Feather's Verdict (GDD §15.0 "Feather's Verdict, Heart Devoured, Heavy
+	# Heart and the Pharaoh's Shade"; owner-approved proposal: "a gold feather
+	# lands on the strongest enemy and executes weak enemies in a ring around
+	# it"; unlocked by defeating Osiris and Ammit, UnlockData): every `cooldown`
+	# s a gold feather falls on the strongest open foe within `range` px (the
+	# Sandstorm halves it) for `damage`, and every other foe within `ring` px at
+	# or under `execute` of its max HP is executed (never a boss, a miniboss or a
+	# structure). Logic: FeathersVerdict; fixed rules: FeathersVerdictData. A
+	# single-target blow that also clears the wounded round it.
+	"feathers_verdict": {
+		"display_name": "Feather's Verdict",  # Owner-approved proposal
+		"icon": "feathers_verdict",
+		"description": "A gold feather falls on the strongest foe, and the weak around it are judged.",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Feather damage", "cooldown": "Cooldown (s)", "execute": "Executes under", "ring": "Ring (px)"},
+		"levels": [
+			{"damage": 34.0, "cooldown": 3.4, "range": 300.0, "execute": 0.15, "ring": 56.0},  # TUNING (not in GDD)
+			{"damage": 42.0, "cooldown": 3.25, "range": 300.0, "execute": 0.17, "ring": 60.0},  # TUNING (not in GDD)
+			{"damage": 52.0, "cooldown": 3.1, "range": 300.0, "execute": 0.19, "ring": 64.0},  # TUNING (not in GDD)
+			{"damage": 62.0, "cooldown": 2.95, "range": 300.0, "execute": 0.21, "ring": 68.0},  # TUNING (not in GDD)
+			{"damage": 74.0, "cooldown": 2.8, "range": 300.0, "execute": 0.24, "ring": 74.0},  # TUNING (not in GDD) Tractor Beam Lv5 78 / 2.6 s
+		],
+	},
+	# --- Act XIII (temporary number): the Silver Stair ---
+	# Flaming Sword (GDD §15.0 "Flaming Sword, Sword at the Gate, Fallen Light
+	# and the Fallen Herald"; owner-approved proposal: "a spectral sword sweeps
+	# a wide arc in front of the necromancer"; unlocked by slaying Seraiel, then
+	# offered on every stage). Every `cooldown` s, a foe within reach, it sweeps
+	# `arc` degrees centred on the nearest foe, `radius` px long (spell area
+	# widens it): every foe in the sector takes `damage` at once. Logic:
+	# FlamingSword; fixed rules: FlamingSwordData. Shorter and wider than the
+	# Burning Eye: a close guard for a necromancer in the middle of his ring.
+	"flaming_sword": {
+		"display_name": "Flaming Sword",  # Owner-approved proposal
+		"icon": "flaming_sword",
+		"description": "A spectral sword sweeps a wide arc in front of you, cutting every foe in it.",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Sword damage", "arc": "Arc (deg)", "radius": "Reach (px)", "cooldown": "Cooldown (s)"},
+		"levels": [
+			{"damage": 24.0, "arc": 140.0, "radius": 120.0, "cooldown": 2.2},  # TUNING (not in GDD) owner-approved proposal: "a wide arc"
+			{"damage": 30.0, "arc": 140.0, "radius": 125.0, "cooldown": 2.1},  # TUNING (not in GDD)
+			{"damage": 37.0, "arc": 150.0, "radius": 130.0, "cooldown": 2.0},  # TUNING (not in GDD)
+			{"damage": 45.0, "arc": 160.0, "radius": 138.0, "cooldown": 1.9},  # TUNING (not in GDD)
+			{"damage": 54.0, "arc": 170.0, "radius": 145.0, "cooldown": 1.8},  # TUNING (not in GDD) Burning Eye Lv5 52 / 2.2 s (a longer, narrower beam)
+		],
+	},
+	# --- Act XIII (temporary number): the Wheel of Thrones ---
+	# Wheel of Eyes (GDD §15.0 "Wheel of Eyes, Ophanim, All-Seeing and the
+	# Blind Saint"; owner-approved proposal: "a burning wheel rolls out in a
+	# line and rebounds off walls"; unlocked by slaying the Throne, then offered
+	# on every stage). Every `cooldown` s, a foe in range, `count` burning
+	# wheels roll toward the nearest foe at `speed` px/s for `life` s, `radius`
+	# px wide (spell area widens them), striking every foe under them for
+	# `damage` (once each 0.5 s a wheel) and rebounding off obstacles and the
+	# edge of the sight. Logic: WheelOfEyes; fixed rules: WheelOfEyesData. A
+	# roaming area spell that keeps returning across the ring's front.
+	"wheel_of_eyes": {
+		"display_name": "Wheel of Eyes",  # Owner-approved proposal
+		"icon": "wheel_of_eyes",
+		"description": "A burning wheel rolls out at the nearest foe and rebounds off every wall, cutting all it rolls over.",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Wheel damage", "count": "Wheels", "radius": "Size (px)", "life": "Rolls for (s)", "cooldown": "Cooldown (s)"},
+		"levels": [
+			{"damage": 16.0, "count": 1, "speed": 230.0, "life": 2.6, "radius": 16.0, "cooldown": 2.6},  # TUNING (not in GDD) owner-approved proposal: "a burning wheel"
+			{"damage": 20.0, "count": 1, "speed": 235.0, "life": 2.8, "radius": 17.0, "cooldown": 2.5},  # TUNING (not in GDD)
+			{"damage": 24.0, "count": 2, "speed": 240.0, "life": 2.8, "radius": 17.0, "cooldown": 2.5},  # TUNING (not in GDD)
+			{"damage": 29.0, "count": 2, "speed": 245.0, "life": 3.0, "radius": 18.0, "cooldown": 2.3},  # TUNING (not in GDD)
+			{"damage": 34.0, "count": 2, "speed": 250.0, "life": 3.2, "radius": 20.0, "cooldown": 2.1},  # TUNING (not in GDD) about Flaming Sword's Lv5 damage a second, spread over the field
+		],
+	},
+	# --- Act XIII (temporary number): the Empyrean ---
+	# Revelation (GDD §15.0 "Revelation, Be Not Afraid, Seventh Seal and the
+	# Unveiled"; owner-approved proposal: "a flash that stuns every enemy on
+	# screen for 1 s and weakens them through the one debuff path"; unlocked by
+	# slaying the Voice, then offered on every stage). Every `cooldown` s, a foe
+	# on screen, a flash: every foe in the view round the necromancer takes
+	# `damage`, is stunned `stun` s (CombatResolver.stun_enemy(): bosses and
+	# elites a share) and weakened for `weaken_time` s (CombatResolver.
+	# weaken_enemy(): `weaken_slow` slower, `weaken_cut` less damage). Logic:
+	# Revelation; fixed rules: RevelationData. Crowd control more than damage.
+	"revelation": {
+		"display_name": "Revelation",  # Owner-approved proposal
+		"icon": "revelation",
+		"description": "A flash of the unveiled light: every foe on screen is struck, stunned and weakened.",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Flash damage", "stun": "Stun (s)", "weaken_cut": "Their damage cut", "weaken_time": "Weakened for (s)", "cooldown": "Cooldown (s)"},
+		"levels": [
+			{"damage": 8.0, "stun": 1.0, "weaken_slow": 0.15, "weaken_cut": 0.12, "weaken_time": 3.0, "cooldown": 9.0},  # Owner-approved proposal: "stuns ... for 1 s"; TUNING (not in GDD) the rest
+			{"damage": 10.0, "stun": 1.0, "weaken_slow": 0.15, "weaken_cut": 0.14, "weaken_time": 3.0, "cooldown": 8.5},  # TUNING (not in GDD)
+			{"damage": 13.0, "stun": 1.0, "weaken_slow": 0.18, "weaken_cut": 0.16, "weaken_time": 3.5, "cooldown": 8.0},  # TUNING (not in GDD)
+			{"damage": 16.0, "stun": 1.0, "weaken_slow": 0.2, "weaken_cut": 0.18, "weaken_time": 3.5, "cooldown": 7.5},  # TUNING (not in GDD)
+			{"damage": 20.0, "stun": 1.0, "weaken_slow": 0.2, "weaken_cut": 0.2, "weaken_time": 4.0, "cooldown": 7.0},  # TUNING (not in GDD) every foe in sight, so lighter per foe than a single-target spell (first pass 14-34: the evolved run dealt 513k, Flaming Sword 320k)
+		],
+	},
+	# --- Act XIV (temporary number): the Fern Basin ---
+	# Pack Leap (GDD §15.0 "Pack Leap, Apex Pack, Pack Instinct and the Fern
+	# Huntress"; owner-approved proposal: "three spectral raptors leap at marked
+	# enemies"; unlocked by slaying Scarmaw, then offered on every stage). Every
+	# `cooldown` s, a foe within `range` px, it MARKS the `raptors` strongest
+	# foes in reach (distinct while there are enough); mark_time s later a
+	# spectral raptor lands on each: `damage` to the mark and pounce_share of it
+	# to every other foe within `radius` px (the pounce) (`radius`: spell area widens it). Logic:
+	# PackLeap; fixed rules: PackLeapData. Strong single-target damage spread
+	# over the toughest foes in reach.
+	"pack_leap": {
+		"display_name": "Pack Leap",  # Owner-approved proposal
+		"icon": "pack_leap",
+		"description": "Spectral raptors mark the strongest foes near you and leap on them.",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Leap damage", "raptors": "Raptors", "radius": "Pounce (px)", "cooldown": "Cooldown (s)"},
+		"levels": [
+			{"damage": 26.0, "raptors": 3, "range": 320.0, "radius": 24.0, "pounce_share": 0.35, "cooldown": 2.6},  # Owner-approved proposal: "three spectral raptors"; TUNING (not in GDD) the rest
+			{"damage": 32.0, "raptors": 3, "range": 330.0, "radius": 26.0, "pounce_share": 0.35, "cooldown": 2.5},  # TUNING (not in GDD)
+			{"damage": 39.0, "raptors": 3, "range": 340.0, "radius": 28.0, "pounce_share": 0.4, "cooldown": 2.4},  # TUNING (not in GDD)
+			{"damage": 47.0, "raptors": 4, "range": 350.0, "radius": 30.0, "pounce_share": 0.4, "cooldown": 2.3},  # TUNING (not in GDD)
+			{"damage": 56.0, "raptors": 4, "range": 360.0, "radius": 32.0, "pounce_share": 0.45, "cooldown": 2.2},  # TUNING (not in GDD) about Flaming Sword's Lv5 on fewer, tougher foes
+		],
+	},
+	# --- Act XIV (temporary number): the Great Plain ---
+	# Stampede (GDD §15.0 "Stampede, Herd of Ages, Calcified Hide and the
+	# Herd-Warden"; owner-approved proposal: "a spectral horned charger
+	# tramples a line"; unlocked by slaying Old Ironbrow, then offered on every
+	# stage). Every `cooldown` s, a foe within `range` px, a spectral charger
+	# runs `length` px at `speed` px/s from behind the necromancer toward the
+	# thickest foes in reach; every foe within `radius` px of it (spell area
+	# widens it) takes `damage` once and is knocked along. Logic: Stampede;
+	# fixed rules: StampedeData. Line damage through packs, weak on one foe.
+	"stampede": {
+		"display_name": "Stampede",  # Owner-approved proposal
+		"icon": "stampede",
+		"description": "A spectral horned charger tramples a line through the thickest foes.",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Trample damage", "length": "Run (px)", "radius": "Width (px)", "cooldown": "Cooldown (s)"},
+		"levels": [
+			{"damage": 30.0, "range": 320.0, "length": 340.0, "speed": 520.0, "radius": 22.0, "cooldown": 3.0},  # Owner-approved proposal: "tramples a line"; TUNING (not in GDD) the numbers
+			{"damage": 36.0, "range": 330.0, "length": 360.0, "speed": 520.0, "radius": 24.0, "cooldown": 2.9},  # TUNING (not in GDD)
+			{"damage": 43.0, "range": 340.0, "length": 380.0, "speed": 540.0, "radius": 26.0, "cooldown": 2.8},  # TUNING (not in GDD)
+			{"damage": 51.0, "range": 350.0, "length": 400.0, "speed": 540.0, "radius": 28.0, "cooldown": 2.6},  # TUNING (not in GDD)
+			{"damage": 60.0, "range": 360.0, "length": 420.0, "speed": 560.0, "radius": 30.0, "cooldown": 2.5},  # TUNING (not in GDD) a line through a pack, about Pack Leap's Lv5 on many foes
+		],
+	},
+	# --- Act XIV (temporary number): the Last Day ---
+	# Meteor Call (GDD §15.0 "Meteor Call, Extinction Event, Cosmic Dust and
+	# the Skywatcher"; owner-approved proposal: "a telegraphed meteor lands on
+	# the densest group"; unlocked by slaying Old Gravejaw before the impact,
+	# then offered on every stage). Every `cooldown` s, a foe within `range`
+	# px, a soul-teal circle of `radius` px (spell area widens it) shows on the
+	# densest group for `delay` s, then the meteor strikes every foe inside it
+	# once for `damage` and knocks it out. Logic: MeteorCall; fixed rules:
+	# MeteorCallData. Slow, heavy area damage on packs.
+	"meteor_call": {
+		"display_name": "Meteor Call",  # Owner-approved proposal
+		"icon": "meteor_call",
+		"description": "A telegraphed meteor falls on the densest group of foes.",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Meteor damage", "radius": "Radius (px)", "cooldown": "Cooldown (s)"},
+		"levels": [
+			{"damage": 44.0, "range": 360.0, "radius": 50.0, "delay": 0.9, "cooldown": 3.6},  # Owner-approved proposal: "a telegraphed meteor"; TUNING (not in GDD) the numbers
+			{"damage": 53.0, "range": 370.0, "radius": 53.0, "delay": 0.9, "cooldown": 3.4},  # TUNING (not in GDD)
+			{"damage": 63.0, "range": 380.0, "radius": 56.0, "delay": 0.85, "cooldown": 3.2},  # TUNING (not in GDD)
+			{"damage": 75.0, "range": 390.0, "radius": 60.0, "delay": 0.85, "cooldown": 3.0},  # TUNING (not in GDD)
+			{"damage": 88.0, "range": 400.0, "radius": 64.0, "delay": 0.8, "cooldown": 2.8},  # TUNING (not in GDD) a slow, heavy blow on a pack (Stampede's Lv5 60 on a line)
+		],
+	},
+	# --- Act XV (temporary number): the Greenwood ---
+	# Wild Hunt (GDD §15.0 "Wild Hunt, The Endless Hunt, Horn of the Hunt and
+	# the Horned Herald"; owner-approved proposal: "spectral riders sweep across
+	# the screen in a line"; unlocked by slaying the Stag King, then offered on
+	# every stage). Every `cooldown` s, a foe within `range` px, a line of
+	# `riders` spectral riders abreast rides in from behind the necromancer and
+	# sweeps `length` px at `speed` px/s toward the thickest foes in reach; every
+	# foe within `radius` px of a rider (spell area widens it) takes `damage`
+	# once a sweep and is knocked along. Logic: WildHunt; fixed rules:
+	# WildHuntData. A wide line through the whole screen: lighter per foe than
+	# Stampede's narrow charger.
+	"wild_hunt": {
+		"display_name": "Wild Hunt",  # Owner-approved proposal
+		"icon": "wild_hunt",
+		"description": "Spectral riders sweep across the screen in a line, striking every foe they pass.",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Rider damage", "riders": "Riders", "radius": "Reach (px)", "cooldown": "Cooldown (s)"},
+		"levels": [
+			{"damage": 22.0, "riders": 3, "range": 320.0, "length": 640.0, "speed": 600.0, "radius": 16.0, "cooldown": 3.6},  # Owner-approved proposal: "spectral riders sweep across the screen in a line"; TUNING (not in GDD) the numbers
+			{"damage": 27.0, "riders": 3, "range": 330.0, "length": 660.0, "speed": 600.0, "radius": 17.0, "cooldown": 3.5},  # TUNING (not in GDD)
+			{"damage": 32.0, "riders": 4, "range": 340.0, "length": 680.0, "speed": 620.0, "radius": 18.0, "cooldown": 3.3},  # TUNING (not in GDD)
+			{"damage": 38.0, "riders": 4, "range": 350.0, "length": 700.0, "speed": 620.0, "radius": 19.0, "cooldown": 3.2},  # TUNING (not in GDD)
+			{"damage": 45.0, "riders": 5, "range": 360.0, "length": 720.0, "speed": 640.0, "radius": 20.0, "cooldown": 3.0},  # TUNING (not in GDD) a wide line across the screen, under Stampede's Lv5 60 on its narrow one
+		],
+	},
+	# --- Act XV (temporary number): the Fae Court ---
+	# Glamour (GDD §15.0 "Glamour, Court of Masks, Changeling and the Changeling
+	# Princess"; owner-approved proposal: "illusory copies of the necromancer draw
+	# enemy attacks"; unlocked by slaying the Summer Queen, then offered on every
+	# stage). Every `cooldown` s, a foe within `range` px, `copies` illusory
+	# copies of the necromancer step out round him for `life` s: temporary
+	# Warrior bodies with `hp` x a Warrior's HP that never strike and draw every
+	# foe within `taunt` px (the one taunt path); each that falls or fades
+	# shatters for `damage` to every foe within `radius` px (spell area widens
+	# it). Logic: Glamour; fixed rules: GlamourData. A defensive spell: its
+	# damage is the shattering, lighter than a striking spell's.
+	"glamour": {
+		"display_name": "Glamour",  # Owner-approved proposal
+		"icon": "glamour",
+		"description": "Illusory copies of you step out and draw enemy attacks, then shatter.",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Shatter damage", "copies": "Copies", "hp": "Copy HP (x Warrior)", "life": "Copy life (s)", "cooldown": "Cooldown (s)"},
+		"levels": [
+			{"damage": 30.0, "copies": 2, "hp": 1.5, "life": 6.0, "taunt": 110.0, "range": 300.0, "radius": 52.0, "cooldown": 8.0},  # Owner-approved proposal: "illusory copies of the necromancer draw enemy attacks"; TUNING (not in GDD) the numbers
+			{"damage": 37.0, "copies": 2, "hp": 1.8, "life": 6.5, "taunt": 115.0, "range": 310.0, "radius": 54.0, "cooldown": 7.5},  # TUNING (not in GDD)
+			{"damage": 44.0, "copies": 3, "hp": 2.1, "life": 7.0, "taunt": 120.0, "range": 320.0, "radius": 56.0, "cooldown": 7.0},  # TUNING (not in GDD)
+			{"damage": 53.0, "copies": 3, "hp": 2.5, "life": 7.5, "taunt": 130.0, "range": 330.0, "radius": 60.0, "cooldown": 6.5},  # TUNING (not in GDD)
+			{"damage": 64.0, "copies": 4, "hp": 3.0, "life": 8.0, "taunt": 140.0, "range": 340.0, "radius": 64.0, "cooldown": 6.0},  # TUNING (not in GDD) four copies every 6 s: a wall of faces round the ring
+		],
+	},
+	# --- Act XV (temporary number): the World-Tree ---
+	# Root and Rot (GDD §15.0 "Root and Rot, Return to Earth, Compost Heart and
+	# the Gravegardener"; owner-approved proposal: "a ring of roots grows at the
+	# strongest enemy and rots everything inside"; unlocked by slaying the Green
+	# Mother, then offered on every stage). Every `cooldown` s, a foe within
+	# `range` px, a ring of roots of `radius` px (spell area widens it) grows at
+	# the strongest foe in reach: `damage` to every foe inside as it grows, then
+	# for `duration` s every foe inside is rotted (`rot` more damage taken, the
+	# one Rot path) and held by the roots (`slow`). Logic: RootAndRot; fixed
+	# rules: RootAndRotData. A setter: little damage of its own, the Rot is the point.
+	"root_and_rot": {
+		"display_name": "Root and Rot",  # Owner-approved proposal
+		"icon": "root_and_rot",
+		"description": "A ring of roots grows at the strongest foe and rots everything inside.",
+		"shared_card_pool": true,  # TUNING (not in GDD) a later item: its NEW card weighs LevelUpData.WEIGHT_NEW_LATER
+		"labels": {"damage": "Root damage", "rot": "Rot", "radius": "Radius (px)", "duration": "Ring time (s)", "cooldown": "Cooldown (s)"},
+		"levels": [
+			{"damage": 18.0, "rot": 0.12, "slow": 0.3, "radius": 56.0, "duration": 3.0, "range": 340.0, "cooldown": 5.0},  # Owner-approved proposal: "a ring of roots ... rots everything inside"; TUNING (not in GDD) the numbers
+			{"damage": 22.0, "rot": 0.14, "slow": 0.32, "radius": 58.0, "duration": 3.3, "range": 350.0, "cooldown": 4.7},  # TUNING (not in GDD)
+			{"damage": 27.0, "rot": 0.16, "slow": 0.34, "radius": 62.0, "duration": 3.6, "range": 360.0, "cooldown": 4.4},  # TUNING (not in GDD)
+			{"damage": 33.0, "rot": 0.18, "slow": 0.37, "radius": 66.0, "duration": 4.0, "range": 370.0, "cooldown": 4.1},  # TUNING (not in GDD)
+			{"damage": 40.0, "rot": 0.20, "slow": 0.4, "radius": 70.0, "duration": 4.5, "range": 380.0, "cooldown": 3.8},  # TUNING (not in GDD) a rotting ring on the toughest foe (Plague Cloud's Rot is the model)
+		],
+	},
 }
 
 ## Stat keys shown as a percentage on cards (fractions: 0.25 -> 25%).
@@ -975,7 +1448,17 @@ const PERCENT_KEYS := ["lifesteal", "rot", "burst", "zone_damage", "zone_slow", 
 	# --- Act VIII: Liberty Heights ---
 	"fling_share", "crater_share",
 	# --- Act IX: the Ark ---
-	"slam_share", "quake_share"]
+	"slam_share", "quake_share",
+	# --- Act X: the Maelstrom ---
+	"ring_share", "moor_share",
+	# --- Act XI (temporary): Vigrid ---
+	"return_share",
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	"execute",
+	# --- Act XIII (temporary number): the Empyrean ---
+	"weaken_cut", "weaken_slow",
+	# --- Act XIV (temporary number): the Fern Basin ---
+	"pounce_share"]
 ## Stat keys that are spell durations (s): the Lingering Malediction passive
 ## lengthens them (AbilityManager.apply_spell_mods()).
 const DURATION_KEYS := ["duration", "zone_duration", "slow_duration"]

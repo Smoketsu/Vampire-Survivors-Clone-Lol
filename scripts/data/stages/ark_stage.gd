@@ -47,8 +47,6 @@ const ENEMY_DAMAGE_MULT: float = 2.5  # TUNING (not in GDD) was 1.5 (the foundat
 ## Elapsed game seconds from which the two multipliers apply to regular
 ## enemies (the boss always gets them).
 const ENEMY_MULT_FROM: float = 420.0  # TUNING (not in GDD) (Acts III to VIII: 7:00)
-## Soul Ash multiplier of a run on this stage (its own end-screen line).
-const ASH_MULT: float = 1.5  # TUNING (not in GDD) owner decision Oct 2026, GDD §15.0 "Ossuary expansion: owner decisions": every act restarts, stage 3 of Act IX
 
 # =====================================================================================
 # Zones and their look
@@ -272,12 +270,8 @@ const STAGE := {
 	"id": ID,
 	"display_name": "The Ark of the Concord",
 	"short_name": "The Ark",
-	"chapter": "Chapter XXVII",
-	"act": 9,  # Act IX, the Concord of Stars.
 	"playable": true,  # Owner decision (Nov 2026): "Ship it" after the art reviews and playtest passes (GDD §15.0 "Acts VI–IX go live").
 	"description": "The mothership in orbit over the dead world: the Concord's capital and its harvest vault, where the one who planted the world waits.",
-	"unlock": {"stage": "proving_moon", "boss_kills": 1},  # Brief: each Act IX stage opens the next
-	"unlock_text": "Defeat Vrask'Tal on the Proving Moon to unlock.",
 	"boss": BOSS,
 	"segments": SEGMENTS,
 	"events": EVENTS,
@@ -292,7 +286,6 @@ const STAGE := {
 	"enemy_hp_mult": ENEMY_HP_MULT,
 	"enemy_damage_mult": ENEMY_DAMAGE_MULT,
 	"enemy_mult_from": ENEMY_MULT_FROM,
-	"ash_mult": ASH_MULT,
 	"march": MARCH,  # The four clock-driven zones (MarchDirector).
 	"ark": ARK,  # ArkDirector (the Specimen Vaults' tanks, the Reactor's vents, the Luminous Archon).
 	"concord": true,  # Act IX: Beams, Abduction, Terraforming (ConcordRules).

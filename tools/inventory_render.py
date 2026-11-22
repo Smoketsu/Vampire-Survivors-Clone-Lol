@@ -29,20 +29,27 @@ ap.add_argument('--md', default=os.path.join(REPO, 'docs', 'INVENTORY.md'), help
 args = ap.parse_args()
 os.makedirs(args.out_dir, exist_ok=True)
 M = json.load(open(args.model))
-# Short commit id the data was read at (shown on the page); "unknown" outside a git checkout.
+# Short commit id of main the data was read at (the checkout's merge-base with origin/main, else HEAD); "unknown" outside a git checkout.
+def _git(*a):
+    return subprocess.run(['git', '-C', REPO] + list(a), capture_output=True, text=True, check=True).stdout.strip()
 try:
-    HEAD = subprocess.run(['git', '-C', REPO, 'rev-parse', '--short', 'HEAD'], capture_output=True, text=True, check=True).stdout.strip()
+    try:
+        HEAD = _git('rev-parse', '--short', _git('merge-base', 'HEAD', 'origin/main'))
+    except Exception:
+        HEAD = _git('rev-parse', '--short', 'HEAD')
 except Exception:
     HEAD = 'unknown'
-# Branch the inventory describes (shown on the page).
-try:
-    BRANCH = subprocess.run(['git', '-C', REPO, 'rev-parse', '--abbrev-ref', 'HEAD'], capture_output=True, text=True, check=True).stdout.strip()
-except Exception:
-    BRANCH = 'unknown'
-# Act number -> act name (StageRegistry.ACTS, via the extractor).
+# Branch the inventory describes: always main (the inventory is regenerated from main's data files).
+BRANCH = 'main'
+# Act number -> act id (StageRegistry.ACT_ORDER, via the extractor); the per-act texts below are keyed by id.
+ACT_ID = {int(k): v for k, v in M['act_ids'].items()}
+# Part of each act (StageRegistry.ACT_ORDER: three Parts of five acts) and the Part titles.
+PART_OF = lambda a: (a - 1) // 5 + 1
+PART_NAMES = {1: 'Part I: the living', 2: 'Part II: gods, hell and heaven', 3: 'Part III: beyond and before'}
+# Act number -> act name (StageRegistry.ACT_ORDER, via the extractor).
 ACTN = {int(k): v for k, v in M['act_names'].items()}
 # Roman numeral of each act number.
-ROM = {1: 'I', 2: 'II', 3: 'III', 4: 'IV', 5: 'V', 6: 'VI', 7: 'VII', 8: 'VIII', 9: 'IX', 10: 'X'}
+ROM = {1: 'I', 2: 'II', 3: 'III', 4: 'IV', 5: 'V', 6: 'VI', 7: 'VII', 8: 'VIII', 9: 'IX', 10: 'X', 11: 'XI', 12: 'XII', 13: 'XIII', 14: 'XIV', 15: 'XV'}
 # Label for a stage / row that is registered but hidden from the stage select ("playable": false); unused while every stage is live.
 BNP = "Built, not yet playable (waiting on review)"
 stages=M['stages']; S={s['id']:s for s in stages}
@@ -92,6 +99,24 @@ PHASES={
 'hive_mother':"3: the Brood (egg waves, burrowers from every side), the Burrow (dives under the arena and erupts beneath the ring on a telegraph), the Flight (takes to the air, raining acid)",
 'vrask_tal':"3: the Stalk (cloaked, picking summons off the ring's edge; a skull per kill), the Duel (leaps over the ring), the Last Trophy (a 20 s wrist bomb)",
 'harvester':"3: the Council (takes the Concord's powers in turn), the Reaping (immune; emitters lift summons), the Gardener (true form of light and rings, live-turf rings)",
+'crow':"3: Broadside (his sloop's cannon lines cross the deck, his crew boards double), the Duel (cutlass and pistol, a leap onto a landing circle), the Fire Ship (burning planks until he falls)",
+'marrec':"3: the Fleet (her flagship's broadsides, a raider boards by plank), the Boarding (cut both hooks and the plank falls), Gold Fever (cursed coins become barriers, then a quarterdeck duel)",
+'vandermere':"3: the Crew (his ghost crew works the ship), the Maelstrom (the tilt peaks, the kraken strikes the low rail), Dead Men's Oath (an Oath shield chipped by every ghost crewman raised)",
+'hrimgar':"3 lives on one bar: the Grave (frost mist, draugr from every mound), the Barrow Lord (a cleaving greatsword), the Last Rising (drags summons into the mound); he sinks and returns unless the barrow is broken",
+'sigrun':"3: the Charge (she and her valkyrie wing dive along telegraphed lines), the Holmgang (a hazel-rod square, only spell hits land), the Doors of the Hall (every Einherjar marches out)",
+'odin':"3: the Wolf (Fenrir hunts and swallows summons), the All-Father (Gungnir, a homing spear; ravens mark the necromancer), Ragnarok (both at once, the arena burning)",
+'anubis':"3: the Procession (a funeral march, Canopic Jars hold the Names), the Embalmer (wraps the fallen on the whole map), the Jackal (fast duel with afterimage lunges)",
+'sekhmet':"3: the Hunt (leaps between pillars onto landing circles), the Red Wind (an early Sandstorm, Heka spreads at double speed), the Feast (cannot be stopped until the wine jars are broken)",
+'osiris':"3: the Judge (Heka glyphs, his court, judgment circles), the Weighing (the Scales decide: Ammit eats summons or Osiris's shield breaks), the Devourer (Ammit eats every corpse, charges in lanes)",
+'seraiel':"3: the Sword (he walks at the necromancer), the Gate (lanes of Hallowed Light closed in turn), the Gate and the Sword (both, faster); a Trial in each phase fills the scales",
+'throne':"1 loop: the Rolling (marked lines, rebounds across the ring), the Gaze (eyes sweep shafts of Light), the Core (wheels open 10 s, rims take x0.2); below its phase 2 mark every eye opens",
+'voice':"it never moves: the Holy (Light shafts while it stands), Be Not Afraid (unveils, stuns unshaded summons), the Last Word (once, the run's sins return as Judges)",
+'scarmaw':"3: the Hunt (Razorclaw packs from three sides, a leap over the ring), the Ambush (vanishes into fern patches), Blood Up (her alpha-guard joins)",
+'ironbrow':"3: the Charge (into a rock), the Herd (every few charges he leads a stampede), the Break (once, he turns on the nearest rock)",
+'gravejaw':"4: the Hunt (a swallowing bite), the Roar (telegraphed circle), the Last Day (the sky white, his rampage to the Mound), the Impact (the Extinction drops him to 10%)",
+'stag_king':"3: the Rut (a charge that cracks trees into thickets), the Hunt (his horn calls spectral lines), the Antler Crown (thorn thickets that only fire clears)",
+'summer_queen':"4: Petals (bolts), the Masque (she vanishes among masked courtiers), the Bargain (a price and a gift, your choice), the Court in Bloom",
+'green_mother':"3: the Turning (the seasons turn in bursts), the Burial (pulls summons under thickets), the Last Claim (seven other acts' rules, 8 s each, half damage while one holds)",
 }
 # ---- blocks
 B=[] # sections: dict(id,title,status,blocks)
@@ -128,41 +153,49 @@ counts=[
 ("Sprite PNGs in assets/",f"{M['sprite_total']:,}"),
 ]
 sec('summary',"Summary",[
- P("Built from the code on branch " + BRANCH + " at HEAD " + HEAD + " (Acts I to IX all playable), read from scripts/data/ and scripts/data/stages/. Counts are rows in the data tables, not estimates."),
+ P(f"Read from the code on {BRANCH} at commit {HEAD}: all {len(ACTN)} acts and {len(stages)} stages are playable, in the final act order (three Parts of five acts). Everything is read from scripts/data/ and scripts/data/stages/; counts are rows in the data tables, not estimates."),
  T(["Item","Count"],[[a,str(b)] for a,b in counts]),
  H("Playtime"),
- P(f"Owner's estimate: a full clear of every stage takes about 13 hours. For scale, {len(stages)} stages at a 20:00 countdown is {len(stages)*20/60:g} hours of clock alone, before boss fights past 0:00, menus and build choices. This is an estimate, not a measured figure."),
+ P(f"For scale: {len(stages)} stages at a 20:00 countdown is {len(stages)*20/60:g} hours of clock alone, before boss fights past 0:00, menus and build choices. There is no measured full-clear time in the data."),
  H("Status key"),
- L(["Playable: reachable from the stage select in a normal build. Acts I to IX are all playable (Acts VI to IX went live in Nov 2026).",
-    "Planned or proposed: not in the game; listed only at the end, in their own section."]
+ L(["Playable: reachable from the stage select in a normal build. All 15 acts are playable.",
+    "Planned or deferred: not in the game; listed only at the end, in their own section."]
    + ([f"Built, not yet playable: {nbl} stage(s) hidden behind \"playable\": false."] if nbl else [])),
 ])
 # campaign
 rows=[]
 for s in stages:
     rows.append([str(s['n']),s['name'],f"{ROM[s['act']]}",s['boss'],'Playable' if s['playable'] else 'Built, not yet playable',f"x{s['ash']:g}",f"x{s['hpmult']:g}",MUSIC.get(s['music'],s['music'])])
+# Per act (by StageRegistry.ACT_ORDER id): faction, shared rules, Reckoning. Hand-written from CLAUDE.md and GDD section 15.0; update when an act changes.
 acts_rules={
-1:("Crimson Covenant","No shared act rules (the baseline). Stage mechanics: Graveyard empowered graves, desecration and Crypt Defender; Crimson March battle zones, outposts, ward generators, supply carts; Sanctum ward chambers, sacred altars, floor corruption.","The Reckoning / Dawn's Wrath"),
-2:("Ancient Eye","Dread (damage taken +5% per 25), Claims (fallen summons rise as hostile Drowned Thralls). Tide, ink wells, sinking island on the stages.","The Deep Rises / The Stacks Unwrite Themselves / The Waking"),
-3:("Electronic Empire","Line of Fire, Lock-On, Steel has no soul (machines leave no corpse; cyborgs rise as Grave Gunners).","Purge Protocol (kill-drones, orbital strikes)"),
-4:("Olympian Republic","Wrath of the Gods (waves, lightning, fissures hitting both armies), Phalanx (shield fronts), Glory (Heroes grow with kills).","The Twilight of the Gods (Bronze Titans)"),
-5:("Shogunate","The Sun's Course (day, dusk, night with darkness and lit lanterns), the Draw (iai cuts), From the Shadows (ambushes revealed by light).","The Endless Night"),
-6:("Inferno","Hell Pits, Portals (sealable), Temptation (succubi charm summons).","The Last Judgment (portals open, pits open faster, the Adversary's hand)"),
-7:("Sanguine Court","Bloodfeast (enemies heal on hits, blood shield), Night Wings (bats fly over the ring), the Blood Moon every 4:00 for 45 s.","The Endless Feast (Blood Moon never sets, coffins release Vampire Nobles)"),
-8:("Last Line","City blocks arenas, a clock escalation (gangs, police, SWAT, army, heroes), Armour (frontal cuts, vehicles, wrecks), Supers, Civilians.","Martial Law (every tier at once, artillery lines, the Supers return)"),
-9:("Concord","Beams (only Bone Walls stop them, barriers reflect them), Abduction (saucers lift summons away), Terraforming (alien turf heals Concord units; spells burn it back). Crash Site: Infestation eggs. Proving Moon: low gravity. Ark: vault beasts, reactor vents, reaping emitters.","The Final Harvest (the mothership's eye opens, saucers fill the sky, the abduction cap is gone)"),
+"covenant":("Crimson Covenant","No shared act rules (the baseline). Stage mechanics: Graveyard empowered graves, desecration and Crypt Defender; Crimson March battle zones, outposts, ward generators, supply carts; Sanctum ward chambers, sacred altars, floor corruption.","The Reckoning / Dawn's Wrath"),
+"corsair":("Black Tide","Boarding (boats pull alongside and pour crews aboard; the one spawn route), the Deck (the ship is the arena; a foe knocked past the rail drowns), Strikes from the Sea (swimmers surface on telegraphed circles that hit both armies).","The Black Tide (the whole rail boards at once, the rail is struck every 3 s, a great wave every 20 s)"),
+"court":("Sanguine Court","Bloodfeast (enemies heal on hits, blood shield), Night Wings (bats fly over the ring), the Blood Moon every 4:00 for 45 s.","The Endless Feast (Blood Moon never sets, coffins release Vampire Nobles)"),
+"city":("Last Line","City blocks arenas, a clock escalation (gangs, police, SWAT, army, heroes), Armour (frontal cuts, vehicles, wrecks), Supers, Civilians.","Martial Law (every tier at once, artillery lines, the Supers return)"),
+"shogunate":("Shogunate","The Sun's Course (day, dusk, night with darkness and lit lanterns), the Draw (iai cuts), From the Shadows (ambushes revealed by light).","The Endless Night"),
+"norse":("Hall of the Slain","The Long Winter (the cold closes in; braziers are warmth, doused by frost giants and seers, relit by the necromancer), Berserkergang, Rune-Stones.","Ragnarok (eight Einherjar march at once, fire-giants every 30 s, every valkyrie dives)"),
+"dynasty":("Dynasty","Rebirth and the Names (fallen Dynasty bodies return unless their Canopic Jar is broken; cartouche timers), the Black Land and the Sandstorm, Heka (glyphs that jump between summons).","The Devourer's Hour (Rebirth has no limit, the Sandstorm never ends, the Devourer's shadow runs along telegraphed lanes)"),
+"pantheon":("Olympian Republic","Wrath of the Gods (waves, lightning, fissures hitting both armies), Phalanx (shield fronts), Glory (Heroes grow with kills).","The Twilight of the Gods (Bronze Titans)"),
+"inferno":("Inferno","Hell Pits, Portals (sealable), Temptation (succubi charm summons).","The Last Judgment (portals open, pits open faster, the Adversary's hand)"),
+"host":("Celestial Host","Judgment (the scales of the necromancer's sins), Hallowed Light (shafts only shade and barriers stop), Grace (each halo ignores the first hit of each damage type); low cloud banks give shade.","The Last Trumpet (seven trumpets: each fills the scales, widens the Light and rings the necromancer with Virtues; then the sky opens)"),
+"eye":("Ancient Eye","Dread (damage taken +5% per 25), Claims (fallen summons rise as hostile Drowned Thralls). Tide, ink wells, sinking island on the stages.","The Deep Rises / The Stacks Unwrite Themselves / The Waking"),
+"empire":("Electronic Empire","Line of Fire, Lock-On, Steel has no soul (machines leave no corpse; cyborgs rise as Grave Gunners).","Purge Protocol (kill-drones, orbital strikes)"),
+"concord":("Concord","Beams (only Bone Walls stop them, barriers reflect them), Abduction (saucers lift summons away), Terraforming (alien turf heals Concord units; spells burn it back). Crash Site: Infestation eggs. Proving Moon: low gravity. Ark: vault beasts, reactor vents, reaping emitters.","The Final Harvest (the mothership's eye opens, saucers fill the sky, the abduction cap is gone)"),
+"primeval":("Titans","Packs (a pack leader and its alpha), Herds (stampedes that run away from what hurt the herd), Scavengers; every obstacle shelters from a stampede. Fern Basin tar seeps, Great Plain watering hole and canyon, Last Day meteorites.","The Stampede of Ash (Fern Basin, Great Plain: herds from every side, volcanic bombs); the Extinction (Last Day: a white-out, every enemy dies, the dead rise as the Fossil Host for 30 s, then victory)"),
+"wild":("Turning Year","Seasons (the 20:00 clock is one year of four seasons, the World-Tree twice as fast), Bloom and Blight (grass dies where the army stands; the Wild heal on living ground), Thickets (Rot, Wither and fire burn them).","Spring Returns (everything grows back); on the World-Tree the First Spring (with the Green Mother beaten, the planted dead rise and the run ends in victory)"),
 }
 arows=[]
 for a in sorted(ACTN):
-    f,r,k=acts_rules[a]
+    f,r,k=acts_rules[ACT_ID[a]]
     st=[s['short'] for s in stages if s['act']==a]
-    arows.append([ROM[a],ACTN[a],actstat(a),", ".join(st),r,k])
+    arows.append([ROM[a],PART_NAMES[PART_OF(a)].split(':')[0],ACTN[a],actstat(a),", ".join(st),r,k])
 sec('campaign',"Campaign: acts and stages",[
- H(f"The {len(ACTN)} acts"),
- T(["Act","Name","Status","Stages","Shared rules","Reckoning at 0:00"],arows),
+ H(f"The {len(ACTN)} acts in three Parts"),
+ T(["Act","Part","Name","Status","Stages","Shared rules","Reckoning at 0:00"],arows),
+ P("The acts run in the final order (StageRegistry.ACT_ORDER, three Parts of five acts): "+"; ".join(f"{PART_NAMES[p]} (acts {ROM[5*p-4]} to {ROM[5*p]})" for p in (1,2,3))+". Every act number, chapter, unlock and Soul Ash multiplier derives from that one list."),
  H(f"The {len(stages)} stages"),
  T(["#","Stage","Act","Boss (arrives with 3:00 left)","Status","Soul Ash","Enemy HP mult","Music"],rows),
- P("Every stage is a 20:00 countdown. The boss arrives at 17:00 (BOSS_TIME 1020 s). At 0:00 the Reckoning begins; dying after 0:00 is a victory. Soul Ash multipliers follow the per-act rule x1, x1.25, x1.5 (stage 1, 2, 3 of each act)."),
+ P("Every stage is a 20:00 countdown. The boss arrives at 17:00 (BOSS_TIME 1020 s). At 0:00 the Reckoning begins; dying after 0:00 is a victory. Soul Ash multipliers follow the per-act rule x1, x1.25, x1.5 (stage 1, 2, 3 of each act). Each stage opens when the previous stage's boss falls (the chain runs through all 45 in the order above)."),
  H("Stage zones"),
  T(["Stage","Zones (clock-driven, in order)","Reckoning banner"],[[s['name'],", ".join(s['zones']) or "(single zone; stage events and graves)",s['reckoning']] for s in stages]),
  H("Stage unlock chain"),
@@ -175,7 +208,7 @@ sec('bosses',f"Bosses ({len(stages)})",[T(["#","Boss","Stage","Phases","Status"]
 # minibosses
 mrows=[[e['name'],e['faction'],e['where'],e['behavior'],'Playable' if fac_playable(e['faction']) else 'Built, not yet playable'] for e in mini]
 sec('minibosses',f"Minibosses ({len(mini)} flagged + Supers)",[T(["Miniboss","Faction","Stage","Behaviour","Status"],mrows),
- P("Act VIII also promotes its Supers to zone minibosses at runtime (Liberty Heights: Blitz 17:30, Aurora 13:30, Atlas 8:30, Nightjar from 5:00). The Supers are listed with the Last Line enemies. Crimson March and the Graveyard have no flagged miniboss rows. Act IX miniboss rows: the Brood Matriarch (Crash Site, 10:30), the Warbeast (Proving Moon) and the Luminous Archon (Ark).")])
+ P("The Last Line also promotes its Supers to zone minibosses at runtime (Liberty Heights: Blitz 17:30, Aurora 13:30, Atlas 8:30, Nightjar from 5:00). The Supers are listed with the Last Line enemies. Crimson March and the Graveyard have no flagged miniboss rows. Some minibosses are boss-fight pieces of the act's own rules (the Cherub of the Gate, the Herald of the Seventh Trumpet, the Gardener of Roots, Fenrir beside Odin).")])
 # enemies
 def role(e):
     bits=[e['behavior']]
@@ -187,8 +220,8 @@ def role(e):
     return ", ".join(bits)
 # Faction labels in act order (enemy tables are grouped by them).
 FACS=[M['act_faction'][str(a)] for a in sorted(ACTN)]
-FACN={"Covenant":"Crimson Covenant (Act I)","Ancient Eye":"The Ancient Eye (Act II)","Empire":"The Electronic Empire (Act III)","Republic":"The Olympian Republic (Act IV)","Shogunate":"The Shogunate (Act V)","Inferno":"The Inferno (Act VI)","Sanguine Court":"The Sanguine Court (Act VII)","Last Line":"The Last Line (Act VIII)","Concord":"The Concord of Stars (Act IX)"}
-eb=[P("All rows from the enemy data tables (EnemyData, MarchEnemyData, SanctumEnemyData, BattleSisterData and each act's shared and per-stage tables). Bosses are listed in their own section. Act IX adds the eggs (Brood Egg), the freed Vault Beast and the Specimen Tanks / Reactor Vents / Reaping Emitters as rows. The Reckoning Inquisitor (\"Inquisitor of the End\") is the Act I Reckoning kind and is counted in neither group."),
+FACN={M["act_faction"][str(a)]: "%s (Act %s)" % (ACTN[a], ROM[a]) for a in ACTN}
+eb=[P("All rows from the enemy data tables (EnemyData, MarchEnemyData, SanctumEnemyData, BattleSisterData and each act's shared and per-stage tables). Bosses are listed in their own section. Eggs, freed beasts, nests, barrows, jars and other fight objects are rows too (structures). The Reckoning Inquisitor (\"Inquisitor of the End\") is the Act I Reckoning kind and is counted in neither group."),
     T(["Faction","Regular","Minibosses","Structures","Total"],[[FACN[f],str(sum(1 for e in en if e['faction']==f and e['kind']=='regular')),str(sum(1 for e in en if e['faction']==f and e['kind']=='miniboss')),str(sum(1 for e in en if e['faction']==f and e['kind']=='structure')),str(sum(1 for e in en if e['faction']==f))] for f in FACS]+[["Total",str(len(reg)),str(len(mini)),str(len(stru)),str(len(en))]])]
 for f in FACS:
     rs=[e for e in en if e['faction']==f]
@@ -201,15 +234,13 @@ srows=[[x['name'],x['id'],x['evo'],x['passive'].replace('_',' ').title(),x['sect
 pn={p['id']:p['name'] for p in pas}
 srows=[[x['name'],x['evo'],pn.get(x['passive'],x['passive']),x['section'],x['unlock'] or 'Base game',x['desc'],x['evo_desc']] for x in sp]
 sec('spells',f"Spells and evolutions ({len(sp)} + {len(sp)})",[
- P(f"{sum(1 for x in sp if x['section']=='Base game')} base-game spells (3 starter spells and 9 later ones) and {sum(1 for x in sp if x['section']!='Base game')} act spells, one unlocked by each stage boss from Act II onward. Each has one evolution, delivered by a treasure chest once the spell and its paired passive are at Lv 5 and 8:00 has elapsed. Six active slots compete among spells and summon classes."),
+ P(f"{sum(1 for x in sp if x['section']=='Base game')} base-game spells (3 starter spells and 9 later ones) and {sum(1 for x in sp if x['section']!='Base game')} act spells (three for each of the 14 later acts, each unlocked by a stage boss). Spell origins name the stage the spell was built for, with its act in the final order. Each has one evolution, delivered by a treasure chest once the spell and its paired passive are at Lv 5 and 8:00 has elapsed. Six active slots compete among spells and summon classes."),
  T(["Spell","Evolution","Paired passive (Lv 5)","Origin","Unlock","Description","Evolution effect"],srows),
- P("Act IX spells: Bone Beetles / Hive of Bone (Hive Mother; passive Chitin), Soul Caster / Apex Predator (Vrask'Tal; Trophy Rack) and Tractor Beam / Abduction (the Harvester; Starseed). Acts VI to IX are playable since Nov 2026."),
 ])
 # passives
 prow=[[p['name'],('Profane Pact (opt-in difficulty)' if p['id']=='profane_pact' else ("Counter-passive, Act "+ROM[int(p['act'])]+" only" if p['act'] else ("Paired: "+", ".join(p['paired']) if p['paired'] else "Standalone"))),p['section'],p['unlock'] or 'Open',p['desc']] for p in pas]
 sec('passives',f"Passives ({len(pas)})",[P(f"{len(paired)} passives are paired with an evolution (every evolution needs its paired passive at Lv 5); {len(counter)} are act-only counter-passives earned by an achievement and offered only on that act's stages; plus the Profane Pact."),
- T(["Passive","Type","Origin","Unlock","Effect"],prow),
- P("Act IX adds Chitin, Trophy Rack and Starseed (spell-paired), Crop Circles (paired with the Black Mothership) and the counter-passives Anchored (Nothing Hatched) and Mirror Bones (The Hunter Hunted).")])
+ T(["Passive","Type","Origin","Unlock","Effect"],prow)])
 # summons
 urows=[]
 for u in un:
@@ -221,7 +252,7 @@ sec('summons',f"Summon classes ({len(un)}) and summon evolutions ({len(sev)})",[
  T(["Evolution","Base class(es)","Paired passive","Kind","Origin"],[[e['name'],", ".join(e['bases']),pn.get(e['passive'],e['passive']),e['mode'],e['section']] for e in sev]),
  H("Synergies ("+str(len(M['synergies']))+")"),
  T(["Synergy","Effect"],[[x['name'],x['desc']] for x in M['synergies']]),
- P("Synergies switch on at Lv 2 of each required class. Bone Bastion (Bone Golem plus any blocker) was added with content wave 2; the Charnel Menagerie needs any 4 of the 7 newer classes. Classes from Act V onward (Bound Oni, Succubus, Archfiend, Blood Spawn, Fallen Hero, Ghost Saucer) have no dedicated synergies in the data. The Ghost Saucer (Act IX, unlocked by the Harvester) evolves into the Black Mothership."),
+ P("Synergies switch on at Lv 2 of each required class. Bone Bastion (Bone Golem plus a Warrior or Abomination) was added with content wave 2; the Charnel Menagerie needs any 4 of the 7 newer classes. Only the classes named in the synergy rows take part: the act classes (from the Fallen Seraph through the Bound Oni to the Bound Ophan, Bonehorn and Ossuary Oak) have no dedicated synergies in the data."),
 ])
 # characters & skins
 spn={x['id']:x['name'] for x in sp}
@@ -229,7 +260,7 @@ crow=[[c['name'],spn[c['spell']],c['innate'],'Open' if c['unlocked'] else 'Spell
 hs=dict(M['hyper_skins'])
 chn={c['id']:c['name'] for c in M['characters']}
 sec('characters',f"Characters ({len(M['characters'])}) and skins ({skins_total})",[
- P("One playable character per spell, each with one innate passive. The Gravecaller is the default (no innate, baseline stats). Characters of Act IX spells are the Broodbound, the Blooded and the Starborn."),
+ P("One playable character per spell, each with one innate passive. The Gravecaller is the default (no innate, baseline stats). Characters' origins name the stage of their spell, with its act in the final order."),
  T(["Character","Starting spell","Innate","Unlock","Origin"],crow),
  H("Skins (cosmetic only)"),
  T(["Kind","Count","Detail"],[
@@ -269,10 +300,10 @@ for u in M['upgrades']: byt[u['tree']].append(u)
 TN={'oath':'Oath','necromancy':'Necromancy','shadowcraft':'Shadowcraft','survival':'Survival','fortune':'Fortune','dominion':'Dominion (opens after Seraphine)'}
 orows=[[TN[u['tree']],u['name'],str(u['levels']),u['desc']] for t in ['necromancy','shadowcraft','survival','fortune','dominion','oath'] for u in byt[t]]
 sec('ossuary',"The Ossuary (meta-progression)",[
- P(f"{len(M['upgrades'])} upgrades with {tot_levels} purchasable levels. 13 upgrades have levels 6-10, gated by difficulty clears (levels 6-7 Lich, 8-9 Deathlord, 10 Deathlord + Hyper). Soul Ash is kept on death and restarts its multiplier per act."),
+ P(f"{len(M['upgrades'])} upgrades with {tot_levels} purchasable levels. {M['deep_upgrades']} upgrades have levels 6-10, gated by difficulty clears (levels 6-7 Lich, 8-9 Deathlord, 10 Deathlord + Hyper). Soul Ash is kept on death and restarts its multiplier per act."),
  T(["Tree","Upgrade","Levels","Effect"],orows),
  H(f"Masteries ({len(M['mastery_classes'])} classes x 3 levels)"),
- P("One per offerable summon class, unlocked when the class reaches Lv 5 in any run: "+", ".join(M['mastery_classes'])+". Prices 190 / 250 / 320 Soul Ash."),
+ P("One per offerable summon class, unlocked when the class reaches Lv 5 in any run: "+", ".join(M['mastery_classes'])+". Prices 190 / 250 / 320 Soul Ash (760 a class)."),
  H(f"Relics ({len(M['relics'])}; 1 to 3 slots)"),
  T(["Relic","Effect","Price"],[[b,c,d] for _,b,c,d in M['relics']]),
  H(f"Grave Offerings ({len(M['offerings'])})"),
@@ -287,7 +318,7 @@ sec('achievements',f"Achievements ({len(ach)}) and titles ({len(M['titles'])})",
  T(["Achievement","Condition","Reward"],[[a[1],a[2],a[3]] for a in ach]),
  H("Titles"),
  T(["Title","Earned by achievement"],[[t[1],dict((x[0],x[1]) for x in ach)[t[2]]] for t in M['titles']]),
- P("Act IX adds the achievements Nothing Hatched, The Hunter Hunted and The Last Harvest (the title The Unharvested). Boss and achievement unlock rows in total: "+str(len(M['unlocks']))+"."),
+ P("Each act's finale achievement opens its epilogue part; some achievements grant a title, a skin, an ultimate or an act-only counter-passive. Boss and achievement unlock rows in total: "+str(len(M['unlocks']))+"."),
 ])
 # audio & story
 # Achievement id -> display name (epilogue parts name the achievement that opens them).
@@ -300,42 +331,46 @@ MUSIC_ROWS=[["Act I run loop",_acts_of('')]]+[[title,_acts_of(k)] for k,title in
 sec('audio',"Audio, Codex and story",[
  H(f"Music ({len(M['music'])+2} tracks)"),
  T(["Track","Used by"],MUSIC_ROWS),
- P("All sound and music is synthesised in-engine. Sound recipes: "+", ".join(f"{k.replace('_SOUNDS','').title() or k} {v}" for k,v in M['sound_counts'].items())+f" = {sounds}. Act packs (Empire, Pantheon, Shogunate, Inferno, Court, City, Concord) render lazily when the act's music starts."),
+ P("All sound and music is synthesised in-engine. Sound recipes: "+", ".join(f"{k.replace('_SOUNDS','').title() or k} {v}" for k,v in M['sound_counts'].items())+f" = {sounds}. Act sound packs ({', '.join(p_.title() for p_ in M['sound_packs'])}) render lazily when the act's music starts."),
  H(f"Codex ({len(M['codex_tabs'])} tabs)"),
  P(", ".join(M['codex_tabs'])+". Entries stay dark silhouettes until a run meets them; evolutions show only once obtained."),
  H("Epilogue and closing cards"),
  T(["Part","Opened by","Panels"],[[p['act'].split(': ')[0]+': '+p['heading'],ACH_NAME.get(p['achievement'],p['achievement']),str(p['panels'])] for p in M['epilogue_parts']]),
- T(["Closing card","After"],[[c['heading'],'Act '+ROM[int(c['after'].replace('act',''))]] for c in M['closings']]),
- P("Acts VI to IX have no epilogue part and no closing card yet (owner decision: wait until the act order is settled; Act IX has a short ending text only). The victory screen shows a per-stage title and boss line for every stage."),
+ T(["Closing card","After"],[[c['heading'],'Act '+ROM[c['after']]] for c in M['closings']]),
+ P("Every act has an epilogue part, opened by its finale achievement; each part but the last is followed by a closing card that hints at the next act (the Turning Year's part is the true ending). The victory screen shows a per-stage title and boss line for every stage."),
  H("Art"),
  T(["Folder","PNG files"],[[k,str(v)] for k,v in sorted(M['sprites'].items(),key=lambda x:-x[1])]+[["Total",str(M['sprite_total'])]]),
 ])
 # planned
-sec('planned',"Planned and proposed content (NOT in the game)",[
- P("Nothing in this section exists in code. Source files: docs/proposals/NEW_ACTS_AND_ORDER.md, docs/GDD.md section 15.0. Act IX is built and playable, so it is not listed here."),
- T(["Act","Status","Stages and bosses","Shared rules"],[
-  ["Act X: seasons (The Turning Year)","Concept only","Seasons and nature; named The Turning Year in the order proposal (stages 37-39 there)","Not designed"],
-  ["The Black Tide (pirate act)","Proposed, awaiting owner","The Smuggler's Cutter (Captain Ezekiel Crow), The Treasure Galleon (Admiral Isabeau Marrec), The Maelstrom (Captain Cornelius Vandermere)","Boarding, the Deck, Strikes from the Sea"],
-  ["The Age of Titans (prehistoric act)","Proposed, awaiting owner","The Fern Basin (Scarmaw), The Great Plain (Old Ironbrow), The Last Day (Old Gravejaw); the meteor mechanic","Primeval rules (see proposal)"],
-  ["The Necropolis Dynasty (Egyptian act)","Proposed, awaiting owner","The Necropolis of Sand (Anubis), The Temple of the Lioness (Sekhmet), The Hall of Two Truths (Osiris and Ammit)","Rebirth and dynasty rules"],
-  ["The Hall of the Slain (Norse act)","On the docket, not scheduled","The Barrow Fields, The Longhouse of Heroes, The Frozen Root","The Choosing, Fimbulwinter, Shield Wall (candidates)"],
+sec('planned',"Planned and deferred (NOT in the game)",[
+ P("Nothing in this section exists in code. Every act in the proposals is now built and playable, so no act is listed here. Sources: CLAUDE.md (Next, in priority order), docs/GDD.md section 15.0, docs/ossuary/HANDOFF.md, docs/titans/BRIEF_PHASE2.md."),
+ T(["Item","Status","Detail"],[
+  ["Prestige (Ossuary)","Noted for later (owner)","Left over from the Ossuary expansion proposal; not designed"],
+  ["Lit beacons on the Last Day","Later (owner)","The proposal's optional polish: three channelled beacons, each holding back the impact; not in the Age of Titans' phase 2"],
+  ["Native Android and iOS apps","Deferred","The game runs in desktop and phone browsers (landscape); no native store builds"],
+  ["Final Soul Ash balancing pass","Waits on the owner's playtests","Soul Ash is x1 / x1.25 / x1.5 per stage position in each act; the owner's own notes outrank the bots"],
+  ["Real-device checks","Open","Web performance and the late fights on a real iPhone; the online co-op real-phone test (input lag, late-game frame rate)"],
+  ["Eclipse ultimate balance","Waits on the owner's playtest","Weakest on the Archive; none beats Dread Rally"],
  ]),
- P("The same proposal recommends reordering to 13 acts and 39 stages (Part One I-VIII ending with the Inferno, Part Two IX-XIII). The owner has not answered it; the current order in the game is the ORDER list above."),
+ P("The old proposal to reorder the acts is done: the final order (three Parts of five acts) is StageRegistry.ACT_ORDER, shown in the campaign section."),
 ])
 # not determined
 sec('gaps',"What the data does not say",[L([
  "Boss base HP is not shown: several data files hold per-phase or per-body values (Shogun, Vhal'Neth, Carmilla and the Elder), so a single number would mislead.",
  "Hades' final phase name and Lilith's phase names are not itemised in the data headers.",
  "The Act I run loop has no title in the data.",
- "Total playtime of 13 hours is the owner's estimate, not derived from data.",
+ "No full-clear playtime is stored in the data; the only figure is the 20:00 clock times the stage count.",
  "Sound recipe counts are rows at the top level of each sound table and may include recipe variants.",
- "Enemy rows include spawned sub-kinds (Lesser and Least Mass, Swarm Rocket, Decoy Drone, Shadow of Kage) and boss-fight structures (Cerberus heads, Vhal'Neth arms, Leg Plates)."])])
+ "Enemy rows include spawned sub-kinds (Lesser and Least Mass, Swarm Rocket, Decoy Drone, Shadow of Kage, Fossil Host and Last Claim helpers where they are rows) and boss-fight structures (Cerberus heads, Vhal'Neth arms, Leg Plates, Canopic Jars, barrows).",
+ "Origins of spells, passives, classes and characters come from the section comments in the data files; the act number in a comment is the one the row was built under, so the inventory rebuilds each origin from the stage's final act. The Fallen Seraph is shown under the Sanctum (unlocked by Seraphine).",
+ "Phase lists are hand-summarised from each boss data file's header; the files give HP shares and timers, not short names for every phase.",
+ "Hand-written text (phase lists, each act's shared rules and Reckoning, the planned section) is not read from data and must be updated when an act changes."])])
 json.dump({'B':B,'counts':[[a,str(b)] for a,b in counts]},open(os.path.join(args.out_dir,'sections.json'),'w'))
 d={'B':B,'counts':[[a,str(b)] for a,b in counts]}; C=d['counts']
 # ---- MD
 def md(x): return str(x).replace('|','\\|').replace('\n',' ')
 o=["# Necropathy: Complete Game Inventory","",
-f"Rebuilt from the code (branch `{BRANCH}`, HEAD {HEAD}, after Act IX; Acts I to IX are all playable). Generated by `tools/rebuild_inventory.sh` (`tools/inventory_extract.py`, `tools/inventory_render.py`) from `scripts/data/`; every count is a data row count.",""]
+f"Rebuilt from the code (`{BRANCH}` at commit {HEAD}; all 15 acts and 45 stages are playable, in the final act order). Generated by `tools/rebuild_inventory.sh` (`tools/inventory_extract.py`, `tools/inventory_render.py`) from `scripts/data/`; every count is a data row count.",""]
 for s_ in B:
     o+=[f"## {s_['title']}",""]
     for b in s_['blocks']:
@@ -423,12 +458,12 @@ footer{{color:var(--mute);font-size:12px;margin-top:20px}}
 </style>
 <div class="wrap">
 <h1>Necropathy: Complete Game Inventory</h1>
-<p class="sub">Every stage, enemy, boss, spell, passive, summon, character, skin and unlock in the game, read from the data files after Act IX. Acts I to IX are all playable. Planned content is listed last and is not in the game.</p>
+<p class="sub">Every stage, enemy, boss, spell, passive, summon, character, skin and unlock in the game, read from the data files on main: 15 acts in three Parts, 45 stages, all playable. Deferred ideas are listed last and are not in the game.</p>
 <div class="tiles">{tiles}</div>
 <div class="bar"><input id="q" type="search" placeholder="Search everything (e.g. Zeus, Rot, Lich, civilian)" aria-label="Search"><button id="all" type="button">Expand all</button><button id="none" type="button">Collapse all</button><span id="count"></span></div>
 <nav>{nav}</nav>
 {"".join(out)}
-<footer>Generated from scripts/data/ on branch {BRANCH} (HEAD {HEAD}). Markdown copy: docs/INVENTORY.md.</footer>
+<footer>Generated from scripts/data/ on {BRANCH} (commit {HEAD}). Markdown copy: docs/INVENTORY.md.</footer>
 </div>
 <script>
 (function(){{

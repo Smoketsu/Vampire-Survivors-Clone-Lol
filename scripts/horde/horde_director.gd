@@ -412,6 +412,11 @@ func compute_stats(cls: String, level: int, with_buffs: bool = true, with_evolut
 	if rally != null:
 		dmg_mult *= 1.0 + rally.bonus("damage")
 		spd_mult *= 1.0 + rally.bonus("attack_speed")
+	# --- Act XV (temporary number): the Fae Court --- the Summer Queen's bargain
+	# (WildRules.take_bargain()): its own timed category (0 unless one holds, so
+	# every other run is unchanged).
+	if with_buffs and game.wild != null and game.wild.bargain_damage() > 0.0:
+		dmg_mult *= 1.0 + game.wild.bargain_damage()
 	# Bound Souls (later horde passive): move speed is its own category; the
 	# leash scales the engagement radius and soft recall, and the return trip
 	# takes (1 - return_reduction) of the time (RETURNING speed divided by it).
@@ -514,6 +519,14 @@ func compute_stats(cls: String, level: int, with_buffs: bool = true, with_evolut
 		if haste > 0.0:
 			out["attack_interval"] = float(out["attack_interval"]) / (1.0 + haste)
 			out["attack_range"] = float(out["attack_range"]) * (1.0 + ab.passive_value("recoil_frame", "ranged_reach"))
+	# --- Act XII (temporary number): the Necropolis Dynasty --- the Sandstorm:
+	# the ranged summons reach half as far while it blows
+	# (DynastyRules.army_reach_mult(); only while Game.dynasty exists, and
+	# DynastyRules.on_storm_changed() refreshes every army when it rises / falls).
+	if game.dynasty != null and String(out["attack_profile"]) in PassiveData.RECOIL_PROFILES:
+		var reach := game.dynasty.army_reach_mult()  # x reach now (1 outside a storm).
+		if reach < 1.0:
+			out["attack_range"] = float(out["attack_range"]) * reach
 	# --- Act IV: the Asphodel Underworld --- Myrmidon Oath: the front-line
 	# classes (PassiveData.OATH_CLASSES) gain max HP and damage, its own
 	# category. 0 when not owned, so every other run is unchanged.
@@ -560,6 +573,9 @@ func _special_stats(base: Dictionary, row: Dictionary, dmg_mult: float) -> Dicti
 	var area := 1.0 + float(row.get("special_area", 0.0))  # Radius / length multiplier.
 	var haste := 1.0 + float(row.get("special_haste", 0.0))  # Cooldown divisor.
 	haste *= 1.0 + game.abilities.passive_value("fallen_grace", "special_haste")  # Fallen Grace (0 when not owned).
+	# --- Act XII (temporary number): the Hall of Two Truths --- Answering Words: every class
+	# special recharges sooner, its own category (0 when not owned, so every other run is unchanged).
+	haste *= 1.0 + game.abilities.passive_value(UshabtiSentinelBehavior.ANSWERING, UshabtiSentinelBehavior.ANSWERING_KEY)
 	# --- Act VIII: Liberty Heights --- Origin Story: every class special reaches
 	# wider, its own category (0 when not owned, so every other run is unchanged).
 	area *= 1.0 + game.abilities.passive_value(FallenHeroBehavior.ORIGIN, FallenHeroBehavior.ORIGIN_KEY)
@@ -567,6 +583,9 @@ func _special_stats(base: Dictionary, row: Dictionary, dmg_mult: float) -> Dicti
 	# --- Act IX: the Ark --- Crop Circles: every class special's held effects
 	# last longer, its own category (0 when not owned, so every other run is unchanged).
 	dur *= 1.0 + game.abilities.passive_value(GhostSaucerBehavior.CROP, GhostSaucerBehavior.CROP_KEY)
+	# --- Act X: the Maelstrom --- Slow Match: every class special's knockback
+	# pushes farther, its own category (0 when not owned, so every other run is unchanged).
+	var push := 1.0 + game.abilities.passive_value(PowderWraithBehavior.SLOW_MATCH, PowderWraithBehavior.SLOW_MATCH_KEY)
 	for key: String in src:
 		var v := float(src[key])  # Base value of this key.
 		if key.ends_with("_damage"):
@@ -577,6 +596,8 @@ func _special_stats(base: Dictionary, row: Dictionary, dmg_mult: float) -> Dicti
 			v /= haste
 		elif key.ends_with("_duration"):
 			v *= dur
+		elif key.ends_with("_knockback"):
+			v *= push  # Act X, the Maelstrom: Slow Match.
 		out[key] = v
 	return out
 
@@ -612,6 +633,8 @@ func _update_replenishment(delta: float) -> void:
 			if _try_spawn(cls):
 				replenish_timer[cls] = 0.0
 				game.stat_add("replacements", 1.0)
+				if game.host != null:
+					game.host.on_replace()  # Act XIII (temporary): Judgment, a replaced summon is a sin.
 				_bone_reserve(units[units.size() - 1])
 
 
@@ -764,6 +787,16 @@ func spawn_temporary(cls: String, pos: Vector2, duration: float, hp_mult: float,
 ## II, where this is exactly spawn_temporary() plus the two tags.
 func raise_corpse(cls: String, pos: Vector2, duration: float, hp_mult: float, dmg_mult: float,
 		tag: String, glyph: String, gunner: bool) -> SummonedUnit:
+	# --- Act XII (temporary number): the Necropolis Dynasty --- REBIRTH: a raise
+	# steals the Name of the nearest cartouche there (Rebirth.on_raise(); only
+	# while Game.dynasty exists, so nothing changes elsewhere).
+	if game.dynasty != null:
+		game.dynasty.rebirth.on_raise(pos)
+	# --- Act XIII (temporary number): the Celestial Host --- JUDGMENT: every
+	# raise is a sin on the scales (HostRules.on_raise(); only while Game.host
+	# exists).
+	if game.host != null:
+		game.host.on_raise()
 	var steel := EmpireRulesData.STEEL  # Grave Gunner rules.
 	var u := spawn_temporary(String(steel["class"]) if gunner else cls, pos, duration, hp_mult, dmg_mult)
 	if gunner:
@@ -1011,10 +1044,15 @@ func set_banners(zones: PackedVector3Array, haste: float) -> void:
 ## this army's banners (the strongest, not added up) + Warlord's Seal's when it
 ## stands within BannerData.SEAL_RADIUS px of its necromancer. Exactly 1 when
 ## neither the spell nor the passive is owned (every older run unchanged). The
-## same on every stage (no act-only rule).
+## same on every stage (no act-only rule), times the GROUND's: a Fae Court fairy
+## ring slows the timer of a summon standing in it (FaeCourtDirector.
+## summon_attack_rate(); a stage hazard like TerrainSlow, not a summon rule;
+## exactly 1 elsewhere).
 func attack_haste(u: SummonedUnit) -> float:
+	var fc := game.enemies.fae_court if game.enemies != null else null  # The Fae Court's rings (null elsewhere).
+	var ground := fc.summon_attack_rate(u) if fc != null else 1.0  # Ring rate (1 outside).
 	if banner_haste <= 0.0 and _seal_haste <= 0.0:
-		return 1.0
+		return ground
 	var h := 0.0  # Extra share.
 	if banner_haste > 0.0:
 		for z in banner_zones:
@@ -1023,5 +1061,5 @@ func attack_haste(u: SummonedUnit) -> float:
 				break
 	if _seal_haste > 0.0 and u.position.distance_squared_to(_seal_pos) <= BannerData.SEAL_RADIUS * BannerData.SEAL_RADIUS:
 		h += _seal_haste
-	return 1.0 + h
+	return (1.0 + h) * ground
 

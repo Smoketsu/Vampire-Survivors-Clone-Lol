@@ -41,4 +41,19 @@ const POSES: Dictionary = {
 	"bosses/shogun": {3: "duel"},  # TUNING (not in GDD) the low iai stance with the blade drawn (BossShogun: the leap down and every cut he stands to draw in the duel)
 	# --- Act IX: the Crash Site ---
 	"bosses/hive_mother": {1: "cast", 3: "strike"},  # TUNING (not in GDD) her claws raised over the egg sac as she lays a wave / her claws thrust down as she bursts out of the ground (BossHiveMother; her Flight form is its own still, bosses/hive_mother_flight)
+	# --- Act XIII: the Celestial Host ---
+	"host/seraiel": {1: "raised"},  # TUNING (not in GDD) the sword raised overhead (BossSeraiel: the sword's windup, the sweep and the Gate's cast)
+	"host/throne": {1: "open"},  # TUNING (not in GDD) the wheels parted, the Core open (BossThrone)
+	# --- Act XIV (temporary number): the Fern Basin ---
+	"primeval/scarmaw": {1: "leap"},  # TUNING (not in GDD) crouched to spring / in the air (BossScarmaw: the leap's windup and flight, the ambush lunge)
+	# --- Act XIV (temporary number): the Great Plain ---
+	"primeval/ironbrow": {1: "broken"},  # TUNING (not in GDD) one horn snapped off (BossIronbrow: every frame after the Break)
+	# --- Act XIV (temporary number): the Last Day ---
+	"primeval/gravejaw": {1: "roar"},  # TUNING (not in GDD) jaws wide, head up (BossGravejaw: the Roar's windup, at the Mound)
+	# --- Act XV (temporary number): the Greenwood ---
+	"wild/stag_king": {1: "horn"},  # TUNING (not in GDD) the hunting horn raised to his lips (BossStagKing: while a Hunt rides)
+	# --- Act XV (temporary number): the Fae Court ---
+	"wild/summer_queen": {1: "bargain"},  # TUNING (not in GDD) a hand held out with the bargain (BossSummerQueen: while an offer waits)
+	# --- Act XV (temporary number): the World-Tree ---
+	"wild/green_mother": {1: "cast", 2: "burial"},  # TUNING (not in GDD) arms raised with a season (BossGreenMother: just after the Turning casts) / hands pressed into the earth (just after a burial)
 }

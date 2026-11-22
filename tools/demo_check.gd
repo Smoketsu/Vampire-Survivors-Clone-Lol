@@ -63,7 +63,7 @@ func _expect(ok: bool, what: String) -> void:
 func _check_stages(demo: bool) -> void:
 	var open := PackedStringArray()  # Stages the stage select would let the player choose.
 	for id: String in StageRegistry.ORDER:
-		var in_demo := DemoData.ACTS.has(StageRegistry.act_of(id))  # Expected open in the demo.
+		var in_demo := DemoData.ACTS.has(StageRegistry.act_id_of(id))  # Expected open in the demo.
 		var unlocked := StageSelect._is_open(id)
 		if unlocked:
 			open.append(id)
@@ -75,7 +75,7 @@ func _check_stages(demo: bool) -> void:
 			_expect(lock != DemoData.LOCK_LINE, "full game: stage %s reads the demo lock line" % id)
 	print("[demo_check] stages open: %d (%s)" % [open.size(), ",".join(open) if open.size() <= 6 else ",".join(open.slice(0, 6)) + ",..."])
 	_expect(DemoMode.demo_stages() == PackedStringArray(["graveyard", "crimson_march", "sanctum"]), "demo stages %s" % ",".join(DemoMode.demo_stages()))
-	_expect(DemoMode.acts_left_out() == StageRegistry.ACTS.size() - DemoData.ACTS.size(), "acts left out %d" % DemoMode.acts_left_out())
+	_expect(DemoMode.acts_left_out() == StageRegistry.act_count() - DemoData.ACTS.size(), "acts left out %d" % DemoMode.acts_left_out())
 
 
 ## Items: the card pool on every demo stage offers no full-game item; no demo

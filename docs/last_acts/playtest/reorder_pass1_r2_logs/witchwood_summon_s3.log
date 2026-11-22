@@ -1,0 +1,211 @@
+Godot Engine v4.3.stable.official.77dcf97d8 - https://godotengine.org
+
+[autotest] start: seed=3 speed=8x mortal=true timeout=1500s policy=summon meta=none oath=0 pact=false classes=- spells=-
+[autotest] stage: witchwood
+[autotest] difficulty: necromancer | modifiers: none
+[autotest] character: gravecaller (starting spell shadow_bolt)
+[audio] main-thread startup 14.4 ms; 59 sfx ready after 609 ms, music loop after 583 ms (worker threads); display: headless
+[metric] t=60 avg_horde=2.6 now=4 cap=4 w4/4 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=4 kills=70 enemies=38 hp=120 boss_hp=-1 crystals=3 xp=67
+[metric]    summon dmg taken this window: blood_thrall=84
+[metric]    alive by kind: { "blood_thrall": 35, "hex_stone": 3 } within260=8
+[autotest] t=01:00 lvl=4 kills=70 enemies=38 summons=4/4 projectiles=1 hp=120 step_avg=0.73ms
+[autotest]    unit FSM: { "ACQUIRING": 2, "CASTING": 1, "ENGAGING": 1 }
+[metric] t=120 avg_horde=4.7 now=4 cap=5 w4/5 a0/0 m0/0 m0/0 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=2 lvl=7 kills=171 enemies=50 hp=119 boss_hp=-1 crystals=4 xp=167
+[metric]    summon dmg taken this window: blood_thrall=122
+[metric]    alive by kind: { "blood_thrall": 43, "hex_stone": 3, "vampire_bat": 4 } within260=23
+[autotest] t=02:00 lvl=7 kills=171 enemies=50 summons=4/5 projectiles=0 hp=119 step_avg=0.87ms
+[autotest]    unit FSM: { "ENGAGING": 2, "CASTING": 2 }
+[metric] t=180 avg_horde=6.6 now=10 cap=10 w6/6 a0/0 m0/0 m4/4 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=3 lvl=10 kills=306 enemies=62 hp=120 boss_hp=-1 crystals=4 xp=304
+[metric]    summon dmg taken this window: blood_thrall=250 blood_knight=11 blood_knight_cleave=5 vampire_bat=2
+[metric]    alive by kind: { "blood_thrall": 45, "hex_stone": 3, "blood_knight": 4, "bloated_thrall": 4, "vampire_bat": 6 } within260=9
+[autotest] t=03:00 lvl=10 kills=306 enemies=62 summons=10/10 projectiles=0 hp=120 step_avg=0.92ms
+[autotest]    unit FSM: { "ENGAGING": 6, "CASTING": 2, "ACQUIRING": 2 }
+[metric] t=240 avg_horde=13.5 now=14 cap=14 w9/9 a0/0 m0/0 m5/5 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=15 kills=461 enemies=60 hp=114 boss_hp=-1 crystals=7 xp=529
+[metric]    summon dmg taken this window: blood_thrall=395 blood_knight=134 blood_knight_cleave=61 vampire_bat=18 bloated_thrall=146
+[metric]    alive by kind: { "blood_knight": 8, "blood_thrall": 37, "hex_stone": 3, "vampire_bat": 11, "bloated_thrall": 1 } within260=14
+[autotest] t=04:00 lvl=15 kills=461 enemies=60 summons=14/14 projectiles=1 hp=114 step_avg=1.00ms
+[autotest]    unit FSM: { "ENGAGING": 13, "CASTING": 1 }
+[metric] t=300 avg_horde=16.9 now=19 cap=19 w9/9 a0/0 m5/5 m5/5 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=1 lvl=19 kills=630 enemies=46 hp=120 boss_hp=-1 crystals=12 xp=784
+[metric]    summon dmg taken this window: blood_thrall=313 blood_knight=245 blood_knight_cleave=106 vampire_bat=19 bloated_thrall=27 werewolf_lunge=14 werewolf=44
+[metric]    alive by kind: { "vampire_bat": 7, "blood_thrall": 23, "blood_knight": 10, "bloated_thrall": 1, "hex_stone": 3 } within260=3
+[autotest] t=05:00 lvl=19 kills=630 enemies=46 summons=19/19 projectiles=4 hp=120 step_avg=1.09ms
+[autotest]    unit FSM: { "ENGAGING": 13, "FOLLOWING": 3, "REPOSITIONING": 2, "CASTING": 1 }
+[metric] t=360 avg_horde=19.3 now=21 cap=21 w10/10 a0/0 m6/6 m5/5 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=23 kills=805 enemies=50 hp=111 boss_hp=-1 crystals=16 xp=1088
+[metric]    summon dmg taken this window: blood_thrall=42 blood_knight=131 blood_knight_cleave=52 bloated_thrall=29 werewolf=15 archer_arrow=58
+[metric]    alive by kind: { "blood_thrall": 28, "bloated_thrall": 2, "hex_stone": 3, "blood_knight": 7, "crimson_witch": 3, "vampire_bat": 6, "vampire_noble": 1 } within260=11
+[autotest] t=06:00 lvl=23 kills=805 enemies=50 summons=21/21 projectiles=2 hp=111 step_avg=1.14ms
+[autotest]    unit FSM: { "ENGAGING": 16, "ACQUIRING": 1, "CASTING": 2, "REPOSITIONING": 2 }
+[metric] t=420 avg_horde=24.7 now=26 cap=26 w13/13 a0/0 m7/7 m6/6 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=26 kills=981 enemies=61 hp=120 boss_hp=-1 crystals=25 xp=1413
+[metric]    summon dmg taken this window: blood_thrall=34 blood_knight=105 blood_knight_cleave=45 bloated_thrall=44 werewolf=33 archer_arrow=90 vampire_noble=11
+[metric]    alive by kind: { "blood_thrall": 31, "vampire_bat": 11, "blood_knight": 7, "werewolf": 2, "hex_stone": 2, "crimson_witch": 2, "bloated_thrall": 4, "vampire_noble": 1 } within260=11
+[autotest] t=07:00 lvl=26 kills=981 enemies=61 summons=26/26 projectiles=8 hp=120 step_avg=1.18ms
+[autotest]    unit FSM: { "ENGAGING": 19, "CASTING": 3, "ACQUIRING": 2, "REPOSITIONING": 2 }
+[metric] t=480 avg_horde=26.0 now=27 cap=27 w13/13 a0/0 m8/8 m6/6 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=30 kills=1164 enemies=67 hp=99 boss_hp=-1 crystals=27 xp=1825
+[metric]    summon dmg taken this window: blood_thrall=81 blood_knight=374 blood_knight_cleave=168 vampire_bat=7 bloated_thrall=138 werewolf_lunge=22 werewolf=241 archer_arrow=178 vampire_noble=66
+[metric]    alive by kind: { "blood_knight": 19, "blood_thrall": 27, "crimson_witch": 8, "vampire_bat": 6, "vampire_noble": 2, "werewolf": 1, "hex_stone": 1, "bloated_thrall": 3 } within260=12
+[autotest] t=08:00 lvl=30 kills=1164 enemies=67 summons=27/27 projectiles=5 hp=99 step_avg=1.25ms
+[autotest]    unit FSM: { "ENGAGING": 25, "CASTING": 2 }
+[metric] t=540 avg_horde=27.0 now=27 cap=27 w13/13 a0/0 m8/8 m6/6 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=34 kills=1367 enemies=63 hp=120 boss_hp=-1 crystals=33 xp=2286
+[metric]    summon dmg taken this window: blood_thrall=124 blood_knight=374 blood_knight_cleave=158 vampire_bat=3 bloated_thrall=96 werewolf_lunge=68 werewolf=275 archer_arrow=92 vampire_noble=38
+[metric]    alive by kind: { "blood_thrall": 36, "blood_knight": 13, "bloated_thrall": 2, "vampire_noble": 3, "vampire_bat": 7, "crimson_witch": 1, "werewolf": 1 } within260=10
+[autotest] t=09:00 lvl=34 kills=1367 enemies=63 summons=27/27 projectiles=3 hp=120 step_avg=1.30ms
+[autotest]    unit FSM: { "CASTING": 8, "ENGAGING": 15, "REPOSITIONING": 1, "ACQUIRING": 3 }
+[metric] t=600 avg_horde=27.4 now=28 cap=28 w13/13 a0/0 m8/8 m7/7 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=37 kills=1565 enemies=56 hp=120 boss_hp=-1 crystals=32 xp=2722
+[metric]    summon dmg taken this window: blood_thrall=88 blood_knight=322 blood_knight_cleave=140 bloated_thrall=66 werewolf=99 archer_arrow=170 vampire_noble=66
+[metric]    alive by kind: { "blood_thrall": 38, "blood_knight": 5, "bloated_thrall": 3, "werewolf": 1, "vampire_bat": 4, "crimson_witch": 1, "vampire_noble": 1, "hex_stone": 3 } within260=4
+[autotest] t=10:00 lvl=37 kills=1565 enemies=56 summons=28/28 projectiles=3 hp=120 step_avg=1.34ms
+[autotest]    unit FSM: { "ENGAGING": 7, "FOLLOWING": 9, "REPOSITIONING": 9, "CASTING": 3 }
+[metric] t=660 avg_horde=28.0 now=28 cap=28 w13/13 a0/0 m8/8 m7/7 w0/0 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=40 kills=1768 enemies=64 hp=120 boss_hp=-1 crystals=40 xp=3170
+[metric]    summon dmg taken this window: blood_thrall=191 blood_knight=269 blood_knight_cleave=129 bloated_thrall=295 werewolf=52 archer_arrow=270 vampire_noble=53
+[metric]    alive by kind: { "blood_thrall": 29, "vampire_bat": 8, "bloated_thrall": 11, "blood_knight": 9, "crimson_witch": 2, "hex_stone": 2, "werewolf": 2, "bog_mother": 1 } within260=16
+[autotest] t=11:00 lvl=40 kills=1768 enemies=64 summons=28/28 projectiles=3 hp=120 step_avg=1.39ms
+[autotest]    unit FSM: { "ENGAGING": 22, "CASTING": 2, "ACQUIRING": 3, "REPOSITIONING": 1 }
+[metric] t=720 avg_horde=30.9 now=35 cap=35 w13/13 a0/0 m8/8 m7/7 w7/7 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=45 kills=1979 enemies=70 hp=120 boss_hp=-1 crystals=45 xp=4035
+[metric]    summon dmg taken this window: blood_thrall=136 blood_knight=506 blood_knight_cleave=234 vampire_bat=14 bloated_thrall=392 werewolf_lunge=29 werewolf=288 archer_arrow=257 vampire_noble=19 bog_drown=326 bog_mire=1262 bog_mother=357
+[metric]    alive by kind: { "blood_thrall": 35, "vampire_noble": 2, "blood_knight": 16, "vampire_bat": 9, "hex_stone": 1, "crimson_witch": 2, "bloated_thrall": 3, "werewolf": 2 } within260=10
+[autotest] t=12:00 lvl=45 kills=1979 enemies=70 summons=35/35 projectiles=3 hp=120 step_avg=1.45ms
+[autotest]    unit FSM: { "ENGAGING": 30, "CASTING": 3, "REPOSITIONING": 2 }
+[metric] t=780 avg_horde=35.0 now=35 cap=35 w13/13 a0/0 m8/8 m7/7 w7/7 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=47 kills=2192 enemies=59 hp=120 boss_hp=-1 crystals=44 xp=4469
+[metric]    summon dmg taken this window: blood_knight=25 blood_knight_cleave=44 werewolf_lunge=30 werewolf=74 archer_arrow=10
+[metric]    alive by kind: { "blood_thrall": 28, "bloated_thrall": 2, "vampire_noble": 2, "blood_knight": 13, "vampire_bat": 8, "werewolf": 2, "crimson_witch": 3, "hex_stone": 1 } within260=11
+[autotest] t=13:00 lvl=47 kills=2192 enemies=59 summons=35/35 projectiles=9 hp=120 step_avg=1.50ms
+[autotest]    unit FSM: { "ENGAGING": 26, "CASTING": 6, "REPOSITIONING": 3 }
+[metric] t=840 avg_horde=40.7 now=44 cap=41 w13/13 a6/6 m8/8 m7/7 w7/7 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=49 kills=2404 enemies=70 hp=120 boss_hp=-1 crystals=11 xp=5032
+[metric]    summon dmg taken this window: blood_knight=71 blood_knight_cleave=7 bloated_thrall=25 werewolf=58 archer_arrow=19 noble_drain=1
+[metric]    alive by kind: { "blood_thrall": 25, "vampire_noble": 2, "vampire_bat": 8, "blood_knight": 21, "bloated_thrall": 8, "hex_stone": 1, "crimson_witch": 4 } within260=15
+[autotest] t=14:00 lvl=49 kills=2404 enemies=70 summons=44/41 projectiles=2 hp=120 step_avg=1.56ms
+[autotest]    unit FSM: { "CASTING": 7, "ENGAGING": 33, "FOLLOWING": 2, "REPOSITIONING": 2 }
+[metric] t=900 avg_horde=45.3 now=46 cap=42 w13/13 a7/7 m8/8 m7/7 w7/7 b0/0 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=51 kills=2629 enemies=61 hp=120 boss_hp=-1 crystals=32 xp=5524
+[metric]    summon dmg taken this window: blood_thrall=25 blood_knight=13 blood_knight_cleave=16 werewolf=26 archer_arrow=35
+[metric]    alive by kind: { "blood_knight": 20, "vampire_bat": 9, "werewolf": 3, "blood_thrall": 20, "bloated_thrall": 3, "crimson_witch": 1, "vampire_noble": 1, "hex_stone": 3 } within260=7
+[autotest] t=15:00 lvl=51 kills=2629 enemies=61 summons=46/42 projectiles=11 hp=120 step_avg=1.62ms
+[autotest]    unit FSM: { "ENGAGING": 34, "CASTING": 8, "REPOSITIONING": 4 }
+[metric] t=960 avg_horde=46.7 now=42 cap=38 w13/13 a9/9 m8/8 m0/0 w0/0 b8/8 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=54 kills=2865 enemies=70 hp=120 boss_hp=-1 crystals=26 xp=6189
+[metric]    summon dmg taken this window: blood_knight=11 bloated_thrall=12 werewolf=32 archer_arrow=12 vampire_noble=10
+[metric]    alive by kind: { "vampire_bat": 13, "blood_thrall": 24, "bloated_thrall": 8, "blood_knight": 20, "werewolf": 1, "hex_stone": 3, "vampire_noble": 1 } within260=18
+[autotest] t=16:00 lvl=54 kills=2865 enemies=70 summons=42/38 projectiles=6 hp=120 step_avg=1.69ms
+[autotest]    unit FSM: { "ENGAGING": 28, "RETURNING": 5, "CASTING": 6, "REPOSITIONING": 3 }
+[autotest] boss spawned at 1020.0 s
+[autotest] Shadow Bolt aim switched to Strongest
+[metric] t=1020 avg_horde=42.3 now=43 cap=39 w13/13 a10/10 m8/8 m0/0 w0/0 b8/8 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=56 kills=3117 enemies=61 hp=120 boss_hp=25900 crystals=48 xp=6720
+[metric]    summon dmg taken this window: blood_knight=29 werewolf_lunge=4 werewolf=37
+[metric]    alive by kind: { "bloated_thrall": 5, "werewolf": 3, "blood_thrall": 27, "vampire_bat": 10, "hex_stone": 2, "blood_knight": 11, "crimson_witch": 2, "boss": 1 } within260=6
+[autotest] t=17:00 lvl=56 kills=3117 enemies=61 summons=43/39 projectiles=19 hp=120 step_avg=1.74ms
+[autotest]    unit FSM: { "ENGAGING": 20, "FOLLOWING": 8, "RETURNING": 3, "CASTING": 8, "REPOSITIONING": 1, "ACQUIRING": 2, "SPAWNING": 1 }
+[autotest] boss defeated at 1065.7 s
+[metric] t=1080 avg_horde=42.3 now=39 cap=39 w13/13 a10/10 m8/8 m0/0 w0/0 b8/8 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=60 kills=3337 enemies=42 hp=120 boss_hp=0 crystals=42 xp=7779
+[metric]    summon dmg taken this window: blood_thrall=66 blood_knight=144 blood_knight_cleave=84 bloated_thrall=5 werewolf=50 archer_arrow=65 hex_circle=1609 isolde_bomb=485 boss=230
+[metric]    alive by kind: { "blood_knight": 9, "vampire_bat": 11, "blood_thrall": 17, "hex_stone": 2, "bloated_thrall": 1, "vampire_noble": 2 } within260=3
+[autotest] t=18:00 lvl=60 kills=3337 enemies=42 summons=39/39 projectiles=18 hp=120 step_avg=1.78ms
+[autotest]    unit FSM: { "FOLLOWING": 13, "ENGAGING": 13, "CASTING": 6, "RETURNING": 3, "REPOSITIONING": 4 }
+[metric] t=1140 avg_horde=41.2 now=41 cap=39 w13/13 a10/10 m8/8 m0/0 w0/0 b8/8 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=61 kills=3513 enemies=46 hp=120 boss_hp=0 crystals=40 xp=8076
+[metric]    summon dmg taken this window: blood_thrall=6 blood_knight=16 blood_knight_cleave=8
+[metric]    alive by kind: { "vampire_bat": 8, "blood_thrall": 19, "blood_knight": 13, "bloated_thrall": 6 } within260=5
+[autotest] t=19:00 lvl=61 kills=3513 enemies=46 summons=41/39 projectiles=20 hp=120 step_avg=1.81ms
+[autotest]    unit FSM: { "FOLLOWING": 1, "ENGAGING": 24, "CASTING": 5, "ACQUIRING": 7, "REPOSITIONING": 4 }
+[autotest] countdown reached 0:00 at 1200.0 s - THE RECKONING begins
+[metric] t=1200 avg_horde=41.9 now=43 cap=39 w13/13 a10/10 m8/8 m0/0 w0/0 b8/8 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=0 lvl=63 kills=3694 enemies=63 hp=120 boss_hp=0 crystals=7 xp=8496
+[metric]    summon dmg taken this window: blood_knight_cleave=9 bloated_thrall=16
+[metric]    alive by kind: { "vampire_bat": 15, "blood_thrall": 29, "bloated_thrall": 4, "blood_knight": 10, "werewolf": 2, "court_coffin": 3 } within260=4
+[autotest] t=20:00 lvl=63 kills=3694 enemies=63 summons=43/39 projectiles=20 hp=120 step_avg=1.82ms
+[autotest]    unit FSM: { "FOLLOWING": 19, "RETURNING": 3, "REPOSITIONING": 6, "ENGAGING": 13, "CASTING": 1, "SPAWNING": 1 }
+[metric] t=1260 avg_horde=42.0 now=38 cap=39 w13/13 a8/10 m8/8 m0/0 w0/0 b8/8 a0/0 r0/0 g0/0 f0/0 b0/0 b0/0 c0/0 deaths_win=2 lvl=64 kills=3896 enemies=133 hp=120 boss_hp=0 crystals=43 xp=8852
+[metric]    summon dmg taken this window: blood_thrall=372 blood_knight=291 blood_knight_cleave=97 vampire_bat=120 bloated_thrall=226 werewolf_lunge=210 werewolf=2520 noble_drain=9
+[metric]    alive by kind: { "bloated_thrall": 27, "blood_knight": 4, "vampire_noble": 2, "werewolf": 29, "blood_thrall": 39, "vampire_bat": 30, "court_coffin": 2 } within260=44
+[autotest] t=21:00 lvl=64 kills=3896 enemies=133 summons=38/39 projectiles=7 hp=120 step_avg=1.88ms
+[autotest]    unit FSM: { "ENGAGING": 22, "CASTING": 8, "REPOSITIONING": 4, "ACQUIRING": 1, "RETURNING": 3 }
+[autotest] ===== NECROPATHY AUTOTEST SUMMARY =====
+[autotest] result: VICTORY / RUN COMPLETE (run_complete)
+[autotest] time reached: 21:59 elapsed (1319.3 s game time, 226.6 s real time); past 0:00: 119.3 s; Reckoning waves: 12
+[autotest] kills: 3942 | level: 64
+[autotest] level pacing: 01:00=L4 03:00=L10 05:00=L19 10:00=L37 15:00=L51 17:00=L56 20:00=L63 | reached: L2@00:29 L5@01:09 L10@02:40 L15@03:50 L20@05:09 L25@06:34 L30@07:57 L35@09:18 L40@10:55 L45@11:59 L50@14:04 L55@16:08 L60@17:46
+[autotest] build complete: no
+[autotest] horde: 6 alive / capacity 39 (warrior 3/13, archer 1/10, mage 1/8, mender 0/0, warder 0/0, bishop 1/8, abomination 0/0, rogue 0/0, gargoyle 0/0, frost_wraith 0/0, bone_hound 0/0, banshee 0/0, corpse_catapult 0/0)
+[autotest] summons spawned: 73, died: 61, hard recalls: 0 (stall recalls: 0)
+[autotest] boss spawned: yes at 1020.0 s | boss defeated: yes at 1065.7 s | boss HP left: 0 / 25900
+[autotest] player HP: 0 / 120 (invulnerable: false)
+[autotest] picks (69): warrior 2, dark_command 1, grave_dominion 1, grave_dominion 2, forbidden_knowledge 1, dark_command 2, necrotic_vigor 1, grave_dominion 3, mender 1, warrior 3, grave_dominion 4, shadow_bolt 2, skip, skip, shadow_bolt 3, mage 1, shadow_bolt 4, bound_souls 1, forbidden_knowledge 2, necrotic_vigor 2, mage 2, warrior 4, grave_dominion 5, forbidden_knowledge 3, warrior 5, mender 2, mage 3, forbidden_knowledge 4, shadow_bolt 5, mage 4, dark_command 3, dark_benediction 1, dark_command 4, skip, necrotic_vigor 3, mender 3, mage 5, dark_benediction 2, skip, dark_command 5, EVOLVE death_knight, mender 4, warder 1, dark_benediction 3, warder 2, warder 3, mender 5, warder 4, dark_benediction 4, archer 1, forbidden_knowledge 5, EVOLVE lich, archer 2, warder 5, archer 3, archer 4, dark_benediction 5, EVOLVE profane_bishop, archer 5, necrotic_vigor 4, shadow_blast 1, shadow_blast 2, shadow_blast 3, necrotic_vigor 5, shadow_blast 4, shadow_blast 5, bound_souls 2, bound_souls 3, bound_souls 4
+[autotest] wards on you: 146 total, absorbed 928 dmg | 145 wards in 622 s with 2+ Warders/Bishops alive (14.0 / min) | heal casts: 1369 | ally barriers: 847, barrier dmg absorbed: 38730
+[autotest] evolutions: death_knight@10:57, lich@13:39, profane_bishop@15:48
+[autotest] evolutions by type: spell: none | summon: death_knight@10:57, lich@13:39, profane_bishop@15:48
+[autotest] summon evolutions: lich raised 125 (capped 0) | merge converted 8, dissolved 6 | aura pulses 937 | merged classes: mender, warder
+[autotest] winter revenant: shatters 0 (capped 0), shatter hits 0, shatter dmg 0 | death novas 0, nova hits 0, nova freezes 0, nova dmg 0
+[autotest] summon output by source (dmg/heal/shield): warrior=37978/0/0 archer=89554/0/0 mage=87361/0/0 mender=13094/7779/0 warder=5027/0/7182 bishop=30410/12048/24789 bash=5114/0/0 death_knight=227366/2411/0 death_knight_bash=21957/0/0 death_knight_cleave=39531/0/0 lich=328116/0/0 lich_risen=13912/0/0 bishop_aura=55632/0/0
+[autotest] summon output by class (dmg/heal/shield): warrior=331949/2411/0 archer=89554/0/0 mage=415478/0/0 mender=13094/7779/0 warder=5027/0/7182 bishop=86043/12048/24789 lich_risen=13912/0/0
+[autotest] recipe book: 3 / 83 discovered (death_knight, lich, profane_bishop) | Recipes view rows built: 83 (saved: false)
+[autotest] codex: 18 entries met this run (spell 2, summon 5, enemy 10, boss 1) | new to the save 18 | save: spell 2/54, summon 5/30, enemy 10/260, boss 1/45, evolutions 3/83
+[autotest] epilogue: parts=15 (acts=15) open=0 seen=0 panels=59 cards_ok=true autoplay_pending=false
+[autotest] volleys: shots 80555 | hits 67846 | dmg 426733 | peak 320/320 | capped volleys 60 | boss hits capped 863 | barrages 11 | mage 167258, warrior 163070, archer 30416, bishop 24064, shadow_bolt 22372, mender 9755, lich_risen 5051, shadow_blast 2609
+[visual] adaptive quality: level 3, peak 3, steps down 4, up 1
+[autotest] victory screen: title=The Coven Breaks best_overtime=119 new_record=true highlights=7
+[autotest] bloodfeast: feeds 2259 (on summons 2188, on you 71) | healed 43509 | blood shield banked 11572, absorbed 7097, broken 226 | halved by Rot / Wither 0 (withheld 0) | under the moon 1018 feeds (51857 HP) | embalmed withheld 0
+[autotest] night wings: swoops 246 | bites on you 16, on summons 97, missed 27 | hits in flight by fliers / ranged / spells 10513, grounded melee blows into the air 13159 | hits while landed 1000 | retargets to the necromancer 5337
+[autotest] blood moon: moons 6 (at 4:00, 8:00, 12:00, 16:00, 17:35, 20:00; forced 1), warnings 4, up 311 s | werebeasts turned under it 99 | feeds under it 1018 (51857 HP)
+[autotest] court kinds (spawned/killed): blood_thrall 1940/1846 first 0:01 (dmg to you 20, to summons 5469, fed 7770) | vampire_bat 1113/1027 first 1:02 (dmg to you 133, to summons 1727, fed 3374) | blood_knight 716/715 first 2:37 (dmg to you 80, to summons 3213, fed 3661) | werewolf 134/52 first 4:10 (dmg to you 26, to summons 11987, fed 22436) | vampire_noble 50/48 first 5:44 (dmg to you 0, to summons 317, fed 371) | court_coffin 5/2 first 20:00 (dmg to you 0, to summons 0, fed 0) | crimson_witch 102/102 first 5:10 (dmg to you 0, to summons 0, fed 0) | bloated_thrall 212/136 first 2:40 (dmg to you 18, to summons 4632, fed 5107) | bog_mother 1/1 first 11:00 (dmg to you 23, to summons 357, fed 492) | isolde_sister 3/3 first 17:31 (dmg to you 0, to summons 0, fed 0) | hex_stone 12/9 first 1:00 (dmg to you 0, to summons 0, fed 0) | werewolves turned 134 (moon 99, wounds 35), lunges 131 (hits 56) | noble beams 55 (ticks 265, broken 5), mists 49 (jumped 4301 px) | coffins opened 5, nobles released 7
+[autotest] endless feast: began 20:00 | feeding x8.9 at the end | coffins opened 5 (standing 3) | nobles released 7 (capped 2)
+[autotest] court stage: witchwood (The Witchwood) | playable true | boss isolde (script isolde) | enemy x1.85 HP / x1.20 dmg from 7:00 | soul ash x1.25 | reckoning kind werewolf, endless feast true
+[autotest] witchwood: fen checks 1200 (wading: you 14, summons 259, foes 4790) | hex stones raised 12 (peak 3, standing 0, broken 9, sunk 3) | bog mother killed at 11:55 | coven breaks no | events 1:00 hex_stones, 5:00 hex_stones, 5:20 coven, 7:50 coven, 10:00 hex_stones, 10:30 coven, 11:00 bog_mother_arrived, 11:55 bog_mother_killed, 15:00 hex_stones, 15:20 coven, 17:45 isolde_slain
+[autotest] witch hexes: covens formed 13 | circles cast 7 (moon 2, stone 5; isolde 11, sisters 0), denied on dead ground 0, failed (a witch fell) 0 | healed the Court 2955 (covens 1019) | summon drain hits 865 (dmg 1609) | blood pools 150 (bloated 136, cauldron 14), healed 9275 | stones broken 9
+[autotest] witchwood kinds: crimson witches 102/102 (chanting 126 s, regrouping 1 s; coven witches by event 24) | bloated thralls 212/136 (bursts 136)
+[autotest] bog mother: drags 6 (marked 11, seized 11, drowned 11) | slams 7 (summon hits 48) | her bog slowed you 38, summons 1950, foes 528 | killed 1 (ttk 56 s) | dmg to you 23, to summons 1945
+[autotest] isolde: hex circles 5 casts (11 circles; healed the Court 1936, drained 865 hits) | cauldron bombs 14 (hits 67, pools 14) | thralls called 18 | sisters 17:31 (falls 3, risen 0, spread of the last falls 1.5 s, waned no, coven breaks no) | red moon 17:35 (moon held 10 s) | dmg to you 0, to summons 2324
+[autotest] gravebow / bone colossus: gravebow volleys 0, splits 0 (+0 arrows), pierce hits 0, dmg 0 | curses applied 0 (refreshed 0), curse bonus dmg 0 | colossus dmg 0, stomps 0 | taunted enemies 0 | shrapnel bursts 0, hits 0, dmg 0
+[autotest] necro spells: bone_spear: not taken | soul_siphon: not taken | corpse_explosion: not taken | plague_cloud: not taken
+[autotest] later spells: death_mark: not taken | bone_wall: not taken | soul_chains: not taken | wither: not taken | raise_dead: not taken
+[autotest] later spell passives: grim_ledger Lv0 bonus_dmg=0 | spirit_binding Lv0 | restless_dead Lv0 | temporary summons spawned=125
+[autotest] horde passives: bone_plating Lv 0 (dmg prevented 0) | unholy_precision Lv 0 (crits 0, crit bonus dmg 0) | unholy_resilience Lv 0 (dmg prevented 0: area 0, holy 0) | bound_souls Lv 4 (soft recalls 14, hard recalls 0)
+[autotest] class passives: blood_scent Lv 0 (fast: Archers, Rogues, Gargoyles, Bone Hounds, Grave Drones, Succubi, Blood Spawn, Fallen Heroes, Ghost Saucers, Powder Wraiths, Bound Ophans, Bonehorns) | mournsong Lv 0 (extra debuff s 0) | siegecraft Lv 0 (siege bonus dmg 0) | summon dmg to structures 14957 (catapults 0)
+[autotest] synergies active at end: shieldwall, volley, deathless, unholy_host | activations: deathless@06:47, shieldwall@11:56, volley@14:04, unholy_host@14:04
+[autotest] synergy bonus: flesh_rampart hits=0 dmg=0 | killing_field hits=0 dmg=0 | death_from_above hits=0 dmg=0 | wild_hunt hits=0 dmg=0 | cold_blood hits=0 dmg=0 | shatterfall hits=0 dmg=0 | requiem hits=0 dmg=0 | charnel_menagerie hits=0 dmg=0 | baying frenzies=0 | marks staggered=0 swooped=0 | dash resets=0 | requiem +0s
+[autotest] level-up offers: hands 67, new-item cards 89, later items 51 (57%) in 38 hands (57%), distinct later items offered 23
+[autotest] level-up actions: rerolls used 2/2, banishes used 2/2 (banished: orb_shield, abyssal_focus), skips 4
+[autotest] shadow bolt: 104906 dmg in Nearest mode, 48628 dmg in Strongest mode; to boss: 1432 of 17661 total boss dmg
+[autotest] stats: ally_barriers=847 aura_pulses=937 barrier_absorbed=38730 bloated_bursts=136 blood_moon_sets=5 blood_moon_time=311 blood_moon_warnings=4 blood_moons=6 blood_moons_forced=1 blood_pool_heal=9275 blood_pools_opened=150 blood_pools_opened_bloated=136 blood_pools_opened_cauldron=14 bog_drags=6 bog_drowned=11 bog_marked=11 bog_mother_kills=1 bog_mother_spawned=1 bog_mother_ttk=55 bog_seized=11 bog_slam_hits=48 bog_slams=7 bog_wade_enemies=528 bog_wade_player=38 bog_wade_summons=1950 boss_advance_time=5 boss_atk_cauldron_bomb=5 boss_atk_hex_circle=5 boss_atk_red_moon=1 boss_atk_sisters=1 boss_atk_thrall_call=3 boss_kill_full_army=1 boss_kills=1 bossdmg_archer=3982 bossdmg_bash=53 bossdmg_bishop=513 bossdmg_bishop_aura=340 bossdmg_blast=79 bossdmg_bolt=1432 bossdmg_death_knight=5108 bossdmg_death_knight_bash=564 bossdmg_death_knight_cleave=50 bossdmg_lich=4571 bossdmg_lich_risen=790 bossdmg_shadow_bolt=175 bot_dash_crowd=20 bot_dash_hit=10 bot_dash_telegraph=13 chest_count_1=6 chest_evolutions=3 chest_items=6 chests_opened=6 chests_pity=4 chests_spawned=6 coffin_capped=2 coffin_nobles=7 coffins_opened=5 damage_dealt=1167347 damage_to_player=505 damage_to_summons=35181 dash_distance=4730 dash_hits_avoided=9 dashes=43 death_archer_by_bloated_thrall=1 death_archer_by_blood_knight=1 death_archer_by_blood_thrall=4 death_archer_by_werewolf=10 death_archer_by_werewolf_lunge=1 death_bishop_by_blood_thrall=1 death_bishop_by_vampire_bat=5 death_bishop_by_werewolf=4 death_mage_by_bloated_thrall=3 death_mage_by_blood_thrall=2 death_mage_by_werewolf=5 death_mage_by_werewolf_lunge=1 death_warrior_by_bloated_thrall=6 death_warrior_by_blood_knight=2 death_warrior_by_blood_thrall=10 death_warrior_by_werewolf=10 death_warrior_by_werewolf_lunge=2 deathless_regen=4449 dmg_archer=89554 dmg_bash=5114 dmg_bishop=30410 dmg_bishop_aura=55632 dmg_blast=23710 dmg_bolt=153535 dmg_death_knight=227366 dmg_death_knight_bash=21957 dmg_death_knight_cleave=39531 dmg_lich=328116 dmg_lich_risen=13912 dmg_mage=87361 dmg_mender=13094 dmg_nova=10060 dmg_resisted_boss=934 dmg_resisted_vampire_bat=189420 dmg_resisted_vampire_noble=5091 dmg_shadow_blast=2609 dmg_shadow_bolt=22372 dmg_warder=5027 dmg_warrior=37978 enemy_healing=55740 evolutions=3 feast_bites=2259 feast_bites_summons=2188 feast_bites_you=71 feast_coffins=5 feast_heal=43509 feast_heal_bloated_thrall=5107 feast_heal_blood_knight=3661 feast_heal_blood_thrall=7770 feast_heal_bog_mother=492 feast_heal_boss=294 feast_heal_vampire_bat=3374 feast_heal_vampire_noble=371 feast_heal_werewolf=22436 feast_moon_bites=1018 feast_moon_heal=51857 feast_shield_absorbed=7097 feast_shield_banked=11572 feast_shields_broken=226 fen_checks=1200 fen_wade_enemies=4790 fen_wade_player=14 fen_wade_summons=259 heal_by_bishop=12048 heal_by_death_knight=2411 heal_by_mender=7779 hex_casts=7 hex_casts_isolde=11 hex_casts_moon=2 hex_casts_stone=5 hex_circle_heal=2955 hex_circle_heal_coven=1019 hex_circle_heal_isolde=1936 hex_covens_formed=13 hex_drain_hits=865 hex_stones_broken=9 hex_stones_raised=12 hex_stones_sunk=3 host_dmg_prevented=10438 isolde_bomb_hits=67 isolde_bombs=14 isolde_circles=11 isolde_moon_time=10 isolde_phase2_at=1050 isolde_phase3_at=1054 isolde_sister_falls=3 isolde_thralls=18 isolde_window_spread=1 kill_bloated_thrall=136 kill_blood_knight=715 kill_blood_thrall=1846 kill_bog_mother=1 kill_boss=1 kill_court_coffin=2 kill_crimson_witch=102 kill_hex_stone=9 kill_isolde_sister=3 kill_vampire_bat=1027 kill_vampire_noble=48 kill_werewolf=52 kills_by_archer=192 kills_by_bash=66 kills_by_bishop=72 kills_by_bishop_aura=55 kills_by_blast=41 kills_by_bolt=1058 kills_by_death_knight=400 kills_by_death_knight_bash=50 kills_by_death_knight_cleave=45 kills_by_lich=629 kills_by_lich_risen=56 kills_by_mage=530 kills_by_mender=74 kills_by_nova=35 kills_by_shadow_blast=3 kills_by_shadow_bolt=104 kills_by_warder=28 kills_by_warrior=504 levelup_banishes=2 levelup_rerolls=2 levelup_skips=4 lich_raised=125 mage_explosions=3090 march_cleave_hits=717 march_zones_entered=3 merge_converted=8 merge_dissolved=6 miniboss_chests=1 minibossdmg_bolt=1882 minibossdmg_death_knight=5500 minibossdmg_death_knight_bash=406 minibossdmg_death_knight_cleave=18 minibossdmg_mage=2961 minibossdmg_mender=195 minibossdmg_shadow_bolt=271 minibossdmg_warder=126 night_wings_air_hits=10513 night_wings_air_whiffs=13159 night_wings_bites_missed=27 night_wings_bites_summons=97 night_wings_bites_you=16 night_wings_landed_hits=1000 night_wings_retargets=5337 night_wings_swoops=246 noble_beam_broken=5 noble_beam_ticks=265 noble_beams=55 noble_mist_jump_px=4301 noble_mists=49 nova_kills=35 overkill_redirects=834 player_dmg_from_archer_arrow=60 player_dmg_from_bloated_thrall=18 player_dmg_from_blood_knight=80 player_dmg_from_blood_thrall=20 player_dmg_from_bog_mother=23 player_dmg_from_noble_drain=119 player_dmg_from_vampire_bat=133 player_dmg_from_werewolf=26 player_dmg_from_werewolf_lunge=20 player_healing=334 priest_heals=1369 priest_wards=146 pu_collected_feast=3 pu_collected_frenzy=3 pu_collected_hyper=3 pu_collected_magnet=3 pu_collected_nova=1 pu_expired_nova=1 pu_magnet_crystals=98 pu_pity_drops=6 pu_spawned_feast=3 pu_spawned_frenzy=3 pu_spawned_hyper=3 pu_spawned_magnet=3 pu_spawned_nova=2 pu_uptime_frenzy=35 pu_uptime_hyper=29 rallies=11 rally_buff_time=88 rally_heal=526 rally_knockbacks=51 rally_meter_fills=11 rally_minion_dmg=64590 rally_raised=2 rally_recalled=32 reckoning_spawned=444 replacements=26 shadow_blasts=87 shield_by_bishop=24789 shield_by_warder=7182 shieldwall_barriers=121 spawned_bloated_thrall=212 spawned_blood_knight=716 spawned_blood_thrall=1940 spawned_bog_mother=1 spawned_court_coffin=5 spawned_crimson_witch=102 spawned_hex_stone=12 spawned_isolde_sister=3 spawned_vampire_bat=1113 spawned_vampire_noble=50 spawned_werewolf=134 structdmg_archer=3072 structdmg_bash=32 structdmg_bishop=362 structdmg_bishop_aura=48 structdmg_blast=166 structdmg_bolt=2556 structdmg_death_knight=1525 structdmg_death_knight_bash=98 structdmg_death_knight_cleave=94 structdmg_lich=6257 structdmg_lich_risen=239 structdmg_mage=2289 structdmg_mender=65 structdmg_nova=2094 structdmg_shadow_blast=24 structdmg_shadow_bolt=170 structdmg_warder=27 structdmg_warrior=844 summon_dmg_from_archer_arrow=1261 summon_dmg_from_bloated_thrall=4632 summon_dmg_from_blood_knight=3213 summon_dmg_from_blood_knight_cleave=1399 summon_dmg_from_blood_thrall=5469 summon_dmg_from_bog_drown=326 summon_dmg_from_bog_mire=1262 summon_dmg_from_bog_mother=357 summon_dmg_from_boss=230 summon_dmg_from_hex_circle=1609 summon_dmg_from_isolde_bomb=485 summon_dmg_from_noble_drain=10 summon_dmg_from_vampire_bat=1727 summon_dmg_from_vampire_noble=317 summon_dmg_from_werewolf=11987 summon_dmg_from_werewolf_lunge=892 summon_evolutions=3 summon_healing=26892 summon_soft_recalls=14 synergies_activated=4 temporary_expired=118 volley_barrages=11 volley_marked_hits=1882 ward_absorbed=928 warrior_bashes=2336 warrior_kills=1065 wave_events=15 werewolf_lunge_hits=56 werewolf_lunges=131 werewolf_turned=134 werewolf_turned_hp=35 werewolf_turned_moon=99 witch_chant_time=126 witch_regroup_time=1 witchwood_bog_mother_killed=1 witchwood_bog_mother_spawned=1 witchwood_coven_witches=24 xp_collected=8871 xp_dropped=8130
+[autotest] boss attacks: hex_circle=5 cauldron_bomb=5 thrall_call=3 sisters=1 red_moon=1 | wrath: no | hammer soaked by undead: 0 | charges stopped by undead: 0 (shielding the player: 0) | judgment hits: 0 | call soldiers: 0 | holy zones boss/grave: 0/0
+[autotest] crimson march: zones entered 3 (final: Zone IV  -  The Cauldron) | placed/destroyed/escaped: outposts 0/0/0 generators 0/0/0 carts 0/0/0 standards 0/0/0 | outpost reinforcements 0 | ward zones 0
+[autotest] march enemies: aura buff pulses 0 | halberd cleave hits 717 | dmg resisted: shieldbearer 0, boss 934 | kills: shieldbearer=0 banner_bearer=0 halberdier=0
+[autotest] marshal vael: last stand no | cleave summon hits 0, soaked for the player 0 | command soldiers 0
+[autotest] march events (3): 5:00 zone_II, 10:00 zone_III, 15:00 zone_IV
+[autotest] stage events fired (0): 
+[autotest] templar charges: 0 (body-blocked by warriors: 0) | temporary summons spawned: 125
+[autotest] obstacle collisions resolved: player=0 summons=4873 enemies=15197
+[autotest] class abomination: Lv 0, alive 0/0, deaths 0 | dmg 0 (abomination=0 abom_stomp=0) | abom_stomps=0 abom_stomp_hits=0
+[autotest] class rogue: Lv 0, alive 0/0, deaths 0 | dmg 0 (rogue=0 rogue_dash=0 rogue_bleed=0) | rogue_dashes=0 rogue_dash_hits=0
+[autotest] class gargoyle: Lv 0, alive 0/0, deaths 0 | dmg 0 (gargoyle=0 gargoyle_swoop=0) | gargoyle_swoops=0 gargoyle_swoop_hits=0
+[autotest] class frost_wraith: Lv 0, alive 0/0, deaths 0 | dmg 0 (frost_wraith=0) | frost_deep_freezes=0 frost_freezes=0 frost_boss_freezes=0 frost_frozen_seconds=0 frost_chills=0
+[autotest] class bone_hound: Lv 0, alive 0/0, deaths 0 | dmg 0 (bone_hound=0 hellhound=0 hellhound_burn=0 hellhound_trail=0) | hound_bites=0 hound_pack_bites=0 hound_pack_bonus_dmg=0 hellhound_burns=0 hellhound_trail_patches=0
+[autotest] class banshee: Lv 0, alive 0/0, deaths 0 | dmg 0 (banshee=0 keening_lady=0) | banshee_dirges=0 banshee_dirge_hits=0 dirge_debuff_seconds=0 keening_waves=0 keening_silenced=0 keening_heals_silenced=0
+[autotest] class corpse_catapult: Lv 0, alive 0/0, deaths 0 | dmg 0 (corpse_catapult=0 ossuary_engine=0 ossuary_shards=0) | catapult_volleys=0 catapult_boulders=0 catapult_boulder_hits=0 catapult_structure_dmg=0 ossuary_shard_fields=0 hazards_dropped=0
+[autotest] class specials: cancelled by recall 0 | ended inside an obstacle 0
+[autotest] special evolutions: shadow reaper: chain dashes 0, cooldown resets 0, bleed stacks added 0, max stacks 0, rogue bleed dmg (all) 0 | cathedral horror: stuns 0 (boss 0), stunned s 0.0, stone forms 0, stone s 0.0, dmg prevented by stone 0
+[autotest] grave step: dashes 43 (bot: crowd 20, hit 10, telegraph 13) | hits avoided in dash i-frames 9 | blocked 0, shortened by obstacles 0, ended inside an obstacle 0, avg length 110 px | charges 1, cooldown 5.00 s
+[autotest] dread rally: rallies 11 | meter fills 11, fill times s [148 95 81 74 76 69 68 64 56 64 81] (avg 80 s), meter now 98% | knockbacks 51 | summons called back 32 | heal 526 | minion dmg under buff 64590 (est. +dmg part 18454) | buff time 88 s
+[autotest] army formation: bone_ring: 1319s kills 3942 army_dmg 35181 recalls 0 spread max 472 mean 105
+[autotest] character: gravecaller (The Gravecaller) | starting spell shadow_bolt Lv 5 | Baseline stats (Max HP 120, move speed 110) | innate: none | characters unlocked this run: voidcaller | unlocked in the profile: gravecaller, voidcaller (saved: false)
+[autotest] stuck_units=0 (touching an obstacle: 0) {  }
+[metric] boss_hp_at_0=0 min_hp_before_0=83
+[autotest] peaks: enemies=344 summons=50 projectiles=33 effects=52 crystals=72
+[autotest] nodes created (pools): enemies=344 summons=50 projectiles=33 effects=52 crystals=72
+[autotest] simulation step: avg 2.00 ms, worst 45.26 ms
+[autotest] power-ups: spawned 14 (magnet=3 feast=3 hyper=3 stasis=0 frenzy=3 nova=2) | collected 13 (magnet=3 feast=3 hyper=3 stasis=0 frenzy=3 nova=1) | expired (magnet=0 feast=0 hyper=0 stasis=0 frenzy=0 nova=1) | lost at cap 0 | pity drops 6 | crystals pulled by Soul Magnet 98
+[autotest] buff uptime: hyper=30s (2.3%, refreshed 0) stasis=0s (0.0%, refreshed 0) frenzy=36s (2.7%, refreshed 0) | soul nova kills: 35
+[autotest] chests: spawned 6, opened 6 (x1=6 x3=0 x5=0), items granted 6 (evolutions 3), pity 4, lost at cap 0, left on ground 0
+[autotest]    chest 06:02 x1: grave_dominion 5
+[autotest]    chest 10:57 x1: EVOLVE death_knight
+[autotest]    chest 11:57 x1: warder 3
+[autotest]    chest 13:39 x1: EVOLVE lich
+[autotest]    chest 15:48 x1: EVOLVE profane_bishop
+[autotest]    chest 17:46 x1: shadow_blast 4
+[autotest] chest beacon: chests marked 6, seen on screen 6 | max off-screen arrows at once 0 | ticks with an arrow 0 (0.0 s)
+[autotest] profane pact: taken no (final Lv 0; never offered or never picked) | oath tier 0 | extra XP from pact 0, from oath 0 | extra soul ash from pact 0, from oath 0
+[autotest] meta upgrades (--meta=none): none | revivals used: 0
+[autotest] soul ash: +801 (time 150 [20:00] + kills 118 [3942] + elites 0 [0] + boss 75 + reckoning 298 [119.3 s] = 641, bonus +0% = +0, pact +0, oath +0) | bounty 250 | new total 1051 | saved: false
+[autotest] difficulty: Necromancer (necromancer) | modifiers: none | foes: HP x0.800 (growth x1.00), dmg x1.000 (growth x1.00), spawn x1.250, speed x1.00, elite chance 0.000, boss HP x1.000 | XP x1.000 | soul ash: difficulty +0%, modifiers +0%, total x1.00
+[autotest] difficulty results: soul ash difficulty +0, modifiers +0 | trickle elites promoted: 0 | holy retribution bursts: 0 (dmg to you 0, to summons 0) | player max HP at start: 120
+[autotest] stage: The Witchwood | soul ash stage bonus +160 (x1.25) | stages unlocked by this run: castle_sanguis
+[autotest] hyper: off (Necromancer) | foes: HP growth x1.00, dmg growth x1.00, boss HP x1.000 | at 0:00 vs the standard game: HP x1.00, dmg x1.00 | soul ash hyper +0 (+0%) | Reckoning lasted 119.3 s past 0:00 | unlocked: false (by this run: false) | hyper clear recorded: no
+[autotest] skins: character gravecaller, worn default | this run: rot kills 0, high confessors slain 0, seraphine slain with all 4 roles 0 | lifetime: rot 0/5000, confessors 0/50, seraphine full army 0/1 | unlocked 55/220 (new: ivory_seer) | setup row cards 6
+[autotest] rewards: achievements=2 (bone_legion, dread_sovereign) titles=0 unlocks=ultimate:sovereigns_decree | run: temp raised 125, min HP before 0:00 69%, evolutions 3, boss slain 45.7 s after arrival | one-run achievements met: untouchable (not checked: --rewards=on) | worn title: none | title row choices 1
+[autotest] demo: on=false | acts=1 | stages=graveyard,crimson_march,sanctum | save=user://save.cfg | full_game_offers=0
+[autotest] feedback: url_set=true | report_chars=122/212/302 (main menu / pause / results samples built, max 1500) | url_chars=593 | opened=never (autotest)
+exit 0

@@ -1,0 +1,6 @@
+A sheet of 2 separate pixel-art game ICON SYMBOLS in one row, evenly spaced with a wide empty gap between them, on a FULLY TRANSPARENT background (real alpha). Each symbol is simple, bold and centred in its part of the image, drawn as chunky low-resolution pixel art (each symbol about 24 pixels wide on a coarse grid, shown enlarged with crisp square pixels, nearest-neighbour, 1-pixel dark outline, flat colours, at most 3 shades per colour, light from the top-left). No frame, no badge background, no text, no letters, no hieroglyph writing.
+From left to right:
+1. A CARTOUCHE: a bright true-gold oval ring (a rounded rectangle, tall, with a short horizontal bar closing it at the bottom) holding two simple dark glyph marks, glowing gold.
+2. A HEKA GLYPH: a small bright true-gold sigil of an eye above a wavy line inside a thin ring, glowing gold.
+Colours: true gold #8A5A12 #E0A92E #FFDC66; dark #3A2410. Bold shapes readable at 16 pixels.
+Attached: an approved icon of this game: match its pixel size, outline weight and flat look (only the symbol, not its frame).

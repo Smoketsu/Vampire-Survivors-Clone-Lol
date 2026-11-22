@@ -61,7 +61,7 @@ const OBSTACLE_PREFIX: String = "obstacles/"  # TUNING (not in GDD) ART_BIBLE ma
 ## `sizes` list in the stage file, smallest first): index i of `sizes` is
 ## suffix i here.
 const OBSTACLE_SIZE_SUFFIXES: Dictionary = {
-	1: ["m"],  # TUNING (not in GDD) (no kind has one size today)
+	1: ["m"],  # TUNING (not in GDD) (the Fern Basin's kinds, e.g. primeval_rock_m)
 	2: ["s", "l"],  # TUNING (not in GDD) ART_BIBLE Anchor 5 gravestone_s / _l
 	3: ["s", "m", "l"],  # TUNING (not in GDD)
 }

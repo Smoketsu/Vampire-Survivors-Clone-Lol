@@ -209,6 +209,24 @@ const CLASSES := {
 	# --- Act IX: the Ark ---
 	"ghost_saucer": {"trigger": "special", "every": 1, "pattern": "ring", "counts": [5, 7], "speed": 260.0,
 		"life": 0.45, "share": 0.3, "pierce": 1, "radius": 3.5, "style": "orb", "color": Color(0.70, 0.92, 0.86)},  # TUNING (not in GDD) a ring of soul-light where a lifted foe falls
+	# --- Act X: the Maelstrom ---
+	"powder_wraith": {"trigger": "special", "every": 1, "pattern": "ring", "counts": [6, 8], "speed": 260.0,
+		"life": 0.4, "share": 0.3, "pierce": 1, "radius": 3.5, "style": "shard", "color": Color(0.95, 0.65, 0.23)},  # TUNING (not in GDD) a ring of burning shrapnel off every keg
+	# --- Act XI (temporary): Vigrid ---
+	"draugr_thane": {"trigger": "special", "every": 1, "pattern": "fan", "counts": [5, 7], "spread": 40.0, "speed": 260.0,
+		"life": 0.4, "share": 0.3, "pierce": 1, "radius": 3.5, "style": "shard", "color": Color(0.72, 0.88, 1.0)},  # TUNING (not in GDD) a fan of frost shards off each cleave
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	"ushabti_sentinel": {"trigger": "special", "every": 1, "pattern": "ring", "counts": [6, 8], "speed": 260.0,
+		"life": 0.45, "share": 0.3, "pierce": 1, "radius": 4.0, "style": "orb", "color": Color(0.70, 0.92, 0.86)},  # TUNING (not in GDD) a ring of stone shards as it reassembles
+	# --- Act XIII (temporary number): the Empyrean ---
+	"bound_ophan": {"trigger": "special", "every": 1, "pattern": "ring", "counts": [5, 7], "speed": 260.0,
+		"life": 0.45, "share": 0.3, "pierce": 1, "radius": 3.5, "style": "orb", "color": Color(0.45, 0.95, 0.85)},  # TUNING (not in GDD) a ring of soul-fire eyes where a roll ends
+	# --- Act XIV (temporary number): the Last Day ---
+	"bonehorn": {"trigger": "special", "every": 1, "pattern": "ring", "counts": [5, 7], "speed": 260.0,
+		"life": 0.45, "share": 0.3, "pierce": 1, "radius": 3.5, "style": "shard", "color": Color(0.92, 0.90, 0.80)},  # TUNING (not in GDD) a burst of bone shards where a charge ends
+	# --- Act XV (temporary number): the World-Tree ---
+	"ossuary_oak": {"trigger": "special", "every": 2, "pattern": "ring", "counts": [5, 7], "speed": 240.0,
+		"life": 0.45, "share": 0.3, "pierce": 1, "radius": 3.5, "style": "shard", "color": Color(0.92, 0.90, 0.80)},  # TUNING (not in GDD) a ring of bone thorns after every other lash
 }
 
 ## Summon evolution id -> its showpiece volley (replaces the class volley once evolved;
@@ -272,6 +290,24 @@ const EVOLVED := {
 	# --- Act IX: the Ark ---
 	"black_mothership": {"trigger": "special", "every": 1, "pattern": "ring", "counts": [10], "speed": 300.0,
 		"life": 0.5, "share": 0.3, "pierce": 2, "radius": 4.0, "style": "orb", "color": Color(0.70, 0.92, 0.86)},  # TUNING (not in GDD) a full ring of soul-light where each lifted foe falls
+	# --- Act X: the Maelstrom ---
+	"magazine_lord": {"trigger": "special", "every": 1, "pattern": "ring", "counts": [10], "speed": 290.0,
+		"life": 0.45, "share": 0.3, "pierce": 2, "radius": 4.0, "style": "shard", "color": Color(0.95, 0.65, 0.23)},  # TUNING (not in GDD) a full ring of burning shrapnel off every keg
+	# --- Act XI (temporary): Vigrid ---
+	"barrow_king": {"trigger": "special", "every": 1, "pattern": "fan", "counts": [11], "spread": 60.0, "speed": 300.0,
+		"life": 0.45, "share": 0.3, "pierce": 2, "radius": 4.0, "style": "shard", "color": Color(0.72, 0.88, 1.0)},  # TUNING (not in GDD) a wide fan of frost shards off each cleave
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	"eternal_guard": {"trigger": "special", "every": 1, "pattern": "ring", "counts": [12], "speed": 300.0,
+		"life": 0.5, "share": 0.3, "pierce": 2, "radius": 4.5, "style": "orb", "color": Color(0.70, 0.92, 0.86)},  # TUNING (not in GDD) a full ring of stone shards as it reassembles
+	# --- Act XIII (temporary number): the Empyrean ---
+	"throne_of_bones": {"trigger": "special", "every": 1, "pattern": "ring", "counts": [10], "speed": 300.0,
+		"life": 0.5, "share": 0.3, "pierce": 2, "radius": 4.0, "style": "orb", "color": Color(0.45, 0.95, 0.85)},  # TUNING (not in GDD) a full ring of soul-fire eyes where each roll ends
+	# --- Act XIV (temporary number): the Last Day ---
+	"fossil_tyrant": {"trigger": "special", "every": 1, "pattern": "ring", "counts": [10], "speed": 300.0,
+		"life": 0.5, "share": 0.3, "pierce": 2, "radius": 4.0, "style": "shard", "color": Color(0.92, 0.90, 0.80)},  # TUNING (not in GDD) a full ring of bone shards with each roar
+	# --- Act XV (temporary number): the World-Tree ---
+	"world_root_warden": {"trigger": "special", "every": 1, "pattern": "ring", "counts": [10], "speed": 280.0,
+		"life": 0.5, "share": 0.3, "pierce": 2, "radius": 4.0, "style": "shard", "color": Color(0.45, 0.95, 0.85)},  # TUNING (not in GDD) a full ring of soul-teal thorns with each lash
 }
 
 # --- Spell echoes (every owned spell from LEVEL_ON) --------------------------------------
@@ -376,6 +412,51 @@ const SPELLS := {
 	# --- Act IX: the Ark ---
 	"tractor_lift": {"every": 2, "clock": "cooldown", "aim": "strongest", "pattern": "ring", "counts": [5, 6, 8], "speed": 240.0,
 		"life": 0.5, "share": 0.35, "pierce": 1, "radius": 3.5, "style": "orb", "color": Color(0.70, 0.92, 0.86)},  # TUNING (not in GDD) a ring of soul-light with every other lift
+	# --- Act X: the Treasure Galleon ---
+	"cannonade": {"every": 2, "clock": "cooldown", "aim": "strongest", "pattern": "fan", "counts": [3, 4, 6], "spread": 30.0, "speed": 280.0,
+		"life": 0.5, "share": 0.3, "pierce": 1, "radius": 3.5, "style": "orb", "color": Color(0.55, 0.95, 0.84)},  # TUNING (not in GDD) a fan of grapeshot with every other volley (CannonadeData.SOUL_COLOR)
+	# --- Act X: the Maelstrom ---
+	"anchor_drop": {"every": 2, "clock": "cooldown", "aim": "strongest", "pattern": "ring", "counts": [5, 6, 8], "speed": 240.0,
+		"life": 0.5, "share": 0.35, "pierce": 1, "radius": 3.5, "style": "orb", "color": Color(0.70, 0.92, 0.86)},  # TUNING (not in GDD) a ring of soul-light round every other anchor
+	# --- Act XI (temporary): Valgard ---
+	"valkyrie_spear": {"every": 2, "clock": "cooldown", "aim": "strongest", "pattern": "fan", "counts": [3, 4, 6], "spread": 20.0, "speed": 300.0,
+		"life": 0.55, "share": 0.3, "pierce": 1, "radius": 3.0, "style": "orb", "color": Color(0.80, 0.95, 0.98)},  # TUNING (not in GDD) a fan of spectral spear-points with every other spear (ValkyrieSpearData.SPEAR_COLOR)
+	# --- Act XI (temporary): Vigrid ---
+	"gungnir": {"every": 2, "clock": "cooldown", "aim": "strongest", "pattern": "fan", "counts": [3, 4, 6], "spread": 20.0, "speed": 340.0,
+		"life": 0.55, "share": 0.3, "pierce": 2, "radius": 3.0, "style": "shard", "color": Color(0.62, 0.95, 0.86)},  # TUNING (not in GDD) a fan of rune-shards after every other spear (GungnirData.COLOR)
+	# --- Act XII (temporary number): the Temple of the Lioness ---
+	"burning_eye": {"every": 2, "clock": "cooldown", "aim": "nearest", "pattern": "fan", "counts": [3, 4, 6], "spread": 22.0, "speed": 300.0,
+		"life": 0.55, "share": 0.3, "pierce": 1, "radius": 3.0, "style": "orb", "color": Color(1.0, 0.62, 0.18)},  # TUNING (not in GDD) a fan of sun sparks with every other sweep (BurningEyeData.GLOW)
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	"feathers_verdict": {"every": 2, "clock": "cooldown", "aim": "strongest", "pattern": "ring", "counts": [5, 6, 8], "speed": 240.0,
+		"life": 0.5, "share": 0.35, "pierce": 1, "radius": 3.5, "style": "orb", "color": Color(0.70, 0.92, 0.86)},  # TUNING (not in GDD) a ring of soul-light with every other feather
+	# --- Act XIII (temporary number): the Silver Stair ---
+	"flaming_sword": {"every": 2, "clock": "cooldown", "aim": "nearest", "pattern": "fan", "counts": [3, 4, 6], "spread": 24.0, "speed": 300.0,
+		"life": 0.5, "share": 0.3, "pierce": 1, "radius": 3.0, "style": "shard", "color": Color(0.45, 0.95, 0.85)},  # TUNING (not in GDD) a fan of soul-flame shards after every other sweep (FlamingSwordData.FLAME)
+	# --- Act XIII (temporary number): the Wheel of Thrones ---
+	"wheel_of_eyes": {"every": 2, "clock": "cooldown", "aim": "nearest", "pattern": "ring", "counts": [4, 6, 8], "speed": 220.0,
+		"life": 0.5, "share": 0.3, "pierce": 1, "radius": 3.0, "style": "orb", "color": Color(0.45, 0.95, 0.85)},  # TUNING (not in GDD) a ring of soul-fire eyes after every other cast (WheelOfEyesData.FIRE)
+	# --- Act XIII (temporary number): the Empyrean ---
+	"revelation": {"every": 1, "clock": "cooldown", "aim": "nearest", "pattern": "ring", "counts": [6, 8, 10], "speed": 240.0,
+		"life": 0.5, "share": 0.3, "pierce": 1, "radius": 3.0, "style": "orb", "color": Color(0.55, 1.0, 0.9)},  # TUNING (not in GDD) a ring of soul-light with every flash (RevelationData.LIGHT)
+	# --- Act XIV (temporary number): the Fern Basin ---
+	"pack_leap": {"every": 2, "clock": "cooldown", "aim": "strongest", "pattern": "fan", "counts": [3, 4, 6], "spread": 20.0, "speed": 300.0,
+		"life": 0.5, "share": 0.3, "pierce": 1, "radius": 3.0, "style": "shard", "color": Color(0.45, 0.95, 0.85)},  # TUNING (not in GDD) a fan of spirit claws after every other cast (PackLeapData.SPIRIT)
+	# --- Act XIV (temporary number): the Great Plain ---
+	"stampede": {"every": 2, "clock": "cooldown", "aim": "nearest", "pattern": "fan", "counts": [3, 4, 6], "spread": 16.0, "speed": 300.0,
+		"life": 0.5, "share": 0.3, "pierce": 2, "radius": 3.0, "style": "shard", "color": Color(0.45, 0.95, 0.85)},  # TUNING (not in GDD) a fan of spirit horns after every other cast (StampedeData.SPIRIT)
+	# --- Act XIV (temporary number): the Last Day ---
+	"meteor_call": {"every": 2, "clock": "cooldown", "aim": "strongest", "pattern": "ring", "counts": [6, 8, 10], "speed": 260.0,
+		"life": 0.5, "share": 0.3, "pierce": 1, "radius": 3.0, "style": "orb", "color": Color(0.45, 0.95, 0.85)},  # TUNING (not in GDD) a ring of star-fire after every other cast (MeteorCallData.FIRE)
+	# --- Act XV (temporary number): the Greenwood ---
+	"wild_hunt": {"every": 2, "clock": "cooldown", "aim": "nearest", "pattern": "fan", "counts": [3, 4, 6], "spread": 18.0, "speed": 300.0,
+		"life": 0.5, "share": 0.3, "pierce": 2, "radius": 3.0, "style": "shard", "color": Color(0.45, 0.95, 0.85)},  # TUNING (not in GDD) a fan of spirit spears after every other cast (WildHuntData.SPIRIT)
+	# --- Act XV (temporary number): the Fae Court ---
+	"glamour": {"every": 1, "clock": "cooldown", "aim": "nearest", "pattern": "ring", "counts": [6, 8, 10], "speed": 240.0,
+		"life": 0.5, "share": 0.3, "pierce": 1, "radius": 3.0, "style": "shard", "color": Color(0.95, 0.70, 0.95)},  # TUNING (not in GDD) a ring of glamour glass after every cast (GlamourData.SHATTER)
+	# --- Act XV (temporary number): the World-Tree ---
+	"root_and_rot": {"every": 2, "clock": "cooldown", "aim": "strongest", "pattern": "ring", "counts": [6, 8, 10], "speed": 240.0,
+		"life": 0.5, "share": 0.3, "pierce": 1, "radius": 3.0, "style": "shard", "color": Color(0.45, 0.95, 0.85)},  # TUNING (not in GDD) a ring of soul-teal thorns after every other cast (RootAndRotData.ROT)
 }
 ## Range (px) within which a spell echo looks for its target (no target, no echo).
 const SPELL_RANGE: float = 340.0  # TUNING (not in GDD)

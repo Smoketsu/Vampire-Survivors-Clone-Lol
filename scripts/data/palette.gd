@@ -292,3 +292,282 @@ const CONCORD_LUMEN := Color(1.000, 0.914, 0.627)  # #FFE9A0
 const CONCORD_TURF_DARK := Color(0.102, 0.110, 0.133)  # #1A1C22
 ## Turf ("turf"): the alien flesh ground Terraforming spreads.
 const CONCORD_TURF := Color(0.353, 0.165, 0.416)  # #5A2A6A
+
+# --- Act X: the Black Tide ---
+# GDD §15.0 "Act X foundation: the Black Tide (phase 1)": the act's ramps as the parallel art pass names them in
+# tools/palette.json (oak, sail, brass, powder, sash, lantern, sea, foam, kraken, serpent, spectre, tan). Tarred
+# oak, sailcloth cream, brass, powder-smoke grey and sash red under a navy-black sea with white foam; lantern
+# amber marks every telegraph. Never soul-teal for water (the undead's colour), never Gullhaven's drowned green
+# or biolume (Act II). Gold keeps its meaning (evolution / chest / victory) and crimson stays danger.
+
+## Outline ink of the whole act (tools/palette.json "sea" ramp, darkest): navy-black night.
+const CORSAIR_INK := Color(0.039, 0.051, 0.094)  # #0A0D18
+## Tarred oak, darkest: hull planks in shadow, deck seams, barrels.
+const CORSAIR_OAK_DARK := Color(0.169, 0.114, 0.078)  # #2B1D14
+## Tarred oak: decks, hulls, barrels, boots and belts.
+const CORSAIR_OAK := Color(0.290, 0.196, 0.125)  # #4A3220
+## Tarred oak, lit: plank edges, rails, the deck's worn boards.
+const CORSAIR_OAK_LIGHT := Color(0.478, 0.337, 0.196)  # #7A5632
+## Sailcloth cream in shadow: shirts, sails, rope.
+const CORSAIR_SAIL_SHADE := Color(0.561, 0.518, 0.400)  # #8F8466
+## Sailcloth cream: shirts, sails, rope, canvas (the pirates' cream, never the undead's bone).
+const CORSAIR_SAIL := Color(0.839, 0.796, 0.643)  # #D6CBA4
+## Sailcloth cream, lit.
+const CORSAIR_SAIL_LIGHT := Color(0.941, 0.914, 0.808)  # #F0E9CE
+## Brass in shadow: buckles, cannon, lantern frames.
+const CORSAIR_BRASS_DARK := Color(0.478, 0.353, 0.110)  # #7A5A1C
+## Brass: hilts, cannon, coins (duller than the UI gold, which keeps its meaning).
+const CORSAIR_BRASS := Color(0.769, 0.569, 0.165)  # #C4912A
+## Brass, lit.
+const CORSAIR_BRASS_LIGHT := Color(0.922, 0.784, 0.353)  # #EBC85A
+## Powder-smoke grey, dark: iron, muskets, shark backs.
+const CORSAIR_POWDER_DARK := Color(0.180, 0.196, 0.224)  # #2E3239
+## Powder-smoke grey: iron, smoke, stone.
+const CORSAIR_POWDER := Color(0.369, 0.388, 0.424)  # #5E636C
+## Powder-smoke grey, lit.
+const CORSAIR_POWDER_LIGHT := Color(0.580, 0.596, 0.627)  # #9498A0
+## Sash red, dark (never the Covenant's crimson).
+const CORSAIR_SASH_DARK := Color(0.416, 0.086, 0.125)  # #6A1620
+## Sash red: bandanas, sashes, coats.
+const CORSAIR_SASH := Color(0.690, 0.165, 0.188)  # #B02A30
+## Sash red, lit.
+const CORSAIR_SASH_LIGHT := Color(0.886, 0.337, 0.247)  # #E2563F
+## Lantern amber, dark: every telegraph's rim, fuses.
+const CORSAIR_LANTERN_DARK := Color(0.690, 0.400, 0.110)  # #B0661C
+## Lantern amber: every telegraph (boat lanes, strike circles, fuses).
+const CORSAIR_LANTERN := Color(0.949, 0.651, 0.227)  # #F2A63A
+## Lantern amber, bright: a lit lantern's flame.
+const CORSAIR_LANTERN_LIGHT := Color(1.000, 0.875, 0.541)  # #FFDF8A
+## Navy sea, deepest: the water around the deck.
+const CORSAIR_SEA_DARK := Color(0.055, 0.102, 0.200)  # #0E1A33
+## Navy sea: the water's swell, hull shadow.
+const CORSAIR_SEA := Color(0.106, 0.208, 0.376)  # #1B3560
+## Navy sea, lit: wave faces.
+const CORSAIR_SEA_LIGHT := Color(0.184, 0.373, 0.588)  # #2F5F96
+## White foam in shadow.
+const CORSAIR_FOAM_SHADE := Color(0.561, 0.706, 0.824)  # #8FB4D2
+## White foam: wave lines, wakes, splashes.
+const CORSAIR_FOAM := Color(0.847, 0.914, 0.957)  # #D8E9F4
+## White foam, brightest crest.
+const CORSAIR_FOAM_LIGHT := Color(0.965, 0.984, 1.000)  # #F6FBFF
+## Kraken purple, dark: the arm's underside.
+const CORSAIR_KRAKEN_DARK := Color(0.227, 0.129, 0.314)  # #3A2150
+## Kraken purple: the kraken's arms.
+const CORSAIR_KRAKEN := Color(0.420, 0.235, 0.525)  # #6B3C86
+## Kraken purple, lit: the suckers.
+const CORSAIR_KRAKEN_LIGHT := Color(0.659, 0.467, 0.737)  # #A877BC
+## Sea-serpent green, dark.
+const CORSAIR_SERPENT_DARK := Color(0.075, 0.278, 0.267)  # #134744
+## Sea-serpent green.
+const CORSAIR_SERPENT := Color(0.149, 0.510, 0.494)  # #26827E
+## Sea-serpent green, lit.
+const CORSAIR_SERPENT_LIGHT := Color(0.400, 0.765, 0.729)  # #66C3BA
+## Ghost-crew green, dark (the Hollow Queen's crew).
+const CORSAIR_SPECTRE_DARK := Color(0.114, 0.310, 0.290)  # #1D4F4A
+## Ghost-crew green.
+const CORSAIR_SPECTRE := Color(0.275, 0.655, 0.561)  # #46A78F
+## Ghost-crew green, bright.
+const CORSAIR_SPECTRE_LIGHT := Color(0.718, 0.941, 0.863)  # #B7F0DC
+## Sun-browned skin, dark.
+const CORSAIR_TAN_DARK := Color(0.361, 0.220, 0.141)  # #5C3824
+## Sun-browned skin.
+const CORSAIR_TAN := Color(0.588, 0.384, 0.243)  # #96623E
+## Sun-browned skin, lit.
+const CORSAIR_TAN_LIGHT := Color(0.776, 0.545, 0.369)  # #C68B5E
+# --- Act XI (temporary number): the Hall of the Slain ---
+# The cold north (docs/proposals/LAST_SIX_ACTS.md "VI. The Hall of the Slain"):
+# frost white, iron grey, pine green-black and hearth amber, with valkyrie gold
+# and an ice-blue rune glow (kept clear of the undead's soul-teal). Gold keeps
+# its UI meaning (evolution, chest, victory): the Einherjar's gold is the paler
+# NORSE_VALKYRIE_GOLD, never Palette.GOLD; crimson stays danger (the fury).
+## Outline ink of the Norse kinds (a cold near-black).
+const NORSE_INK := Color(0.043, 0.059, 0.086)  # #0B0F16
+## Frost white: snow, pale furs, the hall's light.
+const NORSE_FROST := Color(0.918, 0.949, 0.980)  # #EAF2FA
+## Frost shade: snow in shadow, worn linen.
+const NORSE_FROST_SHADE := Color(0.663, 0.733, 0.800)  # #A9BBCC
+## Iron grey: mail, helms, axe heads.
+const NORSE_IRON := Color(0.357, 0.396, 0.439)  # #5B6570
+## Dark iron: shadowed mail, rust-black draugr gear.
+const NORSE_IRON_DARK := Color(0.169, 0.192, 0.224)  # #2B3139
+## Pine green-black: cloaks, pine woods, barrow turf.
+const NORSE_PINE := Color(0.122, 0.290, 0.227)  # #1F4A3A
+## Lighter pine: moss on the barrows, cloak folds.
+const NORSE_PINE_LIGHT := Color(0.173, 0.290, 0.227)  # #2C4A3A
+## Hearth amber: fire light, leather, round-shield wood.
+const NORSE_HEARTH := Color(0.941, 0.565, 0.180)  # #F0902E
+## Dark hearth: leather straps, shield wood in shadow.
+const NORSE_HEARTH_DARK := Color(0.635, 0.298, 0.102)  # #A24C1A
+## Valkyrie gold: the valkyries' wings and the Einherjar's light (paler than
+## the UI gold, so it never reads as a chest or an evolution).
+const NORSE_VALKYRIE_GOLD := Color(0.957, 0.851, 0.541)  # #F4D98A
+## Rune glow: ice-blue carved runes, a warded Norse warrior's shimmer (bluer
+## than the undead's soul-teal).
+const NORSE_RUNE := Color(0.561, 0.816, 1.000)  # #8FD0FF
+## Berserk red: the fury's eyes and its aura (danger).
+const NORSE_BERSERK := Color(0.847, 0.157, 0.165)  # #D8282A
+## Fire of the south: the fire-giants and Ragnarök's burning sky.
+const NORSE_FIRE := Color(1.000, 0.416, 0.102)  # #FF6A1A
+## The rest of the Hall of the Slain's ramps as the art pass named them (tools/palette.json
+## norse_<ramp>[_dark|_light|_glow]; the constants above follow its hexes since the wave 1 integration).
+## Iron grey lit: blade edges, wolf fur highlights (tools/palette.json "norse_iron_light"; added at the wave 1 integration).
+const NORSE_IRON_LIGHT := Color(0.561, 0.600, 0.639)  # #8F99A3
+## Pine green-black in shade: cloaks, tunics, pines (tools/palette.json "norse_pine_dark"; added at the wave 1 integration).
+const NORSE_PINE_DARK := Color(0.071, 0.157, 0.122)  # #12281F
+## Hearth amber bright: flame cores (tools/palette.json "norse_hearth_glow"; added at the wave 1 integration).
+const NORSE_HEARTH_GLOW := Color(1.000, 0.780, 0.400)  # #FFC766
+## Valkyrie pale gold in shade: armour trim, wing shadows (tools/palette.json "norse_valk_dark"; added at the wave 1 integration).
+const NORSE_VALK_DARK := Color(0.690, 0.541, 0.235)  # #B08A3C
+## Valkyrie pale gold: wings, spears, the Einherjar's light (tools/palette.json "norse_valk"; added at the wave 1 integration).
+const NORSE_VALK := Color(0.961, 0.843, 0.478)  # #F5D77A
+## Valkyrie gold bright: wing highlights, Einherjar glow core (tools/palette.json "norse_valk_glow"; added at the wave 1 integration).
+const NORSE_VALK_GLOW := Color(1.000, 0.953, 0.769)  # #FFF3C4
+## Ice-blue rune in shade: rune outlines, frost-giant eyes (tools/palette.json "norse_rune_dark"; added at the wave 1 integration).
+const NORSE_RUNE_DARK := Color(0.247, 0.447, 0.769)  # #3F72C4
+## Ice-blue rune bright: rune cores, ice glints (tools/palette.json "norse_rune_glow"; added at the wave 1 integration).
+const NORSE_RUNE_GLOW := Color(0.878, 0.957, 1.000)  # #E0F4FF
+## Undead blue-grey in shade: draugr flesh in shadow (tools/palette.json "norse_draugr_dark"; added at the wave 1 integration).
+const NORSE_DRAUGR_DARK := Color(0.204, 0.286, 0.353)  # #34495A
+## Undead blue-grey: draugr and Barrow-Wight flesh (tools/palette.json "norse_draugr"; added at the wave 1 integration).
+const NORSE_DRAUGR := Color(0.424, 0.549, 0.627)  # #6C8CA0
+## Undead blue-grey lit: frost-touched skin (tools/palette.json "norse_draugr_light"; added at the wave 1 integration).
+const NORSE_DRAUGR_LIGHT := Color(0.651, 0.753, 0.808)  # #A6C0CE
+# --- Act XII (temporary number): the Necropolis Dynasty ---
+# GDD §15.0 "The Necropolis Dynasty foundation (phase 1)": the act's look (proposal: "gold, lapis blue,
+# sandstone, carnelian red and papyrus green, with blue-black desert night"), the same hex values as the
+# art pass's tools/palette.json ramps night, bronze, lapis, sand, linen, carnelian and papyrus. Gold is
+# the player's colour (evolution / chest / victory / selection), so every Dynasty enemy wears a DULLER
+# bronze-gold (DYN_BRONZE); crimson stays danger, and no Dynasty kind wears the necromancer's violet.
+
+## Dynasty outline ink ("night" ramp, darkest): every Dynasty sprite's outline; blue-black desert night.
+const DYN_INK := Color(0.039, 0.043, 0.086)  # #0A0B16
+## Night blue in shade ("dyn_night_dark"): the night sky's floor tint, dark wigs, Anubis's skin in shadow.
+const DYN_NIGHT_DARK := Color(0.106, 0.125, 0.220)  # #1B2038
+## Night blue ("dyn_night"): jackal fur, the Sandstorm's dusk veil.
+const DYN_NIGHT := Color(0.180, 0.212, 0.376)  # #2E3660
+## Dull bronze-gold in shade ("dyn_bronze_dark"): collars and bracers in shadow, a cartouche's rim.
+const DYN_BRONZE_DARK := Color(0.420, 0.353, 0.133)  # #6B5A22
+## Dull bronze-gold ("dyn_bronze"): the enemies' gold: collars, blades, the cartouches, the Heka glyphs (never the reward gold).
+const DYN_BRONZE := Color(0.639, 0.557, 0.235)  # #A38E3C
+## Dull bronze-gold lit ("dyn_bronze_light"): highlights, a glyph's glow.
+const DYN_BRONZE_LIGHT := Color(0.824, 0.733, 0.384)  # #D2BB62
+## Lapis blue in shade ("dyn_lapis_dark"): scarab shells, a sealed cartouche's rim.
+const DYN_LAPIS_DARK := Color(0.086, 0.196, 0.486)  # #16327C
+## Lapis blue ("dyn_lapis"): headcloth stripes, scarab shells, a cartouche a Canopic Jar holds.
+const DYN_LAPIS := Color(0.169, 0.329, 0.722)  # #2B54B8
+## Sandstone in shade ("dyn_sand_dark"): tombs, statues, the quicksand's rim.
+const DYN_SAND_DARK := Color(0.549, 0.420, 0.243)  # #8C6B3E
+## Sandstone ("dyn_sand"): tomb walls, obelisks, the dunes; the Sandstorm's tint.
+const DYN_SAND := Color(0.824, 0.710, 0.455)  # #D2B574
+## Sandstone lit ("dyn_sand_light"): stone highlights, wind-blown sand.
+const DYN_SAND_LIGHT := Color(0.941, 0.867, 0.651)  # #F0DDA6
+## Linen in shade ("dyn_linen_dark"): mummy bandages in shadow, a corpse's wrapping.
+const DYN_LINEN_DARK := Color(0.561, 0.525, 0.439)  # #8F8670
+## Linen ("dyn_linen"): mummy wrappings, kilts, dresses.
+const DYN_LINEN := Color(0.788, 0.753, 0.643)  # #C9C0A4
+## Carnelian red ("dyn_carnelian"): gems, belts, the Devourer's eyes.
+const DYN_CARNELIAN := Color(0.749, 0.231, 0.169)  # #BF3B2B
+## Papyrus green ("dyn_papyrus"): reeds, the Embalmer's collar.
+const DYN_PAPYRUS := Color(0.306, 0.561, 0.251)  # #4E8F40
+## Egyptian skin ("dyn_skin"): the Dynasty's men and women (their own ramp; the Covenant's skin is peach).
+const DYN_SKIN := Color(0.541, 0.329, 0.188)  # #8A5430
+## The rest of the Dynasty's ramps as the art pass named them (tools/palette.json dyn_*; added at the wave 1 integration).
+## Night blue lit: fur highlights (tools/palette.json "dyn_night_light"; added at the wave 1 integration).
+const DYN_NIGHT_LIGHT := Color(0.294, 0.345, 0.580)  # #4B5894
+## Lapis blue lit: scarab glints, inlay (tools/palette.json "dyn_lapis_light"; added at the wave 1 integration).
+const DYN_LAPIS_LIGHT := Color(0.373, 0.545, 0.902)  # #5F8BE6
+## Linen lit: bright wrappings, Osiris's white robe (tools/palette.json "dyn_linen_light"; added at the wave 1 integration).
+const DYN_LINEN_LIGHT := Color(0.941, 0.910, 0.824)  # #F0E8D2
+## Carnelian red in shade: Sekhmet's gown in shadow (tools/palette.json "dyn_carnelian_dark"; added at the wave 1 integration).
+const DYN_CARNELIAN_DARK := Color(0.482, 0.118, 0.086)  # #7B1E16
+## Carnelian lit: the sun disc's glow (tools/palette.json "dyn_carnelian_light"; added at the wave 1 integration).
+const DYN_CARNELIAN_LIGHT := Color(0.910, 0.471, 0.333)  # #E87855
+## Papyrus green in shade: the crocodile's scales in shadow, Osiris's face (tools/palette.json "dyn_papyrus_dark"; added at the wave 1 integration).
+const DYN_PAPYRUS_DARK := Color(0.157, 0.353, 0.188)  # #285A30
+## Papyrus green lit: scale highlights (tools/palette.json "dyn_papyrus_light"; added at the wave 1 integration).
+const DYN_PAPYRUS_LIGHT := Color(0.549, 0.769, 0.369)  # #8CC45E
+## Egyptian skin in shade (tools/palette.json "dyn_skin_dark"; added at the wave 1 integration).
+const DYN_SKIN_DARK := Color(0.353, 0.212, 0.133)  # #5A3622
+## Egyptian skin lit (tools/palette.json "dyn_skin_light"; added at the wave 1 integration).
+const DYN_SKIN_LIGHT := Color(0.722, 0.486, 0.282)  # #B87C48
+
+# --- Act XIII (temporary number): the Celestial Host ---
+# GDD §15.0 "The Celestial Host foundation (phase 1)": the act's look (docs/proposals/LAST_SIX_ACTS.md X: "starlight
+# white, pale silver, cerulean and dawn rose, with no crimson and no warm gold", thin geometric halos). These are the
+# values the art pass's tools/palette.json ramps host_* must use (docs/host/ART_MANIFEST.md). Gold keeps its meaning
+# (evolution, chest, victory), crimson stays danger, and no Host kind wears the necromancer's violet.
+
+## Host outline ink (deep night blue, darkest): every Host sprite's outline.
+const HOST_INK := Color(0.055, 0.086, 0.149)  # #0E1626
+## Starlight white: robes, wings, the Hallowed Light's shafts, the Verdict's pillar.
+const HOST_STARLIGHT := Color(0.957, 0.969, 1.0)  # #F4F7FF
+## Pale silver: armour, mirror masks, the halos' rims, the scales of Judgment.
+const HOST_SILVER := Color(0.788, 0.824, 0.878)  # #C9D2E0
+## Silver in shade: armour in shadow, a cracked halo.
+const HOST_SILVER_DARK := Color(0.541, 0.588, 0.675)  # #8A96AC
+## Cerulean: halos' light, wing eyes, the Light's aiming line, the Ophan's fire.
+const HOST_CERULEAN := Color(0.243, 0.561, 0.847)  # #3E8FD8
+## Cerulean in shade: robes' folds, the sky floor's deep tone.
+const HOST_CERULEAN_DARK := Color(0.122, 0.310, 0.561)  # #1F4F8F
+## Dawn rose: the Choir's hymn, sashes, the Judges' scales pans (never crimson).
+const HOST_ROSE := Color(0.949, 0.722, 0.776)  # #F2B8C6
+## Cloud: the cloud banks and the stair's pale steps.
+const HOST_CLOUD := Color(0.863, 0.894, 0.941)  # #DCE4F0
+## Cloud shadow: the safe dark ground under a cloud bank (Hallowed Light).
+const HOST_SHADE := Color(0.102, 0.133, 0.212)  # #1A2236
+
+# --- Act XIV (temporary number): the Age of Titans ---
+# GDD §15.0 "The Age of Titans foundation (phase 1)": the act's look (docs/proposals/LAST_SIX_ACTS.md XIV: "fern green,
+# volcanic orange, tar black, dust ochre and bone white, with a white streak in the sky that grows through the act").
+# These are the values the art pass's tools/palette.json ramps primeval_* must use (docs/titans/ART_MANIFEST.md). Gold
+# keeps its meaning (evolution, chest, victory), crimson stays danger, and no beast wears the necromancer's violet.
+
+## Titans outline ink (tar black, darkest): every Titans sprite's outline.
+const PRIMEVAL_INK := Color(0.071, 0.059, 0.051)  # #120F0D
+## Tar: the tar seeps, the Bog Croc's hide, the ground's dark trim.
+const PRIMEVAL_TAR := Color(0.137, 0.110, 0.094)  # #231C18
+## Fern green: ferns, the hunters' feathers, the Fern Basin's floor.
+const PRIMEVAL_FERN := Color(0.302, 0.522, 0.204)  # #4D8534
+## Fern in shade: the jungle's deep tone, the packs' rustling ferns.
+const PRIMEVAL_FERN_DARK := Color(0.141, 0.271, 0.122)  # #24451F
+## Dust ochre: the Great Plain, the herds' hides, a stampede's dust line.
+const PRIMEVAL_OCHRE := Color(0.784, 0.580, 0.282)  # #C89448
+## Ochre in shade: hides in shadow, the plain's dark grass.
+const PRIMEVAL_OCHRE_DARK := Color(0.494, 0.333, 0.165)  # #7E552A
+## Volcanic orange: lava, volcanic bombs, a Tyrant's throat.
+const PRIMEVAL_LAVA := Color(0.937, 0.420, 0.110)  # #EF6B1C
+## Bone white: skeletons, Fossil Giants, horns, the alphas' mark.
+const PRIMEVAL_BONE := Color(0.906, 0.871, 0.788)  # #E7DEC9
+## Sky streak: the meteor's white streak (never the UI gold).
+const PRIMEVAL_STREAK := Color(0.973, 0.965, 0.933)  # #F8F6EE
+
+# --- Act XV (temporary number): the Turning Year ---
+# GDD §15.0 "The Turning Year foundation (phase 1)": the act's look (docs/proposals/LAST_SIX_ACTS.md XV: "moss, bark,
+# blossom pink, gold leaves and frost white, and each season repaints the arena"), with the blight a dead grey that reads
+# strongly against the living green (the doc's note: "the blight should read stronger than this in the game"). These are
+# the values the art pass's tools/palette.json ramps wild_* must use (docs/year/ART_MANIFEST.md). Gold keeps its meaning
+# (evolution, chest, victory): the leaves are a warmer amber; crimson stays danger; the fae never wear the necromancer's
+# violet (the playable characters do).
+
+## Wild outline ink (deep bark, darkest): every Wild sprite's outline.
+const WILD_INK := Color(0.078, 0.063, 0.047)  # #14100C
+## Bark: treants, thickets, the roots' shoots.
+const WILD_BARK := Color(0.333, 0.235, 0.153)  # #553C27
+## Moss green: living ground, dryads, spring.
+const WILD_MOSS := Color(0.349, 0.588, 0.255)  # #599641
+## Moss in shade: deep wood, the sprouts' shadow.
+const WILD_MOSS_DARK := Color(0.153, 0.302, 0.141)  # #274D24
+## Blossom pink: the Fae Court, the Summer Queen, Spring Returns.
+const WILD_BLOSSOM := Color(0.937, 0.651, 0.765)  # #EFA6C3
+## Gold leaf (amber, never the UI gold): summer's dry grass, autumn's leaves.
+const WILD_GOLD_LEAF := Color(0.851, 0.584, 0.235)  # #D9953C
+## Wildfire orange-red: the fronts.
+const WILD_FIRE := Color(0.890, 0.361, 0.149)  # #E35C26
+## Frost white: winter, the Winter Court, the blizzard.
+const WILD_FROST := Color(0.894, 0.929, 0.961)  # #E4EDF5
+## Blight: the dead grey ground under the army.
+const WILD_BLIGHT := Color(0.192, 0.180, 0.173)  # #312E2C
+## Ash grey: dead grass, the smoke line.
+const WILD_ASH := Color(0.525, 0.502, 0.478)  # #86807A
+## Bone white: antlers, the wheel's hand.
+const WILD_BONE := Color(0.910, 0.882, 0.816)  # #E8E1D0

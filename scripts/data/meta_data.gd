@@ -64,7 +64,9 @@ extends RefCounted
 ## a step to Meta._migrate() whenever the save layout changes.
 ## Version 2 (Ossuary deep levels): the [clears] section (hardest difficulty cleared,
 ## with and without Hyper); tiers above 5 became valid. Nothing moves or is refunded.
-const SAVE_VERSION: int = 2
+## Version 3 (the reorder pass, part 1): [stages] opened keeps every stage the old
+## act order had opened (SaveMigration.legacy_opened()).
+const SAVE_VERSION: int = 3
 
 # --- Soul Ash earn formula (header) -----------------------------------------------
 
@@ -444,7 +446,41 @@ const ACHIEVEMENT_ORDER := ["bone_legion", "heretics_bane", "dread_sovereign", "
 	# --- Act IX: the Proving Moon ---
 	"the_hunter_hunted",
 	# --- Act IX: the Ark ---
-	"last_harvest"]
+	"last_harvest",
+	# --- Act X: the Smuggler's Cutter ---
+	"not_one_aboard",
+	# --- Act X: the Treasure Galleon ---
+	"walked_the_plank",
+	# --- Act X: the Maelstrom ---
+	"dead_men_tell_tales",
+	# --- Act XI (temporary): the Barrow Fields ---
+	"keep_the_fires",
+	# --- Act XI (temporary): Valgard ---
+	"holmgang",
+	# --- Act XI (temporary): Vigrid ---
+	"twilight_of_the_wolf",
+	# --- Act XII (temporary number): the Necropolis of Sand ---
+	"no_jars_left",
+	# --- Act XII (temporary number): the Temple of the Lioness ---
+	"names_taken",
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	"a_light_heart",
+	# --- Act XIII (temporary number): the Silver Stair ---
+	"without_sin",
+	# --- Act XIII (temporary number): the Wheel of Thrones ---
+	"the_wheel_breaks",
+	# --- Act XIII (temporary number): the Empyrean ---
+	"the_last_word",
+	# --- Act XIV (temporary number): the Great Plain ---
+	"nothing_taken",
+	# --- Act XIV (temporary number): the Last Day ---
+	"trampled", "the_day_the_sky_fell",
+	# --- Act XV (temporary number): the Greenwood ---
+	"scorched_earth",
+	# --- Act XV (temporary number): the Fae Court ---
+	"a_fair_bargain",
+	# --- Act XV (temporary number): the World-Tree ---
+	"the_first_spring"]
 
 ## Achievement definitions (GDD §9.4 "Example Achievement Unlocks"). Each
 ## achievement is tracked and recorded in the save and pays a one-time Soul
@@ -492,11 +528,11 @@ const ACHIEVEMENTS := {
 		"stat": "archive_all_tomes_runs", "goal": 1, "unlock": "The Iron Mind passive", "bounty": 150},  # bounty TUNING (not in GDD)
 	# --- Act II: Ul-Thalos, the Risen Spire ---
 	# The finale of Act II (proposal: "Achievement The Dead God Serves unlocks
-	# the campaign epilogue"): Vhal'Neth slain on Ul-Thalos. With Dawn
-	# Extinguished it opens the epilogue (EpilogueData, the main menu's
-	# Epilogue screen): Dawn Extinguished the Act I part, this one Act II's.
+	# the campaign epilogue"): Vhal'Neth slain on Ul-Thalos. It opens the Eye's
+	# part (id act2) of the epilogue (EpilogueData, the main menu's Epilogue
+	# screen), read in the act order (Act XI) after the Celestial Host's.
 	"the_dead_god_serves": {"display_name": "The Dead God Serves", "description": "Slay Vhal'Neth, the Dreaming Mother, on Ul-Thalos and raise her",
-		"stat": "boss_kills", "stage": "spire", "goal": 1, "unlock": "Title Master of the Drowned, the Act II epilogue", "bounty": 300},  # Proposal; bounty TUNING (not in GDD)
+		"stat": "boss_kills", "stage": "spire", "goal": 1, "unlock": "Title Master of the Drowned, the Act XI epilogue", "bounty": 300},  # Proposal; bounty TUNING (not in GDD)
 	# --- Content wave 2: B. Achievement rewards ---
 	# Five one-run achievements (owner-approved Proposal 2). Their lifetime
 	# counters are filled by MetaProgress.award_run() from the run's RunRewards
@@ -530,9 +566,9 @@ const ACHIEVEMENTS := {
 	# "Nothing Is Deathless: defeat Deus Ex Machina; reward: the Act III epilogue
 	# + title Breaker of Engines"): the stage boss slain in the Iron Citadel,
 	# counted from the stage record. Its title is an UnlockData row; its epilogue
-	# part is EpilogueData.ACT3_PART (the last row of EpilogueData.PARTS).
+	# part is the Electronic Empire's row of EpilogueData.ROWS (id act3, Act XII).
 	"nothing_is_deathless": {"display_name": "Nothing Is Deathless", "description": "Defeat Deus Ex Machina in the Iron Citadel",
-		"stat": "boss_kills", "stage": "citadel", "goal": 1, "unlock": "Title Breaker of Engines, the Act III epilogue", "bounty": 350},  # Owner-approved proposal; bounty TUNING (not in GDD) the campaign's last (The Dead God Serves 300)
+		"stat": "boss_kills", "stage": "citadel", "goal": 1, "unlock": "Title Breaker of Engines, the Act XII epilogue", "bounty": 350},  # Owner-approved proposal; bounty TUNING (not in GDD) the campaign's last (The Dead God Serves 300)
 	# --- Act IV: the Shores of Ilion ---
 	# Owner-approved Act IV achievement "Heel Found (kill Achilles from behind
 	# only)". Own decision on "from behind only": the KILLING BLOW must strike his
@@ -551,11 +587,11 @@ const ACHIEVEMENTS := {
 	# --- Act IV: the Asphodel Underworld ---
 	# The finale of Act IV (owner-approved proposal: "Empty Throne (beat Hades;
 	# opens the Act IV epilogue)"): Hades beaten in the Asphodel Underworld,
-	# counted from the stage record. Its epilogue part is EpilogueData.ACT4_PART
-	# (the hook the lead appends to EpilogueData.PARTS at integration, with the
-	# closing card "The Sun Still Rises" after it).
+	# counted from the stage record. Its epilogue part is the Republic's row of
+	# EpilogueData.ROWS (id act4, Act VIII), followed by the closing card "The
+	# Pit Keeps Count" (it sets up the Inferno).
 	"empty_throne": {"display_name": "Empty Throne", "description": "Make Hades kneel in the Asphodel Underworld",
-		"stat": "boss_kills", "stage": "underworld", "goal": 1, "unlock": "The Act IV epilogue", "bounty": 400},  # Owner-approved proposal; bounty TUNING (not in GDD) Act IV's last (Nothing Is Deathless 350)
+		"stat": "boss_kills", "stage": "underworld", "goal": 1, "unlock": "The Act VIII epilogue", "bounty": 400},  # Owner-approved proposal; bounty TUNING (not in GDD) Act IV's last (Nothing Is Deathless 350)
 	# --- Act V: the Burning Province ---
 	# Owner-approved Act V achievement "No Shadow Unlit". Own decision on its
 	# rule (the brief: "e.g. clear the Province having lit every stone
@@ -570,8 +606,8 @@ const ACHIEVEMENTS := {
 	# The finale of Act V (owner-approved proposal: "The Sun Goes Out (beat
 	# Amaterasu; opens the Act V epilogue)"): Amaterasu beaten on the Road to the
 	# Sun, counted from the stage record. Its epilogue part is
-	# EpilogueData.ACT5_PART (the hook the lead appends to EpilogueData.PARTS at
-	# integration, with the closing card "The Pit Keeps Count" after it).
+	# the Shogunate's row of EpilogueData.ROWS (id act5, Act V), followed by the
+	# closing card "The Benches Stand Empty" (it sets up the Hall of the Slain).
 	"the_sun_goes_out": {"display_name": "The Sun Goes Out", "description": "Defeat Amaterasu on the Road to the Sun",
 		"stat": "boss_kills", "stage": "sun_road", "goal": 1, "unlock": "The Act V epilogue", "bounty": 450},  # Owner-approved proposal; bounty TUNING (not in GDD) Act V's last (Empty Throne 400)
 	# --- Act V: Castle Kurogane ---
@@ -603,11 +639,11 @@ const ACHIEVEMENTS := {
 	# --- Act VI: Pandemonium ---
 	# The finale of Part One (owner-approved Act VI proposal: "Morning Star Falls
 	# (beat the Adversary)"): the Morning Star beaten in Pandemonium, counted from
-	# the stage record. No epilogue part yet (owner decision Oct 31, 2026: the
-	# epilogues wait for the act order); it records the clear with the title
+	# the stage record. It opens the Inferno's epilogue part (EpilogueData id
+	# inferno, "The Throne Below") and records the clear with the title
 	# Sovereign of Pandemonium (UnlockData / TitleData).
 	"morning_star_falls": {"display_name": "Morning Star Falls", "description": "Cast down the Morning Star in Pandemonium",
-		"stat": "boss_kills", "stage": "pandemonium", "goal": 1, "unlock": "The title Sovereign of Pandemonium", "bounty": 500},  # Owner-approved proposal; bounty TUNING (not in GDD) the end of Part One (The Sun Goes Out 450)
+		"stat": "boss_kills", "stage": "pandemonium", "goal": 1, "unlock": "The title Sovereign of Pandemonium, the Act IX epilogue", "bounty": 500},  # Owner-approved proposal; bounty TUNING (not in GDD) the end of Part One (The Sun Goes Out 450)
 	# --- Act VII: Ravensmoor ---
 	# Owner-approved Act VII achievement "Coffin Nails" ("break every coffin on
 	# Ravensmoor before it opens"): a Ravensmoor run in which every wave of
@@ -628,12 +664,11 @@ const ACHIEVEMENTS := {
 	# --- Act VII: Castle Sanguis ---
 	# The finale of Act VII (owner-approved Act VII proposal: "Last Supper (beat
 	# the Elder)"): Queen Carmilla and the Elder beaten in Castle Sanguis,
-	# counted from the stage record (the boss falls only as the Elder). No
-	# epilogue part (owner decision Oct 31, 2026: the epilogues wait for the act
-	# order); it records the clear with the title Ender of the Feast (UnlockData
-	# / TitleData).
+	# counted from the stage record (the boss falls only as the Elder). It
+	# opens the Court's epilogue part (EpilogueData id court, "The Veil Tears") and
+	# records the clear with the title Ender of the Feast (UnlockData / TitleData).
 	"last_supper": {"display_name": "Last Supper", "description": "Beat the Elder in Castle Sanguis",
-		"stat": "boss_kills", "stage": "castle_sanguis", "goal": 1, "unlock": "The title Ender of the Feast", "bounty": 500},  # Owner-approved proposal; bounty TUNING (not in GDD) as Morning Star Falls
+		"stat": "boss_kills", "stage": "castle_sanguis", "goal": 1, "unlock": "The title Ender of the Feast, the Act III epilogue", "bounty": 500},  # Owner-approved proposal; bounty TUNING (not in GDD) as Morning Star Falls
 	# --- Act VIII: Skid Row ---
 	# Owner's Act VIII achievement "No Witnesses" (Nov 2, 2026, replacing Radio
 	# Silence: "kill every civilian of the opening crowd before they flee the
@@ -658,9 +693,9 @@ const ACHIEVEMENTS := {
 	# (beat Paragon with no Super at his side)"; brief: "every roster Super
 	# killed before Hope begins"): BossParagon counts paragon_no_heroes_kills
 	# when he falls on Liberty Heights and his Hope called no Super (MetaProgress
-	# keeps the lifetime count). No epilogue part (owner decision Oct 31, 2026):
-	# it records the clear with the title Bane of Heroes (UnlockData /
-	# TitleData).
+	# keeps the lifetime count). It opens the Last Line's
+	# epilogue part (EpilogueData id city, "No One Left") and records the clear with
+	# the title Bane of Heroes (UnlockData / TitleData).
 	"no_more_heroes": {"display_name": "No More Heroes", "description": "Beat Paragon at Liberty Heights with no Super at his side",
 		"stat": "paragon_no_heroes_kills", "goal": 1, "unlock": "The title Bane of Heroes", "bounty": 500},  # Owner-approved proposal; bounty TUNING (not in GDD) as Last Supper
 	# --- Act IX: the Crash Site ---
@@ -685,12 +720,184 @@ const ACHIEVEMENTS := {
 		"stat": "hunter_hunted_runs", "goal": 1, "unlock": "The Mirror Bones passive", "bounty": 300},  # Owner-approved Act IX proposal; bounty TUNING (not in GDD) as Broken Arrow
 	# --- Act IX: the Ark ---
 	# The finale of Act IX (owner-approved Act IX proposal: "The Last Harvest
-	# (beat the Harvester)"; owner answers of Oct 31 and Nov 3, 2026: no
-	# epilogue part, no closing card and no epilogue hook): counted from the
-	# stage record (a boss kill on the Ark), as Last Supper. It only records the
-	# clear, with the title The Unharvested (UnlockData / TitleData).
+	# (beat the Harvester)"; owner answers of Oct 31 and Nov 3, 2026: it
+	# opens the Concord's epilogue part, EpilogueData id concord "The Stars Go
+	# Dark", since the reorder pass): counted from the stage record (a boss kill on
+	# the Ark), as Last Supper. It records the clear with the title The
+	# Unharvested (UnlockData / TitleData).
 	"last_harvest": {"display_name": "The Last Harvest", "description": "Beat the Harvester on the Ark of the Concord",
-		"stat": "boss_kills", "stage": "ark", "goal": 1, "unlock": "The title The Unharvested", "bounty": 500},  # Owner-approved proposal; bounty TUNING (not in GDD) as Last Supper
+		"stat": "boss_kills", "stage": "ark", "goal": 1, "unlock": "The title The Unharvested, the Act XIII epilogue", "bounty": 500},  # Owner-approved proposal; bounty TUNING (not in GDD) as Last Supper
+	# --- Act X: the Smuggler's Cutter ---
+	# Not One Aboard (owner-approved Act X proposal: "sink five boats before a
+	# single crewman climbs aboard, on the Cutter"). Own reading, recorded in
+	# GDD §15.0: five CLEAN SINKS in one Cutter run, each a boat sunk before any
+	# of ITS crew climbed aboard (BoardingParty stat boats_sunk_clean; the
+	# Cutter's crew climbs the hooks for 3 s first, its STAGE first_pour;
+	# lead decision at the integration, 1 -> 3 s: nobody could earn it).
+	# CutterDirector sets the run stat cutter_not_one_aboard; MetaProgress
+	# counts the runs (lifetime not_one_aboard_runs). It unlocks the
+	# counter-passive Barnacle Bones (the brief's pairing).
+	"not_one_aboard": {"display_name": "Not One Aboard", "description": "On the Smuggler's Cutter, sink five boats before any of their crew climbs aboard",
+		"stat": "not_one_aboard_runs", "goal": 1, "unlock": "The Barnacle Bones passive", "bounty": 300},  # Owner-approved Act X proposal; bounty TUNING (not in GDD) as Nothing Hatched
+	# --- Act X: the Treasure Galleon ---
+	# Walked the Plank (brief: "push 200 enemies overboard in one run: the
+	# overboard_total stat"): a run in which at least GalleonData.WALKED_GOAL
+	# enemies drowned overboard (any Black Tide deck; MetaProgress counts the
+	# runs, lifetime walked_the_plank_runs). It unlocks the counter-passive Sea
+	# Legs (brief).
+	"walked_the_plank": {"display_name": "Walked the Plank", "description": "Send 200 foes overboard in one run",
+		"stat": "walked_the_plank_runs", "goal": 1, "unlock": "The Sea Legs passive", "bounty": 300},  # Brief; bounty TUNING (not in GDD) as The Hunter Hunted
+	# --- Act X: the Maelstrom ---
+	# The Black Tide's finale (owner-approved proposal: "Dead Men Tell Tales
+	# (beat Vandermere with the Oath broken three times; opens the act's
+	# epilogue part)"; the part is EpilogueData id corsair, "The Hollow Queen
+	# Sails", since the reorder pass; the title is Captain of the Dead): a run in
+	# which Vandermere fell with his Oath broken at least twice (lowered from
+	# three by the lead at the integration: the army slays him in his first
+	# broken-Oath window; VandermereData.TALES_BREAKS; run stat
+	# vandermere_tales_kills, set by MaelstromDirector; MetaProgress counts it,
+	# lifetime dead_men_tales_kills).
+	"dead_men_tell_tales": {"display_name": "Dead Men Tell Tales", "description": "Beat Vandermere in the Maelstrom with his Oath broken twice",
+		"stat": "dead_men_tales_kills", "goal": 1, "unlock": "The title Captain of the Dead", "bounty": 500},  # Owner-approved proposal; bounty TUNING (not in GDD) as The Last Harvest
+	# --- Act XI (temporary): the Barrow Fields ---
+	# The Hall of the Slain's Barrow Fields achievement (owner decision Nov 7,
+	# 2026, replacing None Chosen: "finish the Barrow Fields with no brazier
+	# ever out for more than 30 s"): a Barrow Fields run that reached 0:00 with
+	# LongWinter.longest_out() at most NorseRulesData.KEEP_THE_FIRES_MAX_OUT
+	# (BarrowFieldsDirector sets the run stat barrow_fields_keep_the_fires;
+	# MetaProgress counts the runs, lifetime keep_the_fires_runs). It unlocks
+	# the counter-passive Fur-Lined Bones.
+	"keep_the_fires": {"display_name": "Keep the Fires", "description": "Finish the Barrow Fields with no brazier ever out for more than 30 s",
+		"stat": "keep_the_fires_runs", "goal": 1, "unlock": "The Fur-Lined Bones passive", "bounty": 300},  # Owner decision Nov 7, 2026; bounty TUNING (not in GDD) as Nothing Hatched
+	# --- Act XI (temporary): Valgard ---
+	# Owner-approved achievement "Holmgang" ("win Sigrun's duel without Grave
+	# Step"): a run in which a Holmgang was won (Sigrun yielded) with no Grave
+	# Step taken in the square (BossSigrun sets the run stat
+	# valgard_holmgang_clean; MetaProgress counts the runs, lifetime
+	# holmgang_runs). It unlocks the counter-passive Calm Blood (brief).
+	"holmgang": {"display_name": "Holmgang", "description": "Win Sigrun's duel in Valgard without a single Grave Step",
+		"stat": "holmgang_runs", "goal": 1, "unlock": "The Calm Blood passive", "bounty": 300},  # Owner-approved proposal; bounty TUNING (not in GDD) as The Hunter Hunted
+	# --- Act XI (temporary): Vigrid ---
+	# The finale of the Hall of the Slain (owner-approved proposal: "Twilight
+	# of the Wolf (beat Odin and Fenrir)"; its epilogue part is EpilogueData id
+	# norse, "The Last Field", since the reorder pass): counted from the stage record (a
+	# boss kill on Vigrid: Odin's fall; Fenrir always follows him within 30 s,
+	# BossOdin), as The Last Harvest. It records the clear, with the title Doom
+	# of the Gods (UnlockData / TitleData).
+	"twilight_of_the_wolf": {"display_name": "Twilight of the Wolf", "description": "Beat Odin and Fenrir on Vigrid, the Last Field",
+		"stat": "boss_kills", "stage": "vigrid", "goal": 1, "unlock": "The title Doom of the Gods, the Act VI epilogue", "bounty": 500},  # Owner-approved proposal; bounty TUNING (not in GDD) as The Last Harvest
+	# --- Act XII (temporary number): the Necropolis of Sand ---
+	# The Dynasty's achievement "No Jars Left" (owner-approved proposal:
+	# "break every Canopic Jar on the Necropolis"): a Necropolis run in which
+	# Anubis fell with every jar that rose on the stage broken
+	# (NecropolisDirector sets the run stat necropolis_no_jars_left;
+	# MetaProgress counts the runs, lifetime no_jars_left_runs). It unlocks
+	# the counter-passive Embalmed Bones.
+	"no_jars_left": {"display_name": "No Jars Left", "description": "Break every Canopic Jar on the Necropolis of Sand, then slay Anubis",
+		"stat": "no_jars_left_runs", "goal": 1, "unlock": "The Embalmed Bones passive", "bounty": 300},  # Owner-approved proposal; bounty TUNING (not in GDD) as Nothing Hatched
+	# --- Act XII (temporary number): the Temple of the Lioness ---
+	# Names Taken (proposal: "raise 100 Dynasty dead before their cartouches
+	# expire in one run"): a run with at least DynastyRulesData
+	# .NAMES_TAKEN_RAISES Names stolen by a raise (Rebirth.on_raise(), the run
+	# stat rebirth_stolen), on any Dynasty stage; MetaProgress counts the runs
+	# (lifetime names_taken_runs). It unlocks the Dynasty's counter-passive
+	# Dune Walkers (the integration's split: No Jars Left earns Embalmed Bones).
+	"names_taken": {"display_name": "Names Taken", "description": "Raise 100 of the Dynasty's dead before their Names return, in one run",
+		"stat": "names_taken_runs", "goal": 1, "unlock": "The Dune Walkers passive", "bounty": 300},  # Proposal; bounty TUNING (not in GDD) as The Hunter Hunted
+	# --- Act XII (temporary number): the Hall of Two Truths ---
+	# The finale of the Necropolis Dynasty (owner-approved proposal: "A Light
+	# Heart (win the Weighing with the Balance toward the necromancer; opens the
+	# act's epilogue part)": EpilogueData id dynasty, "Weighed and Wanting", since
+	# the reorder pass): the lifetime count of
+	# Weighings won (BossOsiris, OsirisData.LIGHT_HEART_STAT; MetaProgress), with
+	# the title Light of Heart (UnlockData / TitleData).
+	"a_light_heart": {"display_name": "A Light Heart", "description": "Win Osiris's Weighing with the Scales on your side",
+		"stat": "light_heart_wins", "goal": 1, "unlock": "The title Light of Heart", "bounty": 500},  # Owner-approved proposal; bounty TUNING (not in GDD) as The Last Harvest
+	# --- Act XIII (temporary number): the Silver Stair ---
+	# The Host's achievement "Without Sin" (owner-approved proposal: "clear the
+	# Silver Stair without the scales passing the first third"): a Silver Stair
+	# run in which Seraiel fell while the scales of Judgment had never passed
+	# their first third all run (SilverStairDirector sets the run stat
+	# silver_stair_without_sin; MetaProgress counts the runs, lifetime
+	# without_sin_runs). It unlocks the counter-passive Absolution (owner
+	# answer, Nov 9, 2026).
+	"without_sin": {"display_name": "Without Sin", "description": "Slay Seraiel on the Silver Stair without the scales of Judgment ever passing their first third",
+		"stat": "without_sin_runs", "goal": 1, "unlock": "The Absolution passive", "bounty": 300},  # Owner-approved proposal; bounty TUNING (not in GDD) as No Jars Left
+	# --- Act XIII (temporary number): the Wheel of Thrones ---
+	# The Host's achievement "The Wheel Breaks" (owner-approved proposal: "beat
+	# the Throne by its core alone"): a Wheel of Thrones run in which the Throne
+	# fell to a blow on its open Core with at least ThroneData.WHEEL_BREAKS_SHARE
+	# of its health lost while the Core was open (own reading of "alone": the
+	# rims can be chipped; WheelOfThronesDirector sets the run stat
+	# wheel_of_thrones_wheel_breaks; MetaProgress counts the runs, lifetime
+	# wheel_breaks_runs). It unlocks the counter-passive Smoked Glass (owner
+	# answer, Nov 9, 2026: the Host's other achievement).
+	"the_wheel_breaks": {"display_name": "The Wheel Breaks", "description": "Break the Throne by its open Core, with most of its health lost while the Core was open",
+		"stat": "wheel_breaks_runs", "goal": 1, "unlock": "The Smoked Glass passive", "bounty": 300},  # Owner-approved proposal; bounty TUNING (not in GDD) as Without Sin
+	# --- Act XIII (temporary number): the Empyrean ---
+	# The Host's finale achievement "The Last Word" (owner-approved proposal:
+	# "beat the Voice; opens the act's epilogue part"): an Empyrean run in
+	# which the Voice fell (EmpyreanDirector sets the run stat
+	# empyrean_last_word; MetaProgress counts the runs, lifetime
+	# last_word_runs). It opens the Host's epilogue part (EpilogueData id host,
+	# "The Voice Is Silent"); no other unlock, the bounty.
+	"the_last_word": {"display_name": "The Last Word", "description": "Silence the Voice in the Empyrean: heaven, earth and hell answer to you",
+		"stat": "last_word_runs", "goal": 1, "unlock": "", "bounty": 500},  # Owner-approved proposal; bounty TUNING (not in GDD) as A Light Heart (an act's finale)
+	# --- Act XIV (temporary number): the Great Plain ---
+	# The Titans' achievement "Nothing Taken" (owner-approved proposal: "finish
+	# the Great Plain without losing a crystal pile to a Skyraider"): a Great
+	# Plain run that reached 0:00 with no pile flown to a nest (own reading of
+	# "finish": the countdown's end, the clear; GreatPlainDirector sets the run
+	# stat great_plain_nothing_taken; MetaProgress counts the runs, lifetime
+	# nothing_taken_runs). It unlocks the counter-passive Hoarder's Bones
+	# (owner answer, Nov 9, 2026).
+	"nothing_taken": {"display_name": "Nothing Taken", "description": "Reach the end of the Great Plain without losing a single crystal pile to a Skyraider",
+		"stat": "nothing_taken_runs", "goal": 1, "unlock": "The Hoarder's Bones passive", "bounty": 300},  # Owner-approved proposal; bounty TUNING (not in GDD) as Without Sin
+	# --- Act XIV (temporary number): the Last Day ---
+	# The Titans' achievement "Trampled" (owner-approved proposal: "a stampede
+	# kills 100 enemies in one run"; any Titans stage): a run whose stampedes
+	# killed at least PrimevalRulesData.TRAMPLED_KILLS enemies (the run stat
+	# trample_kills; MetaProgress counts the runs, lifetime trampled_runs). It
+	# unlocks the counter-passive Thick Marrow (owner answer, Nov 9, 2026).
+	"trampled": {"display_name": "Trampled", "description": "Let the stampedes kill 100 enemies in one run on an Age of Titans stage",
+		"stat": "trampled_runs", "goal": 1, "unlock": "The Thick Marrow passive", "bounty": 300},  # Owner-approved proposal; bounty TUNING (not in GDD) as Nothing Taken
+	# The Titans' finale achievement "The Day the Sky Fell" (owner-approved
+	# proposal, narrowed by the owner's answer of Nov 2026: no summon lost after the
+	# boss arrives): a Last Day run that reached the impact with an army raised and
+	# not one of its own summons lost since Old Gravejaw came (Extinction sets the
+	# run stat last_day_sky_fell; MetaProgress counts
+	# the runs, lifetime sky_fell_runs). It opens the
+	# Titans' epilogue part (EpilogueData id primeval, "The Day the Sky Fell").
+	"the_day_the_sky_fell": {"display_name": "The Day the Sky Fell", "description": "Reach the Extinction on the Last Day without losing a summon after Old Gravejaw arrives",
+		"stat": "sky_fell_runs", "goal": 1, "unlock": "", "bounty": 500},  # Owner-approved proposal; bounty TUNING (not in GDD) as The Last Word (an act's finale)
+	# --- Act XV (temporary number): the Greenwood ---
+	# The Turning Year's achievement "Scorched Earth" (owner-approved proposal:
+	# "blight half the Greenwood in one run"): a Greenwood run whose blight's
+	# peak covered half of the stage's area (GreenwoodStage.GREENWOOD
+	# "scorched_area"; GreenwoodDirector sets the run stat
+	# greenwood_scorched_earth; MetaProgress counts the runs, lifetime
+	# scorched_earth_runs). It unlocks the counter-passive Fallow Ground (owner
+	# answer, Nov 2026).
+	"scorched_earth": {"display_name": "Scorched Earth", "description": "Blight half the Greenwood in one run",
+		"stat": "scorched_earth_runs", "goal": 1, "unlock": "The Fallow Ground passive", "bounty": 300},  # Owner-approved proposal; bounty TUNING (not in GDD) as Nothing Taken
+	# --- Act XV (temporary number): the Fae Court ---
+	# The Turning Year's achievement "A Fair Bargain" (owner-approved proposal:
+	# "accept every bargain the Summer Queen offers and still win"): a won run
+	# (any stage where she fought) in which she offered at least one bargain and
+	# every one was accepted (FaeCourtReport.fair_bargain(); MetaProgress counts
+	# the runs, lifetime fair_bargain_runs). It unlocks the counter-passive
+	# Deadwood (owner answer, Nov 2026).
+	"a_fair_bargain": {"display_name": "A Fair Bargain", "description": "Accept every bargain the Summer Queen offers and still win",
+		"stat": "fair_bargain_runs", "goal": 1, "unlock": "The Deadwood passive", "bounty": 300},  # Owner-approved proposal; bounty TUNING (not in GDD) as Scorched Earth
+	# --- Act XV (temporary number): the World-Tree ---
+	# The campaign's last achievement "The First Spring" (owner-approved
+	# proposal: "beat the Green Mother; opens the final epilogue part and the end
+	# of the campaign"): a run in which the Green Mother was slain (MetaProgress
+	# counts the runs, lifetime first_spring_runs). It opens the
+	# final epilogue part (EpilogueData id wild, "The First Spring": the campaign's
+	# true ending, no closing card).
+	"the_first_spring": {"display_name": "The First Spring", "description": "Defeat the Green Mother at the World-Tree",
+		"stat": "first_spring_runs", "goal": 1, "unlock": "", "bounty": 500},  # Owner-approved proposal; bounty TUNING (not in GDD) as The Last Word (an act's finale)
 }
 
 # --- Content wave 2: B. Achievement rewards ---

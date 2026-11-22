@@ -187,6 +187,30 @@ const STAGE_LINES: Dictionary = {
 	"crash_site": "The stars came down on the capital. The Brood is hatching.",  # TUNING (not in GDD) Act IX
 	"proving_moon": "The Vrask take you to their moon, to see what you are worth.",  # TUNING (not in GDD) Act IX
 	"ark": "Board the Ark of the Concord and face the one who planted the world.",  # TUNING (not in GDD) Act IX
+	# --- Act X: the Black Tide ---
+	"cutter": "Slip out of the burning harbour. The Brotherhood boards from the dark.",  # TUNING (not in GDD) Act X
+	"galleon": "Hold the treasure galleon against the Brotherhood's fleet.",  # TUNING (not in GDD) Act X
+	"maelstrom": "Board the ghost ship in the whirlpool and break the captain's oath.",  # TUNING (not in GDD) Act X
+	# --- Act XI (temporary): the Hall of the Slain ---
+	"barrow_fields": "The barrows crack open above the frozen fjord. Keep the fires lit.",  # TUNING (not in GDD) the Norse act
+	"valgard": "Climb to the hall at the edge of the sky, where the heroes feast.",  # TUNING (not in GDD) the Norse act
+	"vigrid": "The last field, under a sky going out. The god rides with his wolf.",  # TUNING (not in GDD) the Norse act
+	# --- Act XII (temporary number): the Necropolis Dynasty ---
+	"necropolis": "The oldest masters of the dead come down the tomb road for theirs.",  # TUNING (not in GDD) Act XII
+	"lioness_temple": "In the Lioness's temple the stone itself walks.",  # TUNING (not in GDD) Act XII
+	"two_truths": "Stand before the scales, and take the dead from Osiris himself.",  # TUNING (not in GDD) Act XII
+	# --- Act XIII (temporary number): the Celestial Host ---
+	"silver_stair": "Heaven comes down a stair of light to weigh your sins.",  # TUNING (not in GDD) Act XIII
+	"wheel_of_thrones": "Through the turning spheres, where the Throne has eyes on every rim.",  # TUNING (not in GDD) Act XIII
+	"empyrean": "In the white rose at the top of heaven, the Voice waits in silence.",  # TUNING (not in GDD) Act XIII
+	# --- Act XIV (temporary number): the Age of Titans ---
+	"fern_basin": "Follow the Harvesters' log to the day before the sky fell.",  # TUNING (not in GDD) Act XIV
+	"great_plain": "Where the herds run, and an old titan leads them.",  # TUNING (not in GDD) Act XIV
+	"last_day": "Under a white sky, the meteor is yours to call.",  # TUNING (not in GDD) Act XIV
+	# --- Act XV (temporary number): the Turning Year ---
+	"greenwood": "The world itself rises in an old forest to take its dead back.",  # TUNING (not in GDD) Act XV
+	"fae_court": "Endless summer, a court of masks, and a queen who bargains.",  # TUNING (not in GDD) Act XV
+	"world_tree": "At the centre of the world, the Green Mother remembers every claim.",  # TUNING (not in GDD) Act XV
 }
 
 ## Size (px) of an act tab button on the stage select (Act I / Act II / Act III).
@@ -198,7 +222,11 @@ const ACT_TAB_SIZE: Vector2 = Vector2(300.0, 40.0)  # TUNING (not in GDD)
 ## fits six acts at 1280 x 600 layout px (GDD §15.0 "Act IV foundation (phase 1)").
 const ACT_TABS_FULL_MAX: int = 3  # TUNING (not in GDD)
 ## Size (px) of a compact act tab ("Act IV").
-const ACT_TAB_COMPACT_SIZE: Vector2 = Vector2(98.0, 40.0)  # TUNING (not in GDD) Act IX: 104 -> 98, so nine tabs keep a margin at 1280 px
+const ACT_TAB_COMPACT_SIZE: Vector2 = Vector2(98.0, 40.0)  # TUNING (not in GDD) the reorder pass groups the acts by Part (five tabs a row), so the compact tabs grow back from 56 to Act IX's 98
+## Size (px) of a Part tab on the stage select ("Part Two"), left of the act tabs.
+const PART_TAB_SIZE: Vector2 = Vector2(112.0, 40.0)  # TUNING (not in GDD)
+## Gap (px) between the Part tabs and the act tabs' Q chip.
+const PART_ACT_GAP: float = 16.0  # TUNING (not in GDD)
 ## Lock line of a registered stage that is not yet playable (StageRegistry "playable").
 const COMING_SOON: String = "Coming soon"  # TUNING (not in GDD)
 
@@ -489,6 +517,169 @@ const VIGNETTES: Dictionary = {
 		],
 		"fx": "motes", "fx_color": Color8(255, 47, 184),
 	},  # TUNING (not in GDD) laser-magenta motes
+	# --- Act X: the Black Tide (placeholder scenes from the shared kinds' art
+	# until each stage brings its own floor, props and boss; a missing sprite or
+	# tile is skipped) ---
+	"cutter": {
+		"tile": "tiles/corsair_cutter",
+		"items": [
+			["corsair/deckhand", 196, 112, true], ["corsair/powder_runner", 232, 132, true], ["corsair/skiff", 214, 186, true],
+			["summons/warrior", 46, 214, false], ["summons/archer", 88, 224, false],
+		],
+		"fx": "motes", "fx_color": Color8(242, 166, 58),
+	},  # TUNING (not in GDD) lantern-amber motes
+	"galleon": {
+		"tile": "tiles/corsair_galleon",
+		"items": [
+			["corsair/swashbuckler", 204, 116, true], ["corsair/musketeer", 236, 150, true], ["corsair/longboat", 196, 196, true],
+			["summons/warrior", 46, 214, false], ["summons/mage", 90, 224, false],
+		],
+		"fx": "motes", "fx_color": Color8(216, 233, 244),
+	},  # TUNING (not in GDD) sea-foam motes
+	"maelstrom": {
+		"tile": "tiles/corsair_maelstrom",
+		"items": [
+			["corsair/kraken_arm", 206, 104, true], ["corsair/reef_shark", 170, 190, true], ["corsair/boarding_bruiser", 230, 182, true],
+			["summons/warrior", 46, 214, false], ["summons/archer", 88, 224, false],
+		],
+		"fx": "motes", "fx_color": Color8(70, 167, 143),
+	},  # TUNING (not in GDD) ghost-crew green motes
+	# --- Act XI (temporary): the Hall of the Slain (placeholder scenes from the
+	# shared kinds' art until each stage brings its own floor, props and boss; a
+	# missing sprite or tile is skipped) ---
+	"barrow_fields": {
+		"tile": "tiles/norse_snow",
+		"items": [
+			["norse/draugr", 196, 112, true], ["norse/raider", 230, 128, true], ["norse/brazier_lit", 160, 160, true],
+			["norse/rune_stone", 214, 186, true],
+			["summons/warrior", 46, 214, false], ["summons/archer", 88, 224, false],
+		],
+		"fx": "motes", "fx_color": Color8(232, 238, 242),
+	},  # TUNING (not in GDD) falling-snow motes
+	"valgard": {
+		"tile": "tiles/norse_planks",
+		"items": [
+			["norse/valkyrie", 204, 100, true], ["norse/shield_maiden", 236, 184, true], ["norse/skald", 170, 196, true],
+			["summons/warrior", 46, 214, false], ["summons/mage", 90, 224, false],
+		],
+		"fx": "motes", "fx_color": Color8(244, 217, 138),
+	},  # TUNING (not in GDD) valkyrie-gold motes
+	"vigrid": {
+		"tile": "tiles/norse_ash",
+		"items": [
+			["norse/frost_giant", 206, 110, true], ["norse/wolf_of_the_wastes", 170, 188, true], ["norse/berserker", 228, 196, true],
+			["summons/warrior", 46, 214, false], ["summons/archer", 88, 224, false],
+		],
+		"fx": "motes", "fx_color": Color8(255, 106, 26),
+	},  # TUNING (not in GDD) ember motes
+	# --- Act XII (temporary number): the Necropolis Dynasty (placeholder scenes
+	# from the shared kinds' art until each stage brings its own floor, props and
+	# boss; a missing sprite or tile is skipped) ---
+	"necropolis": {
+		"tile": "tiles/necropolis_dunes",
+		"items": [
+			["dynasty/mummy", 196, 112, true], ["dynasty/mummy_female", 230, 128, true], ["dynasty/canopic_jar", 160, 150, true],
+			["summons/warrior", 46, 214, false], ["summons/archer", 88, 224, false],
+		],
+		"fx": "motes", "fx_color": Color8(210, 181, 116),
+	},  # TUNING (not in GDD) sand motes
+	"lioness_temple": {
+		"tile": "tiles/lioness_temple_avenue",
+		"items": [
+			["dynasty/khopesh_guard", 204, 116, true], ["dynasty/scarab_swarm", 236, 184, true], ["dynasty/mummy", 170, 196, true],
+			["summons/warrior", 46, 214, false], ["summons/mage", 90, 224, false],
+		],
+		"fx": "motes", "fx_color": Color8(191, 59, 43),
+	},  # TUNING (not in GDD) carnelian motes
+	"two_truths": {
+		"tile": "tiles/two_truths_reeds",
+		"items": [
+			["dynasty/heka_priest", 206, 104, true], ["dynasty/embalmer", 170, 188, true], ["dynasty/mummy_female", 228, 196, true],
+			["summons/warrior", 46, 214, false], ["summons/archer", 88, 224, false],
+		],
+		"fx": "motes", "fx_color": Color8(43, 84, 184),
+	},  # TUNING (not in GDD) lapis motes
+	# --- Act XIII (temporary number): the Celestial Host (placeholder scenes
+	# from the shared kinds' art until each stage brings its own floor, props
+	# and boss; a missing sprite or tile is skipped) ---
+	"silver_stair": {
+		"tile": "tiles/host_stair",
+		"items": [
+			["host/virtue", 196, 112, true], ["host/lesser_light", 232, 128, true], ["host/power", 168, 160, true],
+			["summons/warrior", 46, 214, false], ["summons/archer", 88, 224, false],
+		],
+		"fx": "motes", "fx_color": Color8(244, 247, 255),
+	},  # TUNING (not in GDD) starlight motes
+	"wheel_of_thrones": {
+		"tile": "tiles/host_stair",
+		"items": [
+			["host/dominion", 204, 112, true], ["host/virtue", 236, 176, true], ["host/judge", 168, 192, true],
+			["summons/warrior", 46, 214, false], ["summons/mage", 90, 224, false],
+		],
+		"fx": "motes", "fx_color": Color8(62, 143, 216),
+	},  # TUNING (not in GDD) cerulean motes
+	"empyrean": {
+		"tile": "tiles/host_stair",
+		"items": [
+			["host/choir_angel", 206, 104, true], ["host/herald", 170, 188, true], ["host/power", 228, 196, true],
+			["summons/warrior", 46, 214, false], ["summons/archer", 88, 224, false],
+		],
+		"fx": "motes", "fx_color": Color8(242, 184, 198),
+	},  # TUNING (not in GDD) dawn-rose motes
+	# --- Act XIV (temporary number): the Age of Titans (placeholder scenes
+	# from the shared kinds' art until each stage brings its own floor, props
+	# and boss; a missing sprite or tile is skipped) ---
+	"fern_basin": {
+		"tile": "tiles/primeval_fern",
+		"items": [
+			["primeval/razorclaw", 196, 112, true], ["primeval/razorclaw", 232, 140, true], ["primeval/longneck", 160, 176, true],
+			["summons/warrior", 46, 214, false], ["summons/archer", 88, 224, false],
+		],
+		"fx": "motes", "fx_color": Color8(77, 133, 52),
+	},  # TUNING (not in GDD) fern spores
+	"great_plain": {
+		"tile": "tiles/primeval_plain",
+		"items": [
+			["primeval/duckbill", 204, 112, true], ["primeval/longneck", 232, 176, true], ["primeval/skyraider", 168, 96, true],
+			["summons/warrior", 46, 214, false], ["summons/mage", 90, 224, false],
+		],
+		"fx": "motes", "fx_color": Color8(200, 148, 72),
+	},  # TUNING (not in GDD) dust motes
+	"last_day": {
+		"tile": "tiles/primeval_ash",
+		"items": [
+			["primeval/tyrant", 206, 120, true], ["primeval/razorclaw", 170, 188, true], ["primeval/scuttler", 228, 196, true],
+			["summons/warrior", 46, 214, false], ["summons/archer", 88, 224, false],
+		],
+		"fx": "motes", "fx_color": Color8(239, 107, 28),
+	},  # TUNING (not in GDD) ember motes
+	# --- Act XV (temporary number): the Turning Year (placeholder scenes from
+	# the shared kinds' art until each stage brings its own floor, props and
+	# boss; a missing sprite or tile is skipped) ---
+	"greenwood": {
+		"tile": "tiles/wild_greenwood",
+		"items": [
+			["wild/treant", 200, 120, true], ["wild/dryad", 168, 168, true], ["wild/thornling", 232, 190, true],
+			["summons/warrior", 46, 214, false], ["summons/archer", 88, 224, false],
+		],
+		"fx": "motes", "fx_color": Color8(89, 150, 65),
+	},  # TUNING (not in GDD) drifting leaves
+	"fae_court": {
+		"tile": "tiles/wild_fae",
+		"items": [
+			["wild/fae_knight", 204, 116, true], ["wild/will_o_wisp", 170, 96, true], ["wild/dryad", 232, 176, true],
+			["summons/warrior", 46, 214, false], ["summons/mage", 90, 224, false],
+		],
+		"fx": "motes", "fx_color": Color8(239, 166, 195),
+	},  # TUNING (not in GDD) blossom petals
+	"world_tree": {
+		"tile": "tiles/wild_tree",
+		"items": [
+			["wild/treant", 206, 120, true], ["wild/winter_fae", 170, 180, true], ["wild/great_stag", 232, 196, true],
+			["summons/warrior", 46, 214, false], ["summons/archer", 88, 224, false],
+		],
+		"fx": "motes", "fx_color": Color8(217, 149, 60),
+	},  # TUNING (not in GDD) gold leaves
 }
 ## Ambient motes of a vignette: most at once, seconds between two (random in
 ## range), life (s), rise speed (px/s), sideways sway (px).

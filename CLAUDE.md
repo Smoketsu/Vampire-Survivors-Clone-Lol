@@ -72,34 +72,34 @@ tablets in landscape (the `Web` export preset; touch controls, mobile UI scale, 
   highest), **half against the stage boss**, no extra tier for evolved pairs; every synergy damage
   bonus goes through `SynergyManager.hit_mult()` from `CombatResolver.damage_enemy()`.
 - **Shadow Bolt** has a Nearest/Strongest aim toggle (T / pad Y).
-- **Act II, the Ancient Eye** (owner decisions, GDD §15.0 "Act II: the Ancient Eye"): the faction is
+- **Act XI, the Ancient Eye** (built as Act II; owner decisions, GDD §15.0 "Act II: the Ancient Eye"): the faction is
   **the Ancient Eye** (never "the Drowned Choir"); it fights the necromancer **for the dead**. Its shared
   rules each have one path: **Claims** (`HordeDirector.claim_fallen()` → `EyeClaims`, `game.claims`: a
   summon dying near a claimer rises 15 s as a hostile Drowned Thrall; killed, its soul is Dread Rally
   charge), **Dread** (`DreadMeter`, `game.dread`: +5% damage taken per 25, applied once in
   `CombatResolver.damage_player()`; raised only through `game.dread.add()`), **unlocks** (`Unlocks.is_open()`
-  / `offerable()`, `UnlockData`, Meta `[unlocks]`: Act II spells by its bosses, offered on every stage;
-  its counter-passives by its achievements, Act II only through the card row's `act`). Act I runs never
-  create any of it (`game.dread` / `game.claims` stay null): stages 1–3 must keep their same-seed
-  summaries. Every female character is in the figure-redesign style; the finale (and Seraphine) grant
+  / `offerable()`, `UnlockData`, Meta `[unlocks]`: its spells by its bosses, offered on every stage;
+  its counter-passives by its achievements, in its own act only through the card row's `act` id, `"eye"`). Runs
+  of every other act never create any of it (`game.dread` / `game.claims` stay null): their stages must keep
+  their same-seed summaries. Every female character is in the figure-redesign style; the finale (and Seraphine) grant
   new summon classes; each new spell comes with its playable character.
-- **Act III, the Electronic Empire** (owner-approved proposal `docs/act3/PROPOSAL.md`, GDD §15.0 "Act III
-  foundation (phase 1)"): a machine power that saw the Act II beacons and came; about 60% of its kinds shoot from
+- **Act XII, the Electronic Empire** (built as Act III; owner-approved proposal `docs/act3/PROPOSAL.md`, GDD §15.0
+  "Act III foundation (phase 1)"): a machine power that saw the Ancient Eye's beacons and came; about 60% of its kinds shoot from
   range, and its three shared rules each have one path, all switched on by the STAGE key `empire` (`game.empire`,
   `EmpireRules`): **Line of Fire** (`EmpireShots`: every Empire shot stops on the first summon, Bone Wall segment
   or Orb Shield; barriers absorb; arcing shots ignore it; never through `ProjectileManager`), **Lock-On**
   (`LockOn.paint()`: 1.5 s painted lines, at most 3, a boss override; Signal Ghost through `paint_time()`) and
   **Steel has no soul** (`Enemy.leaves_corpse()` gates every corpse and raise; cyborgs rise as Grave Gunners
-  through `HordeDirector.raise_corpse()` → `spawn_temporary()`). Act I and II runs never create any of it
-  (`game.empire` stays null): stages 1–6 keep their same-seed summaries. Summons never get act-only rules.
-- **Act IV, the Olympian Republic** (owner-answered proposal `docs/act4/PROPOSAL.md`, Acts IV–VI planned, built one
+  through `HordeDirector.raise_corpse()` → `spawn_temporary()`). Runs of every other act never create any of
+  it (`game.empire` stays null): their stages keep their same-seed summaries. Summons never get act-only rules.
+- **Act VIII, the Olympian Republic** (built as Act IV; owner-answered proposal `docs/act4/PROPOSAL.md`, built one
   act at a time; GDD §15.0 from "Act IV proposal (owner answers)" on): Greek gods commanding Roman legions, stages
-  `ilion` / `olympus` / `underworld` (Hades is the act's final boss, the Pantheon Trial is stage 11). Its three shared
+  `ilion` / `olympus` / `underworld` (Hades is the act's final boss, the Pantheon Trial is stage 23). Its three shared
   rules each have one path, all switched on by the STAGE key `pantheon` (`game.pantheon`, `PantheonRules`): **Wrath
   of the Gods** (`DivineWrath`: waves / lightning / fissures, telegraphed, hitting both armies), **Phalanx** (locked
   shield fronts; the one facing test `PantheonRules.hit_from_front()`, applied once in
   `CombatResolver.damage_enemy()` from the hit's `origin`) and **Glory** (Heroes grow with every summon they kill).
-  Act I–III runs never create any of it: stages 1–9 keep their same-seed summaries. A closing card after each act's
+  Runs of every other act never create any of it: their stages keep their same-seed summaries. A closing card after each act's
   epilogue part ties the acts together (`EpilogueData.CLOSINGS`).
 - **Online co-op** (owner decisions Oct 2026, `docs/coop/DESIGN.md`, GDD §15.0 from "Online co-op: relay and
   lobby" on): 2 players, lobby codes through the Cloudflare relay (`server/relay/`, `CoopNet`), each with their own
@@ -170,10 +170,30 @@ Autotest options (full table in the README):
 - `--spells=a,b` (force spells and their evolution passives, e.g.
   `bone_spear,soul_siphon,corpse_explosion,plague_cloud` or `death_mark,bone_wall,soul_chains`)
 - `--passives=a,b` (force passives the same way, e.g. `unholy_precision,unholy_resilience`)
-- `--stage=graveyard|crimson_march|sanctum|harbour|archive|spire|wastes|assembly|citadel|ilion|olympus|underworld|province|kurogane|sun_road|`
-  `burning_gate|silk_palace|pandemonium|ravensmoor|witchwood|castle_sanguis|skid_row|fort_kessler|liberty_heights|crash_site|`
-  `proving_moon|ark` (default graveyard; stage locks are
-  ignored)
+- `--stage=` any of the 45 stage ids, listed here in the act order (`StageRegistry.ACT_ORDER`, the one ordered list;
+  GDD §15.0 "The reorder pass, part 1"): Part One `graveyard|crimson_march|sanctum` (Act I, the Covenant),
+  `cutter|galleon|maelstrom` (II, the Black Tide), `ravensmoor|witchwood|castle_sanguis` (III, the Sanguine Court),
+  `skid_row|fort_kessler|liberty_heights` (IV, the Last Line), `province|kurogane|sun_road` (V, the Shogunate); Part Two
+  `barrow_fields|valgard|vigrid` (VI), `necropolis|lioness_temple|two_truths` (VII), `ilion|olympus|underworld` (VIII,
+  the Olympian Republic), `burning_gate|silk_palace|pandemonium` (IX, the Inferno), `silver_stair|wheel_of_thrones|empyrean`
+  (X); Part Three `harbour|archive|spire` (XI, the Ancient Eye), `wastes|assembly|citadel` (XII, the Electronic Empire),
+  `crash_site|proving_moon|ark` (XIII, the Concord of Stars), `fern_basin|great_plain|last_day` (XIV),
+  `greenwood|fae_court|world_tree` (XV) (default graveyard; stage locks are ignored;
+  `barrow_fields|valgard|vigrid` the Hall of the Slain, Act VI (`--boss=hrimgar|sigrun|odin`, `--character=rune_seer|shield_maiden_hero|berserker_hero`,
+  `--spawn=muspel_giant|fenrir|odin_raven@T`); `necropolis|lioness_temple|two_truths` the
+  Necropolis Dynasty, Act VII (`--boss=anubis|sekhmet|osiris`, `--character=the_embalmer|lion_priestess|pharaohs_shade`);
+  `silver_stair|wheel_of_thrones|empyrean` the Celestial Host, Act X (all three built; `--boss=seraiel|throne|voice`,
+  `--character=fallen_herald|blind_saint|the_unveiled`, `--classes=bound_ophan`, `--spawn=` with
+  `lesser_light|virtue|power|choir_angel|herald|dominion|judge|cherub|cherub_of_the_gate|ophan|dominion_of_the_spheres|herald_of_the_seventh_trumpet`); `fern_basin|great_plain|last_day` the Age of Titans,
+  Act XIV (all three built; `--boss=scarmaw|ironbrow|gravejaw`,
+  `--character=fern_huntress|herd_warden|skywatcher`, `--classes=bonehorn`, `--spawn=` with
+  `scuttler|razorclaw|frill_spitter|longneck|duckbill|skyraider|tyrant|bog_croc|ironjaw|primeval_nest|scarmaw_guard|horncharger|clubtail|mother_clubtail|stormwing|thunderwing`);
+  `greenwood|fae_court|world_tree` the Turning Year, Act XV (all three built; `--boss=stag_king|summer_queen|green_mother`,
+  `--character=horned_herald|changeling_princess|gravegardener`, `--classes=ossuary_oak`, `--spawn=` with
+  `thornling|dryad|treant|corpse_bloom|fae_knight|winter_fae|great_stag|wild_rider|will_o_wisp|spore_mother|hunt_hound|huntsman|antler_thicket|winter_prince|masked_courtier|gardener_of_roots|burial_thicket`;
+  `--last-claim=id,...|all` forces the Green Mother's Last Claim slots from her arrival, e.g.
+  `covenant,black_tide,sanguine_court,last_line,shogunate,hall_of_the_slain,necropolis_dynasty` and
+  `olympian_republic,inferno,celestial_host,ancient_eye,electronic_empire,concord,age_of_titans` cover all fourteen))
 - `--unlocks=all|none` (Act II's lockable spells / passives / classes in the card pool; forced items
   are open either way)
 - `--boss=alaric|vael|seraphine` (puts that boss in the stage's slot, e.g. test Seraphine on the Graveyard)
@@ -186,6 +206,7 @@ Autotest options (full table in the README):
 - `--volleys=on|off` (the bullet heaven pass, default on; `off` = none of the pass runs; the Bone Ring stays)
 - `--spawn=kind@T[xN],...` (force-spawn any enemy kind at T game seconds on any stage, e.g.
   `sanctified_sentinel@120x3,high_confessor@180x2,cathedral_guardian@300` or `battle_sister@60x6`)
+- `--keep-fires` (the Hall of the Slain: the bot walks to the brazier out longest first, Keep the Fires)
 - `--pact`
 - `--meta=none|mid|max`
 - `--oath=0-5`
@@ -206,9 +227,10 @@ Autotest options (full table in the README):
 the autotests for the area a change touches plus one default run; run the full "Done" set (every stage,
 the same-seed gates) once per batch of changes, before `main` moves; multi-seed batches only for balance.
 
-CI (`.github/workflows/ci.yml`) runs the import and, as twenty-five **parallel** matrix jobs, the Graveyard
-autotest with the naive and army policies, a Crimson March autotest, a Sanctum of Judgment autotest (army
-policy) and one army autotest per Act II, Act IV, V, VI, VII, VIII and IX stage; beside them, the Windows/Linux/Web exports (artifacts
+CI (`.github/workflows/ci.yml`) runs the import and, as forty-six **parallel** matrix jobs in the act order (named
+"Act N Stage M", grouped by Part), the Graveyard autotest with the naive and army policies, a Crimson March autotest
+and one army autotest for every other stage (all 45 stages; the graveyard job also runs the Ossuary, demo and act
+order / save migration checks); beside them, the Windows/Linux/Web exports (artifacts
 `Necropathy-windows` / `-linux` / `-web`) and an exported-build smoke test; also the co-op jobs `coop-net` (relay
 protocol + two-process transport test) and `coop-lockstep` (the two-process full-run determinism gate, ~10 min, not
 waited on by the publish jobs) and, on `main` pushes, `deploy-relay` (the Worker, secrets `CLOUDFLARE_API_TOKEN` /
@@ -676,6 +698,123 @@ tiny tweaks.
   Concord** (the Harvester; the Ghost Saucer). Stages 1–24 same-seed summaries unchanged.
 - **Acts VI–IX go live** (owner: "Ship it", Nov 2026; GDD §15.0 "Acts VI–IX go live"): the twelve stages playable, one CI
   army job each (25 matrix jobs), masteries for 24 classes (18,240 Soul Ash), Soul Ash ×1 / ×1.25 / ×1.5 per act.
+- **The Hall of the Slain, playable** (the Norse act, temporarily Act XI, final slot VI; GDD §15.0 from "The Hall of the Slain
+  foundation (phase 1)" to "Hall of the Slain integration"; `docs/norse/`): `game.norse`, `NorseRules` (the Long Winter: cold
+  levels, braziers doused by frost giants and seers and relit by the necromancer; Berserkergang; Rune-Stones; the Ragnarök
+  Reckoning); **the Barrow Fields** (open barrows, the Barrow-Wight, Hrimgar; Barrow Grasp + Grave Frost, the Rune-Seer, Keep
+  the Fires → Fur-Lined Bones), **Valgard** (the Feast, the Einherjar Champion, Sigrun's Charge / Holmgang / Doors of the Hall;
+  Valkyrie Spear + Einherjar's Oath, the Shield-Maiden, Holmgang → Calm Blood) and **Vigrid** (the Fading Light, the Fire-Giant
+  of the south, Odin and Fenrir; Gungnir + Runecraft, the Berserker, the Draugr Thane / Barrow King + Cold Iron, Twilight of the
+  Wolf). One CI army job each (31 matrix jobs); bot pass `docs/norse/playtest/PASS1.md`; autotest `--keep-fires` (the
+  fire-keeper bot). Stages 1–27 same-seed summaries unchanged.
+- **The Hall of Two Truths** (the Necropolis Dynasty's finale, phase 2; GDD §15.0 from "The Hall of Two Truths
+  (Necropolis Dynasty phase 2)"; playable since the integration below): four zones, **the Scales**
+  (`TruthScales` / `ScalesBar` in `TwoTruthsDirector`: every return tips them to the Dynasty, every raise and smash to
+  the necromancer; ±15% enemy damage past the marks through one `Enemy.hit_mult()` read, Names 2 s sooner through
+  `Rebirth.set_duration_bonus()` / `duration()`, the one duration path), the Crocodile Warden (shared row), the Devourer's
+  Whelp (miniboss, eats Names), **Osiris and Ammit** (`boss_osiris.gd`: the Judge, the Weighing, the Devourer), Feather's
+  Verdict / Heart Devoured + Heavy Heart, the Pharaoh's Shade, the **Ushabti Sentinel** / Eternal Guard + Answering Words
+  (reassembly through the one generic `SummonBehavior.on_lethal()` hook in `CombatResolver.damage_unit()`), achievement
+  A Light Heart (title Light of Heart). Stages 1–27 same-seed summaries unchanged.
+- **The Necropolis Dynasty, playable** (temporarily Act XII, final slot VII; GDD §15.0 from "The Necropolis Dynasty foundation
+  (phase 1)" to "The Necropolis Dynasty goes live (integration)"; `docs/dynasty/`): `game.dynasty`, `DynastyRules` (Rebirth and
+  the Names, the Black Land and the Sandstorm, Heka; the Devourer's Hour Reckoning); **the Necropolis of Sand** (the Canopic
+  Jars beside the tombs, the Sand Colossus, Anubis; Linen Bind / Eternal Shroud + Natron Salts, the Embalmer, No Jars Left →
+  Embalmed Bones), **the Temple of the Lioness** (the Awakening Statues, the Lion Warden, Sekhmet; Burning Eye / Eye of
+  Retribution + Desert Fury, the Lion-Priestess, Names Taken → Dune Walkers) and **the Hall of Two Truths** (above). One CI
+  army job each (34 matrix jobs). Stages 1–33 same-seed summaries unchanged.
+- **The Silver Stair, playable** (the Celestial Host's first stage, temporarily Act XIII, final slot X; GDD §15.0 from "The
+  Silver Stair (Act XIII phase 2)" to "Without Sin and Absolution"; brief `docs/host/BRIEF_PHASE2.md`): the four zones
+  (`SilverStairGround`), **the Stair** (`SilverStairDirector`: each zone a wider step, the Light widens; low cloud banks
+  through `CloudShade.add_shade()`), the Cherub (shared, group `guardians`) and the Cherub of the Gate (miniboss) on one
+  `CherubKit` (`sweep()`, the one blade test), **Seraiel** (`boss_seraiel.gd`: the Sword, the Gate's lanes closed by
+  `HallowedLight.add_shaft()`, the Trial through `Judgment.add()`), Flaming Sword / Sword at the Gate + Fallen Light, the
+  Fallen Herald, Without Sin → Absolution. One CI army job (35 matrix jobs). Stages 1–36 same-seed summaries unchanged.
+- **The Wheel of Thrones, playable** (the Celestial Host's second stage; GDD §15.0 from "The Wheel of Thrones (Act XIII phase
+  2)" to "The Wheel of Thrones tests and gate"): the four zones (`WheelOfThronesGround`), **the turning spheres**
+  (`WheelOfThronesDirector`: drifting crystal rings with gaps, moving walls through `Arena.resolve_all()` →
+  `contain_all()`; only a body's own step into the crystal is undone, the drift never shoves), the Ophan (shared, `OphanKit`)
+  and the Dominion of the Spheres (miniboss, `SpheresDominionKit`; row key `regrow_radius` in `Grace.step()`), **the Throne**
+  (`boss_throne.gd`: the Rolling, the Gaze through `HallowedLight.add_shaft()`, the Core: rims take ×0.2), Wheel of Eyes /
+  Ophanim + All-Seeing, the Blind Saint, The Wheel Breaks → Smoked Glass. One CI army job (36 matrix jobs). Stages 1–37
+  same-seed summaries unchanged.
+- **The Empyrean, playable** (the Celestial Host's finale and the end of Part One; GDD §15.0 from "The Empyrean (Act XIII
+  phase 2)" to "The Empyrean tests and gate"): the four zones (`EmpyreanGround`), **the Choir** (`EmpyreanDirector`: every
+  live Choir Angel, `HostRules.choir`, widens the Light's `width_mult`, applied relatively so the Last Trumpet stacks), the
+  Herald of the Seventh Trumpet (miniboss, `SeventhHeraldKit`: each blast calls the next earlier zone's squad, seven in
+  all), **the Voice** (`boss_voice.gd`: it never moves; the Holy through `HallowedLight.add_shaft()`; Be Not Afraid: a flat
+  additive white (`ParagonSky`) and `CombatResolver.stun_unit()` on every summon not shaded or barriered; the Last Word:
+  the run's sins return as Judges in waves, `Judgment.send_wave()`), Revelation / Be Not Afraid + Seventh Seal, the
+  Unveiled, the finale class **Bound Ophan** / Throne of Bones + Turning Bones (`BoundOphanBehavior` "orbit_roll": it
+  circles the ring, then rolls through the densest pack; its Ossuary mastery), The Last Word (records the clear; no
+  epilogue part until the reorder). One CI army job (37 matrix jobs). Stages 1–38 same-seed summaries unchanged.
+- **The Fern Basin, playable** (the Age of Titans' first stage, temporarily Act XIV, final slot XIV; GDD §15.0 from "The Fern
+  Basin (Act XIV phase 2)" to "The Fern Basin tests and gate"; brief `docs/titans/BRIEF_PHASE2.md`): the four zones
+  (`FernBasinGround`), **the Tar Seeps** (`FernBasinDirector`: pools from one pure hash, `pool_in()`, drawn and slowing alike;
+  `TerrainSlow` for the necromancer and summons, `Enemy.apply_slow()` for enemies; a herd beast in tar is trapped through
+  `HerdBeastKit.stuck_until`, read by `Herds`), the Bog Croc (shared, `BogCrocKit`: submerged, then a lunge; `bite_first()`,
+  the one lunge bite), Ironjaw the Nest Mother (miniboss, `IronjawKit`) and her nest (`PrimevalNestKit`), **Scarmaw**
+  (`boss_scarmaw.gd`: the Hunt's packs and leap, the Ambush from fern patches, Blood Up and the alpha-guard), Pack Leap / Apex
+  Pack + Pack Instinct, the Fern Huntress; **stampedes now run away from what hurt the herd** (owner answer, shared
+  `Herds`); the `primeval damage` line. No achievement of its own. One CI army job (38 matrix jobs). Stages 1–39 same-seed
+  summaries unchanged.
+- **The Great Plain, playable** (the Age of Titans' second stage; GDD §15.0 from "The Great Plain (Act XIV phase 2)" to "The
+  Great Plain tests and gate"): the four zones (`GreatPlainGround`), **the Watering Hole** (`GreatPlainDirector`: a lake ahead
+  of the necromancer from 5:00 that gathers the herds through `Herds.gather`, the one read in `Herds.steer()`; a fight near it
+  stampedes the rested herds there through `Herds.launch()`), **the Canyon** (wall obstacles and a 340 px stampede front), the
+  Horncharger (shared, `HornchargerKit`: `gore()` / `rock_ahead()`, the one charge hit and rock test) and the Clubtail (shared,
+  `ClubtailKit`, flat armour 5, the sweep), Mother Clubtail (miniboss, `ClubtailKit` with the herd guard), **Old Ironbrow**
+  (`boss_ironbrow.gd`: the Charge into a rock, the Herd behind him, the Break), Stampede / Herd of Ages + Calcified Hide, the
+  Herd-Warden, the achievement **Nothing Taken** → the counter-passive **Hoarder's Bones** (act 14 only;
+  `PrimevalRules.hoarders_bones_drop_after()` read by `SkyraiderKit`). One CI army job (39 matrix jobs). Stages 1–40 same-seed
+  summaries unchanged.
+- **The Last Day, playable** (the Age of Titans' finale; GDD §15.0 from "The Last Day (Act XIV phase 2)" to "The Last Day tests
+  and gate"): the four zones (`LastDayGround`), **Fire from the Sky** (`LastDayDirector`: meteorites on telegraphed circles, both
+  armies, faster each zone; the growing meteor beside the HUD clock, `MeteorDial`), the Stormwing (shared, `StormwingKit`: the
+  wing gust pushes the ring 100 px, she lands to peck) and Thunderwing, the Sky King (miniboss, same kit), the Tyrant's swallow
+  and roar (`TyrantKit`: `held_until`, `stun_unit()`), **Old Gravejaw** (`boss_gravejaw.gd`: the Hunt and its swallowing bite, the
+  Roar, the Last Day's rampage to the Mound), **the Extinction** (`Extinction`, owned by `PrimevalRules` beside `ash`, RECKONING
+  key `extinction`: at 0:00 a 5 s white-out (`ParagonSky`, a flat additive rect) under a one-time ward, every enemy dies through
+  the one kill path, a living boss drops to 10% and lies broken (no spell), every corpse rises as the Fossil Host through
+  `raise_corpse()` (cap 60, **30 s**, owner answer), then `Game.end_run(true, "extinction")`), Meteor Call / Extinction Event +
+  Cosmic Dust, the Skywatcher, the finale class **Bonehorn** / Fossil Tyrant + Petrified Horns (`BonehornBehavior`
+  "trample_charge"; its Ossuary mastery), Trampled → Thick Marrow (act 14 only; `thick_marrow_mult()` now reads a real passive),
+  The Day the Sky Fell (records the clear). No lit beacons (owner: later), no epilogue part or closing card. One CI army job (40
+  matrix jobs). Stages 1–39 same-seed summaries unchanged; the Fern Basin's and the Great Plain's differ from their Tyrants on
+  (the shared Tyrant's new kit).
+- **The Greenwood, playable** (the Turning Year's first stage, temporarily Act XV, final slot XV; GDD §15.0 from "The Greenwood
+  (Act XV phase 2)" to "The Greenwood tests and gate"; brief `docs/year/BRIEF_PHASE2.md`): the four zones (`GreenwoodGround`),
+  **the sacred groves** (`GreenwoodDirector`: rings from a pure hash that heal the Wild inside; held at 0.6 blight for 10 s through
+  `blight_at()` they die for the run), the shared kinds' specials (`WildKit.trample()`, the one Wild trample; `WildChargeKit` with
+  `lead()`: the Treant's root, the Fae Knight's blink, the Great Stag's charge, the Rider's sweep, hounds (`hunt_hound`) and its
+  passing, the Wisp's lure, the Spore Mother's spores and mould (`BloomField.mould()`), the Corpse-Bloom's meals and buds, the
+  Winter Fae's chill through `fire_hostile()`; Rot, Wither and the fire spells burn thickets through `Thickets.burn_at()`), the
+  Huntsman of the Wild Hunt (miniboss, `HuntsmanKit`), **the Stag King** (`boss_stag_king.gd`: the Hunt's spectral lines, the Rut
+  cracking trees into thickets, the Antler Crown of `antler_thicket` thorns heard by fire through `Thickets.ring_burns`), Wild
+  Hunt / The Endless Hunt + Horn of the Hunt, the Horned Herald, Scorched Earth → the counter-passive Fallow Ground (act 15 only).
+  One CI army job (41 matrix jobs). Stages 1–42 same-seed summaries unchanged.
+- **The Fae Court, playable** (the Turning Year's second stage, temporarily Act XV, final slot XV; GDD §15.0 from "The Fae Court
+  (Act XV phase 2)" to "The Fae Court tests and gate"): the four zones (`FaeCourtGround`), **the endless summer** (`FaeCourtDirector`:
+  `SeasonCycle.set_override(SUMMER, run end)`, its fronts spaced by STAGE `seasons` `wildfire_every`), **the fairy rings** (a pure hash,
+  `ring_in()`: half speed inside for both armies through `TerrainSlow` / `Enemy.apply_slow()`), the Winter Prince (miniboss,
+  `WinterPrinceKit`; his minute of winter through `set_override(WINTER, now + 60)`), **the Summer Queen** (`boss_summer_queen.gd`: petals,
+  the Masque with `masked_courtier`s, **the Bargain** through `ConfirmDialog` and the level-up pause in solo, `CoopLockstep.Cmd.BARGAIN` in
+  co-op, the one bargain path `WildRules.take_bargain()` read by `compute_stats()` and `CombatResolver.heal_unit()`, a price through
+  `CombatResolver.pay_life()`; the Court in Bloom), Glamour / Court of Masks + Changeling (copies are temporary Warrior bodies through
+  `spawn_temporary()` that taunt through `ColossusKit`), the Changeling Princess, A Fair Bargain → the counter-passive Deadwood (act 15
+  only). One CI army job (42 matrix jobs). Stages 1–43 same-seed summaries unchanged.
+- **The World-Tree, playable** (the Turning Year's finale and the campaign's last stage, temporarily Act XV, final slot XV; GDD
+  §15.0 from "The World-Tree (Act XV phase 2)" to "The World-Tree tests and gate"): the four zones (`WorldTreeGround`), the year
+  twice as fast, **the Gardener of Roots** (miniboss, `GardenerOfRootsKit`: the Treant's root, and the roots answer his call in any
+  season through `SeasonCycle.call_roots()`, one new radius rule), **the Green Mother** (`boss_green_mother.gd`: the Turning through
+  `set_override()` with a season burst each, the Burial through `burial_thicket` / `SummonedUnit.held_until`, and **the Last
+  Claim**, `LastClaim`: seven of the fourteen other acts' rules, seeded pick, 8 s each from a third of her HP, each through that
+  act's one path reached by `game.<key>_rules()` built with its clocks off; half damage while a slot holds; `--last-claim=` forces
+  the slots), **the First Spring** (`FirstSpring` beside `returns`, RECKONING key `first_spring`: with her beaten, at 0:00 the
+  planted dead rise and the run ends in victory), Root and Rot / Return to Earth + Compost Heart, the Gravegardener, the finale
+  class **Ossuary Oak** / World-Root Warden + Heartwood (`OssuaryOakBehavior` "root_lash"; its Ossuary mastery), The First Spring
+  (records the clear; no epilogue part or closing card until the reorder). One CI army job (43 matrix jobs). Stages 1–44 same-seed
+  summaries unchanged.
 
 **Next, in priority order:**
 1. **Playtest feedback** from the owner and friends (actively playtesting); it outranks everything below.
@@ -706,7 +845,8 @@ tiny tweaks.
 5. **Content wave 2 art review** (owner): the marks on the wave 2 review page; then any redo.
 6. **Act III, the Electronic Empire: live (Oct 2026).** The three stages are playable (GDD §15.0 "Act III goes
    live"); the owner balances by hand from playtests (their notes outrank the bots). Open: the naive survival rate,
-   the placeholder Soul Ash multipliers, a real-iPhone check; CI has no Act III job yet. Handoff: `docs/act3/HANDOFF.md`.
+   the placeholder Soul Ash multipliers, a real-iPhone check (CI has had an army job for every Act III stage since the
+   reorder pass). Handoff: `docs/act3/HANDOFF.md`.
 6b. **Act IV, the Olympian Republic: live (Oct 25, 2026).** The three stages are playable (GDD §15.0 "Act IV goes
    live"), with one CI army job each. Shipped after the art review (eight rounds) and three bot playtest passes at meta
    none (`docs/act4/playtest/`; the Underworld got damage ×1.5, Centaur Archers and the new Shade Archer). Open: the
@@ -726,9 +866,36 @@ tiny tweaks.
    late fights on a real iPhone), the act's epilogue parts / closing cards (none until the act order is settled). The
    proposal to reorder the acts (Claude Doc "Necropathy: A New Act Order",
    https://claude.ai/artifact/B76vzD659dz2dAyy5P4bqh) is deferred until all content is added (owner, Nov 2, 2026).
-6e. **Proposed acts** (`docs/proposals/NEW_ACTS_AND_ORDER.md`): the Black Tide (pirates), the Age of Titans (prehistoric), the
-   Necropolis Dynasty (Egypt), and a Norse act on the docket; not scheduled; build the plan from `docs/act5/` again once
-   one starts.
+6e. **The last six acts and the final order** (owner, Nov 7, 2026; GDD §15.0 "The last five acts and the act order" and "The
+   fifteenth act: the Celestial Host"; Claude Doc https://claude.ai/artifact/CYA3oBNRr9xqMpnPVWipin, repo copy
+   `docs/proposals/LAST_SIX_ACTS.md`, details of three acts in `docs/proposals/NEW_ACTS_AND_ORDER.md`): the Black Tide, the Hall of
+   the Slain (Norse), the Necropolis Dynasty, the Celestial Host (slot X, ends Part One), the Age of Titans and the Turning Year
+   (the finale), fifteen acts in all. Waits on the owner's answers to the doc's open questions; then wave 1 (Dynasty + Norse + a
+   Black Tide deck spike), wave 2 (Black Tide + Celestial Host + Titans), wave 3 (Turning Year), each with the `docs/act5/` plan
+   and tuned for its final slot, then the reorder in one pass.
+   Wave 1b, **the Black Tide is live** on the lead's branch `tide-integration` (GDD §15.0 from "The Smuggler's Cutter (Act X
+   phase 2)" to "The Black Tide goes live (integration and balance)"; balance pass `docs/tide/playtest/pass1.md`): **the
+   Smuggler's Cutter** (`CutterDirector`: powder barrels, the Fog Bank, Bosun Gorran's ram longboat, Captain Crow and the Fire
+   Ship through `HellPits.open_pit()`; the shared Grappler and Boatswain; Chain Shot / Keelhauler + Bosun's Whistle, the
+   Marooned Quartermaster, Not One Aboard → Barnacle Bones), **the Treasure Galleon** (broadsides, the deck cannons as a
+   world rule, the Gunnery Mate, Voodoo Navigator, Gunboat and Hull Crab, Old Hollow-Eye, Admiral Marrec, Cannonade / Dead
+   Men's Broadside + Black Powder, the Corsair Queen, Walked the Plank → Sea Legs) and **the Maelstrom** (the Heave
+   (`MaelstromDirector`), the ghost crew raised for the necromancer, the Sea Serpent (`corsair_serpent`: Act IV owns
+   `sea_serpent`), the Ghost Bosun, Captain Vandermere and Dead Men's Oath, Anchor Drop / Abyssal Mooring + Dead Reckoning,
+   the Ghost Helmsman, the Powder Wraith / Magazine Lord + Slow Match, Dead Men Tell Tales); `"playable": true`, one CI army
+   job each. Still Act X until the reorder (final slot II); no epilogue part or closing card yet.
+   Wave 1b: the Dynasty's first stage, **the Necropolis of
+   Sand**, is built (GDD §15.0 "The Necropolis of Sand (Act XII phase 2)" and the five rows after it: the Canopic Jars beside
+   the tombs, the Nile Archer, the Jackal Warrior, the Sand Colossus, Anubis, Linen Bind / Eternal Shroud + Natron Salts,
+   the Embalmer, No Jars Left → Embalmed Bones); then the Temple and the Hall, and **the Dynasty is live** (GDD §15.0 "The
+   Necropolis Dynasty goes live (integration)"; one CI army job each). Still Act XII until the reorder (final slot VII).
+   **The reorder pass, part 1 (order and numbering): done** (Nov 2026, GDD §15.0 "The reorder pass, part 1 (order and
+   numbering)"): `StageRegistry.ACT_ORDER` is the one ordered list (three Parts of five acts) from which every act number,
+   Part, chapter, the unlock chain and each stage's Soul Ash (its position in its act) derive; act-scoped rows name an
+   act by id (`PassiveData` "act", `VictoryData.ACT_LINES`, the Codex tabs, `DemoData.ACTS`); Part tabs on the stage
+   select; save version 3 keeps every stage a save had opened (`SaveMigration.legacy_opened()`, `[stages] opened`,
+   checked by `tools/save_migration_check.tscn`); CI 46 jobs in the act order. Section texts above keep the act numbers
+   they were built under. Left for part 2: the epilogue parts and closing cards for every act, a bot pass per moved act.
 7. **Phase 4 polish:** accessibility, profiling on real hardware, and the **final balance pass**.
    The owner's Oct 2026 playtest balance pass is in (GDD §15.0 "Balance pass (Oct 2026 playtest)": Dread Rally raises the army, spells ×1.2, boss HP Alaric −35% / Vael −40% / Seraphine −30%, later level-up items weigh 0.5, Frost Wraith / Bone Hound / Banshee base damage raised; the earlier +5% global multiplier was removed); further value tweaks wait for this pass (naive-bot
    death rates above target on both stages and spell-only builds lacking single-target damage are

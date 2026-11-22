@@ -19,6 +19,12 @@
 ##   "bloodthirst" Blood Spawn    BloodSpawnBehavior (Act VII, Castle Sanguis)
 ##   "hero_slam" Fallen Hero      FallenHeroBehavior (Act VIII, Liberty Heights)
 ##   "saucer_lift" Ghost Saucer   GhostSaucerBehavior (Act IX, the Ark of the Concord)
+##   "keg_burst" Powder Wraith    PowderWraithBehavior (Act X, the Maelstrom)
+##   "frost_axe" Draugr Thane     DraugrThaneBehavior (Vigrid, the Hall of the Slain)
+##   "reassemble" Ushabti Sentinel UshabtiSentinelBehavior (Act XII, temporary: the Hall of Two Truths)
+##   "orbit_roll" Bound Ophan     BoundOphanBehavior (Act XIII, temporary: the Empyrean)
+##   "trample_charge" Bonehorn    BonehornBehavior (Act XIV, temporary: the Last Day)
+##   "root_lash" Ossuary Oak      OssuaryOakBehavior (Act XV, temporary: the World-Tree)
 ## It creates / reuses the per-unit instance and builds the class-specific
 ## level-up card lines (AbilityManager._summon_offer()), so the shared code
 ## only ever talks to this file and the SummonBehavior base class.
@@ -85,6 +91,24 @@ static func for_unit(current: SummonBehavior, kind: String) -> SummonBehavior:
 		# --- Act IX: the Ark ---
 		"saucer_lift":
 			b = GhostSaucerBehavior.new()  # The Ghost Saucer.
+		# --- Act X: the Maelstrom ---
+		"keg_burst":
+			b = PowderWraithBehavior.new()  # The Powder Wraith.
+		# --- Act XI (temporary): Vigrid ---
+		"frost_axe":
+			b = DraugrThaneBehavior.new()  # The Draugr Thane.
+		# --- Act XII (temporary number): the Hall of Two Truths ---
+		"reassemble":
+			b = UshabtiSentinelBehavior.new()  # The Ushabti Sentinel.
+		# --- Act XIII (temporary number): the Empyrean ---
+		"orbit_roll":
+			b = BoundOphanBehavior.new()  # The Bound Ophan.
+		# --- Act XIV (temporary number): the Last Day ---
+		"trample_charge":
+			b = BonehornBehavior.new()  # The Bonehorn.
+		# --- Act XV (temporary number): the World-Tree ---
+		"root_lash":
+			b = OssuaryOakBehavior.new()  # The Ossuary Oak.
 	if b != null:
 		b.kind = kind
 	return b
@@ -233,6 +257,54 @@ static func card_lines(cls: String, cur: Dictionary, nxt: Dictionary) -> PackedS
 			else:
 				_delta(out, "Drop damage", a, b, "lift_damage")
 				_delta(out, "Lift cooldown (s)", a, b, "lift_cooldown")
+		# --- Act X: the Maelstrom ---
+		"keg_burst":
+			if a.is_empty():
+				out.append("Marches a lit keg into a pack and bursts")
+				out.append("Reforms at your ring 12 s later")
+			else:
+				_delta(out, "Keg damage", a, b, "keg_damage")
+				_delta(out, "Keg blast (px)", a, b, "keg_radius")
+		# --- Act XI (temporary): Vigrid ---
+		"frost_axe":
+			if a.is_empty():
+				out.append("Holds the front; every axe blow slows its foe")
+				out.append("Its frost cleave chills all before it")
+			else:
+				_delta(out, "Cleave damage", a, b, "cleave_damage")
+				_delta(out, "Chill (s)", a, b, "cleave_slow_duration")
+		# --- Act XII (temporary number): the Hall of Two Truths ---
+		"reassemble":
+			if a.is_empty():
+				out.append("Holds the line on the Bone Ring")
+				out.append("Rises again from its rubble once every %d s" % int(b.get("reassemble_cooldown", 25.0)))
+			else:
+				_delta(out, "Reform damage", a, b, "reform_damage")
+				_delta(out, "Reassembly (s)", a, b, "reassemble_cooldown")
+		# --- Act XIII (temporary number): the Empyrean ---
+		"orbit_roll":
+			if a.is_empty():
+				out.append("Circles your ring, then rolls through a pack")
+				out.append("Roll: %s dmg to every foe it passes, every %ss" % [_f(b["roll_damage"]), _f(b["roll_cooldown"])])
+			else:
+				_delta(out, "Roll damage", a, b, "roll_damage")
+				_delta(out, "Roll cooldown (s)", a, b, "roll_cooldown")
+		# --- Act XIV (temporary number): the Last Day ---
+		"trample_charge":
+			if a.is_empty():
+				out.append("Charges through a pack, then trots back")
+				out.append("Charge: %s dmg to every foe it tramples, every %ss" % [_f(b["charge_damage"]), _f(b["charge_cooldown"])])
+			else:
+				_delta(out, "Charge damage", a, b, "charge_damage")
+				_delta(out, "Charge cooldown (s)", a, b, "charge_cooldown")
+		# --- Act XV (temporary number): the World-Tree ---
+		"root_lash":
+			if a.is_empty():
+				out.append("Roots in place among foes and blocks")
+				out.append("Lash: %s dmg to every foe in reach, every %ss" % [_f(b["lash_damage"]), _f(b["lash_cooldown"])])
+			else:
+				_delta(out, "Lash damage", a, b, "lash_damage")
+				_delta(out, "Lash cooldown (s)", a, b, "lash_cooldown")
 	return out
 
 
