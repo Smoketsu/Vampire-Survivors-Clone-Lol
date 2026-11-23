@@ -1,0 +1,14 @@
+# Batch 2 post captions, one per day (dayNN: caption). Kept in the repo so a container reset can't lose them.
+day01: vampire survivors but the werewolves turn into beasts under a blood moon 🌕 #vampiresurvivors #survivorslike #gamedev #indiegame #pixelart
+day02: pov: you can't decide which of the 36 necromancers to play 💀 #vampiresurvivors #survivorslike #gamedev #indiegame #pixelart
+day03: vampire survivors but alien beams cut through your whole army 🛸 #vampiresurvivors #survivorslike #gamedev #indiegame #pixelart
+day04: vampire survivors but your hellhounds leave a trail of fire 🔥 #vampiresurvivors #survivorslike #gamedev #indiegame #pixelart
+day05: pov: your undead army brought corpse catapults 💀 #vampiresurvivors #survivorslike #gamedev #indiegame #pixelart
+day06: vampire survivors but the gatekeeper of hell comes wrapped in chains ⛓️ #vampiresurvivors #survivorslike #gamedev #indiegame #pixelart
+day07: vampire survivors but the iron citadel has a laser grid 🔴 #vampiresurvivors #survivorslike #gamedev #indiegame #pixelart
+day08: pov: the superheroes finally show up to stop your undead army 🦸 #vampiresurvivors #survivorslike #gamedev #indiegame #pixelart
+day09: vampire survivors but you fight amazons and cyclopes 🏛️ #vampiresurvivors #survivorslike #gamedev #indiegame #pixelart
+day10: vampire survivors but banshees float with your army and wail 👻 #vampiresurvivors #survivorslike #gamedev #indiegame #pixelart
+day11: vampire survivors but kitsune only come out at night 🦊 #vampiresurvivors #survivorslike #gamedev #indiegame #pixelart
+day13: vampire survivors but it's online co-op with two necromancers 🤝 #vampiresurvivors #survivorslike #gamedev #indiegame #pixelart
+day14: vampire survivors but every stage ends with a boss. this is moloch 🔥 #vampiresurvivors #survivorslike #gamedev #indiegame #pixelart
