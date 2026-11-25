@@ -27,6 +27,19 @@ class_name SoundData
 extends RefCounted
 
 ## Every sound effect id -> recipe (keys documented in the header).
+# --- Audio overhaul (Nov 2026; GDD §15.0 "Audio overhaul: sampled sound effects and per-stage songs") ---
+## Folder of the sampled sound effects (tools/audio/build_sfx.py from Kenney's CC0 packs): a SOUNDS or
+## pack id with <id>.ogg here (and optional takes <id>_2.ogg, ...) plays a sample instead of its synth
+## recipe; the recipe's volume_db, voices, interval, pitch_var and priority still apply.
+const SFX_SAMPLE_DIR: String = "res://assets/audio/sfx/"
+## Folder of the per-stage songs (tools/audio/compose.py, rendered with the GeneralUser GS soundfont):
+## <stage id>.ogg here replaces the stage's synth run loop (loop points in SongData.LOOPS).
+const SONG_DIR: String = "res://assets/audio/music/"
+## Volume (dB) of the song player on the Music bus (the songs are mastered louder than the synth loops).
+const SONG_DB: float = -9.0  # TUNING (not in GDD)
+## Seconds a stage song fades in when a run starts.
+const SONG_FADE_IN: float = 1.5  # TUNING (not in GDD)
+
 const SOUNDS: Dictionary = {  # TUNING (not in GDD)
 	# --- Player necromancy: low and unsettling (GDD §12) --------------------
 	"bolt_cast": {"dur": 0.22, "volume_db": -15.0, "max_voices": 3, "min_interval": 60, "pitch_var": 0.06, "priority": 1,

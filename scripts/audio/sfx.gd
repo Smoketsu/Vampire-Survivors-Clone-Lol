@@ -51,6 +51,15 @@
 ##     screen handles the event; meta "ui_cancel_silent" on the screen turns
 ##     that off). play_ui() plays a sound that replaces the generic click of
 ##     the same press (purchase, denied, card_select).
+## Audio overhaul (Nov 2026; GDD §15.0 "Audio overhaul: sampled sound effects and per-stage
+## songs"): a sound id with a file in SoundData.SFX_SAMPLE_DIR (<id>.ogg, takes <id>_2.ogg, ...;
+## built by tools/audio/build_sfx.py from Kenney's CC0 packs) plays one of its takes instead of
+## its synth render, through the same voice limits (_load_samples(); pack ids load with their
+## pack). A stage with a song in SoundData.SONG_DIR (tools/audio/compose.py) plays it as its run
+## music instead of the synth loop: run_mode_for() returns SONG_PREFIX + the stage id, the song
+## player loops it from SongData.LOOPS, and the act's sound pack is still prepared with it. Songs
+## are never loaded headless, so the autotest is unchanged. Ids and stages without files keep the
+## synthesized audio, which stays the fallback.
 ## Positional sounds are not panned; they are attenuated with distance from
 ## the camera centre and culled beyond CULL_DISTANCE.
 ## Runs with PROCESS_MODE_ALWAYS so menus and the level-up panel (tree
@@ -127,6 +136,9 @@ const MUSIC_PRIMORDIAL: StringName = &"primordial"
 ## play_music() mode: the Turning Year in-run loop "The Turning Year" (SoundData.WILDWOOD_SCORE;
 ## a stage whose STAGE has "music": "wildwood").
 const MUSIC_WILDWOOD: StringName = &"wildwood"
+## play_music() mode prefix of a per-stage song (audio overhaul): SONG_PREFIX + stage id, from
+## run_mode_for() when SoundData.SONG_DIR has that stage's song.
+const SONG_PREFIX: String = "song:"
 ## play_music() mode: the epilogue's slow "Grave Lullaby" cue (content wave 2;
 ## MenuThemeData.EPILOGUE_VARIANT, rendered the first time the epilogue plays).
 const MUSIC_EPILOGUE: StringName = &"epilogue"
@@ -308,6 +320,17 @@ var _last_usec: int = 0
 var _listener: Vector2 = Vector2.INF
 ## Cosmetic RNG for pitch variation (never the global, seeded RNG).
 var _rng: RandomNumberGenerator = RandomNumberGenerator.new()
+# --- Audio overhaul (Nov 2026): sampled sound effects and per-stage songs ---
+## Sampled takes of a sound: id -> Array of AudioStream (<id>.ogg, <id>_2.ogg, ... in
+## SoundData.SFX_SAMPLE_DIR). A sampled id plays one of its takes (picked by _rng) instead of its
+## synth render; ids without a file keep the synth sound. Bank ids load in _ready(), pack ids
+## with their pack (prepare_pack()).
+var _samples: Dictionary = {}
+## The per-stage song player (SoundData.SONG_DIR/<stage id>.ogg; a ScoreLoop used only for its
+## player and fade state, never a synth). Built in _ready().
+var _song: ScoreLoop = null
+## Stage id whose song is on _song's player ("" = none loaded yet).
+var _song_stage: String = ""
 
 
 func _ready() -> void:
@@ -344,6 +367,13 @@ func _ready() -> void:
 	_epi_music.bus = BUS_MUSIC
 	_epi_music.volume_db = MenuThemeData.EPILOGUE_MUSIC_DB
 	add_child(_epi_music)
+	_song = ScoreLoop.new()  # Audio overhaul: the per-stage song player.
+	_song.player = AudioStreamPlayer.new()
+	_song.player.bus = BUS_MUSIC
+	_song.player.volume_db = SoundData.SONG_DB
+	add_child(_song.player)
+	for id: String in SoundData.SOUNDS:
+		_load_samples(id)
 	_last_usec = Time.get_ticks_usec()
 	# Longest renders first, so the slowest sounds never start last and
 	# stretch the total synthesis time.
@@ -396,6 +426,9 @@ func _exit_tree() -> void:
 		WorkerThreadPool.wait_for_task_completion(_epi_task)
 		_epi_task = -1
 	_epi_synth = null
+	_song.player.stop()
+	_song.player.stream = null
+	_samples.clear()
 	_epi_music.stop()
 	_epi_music.stream = null
 	# Release playbacks so the audio server holds no stream at exit.
@@ -444,6 +477,7 @@ func _process(_delta: float) -> void:
 	for sid: String in _scores:
 		var sl: ScoreLoop = _scores[sid]
 		sl.gain = _fade_player(sl.player, MUSIC_DB, sl.gain, sl.target, sl.rate, real_dt)
+	_song.gain = _fade_player(_song.player, SoundData.SONG_DB, _song.gain, _song.target, _song.rate, real_dt)
 	_epi_gain = _fade_player(_epi_music, MenuThemeData.EPILOGUE_MUSIC_DB, _epi_gain, _epi_target, _epi_rate, real_dt)
 
 
@@ -491,6 +525,7 @@ func play_music(mode: StringName) -> void:
 		_menu_target = 0.0
 		_menu_rate = 1.0 / MenuThemeData.EPILOGUE_FADE_IN
 		_run_target = 0.0
+		_song.target = 0.0
 		for sid: String in _scores:
 			(_scores[sid] as ScoreLoop).target = 0.0
 		return
@@ -500,17 +535,25 @@ func play_music(mode: StringName) -> void:
 		_menu_rate = 1.0 / MenuThemeData.FADE_IN
 		_run_target = 0.0
 		_run_rate = 1.0 / MenuThemeData.RUN_FADE_OUT
+		_song.target = 0.0
+		_song.rate = 1.0 / MenuThemeData.RUN_FADE_OUT
 		for sid: String in _scores:
 			var sl: ScoreLoop = _scores[sid]
 			sl.target = 0.0
 			sl.rate = 1.0 / MenuThemeData.RUN_FADE_OUT
 	else:
+		var song := String(mode).trim_prefix(SONG_PREFIX) if String(mode).begins_with(SONG_PREFIX) else ""  # Its stage song ("" = none).
 		var score := String(mode) if _scores.has(String(mode)) else ""  # A score loop instead of Act I's ("" = none).
-		if score != "":
+		if song != "":
+			prepare_pack(String(SoundData.SCORE_PACKS.get(_stage_music(song), "")))  # The act's sounds come with its song too.
+			_start_song(song)
+		elif score != "":
 			_start_score(score)
 			prepare_pack(String(SoundData.SCORE_PACKS.get(score, "")))
-		_run_target = 0.0 if score != "" else 1.0
-		_run_rate = 1.0 / (MenuThemeData.RUN_FADE_OUT if score != "" else MUSIC_FADE_IN)
+		_song.target = 1.0 if song != "" else 0.0
+		_song.rate = 1.0 / (SoundData.SONG_FADE_IN if song != "" else MenuThemeData.RUN_FADE_OUT)
+		_run_target = 0.0 if score != "" or song != "" else 1.0
+		_run_rate = 1.0 / (MenuThemeData.RUN_FADE_OUT if score != "" or song != "" else MUSIC_FADE_IN)
 		for sid: String in _scores:
 			var sl: ScoreLoop = _scores[sid]
 			var on := sid == score  # This score is the run's loop.
@@ -520,15 +563,52 @@ func play_music(mode: StringName) -> void:
 		_menu_rate = 1.0 / MenuThemeData.FADE_OUT
 
 
-## The run-loop mode of stage `stage_id`: its STAGE "music" id when that is a
+## The run-loop mode of stage `stage_id`: SONG_PREFIX + `stage_id` when the stage has a song
+## (SoundData.SONG_DIR/<stage id>.ogg, audio overhaul), else its STAGE "music" id when that is a
 ## SoundData.SCORES entry (MUSIC_TIDE on Act II, MUSIC_IRON on Act III, MUSIC_BRONZE on Act IV, MUSIC_SUN on Act V, MUSIC_BRIMSTONE on Act VI, MUSIC_SANGUINE on Act VII, MUSIC_SIREN on Act VIII, MUSIC_STARSONG on Act IX),
 ## MUSIC_RUN otherwise.
 static func run_mode_for(stage_id: String) -> StringName:
+	if ResourceLoader.exists(SoundData.SONG_DIR + stage_id + ".ogg"):
+		return StringName(SONG_PREFIX + stage_id)
 	if StageRegistry.STAGES.has(stage_id):
 		var music := String((StageRegistry.STAGES[stage_id] as Dictionary).get("music", ""))  # Its run loop id.
 		if SoundData.SCORES.has(music):
 			return StringName(music)
 	return MUSIC_RUN
+
+
+## STAGE "music" id of stage `stage_id` ("" = none, the Act I stages).
+static func _stage_music(stage_id: String) -> String:
+	return String((StageRegistry.STAGES.get(stage_id, {}) as Dictionary).get("music", ""))
+
+
+## Puts stage `stage_id`'s song on the song player, looping from SongData.LOOPS (never
+## headless: nothing can be heard and the autotest stays as it was). A new stage swaps the stream;
+## the same stage keeps it (and its fade).
+func _start_song(stage_id: String) -> void:
+	if _silent or stage_id == _song_stage:
+		return
+	var stream := load(SoundData.SONG_DIR + stage_id + ".ogg") as AudioStreamOggVorbis  # The song file.
+	if stream == null:
+		return
+	stream.loop = true
+	stream.loop_offset = float(SongData.LOOPS.get(stage_id, 0.0))
+	_song.player.stop()
+	_song.player.stream = stream
+	_song.gain = 0.0
+	_song_stage = stage_id
+
+
+## Loads sound `id`'s sampled takes into _samples (<id>.ogg, <id>_2.ogg, ... in
+## SoundData.SFX_SAMPLE_DIR; none = the id keeps its synth sound).
+func _load_samples(id: String) -> void:
+	var takes: Array = []  # Its takes, in file order.
+	var path := SoundData.SFX_SAMPLE_DIR + id + ".ogg"  # The next take's file.
+	while ResourceLoader.exists(path):
+		takes.append(load(path))
+		path = SoundData.SFX_SAMPLE_DIR + "%s_%d.ogg" % [id, takes.size() + 1]
+	if not takes.is_empty():
+		_samples[id] = takes
 
 
 ## Creates score loop `sid`'s renderer (first call only; never headless): a
@@ -605,6 +685,7 @@ func prepare_pack(pack: String) -> void:
 	_mutex.lock()  # The worker reads the queue and recipes.
 	for id: String in defs:
 		_pack_defs[id] = defs[id]
+		_load_samples(id)
 		_pack_queue.append(id)
 		_pack_seeds.append(PACK_SEED + int(PACK_SEED_OFFSETS.get(pack, 0)) + k)
 		k += 1
@@ -809,7 +890,8 @@ func _setup_buses() -> void:
 ## per-play pitch variation. Cheap when rejected (cooldown is checked first),
 ## so gameplay may call it for every hit.
 func play(id: String, pos: Vector2 = Vector2.INF, pitch: float = 1.0) -> void:
-	if not _streams.has(id):
+	var takes: Array = _samples.get(id, [])  # Its sampled takes (audio overhaul; empty = synth only).
+	if takes.is_empty() and not _streams.has(id):
 		return  # Not rendered yet (or not a sound).
 	var def: Dictionary = SoundData.SOUNDS[id] if SoundData.SOUNDS.has(id) else _pack_defs[id]  # Bank or pack recipe.
 	var now := Time.get_ticks_msec()
@@ -830,7 +912,7 @@ func play(id: String, pos: Vector2 = Vector2.INF, pitch: float = 1.0) -> void:
 		return
 	_last_play[id] = now
 	var p := _voices[v]
-	p.stream = _streams[id]
+	p.stream = takes[_rng.randi() % takes.size()] if not takes.is_empty() else _streams[id]
 	p.volume_db = vol
 	var pv: float = def["pitch_var"]
 	p.pitch_scale = maxf(0.05, pitch * (1.0 + (_rng.randf_range(-pv, pv) if pv > 0.0 else 0.0)))

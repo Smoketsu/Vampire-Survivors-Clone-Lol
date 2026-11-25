@@ -10,9 +10,12 @@ horde (Warriors, Archers, Mages, the Mender
 and Warder priest orders, plus Abominations, Rogues, Gargoyles, Frost Wraiths, Bone Hounds,
 Banshees and Corpse Catapults) against the holy Crimson Covenant. It is built in **Godot 4.3**
 with **GDScript**, top-down 2D and the GL Compatibility renderer. Art is true pixel art (PNGs in `assets/`, made in the Oct 2026 art pass;
-the code drawings in `_draw` stay as the fallback for any missing PNG), and sound and music are synthesized in-engine
-(the sounds and the run loop at startup, the menu theme lazily the first time the menu shows; on the no-threads
-Web build both in small per-frame steps, bit-identical). It also runs in desktop browsers and on phones /
+the code drawings in `_draw` stay as the fallback for any missing PNG). The core sound effects are samples built
+from Kenney's CC0 packs (`tools/audio/build_sfx.py` → `assets/audio/sfx/`) and every stage has its own song
+(`tools/audio/compose.py` + `songs.py` → `assets/audio/music/`, GeneralUser GS soundfont; GDD §15.0 "Audio overhaul");
+everything else (act sound packs, menu theme, epilogue cue, and the fallback for any missing file) is synthesized
+in-engine (the sounds and the run loop at startup, the menu theme lazily the first time the menu shows; on the
+no-threads Web build both in small per-frame steps, bit-identical). It also runs in desktop browsers and on phones /
 tablets in landscape (the `Web` export preset; touch controls, mobile UI scale, GDD §15.0 "Mobile browser support").
 
 ## Sources of truth
