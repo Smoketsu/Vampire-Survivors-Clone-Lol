@@ -659,9 +659,24 @@ Evolution requires the base skill, its **matching passive**, and a **special eli
 | Requiem | Banshee + Mages | Mage explosions hit weakened foes harder and stretch the Dirge (never past its own length) |
 | Baying of the Damned | Banshee + Bone Hounds | Each Dirge sends the pack into a short attack- and move-speed frenzy |
 | The Charnel Menagerie | Any 4 of the 7 newer classes | The newer classes deal more damage and replenish faster |
+| Bone Bastion | Bone Golem + Warriors or Abominations | Summons near a Golem take less damage, far less while it is planted |
+| Pinned Down | Iron Revenant + Archers | Revenant shells pin foes; arrows hit pinned foes harder |
+| Anchor and Stone | Spawn of the Deep + Corpse Catapult | Boulders hit held (stunned) foes harder; catapults aim at them |
+| Broken Guard | Bound Oni + Warriors | Warriors / Death Knights hit held (stunned) foes harder |
+| Searchlight | Gargoyle + Ghost Saucer | Saucer beams hit swooped foes harder |
+| Carrion Swarm | Abomination + Grave Drone | Drone darts hit staggered foes harder |
+| Fallen Choir | Banshee + Fallen Seraph | Seraph blades, dives and feather rings hit weakened foes harder |
+| Black Ice | Frost Wraith + Powder Wraith | Keg bursts hit frozen foes much harder, chilled ones a little |
+| Blood in the Water | Rogues + Blood Spawn | Rogue bleeds mark foes; Blood Spawn hit bleeding foes harder |
+| Aegis of Tartarus | Warders + Myrmidon Shades | Warder barriers on shield-locked Myrmidons (wall + barrier capped together) |
+| The Unhallowed Legion | Any 4 of the 12 later front-line classes | They deal more damage and their specials recharge sooner |
+| The Rain of Ruin | Any 3 of the 5 later ranged classes | They deal more damage and attack faster |
 
 The nine synergies of the newer classes (owner-approved, see 15.0 "Synergies for the newer classes") follow a
-**setter / finisher** pattern; one mark bonus per hit (the highest), half against the stage boss.
+**setter / finisher** pattern; one mark bonus per hit (the highest), half against the stage boss. The later classes'
+synergies (15.0 "Synergies for the later classes (owner decisions, Nov 2026)") follow the same rules; the Draugr Thane
+is a second setter of Cold Blood and Shatterfall (Winter's Edge), and every one of the 17 later classes is in a pair or
+a capstone.
 
 ### 6.4 Stacking Rules
 

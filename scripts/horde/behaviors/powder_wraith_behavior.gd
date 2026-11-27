@@ -239,10 +239,11 @@ func on_deactivate(u: SummonedUnit) -> void:
 
 ## Cluster preference while the keg is ready.
 func score_bonus(u: SummonedUnit, e: Enemy, _dp: float) -> float:
+	var aim := u.director.synergies.aim_bonus("black_ice", e)  # Black Ice: frozen / chilled foes (0 without it).
 	if is_busy() or special_cd > 0.0:
-		return 0.0
+		return aim
 	var n := count_enemies(u.game, e.position, float(u.special["keg_radius"]), _buf2)
-	return float(u.special["cluster_bonus"]) * clampf(float(n) / maxf(float(u.special["keg_min_enemies"]), 1.0), 0.0, 1.0)
+	return aim + float(u.special["cluster_bonus"]) * clampf(float(n) / maxf(float(u.special["keg_min_enemies"]), 1.0), 0.0, 1.0)
 
 
 ## While it marches: the fuse's spark over its keg and the burst's reach at

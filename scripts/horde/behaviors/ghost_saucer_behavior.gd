@@ -212,3 +212,8 @@ func draw_under(u: SummonedUnit) -> void:
 		var k := 1.0 - clampf((g.elapsed - float(bm[2])) / BEAM_TIME, 0.0, 1.0)
 		ArkGlyphs.draw_soul_beam(u, ((bm[0] as Vector2) - u.position) * m, ((bm[1] as Vector2) - u.position) * m, float(u.special.get("beam_width", 7.0)), k)
 	body_space(u)
+
+
+## Searchlight (synergy): a preference for swooped foes (SynergyManager.aim_bonus(), 0 without it).
+func score_bonus(u: SummonedUnit, e: Enemy, _dp: float) -> float:
+	return u.director.synergies.aim_bonus("searchlight", e)

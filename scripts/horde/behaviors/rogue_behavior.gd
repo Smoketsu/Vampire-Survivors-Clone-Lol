@@ -259,6 +259,7 @@ func _add_bleed(u: SummonedUnit, e: Enemy) -> void:
 			have += 1
 			if oldest.is_empty() or int(b["left"]) < int(oldest["left"]):
 				oldest = b
+	u.director.synergies.mark_bleeding(e, float(ticks) * tick)  # Blood in the Water (no-op without it).
 	if have >= stacks:
 		oldest["left"] = ticks
 		return

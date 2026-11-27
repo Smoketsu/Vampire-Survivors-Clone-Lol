@@ -18,6 +18,27 @@
 ## and content wave 2's pair (owner-approved proposal 5; the Bone Golem also
 ## joins NEWER_CLASSES, so it counts toward the Menagerie):
 ##   Bone Bastion          (Bone Golem + Warrior or Abom.)  an aura: summons near a Golem take less damage (no mark)
+## and the synergies of the seventeen later classes (owner-approved proposal
+## "Synergies for the Later Classes", GDD §15.0 "Synergies for the later
+## classes (owner decisions, Nov 2026)"), the same setter / finisher pattern:
+##   Pinned Down           (Iron Revenant + Archers)          shells pin foes; arrows hit pinned foes harder
+##   Anchor and Stone      (Spawn of the Deep + Catapult)     boulders aim at held (stunned) foes and hit them harder
+##   Broken Guard          (Bound Oni + Warriors)             warriors hit held (stunned) foes harder
+##   Searchlight           (Gargoyle + Ghost Saucer)          saucer beams hit swooped foes harder
+##   Carrion Swarm         (Abomination + Grave Drone)        drone darts hit staggered foes harder
+##   Fallen Choir          (Banshee + Fallen Seraph)          seraph blades, dives and feathers hit weakened foes harder
+##   Black Ice             (Frost Wraith + Powder Wraith)     keg bursts hit frozen (or chilled) foes harder
+##   Blood in the Water    (Rogue + Blood Spawn)              rogue bleeds mark foes; blood spawn hit bleeding foes harder
+##   Aegis of Tartarus     (Warder + Myrmidon Shade)          warder barriers on shield-locked Myrmidons (no mark)
+##   Winter's Edge         the Draugr Thane is a second setter of Cold Blood
+##                         and Shatterfall (its chill is the Frost Wraith's)
+## and two capstones that split the seventeen (owner: "maybe more than one";
+## the later classes never join the Charnel Menagerie):
+##   The Unhallowed Legion (any 4 of the 12 LEGION_CLASSES, the front line)  more damage, shorter special cooldowns
+##   The Rain of Ruin      (any 3 of the 5 RUIN_CLASSES, the ranged ones)    more damage, faster attacks
+## "Held" is every stun (Enemy.stun_timer > 0) from any source; evolved-only
+## setters count (the Black Paragon slam, the Fossil Tyrant roar stun, the
+## Prince of Hell's weakening).
 ## Evolved forms keep their class id, so they count (and finish) as their
 ## class (Bone Colossus, Cathedral Horror, Winter Revenant, Keening Lady,
 ## Shadow Reaper, Hellhound, Ossuary Engine; Death Knight, Lich).
@@ -54,12 +75,17 @@ const MIN_CLASS_LEVEL: int = 2  # TUNING (not in GDD) decision for open question
 const BANNER_TIME: float = 3.5  # TUNING (not in GDD)
 
 ## Display / HUD order: the four original synergies, the eight pairs of the
-## newer classes, then the capstone.
+## newer classes, then the capstone; Bone Bastion; the later classes' pairs
+## and their two capstones.
 const ORDER := ["shieldwall", "volley", "deathless", "unholy_host",
 		"flesh_rampart", "killing_field", "death_from_above", "wild_hunt",
 		"cold_blood", "shatterfall", "requiem", "baying", "charnel_menagerie",
 		# --- Content wave 2: Bone Golem ---
-		"bone_bastion"]
+		"bone_bastion",
+		# --- Synergies for the later classes (Nov 2026) ---
+		"pinned_down", "anchor_and_stone", "broken_guard", "searchlight",
+		"carrion_swarm", "fallen_choir", "black_ice", "blood_in_the_water",
+		"aegis_of_tartarus", "unhallowed_legion", "rain_of_ruin"]
 
 ## The seven newer summon classes (UnitData ids): the classes the Charnel
 ## Menagerie counts and whose damage and replenishment it raises.
@@ -67,6 +93,29 @@ const NEWER_CLASSES := ["abomination", "rogue", "gargoyle", "frost_wraith",
 		"bone_hound", "banshee", "corpse_catapult",
 		# --- Content wave 2: Bone Golem --- (owner-approved: it counts toward the Menagerie)
 		"bone_golem"]
+## The seventeen later summon classes (UnitData ids; owner list, Nov 2026):
+## every one is in a pair or a capstone. They never count toward the
+## Charnel Menagerie (owner decision).
+const LATER_CLASSES := ["fallen_seraph", "spawn_of_the_deep", "grave_drone", "iron_revenant",
+		"myrmidon_shade", "bound_oni", "bound_succubus", "archfiend", "blood_spawn",
+		"fallen_hero", "ghost_saucer", "powder_wraith", "draugr_thane", "ushabti_sentinel",
+		"bound_ophan", "bonehorn", "ossuary_oak"]
+## The twelve later classes that fight on the Bone Ring's front (formation
+## "front"): the classes The Unhallowed Legion counts and raises.
+const LEGION_CLASSES := ["spawn_of_the_deep", "myrmidon_shade", "bound_oni", "archfiend",
+		"blood_spawn", "fallen_hero", "powder_wraith", "draugr_thane", "ushabti_sentinel",
+		"bound_ophan", "bonehorn", "ossuary_oak"]
+## The five later classes that strike from range (formation "mid" / "back",
+## attack range 140 px or more): the classes The Rain of Ruin counts and raises.
+const RUIN_CLASSES := ["fallen_seraph", "grave_drone", "iron_revenant", "bound_succubus", "ghost_saucer"]
+## Seconds an Iron Revenant (or Deus Revenant) shell leaves a foe "pinned"
+## (Pinned Down; Enemy.pinned_until).
+const PINNED_DURATION: float = 6.0  # TUNING (not in GDD) proposal 4.0; balance pass (docs/synergies/LATE_PAIRS.md): too few pinned arrows
+## Seconds a status mark outlasts its status: a foe stays "held" this long
+## after its stun ends (Enemy.held_until) and "bleeding" this long after the
+## rogue bleed would end (Enemy.bleeding_until), so a finisher arriving just
+## after the setter still cashes it in (like the 4 s stagger).
+const MARK_LINGER: float = 3.0  # TUNING (not in GDD) balance pass: 1 s stuns and 3 s bleeds covered too few finisher hits
 ## Seconds an Abomination (or Bone Colossus) stomp leaves a foe "staggered"
 ## (Flesh Rampart, Killing Field; Enemy.staggered_until).
 const STAGGER_DURATION: float = 4.0  # TUNING (not in GDD) proposal 2.5; pair screens: 2/3 of the 6 s stomp cooldown
@@ -101,7 +150,54 @@ const SOURCE_CLASS := {
 	"ossuary_shards": "corpse_catapult",
 	# --- Content wave 2: Bone Golem ---
 	"bone_golem": "bone_golem", "ossuary_titan": "bone_golem", "golem_slam": "bone_golem", "titan_wall": "bone_golem",
+	# --- Synergies for the later classes (Nov 2026): every source of the
+	# seventeen later classes (basic attack, evolution id, specials), for
+	# their pairs and their capstones ---
+	"fallen_seraph": "fallen_seraph", "ruin_seraph": "fallen_seraph",
+	"seraph_dive": "fallen_seraph", "seraph_feathers": "fallen_seraph",
+	"spawn_of_the_deep": "spawn_of_the_deep", "leviathan": "spawn_of_the_deep",
+	"deep_grasp": "spawn_of_the_deep", "leviathan_sweep": "spawn_of_the_deep",
+	"grave_drone": "grave_drone", "wraith_drone": "grave_drone",
+	"iron_revenant": "iron_revenant", "deus_revenant": "iron_revenant",
+	"deus_revenant_missile": "iron_revenant",
+	"myrmidon_shade": "myrmidon_shade", "legion_of_tartarus": "myrmidon_shade",
+	"myrmidon_pierce": "myrmidon_shade",
+	"bound_oni": "bound_oni", "oni_lord": "bound_oni", "oni_kanabo": "bound_oni", "oni_quake": "bound_oni",
+	"bound_succubus": "bound_succubus", "lilim_matriarch": "bound_succubus",
+	"archfiend": "archfiend", "prince_of_hell": "archfiend", "archfiend_cleave": "archfiend",
+	"blood_spawn": "blood_spawn", "nosferatu": "blood_spawn",
+	"fallen_hero": "fallen_hero", "black_paragon": "fallen_hero",
+	"fallen_hero_slam": "fallen_hero", "black_paragon_slam": "fallen_hero",
+	"ghost_saucer": "ghost_saucer", "black_mothership": "ghost_saucer",
+	"ghost_saucer_lift": "ghost_saucer", "black_mothership_lift": "ghost_saucer",
+	"powder_wraith": "powder_wraith", "magazine_lord": "powder_wraith",
+	"powder_wraith_keg": "powder_wraith", "magazine_lord_keg": "powder_wraith",
+	"draugr_thane": "draugr_thane", "barrow_king": "draugr_thane",
+	"thane_cleave": "draugr_thane", "barrow_king_cleave": "draugr_thane",
+	"ushabti_sentinel": "ushabti_sentinel", "eternal_guard": "ushabti_sentinel",
+	"ushabti_reform": "ushabti_sentinel", "eternal_guard_reform": "ushabti_sentinel",
+	"bound_ophan": "bound_ophan", "throne_of_bones": "bound_ophan",
+	"bound_ophan_roll": "bound_ophan", "throne_of_bones_roll": "bound_ophan",
+	"bonehorn": "bonehorn", "fossil_tyrant": "bonehorn",
+	"bonehorn_charge": "bonehorn", "fossil_tyrant_charge": "bonehorn",
+	"ossuary_oak": "ossuary_oak", "world_root_warden": "ossuary_oak",
+	"ossuary_oak_lash": "ossuary_oak", "world_root_lash": "ossuary_oak",
 }
+## Finisher sources read ONLY by the synergy hit path (SynergyManager.hit_mult()),
+## kept out of SOURCE_CLASS on purpose: other systems read SOURCE_CLASS (the
+## Celestial Host's Grace damage kinds, the Crash Site's egg report), and the
+## Archers are a core class the bots draft, so listing them there would change
+## the same-seed summaries of every run with Archers. Pinned Down's finisher.
+const HIT_ONLY_SOURCES := {"archer": "archer", "gravebow": "archer"}
+## The arrow sources (Archers, Gravebow): Pinned Down raises these.
+const ARROW_SOURCES := ["archer", "gravebow"]
+## The Grave Drone's bone darts (base and Wraith Drone): Carrion Swarm raises these.
+const DART_SOURCES := ["grave_drone", "wraith_drone"]
+## The Ghost Saucer's beams (base and Black Mothership; not the lift's slam):
+## Searchlight raises these.
+const BEAM_SOURCES := ["ghost_saucer", "black_mothership"]
+## The Powder Wraith's keg bursts (base and Magazine Lord): Black Ice raises these.
+const KEG_SOURCES := ["powder_wraith_keg", "magazine_lord_keg"]
 ## The boulder sources (a Corpse Catapult's and an Ossuary Engine's splash):
 ## Killing Field and Shatterfall raise these only, not the shard fields.
 const BOULDER_SOURCES := ["corpse_catapult", "ossuary_engine"]
@@ -125,7 +221,12 @@ const MAGE_SOURCES := ["mage", "lich"]
 ##                  "swooped" (Enemy.swooped_until), "chilled" (chilled or
 ##                  Deep-Frozen), "frozen" (Deep-Frozen takes `bonus`, only
 ##                  chilled takes `bonus_chilled`), "weakened" (the Dirge,
-##                  Enemy.weaken_until) or "dirge" (no hit bonus: Baying).
+##                  Enemy.weaken_until), "dirge" (no hit bonus: Baying),
+##                  "pinned" (Enemy.pinned_until), "held" (any stun,
+##                  Enemy.stun_timer > 0, and MARK_LINGER s after it:
+##                  Enemy.held_until) or "bleeding" (Enemy.bleeding_until).
+##   aim_bonus    — optional: target-score bonus the finisher's behaviour (or
+##                  the catapult aim) gives a marked foe (SynergyManager.aim_bonus()).
 ##   finisher     — optional: the class (a SOURCE_CLASS value) whose hits
 ##                  take the mark bonus.
 ##   sources      — optional: only these damage sources of the finisher take
@@ -246,7 +347,8 @@ const SYNERGIES := {
 		"short_name": "Cold Blood",
 		"icon": "syn_cold_blood",
 		"description": "Rogues dash at chilled and frozen foes and hit them harder.",
-		"requires": ["frost_wraith", "rogue"],
+		# Winter's Edge (owner decision, Nov 2026): the Draugr Thane is a second setter.
+		"requires": [["frost_wraith", "draugr_thane"], "rogue"],
 		"distinct": 0,
 		"mark": "chilled",
 		"finisher": "rogue",
@@ -260,7 +362,8 @@ const SYNERGIES := {
 		"short_name": "Shatterfall",
 		"icon": "syn_shatterfall",
 		"description": "Catapults aim at frozen foes; boulders hit frozen foes much harder.",
-		"requires": ["frost_wraith", "corpse_catapult"],
+		# Winter's Edge (owner decision, Nov 2026): the Draugr Thane is a second setter.
+		"requires": [["frost_wraith", "draugr_thane"], "corpse_catapult"],
 		"distinct": 0,
 		"mark": "frozen",
 		"finisher": "corpse_catapult",
@@ -338,5 +441,162 @@ const SYNERGIES := {
 		"planted_reduction": 0.30,  # TUNING (not in GDD) owner-approved proposal
 		## Most (0..1) Grave Masonry and the bastion may cut one hit together.
 		"max_combined": 0.60,  # TUNING (not in GDD) owner-approved proposal
+	},
+	# --- Synergies for the later classes (owner decisions, Nov 2026) ---
+	"pinned_down": {
+		"display_name": "Pinned Down",
+		"short_name": "Pinned Down",
+		"icon": "syn_pinned_down",
+		"description": "Iron Revenant shells pin foes; arrows hit pinned foes harder.",
+		"requires": ["iron_revenant", "archer"],
+		"distinct": 0,
+		"mark": "pinned",
+		"finisher": "archer",
+		"sources": ARROW_SOURCES,
+		## Extra arrow damage (Archers, Gravebow, their volleys) on a pinned foe (+40%).
+		"bonus": 0.40,  # TUNING (not in GDD) owner-approved proposal
+	},
+	"anchor_and_stone": {
+		"display_name": "Anchor and Stone",
+		"short_name": "Anchor & Stone",
+		"icon": "syn_anchor_and_stone",
+		"description": "Catapults aim at held foes and hit them harder.",
+		"requires": ["spawn_of_the_deep", "corpse_catapult"],
+		"distinct": 0,
+		"mark": "held",
+		"finisher": "corpse_catapult",
+		"sources": BOULDER_SOURCES,
+		## Extra boulder damage on a held (stunned) foe (+50%).
+		"bonus": 0.50,  # TUNING (not in GDD) owner-approved proposal
+		## Catapult target-score bonus for a held foe (like Killing Field's).
+		"aim_bonus": 1.0,  # TUNING (not in GDD) owner-approved proposal
+	},
+	"broken_guard": {
+		"display_name": "Broken Guard",
+		"short_name": "Broken Guard",
+		"icon": "syn_broken_guard",
+		"description": "Warriors hit held foes harder.",
+		"requires": ["bound_oni", "warrior"],
+		"distinct": 0,
+		"mark": "held",
+		"finisher": "warrior",
+		## Extra warrior / Death Knight damage on a held (stunned) foe (+40%).
+		"bonus": 0.40,  # TUNING (not in GDD) owner-approved proposal
+	},
+	"searchlight": {
+		"display_name": "Searchlight",
+		"short_name": "Searchlight",
+		"icon": "syn_searchlight",
+		"description": "Ghost Saucer beams hit swooped foes harder.",
+		"requires": ["gargoyle", "ghost_saucer"],
+		"distinct": 0,
+		"mark": "swooped",
+		"finisher": "ghost_saucer",
+		"sources": BEAM_SOURCES,
+		## Extra beam damage on a swooped foe (+40%).
+		"bonus": 0.40,  # TUNING (not in GDD) owner-approved proposal
+		## Target-score bonus the saucers give a marked foe (SynergyManager.aim_bonus()).
+		"aim_bonus": 1.0,  # TUNING (not in GDD) balance pass: like Killing Field's aim (finishers rarely met the marked foes)
+	},
+	"carrion_swarm": {
+		"display_name": "Carrion Swarm",
+		"short_name": "Carrion Swarm",
+		"icon": "syn_carrion_swarm",
+		"description": "Grave Drone darts hit staggered foes harder.",
+		"requires": ["abomination", "grave_drone"],
+		"distinct": 0,
+		"mark": "staggered",
+		"finisher": "grave_drone",
+		"sources": DART_SOURCES,
+		## Extra dart damage on a staggered foe (+35%).
+		"bonus": 0.35,  # TUNING (not in GDD) owner-approved proposal
+		## Target-score bonus the drones give a marked foe (SynergyManager.aim_bonus()).
+		"aim_bonus": 1.0,  # TUNING (not in GDD) balance pass: like Killing Field's aim (finishers rarely met the marked foes)
+	},
+	"fallen_choir": {
+		"display_name": "Fallen Choir",
+		"short_name": "Fallen Choir",
+		"icon": "syn_fallen_choir",
+		"description": "Fallen Seraphs hit weakened foes harder.",
+		"requires": ["banshee", "fallen_seraph"],
+		"distinct": 0,
+		"mark": "weakened",
+		"finisher": "fallen_seraph",
+		## Extra seraph damage (blades, dives, feather rings) on a weakened foe (+40%).
+		"bonus": 0.40,  # TUNING (not in GDD) owner-approved proposal
+		## Target-score bonus the seraphs give a marked foe (SynergyManager.aim_bonus()).
+		"aim_bonus": 1.0,  # TUNING (not in GDD) balance pass: like Killing Field's aim (finishers rarely met the marked foes)
+	},
+	"black_ice": {
+		"display_name": "Black Ice",
+		"short_name": "Black Ice",
+		"icon": "syn_black_ice",
+		"description": "Powder kegs burst much harder on frozen and chilled foes.",
+		"requires": ["frost_wraith", "powder_wraith"],
+		"distinct": 0,
+		"mark": "frozen",
+		"finisher": "powder_wraith",
+		"sources": KEG_SOURCES,
+		## Extra keg damage on a Deep-Frozen foe (+60%).
+		"bonus": 0.60,  # TUNING (not in GDD) owner-approved proposal
+		## Extra keg damage on a foe that is only chilled (+30%).
+		"bonus_chilled": 0.30,  # TUNING (not in GDD) owner-approved proposal
+		## Target-score bonus the powder wraiths give a marked foe (SynergyManager.aim_bonus()).
+		"aim_bonus": 1.0,  # TUNING (not in GDD) balance pass: like Killing Field's aim (finishers rarely met the marked foes)
+	},
+	"blood_in_the_water": {
+		"display_name": "Blood in the Water",
+		"short_name": "Blood in Water",
+		"icon": "syn_blood_in_the_water",
+		"description": "Rogue bleeds draw the Blood Spawn; they hit bleeding foes harder.",
+		"requires": ["rogue", "blood_spawn"],
+		"distinct": 0,
+		"mark": "bleeding",
+		"finisher": "blood_spawn",
+		## Extra blood spawn / Nosferatu damage on a bleeding foe (+40%).
+		"bonus": 0.40,  # TUNING (not in GDD) owner-approved proposal
+		## Target-score bonus the blood spawn give a marked foe (SynergyManager.aim_bonus()).
+		"aim_bonus": 1.0,  # TUNING (not in GDD) balance pass: like Killing Field's aim (finishers rarely met the marked foes)
+	},
+	"aegis_of_tartarus": {
+		"display_name": "Aegis of Tartarus",
+		"short_name": "Aegis",
+		"icon": "syn_aegis_of_tartarus",
+		"description": "Warders raise bone barriers on shield-locked Myrmidons.",
+		"requires": ["warder", "myrmidon_shade"],
+		"distinct": 0,
+		## Barrier HP as a fraction of the Myrmidon's max HP (refreshed, not stacked; Shieldwall's).
+		"barrier_fraction": 0.25,  # TUNING (not in GDD) owner-approved proposal
+		## Seconds between barrier refreshes (needs a living Warder or Bishop; Shieldwall's).
+		"barrier_interval": 5.0,  # TUNING (not in GDD) owner-approved proposal
+		## Most (0..1) of one hit the locked wall's cut and a barrier may stop
+		## together on a Myrmidon (CombatResolver.damage_unit(); like Bone Bastion's cap).
+		"max_combined": 0.70,  # TUNING (not in GDD)
+	},
+	"unhallowed_legion": {
+		"display_name": "The Unhallowed Legion",
+		"short_name": "Legion",
+		"icon": "syn_unhallowed_legion",
+		"description": "Four of the later front-line horrors: they hit harder and their specials return sooner.",
+		"requires": [],
+		"distinct": 4,
+		"distinct_of": LEGION_CLASSES,
+		## Damage bonus of every LEGION_CLASSES source (+10%), its own category.
+		"damage": 0.10,  # TUNING (not in GDD) owner-approved proposal
+		## Share (0..1) cut from the LEGION_CLASSES' special cooldowns (HordeDirector._special_stats()).
+		"special_cooldown_cut": 0.15,  # TUNING (not in GDD) owner-approved proposal
+	},
+	"rain_of_ruin": {
+		"display_name": "The Rain of Ruin",
+		"short_name": "Rain of Ruin",
+		"icon": "syn_rain_of_ruin",
+		"description": "Three of the later ranged horrors: they hit harder and attack faster.",
+		"requires": [],
+		"distinct": 3,
+		"distinct_of": RUIN_CLASSES,
+		## Damage bonus of every RUIN_CLASSES source (+10%), its own category.
+		"damage": 0.10,  # TUNING (not in GDD) capstone 2, mirrors the Legion
+		## Attack-speed bonus of the RUIN_CLASSES (+10%), its own category (HordeDirector.compute_stats()).
+		"attack_speed": 0.10,  # TUNING (not in GDD) capstone 2
 	},
 }

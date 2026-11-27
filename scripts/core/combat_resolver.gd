@@ -81,8 +81,9 @@
 ## Synergies of the newer classes (SynergyData, SynergyManager): damage_enemy()
 ## multiplies every hit by SynergyManager.hit_mult() once, right after
 ## Siegecraft (the highest mark bonus of the hit's class on a staggered /
-## swooped / chilled / frozen / weakened foe, half on the stage boss, times
-## the Charnel Menagerie for the newer classes; exactly 1 while none is
+## swooped / chilled / frozen / weakened / pinned / held / bleeding foe, half
+## on the stage boss, times the class's capstone: the Charnel Menagerie, the
+## Unhallowed Legion or the Rain of Ruin; exactly 1 while none is
 ## active) and reports the dealt damage to record_hit(). Requiem stretches a
 ## Dirge through extend_weaken() (capped at Enemy.weaken_span).
 ## Every damage to a structure is also counted per source (structdmg_<tag>).
@@ -334,7 +335,7 @@ func damage_enemy(e: Enemy, amount: float, source: String, as_slot: int = -1, or
 		amount *= 1.0 + iron
 	# Synergies of the newer classes (SynergyManager.hit_mult(), the one
 	# synergy hit path): the highest mark bonus of the hit's class, times the
-	# Charnel Menagerie. Exactly 1 while none of them is active.
+	# capstone (Menagerie, Unhallowed Legion, Rain of Ruin). Exactly 1 while none of them is active.
 	var syn := game.horde.synergies  # Army synergies.
 	var syn_mult := syn.hit_mult(source, e)  # Synergy multiplier of this hit.
 	amount *= syn_mult
@@ -653,6 +654,7 @@ func damage_unit(u: SummonedUnit, amount: float, source: String, by: Enemy = nul
 		amount *= mult
 	# --- Act IV: the Asphodel Underworld --- a summon behaviour's own cut (the
 	# Myrmidon Shades' locked shield wall; exactly 1 for every other class).
+	var pre_wall := amount  # The hit before the wall's cut (Aegis of Tartarus caps wall + barrier).
 	if u.behavior != null:
 		var bm := u.behavior.damage_taken_mult(u, source)  # Share of the hit kept.
 		if bm < 1.0:
@@ -694,7 +696,9 @@ func damage_unit(u: SummonedUnit, amount: float, source: String, by: Enemy = nul
 		game.stat_add("plating_dmg_prevented", cut)
 		amount -= cut
 	if u.barrier_hp > 0.0:
-		var absorbed := minf(u.barrier_hp, amount)
+		# Aegis of Tartarus (synergy): on a locked Myrmidon the wall and the
+		# barrier stop at most max_combined of the hit together (INF otherwise).
+		var absorbed := minf(minf(u.barrier_hp, amount), game.horde.synergies.aegis_absorb_cap(u, pre_wall, amount))
 		u.barrier_hp -= absorbed
 		amount -= absorbed
 		game.stat_add("barrier_absorbed", absorbed)
@@ -1086,6 +1090,7 @@ func stun_enemy(e: Enemy, duration: float, boss_mult: float, elite_mult: float) 
 		d *= elite_mult
 	e.stun_timer = maxf(e.stun_timer, d)
 	game.stat_add("enemy_stuns", 1.0)
+	game.horde.synergies.mark_held(e, d)  # Anchor and Stone / Broken Guard (no-op without them).
 	return d
 
 

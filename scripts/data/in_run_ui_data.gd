@@ -235,3 +235,12 @@ const TRAIL_HOLD: float = 0.35  # TUNING (not in GDD)
 const TRAIL_DRAIN: float = 0.9  # TUNING (not in GDD)
 ## Damage trail colour (the HP just lost).
 const TRAIL_COLOR := Color(1.0, 0.9, 0.75, 0.85)  # TUNING (not in GDD)
+
+# --- HUD synergy list (Hud) -----------------------------------------------------------------
+
+## Real seconds between two scroll steps of the synergy list while more
+## synergies are active than its box shows (8 rows).
+const SYN_SCROLL_STEP: float = 2.0  # TUNING (not in GDD)
+## Layout px one scroll step moves the synergy list: one row (22 px icon +
+## 2 px gap).
+const SYN_ROW_STEP: int = 24  # TUNING (not in GDD)

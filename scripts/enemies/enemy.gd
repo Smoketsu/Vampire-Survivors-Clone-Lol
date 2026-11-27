@@ -375,6 +375,18 @@ var staggered_until: float = 0.0
 ## Gargoyle / Cathedral Horror dive (SynergyManager.mark_swooped(); only
 ## written while Death from Above or The Wild Hunt is active). 0 = never.
 var swooped_until: float = 0.0
+## Synergy mark: game time (s) until which this enemy is pinned by an Iron
+## Revenant / Deus Revenant shell (SynergyManager.mark_pinned(); only written
+## while Pinned Down is active). 0 = never.
+var pinned_until: float = 0.0
+## Synergy mark: game time (s) until which this enemy bleeds from a rogue
+## bleed (SynergyManager.mark_bleeding(); only written while Blood in the
+## Water is active). 0 = never.
+var bleeding_until: float = 0.0
+## Synergy mark: game time (s) until which this enemy counts as held after a
+## stun (SynergyManager.mark_held(): the stun plus SynergyData.MARK_LINGER;
+## only written while Anchor and Stone or Broken Guard is active). 0 = never.
+var held_until: float = 0.0
 ## Death from Above: true once a rogue hit spent this swoop mark's dash reset
 ## (a new swoop mark re-arms it).
 var swoop_reset_spent: bool = false
@@ -557,6 +569,9 @@ func activate(p_game: Game, p_kind: String, def: Dictionary, pos: Vector2, hp_mu
 	weaken_span = 0.0
 	staggered_until = 0.0
 	swooped_until = 0.0
+	pinned_until = 0.0
+	bleeding_until = 0.0
+	held_until = 0.0
 	swoop_reset_spent = false
 	_shoot_slow_timer = 0.0
 	frozen = false

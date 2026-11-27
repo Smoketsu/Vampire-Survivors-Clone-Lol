@@ -313,6 +313,7 @@ func _friendly_hits(p: Projectile) -> bool:
 			game.combat.chill_enemy(e, p.chill_slow, p.chill_time)  # Frost Wraith bolt.
 		if p.slow_frac > 0.0:
 			game.combat.slow_enemy(e, p.slow_frac, p.slow_time)  # Act III: an Iron Revenant shell (suppressive fire).
+			game.horde.synergies.mark_pinned(e)  # Pinned Down (no-op without it).
 		if p.curse_time > 0.0:
 			game.combat.curse_enemy(e, p.curse_amp, p.curse_time)  # Gravebow arrow.
 			if p.hit_ids.size() > 1:

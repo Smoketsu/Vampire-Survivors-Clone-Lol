@@ -1036,6 +1036,17 @@ stone wing, ice, wail) meeting its finisher's (sword, boulder, dagger, hound sku
 | `syn_requiem.png` | Synergy Requiem: an arcane-blue orb bursting between two pale wail ripples |
 | `syn_baying.png` | Synergy Baying of the Damned: a howling hound skull with pale wail ripples |
 | `syn_charnel_menagerie.png` | Synergy The Charnel Menagerie: a skull-topped rib cage holding a teal soul flame |
+| `syn_pinned_down.png` | Synergy Pinned Down: an iron shell and a bone arrow pinning a soul-teal mark (procedural, `tools/synergy_badges.py`, Nov 2026) |
+| `syn_anchor_and_stone.png` | Synergy Anchor and Stone: a deep-sea tentacle coiled round a bone boulder (procedural, `tools/synergy_badges.py`, Nov 2026) |
+| `syn_broken_guard.png` | Synergy Broken Guard: an iron oni club cracking a bone shield (procedural, `tools/synergy_badges.py`, Nov 2026) |
+| `syn_searchlight.png` | Synergy Searchlight: a stone wing over a saucer's soul-teal beam (procedural, `tools/synergy_badges.py`, Nov 2026) |
+| `syn_carrion_swarm.png` | Synergy Carrion Swarm: three bone darts diving onto a flesh shockwave (procedural, `tools/synergy_badges.py`, Nov 2026) |
+| `syn_fallen_choir.png` | Synergy Fallen Choir: a pale wail ripple round a seraph's feather blade (procedural, `tools/synergy_badges.py`, Nov 2026) |
+| `syn_black_ice.png` | Synergy Black Ice: a powder keg bursting beside an ice crystal (procedural, `tools/synergy_badges.py`, Nov 2026) |
+| `syn_blood_in_the_water.png` | Synergy Blood in the Water: a blood drop over soul-teal water and bone fangs (procedural, `tools/synergy_badges.py`, Nov 2026) |
+| `syn_aegis_of_tartarus.png` | Synergy Aegis of Tartarus: a bronze hoplite shield under a teal barrier arc (procedural, `tools/synergy_badges.py`, Nov 2026) |
+| `syn_unhallowed_legion.png` | Synergy The Unhallowed Legion: a teal war banner with a bone skull over a soul flame (procedural, `tools/synergy_badges.py`, Nov 2026) |
+| `syn_rain_of_ruin.png` | Synergy The Rain of Ruin: bone darts and an iron shell falling from a soul-teal cloud (procedural, `tools/synergy_badges.py`, Nov 2026) |
 | `profane_oath.png` | Ossuary Profane Oath: a skeletal hand raised in an oath under a crimson flame (the Oath is the one crimson Ossuary icon, like the Pact) |
 | `bone_reserve.png` | Ossuary Bone Reserve (expansion step 3): a bone skull rising from the ground behind a soul-teal barrier arc |
 | `commanders_presence.png` | Ossuary Commander's Presence: a bone war banner with a teal pennant over three small skulls of different classes |
