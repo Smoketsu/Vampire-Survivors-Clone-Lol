@@ -453,8 +453,8 @@ const SYNERGIES := {
 		"mark": "pinned",
 		"finisher": "archer",
 		"sources": ARROW_SOURCES,
-		## Extra arrow damage (Archers, Gravebow, their volleys) on a pinned foe (+40%).
-		"bonus": 0.40,  # TUNING (not in GDD) owner-approved proposal
+		## Extra arrow damage (Archers, Gravebow, their volleys) on a pinned foe (+75%).
+		"bonus": 0.75,  # TUNING (not in GDD) proposal 0.40; balance pass: docs/synergies/LATE_PAIRS.md (low mark coverage; capped at Shatterfall's 0.75)
 	},
 	"anchor_and_stone": {
 		"display_name": "Anchor and Stone",
@@ -466,8 +466,8 @@ const SYNERGIES := {
 		"mark": "held",
 		"finisher": "corpse_catapult",
 		"sources": BOULDER_SOURCES,
-		## Extra boulder damage on a held (stunned) foe (+50%).
-		"bonus": 0.50,  # TUNING (not in GDD) owner-approved proposal
+		## Extra boulder damage on a held (stunned) foe (+75%).
+		"bonus": 0.75,  # TUNING (not in GDD) proposal 0.50; balance pass: docs/synergies/LATE_PAIRS.md (low mark coverage; capped at Shatterfall's 0.75)
 		## Catapult target-score bonus for a held foe (like Killing Field's).
 		"aim_bonus": 1.0,  # TUNING (not in GDD) owner-approved proposal
 	},
@@ -480,8 +480,8 @@ const SYNERGIES := {
 		"distinct": 0,
 		"mark": "held",
 		"finisher": "warrior",
-		## Extra warrior / Death Knight damage on a held (stunned) foe (+40%).
-		"bonus": 0.40,  # TUNING (not in GDD) owner-approved proposal
+		## Extra warrior / Death Knight damage on a held (stunned) foe (+75%).
+		"bonus": 0.75,  # TUNING (not in GDD) proposal 0.40; balance pass: docs/synergies/LATE_PAIRS.md (low mark coverage; capped at Shatterfall's 0.75)
 	},
 	"searchlight": {
 		"display_name": "Searchlight",
@@ -493,8 +493,8 @@ const SYNERGIES := {
 		"mark": "swooped",
 		"finisher": "ghost_saucer",
 		"sources": BEAM_SOURCES,
-		## Extra beam damage on a swooped foe (+40%).
-		"bonus": 0.40,  # TUNING (not in GDD) owner-approved proposal
+		## Extra beam damage on a swooped foe (+75%).
+		"bonus": 0.75,  # TUNING (not in GDD) proposal 0.40; balance pass: docs/synergies/LATE_PAIRS.md (low mark coverage; capped at Shatterfall's 0.75)
 		## Target-score bonus the saucers give a marked foe (SynergyManager.aim_bonus()).
 		"aim_bonus": 1.0,  # TUNING (not in GDD) balance pass: like Killing Field's aim (finishers rarely met the marked foes)
 	},
@@ -508,8 +508,8 @@ const SYNERGIES := {
 		"mark": "staggered",
 		"finisher": "grave_drone",
 		"sources": DART_SOURCES,
-		## Extra dart damage on a staggered foe (+35%).
-		"bonus": 0.35,  # TUNING (not in GDD) owner-approved proposal
+		## Extra dart damage on a staggered foe (+75%).
+		"bonus": 0.75,  # TUNING (not in GDD) proposal 0.35; balance pass: docs/synergies/LATE_PAIRS.md (low mark coverage; capped at Shatterfall's 0.75)
 		## Target-score bonus the drones give a marked foe (SynergyManager.aim_bonus()).
 		"aim_bonus": 1.0,  # TUNING (not in GDD) balance pass: like Killing Field's aim (finishers rarely met the marked foes)
 	},
@@ -522,8 +522,8 @@ const SYNERGIES := {
 		"distinct": 0,
 		"mark": "weakened",
 		"finisher": "fallen_seraph",
-		## Extra seraph damage (blades, dives, feather rings) on a weakened foe (+40%).
-		"bonus": 0.40,  # TUNING (not in GDD) owner-approved proposal
+		## Extra seraph damage (blades, dives, feather rings) on a weakened foe (+60%).
+		"bonus": 0.60,  # TUNING (not in GDD) proposal 0.40; balance pass: docs/synergies/LATE_PAIRS.md (extrapolated to ~10% direct)
 		## Target-score bonus the seraphs give a marked foe (SynergyManager.aim_bonus()).
 		"aim_bonus": 1.0,  # TUNING (not in GDD) balance pass: like Killing Field's aim (finishers rarely met the marked foes)
 	},
@@ -537,10 +537,10 @@ const SYNERGIES := {
 		"mark": "frozen",
 		"finisher": "powder_wraith",
 		"sources": KEG_SOURCES,
-		## Extra keg damage on a Deep-Frozen foe (+60%).
-		"bonus": 0.60,  # TUNING (not in GDD) owner-approved proposal
-		## Extra keg damage on a foe that is only chilled (+30%).
-		"bonus_chilled": 0.30,  # TUNING (not in GDD) owner-approved proposal
+		## Extra keg damage on a Deep-Frozen foe (+75%).
+		"bonus": 0.75,  # TUNING (not in GDD) proposal 0.60; balance pass: docs/synergies/LATE_PAIRS.md (low mark coverage; capped at Shatterfall's 0.75)
+		## Extra keg damage on a foe that is only chilled (+40%).
+		"bonus_chilled": 0.40,  # TUNING (not in GDD) proposal 0.30; balance pass: Shatterfall's chilled share
 		## Target-score bonus the powder wraiths give a marked foe (SynergyManager.aim_bonus()).
 		"aim_bonus": 1.0,  # TUNING (not in GDD) balance pass: like Killing Field's aim (finishers rarely met the marked foes)
 	},
@@ -553,8 +553,8 @@ const SYNERGIES := {
 		"distinct": 0,
 		"mark": "bleeding",
 		"finisher": "blood_spawn",
-		## Extra blood spawn / Nosferatu damage on a bleeding foe (+40%).
-		"bonus": 0.40,  # TUNING (not in GDD) owner-approved proposal
+		## Extra blood spawn / Nosferatu damage on a bleeding foe (+75%).
+		"bonus": 0.75,  # TUNING (not in GDD) proposal 0.40; balance pass: docs/synergies/LATE_PAIRS.md (low mark coverage; capped at Shatterfall's 0.75)
 		## Target-score bonus the blood spawn give a marked foe (SynergyManager.aim_bonus()).
 		"aim_bonus": 1.0,  # TUNING (not in GDD) balance pass: like Killing Field's aim (finishers rarely met the marked foes)
 	},

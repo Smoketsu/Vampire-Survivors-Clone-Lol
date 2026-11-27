@@ -968,16 +968,19 @@ number is in `scripts/data/unit_data.gd`.
   §15.0 "Synergies for the later classes"): every one of the 17 later classes
   is in a pair or a capstone, with the same rules (Lv 2+, hinted, one mark
   bonus per hit, half on the stage boss, no act-only rule). **Pinned Down**
-  (Iron Revenant + Archers: a shell *pins* foes for 4 s; arrows +40% on them),
-  **Anchor and Stone** (Spawn of the Deep + Corpse Catapult: boulders +50% on
-  *held* foes, and catapults aim at them; held = any stun, from any source),
-  **Broken Guard** (Bound Oni + Warriors: +40% on held foes), **Searchlight**
-  (Gargoyle + Ghost Saucer: beams +40% on swooped foes), **Carrion Swarm**
-  (Abomination + Grave Drone: darts +35% on staggered foes), **Fallen Choir**
-  (Banshee + Fallen Seraph: +40% on weakened foes), **Black Ice** (Frost
-  Wraith + Powder Wraith: keg bursts +60% on frozen, +30% on chilled foes),
+  (Iron Revenant + Archers: a shell *pins* foes for 6 s; arrows +75% on them),
+  **Anchor and Stone** (Spawn of the Deep + Corpse Catapult: boulders +75% on
+  *held* foes, and catapults aim at them; held = any stun, from any source,
+  and 3 s after it),
+  **Broken Guard** (Bound Oni + Warriors: +75% on held foes), **Searchlight**
+  (Gargoyle + Ghost Saucer: beams +75% on swooped foes), **Carrion Swarm**
+  (Abomination + Grave Drone: darts +75% on staggered foes), **Fallen Choir**
+  (Banshee + Fallen Seraph: +60% on weakened foes), **Black Ice** (Frost
+  Wraith + Powder Wraith: keg bursts +75% on frozen, +40% on chilled foes),
   **Blood in the Water** (Rogues + Blood Spawn: a rogue bleed marks a foe
-  *bleeding*; Blood Spawn +40% on it), **Aegis of Tartarus** (Warders +
+  *bleeding* until 3 s after the bleed; Blood Spawn +75% on it; the
+  drones, saucers, seraphs, powder wraiths and blood spawn of these pairs
+  prefer marked foes), **Aegis of Tartarus** (Warders +
   Myrmidon Shades: the Shieldwall barriers, 25% of max HP every 5 s, also go
   to shield-locked Myrmidons; the wall and a barrier stop at most 70% of a
   hit together) and **Winter's Edge** (the Draugr Thane is a second setter
