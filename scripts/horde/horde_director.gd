@@ -382,6 +382,11 @@ func compute_stats(cls: String, level: int, with_buffs: bool = true, with_evolut
 		dmg_mult *= 1.0 + presence * float(distinct_classes())
 	var spd_mult := (1.0 + float(row.get("speed_bonus", 0.0))) * (1.0 + ab.passive_value("dark_command", "minion_speed")) \
 			* (1.0 + synergies.value("unholy_host", "attack_speed"))
+	# The Rain of Ruin (synergy capstone): its ranged later classes attack faster,
+	# its own category (0 while off, so every other run is unchanged).
+	var ruin := synergies.capstone_attack_speed(cls)  # Attack-speed bonus.
+	if ruin > 0.0:
+		spd_mult *= 1.0 + ruin
 	# Ossuary Mastery of this class (MasteryData; an evolved form is its base class):
 	# its own category on HP and damage, exactly 1 while the class has none.
 	hp_mult *= 1.0 + game.meta.mastery_value(cls, "hp")
@@ -500,7 +505,7 @@ func compute_stats(cls: String, level: int, with_buffs: bool = true, with_evolut
 		"lifesteal": 0.0,
 		"evolution": "",
 		# Class special numbers (later classes; empty for the others).
-		"special": _special_stats(base, row, dmg_mult),
+		"special": _special_stats(cls, base, row, dmg_mult),
 	}
 	evolutions.modify_stats(cls, out, with_evolution)
 	# Grave Masonry (content wave 2): its blockers hold longer, after the
@@ -563,7 +568,9 @@ func apply_stance() -> void:
 ## Fallen Grace (Act II passive, paired with the Fallen Seraph) divides every
 ## *_cooldown again by (1 + its special_haste): its own category (exactly 1
 ## while it is not owned, so every other run is unchanged).
-func _special_stats(base: Dictionary, row: Dictionary, dmg_mult: float) -> Dictionary:
+## `cls` is the class id: the Unhallowed Legion synergy cuts its *_cooldown
+## keys by its special_cooldown_cut (SynergyManager.special_cooldown_cut()).
+func _special_stats(cls: String, base: Dictionary, row: Dictionary, dmg_mult: float) -> Dictionary:
 	var out := {}  # Effective special numbers.
 	var src: Dictionary = base.get("special", {})  # Base special numbers.
 	var dmg := dmg_mult * (1.0 + float(row.get("special_bonus", 0.0)))  # Special damage multiplier.
@@ -576,6 +583,9 @@ func _special_stats(base: Dictionary, row: Dictionary, dmg_mult: float) -> Dicti
 	# --- Act XII (temporary number): the Hall of Two Truths --- Answering Words: every class
 	# special recharges sooner, its own category (0 when not owned, so every other run is unchanged).
 	haste *= 1.0 + game.abilities.passive_value(UshabtiSentinelBehavior.ANSWERING, UshabtiSentinelBehavior.ANSWERING_KEY)
+	# The Unhallowed Legion (synergy capstone): its front-line later classes' specials
+	# recharge special_cooldown_cut sooner, its own category (0 while off).
+	haste /= 1.0 - synergies.special_cooldown_cut(cls)
 	# --- Act VIII: Liberty Heights --- Origin Story: every class special reaches
 	# wider, its own category (0 when not owned, so every other run is unchanged).
 	area *= 1.0 + game.abilities.passive_value(FallenHeroBehavior.ORIGIN, FallenHeroBehavior.ORIGIN_KEY)

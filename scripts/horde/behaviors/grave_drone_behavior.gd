@@ -15,7 +15,8 @@
 ## Wraith Drone (summon evolution; SummonEvolutionData "special_set"): three
 ## piercing darts an attack and a spectral look; the base drone keeps exactly
 ## the behaviour above. No special to cast, so it never enters CASTING on its
-## own. Stats: drone_darts.
+## own. Carrion Swarm (synergy): drones prefer the foes an Abomination staggers
+## (SynergyManager.aim_bonus(), 0 without it). Stats: drone_darts.
 class_name GraveDroneBehavior
 extends SummonBehavior
 
@@ -38,6 +39,11 @@ func release_attack(u: SummonedUnit) -> void:
 		else:
 			g.projectiles.fire_friendly_dir(Projectile.Kind.ARROW, muzzle, dir.rotated(off), u.damage, u.projectile_speed, pierce, u.dmg_source)
 	g.stat_add("drone_darts", float(n))
+
+
+## Carrion Swarm's target preference for staggered foes (0 without the synergy).
+func score_bonus(u: SummonedUnit, e: Enemy, _dp: float) -> float:
+	return u.director.synergies.aim_bonus("carrion_swarm", e)
 
 
 ## The body hovers above its shadow (drawing only).

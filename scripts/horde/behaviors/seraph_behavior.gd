@@ -286,3 +286,8 @@ func draw_under(u: SummonedUnit) -> void:
 	var at := dive_point - u.position  # Pack centre in world-aligned local space.
 	SeraphGlyphs.draw_dive_mark(u, at, float(u.special["dive_radius"]), phase_time)
 	body_space(u)
+
+
+## Fallen Choir (synergy): a preference for weakened foes (SynergyManager.aim_bonus(), 0 without it).
+func score_bonus(u: SummonedUnit, e: Enemy, _dp: float) -> float:
+	return u.director.synergies.aim_bonus("fallen_choir", e)

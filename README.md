@@ -964,6 +964,35 @@ number is in `scripts/data/unit_data.gd`.
   elites the full bonus), and the Menagerie's bonus multiplies as its own
   category. All of it goes through `SynergyManager.hit_mult()`, called once
   from `CombatResolver.damage_enemy()`; numbers in `synergy_data.gd`.
+- **Synergies of the later classes** (owner decisions Nov 2026, GDD §6.3 /
+  §15.0 "Synergies for the later classes"): every one of the 17 later classes
+  is in a pair or a capstone, with the same rules (Lv 2+, hinted, one mark
+  bonus per hit, half on the stage boss, no act-only rule). **Pinned Down**
+  (Iron Revenant + Archers: a shell *pins* foes for 6 s; arrows +75% on them),
+  **Anchor and Stone** (Spawn of the Deep + Corpse Catapult: boulders +75% on
+  *held* foes, and catapults aim at them; held = any stun, from any source,
+  and 3 s after it),
+  **Broken Guard** (Bound Oni + Warriors: +75% on held foes), **Searchlight**
+  (Gargoyle + Ghost Saucer: beams +75% on swooped foes), **Carrion Swarm**
+  (Abomination + Grave Drone: darts +75% on staggered foes), **Fallen Choir**
+  (Banshee + Fallen Seraph: +60% on weakened foes), **Black Ice** (Frost
+  Wraith + Powder Wraith: keg bursts +75% on frozen, +40% on chilled foes),
+  **Blood in the Water** (Rogues + Blood Spawn: a rogue bleed marks a foe
+  *bleeding* until 3 s after the bleed; Blood Spawn +75% on it; the
+  drones, saucers, seraphs, powder wraiths and blood spawn of these pairs
+  prefer marked foes), **Aegis of Tartarus** (Warders +
+  Myrmidon Shades: the Shieldwall barriers, 25% of max HP every 5 s, also go
+  to shield-locked Myrmidons; the wall and a barrier stop at most 70% of a
+  hit together) and **Winter's Edge** (the Draugr Thane is a second setter
+  of Cold Blood and Shatterfall). Evolved-only setters count (the Black
+  Paragon's slam, the Fossil Tyrant's roar, the Prince of Hell's weakening).
+  Two capstones split the 17: **The Unhallowed Legion** (any 4 of the 12
+  front-line later classes: +10% damage, specials recharge 15% sooner) and
+  **The Rain of Ruin** (any 3 of the 5 ranged later classes, the Fallen
+  Seraph, Grave Drone, Iron Revenant, Bound Succubus and Ghost Saucer: +10%
+  damage, +10% attack speed). The later classes never join the Charnel
+  Menagerie. The HUD synergy list scrolls one row every 2 s when more than 8
+  are active.
 - **Level-up cards** are weighted: upgrades to items you own (2.5), and items
   on an evolution path, come up more often. New cards: Orb Shield, Shadow
   Blast and the first twelve passives weigh 1 each; the GDD summon roles weigh
@@ -4108,9 +4137,11 @@ scripts/
                             collapse wall (HordeDirector.golems, created by the first Golem)
     golem_texts.gd          Content wave 2: Bone Golem / Grave Masonry / Ossuary Titan card and
                             autotest text
-    synergy_manager.gd      Army synergy activation and effects; the newer classes' marks
-                            (staggered, swooped), the one synergy hit bonus (hit_mult()), the
-                            Baying frenzy and the Menagerie replenishment
+    synergy_manager.gd      Army synergy activation and effects; the newer and later classes'
+                            marks (staggered, swooped, pinned, bleeding; held = any stun), the
+                            one synergy hit bonus (hit_mult()), the Baying frenzy, the Menagerie
+                            replenishment, the Aegis of Tartarus barriers and cap and the
+                            capstones' special haste / attack speed
     summoned_unit.gd        The ONE shared FSM/steering/targeting AI for all summon classes
                             (Act II: held_until for a Netcaster's net, misdirect() for the
                             Librarian's beam, compel() for a Siren's lure and a Spawn's grip)
@@ -5063,8 +5094,8 @@ scripts/
     volley_data.gd          Bullet heaven pass: volley shapes per class / evolution / spell, shot cap,
                             boss-hit cap, Rally Barrage rate, denser-fodder spawn / HP multipliers, the
                             shot / burst art sizes and timings
-    synergy_data.gd         Army synergy requirements and effects (13 synergies, the damage-source
-                            -> class table, mark durations)
+    synergy_data.gd         Army synergy requirements and effects (25 synergies, the damage-source
+                            -> class table, mark durations, the later classes' capstone pools)
     level_up_data.gd        Card weights, reroll/banish/skip counts, fallback cards
     arena_data.gd           Structural obstacle limits (cell size, margins; layouts live in the stage files)
     environment_art_data.gd Floor tile / obstacle sprite key scheme, tile variants, obstacle feet and shadow
@@ -5259,7 +5290,7 @@ Options (after `--`):
 | `--art-misses` | Art audit (debug, drawing only): `ArtMissLog` records every sprite key `SpriteBank` / `EnvironmentArt` looks up without a PNG (stills, walk / idle strips, icons, effect strips, markers, decals, floor tiles), dropping the probes another key answered (`enemies/` / `structures/` / `eye/` / `empire/` for one kind, `_2` / `_3` variants), and the unit bodies drawn without a walk strip; prints them sorted by count as `[art-miss]` lines at the end (never `[autotest]` lines). Meaningful only in a window (headless skips `_draw()`), e.g. under `xvfb-run` with `--rendering-driver opengl3 --resolution 1280x720`. |
 | `--art-shots=T,...` | Art audit (debug, drawing only): in a window, saves the screen at each game second T as `<--shot-dir>/art_<T>.png` (needs `--shot-dir=DIR`; a fractional T keeps its tenth, `art_0300.4.png`). |
 | `--movie-spans=T:N,...` | Promo clips (`MovieSpans`, window + `--write-movie` only; `tools/make_promo_clip.py`): the run fast-forwards with drawing off and plays at x1 only for N game seconds from each game second T, printing `[movie] span` frame marks, then quits after the last span. Does nothing when not passed. |
-| `--synergies=off` | A/B switch: no army synergy ever activates (the four original ones and the newer classes' nine). Every summary has a `synergy bonus` line (per newer synergy: the hits its mark bonus raised and the damage it added; the Baying frenzies; staggered / swooped marks; Death from Above dash resets; the seconds Requiem stretched), marked "(synergies off)" with this switch. |
+| `--synergies=off` | A/B switch: no army synergy ever activates (the four original ones, the newer classes' nine, Bone Bastion and the later classes' eleven). Every summary has a `synergy bonus` line (per newer synergy: the hits its mark bonus raised and the damage it added; the Baying frenzies; staggered / swooped marks; Death from Above dash resets; the seconds Requiem stretched; then, only when non-zero, the later classes' hit synergies and capstones, `pinned_marks`, `bleeding_marks` and `aegis_barriers`), marked "(synergies off)" with this switch. |
 | `--spawn=k@T[xN],...` | Test hook: force-spawns N (default 1) enemies of kind `k` at T game seconds, in an arc on the spawn ring, on any stage (any kind id of `EnemyData`, `MarchEnemyData`, `BattleSisterData` or `SanctumEnemyData`), e.g. `--spawn=sanctified_sentinel@120x3,high_confessor@180x2,cathedral_guardian@300` or `--spawn=battle_sister@60x6`. When a Sanctum kind spawned, the summary adds `sanctum ...` lines (spawned / killed per kind; Sentinel sweeps and flat armour absorbed; Inquisitor zones and suppressions with the horde's suppression counters; Confessor heals, shields, revives and cancelled revives; Paladin ward pulses and damage prevented; Guardian slams, beams, kills, time to kill and chests). When a Sister of the Scourge spawned, a `battle sister` line adds her spawns and kills, lashes, lash hits on summons and on you, bodies per lash, zeal surges, and her lash and contact damage to you and to summons. |
 | `--character=ID` | Playable character (`character_data.gd`): `gravecaller` (default, today's game), `umbral_warden`, `voidcaller`, `bone_oracle`, `fallen_confessor`, `carrion_lord`, `plague_scholar`, `doomsayer`, `barrow_warden`, `soulbinder`, `wither_witch` or `grave_herald` (locks are bypassed; an unknown id is refused with an error and the Gravecaller plays). For any character but the Gravecaller, `army` / `evolve` / `summon` swap its starting spell (and that spell's evolution passive) into Shadow Bolt's (and Soul Conduit's) build priority and never banish them. The summary's `character` line reports the starting spell's final level, the stats, the innate's counters (projectiles destroyed, echo bursts and damage, shards grown / hits blocked, summon corpses and their bursts, grace healing, contagion spreads, Ill Omen slows, Stonebone wall seconds, Conductor extra jumps, Creeping Rot applications, Restless extra seconds) and the characters the run unlocked. Combines with `--classes=`, `--spells=`, `--passives=`, `--hyper` and `--skin=`. |
 | `--ultimate=ID` | The ultimate (`ultimate_data.gd`): `dread_rally` (default, today's game), `sovereigns_decree`, `eclipse` or `grave_tide`; locks are bypassed. The bots cast it with the Dread Rally rule; the header names it and an `ultimate` line follows the unchanged `dread rally` line: casts, Decree time, enemies taunted, summon damage prevented, hits on the necromancer ignored (and their damage); Eclipse foes frozen, bosses slowed, foes exposed and the exposure's bonus damage; Grave Tide Risen raised, capped, their damage and kills. |

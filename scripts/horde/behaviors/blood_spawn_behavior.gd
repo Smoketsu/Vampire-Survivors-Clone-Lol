@@ -71,3 +71,8 @@ func on_melee_hit(u: SummonedUnit, _e: Enemy, dealt: float) -> void:
 	if shared > 0.0:
 		game.stat_add("nosferatu_spills", 1.0)
 		game.stat_add("nosferatu_spill_heal", shared)
+
+
+## Blood in the Water (synergy): a preference for bleeding foes (SynergyManager.aim_bonus(), 0 without it).
+func score_bonus(u: SummonedUnit, e: Enemy, _dp: float) -> float:
+	return u.director.synergies.aim_bonus("blood_in_the_water", e)

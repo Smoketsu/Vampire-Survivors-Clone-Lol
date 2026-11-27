@@ -73,7 +73,10 @@ tablets in landscape (the `Web` export preset; touch controls, mobile UI scale, 
 - **Synergies** switch on at Lv 2 of every required class and are hinted (card line, banner), never
   secret. The newer classes' synergies are setter / finisher pairs: **one mark bonus per hit** (the
   highest), **half against the stage boss**, no extra tier for evolved pairs; every synergy damage
-  bonus goes through `SynergyManager.hit_mult()` from `CombatResolver.damage_enemy()`.
+  bonus goes through `SynergyManager.hit_mult()` from `CombatResolver.damage_enemy()`. Every one of the 17
+  later classes is in a pair or a capstone (GDD §15.0 "Synergies for the later classes"): new marks only while
+  their pair is active, "held" = any stun; capstones The Unhallowed Legion (front line) and The Rain of Ruin
+  (ranged); the later classes never join the Charnel Menagerie.
 - **Shadow Bolt** has a Nearest/Strongest aim toggle (T / pad Y).
 - **Act XI, the Ancient Eye** (built as Act II; owner decisions, GDD §15.0 "Act II: the Ancient Eye"): the faction is
   **the Ancient Eye** (never "the Drowned Choir"); it fights the necromancer **for the dead**. Its shared
@@ -480,6 +483,13 @@ tiny tweaks.
   Menagerie's `replenish_interval()`. HUD list fits 8 rows; pixel badges for all 13 synergies
   (`icons/syn_*`). Autotest `--synergies=off` and a `synergy bonus` line; the army / summon / evolve
   summaries are unchanged.
+- **synergies for the later classes** (owner decisions Nov 2026; GDD §6.3 and §15.0 "Synergies for the later
+  classes (owner decisions, Nov 2026)", balance `docs/synergies/LATE_PAIRS.md`): nine pairs (Pinned Down, Anchor and
+  Stone, Broken Guard, Searchlight, Carrion Swarm, Fallen Choir, Black Ice, Blood in the Water, Aegis of Tartarus),
+  Winter's Edge (the Draugr Thane as a second setter of Cold Blood / Shatterfall) and two capstones splitting the 17
+  later classes (The Unhallowed Legion: 4 of the 12 front-line ones; The Rain of Ruin: 3 of the 5 ranged ones); marks
+  `Enemy.pinned_until` / `bleeding_until`, "held" = `stun_timer`; the HUD synergy list scrolls; badges by
+  `tools/synergy_badges.py`. Every stage's same-seed summaries unchanged.
 - the **Sister of the Scourge** (owner request, Oct 2026: a female Covenant soldier in the figure-redesign
   style; GDD §7.2, §15.0): kind `battle_sister`, data in `battle_sister_data.gd` (looked up by
   `EnemyDirector.enemy_def()` after `MarchEnemyData`), a `CovenantKit` (`BattleSisterKit`,

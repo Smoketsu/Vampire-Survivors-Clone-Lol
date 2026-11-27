@@ -104,6 +104,11 @@ var _aim_label: Label
 var _aim_row: HBoxContainer
 ## Synergy id -> HBoxContainer row (icon + name), shown while active.
 var _synergy_rows: Dictionary = {}
+## Clip of the synergy list: when more rows are active than fit, the list
+## scrolls one row every InRunUiData.SYN_SCROLL_STEP s (wrapping to the top).
+var _syn_scroll: ScrollContainer
+## Seconds since the synergy list last scrolled (UI only, never gameplay).
+var _syn_scroll_t: float = 0.0
 ## "Modifiers" label (top right): difficulty, run modifiers, Pact / Oath;
 ## hidden while the run is the standard one.
 var _mods_label: Label
@@ -136,6 +141,27 @@ func _process(delta: float) -> void:
 	if _accum >= REFRESH:
 		_accum = 0.0
 		_refresh()
+	_scroll_synergies(delta)
+
+
+## Steps the synergy list one row every SYN_SCROLL_STEP s while its rows
+## overflow the box, back to the top after the last one (instant steps, so
+## nothing animates under Reduce motion or the autotest).
+func _scroll_synergies(delta: float) -> void:
+	if _syn_scroll == null:
+		return
+	var bar := _syn_scroll.get_v_scroll_bar()  # Holds the scrollable range.
+	var most := int(bar.max_value - bar.page)  # Largest scroll offset (px; <= 0 = it all fits).
+	if most <= 0:
+		_syn_scroll.scroll_vertical = 0
+		_syn_scroll_t = 0.0
+		return
+	_syn_scroll_t += delta
+	if _syn_scroll_t < InRunUiData.SYN_SCROLL_STEP:
+		return
+	_syn_scroll_t = 0.0
+	var next := _syn_scroll.scroll_vertical + InRunUiData.SYN_ROW_STEP  # Next offset (px).
+	_syn_scroll.scroll_vertical = 0 if _syn_scroll.scroll_vertical >= most else mini(next, most)
 
 
 ## Creates a Box container anchored at (ax, ay) with the given pixel rect
@@ -294,11 +320,27 @@ func _build() -> void:
 		_class_rows[cls] = {"row": row, "icon": icon, "label": lbl, "bar": bar}
 
 	# Bottom left, above the army panel: active synergies (only the active
-	# ones show). With the newer classes' synergies up to 7 can be active at
-	# once (6 active slots); compact rows (22 px icons, 2 px gaps) fit 8 in
-	# the 200 px box (8 x 24 = 192 px), which ends 4 px above the army panel
-	# and starts well below the buff rows (y 120-224).
-	var syn := _box(true, 0.0, 1.0, 16, -410, 300, -210, BoxContainer.ALIGNMENT_END)
+	# ones show). Compact rows (22 px icons, 2 px gaps) fit 8 in the 200 px
+	# box (8 x 24 = 192 px), which ends 4 px above the army panel and starts
+	# well below the buff rows (y 120-224). With the later classes' synergies
+	# more can be active at once: the box clips and scrolls (_scroll_synergies()).
+	_syn_scroll = ScrollContainer.new()
+	_syn_scroll.anchor_top = 1.0
+	_syn_scroll.anchor_bottom = 1.0
+	_syn_scroll.offset_left = 16
+	_syn_scroll.offset_top = -410
+	_syn_scroll.offset_right = 300
+	_syn_scroll.offset_bottom = -210
+	_syn_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	_syn_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_SHOW_NEVER
+	_syn_scroll.mouse_filter = Control.MOUSE_FILTER_IGNORE  # Never steals a touch from the joystick.
+	add_child(_syn_scroll)
+	var syn := VBoxContainer.new()
+	syn.alignment = BoxContainer.ALIGNMENT_END
+	syn.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	syn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	syn.custom_minimum_size = Vector2(0, 200)  # Few rows sit at the bottom, as before.
+	_syn_scroll.add_child(syn)
 	syn.add_theme_constant_override("separation", 2)
 	for id: String in SynergyData.ORDER:
 		var srow := HBoxContainer.new()
