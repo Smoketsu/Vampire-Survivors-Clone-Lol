@@ -604,6 +604,111 @@ const HEIGHTS: Dictionary = {
 	"summons/magazine_lord": 52.0,  # TUNING (not in GDD) a MAGAZINE LORD, undead skeleton; walk strip
 	# --- Act X: the Smuggler's Cutter ---
 	"obstacles/deck_barrels_s": 21.0,  # TUNING (not in GDD) the deck furniture's two lashed barrels (30 x 21), drawn as the Cutter's Powder Barrel enemy (CutterEnemyData.BARREL_SPRITE)
+	# --- Unit bodies of the Necropolis Dynasty, the Celestial Host, the Age of Titans and the Turning Year (and their
+	# summons / characters). These rows were written under FLAT_SIZES by mistake: there a sprite wider than it is tall
+	# (a Scuttler 20 x 12, a Tyrant 86 x 72) failed the grid test and was drawn blurred at DEFAULT_HEIGHT. ---
+	"dynasty/mummy": 40.0,  # TUNING (not in GDD) Dynasty fodder, male: a wrapped shambler (about 30 wide)
+	"dynasty/mummy_female": 40.0,  # TUNING (not in GDD) Dynasty fodder, female (figure redesign, wrappings cover chest and hips): a faster walker; bust rig, idle strip (about 24 wide)
+	"dynasty/scarab_swarm": 38.0,  # TUNING (not in GDD) Dynasty fodder swarm, creatures: a lapis-blue scarab cluster (about 34 wide)
+	"dynasty/khopesh_guard": 46.0,  # TUNING (not in GDD) Dynasty soldier, male: striped headcloth and a khopesh (about 28 wide)
+	"dynasty/nile_archer": 44.0,  # TUNING (not in GDD) Dynasty ranged, female (figure redesign): linen dress, bow; bust rig, idle strip (about 32 wide)
+	"dynasty/heka_priest": 46.0,  # TUNING (not in GDD) Dynasty support, male: leopard-skin sash, a glowing gold glyph staff (about 36 wide)
+	"dynasty/embalmer": 44.0,  # TUNING (not in GDD) Dynasty support, female (figure redesign): white wrap, a jar; bust rig, idle strip (about 22 wide)
+	"dynasty/jackal_warrior": 48.0,  # TUNING (not in GDD) Dynasty elite, male: jackal head, spear (about 30 wide)
+	"dynasty/bastet_hunter": 44.0,  # TUNING (not in GDD) Dynasty elite, female (figure redesign): black cat mask, twin daggers; bust rig, idle strip (about 28 wide)
+	"dynasty/crocodile_warden": 50.0,  # TUNING (not in GDD) Dynasty heavy, male: crocodile head, rising from sand (about 36 wide)
+	"dynasty/ushabti_statue": 46.0,  # TUNING (not in GDD) Dynasty heavy, a stone servant statue (no sex) (about 20 wide)
+	"dynasty/canopic_jar": 30.0,  # TUNING (not in GDD) Dynasty structure: a sandstone jar with a jackal-head lid (no walk strip) (about 18 wide)
+	"dynasty/canopic_jar_dead": 26.0,  # TUNING (not in GDD) the same jar shattered (no walk strip) (about 32 wide)
+	"dynasty/sand_colossus": 84.0,  # TUNING (not in GDD) Dynasty miniboss kind: a huge sandstone statue king (about 44 wide)
+	"dynasty/lion_warden": 80.0,  # TUNING (not in GDD) Necropolis / Temple miniboss, male: a stone lion-headed warrior with a slab shield (about 60 wide)
+	"dynasty/devourers_whelp": 36.0,  # TUNING (not in GDD) Hall of Two Truths miniboss, a creature: crocodile head, lion body, hippo rump (about 60 wide)
+	"dynasty/anubis": 90.0,  # TUNING (not in GDD) boss, male god: jackal head, crook staff (about 56 wide)
+	"dynasty/sekhmet": 92.0,  # TUNING (not in GDD) boss, female goddess (figure redesign): lioness head and sun disc, red gown; bust rig, idle strip (about 52 wide)
+	"dynasty/osiris": 96.0,  # TUNING (not in GDD) boss, male god seated on his throne (still only, no strip) (about 46 wide)
+	"dynasty/ammit": 44.0,  # TUNING (not in GDD) boss, a monster: crocodile jaws, lion front, hippo rump (about 76 wide)
+	"primeval/scuttler": 12.0,  # TUNING (not in GDD) fodder, no sex: a tiny fast lizard (about 20 wide); walk strip
+	"primeval/razorclaw": 34.0,  # TUNING (not in GDD) soldier, male: a feathered raptor (about 40 wide); walk strip
+	"primeval/razorclaw_alpha": 38.0,  # TUNING (not in GDD) the pack's female alpha: a tall bone-white crest (about 28 wide); walk strip
+	"primeval/frill_spitter": 32.0,  # TUNING (not in GDD) ranged, male: an orange-frilled lizard (about 36 wide); walk strip
+	"primeval/longneck": 80.0,  # TUNING (not in GDD) herd, one sprite: a huge sauropod (about 88 wide); walk strip
+	"primeval/duckbill": 56.0,  # TUNING (not in GDD) herd, no sex: a crested hadrosaur (about 48 wide); walk strip
+	"primeval/skyraider": 36.0,  # TUNING (not in GDD) flier, male: a pterosaur clutching a crystal; flap strip (about 40 wide); walk strip
+	"primeval/tyrant": 72.0,  # TUNING (not in GDD) titan, one sprite: a great tyrant, orange throat (about 86 wide); walk strip
+	"primeval/bog_croc": 30.0,  # TUNING (not in GDD) hunter, male: a tar-black crocodile (about 72 wide); walk strip, `_submerged` still (its eyes above the tar)
+	"primeval/bog_croc_submerged": 12.0,  # TUNING (not in GDD) the Bog Croc under the tar: eyes and a ripple (about 32 wide)
+	"primeval/ironjaw": 60.0,  # TUNING (not in GDD) Fern Basin miniboss, female (a beast: no figure style): a bulky tar-dark predator, an iron-grey jaw (about 80 wide); walk strip
+	"primeval/primeval_nest": 32.0,  # TUNING (not in GDD) Ironjaw's nest: a mound of fern and eggshells (about 48 wide); `_dead` still
+	"primeval/scarmaw_guard": 40.0,  # TUNING (not in GDD) Scarmaw's alpha-guard, female: a great Razorclaw with a bone crest (about 44 wide); walk strip (the alpha's art until then)
+	"primeval/scarmaw": 60.0,  # TUNING (not in GDD) Fern Basin boss, female (a beast): a huge feathered raptor, a bone crest, a scarred muzzle (about 72 wide); walk strip, pose 1 (the leap)
+	"primeval/horncharger": 48.0,  # TUNING (not in GDD) titan, male: a three-horned ceratopsian, a bone frill (about 64 wide); walk strip
+	"primeval/clubtail": 44.0,  # TUNING (not in GDD) titan, female (a beast): an ankylosaur, armour plates, a bone club tail (about 64 wide); walk strip
+	"primeval/mother_clubtail": 60.0,  # TUNING (not in GDD) Great Plain miniboss, female (a beast): an armoured matriarch (about 88 wide); walk strip
+	"primeval/ironbrow": 80.0,  # TUNING (not in GDD) Great Plain boss, male: a giant ceratopsian (about 112 wide); walk strip, pose 1 `_broken` (one horn snapped)
+	"primeval/stormwing": 44.0,  # TUNING (not in GDD) flier elite, female (a beast): a great pterosaur, a lava crest (about 72 wide); fly strip, `_landed` still
+	"primeval/thunderwing": 64.0,  # TUNING (not in GDD) Last Day miniboss, male: a giant pterosaur (about 112 wide); fly strip
+	"primeval/gravejaw": 104.0,  # TUNING (not in GDD) Last Day boss, male: the greatest tyrant, scarred, a lava glow in the throat (about 128 wide); walk strip, pose 1 `_roar`
+	"player/skywatcher": 56.0,  # TUNING (not in GDD) female (figure style): a violet star-robed dress, a bone astrolabe, a falling-star staff (about 38 wide); walk and idle strips
+	"summons/bonehorn": 34.0,  # TUNING (not in GDD) summon class (no sex, a skeleton): a skeletal horned charger, soul-teal eye sockets (about 40 wide); walk strip
+	"summons/fossil_tyrant": 44.0,  # TUNING (not in GDD) its evolution: the skeleton of a tyrant in soul-teal fire (about 52 wide); walk strip
+	"player/herd_warden": 56.0,  # TUNING (not in GDD) male: heavy violet robes over a bone-plated mantle, a ceratopsian skull shoulder piece, a horn-topped staff (about 42 wide); walk strip
+	"player/fern_huntress": 56.0,  # TUNING (not in GDD) female (figure style): violet hunting leathers, a violet fur-trimmed cloak, a raptor-skull headdress, a bone spear-staff with a soul flame (about 40 wide); walk and idle strips
+	"summons/ushabti_sentinel": 46.0,  # TUNING (not in GDD) summon class, the necromancer's stone servant (no sex) (about 20 wide)
+	"summons/eternal_guard": 58.0,  # TUNING (not in GDD) its evolution: a taller gold-trimmed stone guardian (about 32 wide)
+	"summons/bound_ophan": 30.0,  # TUNING (not in GDD) summon class (no sex, a wheel): a wheel of bone with soul-teal eyes; roll strip (about 30 wide)
+	"summons/throne_of_bones": 44.0,  # TUNING (not in GDD) its evolution: a double wheel of bone in soul-teal fire; roll strip (about 44 wide)
+	"summons/linen_mummy": 40.0,  # TUNING (not in GDD) Act XII (temporary), the Necropolis: Linen Bind's risen Mummy (the Dynasty mummy in the necromancer's bone and soul-teal)
+	"player/the_embalmer": 56.0,  # TUNING (not in GDD) female (figure redesign): violet linen-wrapped necromancer, a canopic-jar staff focus (about 32 wide); glide strip, bust rig, idle strip
+	"player/lion_priestess": 56.0,  # TUNING (not in GDD) female (figure redesign): violet priestess in a lioness-head hood, a sun-disc staff focus (about 38 wide); glide strip, bust rig, idle strip
+	"player/pharaohs_shade": 56.0,  # TUNING (not in GDD) male: a violet-robed spectral pharaoh in a nemes, a crook staff with a soul flame (about 40 wide); glide strip
+	"host/lesser_light": 24.0,  # TUNING (not in GDD) Host fodder, an orb of light (no sex): 22 art rows + 2 empty rows on top for the hover bob; glide (hover) strip (about 26 wide)
+	"host/virtue": 48.0,  # TUNING (not in GDD) Host soldier, male: silver spearman, mirror mask, four wings; walk strip (about 26 wide)
+	"host/power": 48.0,  # TUNING (not in GDD) Host soldier, female (figure redesign): silver armour over a robe, a blade of white flame; bust rig, walk and idle strips (about 30 wide)
+	"host/choir_angel": 48.0,  # TUNING (not in GDD) Host support, female (figure redesign): flowing pale-blue robes, singing; bust rig, glide and idle strips (about 32 wide)
+	"host/herald": 48.0,  # TUNING (not in GDD) Host support, male: a long silver trumpet, two wings; walk strip (about 36 wide)
+	"host/dominion": 54.0,  # TUNING (not in GDD) Host elite, male: sceptre and a crown of light rings; walk strip (about 32 wide)
+	"host/judge": 56.0,  # TUNING (not in GDD) Judgment's elite, male: a sword and scales held high, mirror mask; walk strip (about 58 wide with the scales)
+	"host/cherub": 58.0,  # TUNING (not in GDD) Host guardian (no sex, a creature): four faces, four wings full of eyes, a flaming white sword; walk strip, 2 empty rows on top for the hover bob (50 wide)
+	"host/cherub_of_the_gate": 78.0,  # TUNING (not in GDD) Silver Stair miniboss: a larger Cherub, its sword turning a full circle; walk strip (about 64 wide)
+	"host/seraiel": 96.0,  # TUNING (not in GDD) Silver Stair boss, male: a towering four-winged archangel in silver armour, a flaming white sword; walk strip, pose 1 (sword raised) (about 64 wide)
+	"host/ophan": 52.0,  # TUNING (not in GDD) Host guardian (no sex, a wheel): a burning silver wheel within a wheel, rims covered in eyes; roll strip (about 52 wide)
+	"host/seraiel_raised": 96.0,  # TUNING (not in GDD) Seraiel with the sword raised overhead (pose 1 of BossPoseData)
+	"host/dominion_of_the_spheres": 70.0,  # TUNING (not in GDD) Wheel of Thrones miniboss, male: a larger Dominion among crystal rings; walk strip (about 44 wide)
+	"host/throne": 96.0,  # TUNING (not in GDD) Wheel of Thrones boss: a colossal wheel within a wheel of silver and blue fire, rims covered in eyes; roll strip, pose 1 (the wheels open) (about 96 wide)
+	"host/throne_open": 96.0,  # TUNING (not in GDD) the Throne with its wheels parted (pose 1 of BossPoseData)
+	"host/throne_core": 32.0,  # TUNING (not in GDD) the Throne's burning eye at its centre (drawn over it while the Core is open)
+	"host/herald_of_the_seventh_trumpet": 70.0,  # TUNING (not in GDD) Empyrean miniboss, male: a larger Herald with a great trumpet; walk strip (about 44 wide)
+	"host/voice": 106.0,  # TUNING (not in GDD) Empyrean boss (a sexless seraph): six wings of light (two over the face, two over the feet, two spread) in a white rose; glide strip (about 80 wide)
+	"host/voice_unveiled": 104.0,  # TUNING (not in GDD) the Voice with its face wings lowered (Be Not Afraid): the face pure light, never features (about 80 wide)
+	"player/the_unveiled": 56.0,  # TUNING (not in GDD) female (figure style): violet dress, a lowered violet veil, small grey wings folded, a staff of a dead star (about 38 wide); walk and idle strips
+	"player/blind_saint": 56.0,  # TUNING (not in GDD) female (figure style): violet gown, a violet blindfold, a staff ringed with a bone wheel of closed eyes (about 36 wide); walk and idle strips
+	"player/fallen_herald": 56.0,  # TUNING (not in GDD) male: violet robe and torn cope, one broken bone-white wing, a trumpet-headed staff with a soul flame (about 40 wide); walk strip
+	"wild/thornling": 20.0,  # TUNING (not in GDD) fodder, no sex: a twig creature (about 16 wide); walk strip
+	"wild/dryad": 52.0,  # TUNING (not in GDD) support, female (figure style): a tree spirit in a leaf gown (about 36 wide); walk, idle strips
+	"wild/treant": 80.0,  # TUNING (not in GDD) heavy, no sex: a walking oak (about 46 wide); walk strip
+	"wild/corpse_bloom": 48.0,  # TUNING (not in GDD) structure: a huge pink flower on bones (about 36 wide); no strip
+	"wild/corpse_bloom_dead": 48.0,  # TUNING (not in GDD) the same flower wilted (about 36 wide); no strip
+	"wild/fae_knight": 52.0,  # TUNING (not in GDD) soldier, male: leaf-plate armour and a thorn sword (about 32 wide); walk strip
+	"wild/winter_fae": 52.0,  # TUNING (not in GDD) ranged, female (figure style): frost-lace gown, frost wings that beat (about 28 wide); walk, idle strips
+	"wild/great_stag": 64.0,  # TUNING (not in GDD) elite, male: a huge stag with moss antlers (about 58 wide); walk strip
+	"wild/wild_rider": 64.0,  # TUNING (not in GDD) elite, male: a spectral horseman of the Wild Hunt (about 64 wide); walk strip
+	"wild/will_o_wisp": 30.0,  # TUNING (not in GDD) lure, no sex: a drifting cold light (about 20 wide, 2 empty rows on top for the glide); glide strip
+	"wild/spore_mother": 52.0,  # TUNING (not in GDD) support, female (figure style): a mushroom matron (about 28 wide); walk, idle strips
+	"wild/hunt_hound": 28.0,  # TUNING (not in GDD) the Rider's hounds, no sex (a beast): a spectral hound of the Wild Hunt (about 40 wide); walk strip
+	"wild/huntsman": 68.0,  # TUNING (not in GDD) Greenwood miniboss, male: the Huntsman of the Wild Hunt on a great antlered mount, a horn at his belt (about 80 wide); walk strip (the Rider's art until then)
+	"wild/antler_thicket": 28.0,  # TUNING (not in GDD) one thorn of the Stag King's Antler Crown: a knot of antler-shaped thorns (about 28 wide); no strip
+	"wild/stag_king": 88.0,  # TUNING (not in GDD) Greenwood boss, male: stag-headed, antlered lord of the forest, a hunting horn, a mantle of leaves (about 72 wide); walk strip, pose 1 (the horn raised)
+	"player/horned_herald": 56.0,  # TUNING (not in GDD) male: violet hunting robes, a bone-antler hood, a bone hunting horn, an antler-tined soul staff (about 42 wide); walk strip
+	"wild/winter_prince": 56.0,  # TUNING (not in GDD) Fae Court miniboss, male: frost armour, a cloak of snow, an icicle sword (about 40 wide); walk strip
+	"wild/masked_courtier": 52.0,  # TUNING (not in GDD) a fae courtier, female (figure style): a gown of roses, a thorn rapier (about 32 wide); walk strip (drawn as wild/summer_queen_mask while masked)
+	"wild/summer_queen": 80.0,  # TUNING (not in GDD) Fae Court boss, female (figure style): butterfly wings, a gown of roses, a crown of blossoms (about 64 wide); glide, idle strips, pose 1 (the bargain held out)
+	"wild/summer_queen_mask": 80.0,  # TUNING (not in GDD) her masked face the Masque's courtiers wear (same size as her)
+	"player/changeling_princess": 56.0,  # TUNING (not in GDD) female (figure style): violet gown with gossamer-leaf layers, a bone mask on a stick, a moth wand (about 38 wide); walk, idle strips
+	"wild/gardener_of_roots": 88.0,  # TUNING (not in GDD) World-Tree miniboss (no sex): a great treant with root-hands (about 80 wide); walk strip
+	"wild/green_mother": 144.0,  # TUNING (not in GDD) World-Tree boss, female (figure style, fully clothed): a colossal goddess grown from the tree, half in bloom and half in frost (about 128 wide); idle strip, pose 1 `_cast`, pose 2 `_burial`
+	"player/gravegardener": 56.0,  # TUNING (not in GDD) female (figure style, fully clothed): a violet gardener's robe with an apron of roots, a bone trowel-staff with a sprouting soul seed, a wide-brimmed violet hat (about 40 wide); walk, idle strips
+	"summons/ossuary_oak": 56.0,  # TUNING (not in GDD) summon class (no sex): a slow tree of bone, thorn lashes, soul-teal knots (about 48 wide); walk strip, `_rooted` still
+	"summons/world_root_warden": 64.0,  # TUNING (not in GDD) its evolution (about 56 wide); walk strip, `_rooted` still
 }
 
 ## Height (world px) used for a key missing from HEIGHTS.
@@ -707,137 +812,35 @@ const FLAT_SIZES: Dictionary = {
 	# --- Act IX: the Concord of Stars ---
 	"concord/mothership_eye": 192.0,  # TUNING (not in GDD) the mothership's eye seen from below, a round 192 x 192 sky overlay with transparent corners (the Final Harvest fades it in; no screen read)
 	# --- Act IX: the Crash Site ---
-	"projectiles/bone_beetle": 10.0,  # TUNING (not in GDD) a Bone Beetles beetle from above, about 10 x 8, its head to the right
+	"projectiles/bone_beetle": 12.0,  # TUNING (not in GDD) a Bone Beetles beetle from above, about 10 x 8, its head to the right
 	# --- Act VII slot: the Necropolis Dynasty (assets/sprites/dynasty/, markers/) ---
-	"dynasty/mummy": 40.0,  # TUNING (not in GDD) Dynasty fodder, male: a wrapped shambler (about 30 wide)
-	"dynasty/mummy_female": 40.0,  # TUNING (not in GDD) Dynasty fodder, female (figure redesign, wrappings cover chest and hips): a faster walker; bust rig, idle strip (about 24 wide)
-	"dynasty/scarab_swarm": 38.0,  # TUNING (not in GDD) Dynasty fodder swarm, creatures: a lapis-blue scarab cluster (about 34 wide)
-	"dynasty/khopesh_guard": 46.0,  # TUNING (not in GDD) Dynasty soldier, male: striped headcloth and a khopesh (about 28 wide)
-	"dynasty/nile_archer": 44.0,  # TUNING (not in GDD) Dynasty ranged, female (figure redesign): linen dress, bow; bust rig, idle strip (about 32 wide)
-	"dynasty/heka_priest": 46.0,  # TUNING (not in GDD) Dynasty support, male: leopard-skin sash, a glowing gold glyph staff (about 36 wide)
-	"dynasty/embalmer": 44.0,  # TUNING (not in GDD) Dynasty support, female (figure redesign): white wrap, a jar; bust rig, idle strip (about 22 wide)
-	"dynasty/jackal_warrior": 48.0,  # TUNING (not in GDD) Dynasty elite, male: jackal head, spear (about 30 wide)
-	"dynasty/bastet_hunter": 44.0,  # TUNING (not in GDD) Dynasty elite, female (figure redesign): black cat mask, twin daggers; bust rig, idle strip (about 28 wide)
-	"dynasty/crocodile_warden": 50.0,  # TUNING (not in GDD) Dynasty heavy, male: crocodile head, rising from sand (about 36 wide)
-	"dynasty/ushabti_statue": 46.0,  # TUNING (not in GDD) Dynasty heavy, a stone servant statue (no sex) (about 20 wide)
-	"dynasty/canopic_jar": 30.0,  # TUNING (not in GDD) Dynasty structure: a sandstone jar with a jackal-head lid (no walk strip) (about 18 wide)
-	"dynasty/canopic_jar_dead": 26.0,  # TUNING (not in GDD) the same jar shattered (no walk strip) (about 32 wide)
-	"dynasty/sand_colossus": 84.0,  # TUNING (not in GDD) Dynasty miniboss kind: a huge sandstone statue king (about 44 wide)
-	"dynasty/lion_warden": 80.0,  # TUNING (not in GDD) Necropolis / Temple miniboss, male: a stone lion-headed warrior with a slab shield (about 60 wide)
-	"dynasty/devourers_whelp": 36.0,  # TUNING (not in GDD) Hall of Two Truths miniboss, a creature: crocodile head, lion body, hippo rump (about 60 wide)
-	"dynasty/anubis": 90.0,  # TUNING (not in GDD) boss, male god: jackal head, crook staff (about 56 wide)
-	"dynasty/sekhmet": 92.0,  # TUNING (not in GDD) boss, female goddess (figure redesign): lioness head and sun disc, red gown; bust rig, idle strip (about 52 wide)
-	"dynasty/osiris": 96.0,  # TUNING (not in GDD) boss, male god seated on his throne (still only, no strip) (about 46 wide)
-	"dynasty/ammit": 44.0,  # TUNING (not in GDD) boss, a monster: crocodile jaws, lion front, hippo rump (about 76 wide)
 	# --- Act XIV slot: the Age of Titans (assets/sprites/primeval/; beasts: no bust rigs, no idle strips) ---
-	"primeval/scuttler": 12.0,  # TUNING (not in GDD) fodder, no sex: a tiny fast lizard (about 20 wide); walk strip
-	"primeval/razorclaw": 34.0,  # TUNING (not in GDD) soldier, male: a feathered raptor (about 40 wide); walk strip
-	"primeval/razorclaw_alpha": 38.0,  # TUNING (not in GDD) the pack's female alpha: a tall bone-white crest (about 28 wide); walk strip
-	"primeval/frill_spitter": 32.0,  # TUNING (not in GDD) ranged, male: an orange-frilled lizard (about 36 wide); walk strip
-	"primeval/longneck": 80.0,  # TUNING (not in GDD) herd, one sprite: a huge sauropod (about 88 wide); walk strip
-	"primeval/duckbill": 56.0,  # TUNING (not in GDD) herd, no sex: a crested hadrosaur (about 48 wide); walk strip
-	"primeval/skyraider": 36.0,  # TUNING (not in GDD) flier, male: a pterosaur clutching a crystal; flap strip (about 40 wide); walk strip
-	"primeval/tyrant": 72.0,  # TUNING (not in GDD) titan, one sprite: a great tyrant, orange throat (about 86 wide); walk strip
 	# --- Act XIV (temporary number): the Fern Basin (phase 2; art pending, PrimevalGlyphs / the kits' code shapes until then) ---
-	"primeval/bog_croc": 30.0,  # TUNING (not in GDD) hunter, male: a tar-black crocodile (about 72 wide); walk strip, `_submerged` still (its eyes above the tar)
-	"primeval/bog_croc_submerged": 12.0,  # TUNING (not in GDD) the Bog Croc under the tar: eyes and a ripple (about 32 wide)
-	"primeval/ironjaw": 60.0,  # TUNING (not in GDD) Fern Basin miniboss, female (a beast: no figure style): a bulky tar-dark predator, an iron-grey jaw (about 80 wide); walk strip
-	"primeval/primeval_nest": 32.0,  # TUNING (not in GDD) Ironjaw's nest: a mound of fern and eggshells (about 48 wide); `_dead` still
-	"primeval/scarmaw_guard": 40.0,  # TUNING (not in GDD) Scarmaw's alpha-guard, female: a great Razorclaw with a bone crest (about 44 wide); walk strip (the alpha's art until then)
-	"primeval/scarmaw": 60.0,  # TUNING (not in GDD) Fern Basin boss, female (a beast): a huge feathered raptor, a bone crest, a scarred muzzle (about 72 wide); walk strip, pose 1 (the leap)
 	# --- Act XIV (temporary number): the Great Plain (phase 2; art pending, PrimevalGlyphs / the boss's code shape until then) ---
-	"primeval/horncharger": 48.0,  # TUNING (not in GDD) titan, male: a three-horned ceratopsian, a bone frill (about 64 wide); walk strip
-	"primeval/clubtail": 44.0,  # TUNING (not in GDD) titan, female (a beast): an ankylosaur, armour plates, a bone club tail (about 64 wide); walk strip
-	"primeval/mother_clubtail": 60.0,  # TUNING (not in GDD) Great Plain miniboss, female (a beast): an armoured matriarch (about 88 wide); walk strip
-	"primeval/ironbrow": 80.0,  # TUNING (not in GDD) Great Plain boss, male: a giant ceratopsian (about 112 wide); walk strip, pose 1 `_broken` (one horn snapped)
 	# --- Act XIV (temporary number): the Last Day (phase 2; art pending, PrimevalGlyphs / the boss's and the class's code shapes until then) ---
-	"primeval/stormwing": 44.0,  # TUNING (not in GDD) flier elite, female (a beast): a great pterosaur, a lava crest (about 72 wide); fly strip, `_landed` still
-	"primeval/thunderwing": 64.0,  # TUNING (not in GDD) Last Day miniboss, male: a giant pterosaur (about 112 wide); fly strip
-	"primeval/gravejaw": 104.0,  # TUNING (not in GDD) Last Day boss, male: the greatest tyrant, scarred, a lava glow in the throat (about 128 wide); walk strip, pose 1 `_roar`
-	"player/skywatcher": 56.0,  # TUNING (not in GDD) female (figure style): a violet star-robed dress, a bone astrolabe, a falling-star staff (about 38 wide); walk and idle strips
-	"summons/bonehorn": 34.0,  # TUNING (not in GDD) summon class (no sex, a skeleton): a skeletal horned charger, soul-teal eye sockets (about 40 wide); walk strip
-	"summons/fossil_tyrant": 44.0,  # TUNING (not in GDD) its evolution: the skeleton of a tyrant in soul-teal fire (about 52 wide); walk strip
-	"player/herd_warden": 56.0,  # TUNING (not in GDD) male: heavy violet robes over a bone-plated mantle, a ceratopsian skull shoulder piece, a horn-topped staff (about 42 wide); walk strip
-	"player/fern_huntress": 56.0,  # TUNING (not in GDD) female (figure style): violet hunting leathers, a violet fur-trimmed cloak, a raptor-skull headdress, a bone spear-staff with a soul flame (about 40 wide); walk and idle strips
-	"summons/ushabti_sentinel": 46.0,  # TUNING (not in GDD) summon class, the necromancer's stone servant (no sex) (about 20 wide)
-	"summons/eternal_guard": 58.0,  # TUNING (not in GDD) its evolution: a taller gold-trimmed stone guardian (about 32 wide)
 	# --- Act XIII (temporary number): the Empyrean (art pending, SummonGlyphs' bone wheel until then) ---
-	"summons/bound_ophan": 30.0,  # TUNING (not in GDD) summon class (no sex, a wheel): a wheel of bone with soul-teal eyes; roll strip (about 30 wide)
-	"summons/throne_of_bones": 44.0,  # TUNING (not in GDD) its evolution: a double wheel of bone in soul-teal fire; roll strip (about 44 wide)
 	# The Dynasty's playable necromancers (violet, owner note Nov 2026; assets/sprites/player/)
-	"summons/linen_mummy": 40.0,  # TUNING (not in GDD) Act XII (temporary), the Necropolis: Linen Bind's risen Mummy (the Dynasty mummy in the necromancer's bone and soul-teal)
-	"player/the_embalmer": 56.0,  # TUNING (not in GDD) female (figure redesign): violet linen-wrapped necromancer, a canopic-jar staff focus (about 32 wide); glide strip, bust rig, idle strip
-	"player/lion_priestess": 56.0,  # TUNING (not in GDD) female (figure redesign): violet priestess in a lioness-head hood, a sun-disc staff focus (about 38 wide); glide strip, bust rig, idle strip
-	"player/pharaohs_shade": 56.0,  # TUNING (not in GDD) male: a violet-robed spectral pharaoh in a nemes, a crook staff with a soul flame (about 40 wide); glide strip
 	"markers/dyn_cartouche": 20.0,  # TUNING (not in GDD) a gold cartouche floating over a fallen Dynasty body (Rebirth), 12 x 20
 	"markers/dyn_heka_glyph": 16.0,  # TUNING (not in GDD) the gold Heka glyph sigil over a cursed summon, 16 x 16
 	# --- Act X slot: the Celestial Host (assets/sprites/host/, markers/, fx/) ---
-	"host/lesser_light": 24.0,  # TUNING (not in GDD) Host fodder, an orb of light (no sex): 22 art rows + 2 empty rows on top for the hover bob; glide (hover) strip (about 26 wide)
-	"host/virtue": 48.0,  # TUNING (not in GDD) Host soldier, male: silver spearman, mirror mask, four wings; walk strip (about 26 wide)
-	"host/power": 48.0,  # TUNING (not in GDD) Host soldier, female (figure redesign): silver armour over a robe, a blade of white flame; bust rig, walk and idle strips (about 30 wide)
-	"host/choir_angel": 48.0,  # TUNING (not in GDD) Host support, female (figure redesign): flowing pale-blue robes, singing; bust rig, glide and idle strips (about 32 wide)
-	"host/herald": 48.0,  # TUNING (not in GDD) Host support, male: a long silver trumpet, two wings; walk strip (about 36 wide)
-	"host/dominion": 54.0,  # TUNING (not in GDD) Host elite, male: sceptre and a crown of light rings; walk strip (about 32 wide)
-	"host/judge": 56.0,  # TUNING (not in GDD) Judgment's elite, male: a sword and scales held high, mirror mask; walk strip (about 58 wide with the scales)
 	# --- Act XIII (temporary number): the Silver Stair (phase 2; art pending, HostGlyphs / the boss's glyph until then) ---
-	"host/cherub": 58.0,  # TUNING (not in GDD) Host guardian (no sex, a creature): four faces, four wings full of eyes, a flaming white sword; walk strip, 2 empty rows on top for the hover bob (50 wide)
-	"host/cherub_of_the_gate": 78.0,  # TUNING (not in GDD) Silver Stair miniboss: a larger Cherub, its sword turning a full circle; walk strip (about 64 wide)
-	"host/seraiel": 96.0,  # TUNING (not in GDD) Silver Stair boss, male: a towering four-winged archangel in silver armour, a flaming white sword; walk strip, pose 1 (sword raised) (about 64 wide)
 	# --- Act XIII (temporary number): the Wheel of Thrones (phase 2; art pending, HostGlyphs / the boss's glyph until then) ---
-	"host/ophan": 52.0,  # TUNING (not in GDD) Host guardian (no sex, a wheel): a burning silver wheel within a wheel, rims covered in eyes; roll strip (about 52 wide)
-	"host/seraiel_raised": 96.0,  # TUNING (not in GDD) Seraiel with the sword raised overhead (pose 1 of BossPoseData)
-	"host/dominion_of_the_spheres": 70.0,  # TUNING (not in GDD) Wheel of Thrones miniboss, male: a larger Dominion among crystal rings; walk strip (about 44 wide)
-	"host/throne": 96.0,  # TUNING (not in GDD) Wheel of Thrones boss: a colossal wheel within a wheel of silver and blue fire, rims covered in eyes; roll strip, pose 1 (the wheels open) (about 96 wide)
-	"host/throne_open": 96.0,  # TUNING (not in GDD) the Throne with its wheels parted (pose 1 of BossPoseData)
-	"host/throne_core": 32.0,  # TUNING (not in GDD) the Throne's burning eye at its centre (drawn over it while the Core is open)
 	# --- Act XIII (temporary number): the Empyrean (phase 2; art pending, HostGlyphs / the boss's glyph / the tint until then) ---
-	"host/herald_of_the_seventh_trumpet": 70.0,  # TUNING (not in GDD) Empyrean miniboss, male: a larger Herald with a great trumpet; walk strip (about 44 wide)
-	"host/voice": 106.0,  # TUNING (not in GDD) Empyrean boss (a sexless seraph): six wings of light (two over the face, two over the feet, two spread) in a white rose; glide strip (about 80 wide)
-	"host/voice_unveiled": 104.0,  # TUNING (not in GDD) the Voice with its face wings lowered (Be Not Afraid): the face pure light, never features (about 80 wide)
-	"player/the_unveiled": 56.0,  # TUNING (not in GDD) female (figure style): violet dress, a lowered violet veil, small grey wings folded, a staff of a dead star (about 38 wide); walk and idle strips
-	"player/blind_saint": 56.0,  # TUNING (not in GDD) female (figure style): violet gown, a violet blindfold, a staff ringed with a bone wheel of closed eyes (about 36 wide); walk and idle strips
-	"player/fallen_herald": 56.0,  # TUNING (not in GDD) male: violet robe and torn cope, one broken bone-white wing, a trumpet-headed staff with a soul flame (about 40 wide); walk strip
-	"markers/host_halo": 6.0,  # TUNING (not in GDD) the halo ring over an angel (cerulean light, silver rim), 16 x 6 (not drawn yet: the code ring stays)
-	"markers/host_halo_cracked": 6.0,  # TUNING (not in GDD) the halo with two gaps, 16 x 6
-	"markers/host_scales": 20.0,  # TUNING (not in GDD) the scales of Judgment, the HUD bar's end cap, 24 x 20
+	"markers/host_halo": 16.0,  # TUNING (not in GDD) the halo ring over an angel (cerulean light, silver rim), 16 x 6 (not drawn yet: the code ring stays)
+	"markers/host_halo_cracked": 16.0,  # TUNING (not in GDD) the halo with two gaps, 16 x 6
+	"markers/host_scales": 24.0,  # TUNING (not in GDD) the scales of Judgment, the HUD bar's end cap, 24 x 20
 	"markers/host_pillar": 120.0,  # TUNING (not in GDD) the Verdict's pillar of light, 40 x 120, drawn additively
 	# --- Act XIV slot: the Age of Titans markers (not drawn until the stage agents wire them; the code shapes stay) ---
 	"markers/primeval_alpha": 10.0,  # TUNING (not in GDD) the alpha's bone-white chevron over her head, 10 x 6
 	"markers/primeval_shadow": 48.0,  # TUNING (not in GDD) a diving Skyraider's shadow, 48 x 24
 	"markers/primeval_bomb": 64.0,  # TUNING (not in GDD) a volcanic bomb's landing ring, 64 x 64
 	# --- Act XV slot: the Turning Year (assets/sprites/wild/; the stage key wild; the three women have bust rigs and idle strips) ---
-	"wild/thornling": 20.0,  # TUNING (not in GDD) fodder, no sex: a twig creature (about 16 wide); walk strip
-	"wild/dryad": 52.0,  # TUNING (not in GDD) support, female (figure style): a tree spirit in a leaf gown (about 36 wide); walk, idle strips
-	"wild/treant": 80.0,  # TUNING (not in GDD) heavy, no sex: a walking oak (about 46 wide); walk strip
-	"wild/corpse_bloom": 48.0,  # TUNING (not in GDD) structure: a huge pink flower on bones (about 36 wide); no strip
-	"wild/corpse_bloom_dead": 48.0,  # TUNING (not in GDD) the same flower wilted (about 36 wide); no strip
-	"wild/fae_knight": 52.0,  # TUNING (not in GDD) soldier, male: leaf-plate armour and a thorn sword (about 32 wide); walk strip
-	"wild/winter_fae": 52.0,  # TUNING (not in GDD) ranged, female (figure style): frost-lace gown, frost wings that beat (about 28 wide); walk, idle strips
-	"wild/great_stag": 64.0,  # TUNING (not in GDD) elite, male: a huge stag with moss antlers (about 58 wide); walk strip
-	"wild/wild_rider": 64.0,  # TUNING (not in GDD) elite, male: a spectral horseman of the Wild Hunt (about 64 wide); walk strip
-	"wild/will_o_wisp": 30.0,  # TUNING (not in GDD) lure, no sex: a drifting cold light (about 20 wide, 2 empty rows on top for the glide); glide strip
-	"wild/spore_mother": 52.0,  # TUNING (not in GDD) support, female (figure style): a mushroom matron (about 28 wide); walk, idle strips
 	# --- Act XV (temporary number): the Greenwood (phase 2; art pending, WildGlyphs / the boss's code shape until then) ---
-	"wild/hunt_hound": 28.0,  # TUNING (not in GDD) the Rider's hounds, no sex (a beast): a spectral hound of the Wild Hunt (about 40 wide); walk strip
-	"wild/huntsman": 68.0,  # TUNING (not in GDD) Greenwood miniboss, male: the Huntsman of the Wild Hunt on a great antlered mount, a horn at his belt (about 80 wide); walk strip (the Rider's art until then)
-	"wild/antler_thicket": 28.0,  # TUNING (not in GDD) one thorn of the Stag King's Antler Crown: a knot of antler-shaped thorns (about 28 wide); no strip
-	"wild/stag_king": 88.0,  # TUNING (not in GDD) Greenwood boss, male: stag-headed, antlered lord of the forest, a hunting horn, a mantle of leaves (about 72 wide); walk strip, pose 1 (the horn raised)
-	"player/horned_herald": 56.0,  # TUNING (not in GDD) male: violet hunting robes, a bone-antler hood, a bone hunting horn, an antler-tined soul staff (about 42 wide); walk strip
 	"obstacles/wild_grove_tree": 48.0,  # TUNING (not in GDD) a sacred grove's standing tree (40 x 48; drawn by GreenwoodDirector, never an obstacle)
 	# --- Act XV (temporary number): the Fae Court (phase 2; art pending, WildGlyphs / the boss's code shape until then) ---
-	"wild/winter_prince": 56.0,  # TUNING (not in GDD) Fae Court miniboss, male: frost armour, a cloak of snow, an icicle sword (about 40 wide); walk strip
-	"wild/masked_courtier": 52.0,  # TUNING (not in GDD) a fae courtier, female (figure style): a gown of roses, a thorn rapier (about 32 wide); walk strip (drawn as wild/summer_queen_mask while masked)
-	"wild/summer_queen": 80.0,  # TUNING (not in GDD) Fae Court boss, female (figure style): butterfly wings, a gown of roses, a crown of blossoms (about 64 wide); glide, idle strips, pose 1 (the bargain held out)
-	"wild/summer_queen_mask": 80.0,  # TUNING (not in GDD) her masked face the Masque's courtiers wear (same size as her)
-	"player/changeling_princess": 56.0,  # TUNING (not in GDD) female (figure style): violet gown with gossamer-leaf layers, a bone mask on a stick, a moth wand (about 38 wide); walk, idle strips
 	# --- Act XV (temporary number): the World-Tree (phase 2; art pending, WildGlyphs / the boss's and the class's code shapes until then) ---
-	"wild/gardener_of_roots": 88.0,  # TUNING (not in GDD) World-Tree miniboss (no sex): a great treant with root-hands (about 80 wide); walk strip
-	"wild/green_mother": 144.0,  # TUNING (not in GDD) World-Tree boss, female (figure style, fully clothed): a colossal goddess grown from the tree, half in bloom and half in frost (about 128 wide); idle strip, pose 1 `_cast`, pose 2 `_burial`
-	"player/gravegardener": 56.0,  # TUNING (not in GDD) female (figure style, fully clothed): a violet gardener's robe with an apron of roots, a bone trowel-staff with a sprouting soul seed, a wide-brimmed violet hat (about 40 wide); walk, idle strips
-	"summons/ossuary_oak": 56.0,  # TUNING (not in GDD) summon class (no sex): a slow tree of bone, thorn lashes, soul-teal knots (about 48 wide); walk strip, `_rooted` still
-	"summons/world_root_warden": 64.0,  # TUNING (not in GDD) its evolution (about 56 wide); walk strip, `_rooted` still
 	# The Turning Year's markers (not drawn until the stage agents wire them; the code shapes stay)
-	"markers/wild_roots": 16.0,  # TUNING (not in GDD) roots sprouting under a body that stood still, 24 x 16
+	"markers/wild_roots": 24.0,  # TUNING (not in GDD) roots sprouting under a body that stood still, 24 x 16
 	"markers/wild_sprout": 32.0,  # TUNING (not in GDD) a thicket seed sprouting, 32 x 32
 	"markers/wild_blight": 64.0,  # TUNING (not in GDD) a blighted 64 px cell, 64 x 64, tiling
 	"markers/wild_season_wheel": 28.0,  # TUNING (not in GDD) the HUD's wheel of the year, 28 x 28
