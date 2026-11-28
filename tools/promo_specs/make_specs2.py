@@ -5,7 +5,9 @@ Same style as batch 1 (make_specs.py, whose hook() and END card it reuses): one 
 clean gameplay, then the shared end card. Every shot is recorded SHOT_SEC long; tools/promo_quickcut.py keeps 1.5 s of each
 later shot. Lesson from batch 1: every shot must show what the hook says, so each shot lists the autotest args that put the
 named subject on screen (--spawn=, --character=, --spells=, --classes=) and a note of what was confirmed in the frames.
-Run: python3 tools/promo_specs/make_specs2.py
+Run: python3 tools/promo_specs/make_specs2.py [days file] [output folder]
+     (defaults batch2_days.py and batch2; the daily clips use daily_days.py and daily, see tools/promo_daily.sh,
+      where a clip's key n is its date text "YYYY-MM-DD" instead of a day number)
 Render one day: python3 tools/make_promo_clip.py --spec tools/promo_specs/batch2/day01.json --out <dir> --work <cache dir> --jobs 1
 Then:           python3 tools/promo_quickcut.py <spec> <out>/dayNN.mp4 <final.mp4> [maxcuts]
 """
@@ -26,10 +28,12 @@ def add(n, hook_line, cuts, shots):
     DAYS[n] = {"hook": hook_line, "cuts": cuts, "shots": shots}
 
 
-exec(open(os.path.join(HERE, "batch2_days.py")).read())  # the clips themselves (kept in their own file so each can be re-scouted alone)
+DAYS_FILE = sys.argv[1] if len(sys.argv) > 1 else "batch2_days.py"  # file of add() calls, relative to this folder
+OUT_DIR = sys.argv[2] if len(sys.argv) > 2 else "batch2"            # folder the spec JSONs are written to, relative to this folder
+exec(open(os.path.join(HERE, DAYS_FILE)).read())  # the clips themselves (kept in their own file so each can be re-scouted alone)
 
 if __name__ == "__main__":
-    os.makedirs(os.path.join(HERE, "batch2"), exist_ok=True)
+    os.makedirs(os.path.join(HERE, OUT_DIR), exist_ok=True)
     for n, d in DAYS.items():
         shots = []
         for i, (stage, seed, start, extra, _note) in enumerate(d["shots"]):
@@ -39,5 +43,6 @@ if __name__ == "__main__":
             s["texts"] = hook(d["hook"], HOOK_SEC) if i == 0 else []
             shots.append(s)
         shots.append(END)
-        spec = {"name": "day%02d" % n, "render": [1080, 1920], "size": [1080, 1920], "fps": 30, "lufs": -14, "art_scale": ART, "cuts": d["cuts"], "shots": shots}
-        json.dump(spec, open(os.path.join(HERE, "batch2", "day%02d.json" % n), "w"), indent=1)
+        name = "day%02d" % n if isinstance(n, int) else n  # spec / video basename: dayNN for a batch, the date for a daily clip
+        spec = {"name": name, "render": [1080, 1920], "size": [1080, 1920], "fps": 30, "lufs": -14, "art_scale": ART, "cuts": d["cuts"], "shots": shots}
+        json.dump(spec, open(os.path.join(HERE, OUT_DIR, name + ".json"), "w"), indent=1)
